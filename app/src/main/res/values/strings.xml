@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HundeWildnis</string>
+    <string name="search">Suchen</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="toggle_theme">Design wechseln</string>
+    <string name="error_loading">Fehler beim Laden: %s</string>
+    <string name="blog">Blog</string>
+    <string name="pages">Seiten</string>
+    <string name="load_more">Weitere Beiträge laden</string>
+</resources>
