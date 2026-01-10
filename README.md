@@ -1,12 +1,13 @@
 Installation der App
 
 Rechts in der Seitenleiste oder oben im Tab-Menü → Releases anklicken
+
 Alternativ direkt: [https://github.com/tux4us/HundeWildnisAndroidApp/releases](https://github.com/tux4us/HundeWildnisAndroidApp/releases)
 
-Wähle die neueste Version
+Wähle die neueste Version von HundeWildnis_"Versionsnummer".apk
 → Ganz oben steht meist Latest (oder die neueste Versionsnummer)
 Lade die .apk Datei herunter
-Suche nach Datei HundeWildnis_"Versionsnummer".apk
+
 Direkt auf den Dateinamen tippen → Download startet
 
 Nachdem der Download beendet ist kommt eine Meldung ob man die Datei installieren möchte.
