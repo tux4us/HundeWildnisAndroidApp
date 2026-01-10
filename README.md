@@ -1,7 +1,7 @@
 Installation der App
 
 Rechts in der Seitenleiste oder oben im Tab-Menü → Releases anklicken
-Alternativ direkt: [https://github.com/EntwicklerName/ProjektName/releases](https://github.com/tux4us/HundeWildnisAndroidApp/releases)
+Alternativ direkt: [https://github.com/tux4us/HundeWildnisAndroidApp/releases](https://github.com/tux4us/HundeWildnisAndroidApp/releases)
 
 Wähle die neueste Version
 → Ganz oben steht meist Latest (oder die neueste Versionsnummer)
