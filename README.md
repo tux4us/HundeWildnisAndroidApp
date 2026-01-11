@@ -1,6 +1,6 @@
 # HundeWildnis – Android App
 
-Eine komfortable Android-App (Phone & Tablet) zum Lesen aller Inhalte von  
+Eine komfortable Android-App (Phone & Tablet) für alle Inhalte von  
 **[https://www.wildnislehrer.com](https://www.wildnislehrer.com)**
 
 ## Über die App
