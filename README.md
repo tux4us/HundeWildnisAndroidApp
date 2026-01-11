@@ -55,7 +55,7 @@ Die App erscheint nun in deinem App-Drawer.
 ## Wichtige Hinweise
 
 - Die App benötigt eine Internetverbindung zum Laden der Inhalte
-- Updates musst du selbst über die Releases-Seite installieren
+- Updates musst du selbst über die Releases-Seite https://github.com/tux4us/HundeWildnisAndroidApp/releases installieren
 - eine Veröffentlichung im PlayStore und F-Droid Store ist geplant
 - Nur aus vertrauenswürdiger Quelle installieren: ausschließlich Releases dieses GitHub-Repositories!
 
