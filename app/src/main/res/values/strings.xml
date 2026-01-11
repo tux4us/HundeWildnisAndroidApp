@@ -5,8 +5,8 @@
     <string name="refresh">Aktualisieren</string>
     <string name="toggle_theme">Design wechseln</string>
     <string name="error_loading">Fehler beim Laden: %s</string>
-    <string name="blog">BLOG</string>
-    <string name="pages">SEITEN</string>
-    <string name="courses">ONLINEKURS</string>
+    <string name="blog">BLOG\nNACH-\nRICHTEN</string>
+    <string name="pages">HUNDE\nWILDNIS\nSCHULE</string>
+    <string name="courses">ONLINE\nKURSE\nPORTAL</string>
     <string name="load_more">Weitere Beiträge laden</string>
 </resources>
