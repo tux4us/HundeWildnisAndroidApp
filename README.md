@@ -1,47 +1,62 @@
-1. Android App "HundeWildnis"
+# HundeWildnis – Android App
 
-Eine App für Android Phone und Tablet zum komfortablen Anzeigen aller Inhalte von https://www.wildnislehrer.com
+Eine komfortable Android-App (Phone & Tablet) zum Lesen aller Inhalte von  
+**[https://www.wildnislehrer.com](https://www.wildnislehrer.com)**
 
-Es werden alle Blogbeiträge und alle Seiten der Webseite übersichtlich in 2 Listen zur Verfügung gestellt.
+## Über die App
 
-Liste "Blog" und Liste "Seiten"
+Mit **HundeWildnis** hast du alle Inhalte der Webseite **wildnislehrer.com** immer aktuell und übersichtlich auf deinem Android-Gerät dabei – ohne umständliches Surfen im Browser.
 
-Durch das Antippen eines Listeneintrags öffnet sich der gesamte Beitrag bzw. die gesamte Seite.
+### Hauptfunktionen
+- Zwei übersichtliche Listen:  
+  • **Blog** – alle Blogbeiträge  
+  • **Seiten** – alle statischen Seiten  
+- Antippen eines Eintrags → kompletter Beitrag / komplette Seite wird geöffnet  
+- Immer aktuell – Inhalte werden direkt von der Webseite geladen  
+- Einfache, aufgeräumte Darstellung – optimiert für mobiles Lesen
 
-Nutzen Sie somit den gesamten Inhalt von https://www.wildnislehrer.com bequem und jederzeit aktuell auf Ihrem mobilen Gerät.
+---
 
+## Installation (Sideloading)
 
+Die App wird als **.apk**-Datei über GitHub Releases verteilt.
 
-2. Installation der App
+### So installierst du die App:
 
-Rechts in der Seitenleiste oder oben im Tab-Menü → Releases anklicken
+1. Gehe zu den Releases:  
+   👉 https://github.com/tux4us/HundeWildnisAndroidApp/releases
 
-Alternativ direkt: [https://github.com/tux4us/HundeWildnisAndroidApp/releases](https://github.com/tux4us/HundeWildnisAndroidApp/releases)
+2. Wähle die **neueste Version**  
+   (steht ganz oben – meist mit dem Schildchen **Latest**)
 
-Wähle die neueste Version von HundeWildnis_"Versionsnummer".apk
-→ Ganz oben steht meist Latest (oder die neueste Versionsnummer)
-Lade die .apk Datei herunter
+3. Lade die APK herunter  
+   Dateiname ist meist:  
+   `HundeWildnis_vX.X.X.apk`  
+   → einfach auf den Dateinamen tippen
 
-Direkt auf den Dateinamen tippen → Download startet
+4. **Unbekannte Quellen** erlauben (einmalig)  
+   Nach dem Download erscheint meist eine Meldung → **Einstellungen** oder **Zulassen** tippen  
+   Oder manuell:  
+   Einstellungen → Apps → **Spezieller App-Zugriff**  
+   → **Apps aus unbekannten Quellen installieren**  
+   → Deinen Browser (z. B. Chrome) aktivieren
 
-Nachdem der Download beendet ist kommt eine Meldung ob man die Datei installieren möchte.
-Alternativ im Downloadordner die heruntergeladene Datei antippen.
+5. APK installieren  
+   - Öffne **Downloads** oder deinen Dateimanager  
+   - Tippe auf die heruntergeladene `.apk`-Datei  
+   - **Installieren** auswählen  
+   - Sicherheitsabfragen bestätigen
 
-Installation erlauben.
+**Fertig!** 🎉  
+Die App erscheint nun in deinem App-Drawer.
 
-Unbekannte Quellen erlauben (einmalig pro Browser/App)
+---
 
-Nach dem Download erscheint meist eine Meldung:
-→ Tippe auf Einstellungen oder Zulassen
-Oder gehe manuell:
-Einstellungen → Apps → Spezieller App-Zugriff → Apps aus unbekannten Quellen installieren
-→ Deinen Browser (z. B. Chrome) einschalten
-APK installieren
+## Wichtige Hinweise
 
-Öffne die Downloads-App oder den Dateimanager
-Tippe auf die heruntergeladene .apk-Datei
-→ Installieren auswählen
-→ Eventuell nochmal Sicherheitsabfrage bestätigen
+- Die App benötigt eine Internetverbindung zum Laden der Inhalte
+- Updates musst du selbst über die Releases-Seite installieren
+- eine Veröffentlichung im PlayStore und F-Droid Store ist geplant
+- Nur aus vertrauenswürdiger Quelle installieren: ausschließlich Releases dieses GitHub-Repositories!
 
-
-Fertig! 
+Viel Spaß beim Stöbern mit dem Hund in der Wildnis! 🐾🌲
