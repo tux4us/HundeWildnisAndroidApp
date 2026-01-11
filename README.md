@@ -11,7 +11,7 @@ Mit **HundeWildnis** hast du alle Inhalte der Webseite **wildnislehrer.com** imm
 - Zwei übersichtliche Listen:  
   • **Blog** – alle Blogbeiträge  
   • **Seiten** – alle statischen Seiten
-- Portal für Onlinekurse (befindet sich im Aufbau. Veröffentlichung wird über unseren Blog bekanntgegeben) 
+- **Portal für Onlinekurse** (befindet sich im Aufbau. Veröffentlichung wird über unseren Blog bekanntgegeben) 
 - Antippen eines Eintrags → kompletter Beitrag / komplette Seite wird geöffnet  
 - Immer aktuell – Inhalte werden direkt von der Webseite geladen  
 - Aktualisierung der listen einfach durch Wischen von oben nach unten über den Bildschirm bzw. oben rechts 3 Punkte antippen - "Aktualisieren"
