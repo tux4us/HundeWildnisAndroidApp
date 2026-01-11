@@ -32,6 +32,7 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 - "Weitere Beiträge laden"-Button für ältere Artikel
 - Anzeige von Titel, Datum und Textauszug
 - Durchsuchbar nach Titel und Inhalt
+- Öffnen der Blogbeiträge
 
 ### 2. Seiten
 - Hierarchische Darstellung aller Webseiten
@@ -48,7 +49,7 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 
 - **Sprache:** Kotlin 100%
 - **Min SDK:** 24 (Android 7.0)
-- **Target SDK:** 34 (Android 14)
+- **Target SDK:** 36 (Android 15)
 - **Build-System:** Gradle (Kotlin DSL)
 - **UI:** Android Views mit ViewBinding
 - **Architektur:** MVVM mit Kotlin Coroutines
