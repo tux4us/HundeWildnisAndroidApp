@@ -1,4 +1,18 @@
-Installation der App
+1. Android App "HundeWildnis"
+
+Eine App für Android Phone und Tablet zum komfortablen Anzeigen aller Inhalte von https://www.wildnislehrer.com
+
+Es werden alle Blogbeiträge und alle Seiten der Webseite übersichtlich in 2 Listen zur Verfügung gestellt.
+
+Liste "Blog" und Liste "Seiten"
+
+Durch das Antippen eines Listeneintrags öffnet sich der gesamte Beitrag bzw. die gesamte Seite.
+
+Nutzen Sie somit den gesamten Inhalt von https://www.wildnislehrer.com bequem und jederzeit aktuell auf Ihrem mobilen Gerät.
+
+
+
+2. Installation der App
 
 Rechts in der Seitenleiste oder oben im Tab-Menü → Releases anklicken
 
