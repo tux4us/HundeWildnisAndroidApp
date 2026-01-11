@@ -14,7 +14,7 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 
 - 📝 **Blog** - Die 20 neuesten Blogbeiträge mit "Weitere laden"-Funktion
 - 📄 **Seiten** - Alle Seiten hierarchisch organisiert und übersichtlich dargestellt
-- 🎓 **Onlinekurse** - Direkter Zugriff auf alle Kursinhalte
+- 🎓 **Onlinekurse** - Direkter Zugriff auf alle Kursinhalte (in Arbeit)
 - 🔍 **Integrierte Suche** - Durchsuche alle Bereiche schnell und einfach
 - 🌓 **Dark/Light Mode** - Wechsle zwischen heller und dunkler Darstellung
 - 🔄 **Pull-to-Refresh** - Aktualisiere Inhalte durch Herunterziehen
@@ -23,7 +23,23 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 
 ## 🖼️ Screenshots
 
-*[Screenshots folgen]*
+<img width="1080" height="2400" alt="Screenshot_20260111-224109_HundeWildnis" src="https://github.com/user-attachments/assets/1ef3b084-51e8-4865-81cb-f78e2d54fbb2" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224153_HundeWildnis" src="https://github.com/user-attachments/assets/a57bf890-09c9-40d5-80d5-ff9b6f94c567" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224204_HundeWildnis" src="https://github.com/user-attachments/assets/c207d308-141d-4434-8008-024675c60848" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224323_HundeWildnis" src="https://github.com/user-attachments/assets/f9df627c-5635-4ffe-a091-d3301dc9152c" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224405_HundeWildnis" src="https://github.com/user-attachments/assets/bbba8a34-e2b5-4bd9-ad65-34c416b36823" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224423_HundeWildnis" src="https://github.com/user-attachments/assets/d0ff0ba2-20a5-4bb1-b03e-8e043a9d70ba" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224458_HundeWildnis" src="https://github.com/user-attachments/assets/2d3d3d46-874f-4f39-abaa-b8d3dd7c68a4" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224509_HundeWildnis" src="https://github.com/user-attachments/assets/97d9f7d6-f778-4df1-a6d5-61e7e1331f0d" />
+
+<img width="1080" height="2400" alt="Screenshot_20260111-224520_HundeWildnis" src="https://github.com/user-attachments/assets/f47bc32e-c382-46d6-a8e5-c246b4d846a5" />
 
 ## 🎯 App-Bereiche
 
