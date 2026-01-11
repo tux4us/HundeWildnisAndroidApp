@@ -21,11 +21,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var blogAdapter: ContentAdapter
     private lateinit var pageAdapter: ContentAdapter
+    private lateinit var courseAdapter: ContentAdapter
     private val wordPressParser = WordPressParser()
 
     private var allBlogPosts = listOf<ContentItem>()
     private var allPages = listOf<ContentItem>()
-    private var showingBlog = true
+    private var allCourses = listOf<ContentItem>()
+    private var currentView = VIEW_BLOG
+
+    companion object {
+        const val VIEW_BLOG = 0
+        const val VIEW_PAGES = 1
+        const val VIEW_COURSES = 2
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +69,18 @@ class MainActivity : AppCompatActivity() {
             openContent(item)
         }
 
+        courseAdapter = ContentAdapter { item ->
+            openContent(item)
+        }
+
         binding.blogRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.blogRecyclerView.adapter = blogAdapter
 
         binding.pagesRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.pagesRecyclerView.adapter = pageAdapter
+
+        binding.coursesRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.coursesRecyclerView.adapter = courseAdapter
     }
 
     private fun setupButtons() {
@@ -77,6 +92,10 @@ class MainActivity : AppCompatActivity() {
             showPagesView()
         }
 
+        binding.btnCourses.setOnClickListener {
+            showCoursesView()
+        }
+
         binding.btnLoadMore.setOnClickListener {
             loadMoreBlogPosts()
         }
@@ -85,20 +104,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBlogView() {
-        showingBlog = true
+        currentView = VIEW_BLOG
         binding.btnBlog.isSelected = true
         binding.btnPages.isSelected = false
+        binding.btnCourses.isSelected = false
         binding.blogRecyclerView.visibility = View.VISIBLE
         binding.pagesRecyclerView.visibility = View.GONE
+        binding.coursesRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.VISIBLE
     }
 
     private fun showPagesView() {
-        showingBlog = false
+        currentView = VIEW_PAGES
         binding.btnBlog.isSelected = false
         binding.btnPages.isSelected = true
+        binding.btnCourses.isSelected = false
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.VISIBLE
+        binding.coursesRecyclerView.visibility = View.GONE
+        binding.btnLoadMore.visibility = View.GONE
+    }
+
+    private fun showCoursesView() {
+        currentView = VIEW_COURSES
+        binding.btnBlog.isSelected = false
+        binding.btnPages.isSelected = false
+        binding.btnCourses.isSelected = true
+        binding.blogRecyclerView.visibility = View.GONE
+        binding.pagesRecyclerView.visibility = View.GONE
+        binding.coursesRecyclerView.visibility = View.VISIBLE
         binding.btnLoadMore.visibility = View.GONE
     }
 
@@ -108,23 +142,26 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val (posts, pages) = withContext(Dispatchers.IO) {
+                val (posts, pages, courses) = withContext(Dispatchers.IO) {
                     val posts = wordPressParser.parseBlogPosts()
                     val pages = wordPressParser.parsePages()
-                    Pair(posts, pages)
+                    val courses = wordPressParser.parseCourses()
+                    Triple(posts, pages, courses)
                 }
 
                 allBlogPosts = posts
                 allPages = pages
+                allCourses = courses
 
                 blogAdapter.submitList(posts.take(20))
                 pageAdapter.submitList(pages)
+                courseAdapter.submitList(courses)
 
                 binding.progressBar.visibility = View.GONE
                 binding.swipeRefresh.isRefreshing = false
 
                 Toast.makeText(this@MainActivity,
-                    "${posts.size} Beiträge, ${pages.size} Seiten geladen",
+                    "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse geladen",
                     Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
@@ -210,25 +247,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterContent(query: String) {
-        if (showingBlog) {
-            val filtered = if (query.isEmpty()) {
-                allBlogPosts.take(blogAdapter.itemCount)
-            } else {
-                allBlogPosts.filter { item ->
-                    item.title.contains(query, ignoreCase = true) ||
-                            item.excerpt.contains(query, ignoreCase = true)
+        when (currentView) {
+            VIEW_BLOG -> {
+                val filtered = if (query.isEmpty()) {
+                    allBlogPosts.take(blogAdapter.itemCount)
+                } else {
+                    allBlogPosts.filter { item ->
+                        item.title.contains(query, ignoreCase = true) ||
+                                item.excerpt.contains(query, ignoreCase = true)
+                    }
                 }
+                blogAdapter.submitList(filtered)
             }
-            blogAdapter.submitList(filtered)
-        } else {
-            val filtered = if (query.isEmpty()) {
-                allPages
-            } else {
-                allPages.filter { item ->
-                    item.title.contains(query, ignoreCase = true)
+            VIEW_PAGES -> {
+                val filtered = if (query.isEmpty()) {
+                    allPages
+                } else {
+                    allPages.filter { item ->
+                        item.title.contains(query, ignoreCase = true)
+                    }
                 }
+                pageAdapter.submitList(filtered)
             }
-            pageAdapter.submitList(filtered)
+            VIEW_COURSES -> {
+                val filtered = if (query.isEmpty()) {
+                    allCourses
+                } else {
+                    allCourses.filter { item ->
+                        item.title.contains(query, ignoreCase = true)
+                    }
+                }
+                courseAdapter.submitList(filtered)
+            }
         }
     }
 }

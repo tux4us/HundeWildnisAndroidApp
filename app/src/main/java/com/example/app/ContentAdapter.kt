@@ -38,6 +38,10 @@ class ContentAdapter(
         }
 
         fun bind(item: ContentItem) {
+            // Einrückung basierend auf Level
+            val paddingStart = (item.level * 24).coerceAtMost(72)
+            binding.root.setPadding(paddingStart, 16, 16, 16)
+
             binding.titleText.text = item.title
             binding.excerptText.text = if (item.excerpt.isNotEmpty()) {
                 item.excerpt
