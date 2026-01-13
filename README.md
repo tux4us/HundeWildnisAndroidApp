@@ -124,6 +124,7 @@ Bei Fragen oder Problemen:
 **Entwickler:** tux4us  
 **GitHub:** [@tux4us](https://github.com/tux4us)  
 **Website:** [wildnislehrer.com](https://wildnislehrer.com)
+**Datenschutzerklärung:** (https://github.com/tux4us/HundeWildnisAndroidApp/blob/master/Datenschutzerklaerung)
 
 ---
 
