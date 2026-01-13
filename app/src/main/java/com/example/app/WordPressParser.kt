@@ -5,9 +5,10 @@ import org.jsoup.Jsoup
 data class ContentItem(
     val title: String,
     val url: String,
-    val excerpt: String,
+    val excerpt: String = "",
     val date: String = "",
-    val level: Int = 0
+    val level: Int = 0,
+    val type: String = "page"  // NEU: "blog", "page", "course"
 )
 
 class WordPressParser {
@@ -37,7 +38,7 @@ class WordPressParser {
                     val date = article.select(".published, time, .entry-date, .post-date").firstOrNull()?.text() ?: ""
 
                     if (url.isNotEmpty()) {
-                        posts.add(ContentItem(title, url, excerpt, date))
+                        posts.add(ContentItem(title, url, excerpt, date, 0, "blog"))
                         android.util.Log.d("WordPressParser", "Beitrag: $title")
                     }
                 }
@@ -106,7 +107,7 @@ class WordPressParser {
 
                     // Einrückungsebene basierend auf Menü-Struktur
                     val level = calculateMenuLevel(link)
-                    pages.add(ContentItem(title, href, "", "", level))
+                    pages.add(ContentItem(title, href, "", "", level, "page"))
                     android.util.Log.d("WordPressParser", "Seite (Level $level): $title")
                 }
             }
@@ -123,72 +124,81 @@ class WordPressParser {
 
     suspend fun parseCourses(): List<ContentItem> {
         val courses = mutableListOf<ContentItem>()
+        val coursesBaseUrl = "$baseUrl/onlinekurse-hundeschule/"
+        val seenUrls = mutableSetOf<String>()
 
         try {
-            android.util.Log.d("WordPressParser", "Lade Onlinekurse...")
+            android.util.Log.d("WordPressParser", "Lade Onlinekurse hierarchisch...")
 
-            // Hauptseite Onlinekurse
-            val mainDoc = Jsoup.connect(coursesUrl)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .timeout(15000)
-                .get()
+            // Hauptseite hinzufügen - Level 0
+            courses.add(ContentItem("Onlinekurse Hundeschule", coursesBaseUrl, "Übersicht aller Onlinekurse", "", 0, "course"))
+            seenUrls.add(coursesBaseUrl)
 
-            courses.add(ContentItem("Onlinekurse Hundeschule", coursesUrl, "Übersicht aller Onlinekurse", "", 0))
+            android.util.Log.d("WordPressParser", "Level 0: Onlinekurse Hundeschule")
 
-            // Unterseiten der Onlinekurse
-            val courseLinks = mainDoc.select("a[href*='/onlinekurse-hundeschule/']")
-            val seenUrls = mutableSetOf(coursesUrl)
+            // Rekursive Funktion - behält die Reihenfolge bei
+            suspend fun crawlCoursePage(url: String, currentLevel: Int) {
+                try {
+                    android.util.Log.d("WordPressParser", "Crawle (Level $currentLevel): $url")
 
-            for (link in courseLinks) {
-                val href = link.attr("abs:href")
-                val title = link.text()
+                    val doc = Jsoup.connect(url)
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                        .timeout(15000)
+                        .followRedirects(true)
+                        .get()
 
-                if (href.startsWith(coursesUrl) &&
-                    href != coursesUrl &&
-                    !href.contains("#") &&
-                    title.length > 3 &&
-                    href !in seenUrls) {
+                    // Links in der Reihenfolge wie sie auf der Seite erscheinen
+                    val links = doc.select("a[href]")
 
-                    seenUrls.add(href)
+                    for (link in links) {
+                        val href = link.attr("abs:href")
+                        val title = link.text().trim()
 
-                    // Einrückungsebene basierend auf URL-Tiefe
-                    val level = href.removePrefix(coursesUrl).count { it == '/' }
-                    courses.add(ContentItem(title, href, "", "", level + 1))
-                    android.util.Log.d("WordPressParser", "Kurs (Level ${level + 1}): $title")
+                        // Nur Links unter /onlinekurse-hundeschule/
+                        if (href.startsWith(coursesBaseUrl) &&
+                            href != coursesBaseUrl &&
+                            !href.contains("#") &&
+                            !href.contains("?") &&
+                            !href.endsWith(".jpg") &&
+                            !href.endsWith(".png") &&
+                            !href.endsWith(".pdf") &&
+                            title.length > 3 &&
+                            href !in seenUrls) {
+
+                            seenUrls.add(href)
+
+                            // Nächstes Level ist currentLevel + 1
+                            val nextLevel = currentLevel + 1
+
+                            // Füge zur Liste hinzu
+                            courses.add(ContentItem(title, href, "", "", nextLevel, "course"))
+                            android.util.Log.d("WordPressParser", "  ".repeat(nextLevel) + "→ Level $nextLevel: $title")
+
+                            // Rekursiv in diese Seite gehen mit dem neuen Level
+                            crawlCoursePage(href, nextLevel)
+                        }
+                    }
+
+                    // Kleine Pause
+                    kotlinx.coroutines.delay(100)
+
+                } catch (e: Exception) {
+                    android.util.Log.e("WordPressParser", "Fehler bei $url: ${e.message}")
                 }
             }
 
-            // Auch Links aus dem Hauptmenü prüfen
-            val homeDoc = Jsoup.connect(baseUrl)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .timeout(15000)
-                .get()
+            // Starte Crawling von der Hauptseite mit Level 0
+            crawlCoursePage(coursesBaseUrl, 0)
 
-            val menuCourseLinks = homeDoc.select("nav a[href*='/onlinekurse-hundeschule/'], .menu a[href*='/onlinekurse-hundeschule/']")
-
-            for (link in menuCourseLinks) {
-                val href = link.attr("abs:href")
-                val title = link.text()
-
-                if (href.startsWith(coursesUrl) &&
-                    title.length > 2 &&
-                    href !in seenUrls) {
-
-                    seenUrls.add(href)
-                    val level = if (href == coursesUrl) 0 else 1
-                    courses.add(ContentItem(title, href, "", "", level))
-                    android.util.Log.d("WordPressParser", "Menü-Kurs (Level $level): $title")
-                }
-            }
-
-            android.util.Log.d("WordPressParser", "${courses.size} Kurse gefunden")
+            android.util.Log.d("WordPressParser", "${courses.size} Kurs-Seiten gesamt gefunden")
 
         } catch (e: Exception) {
-            android.util.Log.e("WordPressParser", "Fehler: ${e.message}")
+            android.util.Log.e("WordPressParser", "Fehler beim Kurse-Laden: ${e.message}")
             e.printStackTrace()
         }
 
-        return courses.distinctBy { it.url }.sortedBy { it.level }
+        // Keine Sortierung - behält die gefundene Reihenfolge
+        return courses.distinctBy { it.url }
     }
 
     private fun calculateMenuLevel(link: org.jsoup.nodes.Element): Int {
