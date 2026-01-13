@@ -230,8 +230,20 @@ class MainActivity : AppCompatActivity() {
                 toggleTheme()
                 true
             }
+            R.id.action_privacy -> {
+                openPrivacyPolicy()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun openPrivacyPolicy() {
+        val intent = Intent(this, ContentActivity::class.java).apply {
+            putExtra("url", getString(R.string.privacy_url))
+            putExtra("title", "Datenschutzerklärung")
+        }
+        startActivity(intent)
     }
 
     private fun toggleTheme() {

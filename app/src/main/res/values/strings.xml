@@ -9,4 +9,6 @@
     <string name="pages">🐶 HUNDE 🦉\nWILDNIS\nSCHULE</string>
     <string name="courses">📚 ONLINE\nKURSE\nPORTAL</string>
     <string name="load_more">Weitere Beiträge laden</string>
+    <string name="privacy">Datenschutz</string>
+    <string name="privacy_url">https://github.com/tux4us/HundeWildnisAndroidApp/blob/master/Datenschutzerklaerung</string>
 </resources>
