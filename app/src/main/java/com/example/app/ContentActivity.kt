@@ -9,12 +9,17 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.hundewildnis.app.databinding.ActivityContentBinding
+import androidx.core.view.WindowCompat
 
 class ContentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Edge-to-Edge aktivieren
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

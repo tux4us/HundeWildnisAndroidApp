@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityAltimeterBinding
 import java.util.Locale
 import kotlin.math.pow
+import androidx.core.view.WindowCompat
 
 class AltimeterActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
@@ -45,6 +46,10 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener, LocationList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Edge-to-Edge aktivieren
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityAltimeterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

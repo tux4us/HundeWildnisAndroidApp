@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.HundeWildnis" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.HundeWildnis" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">#2d5016</item>
         <item name="colorPrimaryVariant">#1a3009</item>
         <item name="colorOnPrimary">#FFFFFF</item>
@@ -8,9 +8,19 @@
         <item name="colorSecondaryVariant">#4a6135</item>
         <item name="colorOnSecondary">#FFFFFF</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+
         <item name="android:windowBackground">?android:attr/colorBackground</item>
 
         <!-- Menü-Farben -->
         <item name="actionMenuTextColor">#FFFFFF</item>
     </style>
+
+    <style name="Theme.HundeWildnis" parent="Base.Theme.HundeWildnis" />
+
 </resources>

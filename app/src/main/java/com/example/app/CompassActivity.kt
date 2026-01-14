@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hundewildnis.app.databinding.ActivityCompassBinding
 import kotlin.math.roundToInt
+import androidx.core.view.WindowCompat
 
 class CompassActivity : AppCompatActivity(), SensorEventListener {
 
@@ -29,6 +30,10 @@ class CompassActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Edge-to-Edge aktivieren
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityCompassBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

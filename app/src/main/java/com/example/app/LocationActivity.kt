@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityLocationBinding
 import java.util.Locale
+import androidx.core.view.WindowCompat
 
 class LocationActivity : AppCompatActivity(), LocationListener {
 
@@ -31,6 +32,10 @@ class LocationActivity : AppCompatActivity(), LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Edge-to-Edge aktivieren
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
