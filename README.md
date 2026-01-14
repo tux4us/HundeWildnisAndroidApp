@@ -19,7 +19,7 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 - 🌓 **Dark/Light Mode** - Wechsle zwischen heller und dunkler Darstellung
 - 🔄 **Pull-to-Refresh** - Aktualisiere Inhalte durch Herunterziehen
 - 📱 **Responsive WebView** - Mobile-optimierte Darstellung aller Inhalte
-- ✅ **100% ohne Google-Dienste** - Funktioniert komplett offline-fähig
+- ✅ **100% ohne Google-Dienste** 
 
 ## 🖼️ Screenshots
 
