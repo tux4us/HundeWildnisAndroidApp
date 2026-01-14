@@ -8,21 +8,22 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.*
 import com.hundewildnis.app.databinding.ActivityAltimeterBinding
 import java.util.Locale
 import kotlin.math.pow
 
-class AltimeterActivity : AppCompatActivity(), SensorEventListener {
+class AltimeterActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
     private lateinit var binding: ActivityAltimeterBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationManager: LocationManager
     private var sensorManager: SensorManager? = null
     private var pressureSensor: Sensor? = null
 
@@ -30,9 +31,16 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
     private var barometerAltitude: Double? = null
     private var currentPressure: Float? = null
 
+    // Für Barometer-Kalibrierung
+    private var referenceAltitude: Double? = null
+    private var referencePressure: Float? = null
+    private var isRequestingUpdates = false
+
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1002
         private const val SEA_LEVEL_PRESSURE = 1013.25 // hPa
+        private const val MIN_TIME_BETWEEN_UPDATES = 2000L // 2 Sekunden
+        private const val MIN_DISTANCE_CHANGE = 0f // Jede Änderung
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +54,7 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         // Sensor Manager für Barometer
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -55,7 +63,9 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
         if (pressureSensor == null) {
             binding.barometerCard.visibility = View.GONE
             binding.pressureCard.visibility = View.GONE
-            binding.statusText.text = "Barometer nicht verfügbar - nur GPS-Höhe"
+            binding.statusText.text = "⚠️ Barometer nicht verfügbar\nNur GPS-Höhe (ungenau)"
+        } else {
+            binding.statusText.text = "📡 GPS-Höhe ist sehr ungenau!\n🌡️ Barometer wird für Genauigkeit genutzt"
         }
 
         checkLocationPermission()
@@ -71,6 +81,7 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
     override fun onPause() {
         super.onPause()
         sensorManager?.unregisterListener(this)
+        stopLocationUpdates()
     }
 
     private fun checkLocationPermission() {
@@ -106,7 +117,7 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getAltitude()
                 } else {
-                    binding.statusText.text = "Standortberechtigung benötigt"
+                    binding.statusText.text = "❌ Standortberechtigung benötigt"
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(
                         this,
@@ -128,34 +139,91 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
         }
 
         binding.progressBar.visibility = View.VISIBLE
-        binding.statusText.text = "Höhe wird ermittelt..."
 
-        val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            10000
-        ).apply {
-            setMinUpdateIntervalMillis(5000)
-            setMaxUpdates(1)
-        }.build()
+        // Versuche zuerst letzte bekannte Position
+        var lastLocation: Location? = null
 
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { location ->
-                    updateGpsAltitude(location)
-                }
-            }
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            mainLooper
-        )
+        if (lastLocation == null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        }
+
+        if (lastLocation != null && lastLocation.hasAltitude()) {
+            updateGpsAltitude(lastLocation)
+        }
+
+        // Fordere neue Updates an
+        requestLocationUpdates()
     }
+
+    private fun requestLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        isRequestingUpdates = true
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MIN_TIME_BETWEEN_UPDATES,
+                MIN_DISTANCE_CHANGE,
+                this
+            )
+        }
+
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                MIN_TIME_BETWEEN_UPDATES,
+                MIN_DISTANCE_CHANGE,
+                this
+            )
+        }
+    }
+
+    private fun stopLocationUpdates() {
+        if (isRequestingUpdates) {
+            locationManager.removeUpdates(this)
+            isRequestingUpdates = false
+        }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        if (location.hasAltitude()) {
+            updateGpsAltitude(location)
+        }
+    }
+
+    override fun onProviderEnabled(provider: String) {}
+    override fun onProviderDisabled(provider: String) {}
+
+    @Deprecated("Deprecated in Java")
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
     private fun updateGpsAltitude(location: Location) {
         if (location.hasAltitude()) {
             gpsAltitude = location.altitude
+
+            val accuracyInfo = if (location.hasAccuracy()) {
+                val acc = location.accuracy
+                when {
+                    acc < 10 -> "sehr gut"
+                    acc < 50 -> "gut"
+                    acc < 100 -> "mittel"
+                    acc < 200 -> "schlecht"
+                    else -> "sehr schlecht"
+                }
+            } else {
+                "unbekannt"
+            }
 
             binding.gpsAltitudeText.text = String.format(
                 Locale.GERMAN,
@@ -163,24 +231,41 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
                 gpsAltitude
             )
 
-            // Accuracy anzeigen
-            if (location.hasVerticalAccuracy()) {
+            // Genauigkeit mit Warnung
+            if (location.hasAccuracy()) {
+                val acc = location.accuracy
                 binding.accuracyText.text = String.format(
                     Locale.GERMAN,
-                    "Genauigkeit: ± %.0f m",
-                    location.verticalAccuracyMeters
+                    "GPS-Genauigkeit: ± %.0f m (%s)\n⚠️ GPS-Höhe ist sehr ungenau!",
+                    acc,
+                    accuracyInfo
+                )
+                binding.accuracyText.setTextColor(
+                    if (acc > 100) android.graphics.Color.parseColor("#ff6b6b")
+                    else android.graphics.Color.parseColor("#999999")
                 )
             } else {
-                binding.accuracyText.text = "Genauigkeit: unbekannt"
+                binding.accuracyText.text = "GPS-Genauigkeit: unbekannt\n⚠️ GPS-Höhe ist sehr ungenau!"
+                binding.accuracyText.setTextColor(android.graphics.Color.parseColor("#ff6b6b"))
+            }
+
+            // Wenn Barometer verfügbar und noch nicht kalibriert: Kalibriere jetzt
+            if (pressureSensor != null && referenceAltitude == null && currentPressure != null) {
+                calibrateBarometer(gpsAltitude!!, currentPressure!!)
             }
 
             updateMainAltitude()
             binding.progressBar.visibility = View.GONE
-            binding.statusText.text = "Höhe erfolgreich ermittelt"
+
+            if (pressureSensor != null) {
+                binding.statusText.text = "✅ Barometer kalibriert\n🎯 Nutze Barometer für genaue Höhe"
+            } else {
+                binding.statusText.text = "⚠️ Nur GPS verfügbar (sehr ungenau)"
+            }
 
         } else {
             binding.gpsAltitudeText.text = "Nicht verfügbar"
-            binding.statusText.text = "GPS-Höhe nicht verfügbar"
+            binding.statusText.text = "❌ GPS-Höhe nicht verfügbar"
             binding.progressBar.visibility = View.GONE
         }
     }
@@ -191,39 +276,64 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener {
         if (event.sensor.type == Sensor.TYPE_PRESSURE) {
             currentPressure = event.values[0]
 
-            // Luftdruck anzeigen
             binding.pressureText.text = String.format(
                 Locale.GERMAN,
                 "%.1f hPa",
                 currentPressure
             )
 
-            // Höhe aus Luftdruck berechnen
-            barometerAltitude = calculateAltitudeFromPressure(currentPressure!!)
+            if (referenceAltitude != null && referencePressure != null) {
+                barometerAltitude = calculateCalibratedAltitude(currentPressure!!)
 
-            binding.barometerAltitudeText.text = String.format(
-                Locale.GERMAN,
-                "%.0f m",
-                barometerAltitude
-            )
+                binding.barometerAltitudeText.text = String.format(
+                    Locale.GERMAN,
+                    "%.1f m (kalibriert)",
+                    barometerAltitude
+                )
+            } else {
+                barometerAltitude = calculateAltitudeFromPressure(currentPressure!!)
+
+                binding.barometerAltitudeText.text = String.format(
+                    Locale.GERMAN,
+                    "%.0f m (nicht kalibriert)",
+                    barometerAltitude
+                )
+            }
 
             updateMainAltitude()
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Nicht benötigt
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun calibrateBarometer(altitude: Double, pressure: Float) {
+        referenceAltitude = altitude
+        referencePressure = pressure
+
+        Toast.makeText(
+            this,
+            "✅ Barometer kalibriert auf ${altitude.toInt()}m",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun calculateCalibratedAltitude(currentPressure: Float): Double {
+        val pressureDiff = referencePressure!! - currentPressure
+        val altitudeDiff = pressureDiff * 8.3
+
+        return referenceAltitude!! + altitudeDiff
     }
 
     private fun calculateAltitudeFromPressure(pressure: Float): Double {
-        // Barometrische Höhenformel
-        // h = 44330 * (1 - (P/P0)^(1/5.255))
         return 44330 * (1.0 - (pressure / SEA_LEVEL_PRESSURE).pow(1.0 / 5.255))
     }
 
     private fun updateMainAltitude() {
-        // Zeige bevorzugt GPS-Höhe, falls verfügbar
-        val altitude = gpsAltitude ?: barometerAltitude
+        val altitude = if (referenceAltitude != null && barometerAltitude != null) {
+            barometerAltitude
+        } else {
+            gpsAltitude ?: barometerAltitude
+        }
 
         altitude?.let {
             binding.altitudeText.text = String.format(

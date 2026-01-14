@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -11,18 +13,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.*
 import com.hundewildnis.app.databinding.ActivityLocationBinding
 import java.util.Locale
 
-class LocationActivity : AppCompatActivity() {
+class LocationActivity : AppCompatActivity(), LocationListener {
 
     private lateinit var binding: ActivityLocationBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
+    private var isRequestingUpdates = false
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
+        private const val MIN_TIME_BETWEEN_UPDATES = 5000L // 5 Sekunden
+        private const val MIN_DISTANCE_CHANGE = 10f // 10 Meter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +40,18 @@ class LocationActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         binding.shareButton.setOnClickListener {
             shareLocation()
         }
 
         checkLocationPermission()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
     }
 
     private fun checkLocationPermission() {
@@ -102,51 +111,116 @@ class LocationActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.statusText.text = "Standort wird ermittelt..."
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            location?.let {
-                updateLocationUI(it)
-            } ?: run {
-                // Wenn keine letzte Position verfügbar, fordere neue an
-                requestNewLocation()
+        // Prüfe verfügbare Provider
+        val providers = locationManager.allProviders
+        val gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+        if (!gpsEnabled && !networkEnabled) {
+            binding.statusText.text = "GPS und Netzwerk sind deaktiviert"
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(
+                this,
+                "Bitte aktiviere GPS oder mobiles Netzwerk",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        // Versuche zuerst die letzte bekannte Position zu holen
+        var bestLocation: Location? = null
+
+        if (gpsEnabled) {
+            val lastGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            bestLocation = lastGpsLocation
+        }
+
+        if (networkEnabled) {
+            val lastNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            if (bestLocation == null ||
+                (lastNetworkLocation != null && lastNetworkLocation.accuracy < bestLocation.accuracy)) {
+                bestLocation = lastNetworkLocation
             }
+        }
+
+        if (bestLocation != null && isLocationRecent(bestLocation)) {
+            updateLocationUI(bestLocation)
+        } else {
+            // Fordere neue Position an
+            requestLocationUpdates()
         }
     }
 
-    private fun requestNewLocation() {
-        val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            10000
-        ).apply {
-            setMinUpdateIntervalMillis(5000)
-            setMaxUpdates(1)
-        }.build()
+    private fun isLocationRecent(location: Location): Boolean {
+        val maxAge = 60000L // 1 Minute
+        return System.currentTimeMillis() - location.time < maxAge
+    }
 
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { location ->
-                    updateLocationUI(location)
-                }
-            }
-        }
-
+    private fun requestLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                mainLooper
+            return
+        }
+
+        isRequestingUpdates = true
+
+        // Nutze GPS wenn verfügbar (genauer)
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MIN_TIME_BETWEEN_UPDATES,
+                MIN_DISTANCE_CHANGE,
+                this
             )
         }
+
+        // Nutze Netzwerk als Fallback (schneller)
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                MIN_TIME_BETWEEN_UPDATES,
+                MIN_DISTANCE_CHANGE,
+                this
+            )
+        }
+
+        binding.statusText.text = "Warte auf GPS-Signal..."
+    }
+
+    private fun stopLocationUpdates() {
+        if (isRequestingUpdates) {
+            locationManager.removeUpdates(this)
+            isRequestingUpdates = false
+        }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        updateLocationUI(location)
+        // Stoppe Updates nach erfolgreicher Positionsbestimmung
+        stopLocationUpdates()
+    }
+
+    override fun onProviderEnabled(provider: String) {
+        Toast.makeText(this, "$provider aktiviert", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onProviderDisabled(provider: String) {
+        Toast.makeText(this, "$provider deaktiviert", Toast.LENGTH_SHORT).show()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+        // Deprecated, aber muss für Kompatibilität implementiert werden
     }
 
     private fun updateLocationUI(location: Location) {
         currentLocation = location
 
         binding.progressBar.visibility = View.GONE
-        binding.statusText.text = "Standort gefunden"
+        binding.statusText.text = "Standort gefunden (${location.provider})"
 
         binding.latitudeText.text = String.format(
             Locale.GERMAN,
