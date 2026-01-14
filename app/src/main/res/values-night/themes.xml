@@ -8,5 +8,9 @@
         <item name="colorSecondaryVariant">#4a6135</item>
         <item name="colorOnSecondary">#FFFFFF</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
+
+        <!-- Menü-Farben -->
+        <item name="actionMenuTextColor">#FFFFFF</item>
     </style>
 </resources>

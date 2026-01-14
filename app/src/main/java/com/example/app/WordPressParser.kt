@@ -23,92 +23,143 @@ class WordPressParser {
 
             val doc = Jsoup.connect("$baseUrl/blog/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .timeout(15000)
+                .timeout(8000)
                 .get()
 
             val articles = doc.select("article, .post, .entry, .hentry, .blog-post")
             android.util.Log.d("WordPressParser", "Gefundene Artikel-Container: ${articles.size}")
 
-            if (articles.isNotEmpty()) {
-                for (article in articles) {
-                    val titleElem = article.select("h2 a, h1 a, h3 a, .entry-title a, .post-title a").firstOrNull()
-                    val title = titleElem?.text() ?: continue
-                    val url = titleElem.attr("abs:href")
-                    val excerpt = article.select("p, .excerpt, .entry-summary, .entry-content p").firstOrNull()?.text()?.take(150) ?: ""
-                    val date = article.select(".published, time, .entry-date, .post-date").firstOrNull()?.text() ?: ""
+            for (article in articles) {
+                try {
+                    val titleElement = article.select("h1, h2, h3, .entry-title, .post-title").first()
+                    val linkElement = article.select("a[href]").first()
+                    val excerptElement = article.select(".entry-content, .post-content, p").first()
+                    val dateElement = article.select("time, .date, .post-date").first()
 
-                    if (url.isNotEmpty()) {
+                    val title = titleElement?.text()?.trim() ?: continue
+                    val url = linkElement?.attr("abs:href") ?: continue
+                    val excerpt = excerptElement?.text()?.trim()?.take(200) ?: ""
+                    val date = dateElement?.text()?.trim() ?: ""
+
+                    if (url.startsWith(baseUrl) && !url.contains("/blog/") && title.isNotEmpty()) {
                         posts.add(ContentItem(title, url, excerpt, date, 0, "blog"))
-                        android.util.Log.d("WordPressParser", "Beitrag: $title")
+                        android.util.Log.d("WordPressParser", "✓ Blog: $title")
                     }
+                } catch (e: Exception) {
+                    android.util.Log.e("WordPressParser", "Fehler beim Parsen eines Artikels: ${e.message}")
                 }
             }
 
-            if (posts.isEmpty()) {
-                val links = doc.select("a[href*='/blog/']")
-                for (link in links) {
-                    val href = link.attr("abs:href")
-                    val title = link.text()
-
-                    if (href.contains("/blog/") &&
-                        !href.endsWith("/blog/") &&
-                        title.length > 5 &&
-                        !href.contains("#") &&
-                        !href.contains("page/")) {
-                        posts.add(ContentItem(title, href, ""))
-                        android.util.Log.d("WordPressParser", "Fallback-Beitrag: $title")
-                    }
-                }
-            }
-
-            android.util.Log.d("WordPressParser", "${posts.size} Beiträge gefunden")
+            android.util.Log.d("WordPressParser", "${posts.size} Blogbeiträge gefunden")
 
         } catch (e: Exception) {
-            android.util.Log.e("WordPressParser", "Fehler: ${e.message}")
+            android.util.Log.e("WordPressParser", "Fehler beim Blog-Laden: ${e.message}")
             e.printStackTrace()
         }
 
-        return posts.distinctBy { it.url }
+        return posts.sortedByDescending { it.date }
     }
+
 
     suspend fun parsePages(): List<ContentItem> {
         val pages = mutableListOf<ContentItem>()
 
         try {
             android.util.Log.d("WordPressParser", "Lade Seiten...")
-            val doc = Jsoup.connect(baseUrl)
+
+            val doc = Jsoup.connect("$baseUrl/de/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .timeout(15000)
+                .timeout(8000)
                 .get()
 
             val menuLinks = doc.select("nav a, .menu a, header a, .navigation a")
             val seenUrls = mutableSetOf<String>()
 
+            // Unerwünschte Navigationselemente
+            val excludedTitles = listOf(
+                "vorheriger beitrag",
+                "nächster beitrag",
+                "previous post",
+                "next post",
+                "zurück",
+                "weiter",
+                "start"  // NEU: "Start"-Link ausschließen
+            )
+
+            // Bekannte Seiten-Kategorien (alles andere sind vermutlich Blogbeiträge)
+            val validPageCategories = listOf(
+                "/hundeschule/",
+                "/wildnisschule/",
+                "/informationen/",
+                "/impressum/",
+                "/honorare",
+                "/downloads"
+            )
+
             for (link in menuLinks) {
                 val href = link.attr("abs:href")
-                val title = link.text()
+                val title = link.text().trim()
+                val titleLower = title.lowercase()
 
-                // Onlinekurse-Seite und deren Unterseiten ausschließen
+                // Prüfung auf unerwünschte Titel
+                val isExcluded = excludedTitles.any { excluded ->
+                    titleLower.contains(excluded) || titleLower.startsWith(excluded)
+                }
+
+                // Prüfung ob es eine bekannte Seitenkategorie ist ODER die Startseite
+                val normalizedHref = href.trimEnd('/')
+                val isValidPage = normalizedHref == baseUrl.trimEnd('/') ||
+                        validPageCategories.any { href.contains(it) }
+
                 if (href.startsWith(baseUrl) &&
                     !href.contains("/blog") &&
+                    !href.contains("/blog/") &&
                     !href.contains("/onlinekurse-hundeschule") &&
+                    !href.contains("/onlinekurse-hundeschule/") &&
                     !href.contains("#") &&
-                    !href.contains("wp-content") &&
-                    !href.contains("wp-admin") &&
-                    !href.contains("wp-login") &&
+                    !href.contains("?") &&
                     title.length > 2 &&
                     href !in seenUrls &&
-                    href != baseUrl &&
-                    !href.endsWith(".jpg") &&
-                    !href.endsWith(".png") &&
-                    !href.endsWith(".pdf")) {
+                    !isExcluded &&
+                    isValidPage) {
 
                     seenUrls.add(href)
 
-                    // Einrückungsebene basierend auf Menü-Struktur
-                    val level = calculateMenuLevel(link)
+                    val level = when {
+                        // Level 0: Nur die Hauptseite
+                        normalizedHref == baseUrl.trimEnd('/') -> 0
+
+                        // Level 1: Hundeschule Hauptseite
+                        normalizedHref == "$baseUrl/hundeschule".trimEnd('/') -> 1
+
+                        // Level 1: Wildnisschule Hauptseite
+                        normalizedHref == "$baseUrl/wildnisschule".trimEnd('/') -> 1
+
+                        // Level 2: Direkte Unterseiten von Hundeschule
+                        href.startsWith("$baseUrl/hundeschule/") &&
+                                href.removePrefix("$baseUrl/hundeschule/").trimEnd('/').count { it == '/' } == 0 -> 2
+
+                        // Level 2: Direkte Unterseiten von Wildnisschule
+                        href.startsWith("$baseUrl/wildnisschule/") &&
+                                href.removePrefix("$baseUrl/wildnisschule/").trimEnd('/').count { it == '/' } == 0 -> 2
+
+                        // Level 3+: Tiefere Verschachtelung unter Hundeschule
+                        href.startsWith("$baseUrl/hundeschule/") -> {
+                            2 + href.removePrefix("$baseUrl/hundeschule/").trimEnd('/').count { it == '/' }
+                        }
+
+                        // Level 3+: Tiefere Verschachtelung unter Wildnisschule
+                        href.startsWith("$baseUrl/wildnisschule/") -> {
+                            2 + href.removePrefix("$baseUrl/wildnisschule/").trimEnd('/').count { it == '/' }
+                        }
+
+                        // Level 1: ALLE anderen Seiten (egal wie tief verschachtelt)
+                        // Das betrifft: /informationen/, /impressum/, /honorare, /downloads, etc.
+                        else -> 1
+                    }
+
                     pages.add(ContentItem(title, href, "", "", level, "page"))
-                    android.util.Log.d("WordPressParser", "Seite (Level $level): $title")
+                    android.util.Log.d("WordPressParser", "✓ Seite (Level $level): $title")
                 }
             }
 
@@ -119,7 +170,22 @@ class WordPressParser {
             e.printStackTrace()
         }
 
-        return pages
+        // Sortierung: Erst nach Level, dann nach Kategoriegruppe, dann alphabetisch
+        return pages.sortedWith(
+            compareBy<ContentItem>(
+                {
+                    // Primäre Sortierung: Kategorie-Gruppe
+                    when {
+                        it.url.trimEnd('/') == baseUrl.trimEnd('/') -> 0  // Startseite zuerst
+                        it.url.contains("/hundeschule/") -> 1              // Dann Hundeschule-Bereich
+                        it.url.contains("/wildnisschule/") -> 2            // Dann Wildnisschule-Bereich
+                        else -> 3                                          // Dann Rest
+                    }
+                },
+                { it.level },           // Sekundär: Level (innerhalb der Kategorie)
+                // { it.title }            // Tertiär: Alphabetisch (innerhalb Level)
+            )
+        )
     }
 
     suspend fun parseCourses(): List<ContentItem> {
@@ -143,7 +209,7 @@ class WordPressParser {
 
                     val doc = Jsoup.connect(url)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                        .timeout(15000)
+                        .timeout(8000)
                         .followRedirects(true)
                         .get()
 

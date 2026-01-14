@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hundewildnis.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -42,6 +43,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "HundeWildnis"
+
+        // Setze Overflow-Icon auf weiß (3 Punkte)
+        binding.toolbar.overflowIcon?.setTint(android.graphics.Color.WHITE)
+
         setupRecyclerViews()
         setupButtons()
         loadContent()
@@ -53,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadThemePreference() {
         val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val isDark = prefs.getBoolean("dark_theme", false)
+        val isDark = prefs.getBoolean("dark_theme", true)  // true statt false
         AppCompatDelegate.setDefaultNightMode(
             if (isDark) AppCompatDelegate.MODE_NIGHT_YES
             else AppCompatDelegate.MODE_NIGHT_NO
@@ -137,17 +143,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadContent() {
+        // Zeige ProgressBar und Ladetext
         binding.progressBar.visibility = View.VISIBLE
-        binding.errorText.visibility = View.GONE
+        binding.errorText.text = "Inhalte werden aktualisiert..."
+        binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
+        binding.errorText.visibility = View.VISIBLE
+
+        // Verstecke RecyclerViews während des Ladens
+        binding.blogRecyclerView.visibility = View.GONE
+        binding.pagesRecyclerView.visibility = View.GONE
+        binding.coursesRecyclerView.visibility = View.GONE
+        binding.btnLoadMore.visibility = View.GONE
 
         lifecycleScope.launch {
             try {
-                val (posts, pages, courses) = withContext(Dispatchers.IO) {
-                    val posts = wordPressParser.parseBlogPosts()
-                    val pages = wordPressParser.parsePages()
-                    val courses = wordPressParser.parseCourses()
-                    Triple(posts, pages, courses)
+                // PARALLEL laden statt sequenziell
+                val result: Triple<List<ContentItem>, List<ContentItem>, List<ContentItem>> = withContext(Dispatchers.IO) {
+                    val postsDeferred = async { wordPressParser.parseBlogPosts() }
+                    val pagesDeferred = async { wordPressParser.parsePages() }
+                    val coursesDeferred = async { wordPressParser.parseCourses() }
+
+                    Triple(
+                        postsDeferred.await(),
+                        pagesDeferred.await(),
+                        coursesDeferred.await()
+                    )
                 }
+                val posts = result.first
+                val pages = result.second
+                val courses = result.third
 
                 allBlogPosts = posts
                 allPages = pages
@@ -157,8 +181,17 @@ class MainActivity : AppCompatActivity() {
                 pageAdapter.submitList(pages)
                 courseAdapter.submitList(courses)
 
+                // Verstecke ProgressBar und Ladetext
                 binding.progressBar.visibility = View.GONE
+                binding.errorText.visibility = View.GONE
                 binding.swipeRefresh.isRefreshing = false
+
+                // Zeige die aktuelle View wieder
+                when (currentView) {
+                    VIEW_BLOG -> showBlogView()
+                    VIEW_PAGES -> showPagesView()
+                    VIEW_COURSES -> showCoursesView()
+                }
 
                 Toast.makeText(this@MainActivity,
                     "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse geladen",
@@ -168,7 +201,9 @@ class MainActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.GONE
                 binding.swipeRefresh.isRefreshing = false
                 binding.errorText.text = getString(R.string.error_loading, e.message)
+                binding.errorText.setTextColor(android.graphics.Color.RED)
                 binding.errorText.visibility = View.VISIBLE
+
                 Toast.makeText(this@MainActivity,
                     getString(R.string.error_loading, e.message),
                     Toast.LENGTH_LONG).show()
@@ -204,6 +239,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        // Erkenne ob Dark Mode aktiv ist
+        val nightMode = resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val isDarkMode = nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        // Setze Textfarbe abhängig vom Theme
+        val textColor = if (isDarkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+
+        for (i in 0 until menu.size()) {
+            val item = menu.getItem(i)
+            val spanString = android.text.SpannableString(item.title.toString())
+            spanString.setSpan(
+                android.text.style.ForegroundColorSpan(textColor),
+                0,
+                spanString.length,
+                0
+            )
+            item.title = spanString
+        }
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
