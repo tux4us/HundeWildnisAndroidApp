@@ -12,10 +12,13 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 
 ## ✨ Features
 
-- 📝 **Blog** - Die 20 neuesten Blogbeiträge mit "Weitere laden"-Funktion
+- 📝 **Blog** - Die neuesten Blogbeiträge mit "Weitere laden"-Funktion
 - 📄 **Seiten** - Alle Seiten hierarchisch organisiert und übersichtlich dargestellt
 - 🎓 **Onlinekurse** - Direkter Zugriff auf alle Kursinhalte (in Arbeit)
 - 🔍 **Integrierte Suche** - Durchsuche alle Bereiche schnell und einfach
+- 🧭 Integrierter Kompass - unterwegs immer die Orientierung behalten
+- 📐 Integrierter Höhenmesser - unterwegs immer wissen wie hoch man unterwegs ist
+- 🌐 Standortbestimmung per GPS und der Möglichkeit den Standort unmittelbar über "Teilen" an Apps, Navigationsanwendungen und andere Empfänger zu übermitteln
 - 🌓 **Dark/Light Mode** - Wechsle zwischen heller und dunkler Darstellung
 - 🔄 **Pull-to-Refresh** - Aktualisiere Inhalte durch Herunterziehen
 - 📱 **Responsive WebView** - Mobile-optimierte Darstellung aller Inhalte
