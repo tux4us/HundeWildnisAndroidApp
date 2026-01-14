@@ -11,8 +11,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 7
-        versionName = "2.4"
+        versionCode = 8
+        versionName = "2.5"
     }
 
     buildTypes {
@@ -45,4 +45,5 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.jsoup)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.play.services.location)
 }

@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
     private var allCourses = listOf<ContentItem>()
     private var currentView = VIEW_BLOG
 
+    private var isFabOpen = false
+    //private var overlayView: View? = null  // NEU
+
     companion object {
         const val VIEW_BLOG = 0
         const val VIEW_PAGES = 1
@@ -45,11 +48,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
 
-        // Setze Overflow-Icon auf weiß (3 Punkte)
         binding.toolbar.overflowIcon?.setTint(android.graphics.Color.WHITE)
 
         setupRecyclerViews()
         setupButtons()
+        setupFab()
         loadContent()
 
         binding.swipeRefresh.setOnRefreshListener {
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadThemePreference() {
         val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val isDark = prefs.getBoolean("dark_theme", true)  // true statt false
+        val isDark = prefs.getBoolean("dark_theme", true)
         AppCompatDelegate.setDefaultNightMode(
             if (isDark) AppCompatDelegate.MODE_NIGHT_YES
             else AppCompatDelegate.MODE_NIGHT_NO
@@ -143,13 +146,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadContent() {
-        // Zeige ProgressBar und Ladetext
         binding.progressBar.visibility = View.VISIBLE
         binding.errorText.text = "Inhalte werden aktualisiert..."
         binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
         binding.errorText.visibility = View.VISIBLE
 
-        // Verstecke RecyclerViews während des Ladens
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.GONE
@@ -157,7 +158,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                // PARALLEL laden statt sequenziell
                 val result: Triple<List<ContentItem>, List<ContentItem>, List<ContentItem>> = withContext(Dispatchers.IO) {
                     val postsDeferred = async { wordPressParser.parseBlogPosts() }
                     val pagesDeferred = async { wordPressParser.parsePages() }
@@ -181,12 +181,10 @@ class MainActivity : AppCompatActivity() {
                 pageAdapter.submitList(pages)
                 courseAdapter.submitList(courses)
 
-                // Verstecke ProgressBar und Ladetext
                 binding.progressBar.visibility = View.GONE
                 binding.errorText.visibility = View.GONE
                 binding.swipeRefresh.isRefreshing = false
 
-                // Zeige die aktuelle View wieder
                 when (currentView) {
                     VIEW_BLOG -> showBlogView()
                     VIEW_PAGES -> showPagesView()
@@ -240,12 +238,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        // Erkenne ob Dark Mode aktiv ist
         val nightMode = resources.configuration.uiMode and
                 android.content.res.Configuration.UI_MODE_NIGHT_MASK
         val isDarkMode = nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        // Setze Textfarbe abhängig vom Theme
         val textColor = if (isDarkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK
 
         for (i in 0 until menu.size()) {
@@ -347,5 +343,157 @@ class MainActivity : AppCompatActivity() {
                 courseAdapter.submitList(filtered)
             }
         }
+    }
+
+    private fun setupFab() {
+        android.util.Log.d("MainActivity", "setupFab() wird aufgerufen")
+
+        // Haupt-FAB Click - WICHTIG: stopPropagation
+        binding.fabMain.setOnClickListener { view ->
+            android.util.Log.d("MainActivity", "Haupt-FAB geklickt!")
+            view.isClickable = false  // Verhindere Doppel-Klicks
+            toggleFab()
+            view.postDelayed({ view.isClickable = true }, 300)
+        }
+
+        // Standort FAB (vorher Timer)
+        binding.fabLocation.setOnClickListener { view ->
+            android.util.Log.d("MainActivity", "Standort FAB geklickt!")
+            view.isClickable = false
+            closeFab()
+            view.postDelayed({
+                openLocation()
+                view.isClickable = true
+            }, 300)
+        }
+
+        // Kompass FAB
+        binding.fabCompass.setOnClickListener { view ->
+            android.util.Log.d("MainActivity", "Kompass FAB geklickt!")
+            view.isClickable = false
+            closeFab()
+            view.postDelayed({
+                openCompass()
+                view.isClickable = true
+            }, 300)
+        }
+
+        // Höhenmesser FAB (vorher GPS)
+        binding.fabAltimeter.setOnClickListener { view ->
+            android.util.Log.d("MainActivity", "Höhenmesser FAB geklickt!")
+            view.isClickable = false
+            closeFab()
+            view.postDelayed({
+                openAltimeter()
+                view.isClickable = true
+            }, 300)
+        }
+
+        android.util.Log.d("MainActivity", "setupFab() abgeschlossen")
+    }
+
+    private fun toggleFab() {
+        if (isFabOpen) {
+            closeFab()
+        } else {
+            openFab()
+        }
+    }
+
+    private fun openFab() {
+        android.util.Log.d("MainActivity", "openFab() aufgerufen")
+        isFabOpen = true
+
+        // Dimme den Hintergrund OHNE Overlay - nutze das SwipeRefresh-Layout
+        binding.swipeRefresh.alpha = 0.3f
+        binding.swipeRefresh.isEnabled = false  // Deaktiviere Interaktion
+
+        showFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
+        showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 50)
+        showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 100)
+
+        binding.fabMain.animate().rotation(45f).setDuration(200).start()
+
+        // Setze Click-Listener auf Root, um FAB zu schließen
+        binding.root.setOnClickListener {
+            android.util.Log.d("MainActivity", "Root geklickt - schließe FAB")
+            closeFab()
+        }
+
+        android.util.Log.d("MainActivity", "openFab() abgeschlossen")
+    }
+
+    private fun closeFab() {
+        isFabOpen = false
+
+        // Stelle Hintergrund wieder her
+        binding.swipeRefresh.alpha = 1f
+        binding.swipeRefresh.isEnabled = true
+
+        // Entferne Root Click-Listener
+        binding.root.setOnClickListener(null)
+
+        hideFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
+        hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 50)
+        hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 100)
+
+        binding.fabMain.animate().rotation(0f).setDuration(200).start()
+    }
+
+    private fun showFabWithAnimation(fab: View, label: View, delay: Long) {
+        fab.visibility = View.VISIBLE
+        label.visibility = View.VISIBLE
+
+        fab.alpha = 0f
+        fab.translationY = 20f
+        label.alpha = 0f
+        label.translationX = 20f
+
+        fab.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setStartDelay(delay)
+            .setDuration(200)
+            .start()
+
+        label.animate()
+            .alpha(1f)
+            .translationX(0f)
+            .setStartDelay(delay)
+            .setDuration(200)
+            .start()
+    }
+
+    private fun hideFabWithAnimation(fab: View, label: View, delay: Long) {
+        fab.animate()
+            .alpha(0f)
+            .translationY(20f)
+            .setStartDelay(delay)
+            .setDuration(200)
+            .withEndAction { fab.visibility = View.GONE }
+            .start()
+
+        label.animate()
+            .alpha(0f)
+            .translationX(20f)
+            .setStartDelay(delay)
+            .setDuration(200)
+            .withEndAction { label.visibility = View.GONE }
+            .start()
+    }
+
+    private fun openCompass() {
+        val intent = Intent(this, CompassActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun openLocation() {
+        val intent = Intent(this, LocationActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun openAltimeter() {
+        val intent = Intent(this, AltimeterActivity::class.java)
+        startActivity(intent)
     }
 }

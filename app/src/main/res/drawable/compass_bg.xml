@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gummierter Außenring -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#1b1f1a" />
+            <stroke
+                android:width="6dp"
+                android:color="#0e120d" />
+            <size
+                android:width="300dp"
+                android:height="300dp" />
+        </shape>
+    </item>
+
+    <!-- Metallischer Schutzring -->
+    <item
+        android:top="10dp"
+        android:bottom="10dp"
+        android:left="10dp"
+        android:right="10dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="150dp"
+                android:startColor="#4a4f46"
+                android:endColor="#1e221c"
+                android:centerX="0.5"
+                android:centerY="0.5" />
+        </shape>
+    </item>
+
+    <!-- Zifferblatt (oliv, matt) -->
+    <item
+        android:top="22dp"
+        android:bottom="22dp"
+        android:left="22dp"
+        android:right="22dp">
+        <shape android:shape="oval">
+            <solid android:color="#2f3a2c" />
+        </shape>
+    </item>
+
+    <!-- Innerer Zierring -->
+    <item
+        android:top="26dp"
+        android:bottom="26dp"
+        android:left="26dp"
+        android:right="26dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="#6e7c66" />
+        </shape>
+    </item>
+
+    <!-- Nordnadel (Signalrot, dominant) -->
+    <item
+        android:top="40dp"
+        android:bottom="150dp"
+        android:left="147dp"
+        android:right="147dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#b71c1c" />
+            <corners
+                android:topLeftRadius="5dp"
+                android:topRightRadius="5dp" />
+        </shape>
+    </item>
+
+    <!-- Südnadel (hellgrau) -->
+    <item
+        android:top="150dp"
+        android:bottom="40dp"
+        android:left="147dp"
+        android:right="147dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#cfd8dc" />
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:bottomRightRadius="5dp" />
+        </shape>
+    </item>
+
+    <!-- Zentrumspin (Stahloptik) -->
+    <item
+        android:top="138dp"
+        android:bottom="138dp"
+        android:left="138dp"
+        android:right="138dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="22dp"
+                android:startColor="#eeeeee"
+                android:endColor="#424242"
+                android:centerX="0.5"
+                android:centerY="0.5" />
+            <stroke
+                android:width="1dp"
+                android:color="#1c1c1c" />
+        </shape>
+    </item>
+
+</layer-list>

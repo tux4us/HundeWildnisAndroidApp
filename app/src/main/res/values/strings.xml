@@ -11,4 +11,7 @@
     <string name="load_more">Weitere Beiträge laden</string>
     <string name="privacy">Datenschutz</string>
     <string name="privacy_url">https://github.com/tux4us/HundeWildnisAndroidApp/blob/master/Datenschutzerklaerung</string>
+    <string name="location">Standort</string>
+    <string name="compass">Kompass</string>
+    <string name="altimeter">Höhenmesser</string>
 </resources>

@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -133,4 +134,139 @@
                 android:visibility="gone" />
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- 2. DANN die Labels (über dem Overlay) -->
+    <TextView
+        android:id="@+id/fabLocationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="247dp"
+        android:background="@android:color/transparent"
+        android:padding="8dp"
+        android:text="@string/location"
+        android:textColor="#8fad6f"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false"
+        android:elevation="16dp"
+        tools:ignore="all" />
+
+    <TextView
+        android:id="@+id/fabCompassLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="187dp"
+        android:background="@android:color/transparent"
+        android:padding="8dp"
+        android:text="@string/compass"
+        android:textColor="#8fad6f"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false"
+        android:elevation="16dp"
+        tools:ignore="all" />
+
+    <TextView
+        android:id="@+id/fabAltimeterLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="127dp"
+        android:background="@android:color/transparent"
+        android:padding="8dp"
+        android:text="@string/altimeter"
+        android:textColor="#8fad6f"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false"
+        android:elevation="16dp"
+        tools:ignore="all" />
+
+
+    <!-- 3. DANN die Mini-FABs (ganz oben) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="240dp"
+        android:contentDescription="@string/location"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#5a7145"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="18dp"
+        app:borderWidth="2dp"
+        app:rippleColor="#8fad6f"
+        tools:ignore="all" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCompass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="180dp"
+        android:contentDescription="@string/compass"
+        android:src="@android:drawable/ic_menu_compass"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#5a7145"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="18dp"
+        app:borderWidth="2dp"
+        app:rippleColor="#8fad6f"
+        tools:ignore="all" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAltimeter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="120dp"
+        android:contentDescription="@string/altimeter"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#5a7145"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="18dp"
+        app:borderWidth="2dp"
+        app:rippleColor="#8fad6f"
+        tools:ignore="all" />
+
+    <!-- 4. Haupt-FAB ganz oben -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="Tools"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="#827717"
+        app:tint="@android:color/white"
+        app:elevation="20dp"
+        tools:ignore="all" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
