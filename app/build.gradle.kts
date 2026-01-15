@@ -11,8 +11,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 10
-        versionName = "2.7"
+        versionCode = 11
+        versionName = "2.8"
     }
 
     buildTypes {
@@ -47,4 +47,7 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.osmdroid.android)
+    // Gson für JSON Serialisierung (Caching)
+    implementation(libs.gson)
 }

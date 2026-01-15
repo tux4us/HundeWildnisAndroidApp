@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pageAdapter: ContentAdapter
     private lateinit var courseAdapter: ContentAdapter
     private val wordPressParser = WordPressParser()
+    private lateinit var contentCache: ContentCache
 
     private var allBlogPosts = listOf<ContentItem>()
     private var allPages = listOf<ContentItem>()
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "HundeWildnis"
 
         binding.toolbar.overflowIcon?.setTint(android.graphics.Color.WHITE)
+
+        contentCache = ContentCache(this)
 
         setupRecyclerViews()
         setupButtons()
@@ -151,6 +154,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadContent() {
+        // Versuche zuerst Cache zu laden
+        val cachedPosts = contentCache.getBlogPosts()
+        val cachedPages = contentCache.getPages()
+        val cachedCourses = contentCache.getCourses()
+
+        if (cachedPosts != null && cachedPages != null && cachedCourses != null) {
+            // Cache ist gültig - zeige sofort
+            allBlogPosts = cachedPosts
+            allPages = cachedPages
+            allCourses = cachedCourses
+
+            blogAdapter.submitList(cachedPosts.take(20))
+            pageAdapter.submitList(cachedPages)
+            courseAdapter.submitList(cachedCourses)
+
+            binding.progressBar.visibility = View.GONE
+            binding.errorText.visibility = View.GONE
+
+            when (currentView) {
+                VIEW_BLOG -> showBlogView()
+                VIEW_PAGES -> showPagesView()
+                VIEW_COURSES -> showCoursesView()
+            }
+
+            Toast.makeText(this,
+                "Inhalte aus Cache geladen",
+                Toast.LENGTH_SHORT).show()
+
+            // Lade im Hintergrund neue Daten
+            loadContentFromNetwork(silent = true)
+            return
+        }
+
+        // Kein Cache - zeige Ladeanimation
         binding.progressBar.visibility = View.VISIBLE
         binding.errorText.text = "Inhalte werden aktualisiert..."
         binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
@@ -161,22 +198,33 @@ class MainActivity : AppCompatActivity() {
         binding.coursesRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
 
+        loadContentFromNetwork(silent = false)
+    }
+
+    private fun loadContentFromNetwork(silent: Boolean) {
         lifecycleScope.launch {
             try {
-                val result: Triple<List<ContentItem>, List<ContentItem>, List<ContentItem>> = withContext(Dispatchers.IO) {
-                    val postsDeferred = async { wordPressParser.parseBlogPosts() }
-                    val pagesDeferred = async { wordPressParser.parsePages() }
-                    val coursesDeferred = async { wordPressParser.parseCourses() }
+                val result: Triple<List<ContentItem>, List<ContentItem>, List<ContentItem>> =
+                    withContext(Dispatchers.IO) {
+                        val postsDeferred = async { wordPressParser.parseBlogPosts() }
+                        val pagesDeferred = async { wordPressParser.parsePages() }
+                        val coursesDeferred = async { wordPressParser.parseCourses() }
 
-                    Triple(
-                        postsDeferred.await(),
-                        pagesDeferred.await(),
-                        coursesDeferred.await()
-                    )
-                }
+                        Triple(
+                            postsDeferred.await(),
+                            pagesDeferred.await(),
+                            coursesDeferred.await()
+                        )
+                    }
+
                 val posts = result.first
                 val pages = result.second
                 val courses = result.third
+
+                // Speichere in Cache
+                contentCache.saveBlogPosts(posts)
+                contentCache.savePages(pages)
+                contentCache.saveCourses(courses)
 
                 allBlogPosts = posts
                 allPages = pages
@@ -186,30 +234,37 @@ class MainActivity : AppCompatActivity() {
                 pageAdapter.submitList(pages)
                 courseAdapter.submitList(courses)
 
-                binding.progressBar.visibility = View.GONE
-                binding.errorText.visibility = View.GONE
-                binding.swipeRefresh.isRefreshing = false
+                if (!silent) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.errorText.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
 
-                when (currentView) {
-                    VIEW_BLOG -> showBlogView()
-                    VIEW_PAGES -> showPagesView()
-                    VIEW_COURSES -> showCoursesView()
+                    when (currentView) {
+                        VIEW_BLOG -> showBlogView()
+                        VIEW_PAGES -> showPagesView()
+                        VIEW_COURSES -> showCoursesView()
+                    }
+
+                    Toast.makeText(this@MainActivity,
+                        "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse geladen",
+                        Toast.LENGTH_SHORT).show()
+                } else {
+                    binding.swipeRefresh.isRefreshing = false
+                    // Stiller Update - kein Toast
                 }
 
-                Toast.makeText(this@MainActivity,
-                    "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse geladen",
-                    Toast.LENGTH_SHORT).show()
-
             } catch (e: Exception) {
-                binding.progressBar.visibility = View.GONE
-                binding.swipeRefresh.isRefreshing = false
-                binding.errorText.text = getString(R.string.error_loading, e.message)
-                binding.errorText.setTextColor(android.graphics.Color.RED)
-                binding.errorText.visibility = View.VISIBLE
+                if (!silent) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.errorText.text = getString(R.string.error_loading, e.message)
+                    binding.errorText.setTextColor(android.graphics.Color.RED)
+                    binding.errorText.visibility = View.VISIBLE
 
-                Toast.makeText(this@MainActivity,
-                    getString(R.string.error_loading, e.message),
-                    Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity,
+                        getString(R.string.error_loading, e.message),
+                        Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -229,6 +284,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshContent() {
+        contentCache.clearCache()
         loadContent()
     }
 
@@ -279,6 +335,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_refresh -> {
+                contentCache.clearCache()
                 refreshContent()
                 true
             }

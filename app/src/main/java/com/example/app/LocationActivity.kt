@@ -8,14 +8,19 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.hundewildnis.app.databinding.ActivityLocationBinding
-import java.util.Locale
 import androidx.core.view.WindowCompat
+import com.hundewildnis.app.databinding.ActivityLocationBinding
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.Marker
+import java.util.Locale
 
 class LocationActivity : AppCompatActivity(), LocationListener {
 
@@ -23,18 +28,25 @@ class LocationActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
     private var isRequestingUpdates = false
+    private var mapMarker: Marker? = null
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
-        private const val MIN_TIME_BETWEEN_UPDATES = 5000L // 5 Sekunden
-        private const val MIN_DISTANCE_CHANGE = 10f // 10 Meter
+        private const val MIN_TIME_BETWEEN_UPDATES = 5000L
+        private const val MIN_DISTANCE_CHANGE = 10f
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Edge-to-Edge aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // OSMDroid Konfiguration
+        Configuration.getInstance().load(
+            applicationContext,
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        )
+        Configuration.getInstance().userAgentValue = packageName
 
         binding = ActivityLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -47,6 +59,8 @@ class LocationActivity : AppCompatActivity(), LocationListener {
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
+        setupMap()
+
         binding.shareButton.setOnClickListener {
             shareLocation()
         }
@@ -54,9 +68,25 @@ class LocationActivity : AppCompatActivity(), LocationListener {
         checkLocationPermission()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.onResume()
+    }
+
     override fun onPause() {
         super.onPause()
+        binding.mapView.onPause()
         stopLocationUpdates()
+    }
+
+    private fun setupMap() {
+        binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
+        binding.mapView.setMultiTouchControls(true)
+        binding.mapView.controller.setZoom(15.0)
+
+        // Dunkles Theme für die Karte (optional)
+        binding.mapView.overlayManager.tilesOverlay.loadingBackgroundColor =
+            android.graphics.Color.parseColor("#1a1a1a")
     }
 
     private fun checkLocationPermission() {
@@ -116,7 +146,6 @@ class LocationActivity : AppCompatActivity(), LocationListener {
         binding.progressBar.visibility = View.VISIBLE
         binding.statusText.text = "Standort wird ermittelt..."
 
-        // Prüfe verfügbare Provider
         val providers = locationManager.allProviders
         val gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
@@ -132,7 +161,6 @@ class LocationActivity : AppCompatActivity(), LocationListener {
             return
         }
 
-        // Versuche zuerst die letzte bekannte Position zu holen
         var bestLocation: Location? = null
 
         if (gpsEnabled) {
@@ -151,13 +179,12 @@ class LocationActivity : AppCompatActivity(), LocationListener {
         if (bestLocation != null && isLocationRecent(bestLocation)) {
             updateLocationUI(bestLocation)
         } else {
-            // Fordere neue Position an
             requestLocationUpdates()
         }
     }
 
     private fun isLocationRecent(location: Location): Boolean {
-        val maxAge = 60000L // 1 Minute
+        val maxAge = 60000L
         return System.currentTimeMillis() - location.time < maxAge
     }
 
@@ -172,7 +199,6 @@ class LocationActivity : AppCompatActivity(), LocationListener {
 
         isRequestingUpdates = true
 
-        // Nutze GPS wenn verfügbar (genauer)
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
@@ -182,7 +208,6 @@ class LocationActivity : AppCompatActivity(), LocationListener {
             )
         }
 
-        // Nutze Netzwerk als Fallback (schneller)
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
@@ -204,7 +229,6 @@ class LocationActivity : AppCompatActivity(), LocationListener {
 
     override fun onLocationChanged(location: Location) {
         updateLocationUI(location)
-        // Stoppe Updates nach erfolgreicher Positionsbestimmung
         stopLocationUpdates()
     }
 
@@ -217,9 +241,7 @@ class LocationActivity : AppCompatActivity(), LocationListener {
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-        // Deprecated, aber muss für Kompatibilität implementiert werden
-    }
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
     private fun updateLocationUI(location: Location) {
         currentLocation = location
@@ -246,6 +268,41 @@ class LocationActivity : AppCompatActivity(), LocationListener {
         )
 
         binding.shareButton.isEnabled = true
+
+        // Karte aktualisieren
+        updateMap(location)
+    }
+
+    private fun updateMap(location: Location) {
+        val geoPoint = GeoPoint(location.latitude, location.longitude)
+
+        // Zeige Karte
+        binding.mapCard.visibility = View.VISIBLE
+
+        // Zentriere Karte auf Position
+        binding.mapView.controller.setCenter(geoPoint)
+        binding.mapView.controller.setZoom(16.0)
+
+        // Entferne alten Marker falls vorhanden
+        mapMarker?.let {
+            binding.mapView.overlays.remove(it)
+        }
+
+        // Füge neuen Marker hinzu
+        mapMarker = Marker(binding.mapView).apply {
+            position = geoPoint
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            title = "Dein Standort"
+            snippet = String.format(
+                Locale.GERMAN,
+                "%.6f, %.6f",
+                location.latitude,
+                location.longitude
+            )
+        }
+
+        binding.mapView.overlays.add(mapMarker)
+        binding.mapView.invalidate()
     }
 
     private fun shareLocation() {
@@ -253,10 +310,8 @@ class LocationActivity : AppCompatActivity(), LocationListener {
             val latitude = location.latitude
             val longitude = location.longitude
 
-            // Geo URI für verschiedene Apps
             val geoUri = "geo:$latitude,$longitude?q=$latitude,$longitude(Mein Standort)"
 
-            // Text für Teilen
             val shareText = """
                 Mein Standort:
                 
@@ -266,17 +321,14 @@ class LocationActivity : AppCompatActivity(), LocationListener {
                 OpenStreetMap: https://www.openstreetmap.org/?mlat=$latitude&mlon=$longitude&zoom=15
             """.trimIndent()
 
-            // Share Intent erstellen
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_SUBJECT, "Mein Standort")
             }
 
-            // Geo Intent für Navi-Apps
             val geoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
 
-            // Chooser erstellen
             val chooserIntent = Intent.createChooser(shareIntent, "Standort teilen über...")
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(geoIntent))
 

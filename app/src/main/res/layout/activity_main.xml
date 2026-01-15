@@ -108,11 +108,14 @@
                     android:id="@+id/btnLoadMore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:padding="12dp"
-                    android:text="@string/load_more"
+                    android:layout_margin="16dp"
+                    android:layout_marginBottom="80dp"
+                    android:backgroundTint="#2d5016"
+                    android:text="Weitere Beiträge laden"
                     android:textColor="#FFFFFF"
-                    android:backgroundTint="#2d5016" />
+                    android:visibility="visible"
+                    app:layout_anchor="@id/blogRecyclerView"
+                    app:layout_anchorGravity="bottom" />
             </LinearLayout>
 
             <ProgressBar
@@ -205,11 +208,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="240dp"
         android:contentDescription="@string/location"
-        android:src="@android:drawable/ic_menu_mylocation"
+        android:src="@android:drawable/ic_dialog_map"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#5a7145"
+        app:backgroundTint="#2d5016"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -229,7 +232,7 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#5a7145"
+        app:backgroundTint="#2d5016"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -245,11 +248,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="120dp"
         android:contentDescription="@string/altimeter"
-        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:src="@android:drawable/stat_sys_upload"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#5a7145"
+        app:backgroundTint="#2d5016"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -263,12 +266,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="80dp"
         android:contentDescription="Tools"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#827717"
+        android:src="@android:drawable/btn_star"
+        app:backgroundTint="#2d5016"
         app:tint="@android:color/white"
         app:elevation="20dp"
         tools:ignore="all" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

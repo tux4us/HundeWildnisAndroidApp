@@ -4,6 +4,7 @@ androidxCoreKtx = "1.13.1"
 appcompat = "1.7.1"
 constraintlayout = "2.2.1"
 coreKtxVersion = "1.12.0"
+gson = "2.13.2"
 jsoup = "1.22.1"
 kotlin = "2.0.21"
 coreKtx = "1.17.0"
@@ -15,6 +16,7 @@ activityCompose = "1.12.2"
 composeBom = "2024.09.00"
 lifecycleRuntimeKtxVersion = "2.7.0"
 material = "1.13.0"
+osmdroidAndroid = "6.1.20"
 playServicesLocation = "21.3.0"
 recyclerview = "1.4.0"
 swiperefreshlayout = "1.2.0"
@@ -29,6 +31,7 @@ androidx-core-ktx-v1131 = { module = "androidx.core:core-ktx", version.ref = "an
 androidx-lifecycle-runtime-ktx-v270 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -44,6 +47,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
