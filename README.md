@@ -136,29 +136,28 @@ Made with 🐕 and 🌲
 
 ## 🖼️ Screenshots
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221558_HundeWildnis" src="https://github.com/user-attachments/assets/bbd5ced7-b174-4fb5-84c8-24ed2bd822b9" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152633_HundeWildnis" src="https://github.com/user-attachments/assets/7e08cff8-87af-440c-943c-4dcefb1ac0d6" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221750_HundeWildnis" src="https://github.com/user-attachments/assets/bb7ab4b8-b1bb-4376-8928-d31e13f91a2f" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152648_HundeWildnis" src="https://github.com/user-attachments/assets/72b2fe5b-ec3b-4ca4-8a5a-756e17f460b3" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221802_HundeWildnis" src="https://github.com/user-attachments/assets/0c1e1ad6-baf3-42d4-b136-2f3241596275" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152702_HundeWildnis" src="https://github.com/user-attachments/assets/acfd3d3d-b6ec-4fdc-9e6b-094a3c7cb4d6" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221812_HundeWildnis" src="https://github.com/user-attachments/assets/e36a2b6e-b185-4ba0-9dab-bf6bae8582a8" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152712_HundeWildnis" src="https://github.com/user-attachments/assets/c9042d4f-d279-42f1-814b-d097159f9e37" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221827_HundeWildnis" src="https://github.com/user-attachments/assets/beeac958-b4b2-4ab1-a46b-fe38a412de3f" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152824_HundeWildnis" src="https://github.com/user-attachments/assets/14d0737d-527f-4a78-affd-8fbd67e61a99" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221916_HundeWildnis" src="https://github.com/user-attachments/assets/d827de2f-8b26-4441-bd42-852af6902e87" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152856_HundeWildnis" src="https://github.com/user-attachments/assets/e4149eed-5568-4495-af85-ec3c98a8dd24" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-221930_HundeWildnis" src="https://github.com/user-attachments/assets/8cae2bc6-9dc1-4349-81c9-db4c0547215f" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152906_HundeWildnis" src="https://github.com/user-attachments/assets/6d8c5ae9-eb88-4341-bc6f-222e7891a0c0" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-222300_HundeWildnis" src="https://github.com/user-attachments/assets/d26929f2-904b-4018-8458-3e2f21b984b1" />
+<img width="1080" height="2400" alt="Screenshot_20260116-152920_HundeWildnis" src="https://github.com/user-attachments/assets/a4a9382f-6be7-4e74-a50d-0cd96f7469ce" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-222318_HundeWildnis" src="https://github.com/user-attachments/assets/d3352961-883b-4d7b-9d21-42a140bbbfc5" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-222353_HundeWildnis" src="https://github.com/user-attachments/assets/3a396fa6-9d97-4d8f-b38a-7d589bfd162e" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-222402_HundeWildnis" src="https://github.com/user-attachments/assets/782adc7e-4255-408c-8bf9-8a26f9da1c3c" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-222413_HundeWildnis" src="https://github.com/user-attachments/assets/e0529fcd-484f-415d-ac43-ecbc7015f22f" />
 
-<img width="1080" height="2400" alt="Screenshot_20260114-222427_HundeWildnis" src="https://github.com/user-attachments/assets/adaacfba-d9c5-47bf-99ec-350d0ac8b9e5" />
+
+
+
+
 
