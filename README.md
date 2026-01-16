@@ -19,7 +19,7 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 - 🧭 Integrierter Kompass - unterwegs immer die Orientierung behalten
 - 📐 Integrierter Höhenmesser - immer wissen wie hoch man unterwegs ist
 - 🌐 Standortbestimmung per GPS und der Möglichkeit den Standort unmittelbar über "Teilen" an Apps, Navigationsanwendungen und andere Empfänger zu übermitteln
-- ☀️🌧️ standortgenaue aktuelle Wettersituation mit Vorhersage
+- ☀️🌧️ standortgenaue aktuelle Wettersituation mit 
    24h Vorhersage:
    ✅ Temperatur alle 3 Stunden
    ✅ Wettersymbol (Emoji)
