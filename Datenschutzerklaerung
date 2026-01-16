@@ -1,66 +1,265 @@
-# Datenschutzerklärung HundeWildnis App
+Datenschutzerklärung HundeWildnis App
 
-**Stand: Januar 2026**
+Stand: Januar 2026 (zuletzt aktualisiert: Januar 2026)
 
-## 1. Verantwortlicher
+1. Verantwortlicher
 
-HundeWildnisSchule 
+HundeWildnisSchule
+
 Manuela Ulbricht und Peter Jörg Ulbricht GbR
-Steuer-Nr.: Finanzamt Pirna  210/155/00902
+
+Steuer-Nr.: Finanzamt Pirna 210/155/00902
+
 Ust-IdNr.: DE458205581
-Verantwortlicher für Entwicklung und Datenschutz: Peter Jörg Ulbricht
-tux4us@online.de
 
-## 2. Datenverarbeitung in der App
+E-Mail: tux4us@online.de
 
-### 2.1 Keine Erhebung personenbezogener Daten
-Die HundeWildnis App erhebt, speichert oder verarbeitet **keine personenbezogenen Daten** der Nutzer.
+2. Datenverarbeitung in der App
 
-### 2.2 Keine Tracking- oder Analyse-Dienste
-Die App verwendet:
-- ❌ Keine Google Analytics
-- ❌ Keine Tracking-Tools
-- ❌ Keine Werbe-SDKs
-- ❌ Keine Google Play Services
-- ❌ Keine Cookies
+2.1 Keine Erhebung personenbezogener Daten
 
-### 2.3 Internetverbindung
-Die App benötigt eine Internetverbindung, um Inhalte von **wildnislehrer.com** abzurufen. Dabei werden folgende Daten an den Server von wildnislehrer.com übertragen:
-- IP-Adresse (technisch notwendig für die Verbindung)
-- Angefragte URL
-- Datum und Uhrzeit der Anfrage
-- Verwendetes Betriebssystem (Android-Version)
+Die HundeWildnis App erhebt, speichert oder verarbeitet keine personenbezogenen Daten der Nutzer.
 
-Diese Daten werden ausschließlich zur Bereitstellung der Inhalte verwendet und nicht von der App selbst gespeichert.
+2.2 Keine Tracking- oder Analyse-Dienste
 
-### 2.4 Lokale Datenspeicherung
-Die App speichert ausschließlich:
-- **Theme-Einstellung** (Hell/Dunkel-Modus) lokal auf deinem Gerät
-- **Zwischengespeicherte Inhalte** zur Verbesserung der Ladezeiten
+Die App verwendet keine der folgenden Technologien:
 
-Diese Daten verlassen niemals dein Gerät und können jederzeit durch Deinstallation der App gelöscht werden.
+Was die App NICHT macht:
 
-## 3. Externe Inhalte
+❌ Keine WebView mit Cookie-Speicherung für Login/Session
 
-Die App zeigt Inhalte von **wildnislehrer.com** an. Für diese Inhalte gilt die Datenschutzerklärung von wildnislehrer.com:  
-👉 [https://wildnislehrer.com/datenschutzerklaerung/](https://wildnislehrer.com/datenschutzerklaerung/)
+❌ Keine Cookie-basierte Authentifizierung
 
-## 4. Keine Weitergabe von Daten
+❌ Keine Tracking-Cookies
 
-Es werden **keine Daten** an Dritte weitergegeben, verkauft oder anderweitig übermittelt.
+❌ Keine Third-Party Cookies
 
-## 5. Deine Rechte
+❌ Google Analytics
 
-Da die App keine personenbezogenen Daten erhebt oder speichert, entfallen die üblichen Auskunfts-, Löschungs- und Berichtigungsrechte.
+❌ Tracking-Tools / Analyse-SDKs
 
-Bei Fragen zur Datenschutzerklärung kannst du dich jederzeit an mich wenden:  
+❌ Werbe-SDKs
+
+❌ Google Play Services
+
+❌ Cookies speichern
+
+Was die App macht:
+
+✅ WebView nur für Anzeige (ContentActivity zeigt WordPress-Inhalte)
+
+✅ Lokaler Cache (SharedPreferences für Theme, ContentCache für Beiträge)
+
+✅ Keine Session-Verwaltung mit Cookies
+
+2.3 Internetverbindung
+
+Die App benötigt eine Internetverbindung, um Inhalte von wildnislehrer.com abzurufen. Dabei werden technisch notwendig folgende Daten an den Server von wildnislehrer.com übertragen:
+
+IP-Adresse (für die Verbindung erforderlich)
+
+Angefragte URL
+
+Datum und Uhrzeit der Anfrage
+
+Verwendetes Betriebssystem (Android-Version)
+
+Diese Daten werden ausschließlich zur Bereitstellung der Inhalte verwendet und nicht von der App selbst gespeichert oder weiterverarbeitet.
+
+2.4 Lokale Datenspeicherung
+
+Die App speichert ausschließlich lokal auf deinem Gerät:
+
+Theme-Einstellung (Hell-/Dunkel-Modus)
+
+Zwischengespeicherte Inhalte (Cache zur Verbesserung der Ladezeiten)
+
+Diese Daten verlassen niemals dein Gerät und können jederzeit durch Deinstallation der App vollständig gelöscht werden.
+
+3. Externe Inhalte
+
+Die App zeigt Inhalte von wildnislehrer.com an. Für diese externen Inhalte gilt die separate Datenschutzerklärung von wildnislehrer.com:
+
+👉 https://wildnislehrer.com/datenschutzerklaerung/
+
+Weiterhin erhebt die App bei aktiver Nutzung der Anzeige von Standort und Wetterdaten folgende Daten:
+
+→ ✅ Standort → Ungefährer Standort
+
+Details:
+
+Datentyp: Standort
+
+Art: Ungefährer Standort (latitude/longitude)
+
+Erfasst oder geteilt: ✅ Geteilt (an Open-Meteo API)
+
+Ist die Erhebung optional? → JA (Nutzer muss Berechtigung erteilen)
+
+Zweck: App-Funktionalität (Wetterdaten abrufen)
+
+Werden alle Nutzerdaten bei der Übertragung verschlüsselt?
+
+→ ✅ JA
+
+Begründung:
+
+Open-Meteo API verwendet HTTPS (verschlüsselte Verbindung)
+
+URL: https://api.open-meteo.com/...
+
+Alle Daten werden über TLS/SSL verschlüsselt übertragen
+
+Können Nutzer die Löschung dieser Daten beantragen?
+
+→ ✅ Nein, Daten können nicht gelöscht werden
+
+Begründung:
+
+Open-Meteo speichert keine Nutzerdaten (nur anonyme API-Logs)
+
+Die API-Anfragen sind anonym
+
+Es werden keine personenbezogenen Daten gespeichert
+
+Technische Daten dazu im Detail:
+
+Datentyp: Standort
+├─ Ungefährer Standort: ✅ JA
+└─ Genauer Standort: ❌ NEIN
+
+Wird dieser Datentyp erfasst oder geteilt?
+└─ ✅ Geteilt
+
+Ist die Datenerhebung vorübergehend?
+└─ ✅ JA (Daten werden nicht gespeichert)
+
+Ist die Datenerhebung erforderlich oder optional?
+└─ ✅ Optional (Nutzer kann Berechtigung verweigern)
+
+Warum werden diese Nutzerdaten erhoben?
+└─ ✅ App-Funktionalität
+└─ Beschreibung: "Standortdaten werden verwendet, um aktuelle Wetterdaten für den Standort des Nutzers abzurufen"
+
+Werden alle Nutzerdaten bei der Übertragung verschlüsselt?
+└─ ✅ JA
+
+Können Nutzer die Löschung dieser Daten beantragen?
+└─ ❌ NEIN
+Grund: Die übertragenen Daten sind anonym und werden nicht dauerhaft gespeichert.
+Es gibt keine personenbezogenen Daten, die gelöscht werden müssten.
+
+Standortdaten und Wetterdienst
+
+Die App verwendet Ihren Standort, um aktuelle Wetterdaten anzuzeigen.
+Dabei werden folgende Daten verarbeitet:
+
+Übertragung: Ihre Standortkoordinaten (Breiten- und Längengrad) werden
+verschlüsselt (HTTPS) an den Wetterdienst Open-Meteo übertragen.
+
+Zweck: Abruf von Wetterdaten für Ihren aktuellen Standort.
+
+Speicherung: Open-Meteo speichert keine personenbezogenen Daten.
+Die Anfragen sind anonym.
+
+Freiwilligkeit: Die Standortfreigabe ist optional. Sie können die
+Berechtigung jederzeit in den App-Einstellungen widerrufen.
+
+Anbieter: Open-Meteo (https://open-meteo.com)
+Datenschutz: https://open-meteo.com/en/terms
+
+Ihre Standortdaten werden ausschließlich für die Wetterfunktion verwendet
+und nicht von uns gespeichert oder an andere Dienste weitergegeben.
+
+Zusammenfassung:
+
+FrageAntwortWerden Nutzerdaten erhoben/geteilt?✅ JAWelcher Datentyp?Ungefährer StandortErfasst oder geteilt?Geteilt (an Open-Meteo)Verschlüsselt übertragen?✅ JA (HTTPS)Optional?✅ JAZweck?App-Funktionalität (Wetter)Löschung möglich?❌ Nein (anonym, nicht gespeichert)
+
+Verwendete Drittanbieter-Dienste:
+
+OpenStreetMap (Kartendarstellung)
+
+Übertragene Daten: IP-Adresse, Kartenbereich (ungefährer Standort)
+
+Zweck: Anzeige von Kartenkacheln
+
+Datenschutz: https://osmfoundation.org/wiki/Privacy_Policy
+
+Open-Meteo (Wetterdaten)
+
+Übertragene Daten: Standortkoordinaten
+
+Zweck: Abruf aktueller Wetterdaten
+
+Datenschutz: https://open-meteo.com/en/terms
+
+RainViewer (Niederschlagsradar)
+
+Übertragene Daten: IP-Adresse, Kartenbereich
+
+Zweck: Anzeige von Niederschlagsradar
+
+Datenschutz: https://www.rainviewer.com/privacy-policy.html
+
+Alle Übertragungen erfolgen verschlüsselt über HTTPS.
+
+Wichtig:
+
+✅ Open-Meteo ist DSGVO-konform
+
+✅ Keine Registrierung/API-Key nötig = anonym
+
+✅ HTTPS = verschlüsselt
+
+✅ Keine dauerhafte Speicherung
+
+4. Datenschutzhinweise zur Nutzung der Webseite mittels auf Wunsch eingerichteten Nutzerkontos über die App HundeWildnis
+
+Diese Hinweise beziehen sich auf die Nutzung der Webseite https://www.wildnislehrer.com über die App HundeWildnis, entwickelt von HundeWildnisSchule Ulbricht, Entwickler Herr Peter Jörg Ulbricht. 
+
+Wir legen großen Wert auf den Schutz Ihrer personenbezogenen Daten. Im Folgenden erklären wir Ihnen, wie Sie die Löschung Ihrer Nutzerdaten anfordern können, welche Daten betroffen sind und welche Konsequenzen damit verbunden sind.
+
+Falls Sie ein Nutzerkonto auf unserer Webseite erstellt bzw. dessen Einrichtung veranlasst haben, was außerhalb der App erfolgt, können Sie über die E-Mail-Adresse tux4us@online.de die Löschung Ihrer E-Mail-Adresse und damit Ihres Nutzerzugangs verlangen. Bitte beachten Sie, dass mit der Löschung Ihres Nutzerzugangs die Möglichkeit entfällt, auf geschützte Inhalte zuzugreifen, die ein aktives Nutzerkonto voraussetzen.
+
+Schritte zur Anforderung der Löschung von Nutzerdaten
+
+Um die Löschung Ihrer Daten zu beantragen, folgen Sie bitte diesen Schritten:
+
+Erstellen Sie eine E-Mail: Schreiben Sie eine E-Mail mit der klaren Bitte um Löschung Ihrer Nutzerdaten (z. B. "Ich bitte um Löschung meiner E-Mail-Adresse und meines Nutzerzugangs").
+
+Absenderadresse: Die E-Mail muss von der identischen E-Mail-Adresse gesendet werden, unter der Ihr Nutzerkonto eingerichtet wurde. Dies dient der Verifizierung Ihrer Identität.
+
+Empfänger: Senden Sie die E-Mail an tux4us@online.de.
+
+Bestätigung: Nach Erhalt Ihrer Anfrage werden wir diese prüfen und die Löschung innerhalb einer angemessenen Frist (in der Regel innerhalb von 30 Tagen) durchführen. Sie erhalten eine Bestätigung per E-Mail.
+
+Art der zu löschenden oder aufzubewahrenden Daten
+
+Zu löschende Daten: Bei einer Löschanfrage werden Ihre E-Mail-Adresse als Nutzer-ID und das zugehörige Zugangspasswort vollständig gelöscht. Dies umfasst alle damit verbundenen personenbezogenen Daten, die für den Zugang zur Webseite erforderlich sind.
+
+Aufzubewahrende Daten: Während der aktiven Nutzung Ihres Kontos werden die E-Mail-Adresse und das Passwort ausschließlich für die Dauer der Nutzung des Nutzerkontos aufbewahrt (z. B. für Authentifizierungszwecke). Es gibt keine zusätzliche Aufbewahrungsdauer über die Löschung hinaus, es sei denn, gesetzliche Vorgaben (z. B. steuerrechtliche Aufbewahrungspflichten) erfordern eine vorübergehende Speicherung der Daten. In solchen Fällen beträgt die Aufbewahrungsdauer maximal die gesetzlich vorgeschriebene Zeit (z. B. 10 Jahre für Buchhaltungsdaten, falls zutreffend), und die Daten werden nicht mehr mit Ihrem Konto verknüpft.
+
+Falls Sie weitere Fragen haben, kontaktieren Sie uns gerne über die angegebene E-Mail-Adresse. Weitere Details zu unserem Datenschutz finden Sie in unserer Datenschutzerklärung.
+
+5. Deine Rechte
+
+Da die App selbst keine personenbezogenen Daten erhebt oder speichert, entfallen die üblichen Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung usw. im Sinne der DSGVO.
+
+Bezüglich der Erhebung personenbezogener Daten über die Webseite www.wildnislehrer.com außer halb der App geben wir in obiger Datenschutzerklärung zur Webseite ausführlich Auskunft.
+
+Bei Fragen zur Datenschutzerklärung oder zur App darfst du dich jederzeit gerne melden:
+
 📧 tux4us@online.de
 
-## 6. Änderungen dieser Datenschutzerklärung
+6. Änderungen dieser Datenschutzerklärung
 
-Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die aktuelle Version findest du stets hier:  
-👉 https://wildnislehrer.com/impressum/datenschutzerklaerung/
+Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du stets hier:
 
+👉 HundeWildnisApp
+
+Zusammenfassung
+
+Die HundeWildnis App ist datenschutzfreundlich und sammelt keine persönlichen Daten. 🐕✨
 ---
 
 **Zusammenfassung:** Die HundeWildnis App ist datenschutzfreundlich und sammelt keine persönlichen Daten. 🐕✨
