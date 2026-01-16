@@ -59,6 +59,9 @@ class AltimeterActivity : AppCompatActivity(), SensorEventListener, LocationList
             setDisplayHomeAsUpEnabled(true)
         }
 
+        // WICHTIG: Navigation Icon weiß machen
+        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         // Sensor Manager für Barometer

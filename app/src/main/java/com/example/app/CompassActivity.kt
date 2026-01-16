@@ -43,6 +43,8 @@ class CompassActivity : AppCompatActivity(), SensorEventListener {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+
         // Sensor Manager initialisieren
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)

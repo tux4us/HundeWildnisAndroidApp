@@ -109,13 +109,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:layout_marginBottom="80dp"
+                    android:layout_marginBottom="32dp"
+                    android:paddingBottom="24dp"
                     android:backgroundTint="#2d5016"
                     android:text="Weitere Beiträge laden"
                     android:textColor="#FFFFFF"
-                    android:visibility="visible"
-                    app:layout_anchor="@id/blogRecyclerView"
-                    app:layout_anchorGravity="bottom" />
+                    android:visibility="visible" />
             </LinearLayout>
 
             <ProgressBar
@@ -140,20 +139,20 @@
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- 2. DANN die Labels (über dem Overlay) -->
+    <!-- Labels (von oben nach unten) -->
     <TextView
         android:id="@+id/fabLocationLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="72dp"
-        android:layout_marginBottom="247dp"
-        android:background="@android:color/transparent"
-        android:padding="8dp"
+        android:layout_marginBottom="320dp"
+        android:background="@drawable/label_background"
+        android:padding="12dp"
         android:text="@string/location"
-        android:textColor="#8fad6f"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:visibility="gone"
         android:clickable="false"
         android:focusable="false"
@@ -166,13 +165,32 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="72dp"
-        android:layout_marginBottom="187dp"
-        android:background="@android:color/transparent"
-        android:padding="8dp"
+        android:layout_marginBottom="260dp"
+        android:background="@drawable/label_background"
+        android:padding="12dp"
         android:text="@string/compass"
-        android:textColor="#8fad6f"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false"
+        android:elevation="16dp"
+        tools:ignore="all" />
+
+    <TextView
+        android:id="@+id/fabWeatherLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="200dp"
+        android:background="@drawable/label_background"
+        android:padding="12dp"
+        android:text="@string/weather"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="15sp"
         android:visibility="gone"
         android:clickable="false"
         android:focusable="false"
@@ -185,40 +203,40 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="72dp"
-        android:layout_marginBottom="127dp"
-        android:background="@android:color/transparent"
-        android:padding="8dp"
+        android:layout_marginBottom="140dp"
+        android:background="@drawable/label_background"
+        android:padding="12dp"
         android:text="@string/altimeter"
-        android:textColor="#8fad6f"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:visibility="gone"
         android:clickable="false"
         android:focusable="false"
         android:elevation="16dp"
         tools:ignore="all" />
 
-
-    <!-- 3. DANN die Mini-FABs (ganz oben) -->
+    <!-- Mini-FABs (von oben nach unten) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="240dp"
+        android:layout_marginBottom="320dp"
         android:contentDescription="@string/location"
         android:src="@android:drawable/ic_dialog_map"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#2d5016"
+        app:backgroundTint="#003b00"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
         app:borderWidth="2dp"
-        app:rippleColor="#8fad6f"
-        tools:ignore="all" />
+        app:rippleColor="#003b00"
+        tools:ignore="all"
+        android:translationZ="20dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCompass"
@@ -226,19 +244,41 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="180dp"
+        android:layout_marginBottom="260dp"
         android:contentDescription="@string/compass"
         android:src="@android:drawable/ic_menu_compass"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#2d5016"
+        app:backgroundTint="#003b00"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
         app:borderWidth="2dp"
-        app:rippleColor="#8fad6f"
-        tools:ignore="all" />
+        app:rippleColor="#003b00"
+        tools:ignore="all"
+        android:translationZ="20dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="200dp"
+        android:contentDescription="@string/weather"
+        android:src="@android:drawable/arrow_down_float"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#003b00"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="18dp"
+        app:borderWidth="2dp"
+        app:rippleColor="#003b00"
+        tools:ignore="all"
+        android:translationZ="20dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAltimeter"
@@ -246,33 +286,35 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="140dp"
         android:contentDescription="@string/altimeter"
         android:src="@android:drawable/stat_sys_upload"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#2d5016"
+        app:backgroundTint="#003b00"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
         app:borderWidth="2dp"
-        app:rippleColor="#8fad6f"
-        tools:ignore="all" />
+        app:rippleColor="#003b00"
+        tools:ignore="all"
+        android:translationZ="20dp"/>
 
-    <!-- 4. Haupt-FAB ganz oben -->
+    <!-- Haupt-FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="80dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="80dp"
         android:contentDescription="Tools"
-        android:src="@android:drawable/btn_star"
+        android:src="@drawable/center"
         app:backgroundTint="#2d5016"
         app:tint="@android:color/white"
         app:elevation="20dp"
-        tools:ignore="all" />
+        tools:ignore="all"
+        android:translationZ="22dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

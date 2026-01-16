@@ -28,6 +28,9 @@ class ContentActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+
         supportActionBar?.title = title
 
         setupWebView()

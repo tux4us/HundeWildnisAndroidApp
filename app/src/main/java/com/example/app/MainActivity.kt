@@ -18,6 +18,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.view.WindowCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -44,12 +46,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // WICHTIG: Theme ZUERST laden!
+        loadThemePreference()
+
         // Edge-to-Edge aktivieren (für alle Android-Versionen)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        loadThemePreference()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Insets für Navigationsleiste berücksichtigen
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars =
+                insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, 0, 0, systemBars.bottom)
+            insets
+        }
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
@@ -71,10 +83,39 @@ class MainActivity : AppCompatActivity() {
     private fun loadThemePreference() {
         val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         val isDark = prefs.getBoolean("dark_theme", true)
+
+        android.util.Log.d("MainActivity", "loadThemePreference: isDark = $isDark")
+
+        // Setze lokales Theme (nur für diese Activity)
+        delegate.localNightMode = if (isDark) {
+            AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            AppCompatDelegate.MODE_NIGHT_NO
+        }
+    }
+
+    private fun toggleTheme() {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val currentDark = prefs.getBoolean("dark_theme", true)
+        val newDark = !currentDark
+
+        android.util.Log.d("MainActivity", "toggleTheme: currentDark = $currentDark, newDark = $newDark")
+
+        // Speichere SOFORT
+        prefs.edit()
+            .putBoolean("dark_theme", newDark)
+            .commit()
+
+        android.util.Log.d("MainActivity", "toggleTheme: saved value = ${prefs.getBoolean("dark_theme", true)}")
+
+        // Setze Theme
         AppCompatDelegate.setDefaultNightMode(
-            if (isDark) AppCompatDelegate.MODE_NIGHT_YES
+            if (newDark) AppCompatDelegate.MODE_NIGHT_YES
             else AppCompatDelegate.MODE_NIGHT_NO
         )
+
+        // Starte Activity neu
+        recreate()
     }
 
     private fun setupRecyclerViews() {
@@ -340,6 +381,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_theme -> {
+                android.util.Log.d("MainActivity", "Theme button clicked!")
                 toggleTheme()
                 true
             }
@@ -357,18 +399,6 @@ class MainActivity : AppCompatActivity() {
             putExtra("title", "Datenschutzerklärung")
         }
         startActivity(intent)
-    }
-
-    private fun toggleTheme() {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val currentDark = prefs.getBoolean("dark_theme", false)
-        prefs.edit().putBoolean("dark_theme", !currentDark).apply()
-
-        AppCompatDelegate.setDefaultNightMode(
-            if (!currentDark) AppCompatDelegate.MODE_NIGHT_YES
-            else AppCompatDelegate.MODE_NIGHT_NO
-        )
-        recreate()
     }
 
     private fun filterContent(query: String) {
@@ -416,6 +446,17 @@ class MainActivity : AppCompatActivity() {
             view.isClickable = false  // Verhindere Doppel-Klicks
             toggleFab()
             view.postDelayed({ view.isClickable = true }, 300)
+        }
+
+        // NEUER Wetter FAB
+        binding.fabWeather.setOnClickListener { view ->
+            android.util.Log.d("MainActivity", "Wetter FAB geklickt!")
+            view.isClickable = false
+            closeFab()
+            view.postDelayed({
+                openWeather()
+                view.isClickable = true
+            }, 300)
         }
 
         // Standort FAB (vorher Timer)
@@ -466,19 +507,20 @@ class MainActivity : AppCompatActivity() {
         android.util.Log.d("MainActivity", "openFab() aufgerufen")
         isFabOpen = true
 
-        // Dimme den Hintergrund OHNE Overlay - nutze das SwipeRefresh-Layout
+        // KEIN Overlay mehr - nur Hintergrund dimmen
         binding.swipeRefresh.alpha = 0.3f
-        binding.swipeRefresh.isEnabled = false  // Deaktiviere Interaktion
+        binding.swipeRefresh.isEnabled = false
 
+        // Reihenfolge von oben nach unten (passend zur XML)
         showFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
         showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 50)
-        showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 100)
+        showFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 100)
+        showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 150)
 
         binding.fabMain.animate().rotation(45f).setDuration(200).start()
 
-        // Setze Click-Listener auf Root, um FAB zu schließen
+        // Root-Klick schließt FAB (aber nur außerhalb der FABs)
         binding.root.setOnClickListener {
-            android.util.Log.d("MainActivity", "Root geklickt - schließe FAB")
             closeFab()
         }
 
@@ -492,12 +534,14 @@ class MainActivity : AppCompatActivity() {
         binding.swipeRefresh.alpha = 1f
         binding.swipeRefresh.isEnabled = true
 
-        // Entferne Root Click-Listener
+        // Entferne Root-Klick-Listener
         binding.root.setOnClickListener(null)
 
+        // Verstecke FABs
         hideFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
         hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 50)
-        hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 100)
+        hideFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 100)
+        hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 150)
 
         binding.fabMain.animate().rotation(0f).setDuration(200).start()
     }
@@ -542,6 +586,11 @@ class MainActivity : AppCompatActivity() {
             .setDuration(200)
             .withEndAction { label.visibility = View.GONE }
             .start()
+    }
+
+    private fun openWeather() {
+        val intent = Intent(this, WeatherActivity::class.java)
+        startActivity(intent)
     }
 
     private fun openCompass() {

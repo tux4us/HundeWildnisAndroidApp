@@ -57,6 +57,8 @@ class LocationActivity : AppCompatActivity(), LocationListener {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         setupMap()

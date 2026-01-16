@@ -38,6 +38,12 @@
             android:exported="false" />
 
         <activity
+            android:name=".WeatherActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="fullSensor"
+            android:exported="false" />
+
+        <activity
             android:name=".LocationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="fullSensor"
