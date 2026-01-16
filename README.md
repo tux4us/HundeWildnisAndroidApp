@@ -19,6 +19,24 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 - 🧭 Integrierter Kompass - unterwegs immer die Orientierung behalten
 - 📐 Integrierter Höhenmesser - immer wissen wie hoch man unterwegs ist
 - 🌐 Standortbestimmung per GPS und der Möglichkeit den Standort unmittelbar über "Teilen" an Apps, Navigationsanwendungen und andere Empfänger zu übermitteln
+- ☀️🌧️ standortgenaue aktuelle Wettersituation mit Vorhersage
+   24h Vorhersage:
+   ✅ Temperatur alle 3 Stunden
+   ✅ Wettersymbol (Emoji)
+   ✅ Niederschlagswahrscheinlichkeit
+   ✅ Horizontales Scrollen
+   Niederschlagsradar:
+   ✅ OpenStreetMap als Basis
+   ✅ RainViewer Radar-Overlay (Echtzeit-Niederschlag)
+   ✅ Marker auf deinem Standort
+   ✅ Zoom- und Pan-Funktion
+   ✅ Wetter-API (Open-Meteo)
+   ✅ Kein API-Key nötig
+   ✅ Aktuelle Temperatur, gefühlte Temperatur
+   ✅ Luftfeuchtigkeit, Wind, Niederschlag
+   ✅ Luftdruck, UV-Index
+   ✅ Wetter-Icons (Emojis)
+   ✅ Automatische Standorterkennung
 - 🌓 **Dark/Light Mode** - Wechsle zwischen heller und dunkler Darstellung
 - 🔄 **Pull-to-Refresh** - Aktualisiere Inhalte durch Herunterziehen
 - 📱 **Responsive WebView** - Mobile-optimierte Darstellung aller Inhalte
