@@ -59,6 +59,22 @@ class ContentActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 binding.progressBar.visibility = View.GONE
+                val javascript = """
+                    javascript:(function() {
+                        var selectors = [
+                            'header', 'footer', '.header', '.footer', '#header', '#footer',
+                            '.td-header-wrap', '.td-footer-wrap', '.td-sub-footer-wrap',
+                            '.td-footer-template-wrap', '.mobile-header-menu-wrap'
+                        ];
+                        selectors.forEach(function(selector) {
+                            var elements = document.querySelectorAll(selector);
+                            for (var i = 0; i < elements.length; i++) {
+                                elements[i].style.display = 'none';
+                            }
+                        });
+                    })();
+                """
+                view?.loadUrl(javascript)
             }
         }
     }

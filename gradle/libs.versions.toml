@@ -1,12 +1,12 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 androidxCoreKtx = "1.13.1"
 appcompat = "1.7.1"
 constraintlayout = "2.2.1"
 coreKtxVersion = "1.12.0"
 gson = "2.13.2"
 jsoup = "1.22.1"
-kotlin = "2.0.21"
+kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -16,6 +16,7 @@ activityCompose = "1.12.2"
 composeBom = "2024.09.00"
 lifecycleRuntimeKtxVersion = "2.7.0"
 material = "1.13.0"
+materialVersion = "1.11.0"
 osmdroidAndroid = "6.1.20"
 playServicesLocation = "21.3.0"
 recyclerview = "1.4.0"
@@ -47,6 +48,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+material-v1110 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 

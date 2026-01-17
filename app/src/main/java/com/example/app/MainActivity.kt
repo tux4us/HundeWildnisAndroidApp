@@ -20,13 +20,15 @@ import kotlinx.coroutines.withContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var blogAdapter: ContentAdapter
     private lateinit var pageAdapter: ContentAdapter
     private lateinit var courseAdapter: ContentAdapter
-    private val wordPressParser = WordPressParser()
+    private val wordPressApi = WordPressApiParser()
+    private val wordPressParser = WordPressParser() // Behalte auch den alten Parser für Kurse
     private lateinit var contentCache: ContentCache
 
     private var allBlogPosts = listOf<ContentItem>()
@@ -35,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     private var currentView = VIEW_BLOG
 
     private var isFabOpen = false
-    //private var overlayView: View? = null  // NEU
 
     companion object {
         const val VIEW_BLOG = 0
@@ -56,9 +57,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Insets für Navigationsleiste berücksichtigen
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val systemBars =
-                insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+                insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
@@ -142,41 +143,71 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        binding.btnBlog.setOnClickListener {
-            showBlogView()
+        // Bottom Navigation
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_blog -> {
+                    showBlogView()
+                    true
+                }
+                R.id.nav_pages -> {
+                    showPagesView()
+                    true
+                }
+                R.id.nav_courses -> {
+                    showCoursesView()
+                    true
+                }
+                else -> false
+            }
         }
 
-        binding.btnPages.setOnClickListener {
-            showPagesView()
-        }
-
-        binding.btnCourses.setOnClickListener {
-            showCoursesView()
-        }
-
+        // Load More Button
         binding.btnLoadMore.setOnClickListener {
             loadMoreBlogPosts()
         }
 
+        // Scroll-Listener für "Weitere Beiträge laden" Button
+        binding.blogRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                val totalItems = layoutManager.itemCount
+
+                // Zeige Button wenn man nahe am Ende ist und mehr Beiträge verfügbar sind
+                if (lastVisibleItem >= totalItems - 5 && blogAdapter.itemCount < allBlogPosts.size) {
+                    binding.btnLoadMore.visibility = View.VISIBLE
+                } else {
+                    binding.btnLoadMore.visibility = View.GONE
+                }
+            }
+        })
+
+        // Starte mit Blog-View
         showBlogView()
+        binding.bottomNavigation.selectedItemId = R.id.nav_blog
     }
 
     private fun showBlogView() {
         currentView = VIEW_BLOG
-        binding.btnBlog.isSelected = true
-        binding.btnPages.isSelected = false
-        binding.btnCourses.isSelected = false
         binding.blogRecyclerView.visibility = View.VISIBLE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.GONE
-        binding.btnLoadMore.visibility = View.VISIBLE
+
+        // Prüfe ob Daten vorhanden sind
+        if (allBlogPosts.isEmpty()) {
+            binding.btnLoadMore.visibility = View.GONE
+        } else if (blogAdapter.itemCount < allBlogPosts.size) {
+            binding.btnLoadMore.visibility = View.VISIBLE
+        } else {
+            binding.btnLoadMore.visibility = View.GONE
+        }
     }
 
     private fun showPagesView() {
         currentView = VIEW_PAGES
-        binding.btnBlog.isSelected = false
-        binding.btnPages.isSelected = true
-        binding.btnCourses.isSelected = false
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.VISIBLE
         binding.coursesRecyclerView.visibility = View.GONE
@@ -185,9 +216,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun showCoursesView() {
         currentView = VIEW_COURSES
-        binding.btnBlog.isSelected = false
-        binding.btnPages.isSelected = false
-        binding.btnCourses.isSelected = true
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.VISIBLE
@@ -247,9 +275,9 @@ class MainActivity : AppCompatActivity() {
             try {
                 val result: Triple<List<ContentItem>, List<ContentItem>, List<ContentItem>> =
                     withContext(Dispatchers.IO) {
-                        val postsDeferred = async { wordPressParser.parseBlogPosts() }
-                        val pagesDeferred = async { wordPressParser.parsePages() }
-                        val coursesDeferred = async { wordPressParser.parseCourses() }
+                        val postsDeferred = async { wordPressApi.loadBlogPosts() }
+                        val pagesDeferred = async { wordPressParser.parsePages() } // ← ALT: Scraping für Hierarchie
+                        val coursesDeferred = async { wordPressParser.parseCourses() } // ← ALT: Scraping
 
                         Triple(
                             postsDeferred.await(),
@@ -291,7 +319,6 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
                 } else {
                     binding.swipeRefresh.isRefreshing = false
-                    // Stiller Update - kein Toast
                 }
 
             } catch (e: Exception) {
@@ -396,7 +423,7 @@ class MainActivity : AppCompatActivity() {
     private fun openPrivacyPolicy() {
         val intent = Intent(this, ContentActivity::class.java).apply {
             putExtra("url", getString(R.string.privacy_url))
-            putExtra("title", "Datenschutzerklärung")
+            putExtra("title", getString(R.string.privacy_policy))
         }
         startActivity(intent)
     }

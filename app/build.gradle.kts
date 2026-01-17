@@ -11,8 +11,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 12
-        versionName = "2.9"
+        versionCode = 13
+        versionName = "3.0"
     }
 
     buildTypes {
@@ -50,4 +50,6 @@ dependencies {
     implementation(libs.osmdroid.android)
     // Gson für JSON Serialisierung (Caching)
     implementation(libs.gson)
+    implementation(libs.material.v1110)
+    implementation("io.coil-kt:coil:2.6.0")
 }

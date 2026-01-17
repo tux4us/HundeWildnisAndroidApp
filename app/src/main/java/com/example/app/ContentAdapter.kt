@@ -1,10 +1,12 @@
 package com.hundewildnis.app
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.hundewildnis.app.databinding.ItemContentBinding
 
 class ContentAdapter(
@@ -119,6 +121,13 @@ class ContentAdapter(
 
             binding.excerptText.visibility = if (binding.excerptText.text.isEmpty())
                 android.view.View.GONE else android.view.View.VISIBLE
+
+            if (item.imageUrl.isNotEmpty()) {
+                binding.itemImage.visibility = View.VISIBLE
+                binding.itemImage.load(item.imageUrl)
+            } else {
+                binding.itemImage.visibility = View.GONE
+            }
         }
     }
 

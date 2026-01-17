@@ -2,15 +2,6 @@ package com.hundewildnis.app
 
 import org.jsoup.Jsoup
 
-data class ContentItem(
-    val title: String,
-    val url: String,
-    val excerpt: String = "",
-    val date: String = "",
-    val level: Int = 0,
-    val type: String = "page"  // NEU: "blog", "page", "course"
-)
-
 class WordPressParser {
     private val baseUrl = "https://wildnislehrer.com"
     private val coursesUrl = "$baseUrl/onlinekurse-hundeschule/"
@@ -42,7 +33,7 @@ class WordPressParser {
                     val date = dateElement?.text()?.trim() ?: ""
 
                     if (url.startsWith(baseUrl) && !url.contains("/blog/") && title.isNotEmpty()) {
-                        posts.add(ContentItem(title, url, excerpt, date, 0, "blog"))
+                        posts.add(ContentItem(title = title, url = url, excerpt = excerpt, date = date, level = 0, type = "blog"))
                         android.util.Log.d("WordPressParser", "✓ Blog: $title")
                     }
                 } catch (e: Exception) {
@@ -112,10 +103,9 @@ class WordPressParser {
                         validPageCategories.any { href.contains(it) }
 
                 if (href.startsWith(baseUrl) &&
+                    !href.startsWith(coursesUrl) &&
                     !href.contains("/blog") &&
                     !href.contains("/blog/") &&
-                    !href.contains("/onlinekurse-hundeschule") &&
-                    !href.contains("/onlinekurse-hundeschule/") &&
                     !href.contains("#") &&
                     !href.contains("?") &&
                     title.length > 2 &&
@@ -158,7 +148,7 @@ class WordPressParser {
                         else -> 1
                     }
 
-                    pages.add(ContentItem(title, href, "", "", level, "page"))
+                    pages.add(ContentItem(title = title, url = href, excerpt = "", date = "", level = level, type = "page"))
                     android.util.Log.d("WordPressParser", "✓ Seite (Level $level): $title")
                 }
             }
@@ -190,22 +180,21 @@ class WordPressParser {
 
     suspend fun parseCourses(): List<ContentItem> {
         val courses = mutableListOf<ContentItem>()
-        val coursesBaseUrl = "$baseUrl/onlinekurse-hundeschule/"
         val seenUrls = mutableSetOf<String>()
 
         try {
-            android.util.Log.d("WordPressParser", "Lade Onlinekurse hierarchisch...")
+            android.util.Log.d("WordPressParser", "⭐ Lade Onlinekurse hierarchisch...")
 
             // Hauptseite hinzufügen - Level 0
-            courses.add(ContentItem("Onlinekurse Hundeschule", coursesBaseUrl, "Übersicht aller Onlinekurse", "", 0, "course"))
-            seenUrls.add(coursesBaseUrl)
+            courses.add(ContentItem(title = "Onlinekurse Hundeschule", url = coursesUrl, excerpt = "Übersicht aller Onlinekurse", date = "", level = 0, type = "course"))
+            seenUrls.add(coursesUrl)
 
-            android.util.Log.d("WordPressParser", "Level 0: Onlinekurse Hundeschule")
+            android.util.Log.d("WordPressParser", "✓ Level 0: Onlinekurse Hundeschule")
 
-            // Rekursive Funktion - behält die Reihenfolge bei
+            // Rekursive Funktion
             suspend fun crawlCoursePage(url: String, currentLevel: Int) {
                 try {
-                    android.util.Log.d("WordPressParser", "Crawle (Level $currentLevel): $url")
+                    android.util.Log.d("WordPressParser", "🔍 Crawle (Level $currentLevel): $url")
 
                     val doc = Jsoup.connect(url)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
@@ -215,14 +204,16 @@ class WordPressParser {
 
                     // Links in der Reihenfolge wie sie auf der Seite erscheinen
                     val links = doc.select("a[href]")
+                    android.util.Log.d("WordPressParser", "📄 Gefundene Links auf Seite: ${links.size}")
 
+                    var foundCount = 0
                     for (link in links) {
                         val href = link.attr("abs:href")
                         val title = link.text().trim()
 
                         // Nur Links unter /onlinekurse-hundeschule/
-                        if (href.startsWith(coursesBaseUrl) &&
-                            href != coursesBaseUrl &&
+                        if (href.startsWith(coursesUrl) &&
+                            href != coursesUrl &&
                             !href.contains("#") &&
                             !href.contains("?") &&
                             !href.endsWith(".jpg") &&
@@ -232,34 +223,38 @@ class WordPressParser {
                             href !in seenUrls) {
 
                             seenUrls.add(href)
+                            foundCount++
 
                             // Nächstes Level ist currentLevel + 1
                             val nextLevel = currentLevel + 1
 
                             // Füge zur Liste hinzu
-                            courses.add(ContentItem(title, href, "", "", nextLevel, "course"))
-                            android.util.Log.d("WordPressParser", "  ".repeat(nextLevel) + "→ Level $nextLevel: $title")
+                            courses.add(ContentItem(title = title, url = href, excerpt = "", date = "", level = nextLevel, type = "course"))
+                            android.util.Log.d("WordPressParser", "  ".repeat(nextLevel) + "✓ Level $nextLevel: $title")
 
                             // Rekursiv in diese Seite gehen mit dem neuen Level
                             crawlCoursePage(href, nextLevel)
                         }
                     }
 
+                    android.util.Log.d("WordPressParser", "📊 Auf Level $currentLevel: $foundCount neue Kurse gefunden")
+
                     // Kleine Pause
                     kotlinx.coroutines.delay(100)
 
                 } catch (e: Exception) {
-                    android.util.Log.e("WordPressParser", "Fehler bei $url: ${e.message}")
+                    android.util.Log.e("WordPressParser", "❌ Fehler bei $url: ${e.message}")
+                    e.printStackTrace()
                 }
             }
 
             // Starte Crawling von der Hauptseite mit Level 0
-            crawlCoursePage(coursesBaseUrl, 0)
+            crawlCoursePage(coursesUrl, 0)
 
-            android.util.Log.d("WordPressParser", "${courses.size} Kurs-Seiten gesamt gefunden")
+            android.util.Log.d("WordPressParser", "✅ ${courses.size} Kurs-Seiten gesamt gefunden")
 
         } catch (e: Exception) {
-            android.util.Log.e("WordPressParser", "Fehler beim Kurse-Laden: ${e.message}")
+            android.util.Log.e("WordPressParser", "❌ Fehler beim Kurse-Laden: ${e.message}")
             e.printStackTrace()
         }
 
