@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                     showCoursesView()
                     true
                 }
-                R.id.nav_youtube -> { // NEU
+                R.id.nav_youtube -> {
                     showYouTubeView()
                     true
                 }
@@ -133,15 +133,28 @@ class MainActivity : AppCompatActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
+                // Nur im Blog-View aktiv
+                if (currentView != VIEW_BLOG) {
+                    binding.btnLoadMore.visibility = View.GONE
+                    return
+                }
+
+                // Keine weiteren Posts? Button verstecken
+                if (blogAdapter.itemCount >= allBlogPosts.size) {
+                    binding.btnLoadMore.visibility = View.GONE
+                    return
+                }
+
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val totalItems = layoutManager.itemCount
 
-                if (lastVisibleItem >= totalItems - 5 && blogAdapter.itemCount < allBlogPosts.size) {
+                // Zeige Button nur wenn fast am Ende (letzte 5 Items sichtbar)
+                if (lastVisibleItem >= totalItems - 5) {
                     binding.btnLoadMore.visibility = View.VISIBLE
-                } else {
-                    binding.btnLoadMore.visibility = View.GONE
                 }
+                // WICHTIG: Wenn NICHT am Ende, Button NICHT verstecken (bleibt wie er ist)
+                // Entferne das "else { visibility = GONE }"
             }
         })
 
@@ -155,7 +168,35 @@ class MainActivity : AppCompatActivity() {
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.GONE
-        binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size) View.VISIBLE else View.GONE
+
+        // Zeige Button wenn mehr Posts vorhanden
+        binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
+    private fun loadMoreBlogPosts() {
+        val currentSize = blogAdapter.itemCount
+        val nextBatch = allBlogPosts.drop(currentSize).take(20)
+
+        if (nextBatch.isEmpty()) {
+            Toast.makeText(this, "Alle Beiträge geladen", Toast.LENGTH_SHORT).show()
+            binding.btnLoadMore.visibility = View.GONE
+            return
+        }
+
+        val newList = allBlogPosts.take(currentSize + 20)
+        blogAdapter.submitList(newList)
+
+        Toast.makeText(this, "${nextBatch.size} weitere Beiträge geladen", Toast.LENGTH_SHORT).show()
+
+        // Prüfe ob noch mehr Posts vorhanden
+        if (newList.size >= allBlogPosts.size) {
+            binding.btnLoadMore.visibility = View.GONE
+            Toast.makeText(this, "Alle Beiträge geladen", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showPagesView() {
@@ -243,17 +284,19 @@ class MainActivity : AppCompatActivity() {
                 android.util.Log.d("MainActivity", "⏱️ START Laden: ${System.currentTimeMillis()}")
 
                 val result = withContext(Dispatchers.IO) {
-                    // Blog laden
+                    // Blog laden (direkt, nicht async)
                     val blogStart = System.currentTimeMillis()
-                    val postsDeferred = async {
-                        android.util.Log.d("MainActivity", "📝 Blog: Starte Laden...")
-                        val result = wordPressApi.loadBlogPosts()
-                        val duration = System.currentTimeMillis() - blogStart
-                        android.util.Log.d("MainActivity", "✓ Blog: ${result.size} Posts in ${duration}ms")
-                        result
+                    android.util.Log.d("MainActivity", "📝 Blog: Starte Laden...")
+                    val posts = try {
+                        wordPressApi.loadBlogPosts(perPage = 100)
+                    } catch (e: Exception) {
+                        android.util.Log.e("MainActivity", "Blog-Fehler: ${e.message}")
+                        emptyList()
                     }
+                    val blogDuration = System.currentTimeMillis() - blogStart
+                    android.util.Log.d("MainActivity", "✓ Blog: ${posts.size} Posts in ${blogDuration}ms")
 
-                    // Seiten laden
+                    // Seiten laden (async)
                     val pagesStart = System.currentTimeMillis()
                     val pagesDeferred = async {
                         android.util.Log.d("MainActivity", "📄 Seiten: Starte Laden...")
@@ -263,7 +306,7 @@ class MainActivity : AppCompatActivity() {
                         result
                     }
 
-                    // Kurse laden
+                    // Kurse laden (async)
                     val coursesStart = System.currentTimeMillis()
                     val coursesDeferred = async {
                         android.util.Log.d("MainActivity", "🎓 Kurse: Starte Laden...")
@@ -273,7 +316,7 @@ class MainActivity : AppCompatActivity() {
                         result
                     }
 
-                    // YouTube laden
+                    // YouTube laden (async)
                     val youtubeStart = System.currentTimeMillis()
                     val youtubeDeferred = async {
                         android.util.Log.d("MainActivity", "🎥 YouTube: Starte Laden...")
@@ -283,7 +326,7 @@ class MainActivity : AppCompatActivity() {
                         result
                     }
 
-                    val posts = postsDeferred.await()
+                    // Warte auf async Operationen
                     val pages = pagesDeferred.await()
                     val courses = coursesDeferred.await()
                     val videos = youtubeDeferred.await()
@@ -435,20 +478,6 @@ class MainActivity : AppCompatActivity() {
                 "Konnte Video nicht öffnen",
                 Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun loadMoreBlogPosts() {
-        val currentSize = blogAdapter.itemCount
-        val nextBatch = allBlogPosts.drop(currentSize).take(20)
-
-        if (nextBatch.isEmpty()) {
-            Toast.makeText(this, "Keine weiteren Beiträge", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val newList = allBlogPosts.take(currentSize + 20)
-        blogAdapter.submitList(newList)
-        Toast.makeText(this, "${nextBatch.size} weitere Beiträge geladen", Toast.LENGTH_SHORT).show()
     }
 
     private fun refreshContent() {
