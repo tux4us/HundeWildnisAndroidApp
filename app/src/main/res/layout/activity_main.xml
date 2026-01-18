@@ -72,6 +72,18 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="80dp"
                     android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/youtubeRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:clipToPadding="false"
+                    android:paddingTop="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="80dp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- "Weitere Beiträge laden" Button (schwebend) -->

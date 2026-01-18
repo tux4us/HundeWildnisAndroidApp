@@ -11,8 +11,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 13
-        versionName = "3.0"
+        versionCode = 14
+        versionName = "4.0"
     }
 
     buildTypes {
@@ -51,5 +51,7 @@ dependencies {
     // Gson für JSON Serialisierung (Caching)
     implementation(libs.gson)
     implementation(libs.material.v1110)
-    implementation("io.coil-kt:coil:2.6.0")
+    implementation("io.coil-kt:coil:2.5.0")
+    // YouTube Player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 }

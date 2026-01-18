@@ -14,7 +14,7 @@ class WordPressParser {
 
             val doc = Jsoup.connect("$baseUrl/blog/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .timeout(8000)
+                .timeout(60000)
                 .get()
 
             val articles = doc.select("article, .post, .entry, .hentry, .blog-post")
@@ -60,7 +60,7 @@ class WordPressParser {
 
             val doc = Jsoup.connect("$baseUrl/de/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .timeout(8000)
+                .timeout(60000)
                 .get()
 
             val menuLinks = doc.select("nav a, .menu a, header a, .navigation a")
@@ -198,7 +198,7 @@ class WordPressParser {
 
                     val doc = Jsoup.connect(url)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                        .timeout(8000)
+                        .timeout(60000)
                         .followRedirects(true)
                         .get()
 

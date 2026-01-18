@@ -3,6 +3,7 @@ agp = "9.0.0"
 androidxCoreKtx = "1.13.1"
 appcompat = "1.7.1"
 constraintlayout = "2.2.1"
+core = "13.0.0"
 coreKtxVersion = "1.12.0"
 gson = "2.13.2"
 jsoup = "1.22.1"
@@ -32,6 +33,7 @@ androidx-core-ktx-v1131 = { module = "androidx.core:core-ktx", version.ref = "an
 androidx-lifecycle-runtime-ktx-v270 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+core = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "core" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

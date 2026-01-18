@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">HundeWildnis</string>
     <string name="error_loading">Fehler beim Laden: %s</string>
-    <string name="search_hint">Suche nach Inhalten...</string>
+    <string name="search_hint">Inhalte werden abgerufen und geladen...</string>
     <string name="search_title">Suchen</string>
     <string name="theme_light">Helles Design</string>
     <string name="theme_dark">Dunkles Design</string>
@@ -17,6 +17,7 @@
     <string name="toggle_theme">Theme wechseln</string>
     <string name="refresh">Aktualisieren</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
-    <string name="privacy_url">https://www.hundewildnis.de/datenschutzerklaerung/</string>
+    <string name="privacy_url">https://wildnislehrer.com/impressum/datenschutzerklaerung/</string>
     <string name="action_privacy">Datenschutzerklärung</string>
+    <string name="youtube">YouTube</string>
 </resources>

@@ -8,7 +8,7 @@ import java.net.URLEncoder
 class WordPressApiParser {
     companion object {
         private const val BASE_URL = "https://wildnislehrer.com/wp-json/wp/v2"
-        private const val TIMEOUT = 10000 // 10 Sekunden
+        private const val TIMEOUT = 60000
     }
 
     /**
@@ -16,7 +16,7 @@ class WordPressApiParser {
      * @param page Seitennummer (Standard: 1)
      * @param perPage Anzahl Posts pro Seite (Standard: 20)
      */
-    suspend fun loadBlogPosts(page: Int = 1, perPage: Int = 100): List<ContentItem> {
+    suspend fun loadBlogPosts(page: Int = 1, perPage: Int = 20): List<ContentItem> {
         return try {
             val url = "$BASE_URL/posts?page=$page&per_page=$perPage&_embed"
             android.util.Log.d("WordPressAPI", "Lade Blog-Posts von: $url")

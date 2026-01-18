@@ -21,19 +21,26 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import android.net.Uri
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var blogAdapter: ContentAdapter
     private lateinit var pageAdapter: ContentAdapter
     private lateinit var courseAdapter: ContentAdapter
+    private lateinit var youtubeAdapter: YouTubeAdapter
+
     private val wordPressApi = WordPressApiParser()
     private val wordPressParser = WordPressParser() // Behalte auch den alten Parser für Kurse
+    private val youtubeParser = YouTubeParser()
     private lateinit var contentCache: ContentCache
 
     private var allBlogPosts = listOf<ContentItem>()
     private var allPages = listOf<ContentItem>()
     private var allCourses = listOf<ContentItem>()
+    private var allYouTubeVideos = listOf<YouTubeVideo>()
+
     private var currentView = VIEW_BLOG
 
     private var isFabOpen = false
@@ -42,31 +49,26 @@ class MainActivity : AppCompatActivity() {
         const val VIEW_BLOG = 0
         const val VIEW_PAGES = 1
         const val VIEW_COURSES = 2
+        const val VIEW_YOUTUBE = 3
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // WICHTIG: Theme ZUERST laden!
         loadThemePreference()
-
-        // Edge-to-Edge aktivieren (für alle Android-Versionen)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Insets für Navigationsleiste berücksichtigen
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars =
-                insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
-
         binding.toolbar.overflowIcon?.setTint(android.graphics.Color.WHITE)
 
         contentCache = ContentCache(this)
@@ -81,56 +83,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadThemePreference() {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val isDark = prefs.getBoolean("dark_theme", true)
-
-        android.util.Log.d("MainActivity", "loadThemePreference: isDark = $isDark")
-
-        // Setze lokales Theme (nur für diese Activity)
-        delegate.localNightMode = if (isDark) {
-            AppCompatDelegate.MODE_NIGHT_YES
-        } else {
-            AppCompatDelegate.MODE_NIGHT_NO
-        }
-    }
-
-    private fun toggleTheme() {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val currentDark = prefs.getBoolean("dark_theme", true)
-        val newDark = !currentDark
-
-        android.util.Log.d("MainActivity", "toggleTheme: currentDark = $currentDark, newDark = $newDark")
-
-        // Speichere SOFORT
-        prefs.edit()
-            .putBoolean("dark_theme", newDark)
-            .commit()
-
-        android.util.Log.d("MainActivity", "toggleTheme: saved value = ${prefs.getBoolean("dark_theme", true)}")
-
-        // Setze Theme
-        AppCompatDelegate.setDefaultNightMode(
-            if (newDark) AppCompatDelegate.MODE_NIGHT_YES
-            else AppCompatDelegate.MODE_NIGHT_NO
-        )
-
-        // Starte Activity neu
-        recreate()
-    }
-
     private fun setupRecyclerViews() {
-        blogAdapter = ContentAdapter { item ->
-            openContent(item)
-        }
-
-        pageAdapter = ContentAdapter { item ->
-            openContent(item)
-        }
-
-        courseAdapter = ContentAdapter { item ->
-            openContent(item)
-        }
+        blogAdapter = ContentAdapter { item -> openContent(item) }
+        pageAdapter = ContentAdapter { item -> openContent(item) }
+        courseAdapter = ContentAdapter { item -> openContent(item) }
+        youtubeAdapter = YouTubeAdapter { video -> openYouTubeVideo(video) } // NEU
 
         binding.blogRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.blogRecyclerView.adapter = blogAdapter
@@ -140,10 +97,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.coursesRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.coursesRecyclerView.adapter = courseAdapter
+
+        binding.youtubeRecyclerView.layoutManager = LinearLayoutManager(this) // NEU
+        binding.youtubeRecyclerView.adapter = youtubeAdapter // NEU
     }
 
     private fun setupButtons() {
-        // Bottom Navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_blog -> {
@@ -158,16 +117,18 @@ class MainActivity : AppCompatActivity() {
                     showCoursesView()
                     true
                 }
+                R.id.nav_youtube -> { // NEU
+                    showYouTubeView()
+                    true
+                }
                 else -> false
             }
         }
 
-        // Load More Button
         binding.btnLoadMore.setOnClickListener {
             loadMoreBlogPosts()
         }
 
-        // Scroll-Listener für "Weitere Beiträge laden" Button
         binding.blogRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -176,7 +137,6 @@ class MainActivity : AppCompatActivity() {
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val totalItems = layoutManager.itemCount
 
-                // Zeige Button wenn man nahe am Ende ist und mehr Beiträge verfügbar sind
                 if (lastVisibleItem >= totalItems - 5 && blogAdapter.itemCount < allBlogPosts.size) {
                     binding.btnLoadMore.visibility = View.VISIBLE
                 } else {
@@ -185,7 +145,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // Starte mit Blog-View
         showBlogView()
         binding.bottomNavigation.selectedItemId = R.id.nav_blog
     }
@@ -195,15 +154,8 @@ class MainActivity : AppCompatActivity() {
         binding.blogRecyclerView.visibility = View.VISIBLE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.GONE
-
-        // Prüfe ob Daten vorhanden sind
-        if (allBlogPosts.isEmpty()) {
-            binding.btnLoadMore.visibility = View.GONE
-        } else if (blogAdapter.itemCount < allBlogPosts.size) {
-            binding.btnLoadMore.visibility = View.VISIBLE
-        } else {
-            binding.btnLoadMore.visibility = View.GONE
-        }
+        binding.youtubeRecyclerView.visibility = View.GONE
+        binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size) View.VISIBLE else View.GONE
     }
 
     private fun showPagesView() {
@@ -211,6 +163,7 @@ class MainActivity : AppCompatActivity() {
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.VISIBLE
         binding.coursesRecyclerView.visibility = View.GONE
+        binding.youtubeRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
     }
 
@@ -219,24 +172,36 @@ class MainActivity : AppCompatActivity() {
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.VISIBLE
+        binding.youtubeRecyclerView.visibility = View.GONE
+        binding.btnLoadMore.visibility = View.GONE
+    }
+
+    private fun showYouTubeView() { // NEU
+        currentView = VIEW_YOUTUBE
+        binding.blogRecyclerView.visibility = View.GONE
+        binding.pagesRecyclerView.visibility = View.GONE
+        binding.coursesRecyclerView.visibility = View.GONE
+        binding.youtubeRecyclerView.visibility = View.VISIBLE
         binding.btnLoadMore.visibility = View.GONE
     }
 
     private fun loadContent() {
-        // Versuche zuerst Cache zu laden
         val cachedPosts = contentCache.getBlogPosts()
         val cachedPages = contentCache.getPages()
         val cachedCourses = contentCache.getCourses()
+        val cachedYouTube = contentCache.getYouTubeVideos() // NEU
 
-        if (cachedPosts != null && cachedPages != null && cachedCourses != null) {
-            // Cache ist gültig - zeige sofort
+        if (cachedPosts != null && cachedPages != null && cachedCourses != null && cachedYouTube != null) {
+            // ALLES aus Cache verfügbar
             allBlogPosts = cachedPosts
             allPages = cachedPages
             allCourses = cachedCourses
+            allYouTubeVideos = cachedYouTube
 
             blogAdapter.submitList(cachedPosts.take(20))
             pageAdapter.submitList(cachedPages)
             courseAdapter.submitList(cachedCourses)
+            youtubeAdapter.submitList(cachedYouTube) // NEU
 
             binding.progressBar.visibility = View.GONE
             binding.errorText.visibility = View.GONE
@@ -245,18 +210,17 @@ class MainActivity : AppCompatActivity() {
                 VIEW_BLOG -> showBlogView()
                 VIEW_PAGES -> showPagesView()
                 VIEW_COURSES -> showCoursesView()
+                VIEW_YOUTUBE -> showYouTubeView()
             }
 
-            Toast.makeText(this,
-                "Inhalte aus Cache geladen",
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Inhalte aus Cache geladen", Toast.LENGTH_SHORT).show()
 
             // Lade im Hintergrund neue Daten
             loadContentFromNetwork(silent = true)
             return
         }
 
-        // Kein Cache - zeige Ladeanimation
+        // Kein vollständiger Cache - zeige Ladeanimation
         binding.progressBar.visibility = View.VISIBLE
         binding.errorText.text = "Inhalte werden aktualisiert..."
         binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
@@ -265,6 +229,7 @@ class MainActivity : AppCompatActivity() {
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.GONE
+        binding.youtubeRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
 
         loadContentFromNetwork(silent = false)
@@ -273,35 +238,86 @@ class MainActivity : AppCompatActivity() {
     private fun loadContentFromNetwork(silent: Boolean) {
         lifecycleScope.launch {
             try {
-                val result: Triple<List<ContentItem>, List<ContentItem>, List<ContentItem>> =
-                    withContext(Dispatchers.IO) {
-                        val postsDeferred = async { wordPressApi.loadBlogPosts() }
-                        val pagesDeferred = async { wordPressParser.parsePages() } // ← ALT: Scraping für Hierarchie
-                        val coursesDeferred = async { wordPressParser.parseCourses() } // ← ALT: Scraping
+                val totalStartTime = System.currentTimeMillis()
+                android.util.Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                android.util.Log.d("MainActivity", "⏱️ START Laden: ${System.currentTimeMillis()}")
 
-                        Triple(
-                            postsDeferred.await(),
-                            pagesDeferred.await(),
-                            coursesDeferred.await()
-                        )
+                val result = withContext(Dispatchers.IO) {
+                    // Blog laden
+                    val blogStart = System.currentTimeMillis()
+                    val postsDeferred = async {
+                        android.util.Log.d("MainActivity", "📝 Blog: Starte Laden...")
+                        val result = wordPressApi.loadBlogPosts()
+                        val duration = System.currentTimeMillis() - blogStart
+                        android.util.Log.d("MainActivity", "✓ Blog: ${result.size} Posts in ${duration}ms")
+                        result
                     }
+
+                    // Seiten laden
+                    val pagesStart = System.currentTimeMillis()
+                    val pagesDeferred = async {
+                        android.util.Log.d("MainActivity", "📄 Seiten: Starte Laden...")
+                        val result = wordPressParser.parsePages()
+                        val duration = System.currentTimeMillis() - pagesStart
+                        android.util.Log.d("MainActivity", "✓ Seiten: ${result.size} Seiten in ${duration}ms")
+                        result
+                    }
+
+                    // Kurse laden
+                    val coursesStart = System.currentTimeMillis()
+                    val coursesDeferred = async {
+                        android.util.Log.d("MainActivity", "🎓 Kurse: Starte Laden...")
+                        val result = wordPressParser.parseCourses()
+                        val duration = System.currentTimeMillis() - coursesStart
+                        android.util.Log.d("MainActivity", "✓ Kurse: ${result.size} Kurse in ${duration}ms")
+                        result
+                    }
+
+                    // YouTube laden
+                    val youtubeStart = System.currentTimeMillis()
+                    val youtubeDeferred = async {
+                        android.util.Log.d("MainActivity", "🎥 YouTube: Starte Laden...")
+                        val result = youtubeParser.loadLatestVideos()
+                        val duration = System.currentTimeMillis() - youtubeStart
+                        android.util.Log.d("MainActivity", "✓ YouTube: ${result.size} Videos in ${duration}ms")
+                        result
+                    }
+
+                    val posts = postsDeferred.await()
+                    val pages = pagesDeferred.await()
+                    val courses = coursesDeferred.await()
+                    val videos = youtubeDeferred.await()
+
+                    Quad(posts, pages, courses, videos)
+                }
 
                 val posts = result.first
                 val pages = result.second
                 val courses = result.third
+                val videos = result.fourth
 
-                // Speichere in Cache
+                // Cache speichern
+                val cacheStart = System.currentTimeMillis()
                 contentCache.saveBlogPosts(posts)
                 contentCache.savePages(pages)
                 contentCache.saveCourses(courses)
+                contentCache.saveYouTubeVideos(videos)
+                val cacheDuration = System.currentTimeMillis() - cacheStart
+                android.util.Log.d("MainActivity", "💾 Cache gespeichert in ${cacheDuration}ms")
 
                 allBlogPosts = posts
                 allPages = pages
                 allCourses = courses
+                allYouTubeVideos = videos
 
                 blogAdapter.submitList(posts.take(20))
                 pageAdapter.submitList(pages)
                 courseAdapter.submitList(courses)
+                youtubeAdapter.submitList(videos)
+
+                val totalDuration = System.currentTimeMillis() - totalStartTime
+                android.util.Log.d("MainActivity", "⏱️ GESAMT: ${totalDuration}ms (${totalDuration/1000.0}s)")
+                android.util.Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                 if (!silent) {
                     binding.progressBar.visibility = View.GONE
@@ -312,16 +328,19 @@ class MainActivity : AppCompatActivity() {
                         VIEW_BLOG -> showBlogView()
                         VIEW_PAGES -> showPagesView()
                         VIEW_COURSES -> showCoursesView()
+                        VIEW_YOUTUBE -> showYouTubeView()
                     }
 
                     Toast.makeText(this@MainActivity,
-                        "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse geladen",
+                        "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse, ${videos.size} Videos geladen",
                         Toast.LENGTH_SHORT).show()
                 } else {
                     binding.swipeRefresh.isRefreshing = false
                 }
 
             } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "❌ Fehler beim Laden", e)
+                e.printStackTrace()
                 if (!silent) {
                     binding.progressBar.visibility = View.GONE
                     binding.swipeRefresh.isRefreshing = false
@@ -334,6 +353,87 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG).show()
                 }
             }
+        }
+    }
+
+    // Hilfsklasse für 4 Werte
+    private data class Quad<A, B, C, D>(
+        val first: A,
+        val second: B,
+        val third: C,
+        val fourth: D
+    )
+
+    private fun saveYouTubeCache(videos: List<YouTubeVideo>) {
+        contentCache.saveYouTubeVideos(videos)
+    }
+
+    private fun openYouTubeVideo(video: YouTubeVideo) {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val hasSeenYouTubeNotice = prefs.getBoolean("youtube_notice_shown", false)
+
+        if (!hasSeenYouTubeNotice) {
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Hinweis")
+                .setMessage(
+                    "Du wirst zu unserem Kanal auf YouTube weitergeleitet." +
+                            "Dabei werden Daten an Google übertragen (z.B. deine IP-Adresse)." +
+                            "Weitere Informationen findest du in der Datenschutzerklärung von YouTube.\n\n" +
+                            "Pro-Tipp: auf dem Smartphone und Tablet empfiehlt sich immer die Nutzung eines vertrauenswürdigen VPN-Dienstes zum Schutz Deiner Daten und Deiner Privatsphäre\n\n" +
+                            "Möchtest du fortfahren? Die App merkt sich Deine Entscheidung."
+                )
+                .setPositiveButton("Ja, fortfahren") { _, _ ->
+                    prefs.edit().putBoolean("youtube_notice_shown", true).apply()
+                    openYouTubeVideoInternal(video)
+                }
+                .setNegativeButton("Abbrechen", null)
+                .setNeutralButton("Datenschutz") { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://policies.google.com/privacy"))
+                    startActivity(intent)
+                }
+                .create()
+
+            dialog.show()
+
+            // Bestimme Farbe basierend auf Theme
+            val isDarkTheme = (resources.configuration.uiMode and
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+            val buttonColor = if (isDarkTheme) {
+                android.graphics.Color.WHITE  // Dark Mode: Weiße Schrift
+            } else {
+                android.graphics.Color.parseColor("#2d5016")  // Light Mode: Grüne Schrift
+            }
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        } else {
+            openYouTubeVideoInternal(video)
+        }
+    }
+
+    private fun openYouTubeVideoInternal(video: YouTubeVideo) {
+        try {
+            val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:${video.videoId}"))
+            appIntent.setPackage("com.google.android.youtube")
+
+            if (appIntent.resolveActivity(packageManager) != null) {
+                android.util.Log.d("MainActivity", "Öffne in YouTube App")
+                startActivity(appIntent)
+            } else {
+                android.util.Log.d("MainActivity", "YouTube App nicht gefunden, öffne im Browser")
+                val webIntent = Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://www.youtube.com/watch?v=${video.videoId}"))
+                startActivity(webIntent)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Fehler beim Öffnen des Videos", e)
+            Toast.makeText(this,
+                "Konnte Video nicht öffnen",
+                Toast.LENGTH_LONG).show()
         }
     }
 
@@ -633,5 +733,38 @@ class MainActivity : AppCompatActivity() {
     private fun openAltimeter() {
         val intent = Intent(this, AltimeterActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun loadThemePreference() {
+        val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("is_dark_mode", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+
+    private fun saveThemePreference(isDarkMode: Boolean) {
+        val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putBoolean("is_dark_mode", isDarkMode)
+            apply()
+        }
+    }
+
+    private fun toggleTheme() {
+        val nightMode = resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val isDarkMode = nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            saveThemePreference(false)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            saveThemePreference(true)
+        }
+        recreate()
     }
 }

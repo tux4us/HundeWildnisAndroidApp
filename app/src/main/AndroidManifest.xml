@@ -34,6 +34,12 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".YouTubePlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
             android:name=".CompassActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="fullSensor"
@@ -47,14 +53,14 @@
 
         <activity
             android:name=".LocationActivity"
-            android.configChanges="orientation|screenSize|keyboardHidden"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="fullSensor"
-            android.exported="false" />
+            android:exported="false" />
 
         <activity
             android:name=".AltimeterActivity"
-            android.configChanges="orientation|screenSize|keyboardHidden"
-            android.screenOrientation="fullSensor"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="fullSensor"
             android:exported="false" />
     </application>
 </manifest>
