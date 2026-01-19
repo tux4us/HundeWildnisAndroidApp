@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -13,74 +12,79 @@ class ContentCache(private val context: Context) {
         private const val KEY_BLOG_POSTS = "blog_posts"
         private const val KEY_PAGES = "pages"
         private const val KEY_COURSES = "courses"
-        private const val KEY_YOUTUBE = "youtube_videos" // NEU
-        private const val KEY_BLOG_TIMESTAMP = "blog_timestamp"
-        private const val KEY_PAGES_TIMESTAMP = "pages_timestamp"
-        private const val KEY_COURSES_TIMESTAMP = "courses_timestamp"
-        private const val KEY_YOUTUBE_TIMESTAMP = "youtube_timestamp" // NEU
-        private const val CACHE_DURATION = 12 * 60 * 60 * 1000L // 12 Stunden
+        private const val KEY_YOUTUBE = "youtube_videos"
+        private const val KEY_LAST_UPDATE = "last_update_timestamp"
+
+        // Cache-Gültigkeit: 6 Stunden (in Millisekunden)
+        private const val CACHE_VALIDITY_MS = 6 * 60 * 60 * 1000L // 6 Stunden
+    }
+
+    // Prüfe ob Cache veraltet ist
+    fun isCacheExpired(): Boolean {
+        val lastUpdate = prefs.getLong(KEY_LAST_UPDATE, 0L)
+        val currentTime = System.currentTimeMillis()
+        val cacheAge = currentTime - lastUpdate
+
+        android.util.Log.d("ContentCache", "Cache-Alter: ${cacheAge / 1000 / 60} Minuten")
+
+        return cacheAge > CACHE_VALIDITY_MS
+    }
+
+    // Setze Timestamp beim Speichern
+    private fun updateTimestamp() {
+        prefs.edit().putLong(KEY_LAST_UPDATE, System.currentTimeMillis()).apply()
     }
 
     fun saveBlogPosts(posts: List<ContentItem>) {
-        prefs.edit()
-            .putString(KEY_BLOG_POSTS, gson.toJson(posts))
-            .putLong(KEY_BLOG_TIMESTAMP, System.currentTimeMillis())
-            .apply()
-    }
-
-    fun getBlogPosts(): List<ContentItem>? {
-        if (!isCacheValid(KEY_BLOG_TIMESTAMP)) return null
-        val json = prefs.getString(KEY_BLOG_POSTS, null) ?: return null
-        return gson.fromJson(json, object : TypeToken<List<ContentItem>>() {}.type)
+        val json = gson.toJson(posts)
+        prefs.edit().putString(KEY_BLOG_POSTS, json).apply()
+        updateTimestamp()
     }
 
     fun savePages(pages: List<ContentItem>) {
-        prefs.edit()
-            .putString(KEY_PAGES, gson.toJson(pages))
-            .putLong(KEY_PAGES_TIMESTAMP, System.currentTimeMillis())
-            .apply()
-    }
-
-    fun getPages(): List<ContentItem>? {
-        if (!isCacheValid(KEY_PAGES_TIMESTAMP)) return null
-        val json = prefs.getString(KEY_PAGES, null) ?: return null
-        return gson.fromJson(json, object : TypeToken<List<ContentItem>>() {}.type)
+        val json = gson.toJson(pages)
+        prefs.edit().putString(KEY_PAGES, json).apply()
+        updateTimestamp()
     }
 
     fun saveCourses(courses: List<ContentItem>) {
-        prefs.edit()
-            .putString(KEY_COURSES, gson.toJson(courses))
-            .putLong(KEY_COURSES_TIMESTAMP, System.currentTimeMillis())
-            .apply()
+        val json = gson.toJson(courses)
+        prefs.edit().putString(KEY_COURSES, json).apply()
+        updateTimestamp()
+    }
+
+    fun saveYouTubeVideos(videos: List<YouTubeVideo>) {
+        val json = gson.toJson(videos)
+        prefs.edit().putString(KEY_YOUTUBE, json).apply()
+        updateTimestamp()
+    }
+
+    fun getBlogPosts(): List<ContentItem>? {
+        val json = prefs.getString(KEY_BLOG_POSTS, null) ?: return null
+        val type = object : TypeToken<List<ContentItem>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    fun getPages(): List<ContentItem>? {
+        val json = prefs.getString(KEY_PAGES, null) ?: return null
+        val type = object : TypeToken<List<ContentItem>>() {}.type
+        return gson.fromJson(json, type)
     }
 
     fun getCourses(): List<ContentItem>? {
-        if (!isCacheValid(KEY_COURSES_TIMESTAMP)) return null
         val json = prefs.getString(KEY_COURSES, null) ?: return null
-        return gson.fromJson(json, object : TypeToken<List<ContentItem>>() {}.type)
-    }
-
-    // NEU: YouTube Cache
-    fun saveYouTubeVideos(videos: List<YouTubeVideo>) {
-        prefs.edit()
-            .putString(KEY_YOUTUBE, gson.toJson(videos))
-            .putLong(KEY_YOUTUBE_TIMESTAMP, System.currentTimeMillis())
-            .apply()
+        val type = object : TypeToken<List<ContentItem>>() {}.type
+        return gson.fromJson(json, type)
     }
 
     fun getYouTubeVideos(): List<YouTubeVideo>? {
-        if (!isCacheValid(KEY_YOUTUBE_TIMESTAMP)) return null
         val json = prefs.getString(KEY_YOUTUBE, null) ?: return null
-        return gson.fromJson(json, object : TypeToken<List<YouTubeVideo>>() {}.type)
+        val type = object : TypeToken<List<YouTubeVideo>>() {}.type
+        return gson.fromJson(json, type)
     }
 
     fun clearCache() {
         prefs.edit().clear().apply()
-    }
-
-    private fun isCacheValid(timestampKey: String): Boolean {
-        val timestamp = prefs.getLong(timestampKey, 0)
-        val age = System.currentTimeMillis() - timestamp
-        return age < CACHE_DURATION
+        android.util.Log.d("ContentCache", "Cache gelöscht")
     }
 }

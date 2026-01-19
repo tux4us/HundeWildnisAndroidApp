@@ -16,7 +16,7 @@ class YouTubeParser {
     /**
      * Lädt die neuesten Videos vom YouTube-Kanal
      */
-    suspend fun loadLatestVideos(maxResults: Int = 50): List<YouTubeVideo> {
+    suspend fun loadLatestVideos(maxResults: Int = 100): List<YouTubeVideo> {
         var connection: HttpURLConnection? = null
         return try {
             if (API_KEY.isEmpty()) {

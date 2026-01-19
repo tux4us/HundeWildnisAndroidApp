@@ -27,17 +27,19 @@
             </intent-filter>
         </activity>
 
+        <!-- NEUE Activity für Impressum -->
+        <activity
+            android:name=".ImprintActivity"
+            android:label="Impressum"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" />
+
+
         <activity
             android:name=".ContentActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".YouTubePlayerActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/Theme.HundeWildnis" />
 
         <activity
             android:name=".CompassActivity"

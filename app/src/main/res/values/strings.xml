@@ -10,9 +10,9 @@
     <string name="altimeter">Höhenmesser</string>
     <string name="weather">Wetter</string>
     <string name="location">Standort</string>
-    <string name="blog">Nachrichten</string>
-    <string name="pages">HundeWildnis</string>
-    <string name="courses">Onlinekurse</string>
+    <string name="blog">Blog</string>
+    <string name="pages">Seiten</string>
+    <string name="courses">Kurse</string>
     <string name="search">Suchen</string>
     <string name="toggle_theme">Theme wechseln</string>
     <string name="refresh">Aktualisieren</string>
@@ -20,4 +20,62 @@
     <string name="privacy_url">https://wildnislehrer.com/impressum/datenschutzerklaerung/</string>
     <string name="action_privacy">Datenschutzerklärung</string>
     <string name="youtube">YouTube</string>
+    <!-- Impressum Text -->
+    <string name="imprint_content">
+        <![CDATA[
+        <h2>Impressum</h2>
+
+            <h3>Angaben gemäß § 5 TMG</h3>
+            <p>
+            HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR<br>
+            Hohe Lehne 14<br>
+            01705 Freital<br>
+            Umsatzsteuer-IdNr.:<br>
+            DE458205581<br>
+            </p>
+
+            <h3>Kontakt</h3>
+            <p>
+            E-Mail: info[at]wildnislehrer.de<br>
+            </p>
+
+            <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
+            <p>
+            Manuela Ulbricht und Peter Jörg Ulbricht<br>
+            01705 Freital, Hohe Lehne 14<br>
+            </p>
+
+            <h3>Haftungsausschluss</h3>
+
+            <h4>Haftung für Inhalte</h4>
+            <p>
+            Die Inhalte unserer App und Seiten wurden mit größter Sorgfalt erstellt.
+            Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
+            können wir jedoch keine Gewähr übernehmen.
+            </p>
+
+            <h4>Haftung für Links</h4>
+            <p>
+            Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren
+            Inhalte wir keinen Einfluss haben. Deshalb können wir für diese
+            fremden Inhalte auch keine Gewähr übernehmen.
+            </p>
+
+            <h4>Urheberrecht</h4>
+            <p>
+            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen
+            Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung,
+            Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
+            Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des
+            jeweiligen Autors bzw. Erstellers.
+            ZUWIDERHANDLUNG HAT SCHADENERSATZFORDERUNGEN ZUR FOLGE
+            </p>
+            ]]>
+    </string>
+    <!-- Social Media -->
+    <string name="twitter_username">teamnaturedogs</string>
+
+    <!-- NEU: Signal -->
+    <string name="signal_support">HundeWildnisGruppe auf SIGNAL</string>
+    <string name="signal_group_link">https://signal.group/#CjQKIHJcoNHMe3tNArSNAp9uYDw6psjUVbVFP1HFDYi-cAQwEhA37ia7Wb2iYAXEEnk-6mT2</string>
 </resources>

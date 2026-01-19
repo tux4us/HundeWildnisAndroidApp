@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         const val VIEW_PAGES = 1
         const val VIEW_COURSES = 2
         const val VIEW_YOUTUBE = 3
+        const val VIEW_TWITTER = 4
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,9 +79,6 @@ class MainActivity : AppCompatActivity() {
         setupFab()
         loadContent()
 
-        binding.swipeRefresh.setOnRefreshListener {
-            refreshContent()
-        }
     }
 
     private fun setupRecyclerViews() {
@@ -119,6 +117,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_youtube -> {
                     showYouTubeView()
+                    true
+                }
+                R.id.nav_twitter -> {  // NEU
+                    openTwitter()
                     true
                 }
                 else -> false
@@ -230,19 +232,25 @@ class MainActivity : AppCompatActivity() {
         val cachedPosts = contentCache.getBlogPosts()
         val cachedPages = contentCache.getPages()
         val cachedCourses = contentCache.getCourses()
-        val cachedYouTube = contentCache.getYouTubeVideos() // NEU
+        val cachedYouTube = contentCache.getYouTubeVideos()
 
-        if (cachedPosts != null && cachedPages != null && cachedCourses != null && cachedYouTube != null) {
-            // ALLES aus Cache verfügbar
-            allBlogPosts = cachedPosts
-            allPages = cachedPages
-            allCourses = cachedCourses
-            allYouTubeVideos = cachedYouTube
+        val hasFullCache = cachedPosts != null && cachedPages != null &&
+                cachedCourses != null && cachedYouTube != null
+        val isCacheExpired = contentCache.isCacheExpired()
+
+        if (hasFullCache) {
+            // Cache vorhanden - zeige sofort an
+            android.util.Log.d("MainActivity", "📦 Lade Inhalte aus Cache (Alter: ${if(isCacheExpired) "veraltet" else "aktuell"})")
+
+            allBlogPosts = cachedPosts!!
+            allPages = cachedPages!!
+            allCourses = cachedCourses!!
+            allYouTubeVideos = cachedYouTube!!
 
             blogAdapter.submitList(cachedPosts.take(20))
             pageAdapter.submitList(cachedPages)
             courseAdapter.submitList(cachedCourses)
-            youtubeAdapter.submitList(cachedYouTube) // NEU
+            youtubeAdapter.submitList(cachedYouTube)
 
             binding.progressBar.visibility = View.GONE
             binding.errorText.visibility = View.GONE
@@ -254,12 +262,31 @@ class MainActivity : AppCompatActivity() {
                 VIEW_YOUTUBE -> showYouTubeView()
             }
 
-            Toast.makeText(this, "Inhalte aus Cache geladen", Toast.LENGTH_SHORT).show()
-
-            // Lade im Hintergrund neue Daten
-            loadContentFromNetwork(silent = true)
+            if (isCacheExpired) {
+                // Cache veraltet - aktualisiere im Hintergrund
+                Toast.makeText(this, "Inhalte werden aktualisiert...", Toast.LENGTH_SHORT).show()
+                loadContentFromNetwork(silent = true)
+            } else {
+                // Cache aktuell - kein Update nötig
+                Toast.makeText(this, "Inhalte aus Cache geladen", Toast.LENGTH_SHORT).show()
+            }
             return
         }
+
+        // Kein Cache vorhanden - zeige Ladeanimation
+        android.util.Log.d("MainActivity", "🌐 Kein Cache vorhanden - lade vom Server")
+        binding.progressBar.visibility = View.VISIBLE
+        binding.errorText.text = "Inhalte werden geladen..."
+        binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
+        binding.errorText.visibility = View.VISIBLE
+
+        binding.blogRecyclerView.visibility = View.GONE
+        binding.pagesRecyclerView.visibility = View.GONE
+        binding.coursesRecyclerView.visibility = View.GONE
+        binding.youtubeRecyclerView.visibility = View.GONE
+        binding.btnLoadMore.visibility = View.GONE
+
+        loadContentFromNetwork(silent = false)
 
         // Kein vollständiger Cache - zeige Ladeanimation
         binding.progressBar.visibility = View.VISIBLE
@@ -353,6 +380,7 @@ class MainActivity : AppCompatActivity() {
                 allCourses = courses
                 allYouTubeVideos = videos
 
+                // UI IMMER aktualisieren (auch im silent mode!)
                 blogAdapter.submitList(posts.take(20))
                 pageAdapter.submitList(pages)
                 courseAdapter.submitList(courses)
@@ -363,9 +391,9 @@ class MainActivity : AppCompatActivity() {
                 android.util.Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                 if (!silent) {
+                    // Erstmaliges Laden - verstecke Ladeanimation
                     binding.progressBar.visibility = View.GONE
                     binding.errorText.visibility = View.GONE
-                    binding.swipeRefresh.isRefreshing = false
 
                     when (currentView) {
                         VIEW_BLOG -> showBlogView()
@@ -378,7 +406,10 @@ class MainActivity : AppCompatActivity() {
                         "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse, ${videos.size} Videos geladen",
                         Toast.LENGTH_SHORT).show()
                 } else {
-                    binding.swipeRefresh.isRefreshing = false
+                    // Silent Update im Hintergrund - nur kurze Bestätigung
+                    Toast.makeText(this@MainActivity,
+                        "✓ Inhalte aktualisiert",
+                        Toast.LENGTH_SHORT).show()
                 }
 
             } catch (e: Exception) {
@@ -386,7 +417,6 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
                 if (!silent) {
                     binding.progressBar.visibility = View.GONE
-                    binding.swipeRefresh.isRefreshing = false
                     binding.errorText.text = getString(R.string.error_loading, e.message)
                     binding.errorText.setTextColor(android.graphics.Color.RED)
                     binding.errorText.visibility = View.VISIBLE
@@ -394,6 +424,9 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity,
                         getString(R.string.error_loading, e.message),
                         Toast.LENGTH_LONG).show()
+                } else {
+                    // Silent mode - nur Log, keine UI-Änderung
+                    android.util.Log.e("MainActivity", "Hintergrund-Update fehlgeschlagen")
                 }
             }
         }
@@ -476,6 +509,102 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun openTwitter() {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val hasSeenTwitterNotice = prefs.getBoolean("twitter_notice_shown", false)
+
+        if (!hasSeenTwitterNotice) {
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Hinweis")
+                .setMessage(
+                    "Du wirst zu unserem Account auf X/Twitter weitergeleitet. " +
+                            "Wenn Du 'Ja, fortfahren' wählst werden Daten an X Corp. übertragen (z.B. deine IP-Adresse).\n\n" +
+                            "Weitere Informationen findest du in der Datenschutzerklärung von X/Twitter.\n\n" +
+                            "Pro-Tipp: auf dem Smartphone und Tablet empfiehlt sich immer die Nutzung eines vertrauenswürdigen VPN-Dienstes zum Schutz Deiner Daten und Deiner Privatsphäre\n\n" +
+                            "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
+                )
+                .setPositiveButton("Ja, fortfahren") { _, _ ->
+                    prefs.edit().putBoolean("twitter_notice_shown", true).apply()
+                    openTwitterInternal()
+                }
+                .setNegativeButton("Abbrechen") { _, _ ->
+                    // Zurück zum vorherigen Tab
+                    binding.bottomNavigation.selectedItemId = when (currentView) {
+                        VIEW_BLOG -> R.id.nav_blog
+                        VIEW_PAGES -> R.id.nav_pages
+                        VIEW_COURSES -> R.id.nav_courses
+                        VIEW_YOUTUBE -> R.id.nav_youtube
+                        else -> R.id.nav_blog
+                    }
+                }
+                .setNeutralButton("Datenschutz") { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://twitter.com/privacy"))
+                    startActivity(intent)
+                }
+                .create()
+
+            dialog.show()
+
+            // Bestimme Farbe basierend auf Theme
+            val isDarkTheme = (resources.configuration.uiMode and
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+            val buttonColor = if (isDarkTheme) {
+                android.graphics.Color.WHITE
+            } else {
+                android.graphics.Color.parseColor("#2d5016")
+            }
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        } else {
+            openTwitterInternal()
+        }
+    }
+
+    private fun openTwitterInternal() {
+        try {
+            // Ersetze mit eurem Twitter/X Username
+            val twitterUsername = "@teamnaturedogs"  // ← HIER ANPASSEN!
+
+            // Versuche Twitter/X App zu öffnen
+            val appIntent = Intent(Intent.ACTION_VIEW,
+                Uri.parse("twitter://user?screen_name=$twitterUsername"))
+            appIntent.setPackage("com.twitter.android")
+
+            if (appIntent.resolveActivity(packageManager) != null) {
+                android.util.Log.d("MainActivity", "Öffne in Twitter App")
+                startActivity(appIntent)
+            } else {
+                // Fallback: Öffne im Browser
+                android.util.Log.d("MainActivity", "Twitter App nicht gefunden, öffne im Browser")
+                val webIntent = Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://twitter.com/$twitterUsername"))
+                startActivity(webIntent)
+            }
+
+            // Zurück zum vorherigen Tab nach dem Öffnen
+            binding.bottomNavigation.postDelayed({
+                binding.bottomNavigation.selectedItemId = when (currentView) {
+                    VIEW_BLOG -> R.id.nav_blog
+                    VIEW_PAGES -> R.id.nav_pages
+                    VIEW_COURSES -> R.id.nav_courses
+                    VIEW_YOUTUBE -> R.id.nav_youtube
+                    else -> R.id.nav_blog
+                }
+            }, 300)
+
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Fehler beim Öffnen von Twitter", e)
+            Toast.makeText(this,
+                "Konnte Twitter nicht öffnen",
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun refreshContent() {
         contentCache.clearCache()
         loadContent()
@@ -537,8 +666,18 @@ class MainActivity : AppCompatActivity() {
                 toggleTheme()
                 true
             }
+
+            R.id.action_signal -> {  // NEU
+                openSignal()
+                true
+            }
+
             R.id.action_privacy -> {
                 openPrivacyPolicy()
+                true
+            }
+            R.id.action_imprint -> {
+                openImprint()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -550,6 +689,11 @@ class MainActivity : AppCompatActivity() {
             putExtra("url", getString(R.string.privacy_url))
             putExtra("title", getString(R.string.privacy_policy))
         }
+        startActivity(intent)
+    }
+
+    private fun openImprint() {
+        val intent = Intent(this, ImprintActivity::class.java)
         startActivity(intent)
     }
 
@@ -644,6 +788,17 @@ class MainActivity : AppCompatActivity() {
             }, 300)
         }
 
+        // NEU: Signal FAB
+        binding.fabSignal.setOnClickListener { view ->
+            android.util.Log.d("MainActivity", "Signal FAB geklickt!")
+            view.isClickable = false
+            closeFab()
+            view.postDelayed({
+                openSignal()
+                view.isClickable = true
+            }, 300)
+        }
+
         android.util.Log.d("MainActivity", "setupFab() abgeschlossen")
     }
 
@@ -660,14 +815,14 @@ class MainActivity : AppCompatActivity() {
         isFabOpen = true
 
         // KEIN Overlay mehr - nur Hintergrund dimmen
-        binding.swipeRefresh.alpha = 0.3f
-        binding.swipeRefresh.isEnabled = false
+        binding.contentContainer.alpha = 0.3f
 
         // Reihenfolge von oben nach unten (passend zur XML)
         showFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
-        showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 50)
-        showFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 100)
-        showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 150)
+        showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
+        showFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
+        showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 180)
+        showFabWithAnimation(binding.fabSignal, binding.fabSignalLabel, 240)
 
         binding.fabMain.animate().rotation(45f).setDuration(200).start()
 
@@ -683,17 +838,17 @@ class MainActivity : AppCompatActivity() {
         isFabOpen = false
 
         // Stelle Hintergrund wieder her
-        binding.swipeRefresh.alpha = 1f
-        binding.swipeRefresh.isEnabled = true
+        binding.contentContainer.alpha = 1f
 
         // Entferne Root-Klick-Listener
         binding.root.setOnClickListener(null)
 
         // Verstecke FABs
         hideFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
-        hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 50)
-        hideFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 100)
-        hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 150)
+        hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
+        hideFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
+        hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 180)
+        hideFabWithAnimation(binding.fabSignal, binding.fabSignalLabel, 240)
 
         binding.fabMain.animate().rotation(0f).setDuration(200).start()
     }
@@ -758,6 +913,130 @@ class MainActivity : AppCompatActivity() {
     private fun openAltimeter() {
         val intent = Intent(this, AltimeterActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun openSignal() {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val hasSeenSignalNotice = prefs.getBoolean("signal_notice_shown", false)
+
+        if (!hasSeenSignalNotice) {
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Support-Gruppe auf Signal")
+                .setMessage(
+                    "Du wirst zu unserer Support-Gruppe auf Signal weitergeleitet.\n\n" +
+                            "Die HundeWildnisGruppe dient dem gegenseitigen Austausch zu Inhalten der App und deren Anwendung. Du erhältst Unterstützung von Manuela und Jörg.\n\n" +
+                            "Datenschutz:\n" +
+                            "• Deine Telefonnummer bleibt privat und kann nur von bereits Dir bekannten Nutzern gesehen werden.\n" +
+                            "• Nur Kontakte in deinem Adressbuch können deine Nummer sehen\n" +
+                            "• Andere sehen nur deinen Signal-Profilnamen, welchen Du beliebig und anonym gestalten kannst\n" +
+                            "• Die App HundeWildnis speichert keinerlei Daten welche mit der Nutzung von SIGNAL in Verbindung stehen.\n" +
+                            "• Signal ist Ende-zu-Ende-verschlüsselt und respektiert DSGVO gerecht Datenschutz und Privatsphäre.\n\n" +
+                            "Wir nutzen Signal statt WhatsApp für unsere Supportgruppe, da es als Non-Profit-App minimal Metadaten sammelt, Telefonnummern standardmäßig versteckt und keine Daten für Werbung teilt – im Gegensatz zu WhatsApps Meta-Integration mit umfangreichem Tracking.\n\n" +
+                            "Die Teilnahme ist freiwillig. Du kannst die Gruppe jederzeit verlassen.\n\n" +
+                            "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
+                )
+                .setPositiveButton("Ja, fortfahren") { _, _ ->
+                    prefs.edit().putBoolean("signal_notice_shown", true).apply()
+                    openSignalInternal()
+                }
+                .setNegativeButton("Abbrechen", null)
+                .setNeutralButton("Datenschutz") { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://signal.org/legal/"))
+                    startActivity(intent)
+                }
+                .create()
+
+            dialog.show()
+
+            // Bestimme Farbe basierend auf Theme
+            val isDarkTheme = (resources.configuration.uiMode and
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+            val buttonColor = if (isDarkTheme) {
+                android.graphics.Color.WHITE
+            } else {
+                android.graphics.Color.parseColor("#2d5016")
+            }
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        } else {
+            openSignalInternal()
+        }
+    }
+
+    private fun openSignalInternal() {
+        try {
+            val signalGroupLink = getString(R.string.signal_group_link)
+
+            android.util.Log.d("MainActivity", "Versuche Signal-Link zu öffnen: $signalGroupLink")
+
+            // Erstelle Intent mit dem Signal-Gruppen-Link
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(signalGroupLink))
+
+            // Füge Flags hinzu die helfen können
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            try {
+                // Versuche einfach zu starten - ohne Package-Check!
+                startActivity(intent)
+                android.util.Log.d("MainActivity", "✓ Intent gestartet")
+            } catch (activityNotFound: android.content.ActivityNotFoundException) {
+                // Nur wenn wirklich keine App gefunden wurde
+                android.util.Log.e("MainActivity", "Keine App für Signal-Link gefunden")
+                showSignalNotInstalledDialog()
+            }
+
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Unerwarteter Fehler", e)
+            Toast.makeText(this,
+                "Fehler beim Öffnen: ${e.message}",
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun showSignalNotInstalledDialog() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Signal nicht installiert")
+            .setMessage(
+                "Um der Support-Gruppe beizutreten, benötigst du die Signal-App.\n\n" +
+                        "Du kannst Signal aus folgenden Quellen installieren:\n" +
+                        "• Google Play Store\n" +
+                        "• F-Droid\n" +
+                        "• Signal Website (signal.org)\n\n" +
+                        "Möchtest du die Signal-Website öffnen?"
+            )
+            .setPositiveButton("Ja, zur Website") { _, _ ->
+                val websiteIntent = Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://signal.org/download/"))
+                startActivity(websiteIntent)
+            }
+            .setNeutralButton("Play Store") { _, _ ->
+                val playStoreIntent = Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms"))
+                startActivity(playStoreIntent)
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+
+        dialog.show()
+
+        val isDarkTheme = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val buttonColor = if (isDarkTheme) {
+            android.graphics.Color.WHITE
+        } else {
+            android.graphics.Color.parseColor("#2d5016")
+        }
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun loadThemePreference() {

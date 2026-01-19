@@ -9,6 +9,12 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <!-- Signal Support (NEU) -->
+    <item
+        android:id="@+id/action_signal"
+        android:title="HundeWildnisGruppe auf SIGNAL"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_theme"
         android:icon="@android:drawable/ic_menu_view"
@@ -23,9 +29,16 @@
         app:showAsAction="never"
         app:iconTint="#FFFFFF" />
 
+    <!-- Impressum (NEU) -->
+    <item
+        android:id="@+id/action_imprint"
+        android:title="Impressum"
+        app:showAsAction="never" />
+
+    <!-- NEUER Refresh Button -->
     <item
         android:id="@+id/action_refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
-        android:title="@string/refresh"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_refresh"
+        android:title="Aktualisieren"
+        app:showAsAction="ifRoom" />
 </menu>
