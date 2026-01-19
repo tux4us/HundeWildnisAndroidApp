@@ -76,6 +76,6 @@
     <string name="twitter_username">teamnaturedogs</string>
 
     <!-- NEU: Signal -->
-    <string name="signal_support">HundeWildnisGruppe auf SIGNAL</string>
+    <string name="signal_support">SIGNAL HundeWildnisGruppe</string>
     <string name="signal_group_link">https://signal.group/#CjQKIHJcoNHMe3tNArSNAp9uYDw6psjUVbVFP1HFDYi-cAQwEhA37ia7Wb2iYAXEEnk-6mT2</string>
 </resources>
