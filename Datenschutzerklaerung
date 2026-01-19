@@ -5,13 +5,9 @@ Stand: Januar 2026 (zuletzt aktualisiert: Januar 2026)
 1. Verantwortlicher
 
 HundeWildnisSchule
-
 Manuela Ulbricht und Peter Jörg Ulbricht GbR
-
 Steuer-Nr.: Finanzamt Pirna 210/155/00902
-
 Ust-IdNr.: DE458205581
-
 E-Mail: tux4us@online.de
 
 2. Datenverarbeitung in der App
@@ -27,42 +23,29 @@ Die App verwendet keine der folgenden Technologien:
 Was die App NICHT macht:
 
 ❌ Keine WebView mit Cookie-Speicherung für Login/Session
-
 ❌ Keine Cookie-basierte Authentifizierung
-
 ❌ Keine Tracking-Cookies
-
 ❌ Keine Third-Party Cookies
-
 ❌ Google Analytics
-
 ❌ Tracking-Tools / Analyse-SDKs
-
 ❌ Werbe-SDKs
-
-❌ Google Play Services
-
+❌ Google Play Services (außer für Play Store Updates)
 ❌ Cookies speichern
 
 Was die App macht:
 
 ✅ WebView nur für Anzeige (ContentActivity zeigt WordPress-Inhalte)
-
 ✅ Lokaler Cache (SharedPreferences für Theme, ContentCache für Beiträge)
-
 ✅ Keine Session-Verwaltung mit Cookies
 
 2.3 Internetverbindung
 
 Die App benötigt eine Internetverbindung, um Inhalte von wildnislehrer.com abzurufen. Dabei werden technisch notwendig folgende Daten an den Server von wildnislehrer.com übertragen:
 
-IP-Adresse (für die Verbindung erforderlich)
-
-Angefragte URL
-
-Datum und Uhrzeit der Anfrage
-
-Verwendetes Betriebssystem (Android-Version)
+- IP-Adresse (für die Verbindung erforderlich)
+- Angefragte URL
+- Datum und Uhrzeit der Anfrage
+- Verwendetes Betriebssystem (Android-Version)
 
 Diese Daten werden ausschließlich zur Bereitstellung der Inhalte verwendet und nicht von der App selbst gespeichert oder weiterverarbeitet.
 
@@ -70,170 +53,214 @@ Diese Daten werden ausschließlich zur Bereitstellung der Inhalte verwendet und 
 
 Die App speichert ausschließlich lokal auf deinem Gerät:
 
-Theme-Einstellung (Hell-/Dunkel-Modus)
-
-Zwischengespeicherte Inhalte (Cache zur Verbesserung der Ladezeiten)
+- Theme-Einstellung (Hell-/Dunkel-Modus)
+- Zwischengespeicherte Inhalte (Cache zur Verbesserung der Ladezeiten)
+- Einwilligungen (YouTube-Hinweis, Twitter-Hinweis, Signal-Hinweis gesehen)
 
 Diese Daten verlassen niemals dein Gerät und können jederzeit durch Deinstallation der App vollständig gelöscht werden.
 
-3. Externe Inhalte
+3. Externe Inhalte und Dienste
 
-Die App zeigt Inhalte von wildnislehrer.com an. Für diese externen Inhalte gilt die separate Datenschutzerklärung von wildnislehrer.com:
+3.1 WordPress-API (Blogbeiträge, Seiten, Kurse)
 
+Die App lädt Inhalte über die WordPress REST API von wildnislehrer.com.
+
+Übertragene Daten:
+- IP-Adresse (technisch erforderlich)
+- Angefragte Inhalte (Blog-Posts, Seiten, Kurse)
+- Datum und Uhrzeit der Anfrage
+- App-Version und Android-Version (User-Agent)
+
+Zweck: Anzeige von Blogbeiträgen, Seiten und Kursinhalten in der App
+
+Verschlüsselung: Alle Anfragen erfolgen über HTTPS (verschlüsselt)
+
+Speicherung: Die geladenen Inhalte werden lokal auf Ihrem Gerät zwischengespeichert (Cache), um Ladezeiten zu verkürzen. Dieser Cache wird automatisch nach 6 Stunden aktualisiert.
+
+Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der App-Funktionalität)
+
+Datenschutzerklärung des Anbieters:
 👉 https://wildnislehrer.com/datenschutzerklaerung/
 
-Weiterhin erhebt die App bei aktiver Nutzung der Anzeige von Standort und Wetterdaten folgende Daten:
+3.2 YouTube Data API v3 (Video-Liste)
 
-→ ✅ Standort → Ungefährer Standort
+Die App lädt eine Liste von YouTube-Videos unseres Kanals über die YouTube Data API v3.
 
-Details:
+Übertragene Daten bei Laden der Video-Liste:
+- IP-Adresse (technisch erforderlich)
+- YouTube Data API Anfrage (Kanal-ID, Anzahl Videos)
+- API-Schlüssel (authentifiziert die App, enthält keine Nutzerdaten)
 
-Datentyp: Standort
+Zweck: Anzeige einer Liste aktueller YouTube-Videos in der App
 
-Art: Ungefährer Standort (latitude/longitude)
+Verschlüsselung: HTTPS (verschlüsselt)
 
-Erfasst oder geteilt: ✅ Geteilt (an Open-Meteo API)
+Speicherung: Die Video-Liste wird lokal zwischengespeichert (Cache), keine personenbezogenen Daten werden gespeichert.
 
-Ist die Erhebung optional? → JA (Nutzer muss Berechtigung erteilen)
+Wichtig: Beim Laden der Video-Liste werden KEINE Daten an YouTube/Google übertragen, die Sie als Person identifizieren. Die API-Anfrage ist anonym.
 
-Zweck: App-Funktionalität (Wetterdaten abrufen)
+Übertragene Daten beim Klick auf ein Video:
+Wenn Sie auf ein Video klicken, werden Sie zu YouTube weitergeleitet (YouTube-App oder Browser). Dabei werden Daten an Google LLC (USA) übertragen:
+- IP-Adresse
+- Geräteinformationen
+- YouTube-Account-Daten (falls Sie bei YouTube eingeloggt sind)
 
-Werden alle Nutzerdaten bei der Übertragung verschlüsselt?
+Einwilligung: Beim ersten Klick auf ein Video erscheint ein Hinweistext. Sie können der Weiterleitung zustimmen oder sie ablehnen. Ihre Entscheidung wird lokal gespeichert.
 
-→ ✅ JA
+Anbieter: Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
 
-Begründung:
+Datenschutzerklärungen:
+- YouTube: https://policies.google.com/privacy
+- Google: https://www.google.com/policies/privacy/
 
-Open-Meteo API verwendet HTTPS (verschlüsselte Verbindung)
+Rechtsgrundlage:
+- Laden der Video-Liste: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)
+- Weiterleitung zu YouTube: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
 
-URL: https://api.open-meteo.com/...
+3.3 Twitter/X (Link zu Profil)
 
-Alle Daten werden über TLS/SSL verschlüsselt übertragen
+Die App enthält einen Link zu unserem Twitter/X-Profil.
 
-Können Nutzer die Löschung dieser Daten beantragen?
+Übertragene Daten beim Klick:
+Wenn Sie auf den Twitter-Button klicken, werden Sie zu Twitter/X weitergeleitet. Dabei werden Daten an X Corp. (USA) übertragen:
+- IP-Adresse
+- Geräteinformationen
+- Twitter/X-Account-Daten (falls Sie bei Twitter/X eingeloggt sind)
 
-→ ✅ Nein, Daten können nicht gelöscht werden
+Einwilligung: Beim ersten Klick erscheint ein Hinweistext. Sie können der Weiterleitung zustimmen oder sie ablehnen. Ihre Entscheidung wird lokal gespeichert.
 
-Begründung:
+Anbieter: X Corp., 1355 Market Street, Suite 900, San Francisco, CA 94103, USA
 
-Open-Meteo speichert keine Nutzerdaten (nur anonyme API-Logs)
+Datenschutzerklärung: https://twitter.com/privacy
 
-Die API-Anfragen sind anonym
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
 
-Es werden keine personenbezogenen Daten gespeichert
+3.4 OpenStreetMap (Kartendarstellung)
 
-Technische Daten dazu im Detail:
+Die App verwendet OpenStreetMap zur Anzeige von Karten in der Standort-Ansicht.
 
-Datentyp: Standort
-├─ Ungefährer Standort: ✅ JA
-└─ Genauer Standort: ❌ NEIN
+Übertragene Daten:
+- IP-Adresse (technisch erforderlich)
+- Kartenausschnitt (geografische Koordinaten des angezeigten Bereichs)
+- Zoom-Level
 
-Wird dieser Datentyp erfasst oder geteilt?
-└─ ✅ Geteilt
+Zweck: Anzeige von Kartenkacheln für die Standort-Funktion
 
-Ist die Datenerhebung vorübergehend?
-└─ ✅ JA (Daten werden nicht gespeichert)
+Verschlüsselung: HTTPS (verschlüsselt)
 
-Ist die Datenerhebung erforderlich oder optional?
-└─ ✅ Optional (Nutzer kann Berechtigung verweigern)
+Speicherung: Kartenkacheln werden lokal zwischengespeichert, um Datenvolumen zu sparen
 
-Warum werden diese Nutzerdaten erhoben?
-└─ ✅ App-Funktionalität
-└─ Beschreibung: "Standortdaten werden verwendet, um aktuelle Wetterdaten für den Standort des Nutzers abzurufen"
+Anbieter: OpenStreetMap Foundation, St John's Innovation Centre, Cowley Road, Cambridge CB4 0WS, United Kingdom
 
-Werden alle Nutzerdaten bei der Übertragung verschlüsselt?
-└─ ✅ JA
+Datenschutzerklärung: https://osmfoundation.org/wiki/Privacy_Policy
 
-Können Nutzer die Löschung dieser Daten beantragen?
-└─ ❌ NEIN
-Grund: Die übertragenen Daten sind anonym und werden nicht dauerhaft gespeichert.
-Es gibt keine personenbezogenen Daten, die gelöscht werden müssten.
+Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der Kartenfunktion)
 
-Standortdaten und Wetterdienst
+3.5 Open-Meteo (Wetterdaten)
 
 Die App verwendet Ihren Standort, um aktuelle Wetterdaten anzuzeigen.
-Dabei werden folgende Daten verarbeitet:
 
-Übertragung: Ihre Standortkoordinaten (Breiten- und Längengrad) werden
-verschlüsselt (HTTPS) an den Wetterdienst Open-Meteo übertragen.
+Übertragene Daten:
+- Standortkoordinaten (Breiten- und Längengrad)
+- IP-Adresse (technisch erforderlich)
 
-Zweck: Abruf von Wetterdaten für Ihren aktuellen Standort.
+Zweck: Abruf von Wetterdaten für Ihren aktuellen Standort
 
-Speicherung: Open-Meteo speichert keine personenbezogenen Daten.
-Die Anfragen sind anonym.
+Verschlüsselung: HTTPS (verschlüsselt)
 
-Freiwilligkeit: Die Standortfreigabe ist optional. Sie können die
-Berechtigung jederzeit in den App-Einstellungen widerrufen.
+Speicherung: Open-Meteo speichert keine personenbezogenen Daten. Die Anfragen sind anonym.
+
+Freiwilligkeit: Die Standortfreigabe ist optional. Sie können die Berechtigung jederzeit in den Android-Einstellungen widerrufen.
 
 Anbieter: Open-Meteo (https://open-meteo.com)
-Datenschutz: https://open-meteo.com/en/terms
 
-Ihre Standortdaten werden ausschließlich für die Wetterfunktion verwendet
-und nicht von uns gespeichert oder an andere Dienste weitergegeben.
+Datenschutzerklärung: https://open-meteo.com/en/terms
 
-Zusammenfassung:
+DSGVO-Konformität: ✅ Open-Meteo ist DSGVO-konform, keine Registrierung erforderlich, anonyme Nutzung
 
-FrageAntwortWerden Nutzerdaten erhoben/geteilt?✅ JAWelcher Datentyp?Ungefährer StandortErfasst oder geteilt?Geteilt (an Open-Meteo)Verschlüsselt übertragen?✅ JA (HTTPS)Optional?✅ JAZweck?App-Funktionalität (Wetter)Löschung möglich?❌ Nein (anonym, nicht gespeichert)
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Standortfreigabe)
 
-Verwendete Drittanbieter-Dienste:
+3.6 RainViewer (Niederschlagsradar)
 
-OpenStreetMap (Kartendarstellung)
+Übertragene Daten:
+- IP-Adresse (technisch erforderlich)
+- Kartenbereich (geografische Koordinaten)
 
-Übertragene Daten: IP-Adresse, Kartenbereich (ungefährer Standort)
+Zweck: Anzeige von Niederschlagsradar-Daten
 
-Zweck: Anzeige von Kartenkacheln
+Verschlüsselung: HTTPS (verschlüsselt)
 
-Datenschutz: https://osmfoundation.org/wiki/Privacy_Policy
+Anbieter: RainViewer
 
-Open-Meteo (Wetterdaten)
+Datenschutzerklärung: https://www.rainviewer.com/privacy-policy.html
 
-Übertragene Daten: Standortkoordinaten
+Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)
 
-Zweck: Abruf aktueller Wetterdaten
+3.7 Signal Messenger (Support-Gruppe)
 
-Datenschutz: https://open-meteo.com/en/terms
+Die App bietet optional eine Support-Gruppe über Signal Messenger an.
 
-RainViewer (Niederschlagsradar)
+Angebot und Freiwilligkeit:
+Die Teilnahme an der Support-Gruppe ist vollständig freiwillig und nicht erforderlich, um die App zu nutzen.
 
-Übertragene Daten: IP-Adresse, Kartenbereich
+Datenverarbeitung durch Signal:
+Wenn Sie der Support-Gruppe beitreten, werden Ihre Daten durch Signal Messenger LLC (Signal Technology Foundation, USA) verarbeitet.
 
-Zweck: Anzeige von Niederschlagsradar
+Signal verarbeitet folgende Daten:
+- Ihre Telefonnummer (für die Registrierung bei Signal)
+- Nachrichten innerhalb der Gruppe (Ende-zu-Ende-verschlüsselt)
+- Metadaten (minimiert durch Signal's Protokoll)
 
-Datenschutz: https://www.rainviewer.com/privacy-policy.html
+Datenschutz in der Signal-Gruppe:
+- Alle Nachrichten sind Ende-zu-Ende-verschlüsselt
+- Ihre Telefonnummer bleibt für andere Gruppenmitglieder grundsätzlich verborgen
+- Andere Gruppenmitglieder sehen nur Ihren Signal-Profilnamen (falls von Ihnen eingerichtet)
+- Nur Kontakte, die Sie bereits in Ihrem Adressbuch gespeichert haben, können Ihre Telefonnummer sehen
+- Signal speichert minimal Metadaten
 
-Alle Übertragungen erfolgen verschlüsselt über HTTPS.
+Einwilligung: Beim ersten Klick auf den Signal-Button erscheint ein ausführlicher Hinweistext über die Datenverarbeitung. Sie können der Weiterleitung zustimmen oder sie ablehnen. Ihre Entscheidung wird lokal gespeichert.
 
-Wichtig:
+Widerruf: Sie können die Gruppe jederzeit ohne Angabe von Gründen verlassen. Ein Widerruf Ihrer Einwilligung lässt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung unberührt.
 
-✅ Open-Meteo ist DSGVO-konform
+Anbieter: Signal Messenger LLC, Signal Technology Foundation, USA
 
-✅ Keine Registrierung/API-Key nötig = anonym
+Datenschutzerklärung: https://signal.org/legal/
 
-✅ HTTPS = verschlüsselt
+Drittlandtransfer: USA (auf Grundlage der EU-Standardvertragsklauseln)
 
-✅ Keine dauerhafte Speicherung
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
+
+3.8 Zusammenfassung verwendeter Drittanbieter-Dienste
+
+| Dienst | Zweck | Datenübertragung | Verschlüsselt |
+|--------|-------|------------------|---------------|
+| WordPress-API | Inhalte laden | IP, Anfragen | ✅ HTTPS |
+| YouTube Data API | Video-Liste | IP, API-Request | ✅ HTTPS |
+| Twitter/X | Link zu Profil | IP, Geräteinfo | ✅ HTTPS |
+| OpenStreetMap | Karten anzeigen | IP, Kartenbereich | ✅ HTTPS |
+| Open-Meteo | Wetterdaten | IP, Standort | ✅ HTTPS |
+| RainViewer | Niederschlagsradar | IP, Kartenbereich | ✅ HTTPS |
+| Signal Messenger | Support-Gruppe | Telefonnummer, Nachrichten | ✅ E2E-verschlüsselt |
 
 4. Datenschutzhinweise zur Nutzung der Webseite mittels auf Wunsch eingerichteten Nutzerkontos über die App HundeWildnis
 
-Diese Hinweise beziehen sich auf die Nutzung der Webseite https://www.wildnislehrer.com über die App HundeWildnis, entwickelt von HundeWildnisSchule Ulbricht, Entwickler Herr Peter Jörg Ulbricht. 
+Diese Hinweise beziehen sich auf die Nutzung der Webseite https://www.wildnislehrer.com über die App HundeWildnis, entwickelt von HundeWildnisSchule Ulbricht, Entwickler Herr Peter Jörg Ulbricht.
 
 Wir legen großen Wert auf den Schutz Ihrer personenbezogenen Daten. Im Folgenden erklären wir Ihnen, wie Sie die Löschung Ihrer Nutzerdaten anfordern können, welche Daten betroffen sind und welche Konsequenzen damit verbunden sind.
 
 Falls Sie ein Nutzerkonto auf unserer Webseite erstellt bzw. dessen Einrichtung veranlasst haben, was außerhalb der App erfolgt, können Sie über die E-Mail-Adresse tux4us@online.de die Löschung Ihrer E-Mail-Adresse und damit Ihres Nutzerzugangs verlangen. Bitte beachten Sie, dass mit der Löschung Ihres Nutzerzugangs die Möglichkeit entfällt, auf geschützte Inhalte zuzugreifen, die ein aktives Nutzerkonto voraussetzen.
 
-Schritte zur Anforderung der Löschung von Nutzerdaten
+Schritte zur Anforderung der Löschung von Nutzerdaten:
 
-Um die Löschung Ihrer Daten zu beantragen, folgen Sie bitte diesen Schritten:
+1. Erstellen Sie eine E-Mail: Schreiben Sie eine E-Mail mit der klaren Bitte um Löschung Ihrer Nutzerdaten (z. B. "Ich bitte um Löschung meiner E-Mail-Adresse und meines Nutzerzugangs").
 
-Erstellen Sie eine E-Mail: Schreiben Sie eine E-Mail mit der klaren Bitte um Löschung Ihrer Nutzerdaten (z. B. "Ich bitte um Löschung meiner E-Mail-Adresse und meines Nutzerzugangs").
+2. Absenderadresse: Die E-Mail muss von der identischen E-Mail-Adresse gesendet werden, unter der Ihr Nutzerkonto eingerichtet wurde. Dies dient der Verifizierung Ihrer Identität.
 
-Absenderadresse: Die E-Mail muss von der identischen E-Mail-Adresse gesendet werden, unter der Ihr Nutzerkonto eingerichtet wurde. Dies dient der Verifizierung Ihrer Identität.
+3. Empfänger: Senden Sie die E-Mail an tux4us@online.de.
 
-Empfänger: Senden Sie die E-Mail an tux4us@online.de.
+4. Bestätigung: Nach Erhalt Ihrer Anfrage werden wir diese prüfen und die Löschung innerhalb einer angemessenen Frist (in der Regel innerhalb von 30 Tagen) durchführen. Sie erhalten eine Bestätigung per E-Mail.
 
-Bestätigung: Nach Erhalt Ihrer Anfrage werden wir diese prüfen und die Löschung innerhalb einer angemessenen Frist (in der Regel innerhalb von 30 Tagen) durchführen. Sie erhalten eine Bestätigung per E-Mail.
-
-Art der zu löschenden oder aufzubewahrenden Daten
+Art der zu löschenden oder aufzubewahrenden Daten:
 
 Zu löschende Daten: Bei einer Löschanfrage werden Ihre E-Mail-Adresse als Nutzer-ID und das zugehörige Zugangspasswort vollständig gelöscht. Dies umfasst alle damit verbundenen personenbezogenen Daten, die für den Zugang zur Webseite erforderlich sind.
 
@@ -241,36 +268,31 @@ Aufzubewahrende Daten: Während der aktiven Nutzung Ihres Kontos werden die E-Ma
 
 Falls Sie weitere Fragen haben, kontaktieren Sie uns gerne über die angegebene E-Mail-Adresse. Weitere Details zu unserem Datenschutz finden Sie in unserer Datenschutzerklärung.
 
-5. Inhalte von YouTube
-
-Unsere App zeigt eine Liste von YouTube-Videos unseres Kanals an.
-Wenn Sie auf ein Video klicken, erhalten Sie einen Hinweistext und die Möglichkeit einer Weiterleitung zu YouTube zuzustimmen (um die Inhalte anzusehen) oder die Weiterleitung abzulehnen. 
-Dabei werden Daten an Google LLC übertragen (z.B. IP-Adresse, Geräteinformationen).
-
-Weitere Informationen:
-
-YouTube Datenschutz: https://policies.google.com/privacy
-
-Google Datenschutz: https://www.google.com/policies/privacy/
-
-Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)
-
-6. Deine Rechte
+5. Deine Rechte
 
 Da die App selbst keine personenbezogenen Daten erhebt oder speichert, entfallen die üblichen Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung usw. im Sinne der DSGVO.
 
-Bezüglich der Erhebung personenbezogener Daten über die Webseite www.wildnislehrer.com außer halb der App geben wir in obiger Datenschutzerklärung zur Webseite ausführlich Auskunft.
+Für die Verarbeitung personenbezogener Daten durch Drittanbieter (YouTube, Twitter/X, Signal, etc.) gelten deren jeweilige Datenschutzerklärungen. Auskunfts- und Löschungsrechte können Sie direkt bei den jeweiligen Anbietern geltend machen.
+
+Bezüglich der Erhebung personenbezogener Daten über die Webseite www.wildnislehrer.com außerhalb der App geben wir in obiger Datenschutzerklärung zur Webseite ausführlich Auskunft.
 
 Bei Fragen zur Datenschutzerklärung oder zur App darfst du dich jederzeit gerne melden:
 
 📧 tux4us@online.de
 
-7. Änderungen dieser Datenschutzerklärung
+6. Änderungen dieser Datenschutzerklärung
 
-Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du stets hier:
+Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du stets hier in der App unter "Datenschutzerklärung" im Menü.
 
-👉 HundeWildnisApp
+Stand dieser Datenschutzerklärung: Januar 2026
 
 Zusammenfassung
 
-Die HundeWildnis App ist datenschutzfreundlich und sammelt keine persönlichen Daten. 🐕✨
+✅ Die HundeWildnis App ist datenschutzfreundlich
+✅ Keine Erhebung personenbezogener Daten durch die App selbst
+✅ Alle Verbindungen sind verschlüsselt (HTTPS/E2E)
+✅ Lokaler Cache (nur auf Ihrem Gerät)
+✅ Freiwillige Funktionen mit vorheriger Einwilligung
+✅ Transparente Information über Drittanbieter-Dienste
+
+🐕✨
