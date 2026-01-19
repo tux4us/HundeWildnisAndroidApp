@@ -15,6 +15,7 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 - 📝 **Blog** - Die neuesten Blogbeiträge mit "Weitere laden"-Funktion
 - 📄 **Seiten** - Alle Seiten hierarchisch organisiert und übersichtlich dargestellt
 - 🎓 **Onlinekurse** - Direkter Zugriff auf alle Kursinhalte (in Arbeit)
+- 🎥 HundeWildnis YoutubeKanal - alle Videos in einer übersichtlichen Liste
 - 🔍 **Integrierte Suche** - Durchsuche alle Bereiche schnell und einfach
 - 🧭 Integrierter Kompass - unterwegs immer die Orientierung behalten
 - 📐 Integrierter Höhenmesser - immer wissen wie hoch man unterwegs ist
@@ -61,6 +62,10 @@ HundeWildnis bietet direkten Zugriff auf alle Inhalte von wildnislehrer.com in e
 - Dedizierter Bereich für alle Onlinekurse
 - Strukturierte Darstellung der Kursinhalte
 - Direkter Zugriff auf Kursmaterialien
+
+### 4. Videos
+- Übersichtliche Liste aller Videobeiträge unseres YouTube Kanals
+- Videos werden datenschutzfreundlich im Browser bzw. vorhandener externer YoutubeApp geöffnet
 
 ## 🛠️ Technologie-Stack
 
