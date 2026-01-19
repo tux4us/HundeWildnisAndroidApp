@@ -12,7 +12,7 @@
     <!-- Signal Support (NEU) -->
     <item
         android:id="@+id/action_signal"
-        android:title="HundeWildnisGruppe auf SIGNAL"
+        android:title="SIGNAL HundeWildnisGruppe"
         app:showAsAction="never" />
 
     <item
