@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -11,8 +13,18 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 15
-        versionName = "4.1"
+        versionCode = 17
+        versionName = "4.2"
+
+        // API Key aus local.properties laden - AUSSERHALB von android {}
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+
+        val youtubeApiKey = localProperties.getProperty("YOUTUBE_API_KEY", "")
+        buildConfigField("String", "YOUTUBE_API_KEY", "\"$youtubeApiKey\"")
     }
 
     buildTypes {
@@ -33,6 +45,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -52,6 +65,4 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.material.v1110)
     implementation("io.coil-kt:coil:2.5.0")
-    // YouTube Player
-    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 }

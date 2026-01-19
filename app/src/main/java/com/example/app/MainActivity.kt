@@ -407,10 +407,6 @@ class MainActivity : AppCompatActivity() {
         val fourth: D
     )
 
-    private fun saveYouTubeCache(videos: List<YouTubeVideo>) {
-        contentCache.saveYouTubeVideos(videos)
-    }
-
     private fun openYouTubeVideo(video: YouTubeVideo) {
         val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         val hasSeenYouTubeNotice = prefs.getBoolean("youtube_notice_shown", false)

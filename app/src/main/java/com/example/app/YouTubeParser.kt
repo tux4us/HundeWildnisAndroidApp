@@ -8,17 +8,23 @@ import java.net.URL
 
 class YouTubeParser {
     companion object {
-        private const val API_KEY = "AIzaSyAfFLsnejR05F-KgEXrsqM8ZJzLjKqrrVM"
+        private val API_KEY = BuildConfig.YOUTUBE_API_KEY
         private const val CHANNEL_ID = "UCmFBPW59wHASmFE99ay8qaA"
-        private const val TIMEOUT = 10000
+        private const val TIMEOUT = 30000  // 30 Sekunden (war 10000)
     }
 
     /**
      * Lädt die neuesten Videos vom YouTube-Kanal
      */
     suspend fun loadLatestVideos(maxResults: Int = 50): List<YouTubeVideo> {
+        var connection: HttpURLConnection? = null
         return try {
-            val urlString = "https://www.googleapis.com/youtube/v3/search?" +
+            if (API_KEY.isEmpty()) {
+                android.util.Log.e("YouTubeParser", "⚠️ API Key ist leer! Bitte in local.properties eintragen.")
+                return emptyList()
+            }
+
+            val url = "https://www.googleapis.com/youtube/v3/search?" +
                     "key=$API_KEY" +
                     "&channelId=$CHANNEL_ID" +
                     "&part=snippet" +
@@ -26,62 +32,28 @@ class YouTubeParser {
                     "&maxResults=$maxResults" +
                     "&type=video"
 
-            android.util.Log.d("YouTubeParser", "Lade Videos von: $urlString")
+            android.util.Log.d("YouTubeParser", "Lade Videos von YouTube API...")
 
-            val url = URL(urlString)
-            val connection = url.openConnection() as HttpURLConnection
+            connection = URL(url).openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
             connection.connectTimeout = TIMEOUT
             connection.readTimeout = TIMEOUT
 
             val responseCode = connection.responseCode
-            android.util.Log.d("YouTubeParser", "Response Code: $responseCode")
-
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 val response = connection.inputStream.bufferedReader().use { it.readText() }
-                android.util.Log.d("YouTubeParser", "Response erhalten (${response.length} Zeichen)")
+                android.util.Log.d("YouTubeParser", "✓ ${response.length} Zeichen empfangen")
                 parseVideos(response)
             } else {
-                // Lese Fehler-Response
-                val errorStream = connection.errorStream
-                val errorResponse = if (errorStream != null) {
-                    BufferedReader(InputStreamReader(errorStream)).use { it.readText() }
-                } else {
-                    "No error details available"
-                }
-
-                android.util.Log.e("YouTubeParser", "HTTP Error $responseCode")
-                android.util.Log.e("YouTubeParser", "Error Response: $errorResponse")
-
-                // Parse error details if JSON
-                try {
-                    val errorJson = JSONObject(errorResponse)
-                    if (errorJson.has("error")) {
-                        val error = errorJson.getJSONObject("error")
-                        val message = error.optString("message", "Unknown error")
-                        val code = error.optInt("code", responseCode)
-                        val status = error.optString("status", "UNKNOWN")
-
-                        android.util.Log.e("YouTubeParser", "API Error [$code - $status]: $message")
-
-                        val errors = error.optJSONArray("errors")
-                        if (errors != null && errors.length() > 0) {
-                            for (i in 0 until errors.length()) {
-                                val err = errors.getJSONObject(i)
-                                android.util.Log.e("YouTubeParser", "  - ${err.optString("reason")}: ${err.optString("message")}")
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    android.util.Log.e("YouTubeParser", "Could not parse error JSON")
-                }
-
+                val errorResponse = connection.errorStream?.bufferedReader()?.use { it.readText() } ?: "Keine Fehlermeldung"
+                android.util.Log.e("YouTubeParser", "❌ API Fehler $responseCode: $errorResponse")
                 emptyList()
             }
         } catch (e: Exception) {
-            android.util.Log.e("YouTubeParser", "Exception beim Laden der Videos", e)
-            e.printStackTrace()
+            android.util.Log.e("YouTubeParser", "❌ Fehler beim Laden der Videos", e)
             emptyList()
+        } finally {
+            connection?.disconnect()
         }
     }
 
@@ -90,60 +62,33 @@ class YouTubeParser {
      */
     private fun parseVideos(jsonString: String): List<YouTubeVideo> {
         val videos = mutableListOf<YouTubeVideo>()
-
         try {
             val json = JSONObject(jsonString)
-
-            // Prüfe auf Fehler
-            if (json.has("error")) {
-                val error = json.getJSONObject("error")
-                android.util.Log.e("YouTubeParser", "API Error in Response: ${error.getString("message")}")
-                return emptyList()
-            }
-
             val items = json.getJSONArray("items")
-            android.util.Log.d("YouTubeParser", "✅ Gefundene Videos: ${items.length()}")
 
             for (i in 0 until items.length()) {
-                try {
-                    val item = items.getJSONObject(i)
-                    val id = item.getJSONObject("id").getString("videoId")
-                    val snippet = item.getJSONObject("snippet")
+                val item = items.getJSONObject(i)
+                val id = item.getJSONObject("id").getString("videoId")
+                val snippet = item.getJSONObject("snippet")
+                val title = snippet.getString("title")
+                val description = snippet.getString("description")
+                val publishedAt = snippet.optString("publishedAt", "")  // optString für Sicherheit
 
-                    val title = snippet.getString("title")
-                    val description = snippet.getString("description")
-                    val publishedAt = snippet.getString("publishedAt")
-
-                    // Thumbnail URL
-                    val thumbnails = snippet.getJSONObject("thumbnails")
-                    val thumbnailUrl = when {
-                        thumbnails.has("high") -> thumbnails.getJSONObject("high").getString("url")
-                        thumbnails.has("medium") -> thumbnails.getJSONObject("medium").getString("url")
-                        else -> thumbnails.getJSONObject("default").getString("url")
-                    }
-
-                    videos.add(
-                        YouTubeVideo(
-                            videoId = id,
-                            title = title,
-                            description = description,
-                            thumbnailUrl = thumbnailUrl,
-                            publishedAt = publishedAt
-                        )
-                    )
-
-                    android.util.Log.d("YouTubeParser", "  ✓ Video #${i+1}: $title")
-                } catch (e: Exception) {
-                    android.util.Log.e("YouTubeParser", "Fehler beim Parsen von Video #$i", e)
+                val thumbnails = snippet.getJSONObject("thumbnails")
+                val thumbnailUrl = when {
+                    thumbnails.has("high") -> thumbnails.getJSONObject("high").getString("url")
+                    thumbnails.has("medium") -> thumbnails.getJSONObject("medium").getString("url")
+                    thumbnails.has("default") -> thumbnails.getJSONObject("default").getString("url")
+                    else -> ""
                 }
+
+                videos.add(YouTubeVideo(id, title, description, thumbnailUrl, publishedAt))
             }
 
-            android.util.Log.d("YouTubeParser", "✅ Erfolgreich ${videos.size} Videos geparst")
+            android.util.Log.d("YouTubeParser", "✓ ${videos.size} Videos geparst")
         } catch (e: Exception) {
-            android.util.Log.e("YouTubeParser", "Fehler beim JSON-Parsing", e)
-            e.printStackTrace()
+            android.util.Log.e("YouTubeParser", "❌ Fehler beim Parsen der Videos", e)
         }
-
         return videos
     }
 }
