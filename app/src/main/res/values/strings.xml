@@ -70,6 +70,13 @@
             jeweiligen Autors bzw. Erstellers.
             ZUWIDERHANDLUNG HAT SCHADENERSATZFORDERUNGEN ZUR FOLGE
             </p>
+
+            <h4>Datenschutz</h4>
+            <p>
+            Diese App nutzt die WordPress API (hundewildnis.de) zum Inhalte laden, die YouTube Data API zum Anzeigen von Videos unseres Kanals, verlinkt (Optional) zur X-App bzw. zu X im Webbrowser, den Signal Messenger (optional) zum freiwilligen Beitritt zu unserer Support-Gruppe.
+            Alle Verbindungen sind verschlüsselt (HTTPS).
+            Ausführliche Informationen in unserer Datenschutzerklärung.
+            </p>
             ]]>
     </string>
     <!-- Social Media -->
