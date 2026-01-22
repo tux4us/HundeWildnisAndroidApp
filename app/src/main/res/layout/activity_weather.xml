@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
-                android:text="☀️"
+                android:text="@string/weather_icon_placeholder"
                 android:textSize="80sp" />
 
             <!-- Temperatur -->
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
-                android:text="--°C"
+                android:text="@string/temperature_placeholder"
                 android:textColor="#8fad6f"
                 android:textSize="64sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
-                android:text="Wird geladen..."
+                android:text="@string/weather_description_loading"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
@@ -81,7 +81,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aktuelles Wetter"
+                        android:text="@string/current_weather_title"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -98,7 +98,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Gefühlt:"
+                            android:text="@string/feels_like_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -106,7 +106,7 @@
                             android:id="@+id/feelsLikeText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="--°C"
+                            android:text="@string/temperature_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -123,7 +123,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Luftfeuchtigkeit:"
+                            android:text="@string/humidity_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -131,7 +131,7 @@
                             android:id="@+id/humidityText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="--%"
+                            android:text="@string/humidity_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -148,7 +148,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Wind:"
+                            android:text="@string/wind_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -156,7 +156,7 @@
                             android:id="@+id/windText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-- km/h"
+                            android:text="@string/wind_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -172,7 +172,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Niederschlag:"
+                            android:text="@string/precipitation_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -180,7 +180,7 @@
                             android:id="@+id/precipitationText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-- mm"
+                            android:text="@string/precipitation_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -206,7 +206,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Weitere Details"
+                        android:text="@string/more_details_title"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -223,7 +223,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Luftdruck:"
+                            android:text="@string/pressure_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -231,7 +231,7 @@
                             android:id="@+id/pressureText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-- hPa"
+                            android:text="@string/pressure_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -248,7 +248,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Sichtweite:"
+                            android:text="@string/visibility_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -256,7 +256,7 @@
                             android:id="@+id/visibilityText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-- km"
+                            android:text="@string/visibility_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -272,7 +272,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="UV-Index:"
+                            android:text="@string/uv_index_label"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -280,7 +280,7 @@
                             android:id="@+id/uvIndexText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="--"
+                            android:text="@string/uv_index_placeholder"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -305,7 +305,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="24-Stunden Vorhersage"
+                        android:text="@string/forecast_24h_title"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -340,22 +340,28 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Niederschlagsradar"
+                        android:text="@string/precipitation_radar_title"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:padding="16dp"
                         android:paddingBottom="8dp" />
 
-                    <WebView
-                        android:id="@+id/radarWebView"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="400dp" />
+                        android:layout_height="400dp">
+
+                        <WebView
+                            android:id="@+id/radarWebView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </FrameLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Quelle: RainViewer"
+                        android:text="@string/rainviewer_source"
                         android:textColor="#666666"
                         android:textSize="10sp"
                         android:padding="8dp" />
@@ -368,7 +374,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="📍 Standort wird ermittelt..."
+                android:text="@string/location_determining"
                 android:textColor="#999999"
                 android:textSize="14sp" />
 
@@ -378,7 +384,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="Daten: Open-Meteo.com"
+                android:text="@string/open_meteo_source"
                 android:textColor="#666666"
                 android:textSize="12sp" />
 

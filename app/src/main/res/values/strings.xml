@@ -85,4 +85,29 @@
     <!-- NEU: Signal -->
     <string name="signal_support">SIGNAL HundeWildnisGruppe</string>
     <string name="signal_group_link">https://signal.group/#CjQKIHJcoNHMe3tNArSNAp9uYDw6psjUVbVFP1HFDYi-cAQwEhA37ia7Wb2iYAXEEnk-6mT2</string>
+
+    <!-- Weather Activity -->
+    <string name="weather_icon_placeholder">☀️</string>
+    <string name="temperature_placeholder">--°C</string>
+    <string name="weather_description_loading">Wird geladen...</string>
+    <string name="current_weather_title">Aktuelles Wetter</string>
+    <string name="feels_like_label">Gefühlt:</string>
+    <string name="humidity_label">Luftfeuchtigkeit:</string>
+    <string name="humidity_placeholder">--%</string>
+    <string name="wind_label">Wind:</string>
+    <string name="wind_placeholder">-- km/h</string>
+    <string name="precipitation_label">Niederschlag:</string>
+    <string name="precipitation_placeholder">-- mm</string>
+    <string name="more_details_title">Weitere Details</string>
+    <string name="pressure_label">Luftdruck:</string>
+    <string name="pressure_placeholder">-- hPa</string>
+    <string name="visibility_label">Sichtweite:</string>
+    <string name="visibility_placeholder">-- km</string>
+    <string name="uv_index_label">UV-Index:</string>
+    <string name="uv_index_placeholder">--</string>
+    <string name="forecast_24h_title">24-Stunden Vorhersage</string>
+    <string name="precipitation_radar_title">Niederschlagsradar</string>
+    <string name="rainviewer_source">Quelle: RainViewer</string>
+    <string name="location_determining">📍 Standort wird ermittelt...</string>
+    <string name="open_meteo_source">Daten: Open-Meteo.com</string>
 </resources>

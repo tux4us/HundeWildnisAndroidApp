@@ -1,6 +1,7 @@
 package com.hundewildnis.app
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,6 +10,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -81,9 +83,42 @@ class LocationActivity : AppCompatActivity(), LocationListener {
         stopLocationUpdates()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupMap() {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
+
+        // Enable multi-touch gestures for panning and zooming
         binding.mapView.setMultiTouchControls(true)
+
+        // Set up custom zoom buttons
+        binding.zoomInButton.setOnClickListener {
+            binding.mapView.controller.zoomIn()
+        }
+
+        binding.zoomOutButton.setOnClickListener {
+            binding.mapView.controller.zoomOut()
+        }
+
+        // Disable the built-in zoom controls
+        binding.mapView.setBuiltInZoomControls(false);
+
+        // Fix for map panning inside a ScrollView
+        binding.mapView.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Disallow the parent ScrollView to intercept touch events.
+                    binding.scrollView.requestDisallowInterceptTouchEvent(true)
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // Allow the parent ScrollView to intercept touch events again.
+                    binding.scrollView.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            // Let the map view handle the touch event.
+            v.performClick()
+            false
+        }
+
         binding.mapView.controller.setZoom(15.0)
 
         // Dunkles Theme für die Karte (optional)

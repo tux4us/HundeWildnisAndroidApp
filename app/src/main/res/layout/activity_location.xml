@@ -20,6 +20,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -36,7 +37,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:src="@android:drawable/ic_menu_mylocation"
-                android:tint="#8fad6f" />
+                app:tint="#8fad6f" />
 
             <TextView
                 android:id="@+id/statusText"
@@ -135,26 +136,40 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Standort auf Karte"
-                        android:textColor="#8fad6f"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:padding="16dp"
-                        android:paddingBottom="8dp" />
+                    android:layout_height="300dp">
 
                     <org.osmdroid.views.MapView
                         android:id="@+id/mapView"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp" />
-                </LinearLayout>
+                        android:layout_height="match_parent" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <ImageButton
+                            android:id="@+id/zoomInButton"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Zoom In"
+                            android:src="@drawable/ic_add" />
+
+                        <ImageButton
+                            android:id="@+id/zoomOutButton"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Zoom Out"
+                            android:src="@drawable/ic_remove" />
+                    </LinearLayout>
+
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <Button
