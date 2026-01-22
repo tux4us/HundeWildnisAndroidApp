@@ -125,7 +125,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- NEUE KARTE -->
+            <!-- KARTE MIT ZOOM-BUTTONS UND COPYRIGHT -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mapCard"
                 android:layout_width="match_parent"
@@ -140,34 +140,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp">
 
+                    <!-- OSMDroid MapView -->
                     <org.osmdroid.views.MapView
                         android:id="@+id/mapView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
+                    <!-- Zoom-Buttons (GRÜNER HINTERGRUND, WEISSE ICONS) -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"
                         android:orientation="vertical"
-                        android:padding="8dp">
+                        android:padding="8dp"
+                        android:layout_marginBottom="24dp">
 
                         <ImageButton
                             android:id="@+id/zoomInButton"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="@drawable/zoom_button_background"
                             android:contentDescription="Zoom In"
-                            android:src="@drawable/ic_add" />
+                            android:src="@drawable/ic_add"
+                            app:tint="#FFFFFF"
+                            android:scaleType="centerInside"
+                            android:padding="8dp" />
 
                         <ImageButton
                             android:id="@+id/zoomOutButton"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/zoom_button_background"
                             android:contentDescription="Zoom Out"
-                            android:src="@drawable/ic_remove" />
+                            android:src="@drawable/ic_remove"
+                            app:tint="#FFFFFF"
+                            android:scaleType="centerInside"
+                            android:padding="8dp" />
                     </LinearLayout>
+
+                    <!-- OSM COPYRIGHT (ANKLICKBAR, PERMANENT AM UNTEREN RAND) -->
+                    <TextView
+                        android:id="@+id/osmCopyrightText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:layout_margin="4dp"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:background="#CC000000"
+                        android:text="Map data © OpenStreetMap Contributors"
+                        android:textColor="#FFFFFF"
+                        android:textSize="9sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground" />
 
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -189,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:text="Dein Standort wird nur beim Teilen übertragen"
+                android:text="Dein Standort wird nur beim Teilen übertragen.\nNur Du und der Empfänger bzw. die empfangende App erfahren Deine Standortdaten."
                 android:textAlignment="center"
                 android:textColor="#999999"
                 android:textSize="12sp" />

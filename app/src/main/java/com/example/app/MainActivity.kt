@@ -667,11 +667,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.action_signal -> {  // NEU
-                openSignal()
-                true
-            }
-
             R.id.action_privacy -> {
                 openPrivacyPolicy()
                 true

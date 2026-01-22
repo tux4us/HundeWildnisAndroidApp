@@ -9,12 +9,6 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
-    <!-- Signal Support (NEU) -->
-    <item
-        android:id="@+id/action_signal"
-        android:title="SIGNAL HundeWildnisGruppe"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/action_theme"
         android:icon="@android:drawable/ic_menu_view"

@@ -69,6 +69,14 @@ class LocationActivity : AppCompatActivity(), LocationListener {
             shareLocation()
         }
 
+        // OSM Copyright Link aktivieren
+        binding.osmCopyrightText.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("https://www.openstreetmap.org/copyright")
+            }
+            startActivity(intent)
+        }
+
         checkLocationPermission()
     }
 
