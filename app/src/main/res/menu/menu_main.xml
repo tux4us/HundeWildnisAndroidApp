@@ -19,14 +19,28 @@
         android:id="@+id/action_privacy"
         android:icon="@android:drawable/ic_menu_info_details"
         android:iconTint="#FFFFFF"
-        android:title="Datenschutz"
+        android:title="🔒 Datenschutz"
         app:showAsAction="never"
         app:iconTint="#FFFFFF" />
 
     <!-- Impressum (NEU) -->
     <item
         android:id="@+id/action_imprint"
-        android:title="Impressum"
+        android:title="⚖️ Impressum"
+        app:showAsAction="never" />
+
+    <!-- NEU: SIGNAL Chat mit Wildnislehrerin -->
+    <item
+        android:id="@+id/action_signal_wildnislehrerin"
+        android:title="💬 SIGNAL Chat mit Manuela"
+        android:icon="@drawable/ic_signal"
+        app:showAsAction="never" />
+
+    <!-- NEU: SIGNAL Chat mit Wildnislehrer -->
+    <item
+        android:id="@+id/action_signal_wildnislehrer"
+        android:title="💬 SIGNAL Chat mit Jörg"
+        android:icon="@drawable/ic_signal"
         app:showAsAction="never" />
 
     <!-- NEUER Refresh Button -->

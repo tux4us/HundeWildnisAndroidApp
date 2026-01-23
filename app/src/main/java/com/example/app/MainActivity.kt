@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         loadThemePreference()
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -64,7 +65,56 @@ class MainActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(0, 0, 0, systemBars.bottom)
+
+            // 1. Bottom Navigation bekommt Padding für System-Navigation
+            binding.bottomNavigation.setPadding(0, 0, 0, systemBars.bottom)
+
+            // 2. Warte bis BottomNavigation ihre Höhe kennt
+            binding.bottomNavigation.post {
+                val bottomNavHeight = binding.bottomNavigation.height
+                val totalBottomPadding = bottomNavHeight + systemBars.bottom
+
+                // 2a. Setze Padding für ALLE RecyclerViews
+                binding.blogRecyclerView.setPadding(
+                    binding.blogRecyclerView.paddingLeft,
+                    binding.blogRecyclerView.paddingTop,
+                    binding.blogRecyclerView.paddingRight,
+                    totalBottomPadding
+                )
+
+                binding.pagesRecyclerView.setPadding(
+                    binding.pagesRecyclerView.paddingLeft,
+                    binding.pagesRecyclerView.paddingTop,
+                    binding.pagesRecyclerView.paddingRight,
+                    totalBottomPadding
+                )
+
+                binding.coursesRecyclerView.setPadding(
+                    binding.coursesRecyclerView.paddingLeft,
+                    binding.coursesRecyclerView.paddingTop,
+                    binding.coursesRecyclerView.paddingRight,
+                    totalBottomPadding
+                )
+
+                binding.youtubeRecyclerView.setPadding(
+                    binding.youtubeRecyclerView.paddingLeft,
+                    binding.youtubeRecyclerView.paddingTop,
+                    binding.youtubeRecyclerView.paddingRight,
+                    totalBottomPadding
+                )
+
+                // 2b. Button Position - IM SELBEN BLOCK!
+                val buttonParams = binding.btnLoadMore.layoutParams as
+                        android.widget.FrameLayout.LayoutParams
+                buttonParams.bottomMargin = bottomNavHeight + systemBars.bottom + 16.dpToPx()
+                binding.btnLoadMore.layoutParams = buttonParams
+
+                android.util.Log.d("MainActivity",
+                    "✓ Padding: BottomNav=${bottomNavHeight}px + SystemBars=${systemBars.bottom}px = ${totalBottomPadding}px")
+                android.util.Log.d("MainActivity",
+                    "✓ Button Margin: ${buttonParams.bottomMargin}px")
+            }
+
             insets
         }
 
@@ -78,7 +128,11 @@ class MainActivity : AppCompatActivity() {
         setupButtons()
         setupFab()
         loadContent()
+    }
 
+    // Hilfsfunktion
+    private fun Int.dpToPx(): Int {
+        return (this * resources.displayMetrics.density).toInt()
     }
 
     private fun setupRecyclerViews() {
@@ -675,8 +729,143 @@ class MainActivity : AppCompatActivity() {
                 openImprint()
                 true
             }
+            // NEU: SIGNAL Chat mit Wildnislehrerin
+            R.id.action_signal_wildnislehrerin -> {
+                openSignalTrainer(
+                    name = "Hundetrainerin und Wildnislehrerin Manuela",
+                    link = "https://signal.me/#eu/Ia1RmzOJN5Qo9YkKQfs3vh7f8X70AjwOqb_jpVe5QV1Bw1UVnbpCk5abghaeuz5U"
+                )
+                true
+            }
+            // NEU: SIGNAL Chat mit Wildnislehrer
+            R.id.action_signal_wildnislehrer -> {
+                openSignalTrainer(
+                    name = "Hundetrainer und Wildnislehrer Jörg",
+                    link = "https://signal.me/#eu/UquXr52-0uUIh1o40pI5jH6HLy6gb3eIWeaSLn8eTIuCTKmOtFRF9Ji2VDvGXqFo"
+                )
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun openSignalTrainer(name: String, link: String) {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val prefKey = "signal_trainer_notice_shown"
+        val hasSeenNotice = prefs.getBoolean(prefKey, false)
+
+        if (!hasSeenNotice) {
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("$name via Signal kontaktieren")
+                .setMessage(
+                    "Du wirst zu Signal weitergeleitet, um direkt mit $name zu chatten.\n" +
+                            "Unterstützung bei Fragen zur Nutzung der App ist kostenfrei.\n" +
+                            "Für fachliche, individuelle Beratung zu inhaltlichen Fragen und Anliegen zu allen unseren Ausbildungs- und Lernthemen erbitten wir ein Honorar für unseren zeitlichen und fachlichen Aufwand.\n" +
+                            "Wir teilen bei Eingang einer Anfrage das Honorar im Voraus mit. Nach der Annahme des Honorarangebotes erfolgt der ausführliche Beratungs-Chat und fachliche Unterweisung.\n" +
+                            "Es gibt keine Verpflichtung zur Annahme des Honorarangebotes. NAchdem das Honorarangebot angenommen wurde ist die Beratung verbindlich vereinbart.\n" +
+                            "Wir sind fair, transparent und ehrlich.\n\n" +
+                            "Datenschutz:\n" +
+                            "• Deine Telefonnummer bleibt privat\n" +
+                            "• Signal ist Ende-zu-Ende-verschlüsselt\n" +
+                            "• Kein Tracking oder Datensammlung\n" +
+                            "• Die HundeWildnis-App speichert keine Daten über deine Signal-Nutzung\n\n" +
+                            "Pro-Tipp: Signal ist kostenlos und quelloffen. Falls du es noch nicht nutzt, " +
+                            "kannst du es aus dem Play Store, F-Droid oder von signal.org herunterladen.\n\n" +
+                            "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
+                )
+                .setPositiveButton("Ja, fortfahren") { _, _ ->
+                    prefs.edit().putBoolean(prefKey, true).apply()
+                    openSignalTrainerInternal(name, link)
+                }
+                .setNegativeButton("Abbrechen", null)
+                .setNeutralButton("Mehr zu Signal") { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://signal.org/"))
+                    startActivity(intent)
+                }
+                .create()
+
+            dialog.show()
+
+            // Button-Farben anpassen
+            val isDarkTheme = (resources.configuration.uiMode and
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+            val buttonColor = if (isDarkTheme) {
+                android.graphics.Color.WHITE
+            } else {
+                android.graphics.Color.parseColor("#2d5016")
+            }
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        } else {
+            openSignalTrainerInternal(name, link)
+        }
+    }
+
+    private fun openSignalTrainerInternal(name: String, link: String) {
+        try {
+            android.util.Log.d("MainActivity", "Öffne Signal-Link für $name: $link")
+
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            startActivity(intent)
+            android.util.Log.d("MainActivity", "✓ Signal-Intent gestartet")
+
+        } catch (e: android.content.ActivityNotFoundException) {
+            android.util.Log.e("MainActivity", "Signal nicht installiert")
+            showSignalNotInstalledDialogForTrainer()
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Fehler beim Öffnen von Signal", e)
+            Toast.makeText(this,
+                "Fehler beim Öffnen von Signal: ${e.message}",
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun showSignalNotInstalledDialogForTrainer() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Signal nicht installiert")
+            .setMessage(
+                "Um die Trainer zu kontaktieren, benötigst du die Signal-App.\n\n" +
+                        "Signal ist eine sichere, verschlüsselte Messenger-App und kostenlos.\n\n" +
+                        "Download-Quellen:\n" +
+                        "• Google Play Store\n" +
+                        "• F-Droid (Open Source)\n" +
+                        "• signal.org (direkt vom Hersteller)\n\n" +
+                        "Möchtest du Signal jetzt herunterladen?"
+            )
+            .setPositiveButton("Ja, zur Website") { _, _ ->
+                val websiteIntent = Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://signal.org/download/"))
+                startActivity(websiteIntent)
+            }
+            .setNeutralButton("Play Store") { _, _ ->
+                val playStoreIntent = Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms"))
+                startActivity(playStoreIntent)
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+
+        dialog.show()
+
+        val isDarkTheme = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val buttonColor = if (isDarkTheme) {
+            android.graphics.Color.WHITE
+        } else {
+            android.graphics.Color.parseColor("#2d5016")
+        }
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun openPrivacyPolicy() {
@@ -783,17 +972,6 @@ class MainActivity : AppCompatActivity() {
             }, 300)
         }
 
-        // NEU: Signal FAB
-        binding.fabSignal.setOnClickListener { view ->
-            android.util.Log.d("MainActivity", "Signal FAB geklickt!")
-            view.isClickable = false
-            closeFab()
-            view.postDelayed({
-                openSignal()
-                view.isClickable = true
-            }, 300)
-        }
-
         android.util.Log.d("MainActivity", "setupFab() abgeschlossen")
     }
 
@@ -817,7 +995,6 @@ class MainActivity : AppCompatActivity() {
         showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
         showFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
         showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 180)
-        showFabWithAnimation(binding.fabSignal, binding.fabSignalLabel, 240)
 
         binding.fabMain.animate().rotation(45f).setDuration(200).start()
 
@@ -843,7 +1020,6 @@ class MainActivity : AppCompatActivity() {
         hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
         hideFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
         hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 180)
-        hideFabWithAnimation(binding.fabSignal, binding.fabSignalLabel, 240)
 
         binding.fabMain.animate().rotation(0f).setDuration(200).start()
     }
@@ -908,130 +1084,6 @@ class MainActivity : AppCompatActivity() {
     private fun openAltimeter() {
         val intent = Intent(this, AltimeterActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun openSignal() {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val hasSeenSignalNotice = prefs.getBoolean("signal_notice_shown", false)
-
-        if (!hasSeenSignalNotice) {
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("Support-Gruppe auf Signal")
-                .setMessage(
-                    "Du wirst zu unserer Support-Gruppe auf Signal weitergeleitet.\n\n" +
-                            "Die HundeWildnisGruppe dient dem gegenseitigen Austausch zu Inhalten der App und deren Anwendung. Du erhältst Unterstützung von Manuela und Jörg.\n\n" +
-                            "Datenschutz:\n" +
-                            "• Deine Telefonnummer bleibt privat und kann nur von bereits Dir bekannten Nutzern gesehen werden.\n" +
-                            "• Nur Kontakte in deinem Adressbuch können deine Nummer sehen\n" +
-                            "• Andere sehen nur deinen Signal-Profilnamen, welchen Du beliebig und anonym gestalten kannst\n" +
-                            "• Die App HundeWildnis speichert keinerlei Daten welche mit der Nutzung von SIGNAL in Verbindung stehen.\n" +
-                            "• Signal ist Ende-zu-Ende-verschlüsselt und respektiert DSGVO gerecht Datenschutz und Privatsphäre.\n\n" +
-                            "Wir nutzen Signal statt WhatsApp für unsere Supportgruppe, da es als Non-Profit-App minimal Metadaten sammelt, Telefonnummern standardmäßig versteckt und keine Daten für Werbung teilt – im Gegensatz zu WhatsApps Meta-Integration mit umfangreichem Tracking.\n\n" +
-                            "Die Teilnahme ist freiwillig. Du kannst die Gruppe jederzeit verlassen.\n\n" +
-                            "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
-                )
-                .setPositiveButton("Ja, fortfahren") { _, _ ->
-                    prefs.edit().putBoolean("signal_notice_shown", true).apply()
-                    openSignalInternal()
-                }
-                .setNegativeButton("Abbrechen", null)
-                .setNeutralButton("Datenschutz") { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://signal.org/legal/"))
-                    startActivity(intent)
-                }
-                .create()
-
-            dialog.show()
-
-            // Bestimme Farbe basierend auf Theme
-            val isDarkTheme = (resources.configuration.uiMode and
-                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                    android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-            val buttonColor = if (isDarkTheme) {
-                android.graphics.Color.WHITE
-            } else {
-                android.graphics.Color.parseColor("#2d5016")
-            }
-
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        } else {
-            openSignalInternal()
-        }
-    }
-
-    private fun openSignalInternal() {
-        try {
-            val signalGroupLink = getString(R.string.signal_group_link)
-
-            android.util.Log.d("MainActivity", "Versuche Signal-Link zu öffnen: $signalGroupLink")
-
-            // Erstelle Intent mit dem Signal-Gruppen-Link
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(signalGroupLink))
-
-            // Füge Flags hinzu die helfen können
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-            try {
-                // Versuche einfach zu starten - ohne Package-Check!
-                startActivity(intent)
-                android.util.Log.d("MainActivity", "✓ Intent gestartet")
-            } catch (activityNotFound: android.content.ActivityNotFoundException) {
-                // Nur wenn wirklich keine App gefunden wurde
-                android.util.Log.e("MainActivity", "Keine App für Signal-Link gefunden")
-                showSignalNotInstalledDialog()
-            }
-
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Unerwarteter Fehler", e)
-            Toast.makeText(this,
-                "Fehler beim Öffnen: ${e.message}",
-                Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun showSignalNotInstalledDialog() {
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Signal nicht installiert")
-            .setMessage(
-                "Um der Support-Gruppe beizutreten, benötigst du die Signal-App.\n\n" +
-                        "Du kannst Signal aus folgenden Quellen installieren:\n" +
-                        "• Google Play Store\n" +
-                        "• F-Droid\n" +
-                        "• Signal Website (signal.org)\n\n" +
-                        "Möchtest du die Signal-Website öffnen?"
-            )
-            .setPositiveButton("Ja, zur Website") { _, _ ->
-                val websiteIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://signal.org/download/"))
-                startActivity(websiteIntent)
-            }
-            .setNeutralButton("Play Store") { _, _ ->
-                val playStoreIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms"))
-                startActivity(playStoreIntent)
-            }
-            .setNegativeButton("Abbrechen", null)
-            .create()
-
-        dialog.show()
-
-        val isDarkTheme = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-        val buttonColor = if (isDarkTheme) {
-            android.graphics.Color.WHITE
-        } else {
-            android.graphics.Color.parseColor("#2d5016")
-        }
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun loadThemePreference() {
