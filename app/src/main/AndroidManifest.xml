@@ -17,7 +17,7 @@
         android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.app.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
@@ -31,7 +31,7 @@
         <activity
             android:name=".ImprintActivity"
             android:label="Impressum"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.app.MainActivity"
             android:exported="false" />
 
 
@@ -39,7 +39,7 @@
             android:name=".ContentActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName="com.example.app.MainActivity" />
 
         <activity
             android:name=".CompassActivity"
@@ -54,7 +54,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".LocationActivity"
+            android:name="com.example.app.LocationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="fullSensor"
             android:exported="false" />

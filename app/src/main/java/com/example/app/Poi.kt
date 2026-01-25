@@ -9,7 +9,10 @@ data class POI(
     val lat: Double,
     val lon: Double,
     val distance: Double = 0.0,
-    val tags: Map<String, String> = emptyMap()
+    val tags: Map<String, String> = emptyMap(),
+    val bearing: Double = 0.0,
+    val direction: String = "",
+    val directionArrow: String = ""
 )
 
 // POI Kategorien mit Icons

@@ -6,140 +6,158 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.view.animation.Animation
-import android.view.animation.RotateAnimation
-import android.widget.Toast
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.hundewildnis.app.databinding.ActivityCompassBinding
-import kotlin.math.roundToInt
-import androidx.core.view.WindowCompat
 
 class CompassActivity : AppCompatActivity(), SensorEventListener {
 
-    private lateinit var binding: ActivityCompassBinding
-    private var sensorManager: SensorManager? = null
-    private var accelerometer: Sensor? = null
-    private var magnetometer: Sensor? = null
+    private lateinit var sensorManager: SensorManager
+    private var rotationSensor: Sensor? = null
 
-    private var lastAccelerometer = FloatArray(3)
-    private var lastMagnetometer = FloatArray(3)
-    private var lastAccelerometerSet = false
-    private var lastMagnetometerSet = false
+    // Views
+    private lateinit var compassContainer: FrameLayout
+    private lateinit var degreeText: TextView
+    private lateinit var directionText: TextView
 
-    private var currentDegree = 0f
+    // Glättungs-Variablen
+    private var currentAzimuth = 0f
+    private val ALPHA = 0.2f  // Glättungsfaktor (0.1 = sehr glatt, 0.3 = reaktiv)
+    private val azimuthHistory = mutableListOf<Float>()
+    private val HISTORY_SIZE = 5
+    private var lastDisplayedAzimuth = 0
+    private val MIN_CHANGE_THRESHOLD = 2  // Grad
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_compass)
 
-        // Edge-to-Edge aktivieren
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        binding = ActivityCompassBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
+        // Toolbar Setup
+        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
             title = "Kompass"
             setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
 
-        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+        // Views initialisieren
+        compassContainer = findViewById(R.id.compassContainer)
+        degreeText = findViewById(R.id.degreeText)
+        directionText = findViewById(R.id.directionText)
 
-        // Sensor Manager initialisieren
+        // Sensor initialisieren
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        magnetometer = sensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
 
-        if (accelerometer == null || magnetometer == null) {
-            Toast.makeText(
-                this,
-                "Sensoren nicht verfügbar. Kompass funktioniert nicht auf diesem Gerät.",
-                Toast.LENGTH_LONG
-            ).show()
+        // Fallback falls kein Rotation Vector vorhanden
+        if (rotationSensor == null) {
+            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        accelerometer?.let {
-            sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
-        }
-        magnetometer?.let {
-            sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
+        rotationSensor?.also { sensor ->
+            sensorManager.registerListener(
+                this,
+                sensor,
+                SensorManager.SENSOR_DELAY_UI
+            )
         }
     }
 
     override fun onPause() {
         super.onPause()
-        sensorManager?.unregisterListener(this)
+        sensorManager.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        event ?: return
+        if (event?.sensor?.type == Sensor.TYPE_ROTATION_VECTOR) {
+            val rotationMatrix = FloatArray(9)
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
 
-        when (event.sensor.type) {
-            Sensor.TYPE_ACCELEROMETER -> {
-                System.arraycopy(event.values, 0, lastAccelerometer, 0, event.values.size)
-                lastAccelerometerSet = true
-            }
-            Sensor.TYPE_MAGNETIC_FIELD -> {
-                System.arraycopy(event.values, 0, lastMagnetometer, 0, event.values.size)
-                lastMagnetometerSet = true
-            }
-        }
+            val orientation = FloatArray(3)
+            SensorManager.getOrientation(rotationMatrix, orientation)
 
-        if (lastAccelerometerSet && lastMagnetometerSet) {
-            val r = FloatArray(9)
-            val success = SensorManager.getRotationMatrix(r, null, lastAccelerometer, lastMagnetometer)
+            // Roher Azimuth-Wert
+            val rawAzimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
+            val azimuthDegrees = (rawAzimuth + 360) % 360
 
-            if (success) {
-                val orientation = FloatArray(3)
-                SensorManager.getOrientation(r, orientation)
+            // Glättung anwenden
+            currentAzimuth = lowPassFilter(azimuthDegrees, currentAzimuth)
+            val smoothedAzimuth = addToHistoryAndAverage(currentAzimuth)
 
-                // Azimuth (Ausrichtung) in Grad umrechnen
-                val azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
-                val degree = (azimuth + 360) % 360
-
-                updateCompass(degree)
-            }
+            // UI nur bei signifikanter Änderung updaten
+            updateCompassIfChanged(smoothedAzimuth)
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Nicht benötigt, aber muss implementiert werden
+        // Optional: Warnung bei niedriger Genauigkeit
+        when (accuracy) {
+            SensorManager.SENSOR_STATUS_UNRELIABLE -> {
+                android.util.Log.w("Compass", "Sensor unzuverlässig - bitte kalibrieren")
+            }
+        }
     }
 
-    private fun updateCompass(degree: Float) {
-        // Grad-Anzeige aktualisieren
-        binding.degreeText.text = "${degree.roundToInt()}°"
+    // Low-Pass Filter für glatte Übergänge
+    private fun lowPassFilter(newValue: Float, oldValue: Float): Float {
+        var delta = newValue - oldValue
 
-        // Richtungstext aktualisieren
-        binding.directionText.text = getDirectionText(degree)
+        // Handle 0/360 degree wrap-around
+        if (delta > 180) delta -= 360
+        if (delta < -180) delta += 360
 
-        // Kompass-Bild rotieren
-        val rotateAnimation = RotateAnimation(
-            currentDegree,
-            -degree,
-            Animation.RELATIVE_TO_SELF, 0.5f,
-            Animation.RELATIVE_TO_SELF, 0.5f
-        )
-        rotateAnimation.duration = 210
-        rotateAnimation.fillAfter = true
-
-        binding.compassImage.startAnimation(rotateAnimation)
-        currentDegree = -degree
+        return (oldValue + ALPHA * delta + 360) % 360
     }
 
-    private fun getDirectionText(degree: Float): String {
+    // Averaging über mehrere Werte
+    private fun addToHistoryAndAverage(value: Float): Float {
+        azimuthHistory.add(value)
+
+        if (azimuthHistory.size > HISTORY_SIZE) {
+            azimuthHistory.removeAt(0)
+        }
+
+        return azimuthHistory.average().toFloat()
+    }
+
+    // Update nur bei signifikanter Änderung
+    private fun updateCompassIfChanged(azimuth: Float) {
+        val roundedAzimuth = azimuth.toInt()
+
+        if (Math.abs(roundedAzimuth - lastDisplayedAzimuth) >= MIN_CHANGE_THRESHOLD) {
+            lastDisplayedAzimuth = roundedAzimuth
+            updateCompassUI(roundedAzimuth)
+        }
+    }
+
+    // UI Update
+    private fun updateCompassUI(azimuth: Int) {
+        // Rotiere den Kompass-Container (FrameLayout)
+        // Negativ, weil Kompass gegen den Uhrzeigersinn dreht
+        compassContainer.animate()
+            .rotation(-azimuth.toFloat())
+            .setDuration(100)  // 100ms sanfte Animation
+            .start()
+
+        // Text-Updates (rotieren NICHT mit)
+        degreeText.text = "${azimuth}°"
+        directionText.text = getDirectionName(azimuth)
+    }
+
+    // Himmelsrichtung als Text (Nord, Nordost, etc.)
+    private fun getDirectionName(azimuth: Int): String {
         return when {
-            degree >= 337.5 || degree < 22.5 -> "Blickrichtung Nord"
-            degree >= 22.5 && degree < 67.5 -> "Blickrichtung Nordost"
-            degree >= 67.5 && degree < 112.5 -> "Blickrichtung Ost"
-            degree >= 112.5 && degree < 157.5 -> "Blickrichtung Südost"
-            degree >= 157.5 && degree < 202.5 -> "Blickrichtung Süd"
-            degree >= 202.5 && degree < 247.5 -> "Blickrichtung Südwest"
-            degree >= 247.5 && degree < 292.5 -> "Blickrichtung West"
-            degree >= 292.5 && degree < 337.5 -> "Blickrichtung Nordwest"
+            azimuth in 0..22 || azimuth in 338..360 -> "Nord"
+            azimuth in 23..67 -> "Nordost"
+            azimuth in 68..112 -> "Ost"
+            azimuth in 113..157 -> "Südost"
+            azimuth in 158..202 -> "Süd"
+            azimuth in 203..247 -> "Südwest"
+            azimuth in 248..292 -> "West"
+            azimuth in 293..337 -> "Nordwest"
             else -> "Nord"
         }
     }

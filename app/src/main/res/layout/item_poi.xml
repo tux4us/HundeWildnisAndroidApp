@@ -17,7 +17,7 @@
 
         <!-- Icon -->
         <TextView
-            android:id="@+id/poiIconText"
+            android:id="@+id/poiIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:text="📍"
@@ -35,7 +35,7 @@
 
             <!-- POI Name -->
             <TextView
-                android:id="@+id/poiNameText"
+                android:id="@+id/poiName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="POI Name"
@@ -47,7 +47,7 @@
 
             <!-- Kategorie -->
             <TextView
-                android:id="@+id/poiCategoryText"
+                android:id="@+id/poiCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kategorie"
@@ -58,13 +58,13 @@
                 android:ellipsize="end" />
         </LinearLayout>
 
-        <!-- Entfernung -->
+        <!-- Entfernung mit Richtung -->
         <TextView
-            android:id="@+id/poiDistanceText"
+            android:id="@+id/poiDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.0 km"
-            android:textColor="#999999"
+            android:text="0.0 km NO ↗"
+            android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginStart="8dp"

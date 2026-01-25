@@ -13,8 +13,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 24
-        versionName = "5.0"
+        versionCode = 25
+        versionName = "5.1"
 
         // API Key aus local.properties laden - AUSSERHALB von android {}
         val localProperties = Properties()
