@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.hundewildnis.app.R
+import com.hundewildnis.app.YouTubeVideo
 import java.text.SimpleDateFormat
 import java.util.*
 

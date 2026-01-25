@@ -30,21 +30,29 @@
             android:layout_height="match_parent"
             android:padding="16dp">
 
-            <!-- Kompass-Anzeige -->
-            <ImageView
-                android:id="@+id/compassImage"
+            <!-- NEU: Wrapper für rotierbaren Kompass -->
+            <FrameLayout
+                android:id="@+id/compassContainer"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:layout_centerInParent="true"
-                android:contentDescription="Kompass"
-                android:src="@drawable/compass_bg" />
+                android:layout_centerInParent="true">
 
-            <!-- Grad-Anzeige -->
+                <!-- Kompass-Anzeige (wird rotiert) -->
+                <ImageView
+                    android:id="@+id/compassImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Kompass"
+                    android:src="@drawable/compass_bg" />
+
+            </FrameLayout>
+
+            <!-- Grad-Anzeige (rotiert NICHT mit) -->
             <TextView
                 android:id="@+id/degreeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/compassImage"
+                android:layout_above="@id/compassContainer"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="32dp"
                 android:text="0°"
@@ -53,20 +61,18 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/stencil" />
 
-
-            <!-- Richtungstext (N, NO, O, etc.) -->
+            <!-- Richtungstext (rotiert NICHT mit) -->
             <TextView
                 android:id="@+id/directionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/compassImage"
+                android:layout_below="@id/compassContainer"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
                 android:text="Nord"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp"
                 android:textStyle="normal"/>
-
 
             <!-- Info-Text -->
             <TextView

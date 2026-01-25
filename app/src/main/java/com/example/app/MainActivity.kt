@@ -1,28 +1,48 @@
-package com.hundewildnis.app
+package com.example.app
 
-import android.content.Context
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.hundewildnis.app.AltimeterActivity
+import com.hundewildnis.app.CompassActivity
+import com.hundewildnis.app.ContentActivity
+import com.hundewildnis.app.ContentAdapter
+import com.hundewildnis.app.ContentCache
+import com.hundewildnis.app.ContentItem
+import com.hundewildnis.app.ImprintActivity
+import com.hundewildnis.app.R
+import com.hundewildnis.app.WeatherActivity
+import com.hundewildnis.app.WordPressApiParser
+import com.hundewildnis.app.WordPressParser
+import com.hundewildnis.app.YouTubeAdapter
+import com.hundewildnis.app.YouTubeParser
+import com.hundewildnis.app.YouTubeVideo
 import com.hundewildnis.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.core.view.WindowCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.RecyclerView
-import android.net.Uri
-import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -105,13 +125,13 @@ class MainActivity : AppCompatActivity() {
 
                 // 2b. Button Position - IM SELBEN BLOCK!
                 val buttonParams = binding.btnLoadMore.layoutParams as
-                        android.widget.FrameLayout.LayoutParams
+                        FrameLayout.LayoutParams
                 buttonParams.bottomMargin = bottomNavHeight + systemBars.bottom + 16.dpToPx()
                 binding.btnLoadMore.layoutParams = buttonParams
 
-                android.util.Log.d("MainActivity",
+                Log.d("MainActivity",
                     "✓ Padding: BottomNav=${bottomNavHeight}px + SystemBars=${systemBars.bottom}px = ${totalBottomPadding}px")
-                android.util.Log.d("MainActivity",
+                Log.d("MainActivity",
                     "✓ Button Margin: ${buttonParams.bottomMargin}px")
             }
 
@@ -120,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
-        binding.toolbar.overflowIcon?.setTint(android.graphics.Color.WHITE)
+        binding.toolbar.overflowIcon?.setTint(Color.WHITE)
 
         contentCache = ContentCache(this)
 
@@ -294,7 +314,7 @@ class MainActivity : AppCompatActivity() {
 
         if (hasFullCache) {
             // Cache vorhanden - zeige sofort an
-            android.util.Log.d("MainActivity", "📦 Lade Inhalte aus Cache (Alter: ${if(isCacheExpired) "veraltet" else "aktuell"})")
+            Log.d("MainActivity", "📦 Lade Inhalte aus Cache (Alter: ${if(isCacheExpired) "veraltet" else "aktuell"})")
 
             allBlogPosts = cachedPosts!!
             allPages = cachedPages!!
@@ -328,10 +348,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Kein Cache vorhanden - zeige Ladeanimation
-        android.util.Log.d("MainActivity", "🌐 Kein Cache vorhanden - lade vom Server")
+        Log.d("MainActivity", "🌐 Kein Cache vorhanden - lade vom Server")
         binding.progressBar.visibility = View.VISIBLE
         binding.errorText.text = "Inhalte werden geladen..."
-        binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
+        binding.errorText.setTextColor(Color.parseColor("#2d5016"))
         binding.errorText.visibility = View.VISIBLE
 
         binding.blogRecyclerView.visibility = View.GONE
@@ -345,7 +365,7 @@ class MainActivity : AppCompatActivity() {
         // Kein vollständiger Cache - zeige Ladeanimation
         binding.progressBar.visibility = View.VISIBLE
         binding.errorText.text = "Inhalte werden aktualisiert..."
-        binding.errorText.setTextColor(android.graphics.Color.parseColor("#2d5016"))
+        binding.errorText.setTextColor(Color.parseColor("#2d5016"))
         binding.errorText.visibility = View.VISIBLE
 
         binding.blogRecyclerView.visibility = View.GONE
@@ -361,49 +381,49 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val totalStartTime = System.currentTimeMillis()
-                android.util.Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-                android.util.Log.d("MainActivity", "⏱️ START Laden: ${System.currentTimeMillis()}")
+                Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                Log.d("MainActivity", "⏱️ START Laden: ${System.currentTimeMillis()}")
 
                 val result = withContext(Dispatchers.IO) {
                     // Blog laden (direkt, nicht async)
                     val blogStart = System.currentTimeMillis()
-                    android.util.Log.d("MainActivity", "📝 Blog: Starte Laden...")
+                    Log.d("MainActivity", "📝 Blog: Starte Laden...")
                     val posts = try {
                         wordPressApi.loadBlogPosts(perPage = 100)
                     } catch (e: Exception) {
-                        android.util.Log.e("MainActivity", "Blog-Fehler: ${e.message}")
+                        Log.e("MainActivity", "Blog-Fehler: ${e.message}")
                         emptyList()
                     }
                     val blogDuration = System.currentTimeMillis() - blogStart
-                    android.util.Log.d("MainActivity", "✓ Blog: ${posts.size} Posts in ${blogDuration}ms")
+                    Log.d("MainActivity", "✓ Blog: ${posts.size} Posts in ${blogDuration}ms")
 
                     // Seiten laden (async)
                     val pagesStart = System.currentTimeMillis()
                     val pagesDeferred = async {
-                        android.util.Log.d("MainActivity", "📄 Seiten: Starte Laden...")
+                        Log.d("MainActivity", "📄 Seiten: Starte Laden...")
                         val result = wordPressParser.parsePages()
                         val duration = System.currentTimeMillis() - pagesStart
-                        android.util.Log.d("MainActivity", "✓ Seiten: ${result.size} Seiten in ${duration}ms")
+                        Log.d("MainActivity", "✓ Seiten: ${result.size} Seiten in ${duration}ms")
                         result
                     }
 
                     // Kurse laden (async)
                     val coursesStart = System.currentTimeMillis()
                     val coursesDeferred = async {
-                        android.util.Log.d("MainActivity", "🎓 Kurse: Starte Laden...")
+                        Log.d("MainActivity", "🎓 Kurse: Starte Laden...")
                         val result = wordPressParser.parseCourses()
                         val duration = System.currentTimeMillis() - coursesStart
-                        android.util.Log.d("MainActivity", "✓ Kurse: ${result.size} Kurse in ${duration}ms")
+                        Log.d("MainActivity", "✓ Kurse: ${result.size} Kurse in ${duration}ms")
                         result
                     }
 
                     // YouTube laden (async)
                     val youtubeStart = System.currentTimeMillis()
                     val youtubeDeferred = async {
-                        android.util.Log.d("MainActivity", "🎥 YouTube: Starte Laden...")
+                        Log.d("MainActivity", "🎥 YouTube: Starte Laden...")
                         val result = youtubeParser.loadLatestVideos()
                         val duration = System.currentTimeMillis() - youtubeStart
-                        android.util.Log.d("MainActivity", "✓ YouTube: ${result.size} Videos in ${duration}ms")
+                        Log.d("MainActivity", "✓ YouTube: ${result.size} Videos in ${duration}ms")
                         result
                     }
 
@@ -427,7 +447,7 @@ class MainActivity : AppCompatActivity() {
                 contentCache.saveCourses(courses)
                 contentCache.saveYouTubeVideos(videos)
                 val cacheDuration = System.currentTimeMillis() - cacheStart
-                android.util.Log.d("MainActivity", "💾 Cache gespeichert in ${cacheDuration}ms")
+                Log.d("MainActivity", "💾 Cache gespeichert in ${cacheDuration}ms")
 
                 allBlogPosts = posts
                 allPages = pages
@@ -441,8 +461,8 @@ class MainActivity : AppCompatActivity() {
                 youtubeAdapter.submitList(videos)
 
                 val totalDuration = System.currentTimeMillis() - totalStartTime
-                android.util.Log.d("MainActivity", "⏱️ GESAMT: ${totalDuration}ms (${totalDuration/1000.0}s)")
-                android.util.Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                Log.d("MainActivity", "⏱️ GESAMT: ${totalDuration}ms (${totalDuration/1000.0}s)")
+                Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                 if (!silent) {
                     // Erstmaliges Laden - verstecke Ladeanimation
@@ -467,12 +487,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } catch (e: Exception) {
-                android.util.Log.e("MainActivity", "❌ Fehler beim Laden", e)
+                Log.e("MainActivity", "❌ Fehler beim Laden", e)
                 e.printStackTrace()
                 if (!silent) {
                     binding.progressBar.visibility = View.GONE
                     binding.errorText.text = getString(R.string.error_loading, e.message)
-                    binding.errorText.setTextColor(android.graphics.Color.RED)
+                    binding.errorText.setTextColor(Color.RED)
                     binding.errorText.visibility = View.VISIBLE
 
                     Toast.makeText(this@MainActivity,
@@ -480,7 +500,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG).show()
                 } else {
                     // Silent mode - nur Log, keine UI-Änderung
-                    android.util.Log.e("MainActivity", "Hintergrund-Update fehlgeschlagen")
+                    Log.e("MainActivity", "Hintergrund-Update fehlgeschlagen")
                 }
             }
         }
@@ -495,7 +515,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     private fun openYouTubeVideo(video: YouTubeVideo) {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val hasSeenYouTubeNotice = prefs.getBoolean("youtube_notice_shown", false)
 
         if (!hasSeenYouTubeNotice) {
@@ -514,8 +534,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Abbrechen", null)
                 .setNeutralButton("Datenschutz") { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://policies.google.com/privacy"))
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://policies.google.com/privacy")
+                    )
                     startActivity(intent)
                 }
                 .create()
@@ -524,13 +546,13 @@ class MainActivity : AppCompatActivity() {
 
             // Bestimme Farbe basierend auf Theme
             val isDarkTheme = (resources.configuration.uiMode and
-                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+                    Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
 
             val buttonColor = if (isDarkTheme) {
-                android.graphics.Color.WHITE  // Dark Mode: Weiße Schrift
+                Color.WHITE  // Dark Mode: Weiße Schrift
             } else {
-                android.graphics.Color.parseColor("#2d5016")  // Light Mode: Grüne Schrift
+                Color.parseColor("#2d5016")  // Light Mode: Grüne Schrift
             }
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
@@ -547,16 +569,18 @@ class MainActivity : AppCompatActivity() {
             appIntent.setPackage("com.google.android.youtube")
 
             if (appIntent.resolveActivity(packageManager) != null) {
-                android.util.Log.d("MainActivity", "Öffne in YouTube App")
+                Log.d("MainActivity", "Öffne in YouTube App")
                 startActivity(appIntent)
             } else {
-                android.util.Log.d("MainActivity", "YouTube App nicht gefunden, öffne im Browser")
-                val webIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.youtube.com/watch?v=${video.videoId}"))
+                Log.d("MainActivity", "YouTube App nicht gefunden, öffne im Browser")
+                val webIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.youtube.com/watch?v=${video.videoId}")
+                )
                 startActivity(webIntent)
             }
         } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Fehler beim Öffnen des Videos", e)
+            Log.e("MainActivity", "Fehler beim Öffnen des Videos", e)
             Toast.makeText(this,
                 "Konnte Video nicht öffnen",
                 Toast.LENGTH_LONG).show()
@@ -564,7 +588,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openTwitter() {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val hasSeenTwitterNotice = prefs.getBoolean("twitter_notice_shown", false)
 
         if (!hasSeenTwitterNotice) {
@@ -592,8 +616,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 .setNeutralButton("Datenschutz") { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://twitter.com/privacy"))
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://twitter.com/privacy")
+                    )
                     startActivity(intent)
                 }
                 .create()
@@ -602,13 +628,13 @@ class MainActivity : AppCompatActivity() {
 
             // Bestimme Farbe basierend auf Theme
             val isDarkTheme = (resources.configuration.uiMode and
-                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+                    Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
 
             val buttonColor = if (isDarkTheme) {
-                android.graphics.Color.WHITE
+                Color.WHITE
             } else {
-                android.graphics.Color.parseColor("#2d5016")
+                Color.parseColor("#2d5016")
             }
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
@@ -625,18 +651,22 @@ class MainActivity : AppCompatActivity() {
             val twitterUsername = "@teamnaturedogs"  // ← HIER ANPASSEN!
 
             // Versuche Twitter/X App zu öffnen
-            val appIntent = Intent(Intent.ACTION_VIEW,
-                Uri.parse("twitter://user?screen_name=$twitterUsername"))
+            val appIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("twitter://user?screen_name=$twitterUsername")
+            )
             appIntent.setPackage("com.twitter.android")
 
             if (appIntent.resolveActivity(packageManager) != null) {
-                android.util.Log.d("MainActivity", "Öffne in Twitter App")
+                Log.d("MainActivity", "Öffne in Twitter App")
                 startActivity(appIntent)
             } else {
                 // Fallback: Öffne im Browser
-                android.util.Log.d("MainActivity", "Twitter App nicht gefunden, öffne im Browser")
-                val webIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://twitter.com/$twitterUsername"))
+                Log.d("MainActivity", "Twitter App nicht gefunden, öffne im Browser")
+                val webIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://twitter.com/$twitterUsername")
+                )
                 startActivity(webIntent)
             }
 
@@ -652,7 +682,7 @@ class MainActivity : AppCompatActivity() {
             }, 300)
 
         } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Fehler beim Öffnen von Twitter", e)
+            Log.e("MainActivity", "Fehler beim Öffnen von Twitter", e)
             Toast.makeText(this,
                 "Konnte Twitter nicht öffnen",
                 Toast.LENGTH_LONG).show()
@@ -676,16 +706,16 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
 
         val nightMode = resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK
-        val isDarkMode = nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+                Configuration.UI_MODE_NIGHT_MASK
+        val isDarkMode = nightMode == Configuration.UI_MODE_NIGHT_YES
 
-        val textColor = if (isDarkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+        val textColor = if (isDarkMode) Color.WHITE else Color.BLACK
 
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            val spanString = android.text.SpannableString(item.title.toString())
+            val spanString = SpannableString(item.title.toString())
             spanString.setSpan(
-                android.text.style.ForegroundColorSpan(textColor),
+                ForegroundColorSpan(textColor),
                 0,
                 spanString.length,
                 0
@@ -716,7 +746,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_theme -> {
-                android.util.Log.d("MainActivity", "Theme button clicked!")
+                Log.d("MainActivity", "Theme button clicked!")
                 toggleTheme()
                 true
             }
@@ -750,7 +780,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openSignalTrainer(name: String, link: String) {
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val prefKey = "signal_trainer_notice_shown"
         val hasSeenNotice = prefs.getBoolean(prefKey, false)
 
@@ -788,13 +818,13 @@ class MainActivity : AppCompatActivity() {
 
             // Button-Farben anpassen
             val isDarkTheme = (resources.configuration.uiMode and
-                    android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+                    Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
 
             val buttonColor = if (isDarkTheme) {
-                android.graphics.Color.WHITE
+                Color.WHITE
             } else {
-                android.graphics.Color.parseColor("#2d5016")
+                Color.parseColor("#2d5016")
             }
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
@@ -807,19 +837,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun openSignalTrainerInternal(name: String, link: String) {
         try {
-            android.util.Log.d("MainActivity", "Öffne Signal-Link für $name: $link")
+            Log.d("MainActivity", "Öffne Signal-Link für $name: $link")
 
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
             startActivity(intent)
-            android.util.Log.d("MainActivity", "✓ Signal-Intent gestartet")
+            Log.d("MainActivity", "✓ Signal-Intent gestartet")
 
-        } catch (e: android.content.ActivityNotFoundException) {
-            android.util.Log.e("MainActivity", "Signal nicht installiert")
+        } catch (e: ActivityNotFoundException) {
+            Log.e("MainActivity", "Signal nicht installiert")
             showSignalNotInstalledDialogForTrainer()
         } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Fehler beim Öffnen von Signal", e)
+            Log.e("MainActivity", "Fehler beim Öffnen von Signal", e)
             Toast.makeText(this,
                 "Fehler beim Öffnen von Signal: ${e.message}",
                 Toast.LENGTH_LONG).show()
@@ -839,13 +869,17 @@ class MainActivity : AppCompatActivity() {
                         "Möchtest du Signal jetzt herunterladen?"
             )
             .setPositiveButton("Ja, zur Website") { _, _ ->
-                val websiteIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://signal.org/download/"))
+                val websiteIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://signal.org/download/")
+                )
                 startActivity(websiteIntent)
             }
             .setNeutralButton("Play Store") { _, _ ->
-                val playStoreIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms"))
+                val playStoreIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms")
+                )
                 startActivity(playStoreIntent)
             }
             .setNegativeButton("Abbrechen", null)
@@ -854,13 +888,13 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
 
         val isDarkTheme = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
+                Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
 
         val buttonColor = if (isDarkTheme) {
-            android.graphics.Color.WHITE
+            Color.WHITE
         } else {
-            android.graphics.Color.parseColor("#2d5016")
+            Color.parseColor("#2d5016")
         }
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
@@ -918,11 +952,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFab() {
-        android.util.Log.d("MainActivity", "setupFab() wird aufgerufen")
+        Log.d("MainActivity", "setupFab() wird aufgerufen")
 
         // Haupt-FAB Click - WICHTIG: stopPropagation
         binding.fabMain.setOnClickListener { view ->
-            android.util.Log.d("MainActivity", "Haupt-FAB geklickt!")
+            Log.d("MainActivity", "Haupt-FAB geklickt!")
             view.isClickable = false  // Verhindere Doppel-Klicks
             toggleFab()
             view.postDelayed({ view.isClickable = true }, 300)
@@ -930,7 +964,7 @@ class MainActivity : AppCompatActivity() {
 
         // NEUER Wetter FAB
         binding.fabWeather.setOnClickListener { view ->
-            android.util.Log.d("MainActivity", "Wetter FAB geklickt!")
+            Log.d("MainActivity", "Wetter FAB geklickt!")
             view.isClickable = false
             closeFab()
             view.postDelayed({
@@ -941,7 +975,7 @@ class MainActivity : AppCompatActivity() {
 
         // Standort FAB (vorher Timer)
         binding.fabLocation.setOnClickListener { view ->
-            android.util.Log.d("MainActivity", "Standort FAB geklickt!")
+            Log.d("MainActivity", "Standort FAB geklickt!")
             view.isClickable = false
             closeFab()
             view.postDelayed({
@@ -952,7 +986,7 @@ class MainActivity : AppCompatActivity() {
 
         // Kompass FAB
         binding.fabCompass.setOnClickListener { view ->
-            android.util.Log.d("MainActivity", "Kompass FAB geklickt!")
+            Log.d("MainActivity", "Kompass FAB geklickt!")
             view.isClickable = false
             closeFab()
             view.postDelayed({
@@ -963,7 +997,7 @@ class MainActivity : AppCompatActivity() {
 
         // Höhenmesser FAB (vorher GPS)
         binding.fabAltimeter.setOnClickListener { view ->
-            android.util.Log.d("MainActivity", "Höhenmesser FAB geklickt!")
+            Log.d("MainActivity", "Höhenmesser FAB geklickt!")
             view.isClickable = false
             closeFab()
             view.postDelayed({
@@ -972,7 +1006,7 @@ class MainActivity : AppCompatActivity() {
             }, 300)
         }
 
-        android.util.Log.d("MainActivity", "setupFab() abgeschlossen")
+        Log.d("MainActivity", "setupFab() abgeschlossen")
     }
 
     private fun toggleFab() {
@@ -984,7 +1018,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openFab() {
-        android.util.Log.d("MainActivity", "openFab() aufgerufen")
+        Log.d("MainActivity", "openFab() aufgerufen")
         isFabOpen = true
 
         // KEIN Overlay mehr - nur Hintergrund dimmen
@@ -1003,7 +1037,7 @@ class MainActivity : AppCompatActivity() {
             closeFab()
         }
 
-        android.util.Log.d("MainActivity", "openFab() abgeschlossen")
+        Log.d("MainActivity", "openFab() abgeschlossen")
     }
 
     private fun closeFab() {
@@ -1087,7 +1121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadThemePreference() {
-        val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
         val isDarkMode = sharedPreferences.getBoolean("is_dark_mode", false)
         if (isDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -1097,7 +1131,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveThemePreference(isDarkMode: Boolean) {
-        val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putBoolean("is_dark_mode", isDarkMode)
             apply()
@@ -1106,8 +1140,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun toggleTheme() {
         val nightMode = resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK
-        val isDarkMode = nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+                Configuration.UI_MODE_NIGHT_MASK
+        val isDarkMode = nightMode == Configuration.UI_MODE_NIGHT_YES
 
         if (isDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

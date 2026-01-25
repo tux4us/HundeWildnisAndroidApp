@@ -51,7 +51,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Wetter"
+            title = "Standortwetter"
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -264,7 +264,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
         val windchill = calculateWindchill(temperature, windSpeed)
         binding.feelsLikeText.text = String.format(
             Locale.GERMAN,
-            "%.1f°C (Windchill: %.1f°C)",
+            "%.1f°C (Windgeschützt: %.1f°C)",
             feelsLike,
             windchill
         )
@@ -443,7 +443,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
             precipProb >= 50 -> "🌂 Möglicher Regen (${precipProb}%)"
             code >= 45 -> "🌫️ Nebel"
             code >= 3 -> "☁️ Bewölkt"
-            else -> "✅ Gutes Wetter" // IMMER etwas anzeigen
+            else -> "✅ Keine Wetterwarnung" // IMMER etwas anzeigen
         }
     }
 
@@ -614,7 +614,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                     
                     map = L.map('map', {
                         center: [$lat, $lon],
-                        zoom: 8,
+                        zoom: 6,
                         zoomControl: true
                     });
                     
@@ -645,7 +645,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                                     
                                     const layer = L.tileLayer(radarUrl, {
                                         tileSize: 256,
-                                        opacity: 0.6,
+                                        opacity: 0.9,
                                         zIndex: 10,
                                         attribution: '© <a href="https://www.rainviewer.com/">RainViewer</a>'
                                     });
@@ -743,19 +743,59 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun getWeatherDescription(code: Int): Pair<String, String> {
+        // DEBUG: Log den Weather Code
+        android.util.Log.d("WeatherActivity", "🌤️ Weather Code: $code")
+
         return when (code) {
+            // Klar
             0 -> "Klar" to "☀️"
-            1, 2, 3 -> "Bewölkt" to "⛅"
-            45, 48 -> "Nebel" to "🌫️"
-            51, 53, 55 -> "Nieselregen" to "🌦️"
-            61, 63, 65 -> "Regen" to "🌧️"
-            71, 73, 75 -> "Schneefall" to "🌨️"
-            77 -> "Graupel" to "🌨️"
-            80, 81, 82 -> "Regenschauer" to "🌦️"
-            85, 86 -> "Schneeschauer" to "🌨️"
+
+            // Bewölkt
+            1 -> "Leicht bewölkt" to "🌤️"
+            2 -> "Teilweise bewölkt" to "⛅"
+            3 -> "Bewölkt" to "☁️"
+
+            // Nebel
+            45 -> "Nebel" to "🌫️"
+            48 -> "Gefrierender Nebel" to "🌫️"
+
+            // Nieselregen
+            51 -> "Leichter Nieselregen" to "🌦️"
+            53 -> "Mäßiger Nieselregen" to "🌦️"
+            55 -> "Starker Nieselregen" to "🌦️"
+            56 -> "Gefrierender leichter Nieselregen" to "🌧️"
+            57 -> "Gefrierender starker Nieselregen" to "🌧️"
+
+            // Regen
+            61 -> "Leichter Regen" to "🌧️"
+            63 -> "Mäßiger Regen" to "🌧️"
+            65 -> "Starker Regen" to "🌧️"
+            66 -> "Gefrierender leichter Regen" to "🌧️"
+            67 -> "Gefrierender starker Regen" to "🌧️"
+
+            // Schneefall
+            71 -> "Leichter Schneefall" to "🌨️"
+            73 -> "Mäßiger Schneefall" to "🌨️"
+            75 -> "Starker Schneefall" to "🌨️"
+            77 -> "Schneegriesel" to "🌨️"
+
+            // Schauer
+            80 -> "Leichte Regenschauer" to "🌦️"
+            81 -> "Mäßige Regenschauer" to "🌦️"
+            82 -> "Starke Regenschauer" to "🌦️"
+            85 -> "Leichte Schneeschauer" to "🌨️"
+            86 -> "Starke Schneeschauer" to "🌨️"
+
+            // Gewitter
             95 -> "Gewitter" to "⛈️"
-            96, 99 -> "Gewitter mit Hagel" to "⛈️"
-            else -> "Unbekannt" to "🌡️"
+            96 -> "Gewitter mit leichtem Hagel" to "⛈️"
+            99 -> "Gewitter mit starkem Hagel" to "⛈️"
+
+            // Fallback: Zeige Code statt "Unbekannt"
+            else -> {
+                android.util.Log.w("WeatherActivity", "⚠️ Unbekannter Weather Code: $code")
+                "Wetter-Code $code" to "🌡️"
+            }
         }
     }
 
