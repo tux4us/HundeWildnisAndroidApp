@@ -1,31 +1,32 @@
 package com.hundewildnis.app
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hundewildnis.app.databinding.ActivityWeatherBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
-import java.util.Locale
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.pow
 
 class WeatherActivity : AppCompatActivity(), LocationListener {
 
@@ -225,11 +226,16 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun fetchWeatherData(latitude: Double, longitude: Double): JSONObject {
+        // ERWEITERT: Alle neuen Daten-Felder
         val url = "https://api.open-meteo.com/v1/forecast?" +
                 "latitude=$latitude&longitude=$longitude" +
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature," +
-                "precipitation,weather_code,surface_pressure,wind_speed_10m,uv_index" +
-                "&hourly=temperature_2m,precipitation_probability,weather_code" +
+                "precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m," +
+                "wind_gusts_10m,uv_index" + // NEU: Windböen
+                "&hourly=temperature_2m,precipitation_probability,weather_code," +
+                "temperature_2m,apparent_temperature" + // NEU: Stündliche Daten
+                "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset," + // NEU: Min/Max, Sonne
+                "weather_code,precipitation_probability_max" + // NEU: Tageswarnungen
                 "&forecast_days=2" +
                 "&timezone=auto"
 
@@ -247,66 +253,275 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
         val weatherCode = current.getInt("weather_code")
         val pressure = current.getDouble("surface_pressure")
         val windSpeed = current.getDouble("wind_speed_10m")
+        val windDirection = current.getDouble("wind_direction_10m")
+        val windGusts = current.getDouble("wind_gusts_10m") // NEU
         val uvIndex = current.getDouble("uv_index")
 
         // Temperatur
         binding.temperatureText.text = String.format(Locale.GERMAN, "%.1f°C", temperature)
-        binding.feelsLikeText.text = String.format(Locale.GERMAN, "%.1f°C", feelsLike)
+
+        // NEU: Gefühlte Temperatur mit Windchill-Berechnung
+        val windchill = calculateWindchill(temperature, windSpeed)
+        binding.feelsLikeText.text = String.format(
+            Locale.GERMAN,
+            "%.1f°C (Windchill: %.1f°C)",
+            feelsLike,
+            windchill
+        )
 
         // Wetterbeschreibung und Icon
         val (description, icon) = getWeatherDescription(weatherCode)
         binding.descriptionText.text = description
         binding.weatherIcon.text = icon
 
+        // NEU: Wind mit Beaufort-Skala, Richtung UND Böen (IMMER angezeigt)
+        val windDirectionText = getWindDirection(windDirection)
+        val beaufort = getBeaufortScale(windSpeed)
+        binding.windText.text = String.format(
+            Locale.GERMAN,
+            "%.1f km/h %s (Bft %d)\nBöen: %.1f km/h",
+            windSpeed,
+            windDirectionText,
+            beaufort,
+            windGusts
+        )
+
         // Weitere Daten
         binding.humidityText.text = "$humidity%"
-        binding.windText.text = String.format(Locale.GERMAN, "%.1f km/h", windSpeed)
         binding.precipitationText.text = String.format(Locale.GERMAN, "%.1f mm", precipitation)
         binding.pressureText.text = String.format(Locale.GERMAN, "%.0f hPa", pressure)
         binding.visibilityText.text = "> 10 km"
         binding.uvIndexText.text = String.format(Locale.GERMAN, "%.1f", uvIndex)
 
-        // 24h Vorhersage
+        // NEU: Sonnenauf-/untergang
+        displaySunriseSunset(data)
+
+        // NEU: Stündliche 24h-Vorhersage
         display24HourForecast(data)
 
-        // Regenradar
+        // NEU: Tages-Übersicht (Min/Max, Warnungen)
+        displayDailyOverview(data)
+
+        // Regenradar mit Nowcast
         setupRainRadar()
     }
 
+    // NEU: Windchill berechnen (gefühlte Temperatur bei Wind)
+    private fun calculateWindchill(temp: Double, windKmh: Double): Double {
+        // Nur bei Temp < 10°C und Wind > 4.8 km/h relevant
+        if (temp >= 10.0 || windKmh < 4.8) {
+            return temp
+        }
+
+        // Windchill-Formel (metrisch)
+        val windchill = 13.12 + 0.6215 * temp - 11.37 * windKmh.pow(0.16) +
+                0.3965 * temp * windKmh.pow(0.16)
+
+        return windchill
+    }
+
+    // NEU: Beaufort-Skala
+    private fun getBeaufortScale(windKmh: Double): Int {
+        return when {
+            windKmh < 1 -> 0      // Windstille
+            windKmh < 6 -> 1      // Leiser Zug
+            windKmh < 12 -> 2     // Leichte Brise
+            windKmh < 20 -> 3     // Schwache Brise
+            windKmh < 29 -> 4     // Mäßige Brise
+            windKmh < 39 -> 5     // Frische Brise
+            windKmh < 50 -> 6     // Starker Wind
+            windKmh < 62 -> 7     // Steifer Wind
+            windKmh < 75 -> 8     // Stürmischer Wind
+            windKmh < 89 -> 9     // Sturm
+            windKmh < 103 -> 10   // Schwerer Sturm
+            windKmh < 118 -> 11   // Orkanartiger Sturm
+            else -> 12            // Orkan
+        }
+    }
+
+    private fun getWindDirection(degrees: Double): String {
+        return when {
+            degrees >= 337.5 || degrees < 22.5 -> "↓ N"
+            degrees >= 22.5 && degrees < 67.5 -> "↙ NO"
+            degrees >= 67.5 && degrees < 112.5 -> "← O"
+            degrees >= 112.5 && degrees < 157.5 -> "↖ SO"
+            degrees >= 157.5 && degrees < 202.5 -> "↑ S"
+            degrees >= 202.5 && degrees < 247.5 -> "↗ SW"
+            degrees >= 247.5 && degrees < 292.5 -> "→ W"
+            degrees >= 292.5 && degrees < 337.5 -> "↘ NW"
+            else -> ""
+        }
+    }
+
+    // NEU: Sonnenauf-/untergang
+    private fun displaySunriseSunset(data: JSONObject) {
+        try {
+            val daily = data.getJSONObject("daily")
+            val sunriseArray = daily.getJSONArray("sunrise")
+            val sunsetArray = daily.getJSONArray("sunset")
+
+            if (sunriseArray.length() > 0 && sunsetArray.length() > 0) {
+                val sunriseStr = sunriseArray.getString(0)
+                val sunsetStr = sunsetArray.getString(0)
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+
+                val sunrise = dateFormat.parse(sunriseStr)
+                val sunset = dateFormat.parse(sunsetStr)
+
+                if (sunrise != null && sunset != null) {
+                    binding.sunriseText.text = "🌅 ${timeFormat.format(sunrise)}"
+                    binding.sunsetText.text = "🌇 ${timeFormat.format(sunset)}"
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler beim Laden Sonnenzeiten", e)
+        }
+    }
+
+    // NEU: Tages-Übersicht mit Min/Max und Warnungen
+    private fun displayDailyOverview(data: JSONObject) {
+        try {
+            val daily = data.getJSONObject("daily")
+            val minTemps = daily.getJSONArray("temperature_2m_min")
+            val maxTemps = daily.getJSONArray("temperature_2m_max")
+            val weatherCodes = daily.getJSONArray("weather_code")
+            val precipProbs = daily.getJSONArray("precipitation_probability_max")
+
+            if (minTemps.length() > 0) {
+                val minTemp = minTemps.getDouble(0)
+                val maxTemp = maxTemps.getDouble(0)
+                val code = weatherCodes.getInt(0)
+                val precipProb = precipProbs.getInt(0)
+
+                binding.dailyMinMaxText.text = String.format(
+                    Locale.GERMAN,
+                    "Min: %.1f°C • Max: %.1f°C",
+                    minTemp,
+                    maxTemp
+                )
+
+                // NEU: Wetterwarnung-Badge (IMMER sichtbar)
+                val warningBadge = getWeatherWarningBadge(code, precipProb)
+                binding.warningBadgeText.text = warningBadge
+
+                // Badge ist IMMER sichtbar (auch bei gutem Wetter)
+                binding.warningBadgeText.visibility = View.VISIBLE
+
+                // Farbe je nach Warnstufe anpassen
+                when {
+                    warningBadge.contains("⚠️") || warningBadge.contains("❄️") ||
+                            warningBadge.contains("🌧️") -> {
+                        // Warnung: Rotes Badge
+                        binding.warningBadgeText.setBackgroundResource(R.drawable.warning_badge_bg)
+                    }
+                    warningBadge.contains("☔") || warningBadge.contains("🌦️") ||
+                            warningBadge.contains("🌂") -> {
+                        // Info: Gelbes Badge
+                        binding.warningBadgeText.setBackgroundResource(R.drawable.info_badge_bg)
+                    }
+                    else -> {
+                        // Alles gut: Grünes Badge
+                        binding.warningBadgeText.setBackgroundResource(R.drawable.good_badge_bg)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Tages-Übersicht", e)
+        }
+    }
+
+    // NEU: Wetterwarnung-Badges (IMMER sichtbar)
+    private fun getWeatherWarningBadge(code: Int, precipProb: Int): String {
+        return when {
+            code >= 95 -> "⚠️ Gewitter"
+            code >= 71 -> "❄️ Schneefall"
+            code >= 61 && precipProb >= 70 -> "🌧️ Starker Regen"
+            precipProb >= 80 -> "☔ Hohe Regenwahrscheinlichkeit"
+            code >= 80 -> "🌦️ Schauer"
+            precipProb >= 50 -> "🌂 Möglicher Regen (${precipProb}%)"
+            code >= 45 -> "🌫️ Nebel"
+            code >= 3 -> "☁️ Bewölkt"
+            else -> "✅ Gutes Wetter" // IMMER etwas anzeigen
+        }
+    }
+
+    // NEU: Stündliche 24h-Vorhersage (24 Einträge statt 8)
     private fun display24HourForecast(data: JSONObject) {
         val hourly = data.getJSONObject("hourly")
         val times = hourly.getJSONArray("time")
         val temperatures = hourly.getJSONArray("temperature_2m")
         val weatherCodes = hourly.getJSONArray("weather_code")
         val precipProb = hourly.getJSONArray("precipitation_probability")
+        val feelsLike = hourly.getJSONArray("apparent_temperature")
 
         val forecastItems = mutableListOf<ForecastItem>()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
         val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
 
-        // Nächste 24 Stunden (jede 3. Stunde für bessere Übersicht)
-        for (i in 0 until minOf(24, times.length()) step 3) {
+        val now = System.currentTimeMillis()
+
+        // NEU: 24 stündliche Einträge (statt 8 x 3h)
+        var count = 0
+        for (i in 0 until times.length()) {
+            if (count >= 24) break // Genau 24 Stunden
+
             try {
                 val timeStr = times.getString(i)
                 val date = dateFormat.parse(timeStr)
-                val displayTime = if (date != null) timeFormat.format(date) else timeStr
 
-                val temp = temperatures.getDouble(i)
-                val code = weatherCodes.getInt(i)
-                val precip = if (i < precipProb.length()) precipProb.getDouble(i) else 0.0
+                if (date != null && date.time >= now) {
+                    val displayTime = timeFormat.format(date)
+                    val temp = temperatures.getDouble(i)
+                    val code = weatherCodes.getInt(i)
+                    val precip = if (i < precipProb.length()) precipProb.getDouble(i) else 0.0
+                    val feels = if (i < feelsLike.length()) feelsLike.getDouble(i) else temp
 
-                forecastItems.add(ForecastItem(displayTime, temp, code, precip))
+                    forecastItems.add(ForecastItem(
+                        time = displayTime,
+                        temperature = temp,
+                        weatherCode = code,
+                        precipitation = precip,
+                        feelsLike = feels // NEU
+                    ))
+                    count++
+                }
             } catch (e: Exception) {
-                // Skip fehlerhaften Eintrag
+                android.util.Log.e("WeatherActivity", "Fehler bei Vorhersage", e)
             }
         }
 
-        // RecyclerView einrichten
         binding.forecastRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.forecastRecyclerView.adapter = ForecastAdapter(forecastItems)
+        binding.forecastRecyclerView.adapter = ForecastAdapter(forecastItems) { item ->
+            // NEU: Detailansicht bei Klick
+            showForecastDetail(item)
+        }
     }
 
+    // NEU: Detailansicht bei Klick auf Vorhersage-Item
+    private fun showForecastDetail(item: ForecastItem) {
+        val (description, icon) = getWeatherDescription(item.weatherCode)
+
+        val message = """
+            Uhrzeit: ${item.time}
+            
+            $icon $description
+            
+            Temperatur: ${String.format(Locale.GERMAN, "%.1f°C", item.temperature)}
+            Gefühlt: ${String.format(Locale.GERMAN, "%.1f°C", item.feelsLike)}
+            Regen: ${item.precipitation.toInt()}%
+        """.trimIndent()
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Vorhersage Details")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    // ERWEITERT: Regenradar mit Nowcast
     private fun setupRainRadar() {
         currentLocation?.let { location ->
             val lat = location.latitude
@@ -321,9 +536,20 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             }
 
-            binding.radarWebView.webViewClient = WebViewClient()
+            binding.radarWebView.webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    if (url.contains("leafletjs.com") ||
+                        url.contains("openstreetmap.org") ||
+                        url.contains("rainviewer.com")) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                        return true
+                    }
+                    return false
+                }
+            }
 
-            // Vereinfachte OpenStreetMap Karte mit Standort
+            // NEU: Mit Nowcast (Vorhersage)
             val html = """
             <!DOCTYPE html>
             <html>
@@ -333,54 +559,173 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                 <style>
                     * { margin: 0; padding: 0; }
-                    html, body { height: 100%; }
-                    #map { width: 100%; height: 100%; }
+                    html, body { height: 100%; background: #1a1a1a; }
+                    #map { width: 100%; height: calc(100% - 50px); }
+                    #controls {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        height: 50px;
+                        background: rgba(45, 45, 45, 0.95);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 10px;
+                        z-index: 1000;
+                        padding: 0 10px;
+                    }
+                    .control-btn {
+                        background: #8fad6f;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        padding: 8px 15px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    }
+                    .control-btn:active {
+                        background: #7a9760;
+                    }
+                    #timestamp {
+                        color: #999;
+                        font-size: 12px;
+                        flex: 1;
+                        text-align: center;
+                    }
+                    .leaflet-control-attribution a {
+                        color: #8fad6f !important;
+                        pointer-events: auto !important;
+                    }
                 </style>
             </head>
             <body>
                 <div id="map"></div>
+                <div id="controls">
+                    <button class="control-btn" id="playBtn" onclick="togglePlay()">▶ Play</button>
+                    <button class="control-btn" id="stopBtn" onclick="stopAnimation()">⏹ Stop</button>
+                    <div id="timestamp">Lade Radar...</div>
+                </div>
                 <script>
-                    try {
-                        var map = L.map('map', {
-                            center: [$lat, $lon],
-                            zoom: 8,
-                            zoomControl: true
-                        });
-                        
-                        // OpenStreetMap Tiles
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '© OpenStreetMap',
-                            maxZoom: 19
-                        }).addTo(map);
-                        
-                        // Standort Marker
-                        var marker = L.marker([$lat, $lon]).addTo(map);
-                        marker.bindPopup('Dein Standort').openPopup();
-                        
-                        // RainViewer Radar
-                        fetch('https://api.rainviewer.com/public/weather-maps.json')
-                            .then(response => response.json())
-                            .then(apiData => {
-                                if (apiData.radar && apiData.radar.past && apiData.radar.past.length > 0) {
-                                    var radarLayers = [];
-                                    var timestamps = apiData.radar.past.concat(apiData.radar.nowcast);
+                    let map, radarLayers = [], timestamps = [], currentFrame = 0;
+                    let isPlaying = false, animationInterval = null;
+                    let marker = null;
+                    
+                    map = L.map('map', {
+                        center: [$lat, $lon],
+                        zoom: 8,
+                        zoomControl: true
+                    });
+                    
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                        maxZoom: 19
+                    }).addTo(map);
+                    
+                    marker = L.marker([$lat, $lon]).addTo(map);
+                    marker.bindPopup('Dein Standort').openPopup();
+                    
+                    // NEU: Mit Nowcast (Vergangenheit + Vorhersage)
+                    // ERWEITERT: 6h Historie statt 2h
+                    fetch('https://api.rainviewer.com/public/weather-maps.json')
+                        .then(response => response.json())
+                        .then(apiData => {
+                            if (apiData.radar && apiData.radar.past && apiData.radar.nowcast) {
+                                // Kombiniere: Letzte 36 Vergangenheit (6h) + 6 Nowcast (Vorhersage)
+                                // RainViewer liefert alle 10 Min einen Frame
+                                // 36 Frames = 6 Stunden Historie
+                                const pastFrames = apiData.radar.past.slice(-36);
+                                const nowcastFrames = apiData.radar.nowcast.slice(0, 6);
+                                timestamps = pastFrames.concat(nowcastFrames);
+                                
+                                timestamps.forEach((item, index) => {
+                                    const radarUrl = 'https://tilecache.rainviewer.com' + 
+                                        item.path + '/256/{z}/{x}/{y}/2/1_1.png';
                                     
-                                    // Zeige letzte verfügbare Radaraufnahme
-                                    var lastFrame = timestamps[timestamps.length - 1];
-                                    var radarUrl = 'https://tilecache.rainviewer.com' + lastFrame.path + '/256/{z}/{x}/{y}/2/1_1.png';
-                                    
-                                    L.tileLayer(radarUrl, {
+                                    const layer = L.tileLayer(radarUrl, {
                                         tileSize: 256,
-                                        opacity: 0.5,
+                                        opacity: 0.6,
                                         zIndex: 10,
-                                        attribution: '© RainViewer'
-                                    }).addTo(map);
+                                        attribution: '© <a href="https://www.rainviewer.com/">RainViewer</a>'
+                                    });
+                                    
+                                    radarLayers.push(layer);
+                                });
+                                
+                                // Zeige letzten Vergangenheits-Frame (aktuell)
+                                if (radarLayers.length > 0) {
+                                    currentFrame = pastFrames.length - 1; // Letzter Vergangenheits-Frame
+                                    radarLayers[currentFrame].addTo(map);
+                                    updateTimestamp();
                                 }
-                            })
-                            .catch(err => console.error('Radar error:', err));
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Radar error:', err);
+                            document.getElementById('timestamp').textContent = 'Radar nicht verfügbar';
+                        });
+                    
+                    function togglePlay() {
+                        if (isPlaying) {
+                            pauseAnimation();
+                        } else {
+                            startAnimation();
+                        }
+                    }
+                    
+                    function startAnimation() {
+                        if (radarLayers.length === 0) return;
+                        
+                        isPlaying = true;
+                        document.getElementById('playBtn').innerHTML = '⏸ Pause';
+                        
+                        // GEDROSSELT: 750ms pro Frame (50% langsamer)
+                        animationInterval = setInterval(() => {
+                            radarLayers[currentFrame].remove();
+                            currentFrame = (currentFrame + 1) % radarLayers.length;
+                            radarLayers[currentFrame].addTo(map);
+                            updateTimestamp();
+                        }, 750); // War 500ms, jetzt 750ms
+                    }
+                    
+                    function pauseAnimation() {
+                        isPlaying = false;
+                        document.getElementById('playBtn').innerHTML = '▶ Play';
+                        if (animationInterval) {
+                            clearInterval(animationInterval);
+                            animationInterval = null;
+                        }
+                    }
+                    
+                    function stopAnimation() {
+                        pauseAnimation();
+                        
+                        if (radarLayers.length > 0) {
+                            radarLayers[currentFrame].remove();
+                            currentFrame = timestamps.length > 6 ? timestamps.length - 7 : 0; // Zurück zu "jetzt" (36. Frame bei 6h Historie)
+                            radarLayers[currentFrame].addTo(map);
+                            updateTimestamp();
+                        }
+                    }
+                    
+                    function updateTimestamp() {
+                        if (timestamps.length > 0 && timestamps[currentFrame]) {
+                            const date = new Date(timestamps[currentFrame].time * 1000);
+                            const timeStr = date.toLocaleTimeString('de-DE', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                            });
                             
-                    } catch (e) {
-                        console.error('Map error:', e);
+                            // NEU: Markiere Nowcast (Vorhersage)
+                            // Mit 6h Historie: Frame 0-35 = Vergangenheit, Frame 36+ = Vorhersage
+                            const pastFrameCount = timestamps.length > 6 ? timestamps.length - 6 : 0;
+                            const isNowcast = currentFrame >= pastFrameCount;
+                            const label = isNowcast ? '🔮 Vorhersage' : '📡 Radar';
+                            
+                            document.getElementById('timestamp').textContent = 
+                                label + ': ' + timeStr + ' Uhr';
+                        }
                     }
                 </script>
             </body>

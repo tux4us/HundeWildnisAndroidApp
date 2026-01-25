@@ -758,11 +758,11 @@ class MainActivity : AppCompatActivity() {
             val dialog = AlertDialog.Builder(this)
                 .setTitle("$name via Signal kontaktieren")
                 .setMessage(
-                    "Du wirst zu Signal weitergeleitet, um direkt mit $name zu chatten.\n" +
-                            "Unterstützung bei Fragen zur Nutzung der App ist kostenfrei.\n" +
-                            "Für fachliche, individuelle Beratung zu inhaltlichen Fragen und Anliegen zu allen unseren Ausbildungs- und Lernthemen erbitten wir ein Honorar für unseren zeitlichen und fachlichen Aufwand.\n" +
-                            "Wir teilen bei Eingang einer Anfrage das Honorar im Voraus mit. Nach der Annahme des Honorarangebotes erfolgt der ausführliche Beratungs-Chat und fachliche Unterweisung.\n" +
-                            "Es gibt keine Verpflichtung zur Annahme des Honorarangebotes. NAchdem das Honorarangebot angenommen wurde ist die Beratung verbindlich vereinbart.\n" +
+                    "Du wirst zu Signal weitergeleitet, um direkt mit $name zu chatten.\n\n" +
+                            "Unterstützung bei Fragen zur Nutzung der App ist kostenfrei.\n\n" +
+                            "Für fachliche, individuelle Beratung zu inhaltlichen Fragen und Anliegen zu allen Ausbildungs-, Trainings-, Umsetzungs- und Lernthemen erbitten wir ein kleines Honorar als Wertschätzung für unseren zeitlichen Aufwand und der Weitergabe unserer Erfahrungen.\n" +
+                            "Wir teilen bei Eingang einer Anfrage das der Anfrage entsprechende Honorar im Voraus mit. Nach der Annahme des Honorarangebotes und der Begleichung über PayPal erfolgt der ausführliche, fachlich fundierte Beratungs-Chat incl. der Möglichkeit zu weiteren Rückfragen zum Thema.\n" +
+                            "Es gibt seitens der/des Anfragenden keine Verpflichtung zur Annahme des Honorarangebotes. Nachdem das Honorarangebot jedoch angenommen wurde ist die Beratung verbindlich vereinbart.\n\n" +
                             "Wir sind fair, transparent und ehrlich.\n\n" +
                             "Datenschutz:\n" +
                             "• Deine Telefonnummer bleibt privat\n" +
@@ -770,7 +770,7 @@ class MainActivity : AppCompatActivity() {
                             "• Kein Tracking oder Datensammlung\n" +
                             "• Die HundeWildnis-App speichert keine Daten über deine Signal-Nutzung\n\n" +
                             "Pro-Tipp: Signal ist kostenlos und quelloffen. Falls du es noch nicht nutzt, " +
-                            "kannst du es aus dem Play Store, F-Droid oder von signal.org herunterladen.\n\n" +
+                            "kannst du es aus dem Play Store, über F-Droid-Store oder von signal.org herunterladen.\n\n" +
                             "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
                 )
                 .setPositiveButton("Ja, fortfahren") { _, _ ->

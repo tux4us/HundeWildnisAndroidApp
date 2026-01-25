@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="#1a1a1a">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -19,219 +20,228 @@
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+        <!-- Map container, constrained to the space ABOVE the POI list -->
+        <FrameLayout
+            android:id="@+id/mapFrame"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/poiListCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
-                android:src="@android:drawable/ic_menu_mylocation"
-                app:tint="#8fad6f" />
+            <org.osmdroid.views.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <TextView
-                android:id="@+id/statusText"
+                android:id="@+id/osmCopyrightText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:text="Standort wird ermittelt..."
-                android:textColor="#8fad6f"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_gravity="bottom|start"
+                android:layout_margin="4dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:background="#CC000000"
+                android:text="Map data © OpenStreetMap Contributors"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#2d2d2d"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:layout_gravity="top|end"
+                android:layout_margin="16dp"
+                android:orientation="vertical"
+                android:background="@drawable/button_bg_rounded"
+                android:elevation="4dp">
 
+                <Button
+                    android:id="@+id/btnCurrentLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Standort"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    android:background="@drawable/poi_button_bg"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="8dp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btnReloadPOI"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔄 Punkte aktualisieren"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    android:background="@drawable/poi_button_bg"
+                    android:textColor="#FFFFFF"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/coordinatesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="16dp"
+                android:text="📍 Standort wird ermittelt..."
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:background="#80000000"
+                android:padding="6dp"
+                android:elevation="4dp" />
+
+            <TextView
+                android:id="@+id/navigationInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="60dp"
+                android:text="🧭 0.0 km • 0 Min"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="#DD2d5016"
+                android:padding="14dp"
+                android:elevation="12dp"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="#8fad6f"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- POI-Liste Container, constrained to the bottom -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/poiListCard"
+            android:layout_width="0dp"
+            android:layout_height="340dp"
+            app:cardBackgroundColor="#2d2d2d"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="16dp"
+            android:layout_margin="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Header -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:background="#3d3d3d">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Koordinaten"
+                        android:layout_weight="1"
+                        android:text="📍 POI im Umkreis (5 km)"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/latitudeText"
+                        android:id="@+id/poiCountText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Breitengrad: --"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:id="@+id/longitudeText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Längengrad: --"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp" />
+                        android:text="0 POI"
+                        android:textColor="#999999"
+                        android:textSize="12sp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#2d2d2d"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Genauigkeit"
-                        android:textColor="#8fad6f"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/accuracyText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="± -- Meter"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- KARTE MIT ZOOM-BUTTONS UND COPYRIGHT -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mapCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="#2d2d2d"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                <!-- POI Liste -->
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp">
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-                    <!-- OSMDroid MapView -->
-                    <org.osmdroid.views.MapView
-                        android:id="@+id/mapView"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/poiRecyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:padding="6dp"
+                        android:clipToPadding="false" />
 
-                    <!-- Zoom-Buttons (GRÜNER HINTERGRUND, WEISSE ICONS) -->
-                    <LinearLayout
+                    <ProgressBar
+                        android:id="@+id/poiProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:layout_marginBottom="24dp">
+                        android:layout_gravity="center"
+                        android:indeterminateTint="#8fad6f"
+                        android:visibility="gone" />
 
-                        <ImageButton
-                            android:id="@+id/zoomInButton"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@drawable/zoom_button_background"
-                            android:contentDescription="Zoom In"
-                            android:src="@drawable/ic_add"
-                            app:tint="#FFFFFF"
-                            android:scaleType="centerInside"
-                            android:padding="8dp" />
-
-                        <ImageButton
-                            android:id="@+id/zoomOutButton"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_marginTop="4dp"
-                            android:background="@drawable/zoom_button_background"
-                            android:contentDescription="Zoom Out"
-                            android:src="@drawable/ic_remove"
-                            app:tint="#FFFFFF"
-                            android:scaleType="centerInside"
-                            android:padding="8dp" />
-                    </LinearLayout>
-
-                    <!-- OSM COPYRIGHT (ANKLICKBAR, PERMANENT AM UNTEREN RAND) -->
                     <TextView
-                        android:id="@+id/osmCopyrightText"
+                        android:id="@+id/emptyPoiText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|start"
-                        android:layout_margin="4dp"
-                        android:paddingStart="6dp"
-                        android:paddingEnd="6dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:background="#CC000000"
-                        android:text="Map data © OpenStreetMap Contributors"
-                        android:textColor="#FFFFFF"
-                        android:textSize="9sp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground" />
+                        android:layout_gravity="center"
+                        android:text="Keine POI gefunden
 
+Tippe auf 🔄 POI zum Aktualisieren"
+                        android:textColor="#666666"
+                        android:textSize="13sp"
+                        android:textAlignment="center"
+                        android:visibility="gone" />
                 </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <Button
-                android:id="@+id/shareButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Standort teilen"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#2d5016"
-                android:padding="16dp"
-                android:enabled="false"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <!-- Footer mit Standort teilen Button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="#3d3d3d"
+                    android:gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:text="Dein Standort wird nur beim Teilen übertragen.\nNur Du und der Empfänger bzw. die empfangende App erfahren Deine Standortdaten."
-                android:textAlignment="center"
-                android:textColor="#999999"
-                android:textSize="12sp" />
+                    <Button
+                        android:id="@+id/shareButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="📤 Standort teilen"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="#2d5016"
+                        android:padding="8dp"
+                        android:enabled="false"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
-        </LinearLayout>
-    </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Dein Standort wird nur beim Teilen übertragen."
+                        android:textColor="#999999"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminateTint="#8fad6f"
-        android:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

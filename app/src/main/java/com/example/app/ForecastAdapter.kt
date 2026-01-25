@@ -6,15 +6,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// ERWEITERT: Mit feelsLike (gefühlte Temperatur)
 data class ForecastItem(
     val time: String,
     val temperature: Double,
     val weatherCode: Int,
-    val precipitation: Double
+    val precipitation: Double,
+    val feelsLike: Double = temperature  // NEU: Gefühlte Temperatur
 )
 
-class ForecastAdapter(private val items: List<ForecastItem>) :
-    RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
+// ERWEITERT: Mit Klick-Callback
+class ForecastAdapter(
+    private val items: List<ForecastItem>,
+    private val onItemClick: (ForecastItem) -> Unit  // NEU: Klick-Handler
+) : RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val timeText: TextView = view.findViewById(R.id.timeText)
@@ -38,8 +43,21 @@ class ForecastAdapter(private val items: List<ForecastItem>) :
         val (_, icon) = getWeatherDescription(item.weatherCode)
         holder.iconText.text = icon
 
-        val precipChance = (item.precipitation * 10).coerceIn(0.0, 100.0)
-        holder.rainText.text = "💧 ${precipChance.toInt()}%"
+        holder.rainText.text = "💧 ${item.precipitation.toInt()}%"
+
+        // NEU: Klickbar machen
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
+
+        // NEU: Visuelles Feedback bei Klick
+        holder.itemView.isClickable = true
+        holder.itemView.isFocusable = true
+
+        // NEU: Erhöhe Kontrast für bessere Lesbarkeit
+        holder.itemView.setBackgroundResource(
+            android.R.drawable.list_selector_background
+        )
     }
 
     override fun getItemCount() = items.size
