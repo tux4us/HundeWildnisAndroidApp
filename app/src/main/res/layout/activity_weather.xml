@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- ERWEITERT: Mit Sonnenzeiten, Tages-Min/Max, Warnung-Badge -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
-                android:text="@string/weather_icon_placeholder"
+                android:text="☀️"
                 android:textSize="80sp" />
 
             <!-- Temperatur -->
@@ -47,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
-                android:text="@string/temperature_placeholder"
+                android:text="--°C"
                 android:textColor="#8fad6f"
                 android:textSize="64sp"
                 android:textStyle="bold" />
@@ -58,10 +59,62 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:text="@string/weather_description_loading"
+                android:layout_marginBottom="16dp"
+                android:text="Lade Wetterdaten..."
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
+
+            <!-- NEU: Wetterwarnung-Badge (IMMER sichtbar) -->
+            <TextView
+                android:id="@+id/warningBadgeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/good_badge_bg"
+                android:padding="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="✅ Gutes Wetter"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <!-- NEU: Tages Min/Max & Sonnenzeiten -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/dailyMinMaxText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min: --°C • Max: --°C"
+                    android:textColor="#999999"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/sunriseText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🌅 --:--"
+                    android:textColor="#999999"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/sunsetText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🌇 --:--"
+                    android:textColor="#999999"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <!-- Aktuelles Wetter Card -->
             <com.google.android.material.card.MaterialCardView
@@ -81,13 +134,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/current_weather_title"
+                        android:text="Aktuelles Wetter"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
 
-                    <!-- Gefühlte Temperatur -->
+                    <!-- Gefühlte Temperatur mit Windchill -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -98,7 +151,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/feels_like_label"
+                            android:text="Gefühlt"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -106,9 +159,9 @@
                             android:id="@+id/feelsLikeText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/temperature_placeholder"
+                            android:text="--°C"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -123,7 +176,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/humidity_label"
+                            android:text="Luftfeuchtigkeit"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -131,13 +184,13 @@
                             android:id="@+id/humidityText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/humidity_placeholder"
+                            android:text="--%"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Wind -->
+                    <!-- Wind (ERWEITERT: Mit Beaufort, Richtung, Böen) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -148,7 +201,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/wind_label"
+                            android:text="Wind"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -156,10 +209,11 @@
                             android:id="@+id/windText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/wind_placeholder"
+                            android:text="-- km/h"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="end" />
                     </LinearLayout>
 
                     <!-- Niederschlag -->
@@ -172,7 +226,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/precipitation_label"
+                            android:text="Niederschlag"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -180,7 +234,7 @@
                             android:id="@+id/precipitationText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/precipitation_placeholder"
+                            android:text="-- mm"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -206,7 +260,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/more_details_title"
+                        android:text="Weitere Details"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -223,7 +277,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/pressure_label"
+                            android:text="Luftdruck"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -231,7 +285,7 @@
                             android:id="@+id/pressureText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/pressure_placeholder"
+                            android:text="-- hPa"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -248,7 +302,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/visibility_label"
+                            android:text="Sichtweite"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -256,7 +310,7 @@
                             android:id="@+id/visibilityText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/visibility_placeholder"
+                            android:text="> 10 km"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -272,7 +326,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/uv_index_label"
+                            android:text="UV-Index"
                             android:textColor="#999999"
                             android:textSize="16sp" />
 
@@ -280,7 +334,7 @@
                             android:id="@+id/uvIndexText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/uv_index_placeholder"
+                            android:text="--"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -288,7 +342,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 24h Vorhersage Card -->
+            <!-- 24h Vorhersage Card (ERWEITERT: Stündlich mit Klick-Details) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -305,11 +359,21 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/forecast_24h_title"
+                        android:text="24h-Vorhersage (stündlich)"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:padding="16dp"
+                        android:paddingBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tippe für Details"
+                        android:textColor="#666666"
+                        android:textSize="11sp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         android:paddingBottom="8dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -323,7 +387,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Regenradar Card -->
+            <!-- Regenradar Card (ERWEITERT: Mit Nowcast) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -340,7 +404,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/precipitation_radar_title"
+                        android:text="Niederschlagsradar + Vorhersage"
                         android:textColor="#8fad6f"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -361,7 +425,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/rainviewer_source"
+                        android:text="🔮 = Vorhersage (Nowcast) • 📡 = Aktuelle Daten"
                         android:textColor="#666666"
                         android:textSize="10sp"
                         android:padding="8dp" />
@@ -374,7 +438,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/location_determining"
+                android:text="📍 Standort wird ermittelt..."
                 android:textColor="#999999"
                 android:textSize="14sp" />
 
@@ -384,9 +448,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="@string/open_meteo_source"
+                android:text="Daten: © Open-Meteo (CC BY 4.0)"
                 android:textColor="#666666"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:autoLink="web"
+                android:linksClickable="true" />
 
         </LinearLayout>
     </ScrollView>
