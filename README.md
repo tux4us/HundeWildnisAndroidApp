@@ -32,9 +32,12 @@ Die **HundeWildnisApp** bietet direkten Zugriff auf alle Inhalte von [wildnisleh
 
 ### 🗺️ Navigation & Orientierung
 
-- ✅ GPS-Standortermittlung
+- ✅ GPS-Standortermittlung mit automatischer Aktualisierung in Bewegung
 - ✅ OpenStreetMap Karte
 - ✅ Koordinaten anzeigen & teilen
+- ✅ Wichtige Punkte (POI) für Hundehalter und Wanderfreunde im 2km vom aktuellen Standort als Liste
+- ✅ POI auswählen, in der karte anzeigen und automatisch eine Route dahin anzeigen lassen
+- ✅ POI wechseln und automatische Routenanpassung
 - ✅ Digitaler Kompass
 - ✅ Genauigkeitsanzeige
 - ✅ Barometrischer Höhenmesser
@@ -42,10 +45,11 @@ Die **HundeWildnisApp** bietet direkten Zugriff auf alle Inhalte von [wildnisleh
 ### 🌤️ Wetter & Outdoor
 
 - ✅ Standortgenaue Wettervorhersage
-- ✅ 24h-Vorschau (alle 3h)
-- ✅ Niederschlagsradar (Echtzeit)
-- ✅ Temperatur, Luftfeuchtigkeit, Wind
-- ✅ Luftdruck & UV-Index
+- ✅ 24h-Vorschau in 1h-Schritten mit Detailangaben zu jeder Stunde (alle 3h)
+- ✅ animierter Niederschlagsradar mit 2h Prognose
+- ✅ Temperatur, Luftfeuchtigkeit, Wind, Windrichtung, Bft-Index, Böen, Niederschlag
+- ✅ Luftdruck, Sichtweite & UV-Index
+- ✅ Wetterwarnungen
 - ✅ Wetter-Icons & Emojis
 
 ---
