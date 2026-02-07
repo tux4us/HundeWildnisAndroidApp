@@ -22,6 +22,12 @@
         android:title="⚙️ Einstellungen"
         app:showAsAction="never" />
 
+    <!-- NEU: Test-Button -->
+    <item
+        android:id="@+id/action_test_update"
+        android:title="🧪 Test Autoupdate"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_privacy"
         android:icon="@android:drawable/ic_menu_info_details"
