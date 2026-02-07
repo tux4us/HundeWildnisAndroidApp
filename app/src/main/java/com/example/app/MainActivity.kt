@@ -43,6 +43,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.work.*
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
+import android.os.Build
+import com.hundewildnis.app.ContentUpdateWorker
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -51,8 +56,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var courseAdapter: ContentAdapter
     private lateinit var youtubeAdapter: YouTubeAdapter
 
+    // OPTIMIERT: Nur noch API-Parser für Blog, Kein API für Seiten UND Kurse!
     private val wordPressApi = WordPressApiParser()
-    private val wordPressParser = WordPressParser() // Behalte auch den alten Parser für Kurse
+    private val wordPressParser = WordPressParser()
     private val youtubeParser = YouTubeParser()
     private lateinit var contentCache: ContentCache
 
@@ -70,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         const val VIEW_PAGES = 1
         const val VIEW_COURSES = 2
         const val VIEW_YOUTUBE = 3
-        const val VIEW_TWITTER = 4
+        const val VIEW_PODCASTS = 4
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,15 +92,12 @@ class MainActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            // 1. Bottom Navigation bekommt Padding für System-Navigation
             binding.bottomNavigation.setPadding(0, 0, 0, systemBars.bottom)
 
-            // 2. Warte bis BottomNavigation ihre Höhe kennt
             binding.bottomNavigation.post {
                 val bottomNavHeight = binding.bottomNavigation.height
                 val totalBottomPadding = bottomNavHeight + systemBars.bottom
 
-                // 2a. Setze Padding für ALLE RecyclerViews
                 binding.blogRecyclerView.setPadding(
                     binding.blogRecyclerView.paddingLeft,
                     binding.blogRecyclerView.paddingTop,
@@ -123,16 +126,10 @@ class MainActivity : AppCompatActivity() {
                     totalBottomPadding
                 )
 
-                // 2b. Button Position - IM SELBEN BLOCK!
                 val buttonParams = binding.btnLoadMore.layoutParams as
                         FrameLayout.LayoutParams
                 buttonParams.bottomMargin = bottomNavHeight + systemBars.bottom + 16.dpToPx()
                 binding.btnLoadMore.layoutParams = buttonParams
-
-                Log.d("MainActivity",
-                    "✓ Padding: BottomNav=${bottomNavHeight}px + SystemBars=${systemBars.bottom}px = ${totalBottomPadding}px")
-                Log.d("MainActivity",
-                    "✓ Button Margin: ${buttonParams.bottomMargin}px")
             }
 
             insets
@@ -148,9 +145,14 @@ class MainActivity : AppCompatActivity() {
         setupButtons()
         setupFab()
         loadContent()
+
+        // NEU: Registriere Hintergrund-Updates
+        scheduleContentUpdates()
+
+        // NEU: Frage Benachrichtigungs-Berechtigung (Android 13+)
+        requestNotificationPermission()
     }
 
-    // Hilfsfunktion
     private fun Int.dpToPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
     }
@@ -159,7 +161,7 @@ class MainActivity : AppCompatActivity() {
         blogAdapter = ContentAdapter { item -> openContent(item) }
         pageAdapter = ContentAdapter { item -> openContent(item) }
         courseAdapter = ContentAdapter { item -> openContent(item) }
-        youtubeAdapter = YouTubeAdapter { video -> openYouTubeVideo(video) } // NEU
+        youtubeAdapter = YouTubeAdapter { video -> openYouTubeVideo(video) }
 
         binding.blogRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.blogRecyclerView.adapter = blogAdapter
@@ -170,8 +172,8 @@ class MainActivity : AppCompatActivity() {
         binding.coursesRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.coursesRecyclerView.adapter = courseAdapter
 
-        binding.youtubeRecyclerView.layoutManager = LinearLayoutManager(this) // NEU
-        binding.youtubeRecyclerView.adapter = youtubeAdapter // NEU
+        binding.youtubeRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.youtubeRecyclerView.adapter = youtubeAdapter
     }
 
     private fun setupButtons() {
@@ -193,8 +195,8 @@ class MainActivity : AppCompatActivity() {
                     showYouTubeView()
                     true
                 }
-                R.id.nav_twitter -> {  // NEU
-                    openTwitter()
+                R.id.nav_podcasts -> {  // NEU: statt nav_twitter
+                    openPodcasts()
                     true
                 }
                 else -> false
@@ -209,13 +211,11 @@ class MainActivity : AppCompatActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                // Nur im Blog-View aktiv
                 if (currentView != VIEW_BLOG) {
                     binding.btnLoadMore.visibility = View.GONE
                     return
                 }
 
-                // Keine weiteren Posts? Button verstecken
                 if (blogAdapter.itemCount >= allBlogPosts.size) {
                     binding.btnLoadMore.visibility = View.GONE
                     return
@@ -225,12 +225,9 @@ class MainActivity : AppCompatActivity() {
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val totalItems = layoutManager.itemCount
 
-                // Zeige Button nur wenn fast am Ende (letzte 5 Items sichtbar)
                 if (lastVisibleItem >= totalItems - 5) {
                     binding.btnLoadMore.visibility = View.VISIBLE
                 }
-                // WICHTIG: Wenn NICHT am Ende, Button NICHT verstecken (bleibt wie er ist)
-                // Entferne das "else { visibility = GONE }"
             }
         })
 
@@ -245,7 +242,6 @@ class MainActivity : AppCompatActivity() {
         binding.coursesRecyclerView.visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.GONE
 
-        // Zeige Button wenn mehr Posts vorhanden
         binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size) {
             View.VISIBLE
         } else {
@@ -268,7 +264,6 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, "${nextBatch.size} weitere Beiträge geladen", Toast.LENGTH_SHORT).show()
 
-        // Prüfe ob noch mehr Posts vorhanden
         if (newList.size >= allBlogPosts.size) {
             binding.btnLoadMore.visibility = View.GONE
             Toast.makeText(this, "Alle Beiträge geladen", Toast.LENGTH_SHORT).show()
@@ -293,13 +288,40 @@ class MainActivity : AppCompatActivity() {
         binding.btnLoadMore.visibility = View.GONE
     }
 
-    private fun showYouTubeView() { // NEU
+    private fun showYouTubeView() {
         currentView = VIEW_YOUTUBE
         binding.blogRecyclerView.visibility = View.GONE
         binding.pagesRecyclerView.visibility = View.GONE
         binding.coursesRecyclerView.visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.VISIBLE
         binding.btnLoadMore.visibility = View.GONE
+    }
+
+    private fun openPodcasts() {
+        try {
+            val intent = Intent(this, ContentActivity::class.java).apply {
+                putExtra("url", "https://wildnislehrer.com/podcasts-audiobeitraege/")
+                putExtra("title", "HundeWildnis Podcast")
+            }
+            startActivity(intent)
+
+            // Zurück zum vorherigen Tab nach dem Öffnen
+            binding.bottomNavigation.postDelayed({
+                binding.bottomNavigation.selectedItemId = when (currentView) {
+                    VIEW_BLOG -> R.id.nav_blog
+                    VIEW_PAGES -> R.id.nav_pages
+                    VIEW_COURSES -> R.id.nav_courses
+                    VIEW_YOUTUBE -> R.id.nav_youtube
+                    else -> R.id.nav_blog
+                }
+            }, 300)
+
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Fehler beim Öffnen der Podcasts", e)
+            Toast.makeText(this,
+                "Konnte Podcasts nicht öffnen",
+                Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun loadContent() {
@@ -313,7 +335,6 @@ class MainActivity : AppCompatActivity() {
         val isCacheExpired = contentCache.isCacheExpired()
 
         if (hasFullCache) {
-            // Cache vorhanden - zeige sofort an
             Log.d("MainActivity", "📦 Lade Inhalte aus Cache (Alter: ${if(isCacheExpired) "veraltet" else "aktuell"})")
 
             allBlogPosts = cachedPosts!!
@@ -337,35 +358,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (isCacheExpired) {
-                // Cache veraltet - aktualisiere im Hintergrund
-                Toast.makeText(this, "Inhalte werden aktualisiert...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Inhalte werden geladen...", Toast.LENGTH_SHORT).show()
                 loadContentFromNetwork(silent = true)
             } else {
-                // Cache aktuell - kein Update nötig
                 Toast.makeText(this, "Inhalte aus Cache geladen", Toast.LENGTH_SHORT).show()
             }
             return
         }
 
-        // Kein Cache vorhanden - zeige Ladeanimation
         Log.d("MainActivity", "🌐 Kein Cache vorhanden - lade vom Server")
         binding.progressBar.visibility = View.VISIBLE
-        binding.errorText.text = "Inhalte werden geladen..."
-        binding.errorText.setTextColor(Color.parseColor("#2d5016"))
-        binding.errorText.visibility = View.VISIBLE
-
-        binding.blogRecyclerView.visibility = View.GONE
-        binding.pagesRecyclerView.visibility = View.GONE
-        binding.coursesRecyclerView.visibility = View.GONE
-        binding.youtubeRecyclerView.visibility = View.GONE
-        binding.btnLoadMore.visibility = View.GONE
-
-        loadContentFromNetwork(silent = false)
-
-        // Kein vollständiger Cache - zeige Ladeanimation
-        binding.progressBar.visibility = View.VISIBLE
-        binding.errorText.text = "Inhalte werden aktualisiert..."
-        binding.errorText.setTextColor(Color.parseColor("#2d5016"))
+        binding.errorText.text = "Wir machen uns jetzt für Dich auf die Spur \nund suchen \uD83D\uDC36 alle Seiten nach neuen Inhalten ab. \n\nErstmalig kann dieser Vorgang 1 Minute ⏳ dauern.\n\nWir danken \uD83D\uDE4F\uD83C\uDFFD für Deine Geduld."
+        binding.errorText.setTextColor(Color.parseColor("#3f6f1e"))
         binding.errorText.visibility = View.VISIBLE
 
         binding.blogRecyclerView.visibility = View.GONE
@@ -377,6 +381,7 @@ class MainActivity : AppCompatActivity() {
         loadContentFromNetwork(silent = false)
     }
 
+    // ⚡ OPTIMIERT: Nutzt nur noch API-Calls (außer Kurse Fallback)
     private fun loadContentFromNetwork(silent: Boolean) {
         lifecycleScope.launch {
             try {
@@ -385,49 +390,67 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "⏱️ START Laden: ${System.currentTimeMillis()}")
 
                 val result = withContext(Dispatchers.IO) {
-                    // Blog laden (direkt, nicht async)
-                    val blogStart = System.currentTimeMillis()
-                    Log.d("MainActivity", "📝 Blog: Starte Laden...")
-                    val posts = try {
-                        wordPressApi.loadBlogPosts(perPage = 100)
-                    } catch (e: Exception) {
-                        Log.e("MainActivity", "Blog-Fehler: ${e.message}")
-                        emptyList()
-                    }
-                    val blogDuration = System.currentTimeMillis() - blogStart
-                    Log.d("MainActivity", "✓ Blog: ${posts.size} Posts in ${blogDuration}ms")
-
-                    // Seiten laden (async)
-                    val pagesStart = System.currentTimeMillis()
-                    val pagesDeferred = async {
-                        Log.d("MainActivity", "📄 Seiten: Starte Laden...")
-                        val result = wordPressParser.parsePages()
-                        val duration = System.currentTimeMillis() - pagesStart
-                        Log.d("MainActivity", "✓ Seiten: ${result.size} Seiten in ${duration}ms")
+                    // ⚡ Blog: API (schnell)
+                    val blogDeferred = async<List<ContentItem>> {
+                        val start = System.currentTimeMillis()
+                        Log.d("MainActivity", "📝 Blog: Starte API-Call...")
+                        val result = try {
+                            wordPressApi.loadBlogPosts(perPage = 100)
+                        } catch (e: Exception) {
+                            Log.e("MainActivity", "Blog-Fehler: ${e.message}")
+                            emptyList()
+                        }
+                        val duration = System.currentTimeMillis() - start
+                        Log.d("MainActivity", "✓ Blog (API): ${result.size} Posts in ${duration}ms")
                         result
                     }
 
-                    // Kurse laden (async)
-                    val coursesStart = System.currentTimeMillis()
-                    val coursesDeferred = async {
-                        Log.d("MainActivity", "🎓 Kurse: Starte Laden...")
-                        val result = wordPressParser.parseCourses()
-                        val duration = System.currentTimeMillis() - coursesStart
-                        Log.d("MainActivity", "✓ Kurse: ${result.size} Kurse in ${duration}ms")
+                    // 🎯 Seiten: Jsoup (korrekte Sortierung) ← NEU!
+                    val pagesDeferred = async<List<ContentItem>> {
+                        val start = System.currentTimeMillis()
+                        Log.d("MainActivity", "📄 Seiten: Starte Jsoup-Parsing...")  // ← GEÄNDERT
+                        val result = try {
+                            wordPressParser.parsePages()  // ← GEÄNDERT (war: wordPressApi.loadPages())
+                        } catch (e: Exception) {
+                            Log.e("MainActivity", "Seiten-Fehler: ${e.message}")
+                            emptyList()
+                        }
+                        val duration = System.currentTimeMillis() - start
+                        Log.d("MainActivity", "✓ Seiten (Jsoup): ${result.size} Seiten in ${duration}ms")  // ← GEÄNDERT
                         result
                     }
 
-                    // YouTube laden (async)
-                    val youtubeStart = System.currentTimeMillis()
-                    val youtubeDeferred = async {
+// 🎯 Kurse: Jsoup (bleibt wie es ist!)
+                    val coursesDeferred = async<List<ContentItem>> {
+                        val start = System.currentTimeMillis()
+                        Log.d("MainActivity", "🎓 Kurse: Starte Jsoup-Parsing...")
+                        val result = try {
+                            wordPressParser.parseCourses()  // ← Bleibt Jsoup!
+                        } catch (e: Exception) {
+                            Log.e("MainActivity", "Kurse-Fehler: ${e.message}")
+                            emptyList()
+                        }
+                        val duration = System.currentTimeMillis() - start
+                        Log.d("MainActivity", "✓ Kurse (Jsoup): ${result.size} Kurse in ${duration}ms")
+                        result
+                    }
+
+                    val youtubeDeferred = async<List<YouTubeVideo>> {
+                        val start = System.currentTimeMillis()
                         Log.d("MainActivity", "🎥 YouTube: Starte Laden...")
-                        val result = youtubeParser.loadLatestVideos()
-                        val duration = System.currentTimeMillis() - youtubeStart
+                        val result = try {
+                            youtubeParser.loadLatestVideos()
+                        } catch (e: Exception) {
+                            Log.e("MainActivity", "YouTube-Fehler: ${e.message}")
+                            emptyList()
+                        }
+                        val duration = System.currentTimeMillis() - start
                         Log.d("MainActivity", "✓ YouTube: ${result.size} Videos in ${duration}ms")
                         result
                     }
 
-                    // Warte auf async Operationen
+                    // Warte auf ALLE parallel
+                    val posts = blogDeferred.await()
                     val pages = pagesDeferred.await()
                     val courses = coursesDeferred.await()
                     val videos = youtubeDeferred.await()
@@ -454,7 +477,6 @@ class MainActivity : AppCompatActivity() {
                 allCourses = courses
                 allYouTubeVideos = videos
 
-                // UI IMMER aktualisieren (auch im silent mode!)
                 blogAdapter.submitList(posts.take(20))
                 pageAdapter.submitList(pages)
                 courseAdapter.submitList(courses)
@@ -465,7 +487,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                 if (!silent) {
-                    // Erstmaliges Laden - verstecke Ladeanimation
                     binding.progressBar.visibility = View.GONE
                     binding.errorText.visibility = View.GONE
 
@@ -480,7 +501,6 @@ class MainActivity : AppCompatActivity() {
                         "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse, ${videos.size} Videos geladen",
                         Toast.LENGTH_SHORT).show()
                 } else {
-                    // Silent Update im Hintergrund - nur kurze Bestätigung
                     Toast.makeText(this@MainActivity,
                         "✓ Inhalte aktualisiert",
                         Toast.LENGTH_SHORT).show()
@@ -499,20 +519,21 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.error_loading, e.message),
                         Toast.LENGTH_LONG).show()
                 } else {
-                    // Silent mode - nur Log, keine UI-Änderung
                     Log.e("MainActivity", "Hintergrund-Update fehlgeschlagen")
                 }
             }
         }
     }
 
-    // Hilfsklasse für 4 Werte
     private data class Quad<A, B, C, D>(
         val first: A,
         val second: B,
         val third: C,
         val fourth: D
     )
+
+    // ... Rest der Methoden bleibt GENAU GLEICH ...
+    // (openYouTubeVideo, openTwitter, openContent, setupFab, etc.)
 
     private fun openYouTubeVideo(video: YouTubeVideo) {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
@@ -544,15 +565,14 @@ class MainActivity : AppCompatActivity() {
 
             dialog.show()
 
-            // Bestimme Farbe basierend auf Theme
             val isDarkTheme = (resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
 
             val buttonColor = if (isDarkTheme) {
-                Color.WHITE  // Dark Mode: Weiße Schrift
+                Color.WHITE
             } else {
-                Color.parseColor("#2d5016")  // Light Mode: Grüne Schrift
+                Color.parseColor("#2d5016")
             }
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
@@ -605,16 +625,7 @@ class MainActivity : AppCompatActivity() {
                     prefs.edit().putBoolean("twitter_notice_shown", true).apply()
                     openTwitterInternal()
                 }
-                .setNegativeButton("Abbrechen") { _, _ ->
-                    // Zurück zum vorherigen Tab
-                    binding.bottomNavigation.selectedItemId = when (currentView) {
-                        VIEW_BLOG -> R.id.nav_blog
-                        VIEW_PAGES -> R.id.nav_pages
-                        VIEW_COURSES -> R.id.nav_courses
-                        VIEW_YOUTUBE -> R.id.nav_youtube
-                        else -> R.id.nav_blog
-                    }
-                }
+                .setNegativeButton("Abbrechen", null)  // ENTFERNE die Bottom Nav Zurück-Logik!
                 .setNeutralButton("Datenschutz") { _, _ ->
                     val intent = Intent(
                         Intent.ACTION_VIEW,
@@ -626,7 +637,6 @@ class MainActivity : AppCompatActivity() {
 
             dialog.show()
 
-            // Bestimme Farbe basierend auf Theme
             val isDarkTheme = (resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
@@ -647,10 +657,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun openTwitterInternal() {
         try {
-            // Ersetze mit eurem Twitter/X Username
-            val twitterUsername = "@teamnaturedogs"  // ← HIER ANPASSEN!
+            val twitterUsername = "@teamnaturedogs"
 
-            // Versuche Twitter/X App zu öffnen
             val appIntent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("twitter://user?screen_name=$twitterUsername")
@@ -661,7 +669,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "Öffne in Twitter App")
                 startActivity(appIntent)
             } else {
-                // Fallback: Öffne im Browser
                 Log.d("MainActivity", "Twitter App nicht gefunden, öffne im Browser")
                 val webIntent = Intent(
                     Intent.ACTION_VIEW,
@@ -670,16 +677,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(webIntent)
             }
 
-            // Zurück zum vorherigen Tab nach dem Öffnen
-            binding.bottomNavigation.postDelayed({
-                binding.bottomNavigation.selectedItemId = when (currentView) {
-                    VIEW_BLOG -> R.id.nav_blog
-                    VIEW_PAGES -> R.id.nav_pages
-                    VIEW_COURSES -> R.id.nav_courses
-                    VIEW_YOUTUBE -> R.id.nav_youtube
-                    else -> R.id.nav_blog
-                }
-            }, 300)
+            // ENTFERNE die postDelayed Bottom Nav Zurück-Logik!
 
         } catch (e: Exception) {
             Log.e("MainActivity", "Fehler beim Öffnen von Twitter", e)
@@ -751,6 +749,11 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.action_settings -> {  // NEU
+                showSettingsDialog()
+                true
+            }
+
             R.id.action_privacy -> {
                 openPrivacyPolicy()
                 true
@@ -759,7 +762,11 @@ class MainActivity : AppCompatActivity() {
                 openImprint()
                 true
             }
-            // NEU: SIGNAL Chat mit Wildnislehrerin
+            // NEU: Twitter im Menü
+            R.id.action_twitter -> {
+                openTwitter()
+                true
+            }
             R.id.action_signal_wildnislehrerin -> {
                 openSignalTrainer(
                     name = "Hundetrainerin und Wildnislehrerin Manuela",
@@ -767,7 +774,6 @@ class MainActivity : AppCompatActivity() {
                 )
                 true
             }
-            // NEU: SIGNAL Chat mit Wildnislehrer
             R.id.action_signal_wildnislehrer -> {
                 openSignalTrainer(
                     name = "Hundetrainer und Wildnislehrer Jörg",
@@ -777,6 +783,88 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    // NEU: Einstellungs-Dialog
+    private fun showSettingsDialog() {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_settings, null)
+
+        val switchBackgroundUpdates = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
+        val switchWifiOnly = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
+        val switchNotifications = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
+
+        // Lade gespeicherte Einstellungen
+        switchBackgroundUpdates.isChecked = prefs.getBoolean("background_updates_enabled", true)
+        switchWifiOnly.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
+        switchNotifications.isChecked = prefs.getBoolean("notifications_enabled", true)
+
+        // Theme-abhängige Switch-Farben setzen
+        val isDarkTheme = (resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+
+        if (isDarkTheme) {
+            val whiteColorStateList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            switchBackgroundUpdates.thumbTintList = whiteColorStateList
+            switchBackgroundUpdates.trackTintList = whiteColorStateList.withAlpha(77)
+            switchWifiOnly.thumbTintList = whiteColorStateList
+            switchWifiOnly.trackTintList = whiteColorStateList.withAlpha(77)
+            switchNotifications.thumbTintList = whiteColorStateList
+            switchNotifications.trackTintList = whiteColorStateList.withAlpha(77)
+        } else {
+            val greenColor = Color.parseColor("#2d5016")
+            val greenColorStateList = android.content.res.ColorStateList.valueOf(greenColor)
+            switchBackgroundUpdates.thumbTintList = greenColorStateList
+            switchBackgroundUpdates.trackTintList = greenColorStateList.withAlpha(77)
+            switchWifiOnly.thumbTintList = greenColorStateList
+            switchWifiOnly.trackTintList = greenColorStateList.withAlpha(77)
+            switchNotifications.thumbTintList = greenColorStateList
+            switchNotifications.trackTintList = greenColorStateList.withAlpha(77)
+        }
+
+        // Listeners
+        switchBackgroundUpdates.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("background_updates_enabled", isChecked).apply()
+            if (isChecked) {
+                scheduleContentUpdates()
+            } else {
+                WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_morning")
+            }
+
+            switchWifiOnly.isEnabled = isChecked
+            switchNotifications.isEnabled = isChecked
+        }
+
+        switchWifiOnly.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("background_updates_wifi_only", isChecked).apply()
+            scheduleContentUpdates()
+        }
+
+        switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("notifications_enabled", isChecked).apply()
+        }
+
+        switchWifiOnly.isEnabled = switchBackgroundUpdates.isChecked
+        switchNotifications.isEnabled = switchBackgroundUpdates.isChecked
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("⚙️ Einstellungen")
+            .setView(dialogView)
+            .setPositiveButton("Fertig", null)
+            .create()
+
+        dialog.show()
+
+        // Theme-abhängige Button-Farbe
+        val buttonColor = if (isDarkTheme) {
+            Color.WHITE
+        } else {
+            Color.parseColor("#2d5016")
+        }
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
     }
 
     private fun openSignalTrainer(name: String, link: String) {
@@ -816,7 +904,6 @@ class MainActivity : AppCompatActivity() {
 
             dialog.show()
 
-            // Button-Farben anpassen
             val isDarkTheme = (resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
@@ -954,15 +1041,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupFab() {
         Log.d("MainActivity", "setupFab() wird aufgerufen")
 
-        // Haupt-FAB Click - WICHTIG: stopPropagation
         binding.fabMain.setOnClickListener { view ->
             Log.d("MainActivity", "Haupt-FAB geklickt!")
-            view.isClickable = false  // Verhindere Doppel-Klicks
+            view.isClickable = false
             toggleFab()
             view.postDelayed({ view.isClickable = true }, 300)
         }
 
-        // NEUER Wetter FAB
         binding.fabWeather.setOnClickListener { view ->
             Log.d("MainActivity", "Wetter FAB geklickt!")
             view.isClickable = false
@@ -973,7 +1058,6 @@ class MainActivity : AppCompatActivity() {
             }, 300)
         }
 
-        // Standort FAB (vorher Timer)
         binding.fabLocation.setOnClickListener { view ->
             Log.d("MainActivity", "Standort FAB geklickt!")
             view.isClickable = false
@@ -984,7 +1068,6 @@ class MainActivity : AppCompatActivity() {
             }, 300)
         }
 
-        // Kompass FAB
         binding.fabCompass.setOnClickListener { view ->
             Log.d("MainActivity", "Kompass FAB geklickt!")
             view.isClickable = false
@@ -995,7 +1078,6 @@ class MainActivity : AppCompatActivity() {
             }, 300)
         }
 
-        // Höhenmesser FAB (vorher GPS)
         binding.fabAltimeter.setOnClickListener { view ->
             Log.d("MainActivity", "Höhenmesser FAB geklickt!")
             view.isClickable = false
@@ -1021,10 +1103,8 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "openFab() aufgerufen")
         isFabOpen = true
 
-        // KEIN Overlay mehr - nur Hintergrund dimmen
         binding.contentContainer.alpha = 0.3f
 
-        // Reihenfolge von oben nach unten (passend zur XML)
         showFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
         showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
         showFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
@@ -1032,7 +1112,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabMain.animate().rotation(45f).setDuration(200).start()
 
-        // Root-Klick schließt FAB (aber nur außerhalb der FABs)
         binding.root.setOnClickListener {
             closeFab()
         }
@@ -1043,13 +1122,10 @@ class MainActivity : AppCompatActivity() {
     private fun closeFab() {
         isFabOpen = false
 
-        // Stelle Hintergrund wieder her
         binding.contentContainer.alpha = 1f
 
-        // Entferne Root-Klick-Listener
         binding.root.setOnClickListener(null)
 
-        // Verstecke FABs
         hideFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
         hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
         hideFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
@@ -1151,5 +1227,164 @@ class MainActivity : AppCompatActivity() {
             saveThemePreference(true)
         }
         recreate()
+    }
+
+    /**
+     * Plant 2x tägliche Content-Updates (8 Uhr morgens & 20 Uhr abends)
+     */
+    private fun scheduleContentUpdates() {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val backgroundUpdatesEnabled = prefs.getBoolean("background_updates_enabled", true)
+
+        if (!backgroundUpdatesEnabled) {
+            Log.d("MainActivity", "Hintergrund-Updates deaktiviert")
+            WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_morning")
+            WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_evening")
+            return
+        }
+
+        val wifiOnly = prefs.getBoolean("background_updates_wifi_only", false)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(
+                if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED
+            )
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        // ===== MORGENS 8 UHR =====
+        val morningDelay = calculateDelayUntil(8)
+        val morningRequest = PeriodicWorkRequestBuilder<ContentUpdateWorker>(
+            12, TimeUnit.HOURS, // Alle 12 Stunden (wird zu 8 Uhr und 20 Uhr)
+            1, TimeUnit.HOURS   // Flexibilität: 8-9 Uhr bzw. 20-21 Uhr
+        )
+            .setConstraints(constraints)
+            .setInitialDelay(morningDelay, TimeUnit.MILLISECONDS)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "content_updates_morning",
+            ExistingPeriodicWorkPolicy.KEEP,
+            morningRequest
+        )
+
+        Log.d("MainActivity", "✓ Update geplant: 8 Uhr & 20 Uhr (WLAN-only: $wifiOnly)")
+        Log.d("MainActivity", "Nächstes Update in ${morningDelay / 1000 / 60} Minuten")
+    }
+
+    /**
+     * Berechnet Verzögerung bis zur nächsten Zielstunde (z.B. 8 Uhr oder 20 Uhr)
+     */
+    private fun calculateDelayUntil(targetHour: Int): Long {
+        val currentDate = Calendar.getInstance()
+        val dueDate = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, targetHour)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+
+            // Wenn die Zielstunde heute schon vorbei ist, plane für morgen
+            if (before(currentDate)) {
+                add(Calendar.DAY_OF_MONTH, 1)
+            }
+        }
+
+        return dueDate.timeInMillis - currentDate.timeInMillis
+    }
+
+    /**
+     * Fragt Benachrichtigungs-Berechtigung ab (Android 13+)
+     */
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
+                android.content.pm.PackageManager.PERMISSION_GRANTED) {
+
+                val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+                val hasAskedBefore = prefs.getBoolean("notification_permission_asked", false)
+
+                if (!hasAskedBefore) {
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle("Benachrichtigungen aktivieren?")
+                        .setMessage(
+                            "HundeWildnis kann dich benachrichtigen, wenn neue Inhalte verfügbar sind:\n\n" +
+                                    "• Neue Blogbeiträge\n" +
+                                    "• Neue Seiten\n" +
+                                    "• Neue Kurse\n" +
+                                    "• Neue Videos\n\n" +
+                                    "Die App prüft zweimal täglich (8 Uhr morgens & 20 Uhr abends) auf neue Inhalte.\n\n" +
+                                    "Du kannst das jederzeit in den Einstellungen ändern."
+                        )
+                        .setPositiveButton("Aktivieren") { _, _ ->
+                            prefs.edit().putBoolean("notification_permission_asked", true).apply()
+                            requestPermissions(
+                                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                                1001
+                            )
+                        }
+                        .setNegativeButton("Nicht jetzt") { _, _ ->
+                            prefs.edit().putBoolean("notification_permission_asked", true).apply()
+                            prefs.edit().putBoolean("notifications_enabled", false).apply()
+                        }
+                        .create()
+
+                    dialog.show()
+
+                    // Theme-abhängige Button-Farben
+                    val isDarkTheme = (resources.configuration.uiMode and
+                            Configuration.UI_MODE_NIGHT_MASK) ==
+                            Configuration.UI_MODE_NIGHT_YES
+
+                    val buttonColor = if (isDarkTheme) {
+                        Color.WHITE
+                    } else {
+                        Color.parseColor("#2d5016")
+                    }
+
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+
+                } else {
+                    requestPermissions(
+                        arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                        1001
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * Aktiviert/Deaktiviert Hintergrund-Updates (wird von Settings aufgerufen)
+     */
+    fun toggleBackgroundUpdates(enabled: Boolean) {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        prefs.edit().putBoolean("background_updates_enabled", enabled).apply()
+
+        if (enabled) {
+            scheduleContentUpdates()
+        } else {
+            WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates")
+            Log.d("MainActivity", "Hintergrund-Updates deaktiviert")
+        }
+    }
+
+    /**
+     * Aktiviert/Deaktiviert "Nur WLAN" für Updates
+     */
+    fun toggleWifiOnly(wifiOnly: Boolean) {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        prefs.edit().putBoolean("background_updates_wifi_only", wifiOnly).apply()
+
+        // Neu planen mit geänderten Constraints
+        scheduleContentUpdates()
+    }
+
+    /**
+     * Aktiviert/Deaktiviert Benachrichtigungen
+     */
+    fun toggleNotifications(enabled: Boolean) {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        prefs.edit().putBoolean("notifications_enabled", enabled).apply()
+        Log.d("MainActivity", "Benachrichtigungen ${if (enabled) "aktiviert" else "deaktiviert"}")
     }
 }

@@ -13,8 +13,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 25
-        versionName = "5.1"
+        versionCode = 27
+        versionName = "5.3"
 
         // API Key aus local.properties laden - AUSSERHALB von android {}
         val localProperties = Properties()
@@ -50,19 +50,18 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx.v1120)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v270)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.jsoup)
     implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.androidx.core.ktx.v1131)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.osmdroid.android)
-    // Gson für JSON Serialisierung (Caching)
     implementation(libs.gson)
-    implementation(libs.material.v1110)
-    implementation("io.coil-kt:coil:2.5.0")
+    implementation(libs.coil)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.youtube.player.core)
 }

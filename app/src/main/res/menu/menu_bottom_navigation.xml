@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/menu/bottom_navigation.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_blog"
@@ -20,8 +21,9 @@
         android:icon="@android:drawable/ic_menu_slideshow"
         android:title="YT" />
 
+    <!-- NEU: Podcasts statt Twitter -->
     <item
-        android:id="@+id/nav_twitter"
-        android:icon="@drawable/ic_twitter"
-        android:title="X" />
+        android:id="@+id/nav_podcasts"
+        android:icon="@drawable/ic_podcast"
+        android:title="Podcast" />
 </menu>

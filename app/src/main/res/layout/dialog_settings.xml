@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hintergrund-Updates"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Die App prüft zweimal täglich 8 Uhr morgens und 20 Uhr abends auf neue Inhalte. Du kannst aber auch jederzeit selbst die Aktualisierung starten."
+        android:textSize="14sp"
+        android:paddingBottom="16dp"
+        android:textColor="?android:attr/textColorSecondary" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchBackgroundUpdates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hintergrund-Updates aktivieren"
+        android:checked="true" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchWifiOnly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nur über WLAN aktualisieren"
+        android:layout_marginTop="8dp" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Benachrichtigungen anzeigen"
+        android:layout_marginTop="8dp"
+        android:checked="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ℹ️ Datenverbrauch bei 2x täglich Update der Inhaltslisten ist sehr gering."
+        android:textSize="12sp"
+        android:layout_marginTop="16dp"
+        android:textColor="?android:attr/textColorSecondary" />
+
+</LinearLayout>

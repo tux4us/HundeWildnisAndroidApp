@@ -8,5 +8,7 @@ data class ContentItem(
     val level: Int = 0,
     val type: String = "blog",
     val imageUrl: String = "",
-    val id: Int = 0
+    val id: Int = 0,
+    val parentId: Int = 0,  // NEU
+    val menuOrder: Int = 0  // NEU: Für WordPress Menu-Reihenfolge
 )

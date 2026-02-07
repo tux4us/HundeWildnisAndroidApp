@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:indeterminateTint="#2d5016"
+            android:indeterminateTint="#33691E"
             android:visibility="visible" />
 
         <TextView
@@ -115,7 +115,7 @@
             android:padding="16dp"
             android:textAlignment="center"
             android:textSize="16sp"
-            android:textColor="#2d5016"
+            android:textColor="#33691E"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -209,7 +209,7 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#003b00"
+        app:backgroundTint="#33691E"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -230,7 +230,7 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#003b00"
+        app:backgroundTint="#33691E"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -251,7 +251,7 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#003b00"
+        app:backgroundTint="#33691E"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -272,7 +272,7 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#003b00"
+        app:backgroundTint="#33691E"
         app:fabSize="normal"
         app:tint="@android:color/white"
         app:elevation="18dp"
@@ -303,11 +303,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#2d5016"
+        app:backgroundTint="#2d5016"
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_navigation"
-        android:elevation="8dp" />
+        app:elevation="8dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
