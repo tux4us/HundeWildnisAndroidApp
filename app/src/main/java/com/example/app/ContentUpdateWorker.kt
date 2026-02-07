@@ -30,13 +30,12 @@ class ContentUpdateWorker(
             try {
                 Log.d("ContentUpdateWorker", "🔄 Hintergrund-Update gestartet")
 
-                // Initialisiere Parser
                 val wordPressApi = WordPressApiParser()
                 val wordPressParser = WordPressParser()
                 val youtubeParser = YouTubeParser()
                 val contentCache = ContentCache(applicationContext)
 
-                // Lade alte Daten aus Cache
+                // Lade alte Daten
                 val oldBlogPosts = contentCache.getBlogPosts() ?: emptyList()
                 val oldPages = contentCache.getPages() ?: emptyList()
                 val oldCourses = contentCache.getCourses() ?: emptyList()
@@ -44,14 +43,49 @@ class ContentUpdateWorker(
 
                 Log.d("ContentUpdateWorker", "Alter Stand: ${oldBlogPosts.size} Posts, ${oldPages.size} Seiten, ${oldCourses.size} Kurse, ${oldVideos.size} Videos")
 
-                // Lade neue Daten
-                val newBlogPosts = try {
-                    wordPressApi.loadBlogPosts(perPage = 100)
+                // SCHRITT 1: Lade nur die neuesten 20 Posts zum Check
+                val recentPosts = try {
+                    wordPressApi.loadBlogPosts(perPage = 20)
                 } catch (e: Exception) {
                     Log.e("ContentUpdateWorker", "Blog-Fehler: ${e.message}")
+                    emptyList()
+                }
+
+                // Prüfe ob es neue Posts gibt
+                val oldRecentIds = oldBlogPosts.take(20).map { it.url }.toSet()
+                val newRecentIds = recentPosts.map { it.url }.toSet()
+                val hasNewBlogPosts = newRecentIds.any { it !in oldRecentIds }
+
+                // SCHRITT 2: Wenn neue Posts -> Lade ALLE
+                val newBlogPosts = if (hasNewBlogPosts) {
+                    Log.d("ContentUpdateWorker", "🆕 Neue Posts erkannt! Lade alle...")
+                    try {
+                        val allPosts = mutableListOf<ContentItem>()
+                        var page = 1
+                        var hasMore = true
+
+                        while (hasMore && page <= 10) {
+                            val posts = wordPressApi.loadBlogPosts(page = page, perPage = 100)
+                            if (posts.isEmpty()) {
+                                hasMore = false
+                            } else {
+                                allPosts.addAll(posts)
+                                page++
+                                if (posts.size < 100) hasMore = false
+                            }
+                        }
+                        Log.d("ContentUpdateWorker", "Alle Posts geladen: ${allPosts.size}")
+                        allPosts
+                    } catch (e: Exception) {
+                        Log.e("ContentUpdateWorker", "Fehler beim Laden aller Posts: ${e.message}")
+                        oldBlogPosts
+                    }
+                } else {
+                    Log.d("ContentUpdateWorker", "Keine neuen Blog-Posts")
                     oldBlogPosts
                 }
 
+                // Lade andere Inhalte
                 val newPages = try {
                     wordPressParser.parsePages()
                 } catch (e: Exception) {
@@ -91,7 +125,6 @@ class ContentUpdateWorker(
 
                 Log.d("ContentUpdateWorker", "✓ Update abgeschlossen: $totalNew neue Inhalte")
 
-                // Zeige Benachrichtigung nur bei neuen Inhalten
                 if (totalNew > 0) {
                     showNotification(newBlogCount, newPagesCount, newCoursesCount, newVideosCount)
                 } else {

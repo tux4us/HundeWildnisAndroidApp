@@ -754,6 +754,11 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.action_test_update -> {  // NEU
+                testBackgroundUpdate()
+                true
+            }
+
             R.id.action_privacy -> {
                 openPrivacyPolicy()
                 true
@@ -783,6 +788,23 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun testBackgroundUpdate() {
+        Toast.makeText(this, "Starte Test-Update in 10 Sekunden...", Toast.LENGTH_LONG).show()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val testRequest = OneTimeWorkRequestBuilder<ContentUpdateWorker>()
+            .setConstraints(constraints)
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueue(testRequest)
+
+        Log.d("MainActivity", "🧪 Test-Update gestartet - Check Logcat in 10s")
     }
 
     // NEU: Einstellungs-Dialog
