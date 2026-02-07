@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.size.Scale
+import coil.request.CachePolicy
 import com.hundewildnis.app.databinding.ItemContentBinding
 
 class ContentAdapter(
@@ -57,14 +59,12 @@ class ContentAdapter(
             // Icon und Styling basierend auf Typ und Level
             when (item.type) {
                 "blog" -> {
-                    // Blog-Einträge
                     binding.titleText.textSize = 16f
                     binding.titleText.setTypeface(null, android.graphics.Typeface.NORMAL)
                     binding.titleText.setTextColor(android.graphics.Color.parseColor(darkGreen))
                     binding.titleText.text = "💬 ${item.title}"
                 }
                 "page" -> {
-                    // Webseiten mit verschiedenen Icons je nach Level
                     val (icon, textSize, typeface) = when (item.level) {
                         0 -> Triple("🐶🦉", 16f, android.graphics.Typeface.BOLD)
                         1 -> Triple("📁", 16f, android.graphics.Typeface.BOLD)
@@ -84,7 +84,6 @@ class ContentAdapter(
                     binding.titleText.text = "$icon ${item.title}"
                 }
                 "course" -> {
-                    // Onlinekurse - mit angepassten Farben
                     when (item.level) {
                         0 -> {
                             binding.titleText.textSize = 18f
@@ -122,16 +121,33 @@ class ContentAdapter(
             binding.excerptText.visibility = if (binding.excerptText.text.isEmpty())
                 android.view.View.GONE else android.view.View.VISIBLE
 
+            // ⚡ OPTIMIERT: Bild-Loading mit Coil
             if (item.imageUrl.isNotEmpty()) {
                 binding.itemImage.visibility = View.VISIBLE
-                binding.itemImage.load(item.imageUrl)
+                binding.itemImage.load(item.imageUrl) {
+                    // Thumbnail-Größe (300px breit)
+                    size(300)
+                    scale(Scale.FIT)
+
+                    // Aggressive Caching
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    memoryCachePolicy(CachePolicy.ENABLED)
+
+                    // Placeholder während Laden
+                    placeholder(R.drawable.ic_placeholder_image)
+
+                    // Fehler-Bild
+                    error(R.drawable.ic_error_image)
+
+                    // Crossfade Animation
+                    crossfade(200)
+                }
             } else {
                 binding.itemImage.visibility = View.GONE
             }
         }
     }
 
-    // DiffCallback HIER - auf gleicher Ebene wie ViewHolder, NICHT darin!
     class DiffCallback : DiffUtil.ItemCallback<ContentItem>() {
         override fun areItemsTheSame(oldItem: ContentItem, newItem: ContentItem): Boolean {
             return oldItem.url == newItem.url

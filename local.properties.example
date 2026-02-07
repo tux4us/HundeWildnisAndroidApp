@@ -1,0 +1,12 @@
+# This file is an example. Rename it to local.properties and add your API key.
+#
+# This file must *NOT* be checked into Version Control Systems,
+# as it contains information specific to your local configuration.
+#
+# Location of the SDK. If you wish to specify a different location,
+# edit this file to point to the location of your SDK and restart the IDE.
+
+sdk.dir=/home/tuxus/Android/Sdk
+
+# Add your YouTube API key here
+YOUTUBE_API_KEY=YOUR_API_KEY_HERE

@@ -1,10 +1,6 @@
 package com.hundewildnis.app
 
-import android.util.Log
-import com.hundewildnis.app.ContentItem
-import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 
 class WordPressParser {
     private val baseUrl = "https://wildnislehrer.com"
@@ -14,7 +10,7 @@ class WordPressParser {
         val posts = mutableListOf<ContentItem>()
 
         try {
-            Log.d("WordPressParser", "Lade Blogbeiträge...")
+            android.util.Log.d("WordPressParser", "Lade Blogbeiträge...")
 
             val doc = Jsoup.connect("$baseUrl/blog/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
@@ -22,7 +18,7 @@ class WordPressParser {
                 .get()
 
             val articles = doc.select("article, .post, .entry, .hentry, .blog-post")
-            Log.d("WordPressParser", "Gefundene Artikel-Container: ${articles.size}")
+            android.util.Log.d("WordPressParser", "Gefundene Artikel-Container: ${articles.size}")
 
             for (article in articles) {
                 try {
@@ -37,27 +33,18 @@ class WordPressParser {
                     val date = dateElement?.text()?.trim() ?: ""
 
                     if (url.startsWith(baseUrl) && !url.contains("/blog/") && title.isNotEmpty()) {
-                        posts.add(
-                            ContentItem(
-                                title = title,
-                                url = url,
-                                excerpt = excerpt,
-                                date = date,
-                                level = 0,
-                                type = "blog"
-                            )
-                        )
-                        Log.d("WordPressParser", "✓ Blog: $title")
+                        posts.add(ContentItem(title = title, url = url, excerpt = excerpt, date = date, level = 0, type = "blog"))
+                        android.util.Log.d("WordPressParser", "✓ Blog: $title")
                     }
                 } catch (e: Exception) {
-                    Log.e("WordPressParser", "Fehler beim Parsen eines Artikels: ${e.message}")
+                    android.util.Log.e("WordPressParser", "Fehler beim Parsen eines Artikels: ${e.message}")
                 }
             }
 
-            Log.d("WordPressParser", "${posts.size} Blogbeiträge gefunden")
+            android.util.Log.d("WordPressParser", "${posts.size} Blogbeiträge gefunden")
 
         } catch (e: Exception) {
-            Log.e("WordPressParser", "Fehler beim Blog-Laden: ${e.message}")
+            android.util.Log.e("WordPressParser", "Fehler beim Blog-Laden: ${e.message}")
             e.printStackTrace()
         }
 
@@ -69,7 +56,7 @@ class WordPressParser {
         val pages = mutableListOf<ContentItem>()
 
         try {
-            Log.d("WordPressParser", "Lade Seiten...")
+            android.util.Log.d("WordPressParser", "Lade Seiten...")
 
             val doc = Jsoup.connect("$baseUrl/de/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
@@ -161,24 +148,15 @@ class WordPressParser {
                         else -> 1
                     }
 
-                    pages.add(
-                        ContentItem(
-                            title = title,
-                            url = href,
-                            excerpt = "",
-                            date = "",
-                            level = level,
-                            type = "page"
-                        )
-                    )
-                    Log.d("WordPressParser", "✓ Seite (Level $level): $title")
+                    pages.add(ContentItem(title = title, url = href, excerpt = "", date = "", level = level, type = "page"))
+                    android.util.Log.d("WordPressParser", "✓ Seite (Level $level): $title")
                 }
             }
 
-            Log.d("WordPressParser", "${pages.size} Seiten gefunden")
+            android.util.Log.d("WordPressParser", "${pages.size} Seiten gefunden")
 
         } catch (e: Exception) {
-            Log.e("WordPressParser", "Fehler: ${e.message}")
+            android.util.Log.e("WordPressParser", "Fehler: ${e.message}")
             e.printStackTrace()
         }
 
@@ -205,27 +183,18 @@ class WordPressParser {
         val seenUrls = mutableSetOf<String>()
 
         try {
-            Log.d("WordPressParser", "⭐ Lade Onlinekurse hierarchisch...")
+            android.util.Log.d("WordPressParser", "⭐ Lade Onlinekurse hierarchisch...")
 
             // Hauptseite hinzufügen - Level 0
-            courses.add(
-                ContentItem(
-                    title = "Onlinekurse Hundeschule",
-                    url = coursesUrl,
-                    excerpt = "Übersicht aller Onlinekurse",
-                    date = "",
-                    level = 0,
-                    type = "course"
-                )
-            )
+            courses.add(ContentItem(title = "Onlinekurse Hundeschule", url = coursesUrl, excerpt = "Übersicht aller Onlinekurse", date = "", level = 0, type = "course"))
             seenUrls.add(coursesUrl)
 
-            Log.d("WordPressParser", "✓ Level 0: Onlinekurse Hundeschule")
+            android.util.Log.d("WordPressParser", "✓ Level 0: Onlinekurse Hundeschule")
 
             // Rekursive Funktion
             suspend fun crawlCoursePage(url: String, currentLevel: Int) {
                 try {
-                    Log.d("WordPressParser", "🔍 Crawle (Level $currentLevel): $url")
+                    android.util.Log.d("WordPressParser", "🔍 Crawle (Level $currentLevel): $url")
 
                     val doc = Jsoup.connect(url)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
@@ -235,7 +204,7 @@ class WordPressParser {
 
                     // Links in der Reihenfolge wie sie auf der Seite erscheinen
                     val links = doc.select("a[href]")
-                    Log.d("WordPressParser", "📄 Gefundene Links auf Seite: ${links.size}")
+                    android.util.Log.d("WordPressParser", "📄 Gefundene Links auf Seite: ${links.size}")
 
                     var foundCount = 0
                     for (link in links) {
@@ -260,30 +229,21 @@ class WordPressParser {
                             val nextLevel = currentLevel + 1
 
                             // Füge zur Liste hinzu
-                            courses.add(
-                                ContentItem(
-                                    title = title,
-                                    url = href,
-                                    excerpt = "",
-                                    date = "",
-                                    level = nextLevel,
-                                    type = "course"
-                                )
-                            )
-                            Log.d("WordPressParser", "  ".repeat(nextLevel) + "✓ Level $nextLevel: $title")
+                            courses.add(ContentItem(title = title, url = href, excerpt = "", date = "", level = nextLevel, type = "course"))
+                            android.util.Log.d("WordPressParser", "  ".repeat(nextLevel) + "✓ Level $nextLevel: $title")
 
                             // Rekursiv in diese Seite gehen mit dem neuen Level
                             crawlCoursePage(href, nextLevel)
                         }
                     }
 
-                    Log.d("WordPressParser", "📊 Auf Level $currentLevel: $foundCount neue Kurse gefunden")
+                    android.util.Log.d("WordPressParser", "📊 Auf Level $currentLevel: $foundCount neue Kurse gefunden")
 
                     // Kleine Pause
-                    delay(100)
+                    kotlinx.coroutines.delay(100)
 
                 } catch (e: Exception) {
-                    Log.e("WordPressParser", "❌ Fehler bei $url: ${e.message}")
+                    android.util.Log.e("WordPressParser", "❌ Fehler bei $url: ${e.message}")
                     e.printStackTrace()
                 }
             }
@@ -291,10 +251,10 @@ class WordPressParser {
             // Starte Crawling von der Hauptseite mit Level 0
             crawlCoursePage(coursesUrl, 0)
 
-            Log.d("WordPressParser", "✅ ${courses.size} Kurs-Seiten gesamt gefunden")
+            android.util.Log.d("WordPressParser", "✅ ${courses.size} Kurs-Seiten gesamt gefunden")
 
         } catch (e: Exception) {
-            Log.e("WordPressParser", "❌ Fehler beim Kurse-Laden: ${e.message}")
+            android.util.Log.e("WordPressParser", "❌ Fehler beim Kurse-Laden: ${e.message}")
             e.printStackTrace()
         }
 
@@ -302,7 +262,7 @@ class WordPressParser {
         return courses.distinctBy { it.url }
     }
 
-    private fun calculateMenuLevel(link: Element): Int {
+    private fun calculateMenuLevel(link: org.jsoup.nodes.Element): Int {
         var level = 0
         var parent = link.parent()
 

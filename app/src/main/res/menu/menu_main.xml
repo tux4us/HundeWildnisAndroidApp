@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/menu/menu_main.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -15,6 +16,12 @@
         android:title="@string/toggle_theme"
         app:showAsAction="never" />
 
+    <!-- NEU: Einstellungen -->
+    <item
+        android:id="@+id/action_settings"
+        android:title="⚙️ Einstellungen"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_privacy"
         android:icon="@android:drawable/ic_menu_info_details"
@@ -23,27 +30,30 @@
         app:showAsAction="never"
         app:iconTint="#FFFFFF" />
 
-    <!-- Impressum (NEU) -->
     <item
         android:id="@+id/action_imprint"
-        android:title="⚖️ Impressum"
+        android:title="📇 Impressum"
         app:showAsAction="never" />
 
-    <!-- NEU: SIGNAL Chat mit Wildnislehrerin -->
+    <!-- NEU: X/Twitter im Menü -->
+    <item
+        android:id="@+id/action_twitter"
+        android:icon="@drawable/ic_twitter"
+        android:title="🐦 Folge uns auf X"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_signal_wildnislehrerin"
         android:title="💬 SIGNAL Chat mit Manuela"
         android:icon="@drawable/ic_signal"
         app:showAsAction="never" />
 
-    <!-- NEU: SIGNAL Chat mit Wildnislehrer -->
     <item
         android:id="@+id/action_signal_wildnislehrer"
         android:title="💬 SIGNAL Chat mit Jörg"
         android:icon="@drawable/ic_signal"
         app:showAsAction="never" />
 
-    <!-- NEUER Refresh Button -->
     <item
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh"

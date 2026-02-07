@@ -1,0 +1,186 @@
+package com.hundewildnis.app
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import com.example.app.MainActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class ContentUpdateWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+
+    companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "hundewildnis_updates"
+        private const val NOTIFICATION_ID = 1001
+    }
+
+    override suspend fun doWork(): Result {
+        return withContext(Dispatchers.IO) {
+            try {
+                Log.d("ContentUpdateWorker", "🔄 Hintergrund-Update gestartet")
+
+                // Initialisiere Parser
+                val wordPressApi = WordPressApiParser()
+                val wordPressParser = WordPressParser()
+                val youtubeParser = YouTubeParser()
+                val contentCache = ContentCache(applicationContext)
+
+                // Lade alte Daten aus Cache
+                val oldBlogPosts = contentCache.getBlogPosts() ?: emptyList()
+                val oldPages = contentCache.getPages() ?: emptyList()
+                val oldCourses = contentCache.getCourses() ?: emptyList()
+                val oldVideos = contentCache.getYouTubeVideos() ?: emptyList()
+
+                Log.d("ContentUpdateWorker", "Alter Stand: ${oldBlogPosts.size} Posts, ${oldPages.size} Seiten, ${oldCourses.size} Kurse, ${oldVideos.size} Videos")
+
+                // Lade neue Daten
+                val newBlogPosts = try {
+                    wordPressApi.loadBlogPosts(perPage = 100)
+                } catch (e: Exception) {
+                    Log.e("ContentUpdateWorker", "Blog-Fehler: ${e.message}")
+                    oldBlogPosts
+                }
+
+                val newPages = try {
+                    wordPressParser.parsePages()
+                } catch (e: Exception) {
+                    Log.e("ContentUpdateWorker", "Seiten-Fehler: ${e.message}")
+                    oldPages
+                }
+
+                val newCourses = try {
+                    wordPressParser.parseCourses()
+                } catch (e: Exception) {
+                    Log.e("ContentUpdateWorker", "Kurse-Fehler: ${e.message}")
+                    oldCourses
+                }
+
+                val newVideos = try {
+                    youtubeParser.loadLatestVideos()
+                } catch (e: Exception) {
+                    Log.e("ContentUpdateWorker", "YouTube-Fehler: ${e.message}")
+                    oldVideos
+                }
+
+                // Speichere neue Daten
+                contentCache.saveBlogPosts(newBlogPosts)
+                contentCache.savePages(newPages)
+                contentCache.saveCourses(newCourses)
+                contentCache.saveYouTubeVideos(newVideos)
+
+                Log.d("ContentUpdateWorker", "Neuer Stand: ${newBlogPosts.size} Posts, ${newPages.size} Seiten, ${newCourses.size} Kurse, ${newVideos.size} Videos")
+
+                // Berechne neue Inhalte
+                val newBlogCount = maxOf(0, newBlogPosts.size - oldBlogPosts.size)
+                val newPagesCount = maxOf(0, newPages.size - oldPages.size)
+                val newCoursesCount = maxOf(0, newCourses.size - oldCourses.size)
+                val newVideosCount = maxOf(0, newVideos.size - oldVideos.size)
+
+                val totalNew = newBlogCount + newPagesCount + newCoursesCount + newVideosCount
+
+                Log.d("ContentUpdateWorker", "✓ Update abgeschlossen: $totalNew neue Inhalte")
+
+                // Zeige Benachrichtigung nur bei neuen Inhalten
+                if (totalNew > 0) {
+                    showNotification(newBlogCount, newPagesCount, newCoursesCount, newVideosCount)
+                } else {
+                    Log.d("ContentUpdateWorker", "Keine neuen Inhalte - keine Benachrichtigung")
+                }
+
+                Result.success()
+            } catch (e: Exception) {
+                Log.e("ContentUpdateWorker", "❌ Fehler beim Update", e)
+                Result.retry()
+            }
+        }
+    }
+
+    private fun showNotification(
+        newBlogs: Int,
+        newPages: Int,
+        newCourses: Int,
+        newVideos: Int
+    ) {
+        // Erstelle Notification Channel (ab Android 8.0)
+        createNotificationChannel()
+
+        // Prüfe ob Benachrichtigungen erlaubt sind
+        val prefs = applicationContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+
+        if (!notificationsEnabled) {
+            Log.d("ContentUpdateWorker", "Benachrichtigungen vom User deaktiviert")
+            return
+        }
+
+        // Erstelle Nachrichtentext
+        val parts = mutableListOf<String>()
+        if (newBlogs > 0) parts.add("$newBlogs ${if (newBlogs == 1) "Beitrag" else "Beiträge"}")
+        if (newPages > 0) parts.add("$newPages ${if (newPages == 1) "Seite" else "Seiten"}")
+        if (newCourses > 0) parts.add("$newCourses ${if (newCourses == 1) "Kurs" else "Kurse"}")
+        if (newVideos > 0) parts.add("$newVideos ${if (newVideos == 1) "Video" else "Videos"}")
+
+        val message = when {
+            parts.isEmpty() -> return
+            parts.size == 1 -> "Neu: ${parts[0]}"
+            else -> "Neu: ${parts.joinToString(", ")}"
+        }
+
+        // Intent zum Öffnen der App
+        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        // Erstelle Notification
+        val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher_hundewildnis)
+            .setContentTitle("🐕 Neue Inhalte bei HundeWildnis!")
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setColor(android.graphics.Color.parseColor("#2d5016"))
+            .build()
+
+        // Zeige Notification
+        try {
+            NotificationManagerCompat.from(applicationContext)
+                .notify(NOTIFICATION_ID, notification)
+            Log.d("ContentUpdateWorker", "✓ Benachrichtigung angezeigt: $message")
+        } catch (e: SecurityException) {
+            Log.e("ContentUpdateWorker", "Benachrichtigungs-Berechtigung fehlt", e)
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Neue Inhalte"
+            val descriptionText = "Benachrichtigungen über neue Blogbeiträge, Seiten, Kurse und Videos"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+
+            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+}
