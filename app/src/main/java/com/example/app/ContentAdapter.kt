@@ -43,7 +43,7 @@ class ContentAdapter(
 
         fun bind(item: ContentItem) {
             // Einrückung basierend auf Level
-            val paddingStart = (item.level * 32).coerceAtMost(128)
+            val paddingStart = (item.level * 32).coerceAtMost(64)  // ← Reduziert von 128 auf 64
             binding.root.setPadding(paddingStart + 16, 16, 16, 16)
 
             // Erkenne Dark Mode
@@ -68,8 +68,8 @@ class ContentAdapter(
                     val (icon, textSize, typeface) = when (item.level) {
                         0 -> Triple("🐶🦉", 16f, android.graphics.Typeface.BOLD)
                         1 -> Triple("📁", 16f, android.graphics.Typeface.BOLD)
-                        2 -> Triple("   \uD83D\uDCDC", 14f, android.graphics.Typeface.NORMAL)
-                        else -> Triple("      \uD83D\uDCDC", 13f, android.graphics.Typeface.NORMAL)
+                        2 -> Triple("   📄", 14f, android.graphics.Typeface.NORMAL)
+                        else -> Triple("      📄", 13f, android.graphics.Typeface.NORMAL)
                     }
 
                     binding.titleText.textSize = textSize
@@ -84,30 +84,28 @@ class ContentAdapter(
                     binding.titleText.text = "$icon ${item.title}"
                 }
                 "course" -> {
+                    // Vereinfachte Kurs-Hierarchie: Nur noch 3 Ebenen (0, 1, 2)
                     when (item.level) {
                         0 -> {
+                            // Ebene 0: Hauptseite "Onlinekurse Hundeschule"
                             binding.titleText.textSize = 18f
                             binding.titleText.setTypeface(null, android.graphics.Typeface.BOLD)
                             binding.titleText.setTextColor(android.graphics.Color.parseColor(darkGreen))
                             binding.titleText.text = "📚 ${item.title}"
                         }
                         1 -> {
+                            // Ebene 1: "Kursverzeichnis Hundeschule"
                             binding.titleText.textSize = 16f
                             binding.titleText.setTypeface(null, android.graphics.Typeface.BOLD)
                             binding.titleText.setTextColor(android.graphics.Color.parseColor(darkGreen))
                             binding.titleText.text = "📂 ${item.title}"
                         }
-                        2 -> {
+                        else -> {
+                            // Ebene 2: Einzelkurse (alle Kurse aus Kursverzeichnis)
                             binding.titleText.textSize = 15f
-                            binding.titleText.setTypeface(null, android.graphics.Typeface.BOLD)
+                            binding.titleText.setTypeface(null, android.graphics.Typeface.NORMAL)
                             binding.titleText.setTextColor(android.graphics.Color.parseColor(mediumGreen))
                             binding.titleText.text = "   📖 ${item.title}"
-                        }
-                        else -> {
-                            binding.titleText.textSize = 14f
-                            binding.titleText.setTypeface(null, android.graphics.Typeface.NORMAL)
-                            binding.titleText.setTextColor(android.graphics.Color.parseColor(lightGreen))
-                            binding.titleText.text = "      • ${item.title}"
                         }
                     }
                 }
