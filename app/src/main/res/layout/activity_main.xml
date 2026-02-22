@@ -23,65 +23,52 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Content Container (ersetzt SwipeRefreshLayout) -->
+    <!-- Content Container (ersetzt SwipeRefreshLayout) -->
     <FrameLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <!-- Blog RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/blogRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="16dp"
+            android:visibility="visible" />
 
-            <!-- RecyclerViews -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/blogRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="16dp" />
+        <!-- Pages Menu (Include) -->
+        <include
+            android:id="@+id/pagesMenu"
+            layout="@layout/fragment_pages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/pagesRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="16dp"
-                android:visibility="gone" />
+        <!-- Courses Menu (Include) -->
+        <include
+            android:id="@+id/coursesMenu"
+            layout="@layout/fragment_courses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/coursesRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="16dp"
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/youtubeRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="16dp"
-                android:visibility="gone" />
-        </LinearLayout>
+        <!-- YouTube RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/youtubeRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone" />
 
         <!-- "Weitere Beiträge laden" Button (schwebend) -->
         <Button

@@ -31,17 +31,14 @@ class ContentUpdateWorker(
                 Log.d("ContentUpdateWorker", "🔄 Hintergrund-Update gestartet")
 
                 val wordPressApi = WordPressApiParser()
-                val wordPressParser = WordPressParser()
                 val youtubeParser = YouTubeParser()
                 val contentCache = ContentCache(applicationContext)
 
-                // Lade alte Daten
+                // Lade alte Daten (nur Blog & YouTube)
                 val oldBlogPosts = contentCache.getBlogPosts() ?: emptyList()
-                val oldPages = contentCache.getPages() ?: emptyList()
-                val oldCourses = contentCache.getCourses() ?: emptyList()
                 val oldVideos = contentCache.getYouTubeVideos() ?: emptyList()
 
-                Log.d("ContentUpdateWorker", "Alter Stand: ${oldBlogPosts.size} Posts, ${oldPages.size} Seiten, ${oldCourses.size} Kurse, ${oldVideos.size} Videos")
+                Log.d("ContentUpdateWorker", "Alter Stand: ${oldBlogPosts.size} Posts, ${oldVideos.size} Videos")
 
                 // SCHRITT 1: Lade nur die neuesten 20 Posts zum Check
                 val recentPosts = try {
@@ -85,21 +82,7 @@ class ContentUpdateWorker(
                     oldBlogPosts
                 }
 
-                // Lade andere Inhalte
-                val newPages = try {
-                    wordPressParser.parsePages()
-                } catch (e: Exception) {
-                    Log.e("ContentUpdateWorker", "Seiten-Fehler: ${e.message}")
-                    oldPages
-                }
-
-                val newCourses = try {
-                    wordPressParser.parseCourses()
-                } catch (e: Exception) {
-                    Log.e("ContentUpdateWorker", "Kurse-Fehler: ${e.message}")
-                    oldCourses
-                }
-
+                // Lade YouTube Videos
                 val newVideos = try {
                     youtubeParser.loadLatestVideos()
                 } catch (e: Exception) {
@@ -109,24 +92,20 @@ class ContentUpdateWorker(
 
                 // Speichere neue Daten
                 contentCache.saveBlogPosts(newBlogPosts)
-                contentCache.savePages(newPages)
-                contentCache.saveCourses(newCourses)
                 contentCache.saveYouTubeVideos(newVideos)
 
-                Log.d("ContentUpdateWorker", "Neuer Stand: ${newBlogPosts.size} Posts, ${newPages.size} Seiten, ${newCourses.size} Kurse, ${newVideos.size} Videos")
+                Log.d("ContentUpdateWorker", "Neuer Stand: ${newBlogPosts.size} Posts, ${newVideos.size} Videos")
 
                 // Berechne neue Inhalte
                 val newBlogCount = maxOf(0, newBlogPosts.size - oldBlogPosts.size)
-                val newPagesCount = maxOf(0, newPages.size - oldPages.size)
-                val newCoursesCount = maxOf(0, newCourses.size - oldCourses.size)
                 val newVideosCount = maxOf(0, newVideos.size - oldVideos.size)
 
-                val totalNew = newBlogCount + newPagesCount + newCoursesCount + newVideosCount
+                val totalNew = newBlogCount + newVideosCount
 
                 Log.d("ContentUpdateWorker", "✓ Update abgeschlossen: $totalNew neue Inhalte")
 
                 if (totalNew > 0) {
-                    showNotification(newBlogCount, newPagesCount, newCoursesCount, newVideosCount)
+                    showNotification(newBlogCount, newVideosCount)
                 } else {
                     Log.d("ContentUpdateWorker", "Keine neuen Inhalte - keine Benachrichtigung")
                 }
@@ -141,8 +120,6 @@ class ContentUpdateWorker(
 
     private fun showNotification(
         newBlogs: Int,
-        newPages: Int,
-        newCourses: Int,
         newVideos: Int
     ) {
         // Erstelle Notification Channel (ab Android 8.0)
@@ -160,8 +137,6 @@ class ContentUpdateWorker(
         // Erstelle Nachrichtentext
         val parts = mutableListOf<String>()
         if (newBlogs > 0) parts.add("$newBlogs ${if (newBlogs == 1) "Beitrag" else "Beiträge"}")
-        if (newPages > 0) parts.add("$newPages ${if (newPages == 1) "Seite" else "Seiten"}")
-        if (newCourses > 0) parts.add("$newCourses ${if (newCourses == 1) "Kurs" else "Kurse"}")
         if (newVideos > 0) parts.add("$newVideos ${if (newVideos == 1) "Video" else "Videos"}")
 
         val message = when {
@@ -206,7 +181,7 @@ class ContentUpdateWorker(
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Neue Inhalte"
-            val descriptionText = "Benachrichtigungen über neue Blogbeiträge, Seiten, Kurse und Videos"
+            val descriptionText = "Benachrichtigungen über neue Blogbeiträge und Videos"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
                 description = descriptionText

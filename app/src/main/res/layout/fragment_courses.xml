@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:background="?android:attr/windowBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingBottom="120dp">
+
+        <!-- Hauptseite -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCoursesMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🎓 Onlinekurse Hundeschule"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:backgroundTint="#2d5016"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            android:paddingVertical="16dp"
+            android:gravity="start|center_vertical" />
+
+        <!-- Kursverzeichnis -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📁 Kursverzeichnis Hundeschule"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#2d5016"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCoursesDirectory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   📖 Kursverzeichnis Hundeschule"
+            app:backgroundTint="#4a6135"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="12dp" />
+
+        <!-- Einzelkurse -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📖 Kurse"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4a6135"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 01 Grundlagen"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 02 Motivation"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 03 Korrektur"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse04"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 04 Harmonie"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse05"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 05 Mentaltraining"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse06"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 06 Körpersprache"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse07"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 07 Sprachkommunikation"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse08"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 08 Sinneswahrnehmung"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse09"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 09 Teamarbeit"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 10 Routinen"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 11 Unfallschutz"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 12 Junghundepädagogik"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 13 Leinenarbeit"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 14 Unterbrechungen"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 15 Fuss"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 16 Sitz"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 17 Platz"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 18 Steh"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 19 Sozialisierungstechniken"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 20 Langdistanztraining"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 21 Distanzunterbrechungen"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 22 Freilauf"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 23 Freifolge"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 24 Teamwalk"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse25"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 25 Scouttechniken"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse26"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 26 Jagdvermeidung"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse27"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 27 Nasenarbeit"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse28"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 28 Leinenfühigkeit"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse29"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 29 Begegnungssituationen"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 30 Stresstoleranztraining"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse31"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 31 Stresserroutinen"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 32 Hundekonflikte"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse33"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 33 Menschenkonflikte"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse34"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 34 Umweltkonflikte"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse35"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 35 Besitzkonflikte"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse36"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 36 Tierschutzhunde"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse37"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 37 Hunde mit Vorbesitzern"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse38"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 38 Kranke Hunde"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse39"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 39 Traumahunde"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse40"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 40 Erste Hilfe Set"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCourse41"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="      📖 Onlinekurs 41 Erste Hilfe am Hund"
+            app:backgroundTint="#5a7145"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="10dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -34,7 +34,6 @@ import com.hundewildnis.app.ImprintActivity
 import com.hundewildnis.app.R
 import com.hundewildnis.app.WeatherActivity
 import com.hundewildnis.app.WordPressApiParser
-import com.hundewildnis.app.WordPressParser
 import com.hundewildnis.app.YouTubeAdapter
 import com.hundewildnis.app.YouTubeParser
 import com.hundewildnis.app.YouTubeVideo
@@ -47,24 +46,19 @@ import androidx.work.*
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import android.os.Build
+import android.view.Gravity
 import com.hundewildnis.app.ContentUpdateWorker
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var blogAdapter: ContentAdapter
-    private lateinit var pageAdapter: ContentAdapter
-    private lateinit var courseAdapter: ContentAdapter
     private lateinit var youtubeAdapter: YouTubeAdapter
 
-    // OPTIMIERT: Nur noch API-Parser für Blog, Kein API für Seiten UND Kurse!
     private val wordPressApi = WordPressApiParser()
-    private val wordPressParser = WordPressParser()
     private val youtubeParser = YouTubeParser()
     private lateinit var contentCache: ContentCache
 
     private var allBlogPosts = listOf<ContentItem>()
-    private var allPages = listOf<ContentItem>()
-    private var allCourses = listOf<ContentItem>()
     private var allYouTubeVideos = listOf<YouTubeVideo>()
 
     private var currentView = VIEW_BLOG
@@ -98,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 val bottomNavHeight = binding.bottomNavigation.height
                 val totalBottomPadding = bottomNavHeight + systemBars.bottom
 
+                // Blog RecyclerView Padding
                 binding.blogRecyclerView.setPadding(
                     binding.blogRecyclerView.paddingLeft,
                     binding.blogRecyclerView.paddingTop,
@@ -105,20 +100,7 @@ class MainActivity : AppCompatActivity() {
                     totalBottomPadding
                 )
 
-                binding.pagesRecyclerView.setPadding(
-                    binding.pagesRecyclerView.paddingLeft,
-                    binding.pagesRecyclerView.paddingTop,
-                    binding.pagesRecyclerView.paddingRight,
-                    totalBottomPadding
-                )
-
-                binding.coursesRecyclerView.setPadding(
-                    binding.coursesRecyclerView.paddingLeft,
-                    binding.coursesRecyclerView.paddingTop,
-                    binding.coursesRecyclerView.paddingRight,
-                    totalBottomPadding
-                )
-
+                // YouTube RecyclerView Padding
                 binding.youtubeRecyclerView.setPadding(
                     binding.youtubeRecyclerView.paddingLeft,
                     binding.youtubeRecyclerView.paddingTop,
@@ -126,8 +108,30 @@ class MainActivity : AppCompatActivity() {
                     totalBottomPadding
                 )
 
-                val buttonParams = binding.btnLoadMore.layoutParams as
-                        FrameLayout.LayoutParams
+                // Pages Menu - Padding auf LinearLayout INNERHALB des ScrollView
+                findViewById<View>(R.id.pagesMenu)?.let { scrollView ->
+                    val linearLayout = (scrollView as? android.widget.ScrollView)?.getChildAt(0)
+                    linearLayout?.setPadding(
+                        linearLayout.paddingLeft,
+                        linearLayout.paddingTop,
+                        linearLayout.paddingRight,
+                        totalBottomPadding
+                    )
+                }
+
+                // Courses Menu - Padding auf LinearLayout INNERHALB des ScrollView
+                findViewById<View>(R.id.coursesMenu)?.let { scrollView ->
+                    val linearLayout = (scrollView as? android.widget.ScrollView)?.getChildAt(0)
+                    linearLayout?.setPadding(
+                        linearLayout.paddingLeft,
+                        linearLayout.paddingTop,
+                        linearLayout.paddingRight,
+                        totalBottomPadding
+                    )
+                }
+
+                // Load More Button Margin
+                val buttonParams = binding.btnLoadMore.layoutParams as FrameLayout.LayoutParams
                 buttonParams.bottomMargin = bottomNavHeight + systemBars.bottom + 16.dpToPx()
                 binding.btnLoadMore.layoutParams = buttonParams
             }
@@ -144,12 +148,11 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerViews()
         setupButtons()
         setupFab()
+        setupPagesMenu()
+        setupCoursesMenu()
         loadContent()
 
-        // NEU: Registriere Hintergrund-Updates
         scheduleContentUpdates()
-
-        // NEU: Frage Benachrichtigungs-Berechtigung (Android 13+)
         requestNotificationPermission()
     }
 
@@ -159,18 +162,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerViews() {
         blogAdapter = ContentAdapter { item -> openContent(item) }
-        pageAdapter = ContentAdapter { item -> openContent(item) }
-        courseAdapter = ContentAdapter { item -> openContent(item) }
         youtubeAdapter = YouTubeAdapter { video -> openYouTubeVideo(video) }
 
         binding.blogRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.blogRecyclerView.adapter = blogAdapter
-
-        binding.pagesRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.pagesRecyclerView.adapter = pageAdapter
-
-        binding.coursesRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.coursesRecyclerView.adapter = courseAdapter
 
         binding.youtubeRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.youtubeRecyclerView.adapter = youtubeAdapter
@@ -195,7 +190,7 @@ class MainActivity : AppCompatActivity() {
                     showYouTubeView()
                     true
                 }
-                R.id.nav_podcasts -> {  // NEU: statt nav_twitter
+                R.id.nav_podcasts -> {
                     openPodcasts()
                     true
                 }
@@ -238,8 +233,8 @@ class MainActivity : AppCompatActivity() {
     private fun showBlogView() {
         currentView = VIEW_BLOG
         binding.blogRecyclerView.visibility = View.VISIBLE
-        binding.pagesRecyclerView.visibility = View.GONE
-        binding.coursesRecyclerView.visibility = View.GONE
+        findViewById<View>(R.id.pagesMenu).visibility = View.GONE
+        findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.GONE
 
         binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size) {
@@ -273,8 +268,8 @@ class MainActivity : AppCompatActivity() {
     private fun showPagesView() {
         currentView = VIEW_PAGES
         binding.blogRecyclerView.visibility = View.GONE
-        binding.pagesRecyclerView.visibility = View.VISIBLE
-        binding.coursesRecyclerView.visibility = View.GONE
+        findViewById<View>(R.id.pagesMenu).visibility = View.VISIBLE
+        findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
     }
@@ -282,8 +277,8 @@ class MainActivity : AppCompatActivity() {
     private fun showCoursesView() {
         currentView = VIEW_COURSES
         binding.blogRecyclerView.visibility = View.GONE
-        binding.pagesRecyclerView.visibility = View.GONE
-        binding.coursesRecyclerView.visibility = View.VISIBLE
+        findViewById<View>(R.id.pagesMenu).visibility = View.GONE
+        findViewById<View>(R.id.coursesMenu).visibility = View.VISIBLE
         binding.youtubeRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
     }
@@ -291,8 +286,8 @@ class MainActivity : AppCompatActivity() {
     private fun showYouTubeView() {
         currentView = VIEW_YOUTUBE
         binding.blogRecyclerView.visibility = View.GONE
-        binding.pagesRecyclerView.visibility = View.GONE
-        binding.coursesRecyclerView.visibility = View.GONE
+        findViewById<View>(R.id.pagesMenu).visibility = View.GONE
+        findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.VISIBLE
         binding.btnLoadMore.visibility = View.GONE
     }
@@ -305,7 +300,6 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(intent)
 
-            // Zurück zum vorherigen Tab nach dem Öffnen
             binding.bottomNavigation.postDelayed({
                 binding.bottomNavigation.selectedItemId = when (currentView) {
                     VIEW_BLOG -> R.id.nav_blog
@@ -318,33 +312,330 @@ class MainActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             Log.e("MainActivity", "Fehler beim Öffnen der Podcasts", e)
-            Toast.makeText(this,
-                "Konnte Podcasts nicht öffnen",
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Konnte Podcasts nicht öffnen", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun setupPagesMenu() {
+        // HUNDESCHULE - Hauptseite
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnHundeWildnisSchule)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/", "HundeWildnis Schule")
+        }
+
+        // HUNDESCHULE
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAntiJagdTraining)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/anti-jagd-training/", "Anti-Jagd-Training")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAusbildungAssistenzhunde)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-assistenzhunden-fuer-den-einsatz-im-paedagogischen-arbeitsumfeld/", "Ausbildung Assistenzhunde")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnBeratung)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/beratung/", "Beratung")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnFahrradtraining)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/fahrradtraining/", "Fahrradtraining")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnFaehrteUndSuche)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/faehrte-und-suche/", "Fährte und Suche")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnGedankenUndGrundlagen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/gedanken-und-grundlagen/", "Gedanken und Grundlagen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnGrundausbildung)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/grundausbildung/", "Grundausbildung")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnHundeleinen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/hundeleinen/", "Hundeleinen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLernfoerderungSchulen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/lernfoerderung-an-schulen/", "Lernförderung an Schulen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnProblemberatung)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/problemberatung-problemkorrektur-intensivtraining/", "Problemberatung")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSeminare)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/seminare/", "Seminare")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnTeamsport)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/teamsport/", "Teamsport")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnTierschutzHunde)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/tierschutz-hunde-mit-lebensgeschichte/", "Tierschutz Hunde")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnTiertherapeutischerSozialbesuchshundeservice)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischer-sozialbesuchshundeservice/", "Tiertherapeutischer Service")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWandernZumGutenZweck)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/wandern-zum-guten-zweck/", "Wandern zum guten Zweck")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWelpenschule)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/hundeschule/welpenschule/", "Welpenschule")
+        }
+
+        // WILDNISSCHULE
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWildnisInUns)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns-individuelle-ausbildung/", "Die Wildnis in uns")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSpurenUndZeichen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen-individuelle-ausbildung/", "Spuren und Zeichen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWildnishandwerkSchulen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerk-fuer-schulen/", "Wildnishandwerk für Schulen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWildnispaedagogikSchulen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/wildnisschule/wildnispaedagogik-fuer-schulen/", "Wildnispädagogik für Schulen")
+        }
+
+        // WEITERE INFORMATIONEN
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDownloads)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/downloads/", "Downloads")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnHonorare)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/honorare/", "Honorare")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnImpressum)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/impressum/", "Impressum")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAGBs)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/allg-geschaeftsbedingungen/", "AGB")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDatenschutz)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/datenschutzerklaerung/", "Datenschutzerklärung")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnInformationen)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/informationen/", "Informationen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnKontakt)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/kontakt/", "Kontakt")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnUeberUns)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/ueber-uns/", "Über Uns")
+        }
+    }
+
+    private fun setupCoursesMenu() {
+        // Hauptseite & Verzeichnis
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCoursesMain)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", "Onlinekurse Hundeschule")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCoursesDirectory)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/", "Kursverzeichnis")
+        }
+
+        // Kurse 01-41
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse01)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-01-grundlagen/", "Kurs 01: Grundlagen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse02)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-02-motivation/", "Kurs 02: Motivation")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse03)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-03-korrektur/", "Kurs 03: Korrektur")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse04)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-04-harmonie/", "Kurs 04: Harmonie")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse05)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-05-mentaltraining/", "Kurs 05: Mentaltraining")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse06)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-06-koerpersprache/", "Kurs 06: Körpersprache")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse07)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-07-sprachkommunikation/", "Kurs 07: Sprachkommunikation")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse08)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-08-sinneswahrnehmung/", "Kurs 08: Sinneswahrnehmung")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse09)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-09-teamarbeit/", "Kurs 09: Teamarbeit")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse10)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-10-routinen/", "Kurs 10: Routinen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse11)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-11-unfallschutz/", "Kurs 11: Unfallschutz")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse12)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-12-junghundepaedagogik/", "Kurs 12: Junghundepädagogik")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse13)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-13-leinenarbeit/", "Kurs 13: Leinenarbeit")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse14)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-14-unterbrechungen/", "Kurs 14: Unterbrechungen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse15)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-15-fuss/", "Kurs 15: Fuss")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse16)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-16-sitz/", "Kurs 16: Sitz")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse17)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-17-platz/", "Kurs 17: Platz")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse18)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-18-steh/", "Kurs 18: Steh")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse19)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-19-sozialisierungstechniken/", "Kurs 19: Sozialisierungstechniken")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse20)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-20-langdistanztraining/", "Kurs 20: Langdistanztraining")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse21)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-21-distanzunterbrechungen/", "Kurs 21: Distanzunterbrechungen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse22)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-22-freilauf/", "Kurs 22: Freilauf")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse23)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-23-freifolge/", "Kurs 23: Freifolge")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse24)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-24-teamwalk/", "Kurs 24: Teamwalk")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse25)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-25-scouttechniken/", "Kurs 25: Scouttechniken")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse26)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-26-jagdvermeidung/", "Kurs 26: Jagdvermeidung")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse27)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-27-nasenarbeit/", "Kurs 27: Nasenarbeit")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse28)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-28-leinenfuehrigkeit/", "Kurs 28: Leinenfühigkeit")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse29)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-29-begegnungssituationen/", "Kurs 29: Begegnungssituationen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse30)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-30-stresstoleranztraining/", "Kurs 30: Stresstoleranztraining")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse31)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-31-stresserroutinen/", "Kurs 31: Stresserroutinen")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse32)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-32-hundekonflikte/", "Kurs 32: Hundekonflikte")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse33)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-33-menschenkonflikte/", "Kurs 33: Menschenkonflikte")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse34)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-34-umweltkonflikte/", "Kurs 34: Umweltkonflikte")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse35)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-35-besitzkonflikte/", "Kurs 35: Besitzkonflikte")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse36)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-36-tierschutzhunde/", "Kurs 36: Tierschutzhunde")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse37)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-37-hunde-mit-vorbesitzern/", "Kurs 37: Hunde mit Vorbesitzern")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse38)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-38-kranke-hunde/", "Kurs 38: Kranke Hunde")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse39)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-39-traumahunde/", "Kurs 39: Traumahunde")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse40)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-40-erste-hilfe-set/", "Kurs 40: Erste Hilfe Set")
+        }
+
+        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse41)?.setOnClickListener {
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-41-erste-hilfe-am-hund/", "Kurs 41: Erste Hilfe am Hund")
+        }
+    }
+
+    private fun openUrl(url: String, title: String) {
+        val intent = Intent(this, ContentActivity::class.java).apply {
+            putExtra("url", url)
+            putExtra("title", title)
+        }
+        startActivity(intent)
     }
 
     private fun loadContent() {
         val cachedPosts = contentCache.getBlogPosts()
-        val cachedPages = contentCache.getPages()
-        val cachedCourses = contentCache.getCourses()
         val cachedYouTube = contentCache.getYouTubeVideos()
 
-        val hasFullCache = cachedPosts != null && cachedPages != null &&
-                cachedCourses != null && cachedYouTube != null
+        val hasCache = cachedPosts != null && cachedYouTube != null
         val isCacheExpired = contentCache.isCacheExpired()
 
-        if (hasFullCache) {
-            Log.d("MainActivity", "📦 Lade Inhalte aus Cache (Alter: ${if(isCacheExpired) "veraltet" else "aktuell"})")
+        if (hasCache) {
+            Log.d("MainActivity", "📦 Zeige Cache sofort")
 
             allBlogPosts = cachedPosts!!
-            allPages = cachedPages!!
-            allCourses = cachedCourses!!
             allYouTubeVideos = cachedYouTube!!
 
             blogAdapter.submitList(cachedPosts.take(20))
-            pageAdapter.submitList(cachedPages)
-            courseAdapter.submitList(cachedCourses)
             youtubeAdapter.submitList(cachedYouTube)
 
             binding.progressBar.visibility = View.GONE
@@ -358,39 +649,38 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (isCacheExpired) {
-                Toast.makeText(this, "Inhalte werden geladen...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Aktualisiere Inhalte...", Toast.LENGTH_SHORT).show()
                 loadContentFromNetwork(silent = true)
             } else {
-                Toast.makeText(this, "Inhalte aus Cache geladen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Inhalte geladen", Toast.LENGTH_SHORT).show()
             }
             return
         }
 
-        Log.d("MainActivity", "🌐 Kein Cache vorhanden - lade vom Server")
+        Log.d("MainActivity", "🌐 Erstmaliges Laden...")
         binding.progressBar.visibility = View.VISIBLE
-        binding.errorText.text = "Wir machen uns jetzt für Dich auf die Spur \nund suchen \uD83D\uDC36 alle Seiten nach neuen Inhalten ab. \n\nErstmalig kann dieser Vorgang 1 Minute ⏳ dauern.\n\nWir danken \uD83D\uDE4F\uD83C\uDFFD für Deine Geduld."
+        binding.errorText.text = "Lade Inhalte...\n\n⏳ Circa 5 Sekunden.\n\nDanach startet die App sofort! 🚀"
         binding.errorText.setTextColor(Color.parseColor("#3f6f1e"))
+        binding.errorText.gravity = Gravity.CENTER_HORIZONTAL
         binding.errorText.visibility = View.VISIBLE
 
         binding.blogRecyclerView.visibility = View.GONE
-        binding.pagesRecyclerView.visibility = View.GONE
-        binding.coursesRecyclerView.visibility = View.GONE
+        findViewById<View>(R.id.pagesMenu).visibility = View.GONE
+        findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
 
         loadContentFromNetwork(silent = false)
     }
 
-    // ⚡ OPTIMIERT: Nutzt nur noch API-Calls (außer Kurse Fallback)
     private fun loadContentFromNetwork(silent: Boolean) {
         lifecycleScope.launch {
             try {
                 val totalStartTime = System.currentTimeMillis()
                 Log.d("MainActivity", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-                Log.d("MainActivity", "⏱️ START Laden: ${System.currentTimeMillis()}")
+                Log.d("MainActivity", "⏱️ START Laden")
 
                 val result = withContext(Dispatchers.IO) {
-                    // ⚡ Blog: API (schnell)
                     val blogDeferred = async<List<ContentItem>> {
                         val start = System.currentTimeMillis()
                         Log.d("MainActivity", "📝 Blog: Starte API-Call...")
@@ -401,37 +691,7 @@ class MainActivity : AppCompatActivity() {
                             emptyList()
                         }
                         val duration = System.currentTimeMillis() - start
-                        Log.d("MainActivity", "✓ Blog (API): ${result.size} Posts in ${duration}ms")
-                        result
-                    }
-
-                    // 🎯 Seiten: Jsoup (korrekte Sortierung) ← NEU!
-                    val pagesDeferred = async<List<ContentItem>> {
-                        val start = System.currentTimeMillis()
-                        Log.d("MainActivity", "📄 Seiten: Starte Jsoup-Parsing...")  // ← GEÄNDERT
-                        val result = try {
-                            wordPressParser.parsePages()  // ← GEÄNDERT (war: wordPressApi.loadPages())
-                        } catch (e: Exception) {
-                            Log.e("MainActivity", "Seiten-Fehler: ${e.message}")
-                            emptyList()
-                        }
-                        val duration = System.currentTimeMillis() - start
-                        Log.d("MainActivity", "✓ Seiten (Jsoup): ${result.size} Seiten in ${duration}ms")  // ← GEÄNDERT
-                        result
-                    }
-
-// 🎯 Kurse: Jsoup (bleibt wie es ist!)
-                    val coursesDeferred = async<List<ContentItem>> {
-                        val start = System.currentTimeMillis()
-                        Log.d("MainActivity", "🎓 Kurse: Starte Jsoup-Parsing...")
-                        val result = try {
-                            wordPressParser.parseCourses()  // ← Bleibt Jsoup!
-                        } catch (e: Exception) {
-                            Log.e("MainActivity", "Kurse-Fehler: ${e.message}")
-                            emptyList()
-                        }
-                        val duration = System.currentTimeMillis() - start
-                        Log.d("MainActivity", "✓ Kurse (Jsoup): ${result.size} Kurse in ${duration}ms")
+                        Log.d("MainActivity", "✓ Blog: ${result.size} Posts in ${duration}ms")
                         result
                     }
 
@@ -449,37 +709,22 @@ class MainActivity : AppCompatActivity() {
                         result
                     }
 
-                    // Warte auf ALLE parallel
                     val posts = blogDeferred.await()
-                    val pages = pagesDeferred.await()
-                    val courses = coursesDeferred.await()
                     val videos = youtubeDeferred.await()
 
-                    Quad(posts, pages, courses, videos)
+                    Pair(posts, videos)
                 }
 
                 val posts = result.first
-                val pages = result.second
-                val courses = result.third
-                val videos = result.fourth
+                val videos = result.second
 
-                // Cache speichern
-                val cacheStart = System.currentTimeMillis()
                 contentCache.saveBlogPosts(posts)
-                contentCache.savePages(pages)
-                contentCache.saveCourses(courses)
                 contentCache.saveYouTubeVideos(videos)
-                val cacheDuration = System.currentTimeMillis() - cacheStart
-                Log.d("MainActivity", "💾 Cache gespeichert in ${cacheDuration}ms")
 
                 allBlogPosts = posts
-                allPages = pages
-                allCourses = courses
                 allYouTubeVideos = videos
 
                 blogAdapter.submitList(posts.take(20))
-                pageAdapter.submitList(pages)
-                courseAdapter.submitList(courses)
                 youtubeAdapter.submitList(videos)
 
                 val totalDuration = System.currentTimeMillis() - totalStartTime
@@ -498,7 +743,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     Toast.makeText(this@MainActivity,
-                        "${posts.size} Beiträge, ${pages.size} Seiten, ${courses.size} Kurse, ${videos.size} Videos geladen",
+                        "${posts.size} Beiträge, ${videos.size} Videos geladen",
                         Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@MainActivity,
@@ -511,29 +756,17 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
                 if (!silent) {
                     binding.progressBar.visibility = View.GONE
-                    binding.errorText.text = getString(R.string.error_loading, e.message)
+                    binding.errorText.text = "Fehler: ${e.message}"
                     binding.errorText.setTextColor(Color.RED)
                     binding.errorText.visibility = View.VISIBLE
 
                     Toast.makeText(this@MainActivity,
-                        getString(R.string.error_loading, e.message),
+                        "Fehler: ${e.message}",
                         Toast.LENGTH_LONG).show()
-                } else {
-                    Log.e("MainActivity", "Hintergrund-Update fehlgeschlagen")
                 }
             }
         }
     }
-
-    private data class Quad<A, B, C, D>(
-        val first: A,
-        val second: B,
-        val third: C,
-        val fourth: D
-    )
-
-    // ... Rest der Methoden bleibt GENAU GLEICH ...
-    // (openYouTubeVideo, openTwitter, openContent, setupFab, etc.)
 
     private fun openYouTubeVideo(video: YouTubeVideo) {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
@@ -555,25 +788,17 @@ class MainActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Abbrechen", null)
                 .setNeutralButton("Datenschutz") { _, _ ->
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://policies.google.com/privacy")
-                    )
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://policies.google.com/privacy"))
                     startActivity(intent)
                 }
                 .create()
 
             dialog.show()
 
-            val isDarkTheme = (resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) ==
+            val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
 
-            val buttonColor = if (isDarkTheme) {
-                Color.WHITE
-            } else {
-                Color.parseColor("#2d5016")
-            }
+            val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
@@ -593,17 +818,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(appIntent)
             } else {
                 Log.d("MainActivity", "YouTube App nicht gefunden, öffne im Browser")
-                val webIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://www.youtube.com/watch?v=${video.videoId}")
-                )
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${video.videoId}"))
                 startActivity(webIntent)
             }
         } catch (e: Exception) {
             Log.e("MainActivity", "Fehler beim Öffnen des Videos", e)
-            Toast.makeText(this,
-                "Konnte Video nicht öffnen",
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Konnte Video nicht öffnen", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -625,27 +845,19 @@ class MainActivity : AppCompatActivity() {
                     prefs.edit().putBoolean("twitter_notice_shown", true).apply()
                     openTwitterInternal()
                 }
-                .setNegativeButton("Abbrechen", null)  // ENTFERNE die Bottom Nav Zurück-Logik!
+                .setNegativeButton("Abbrechen", null)
                 .setNeutralButton("Datenschutz") { _, _ ->
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://twitter.com/privacy")
-                    )
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/privacy"))
                     startActivity(intent)
                 }
                 .create()
 
             dialog.show()
 
-            val isDarkTheme = (resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) ==
+            val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
 
-            val buttonColor = if (isDarkTheme) {
-                Color.WHITE
-            } else {
-                Color.parseColor("#2d5016")
-            }
+            val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
@@ -659,10 +871,7 @@ class MainActivity : AppCompatActivity() {
         try {
             val twitterUsername = "@teamnaturedogs"
 
-            val appIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("twitter://user?screen_name=$twitterUsername")
-            )
+            val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=$twitterUsername"))
             appIntent.setPackage("com.twitter.android")
 
             if (appIntent.resolveActivity(packageManager) != null) {
@@ -670,20 +879,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(appIntent)
             } else {
                 Log.d("MainActivity", "Twitter App nicht gefunden, öffne im Browser")
-                val webIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://twitter.com/$twitterUsername")
-                )
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/$twitterUsername"))
                 startActivity(webIntent)
             }
-
-            // ENTFERNE die postDelayed Bottom Nav Zurück-Logik!
-
         } catch (e: Exception) {
             Log.e("MainActivity", "Fehler beim Öffnen von Twitter", e)
-            Toast.makeText(this,
-                "Konnte Twitter nicht öffnen",
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Konnte Twitter nicht öffnen", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -703,8 +904,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        val nightMode = resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK
+        val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val isDarkMode = nightMode == Configuration.UI_MODE_NIGHT_YES
 
         val textColor = if (isDarkMode) Color.WHITE else Color.BLACK
@@ -712,12 +912,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
             val spanString = SpannableString(item.title.toString())
-            spanString.setSpan(
-                ForegroundColorSpan(textColor),
-                0,
-                spanString.length,
-                0
-            )
+            spanString.setSpan(ForegroundColorSpan(textColor), 0, spanString.length, 0)
             item.title = spanString
         }
 
@@ -748,17 +943,14 @@ class MainActivity : AppCompatActivity() {
                 toggleTheme()
                 true
             }
-
-            R.id.action_settings -> {  // NEU
+            R.id.action_settings -> {
                 showSettingsDialog()
                 true
             }
-
-            R.id.action_test_update -> {  // NEU
+            R.id.action_test_update -> {
                 testBackgroundUpdate()
                 true
             }
-
             R.id.action_privacy -> {
                 openPrivacyPolicy()
                 true
@@ -767,7 +959,6 @@ class MainActivity : AppCompatActivity() {
                 openImprint()
                 true
             }
-            // NEU: Twitter im Menü
             R.id.action_twitter -> {
                 openTwitter()
                 true
@@ -807,7 +998,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "🧪 Test-Update gestartet - Check Logcat in 10s")
     }
 
-    // NEU: Einstellungs-Dialog
     private fun showSettingsDialog() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
 
@@ -817,14 +1007,11 @@ class MainActivity : AppCompatActivity() {
         val switchWifiOnly = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
         val switchNotifications = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
 
-        // Lade gespeicherte Einstellungen
         switchBackgroundUpdates.isChecked = prefs.getBoolean("background_updates_enabled", true)
         switchWifiOnly.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
         switchNotifications.isChecked = prefs.getBoolean("notifications_enabled", true)
 
-        // Theme-abhängige Switch-Farben setzen
-        val isDarkTheme = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) ==
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
 
         if (isDarkTheme) {
@@ -846,7 +1033,6 @@ class MainActivity : AppCompatActivity() {
             switchNotifications.trackTintList = greenColorStateList.withAlpha(77)
         }
 
-        // Listeners
         switchBackgroundUpdates.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("background_updates_enabled", isChecked).apply()
             if (isChecked) {
@@ -879,12 +1065,7 @@ class MainActivity : AppCompatActivity() {
 
         dialog.show()
 
-        // Theme-abhängige Button-Farbe
-        val buttonColor = if (isDarkTheme) {
-            Color.WHITE
-        } else {
-            Color.parseColor("#2d5016")
-        }
+        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
     }
@@ -926,15 +1107,10 @@ class MainActivity : AppCompatActivity() {
 
             dialog.show()
 
-            val isDarkTheme = (resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) ==
+            val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
 
-            val buttonColor = if (isDarkTheme) {
-                Color.WHITE
-            } else {
-                Color.parseColor("#2d5016")
-            }
+            val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
@@ -959,9 +1135,7 @@ class MainActivity : AppCompatActivity() {
             showSignalNotInstalledDialogForTrainer()
         } catch (e: Exception) {
             Log.e("MainActivity", "Fehler beim Öffnen von Signal", e)
-            Toast.makeText(this,
-                "Fehler beim Öffnen von Signal: ${e.message}",
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Fehler beim Öffnen von Signal: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -978,17 +1152,11 @@ class MainActivity : AppCompatActivity() {
                         "Möchtest du Signal jetzt herunterladen?"
             )
             .setPositiveButton("Ja, zur Website") { _, _ ->
-                val websiteIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://signal.org/download/")
-                )
+                val websiteIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://signal.org/download/"))
                 startActivity(websiteIntent)
             }
             .setNeutralButton("Play Store") { _, _ ->
-                val playStoreIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms")
-                )
+                val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms"))
                 startActivity(playStoreIntent)
             }
             .setNegativeButton("Abbrechen", null)
@@ -996,15 +1164,10 @@ class MainActivity : AppCompatActivity() {
 
         dialog.show()
 
-        val isDarkTheme = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) ==
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
 
-        val buttonColor = if (isDarkTheme) {
-            Color.WHITE
-        } else {
-            Color.parseColor("#2d5016")
-        }
+        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
@@ -1013,8 +1176,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun openPrivacyPolicy() {
         val intent = Intent(this, ContentActivity::class.java).apply {
-            putExtra("url", getString(R.string.privacy_url))
-            putExtra("title", getString(R.string.privacy_policy))
+            putExtra("url", "https://wildnislehrer.com/datenschutzerklaerung/")
+            putExtra("title", "Datenschutzerklärung")
         }
         startActivity(intent)
     }
@@ -1036,26 +1199,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 blogAdapter.submitList(filtered)
-            }
-            VIEW_PAGES -> {
-                val filtered = if (query.isEmpty()) {
-                    allPages
-                } else {
-                    allPages.filter { item ->
-                        item.title.contains(query, ignoreCase = true)
-                    }
-                }
-                pageAdapter.submitList(filtered)
-            }
-            VIEW_COURSES -> {
-                val filtered = if (query.isEmpty()) {
-                    allCourses
-                } else {
-                    allCourses.filter { item ->
-                        item.title.contains(query, ignoreCase = true)
-                    }
-                }
-                courseAdapter.submitList(filtered)
             }
         }
     }
@@ -1237,8 +1380,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleTheme() {
-        val nightMode = resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK
+        val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val isDarkMode = nightMode == Configuration.UI_MODE_NIGHT_YES
 
         if (isDarkMode) {
@@ -1251,9 +1393,6 @@ class MainActivity : AppCompatActivity() {
         recreate()
     }
 
-    /**
-     * Plant 2x tägliche Content-Updates (8 Uhr morgens & 20 Uhr abends)
-     */
     private fun scheduleContentUpdates() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val backgroundUpdatesEnabled = prefs.getBoolean("background_updates_enabled", true)
@@ -1273,11 +1412,10 @@ class MainActivity : AppCompatActivity() {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        // ===== MORGENS 8 UHR =====
         val morningDelay = calculateDelayUntil(8)
         val morningRequest = PeriodicWorkRequestBuilder<ContentUpdateWorker>(
-            12, TimeUnit.HOURS, // Alle 12 Stunden (wird zu 8 Uhr und 20 Uhr)
-            1, TimeUnit.HOURS   // Flexibilität: 8-9 Uhr bzw. 20-21 Uhr
+            12, TimeUnit.HOURS,
+            1, TimeUnit.HOURS
         )
             .setConstraints(constraints)
             .setInitialDelay(morningDelay, TimeUnit.MILLISECONDS)
@@ -1293,9 +1431,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "Nächstes Update in ${morningDelay / 1000 / 60} Minuten")
     }
 
-    /**
-     * Berechnet Verzögerung bis zur nächsten Zielstunde (z.B. 8 Uhr oder 20 Uhr)
-     */
     private fun calculateDelayUntil(targetHour: Int): Long {
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance().apply {
@@ -1304,7 +1439,6 @@ class MainActivity : AppCompatActivity() {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
 
-            // Wenn die Zielstunde heute schon vorbei ist, plane für morgen
             if (before(currentDate)) {
                 add(Calendar.DAY_OF_MONTH, 1)
             }
@@ -1313,9 +1447,6 @@ class MainActivity : AppCompatActivity() {
         return dueDate.timeInMillis - currentDate.timeInMillis
     }
 
-    /**
-     * Fragt Benachrichtigungs-Berechtigung ab (Android 13+)
-     */
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
@@ -1330,8 +1461,6 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(
                             "HundeWildnis kann dich benachrichtigen, wenn neue Inhalte verfügbar sind:\n\n" +
                                     "• Neue Blogbeiträge\n" +
-                                    "• Neue Seiten\n" +
-                                    "• Neue Kurse\n" +
                                     "• Neue Videos\n\n" +
                                     "Die App prüft zweimal täglich (8 Uhr morgens & 20 Uhr abends) auf neue Inhalte.\n\n" +
                                     "Du kannst das jederzeit in den Einstellungen ändern."
@@ -1351,16 +1480,10 @@ class MainActivity : AppCompatActivity() {
 
                     dialog.show()
 
-                    // Theme-abhängige Button-Farben
-                    val isDarkTheme = (resources.configuration.uiMode and
-                            Configuration.UI_MODE_NIGHT_MASK) ==
+                    val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                             Configuration.UI_MODE_NIGHT_YES
 
-                    val buttonColor = if (isDarkTheme) {
-                        Color.WHITE
-                    } else {
-                        Color.parseColor("#2d5016")
-                    }
+                    val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
                     dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
@@ -1374,39 +1497,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /**
-     * Aktiviert/Deaktiviert Hintergrund-Updates (wird von Settings aufgerufen)
-     */
-    fun toggleBackgroundUpdates(enabled: Boolean) {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        prefs.edit().putBoolean("background_updates_enabled", enabled).apply()
-
-        if (enabled) {
-            scheduleContentUpdates()
-        } else {
-            WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates")
-            Log.d("MainActivity", "Hintergrund-Updates deaktiviert")
-        }
-    }
-
-    /**
-     * Aktiviert/Deaktiviert "Nur WLAN" für Updates
-     */
-    fun toggleWifiOnly(wifiOnly: Boolean) {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        prefs.edit().putBoolean("background_updates_wifi_only", wifiOnly).apply()
-
-        // Neu planen mit geänderten Constraints
-        scheduleContentUpdates()
-    }
-
-    /**
-     * Aktiviert/Deaktiviert Benachrichtigungen
-     */
-    fun toggleNotifications(enabled: Boolean) {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        prefs.edit().putBoolean("notifications_enabled", enabled).apply()
-        Log.d("MainActivity", "Benachrichtigungen ${if (enabled) "aktiviert" else "deaktiviert"}")
-    }
 }
+
