@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.hundewildnis.app.OverpassHelper
 import com.hundewildnis.app.POI
 import com.hundewildnis.app.POICategories
 import com.hundewildnis.app.R
@@ -319,19 +320,14 @@ class LocationActivity : AppCompatActivity(), LocationListener {
         }
     }
 
-    private fun fetchPOIsFromOverpass(lat: Double, lon: Double): List<POI> {
+    private suspend fun fetchPOIsFromOverpass(lat: Double, lon: Double): List<POI> {
         val query = POICategories.generateOverpassQuery(lat, lon, 2000)
-        val url = "https://overpass-api.de/api/interpreter"
 
-        val response = URL(url).openConnection().apply {
-            setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-            doOutput = true
-            outputStream.write("data=$query".toByteArray())
-        }.inputStream.readBytes().toString(Charsets.UTF_8)
+        // Verwende OverpassHelper statt direktem API-Call
+        val json = OverpassHelper.queryWithRetry(query)
+            ?: throw Exception("Overpass API nicht erreichbar")
 
-        val json = JSONObject(response)
         val elements = json.getJSONArray("elements")
-
         val pois = mutableListOf<POI>()
 
         for (i in 0 until elements.length()) {
