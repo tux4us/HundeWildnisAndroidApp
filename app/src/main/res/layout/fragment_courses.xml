@@ -184,7 +184,7 @@
             android:id="@+id/btnCourse12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="      📖 Onlinekurs 12 Junghundepädagogik"
+            android:text="      📖 Onlinekurs 12 Junghundeprägung"
             app:backgroundTint="#5a7145"
             android:textColor="@android:color/white"
             android:layout_marginBottom="4dp"

@@ -494,7 +494,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse12)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-12-junghundepaedagogik/", "Kurs 12: Junghundepädagogik")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/onlinekurs-12-junghundepraegung/", "Kurs 12: Junghundeprägung")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse13)?.setOnClickListener {
