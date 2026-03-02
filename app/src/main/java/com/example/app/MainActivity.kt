@@ -586,7 +586,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse35)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-35-besitzkonflikte/", "Kurs 35: Besitzkonflikte")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-35-besitzerkonflikte/", "Kurs 35: Besitzerkonflikte")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse36)?.setOnClickListener {
