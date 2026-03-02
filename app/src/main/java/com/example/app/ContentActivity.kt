@@ -10,8 +10,9 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.hundewildnis.app.databinding.ActivityContentBinding
 import androidx.core.view.WindowCompat
+import com.example.app.SecureBaseActivity
 
-class ContentActivity : AppCompatActivity() {
+class ContentActivity : SecureBaseActivity() {
     private lateinit var binding: ActivityContentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
