@@ -13,8 +13,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 32
-        versionName = "6.2"
+        versionCode = 33
+        versionName = "6.3"
 
         // API Key aus local.properties laden - AUSSERHALB von android {}
         val localProperties = Properties()
@@ -29,8 +29,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true        // ← Code Obfuscation
+            isShrinkResources = true      // ← Ressourcen optimieren
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 

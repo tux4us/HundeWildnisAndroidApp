@@ -44,7 +44,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class LocationActivity : AppCompatActivity(), LocationListener {
+class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private lateinit var binding: ActivityLocationBinding
     private lateinit var locationManager: LocationManager

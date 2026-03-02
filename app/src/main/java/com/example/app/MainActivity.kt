@@ -49,7 +49,7 @@ import android.os.Build
 import android.view.Gravity
 import com.hundewildnis.app.ContentUpdateWorker
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : SecureBaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var blogAdapter: ContentAdapter
     private lateinit var youtubeAdapter: YouTubeAdapter

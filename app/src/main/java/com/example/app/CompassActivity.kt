@@ -9,8 +9,9 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.app.SecureBaseActivity
 
-class CompassActivity : AppCompatActivity(), SensorEventListener {
+class CompassActivity : SecureBaseActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private var rotationSensor: Sensor? = null

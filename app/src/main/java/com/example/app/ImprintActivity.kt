@@ -7,9 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.app.SecureBaseActivity
 import com.hundewildnis.app.databinding.ActivityImprintBinding
 
-class ImprintActivity : AppCompatActivity() {
+class ImprintActivity : SecureBaseActivity() {
     private lateinit var binding: ActivityImprintBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.app.SecureBaseActivity
 import com.hundewildnis.app.databinding.ActivityWeatherBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
 
-class WeatherActivity : AppCompatActivity(), LocationListener {
+class WeatherActivity : SecureBaseActivity(), LocationListener {
 
     private lateinit var binding: ActivityWeatherBinding
     private lateinit var locationManager: LocationManager
