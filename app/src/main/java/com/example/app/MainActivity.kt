@@ -328,7 +328,7 @@ class MainActivity : SecureBaseActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAusbildungAssistenzhunde)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-assistenzhunden-fuer-den-einsatz-im-paedagogischen-arbeitsumfeld/", "Ausbildung Assistenzhunde")
+            openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-paedagogischen-assistenzbegleithunden/", "Ausbildung Assistenzhunde")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnBeratung)?.setOnClickListener {
@@ -356,11 +356,11 @@ class MainActivity : SecureBaseActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLernfoerderungSchulen)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/hundeschule/lernfoerderung-an-schulen/", "Lernförderung an Schulen")
+            openUrl("https://wildnislehrer.com/hundeschule/lernfoerderunganschulen/", "Lernförderung an Schulen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnProblemberatung)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/hundeschule/problemberatung-problemkorrektur-intensivtraining/", "Problemberatung")
+            openUrl("https://wildnislehrer.com/hundeschule/problemtherapie/", "Problemberatung")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSeminare)?.setOnClickListener {
@@ -372,15 +372,15 @@ class MainActivity : SecureBaseActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnTierschutzHunde)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/hundeschule/tierschutz-hunde-mit-lebensgeschichte/", "Tierschutz Hunde")
+            openUrl("https://wildnislehrer.com/hundeschule/hunde-mit-lebensgeschichte/", "Tierschutz Hunde")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnTiertherapeutischerSozialbesuchshundeservice)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischer-sozialbesuchshundeservice/", "Tiertherapeutischer Service")
+            openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischersozialbesuchshundeservice/", "Tiertherapeutischer Service")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWandernZumGutenZweck)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/hundeschule/wandern-zum-guten-zweck/", "Wandern zum guten Zweck")
+            openUrl("https://wildnislehrer.com/hundeschule/trainingswanderungen/", "Wandern zum guten Zweck")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWelpenschule)?.setOnClickListener {
@@ -389,19 +389,19 @@ class MainActivity : SecureBaseActivity() {
 
         // WILDNISSCHULE
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWildnisInUns)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns-individuelle-ausbildung/", "Die Wildnis in uns")
+            openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns/", "Die Wildnis in uns")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSpurenUndZeichen)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen-individuelle-ausbildung/", "Spuren und Zeichen")
+            openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen/", "Spuren und Zeichen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWildnishandwerkSchulen)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerk-fuer-schulen/", "Wildnishandwerk für Schulen")
+            openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerksschule/", "Wildnishandwerk für Schulen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnWildnispaedagogikSchulen)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/wildnisschule/wildnispaedagogik-fuer-schulen/", "Wildnispädagogik für Schulen")
+            openUrl("https://wildnislehrer.com/wildnisschule/schulwildnis/", "Wildnispädagogik für Schulen")
         }
 
         // WEITERE INFORMATIONEN
@@ -418,7 +418,7 @@ class MainActivity : SecureBaseActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAGBs)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/allg-geschaeftsbedingungen/", "AGB")
+            openUrl("https://wildnislehrer.com/impressum/agb/", "AGB")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDatenschutz)?.setOnClickListener {
