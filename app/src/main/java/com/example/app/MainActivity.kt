@@ -526,7 +526,7 @@ class MainActivity : SecureBaseActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse20)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-20-langdistanztraining/", "Kurs 20: Langdistanztraining")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-20-langleinentraining/", "Kurs 20: Langleinentraining")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse21)?.setOnClickListener {
