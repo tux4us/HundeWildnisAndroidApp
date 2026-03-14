@@ -570,7 +570,7 @@ class MainActivity : SecureBaseActivity() {
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse31)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-31-stresserroutinen/", "Kurs 31: Stresserroutinen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-31-strassenroutinen/", "Kurs 31: Strassenroutinen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse32)?.setOnClickListener {
