@@ -20,7 +20,7 @@ import com.hundewildnis.app.databinding.ActivityAltimeterBinding
 import java.util.Locale
 import kotlin.math.pow
 import androidx.core.view.WindowCompat
-import com.example.app.SecureBaseActivity
+import com.hundewildnis.app.SecureBaseActivity
 
 class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationListener {
 

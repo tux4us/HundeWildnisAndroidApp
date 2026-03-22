@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.app.SecureBaseActivity
+import com.hundewildnis.app.SecureBaseActivity
 import com.hundewildnis.app.databinding.ActivityWeatherBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -734,7 +734,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         """.trimIndent()
 
             binding.radarWebView.loadDataWithBaseURL(
-                "https://example.com",
+                "https://hundewildnis.com",
                 html,
                 "text/html",
                 "UTF-8",

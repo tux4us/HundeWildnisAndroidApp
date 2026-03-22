@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#1B3A0A"
+            app:titleTextColor="#FFFFFF" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Content Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Header - FIX oben -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    🐕 Mein Tagestrainer 🌲"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <!-- Scrollable Buttons -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewContent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="false"
+            android:clipToPadding="false"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="140dp">
+
+                <!-- Button 1: Übung des Tages -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDailyExercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕📖 Übung des Tages"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#2d5016"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
+
+                <!-- Button 2: Tagesmeditation -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDailyMeditation"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕🧘 Meditation des Tages"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
+
+                <!-- Button 3: Geh-Geschwindigkeit -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnWalkingSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕⏱️ Mein Tempo"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#5a7145"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
+
+                <!-- Button 4: Tagesnotizen -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDailyNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕📝 Tagesnotizen"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#6a8255"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Button 5: Wetter -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnWeather"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕🌤️ Wetter"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#6a8255"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Button 6: Standort -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕📍 Standort"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#5a7145"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Button 7: Kompass -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCompass"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕🧭 Kompass"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Button 8: Höhenmesser -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAltimeter"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🐕⛰️ Höhenmesser"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#2d5016"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="#1B3A0A"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_bottom_navigation"
+        app:elevation="8dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
