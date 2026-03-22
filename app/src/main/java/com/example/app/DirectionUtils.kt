@@ -1,4 +1,4 @@
-package com.example.app
+package com.hundewildnis.app
 
 import kotlin.math.atan2
 import kotlin.math.cos

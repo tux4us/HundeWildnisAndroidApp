@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_home"
+        android:title="🏠 Home"
+        android:icon="@android:drawable/ic_menu_mylocation"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/search"
@@ -41,28 +47,10 @@
         android:title="📇 Impressum"
         app:showAsAction="never" />
 
-    <!-- NEU: X/Twitter im Menü -->
-    <item
-        android:id="@+id/action_twitter"
-        android:icon="@drawable/ic_twitter"
-        android:title="🐦 Folge uns auf X"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_signal_wildnislehrerin"
-        android:title="💬 SIGNAL Chat mit Manuela"
-        android:icon="@drawable/ic_signal"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_signal_wildnislehrer"
-        android:title="💬 SIGNAL Chat mit Jörg"
-        android:icon="@drawable/ic_signal"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh"
         android:title="Aktualisieren"
         app:showAsAction="ifRoom" />
+
 </menu>

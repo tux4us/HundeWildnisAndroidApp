@@ -4,4 +4,13 @@
     <color name="medium_green">#4a6135</color>
     <color name="light_green">#5a7145</color>
     <color name="accent_green">#6d8a51</color>
+
+    <!-- Grüne Farbpalette für Buttons -->
+    <color name="green_primary">#2d5016</color>
+    <color name="green_secondary">#4a6135</color>
+    <color name="green_tertiary">#5a7145</color>
+    <color name="green_quaternary">#6a8255</color>
+
+    <!-- Dark Theme -->
+    <color name="green_dark">#1B3A0A</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.app
+package com.hundewildnis.app
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -47,9 +47,11 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import android.os.Build
 import android.view.Gravity
+import com.hundewildnis.app.LocationActivity
+import com.hundewildnis.app.SecureBaseActivity
 import com.hundewildnis.app.ContentUpdateWorker
 
-class MainActivity : SecureBaseActivity() {
+class MainActivity : BaseBottomNavActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var blogAdapter: ContentAdapter
     private lateinit var youtubeAdapter: YouTubeAdapter
@@ -63,14 +65,47 @@ class MainActivity : SecureBaseActivity() {
 
     private var currentView = VIEW_BLOG
 
-    private var isFabOpen = false
-
     companion object {
         const val VIEW_BLOG = 0
         const val VIEW_PAGES = 1
         const val VIEW_COURSES = 2
         const val VIEW_YOUTUBE = 3
         const val VIEW_PODCASTS = 4
+    }
+
+    // BaseBottomNavActivity - Abstract Methoden
+    override fun getBottomNavigationView() = binding.bottomNavigation
+
+    override fun getCurrentNavigationItemId() = when (currentView) {
+        VIEW_BLOG -> R.id.nav_blog
+        VIEW_PAGES -> R.id.nav_pages
+        VIEW_COURSES -> R.id.nav_courses
+        VIEW_YOUTUBE -> R.id.nav_blog  // YouTube unter "Mehr", zeige Blog-Tab
+        else -> R.id.nav_blog
+    }
+
+    // BaseBottomNavActivity - Callbacks überschreiben
+    override fun onBlogSelected() {
+        showBlogView()
+    }
+
+    override fun onPagesSelected() {
+        showPagesView()
+    }
+
+    override fun onCoursesSelected() {
+        showCoursesView()
+    }
+
+    override fun onYouTubeSelected() {
+        showYouTubeView()
+    }
+
+    override fun onHomeSelected() {
+        val intent = Intent(this, StartActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,14 +182,30 @@ class MainActivity : SecureBaseActivity() {
 
         setupRecyclerViews()
         setupButtons()
-        setupFab()
         setupPagesMenu()
         setupCoursesMenu()
-        loadContent()
 
+        // Initialen View NACH dem Setup setzen
+        val initialView = intent.getIntExtra("INITIAL_VIEW", VIEW_BLOG)
+        when (initialView) {
+            VIEW_BLOG -> showBlogView()
+            VIEW_PAGES -> showPagesView()
+            VIEW_COURSES -> showCoursesView()
+            VIEW_YOUTUBE -> showYouTubeView()
+        }
+
+        binding.bottomNavigation.selectedItemId = when (initialView) {
+            VIEW_PAGES -> R.id.nav_pages
+            VIEW_COURSES -> R.id.nav_courses
+            VIEW_YOUTUBE -> R.id.nav_blog
+            else -> R.id.nav_blog
+        }
+
+        loadContent()
         scheduleContentUpdates()
         requestNotificationPermission()
     }
+
 
     private fun Int.dpToPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
@@ -172,31 +223,8 @@ class MainActivity : SecureBaseActivity() {
     }
 
     private fun setupButtons() {
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_blog -> {
-                    showBlogView()
-                    true
-                }
-                R.id.nav_pages -> {
-                    showPagesView()
-                    true
-                }
-                R.id.nav_courses -> {
-                    showCoursesView()
-                    true
-                }
-                R.id.nav_youtube -> {
-                    showYouTubeView()
-                    true
-                }
-                R.id.nav_podcasts -> {
-                    openPodcasts()
-                    true
-                }
-                else -> false
-            }
-        }
+        // Bottom Navigation wird von BaseBottomNavActivity gehandhabt
+        super.setupBottomNavigation()
 
         binding.btnLoadMore.setOnClickListener {
             loadMoreBlogPosts()
@@ -225,9 +253,6 @@ class MainActivity : SecureBaseActivity() {
                 }
             }
         })
-
-        showBlogView()
-        binding.bottomNavigation.selectedItemId = R.id.nav_blog
     }
 
     private fun showBlogView() {
@@ -290,30 +315,6 @@ class MainActivity : SecureBaseActivity() {
         findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.youtubeRecyclerView.visibility = View.VISIBLE
         binding.btnLoadMore.visibility = View.GONE
-    }
-
-    private fun openPodcasts() {
-        try {
-            val intent = Intent(this, ContentActivity::class.java).apply {
-                putExtra("url", "https://wildnislehrer.com/podcasts-audiobeitraege/")
-                putExtra("title", "HundeWildnis Podcast")
-            }
-            startActivity(intent)
-
-            binding.bottomNavigation.postDelayed({
-                binding.bottomNavigation.selectedItemId = when (currentView) {
-                    VIEW_BLOG -> R.id.nav_blog
-                    VIEW_PAGES -> R.id.nav_pages
-                    VIEW_COURSES -> R.id.nav_courses
-                    VIEW_YOUTUBE -> R.id.nav_youtube
-                    else -> R.id.nav_blog
-                }
-            }, 300)
-
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Fehler beim Öffnen der Podcasts", e)
-            Toast.makeText(this, "Konnte Podcasts nicht öffnen", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun setupPagesMenu() {
@@ -444,173 +445,173 @@ class MainActivity : SecureBaseActivity() {
             openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", "Onlinekurse Hundeschule")
         }
 
-        binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCoursesDirectory)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/", "Kursverzeichnis")
-        }
+        //binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCoursesDirectory)?.setOnClickListener {
+        //    openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/", "Kursverzeichnis")
+        //}
 
-        // Kurse 01-41
+        // Kurse
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse01)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-01-grundlagen/", "Kurs 01: Grundlagen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-01-grundlagen/", "01 Grundlagen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse02)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-02-motivation/", "Kurs 02: Motivation")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-02-motivation/", "02 Motivation")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse03)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-03-korrektur/", "Kurs 03: Korrektur")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-03-korrektur/", "03 Korrektur")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse04)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-04-harmonie/", "Kurs 04: Harmonie")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-04-harmonie/", "04 Harmonie")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse05)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-05-mentaltraining/", "Kurs 05: Mentaltraining")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-05-mentaltraining/", "05 Mentaltraining")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse06)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-06-koerpersprache/", "Kurs 06: Körpersprache")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-06-koerpersprache/", "06 Körpersprache")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse07)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-07-sprachkommunikation/", "Kurs 07: Sprachkommunikation")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-07-sprachkommunikation/", "07 Sprachkommunikation")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse08)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-08-sinneswahrnehmung/", "Kurs 08: Sinneswahrnehmung")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-08-sinneswahrnehmung/", "08 Sinneswahrnehmung")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse09)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-09-teamarbeit/", "Kurs 09: Teamarbeit")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-09-teamarbeit/", "09 Teamarbeit")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse10)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-10-routinen/", "Kurs 10: Routinen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-10-routinen/", "10 Routinen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse11)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-11-unfallschutz/", "Kurs 11: Unfallschutz")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-11-unfallschutz/", "11 Unfallschutz")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse12)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/onlinekurs-12-junghundepraegung/", "Kurs 12: Junghundeprägung")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/onlinekurs-12-junghundepraegung/", "12 Junghundeprägung")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse13)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-13-leinenarbeit/", "Kurs 13: Leinenarbeit")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-13-leinenarbeit/", "13 Leinenarbeit")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse14)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-14-unterbrechungen/", "Kurs 14: Unterbrechungen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-14-unterbrechungen/", "14 Unterbrechungen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse15)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-15-fuss/", "Kurs 15: Fuss")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-15-fuss/", "15 Fuss")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse16)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-16-sitz/", "Kurs 16: Sitz")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-16-sitz/", "16 Sitz")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse17)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-17-platz/", "Kurs 17: Platz")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-17-platz/", "17 Platz")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse18)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-18-steh/", "Kurs 18: Steh")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-18-steh/", "18 Steh")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse19)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-19-sozialisierungstechniken/", "Kurs 19: Sozialisierungstechniken")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-19-sozialisierungstechniken/", "19 Sozialisierungstechniken")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse20)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-20-langleinentraining/", "Kurs 20: Langleinentraining")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-20-langleinentraining/", "20 Langleinentraining")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse21)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-21-distanzunterbrechungen/", "Kurs 21: Distanzunterbrechungen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-21-distanzunterbrechungen/", "21 Distanzunterbrechungen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse22)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-22-freilauf/", "Kurs 22: Freilauf")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-22-freilauf/", "22 Freilauf")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse23)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-23-freifolge/", "Kurs 23: Freifolge")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-23-freifolge/", "23 Freifolge")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse24)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-24-teamwalk/", "Kurs 24: Teamwalk")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-24-teamwalk/", "24 Teamwalk")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse25)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-25-scouttechniken/", "Kurs 25: Scouttechniken")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-25-scouttechniken/", "25 Scouttechniken")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse26)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-26-jagdvermeidung/", "Kurs 26: Jagdvermeidung")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-26-jagdvermeidung/", "26 Jagdvermeidung")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse27)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-27-nasenarbeit/", "Kurs 27: Nasenarbeit")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-27-nasenarbeit/", "27 Nasenarbeit")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse28)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-28-leinenfuehrigkeit/", "Kurs 28: Leinenfühigkeit")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-28-leinenfuehrigkeit/", "28 Leinenfühigkeit")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse29)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-29-begegnungssituationen/", "Kurs 29: Begegnungssituationen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-29-begegnungssituationen/", "29 Begegnungssituationen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse30)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-30-stresstoleranztraining/", "Kurs 30: Stresstoleranztraining")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-30-stresstoleranztraining/", "30 Stresstoleranztraining")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse31)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-31-strassenroutinen/", "Kurs 31: Strassenroutinen")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-31-strassenroutinen/", "31 Strassenroutinen")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse32)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-32-hundekonflikte/", "Kurs 32: Hundekonflikte")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-32-hundekonflikte/", "32 Hundekonflikte")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse33)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-33-menschenkonflikte/", "Kurs 33: Menschenkonflikte")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-33-menschenkonflikte/", "33 Menschenkonflikte")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse34)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-34-umweltkonflikte/", "Kurs 34: Umweltkonflikte")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-34-umweltkonflikte/", "34 Umweltkonflikte")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse35)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-35-besitzerkonflikte/", "Kurs 35: Besitzerkonflikte")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-35-besitzerkonflikte/", "35 Besitzerkonflikte")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse36)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-36-tierschutzhunde/", "Kurs 36: Tierschutzhunde")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-36-tierschutzhunde/", "36 Tierschutzhunde")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse37)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-37-hunde-mit-vorbesitzern/", "Kurs 37: Hunde mit Vorbesitzern")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-37-hunde-mit-vorbesitzern/", "37 Hunde mit Vorbesitzern")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse38)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-38-kranke-hunde/", "Kurs 38: Kranke Hunde")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-38-kranke-hunde/", "38 Kranke Hunde")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse39)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-39-traumahunde/", "Kurs 39: Traumahunde")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-39-traumahunde/", "39 Traumahunde")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse40)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-40-erste-hilfe-set/", "Kurs 40: Erste Hilfe Set")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-40-erste-hilfe-set/", "40 Erste Hilfe Set")
         }
 
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse41)?.setOnClickListener {
-            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-41-erste-hilfe-am-hund/", "Kurs 41: Erste Hilfe am Hund")
+            openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-41-erste-hilfe-am-hund/", "41 Erste Hilfe am Hund")
         }
     }
 
@@ -827,67 +828,6 @@ class MainActivity : SecureBaseActivity() {
         }
     }
 
-    private fun openTwitter() {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        val hasSeenTwitterNotice = prefs.getBoolean("twitter_notice_shown", false)
-
-        if (!hasSeenTwitterNotice) {
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("Hinweis")
-                .setMessage(
-                    "Du wirst zu unserem Account auf X/Twitter weitergeleitet. " +
-                            "Wenn Du 'Ja, fortfahren' wählst werden Daten an X Corp. übertragen (z.B. deine IP-Adresse).\n\n" +
-                            "Weitere Informationen findest du in der Datenschutzerklärung von X/Twitter.\n\n" +
-                            "Pro-Tipp: auf dem Smartphone und Tablet empfiehlt sich immer die Nutzung eines vertrauenswürdigen VPN-Dienstes zum Schutz Deiner Daten und Deiner Privatsphäre\n\n" +
-                            "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
-                )
-                .setPositiveButton("Ja, fortfahren") { _, _ ->
-                    prefs.edit().putBoolean("twitter_notice_shown", true).apply()
-                    openTwitterInternal()
-                }
-                .setNegativeButton("Abbrechen", null)
-                .setNeutralButton("Datenschutz") { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/privacy"))
-                    startActivity(intent)
-                }
-                .create()
-
-            dialog.show()
-
-            val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-
-            val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
-
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        } else {
-            openTwitterInternal()
-        }
-    }
-
-    private fun openTwitterInternal() {
-        try {
-            val twitterUsername = "@teamnaturedogs"
-
-            val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=$twitterUsername"))
-            appIntent.setPackage("com.twitter.android")
-
-            if (appIntent.resolveActivity(packageManager) != null) {
-                Log.d("MainActivity", "Öffne in Twitter App")
-                startActivity(appIntent)
-            } else {
-                Log.d("MainActivity", "Twitter App nicht gefunden, öffne im Browser")
-                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/$twitterUsername"))
-                startActivity(webIntent)
-            }
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Fehler beim Öffnen von Twitter", e)
-            Toast.makeText(this, "Konnte Twitter nicht öffnen", Toast.LENGTH_LONG).show()
-        }
-    }
-
     private fun refreshContent() {
         contentCache.clearCache()
         loadContent()
@@ -932,6 +872,8 @@ class MainActivity : SecureBaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d("MainActivity", "Menu geklickt: ${item.itemId} / ${item.title}")
+
         return when (item.itemId) {
             R.id.action_refresh -> {
                 contentCache.clearCache()
@@ -959,22 +901,11 @@ class MainActivity : SecureBaseActivity() {
                 openImprint()
                 true
             }
-            R.id.action_twitter -> {
-                openTwitter()
-                true
-            }
-            R.id.action_signal_wildnislehrerin -> {
-                openSignalTrainer(
-                    name = "Hundetrainerin und Wildnislehrerin Manuela",
-                    link = "https://signal.me/#eu/Ia1RmzOJN5Qo9YkKQfs3vh7f8X70AjwOqb_jpVe5QV1Bw1UVnbpCk5abghaeuz5U"
-                )
-                true
-            }
-            R.id.action_signal_wildnislehrer -> {
-                openSignalTrainer(
-                    name = "Hundetrainer und Wildnislehrer Jörg",
-                    link = "https://signal.me/#eu/UquXr52-0uUIh1o40pI5jH6HLy6gb3eIWeaSLn8eTIuCTKmOtFRF9Ji2VDvGXqFo"
-                )
+            R.id.action_home -> {
+                val intent = Intent(this, StartActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -1070,110 +1001,6 @@ class MainActivity : SecureBaseActivity() {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
     }
 
-    private fun openSignalTrainer(name: String, link: String) {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        val prefKey = "signal_trainer_notice_shown"
-        val hasSeenNotice = prefs.getBoolean(prefKey, false)
-
-        if (!hasSeenNotice) {
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("$name via Signal kontaktieren")
-                .setMessage(
-                    "Du wirst zu Signal weitergeleitet, um direkt mit $name zu chatten.\n\n" +
-                            "Unterstützung bei Fragen zur Nutzung der App ist kostenfrei.\n\n" +
-                            "Für fachliche, individuelle Beratung zu inhaltlichen Fragen und Anliegen zu allen Ausbildungs-, Trainings-, Umsetzungs- und Lernthemen erbitten wir ein kleines Honorar als Wertschätzung für unseren zeitlichen Aufwand und der Weitergabe unserer Erfahrungen.\n" +
-                            "Wir teilen bei Eingang einer Anfrage das der Anfrage entsprechende Honorar im Voraus mit. Nach der Annahme des Honorarangebotes und der Begleichung über PayPal erfolgt der ausführliche, fachlich fundierte Beratungs-Chat incl. der Möglichkeit zu weiteren Rückfragen zum Thema.\n" +
-                            "Es gibt seitens der/des Anfragenden keine Verpflichtung zur Annahme des Honorarangebotes. Nachdem das Honorarangebot jedoch angenommen wurde ist die Beratung verbindlich vereinbart.\n\n" +
-                            "Wir sind fair, transparent und ehrlich.\n\n" +
-                            "Datenschutz:\n" +
-                            "• Deine Telefonnummer bleibt privat\n" +
-                            "• Signal ist Ende-zu-Ende-verschlüsselt\n" +
-                            "• Kein Tracking oder Datensammlung\n" +
-                            "• Die HundeWildnis-App speichert keine Daten über deine Signal-Nutzung\n\n" +
-                            "Pro-Tipp: Signal ist kostenlos und quelloffen. Falls du es noch nicht nutzt, " +
-                            "kannst du es aus dem Play Store, über F-Droid-Store oder von signal.org herunterladen.\n\n" +
-                            "Möchtest du fortfahren? Die App merkt sich deine Entscheidung."
-                )
-                .setPositiveButton("Ja, fortfahren") { _, _ ->
-                    prefs.edit().putBoolean(prefKey, true).apply()
-                    openSignalTrainerInternal(name, link)
-                }
-                .setNegativeButton("Abbrechen", null)
-                .setNeutralButton("Mehr zu Signal") { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://signal.org/"))
-                    startActivity(intent)
-                }
-                .create()
-
-            dialog.show()
-
-            val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-
-            val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
-
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        } else {
-            openSignalTrainerInternal(name, link)
-        }
-    }
-
-    private fun openSignalTrainerInternal(name: String, link: String) {
-        try {
-            Log.d("MainActivity", "Öffne Signal-Link für $name: $link")
-
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-            startActivity(intent)
-            Log.d("MainActivity", "✓ Signal-Intent gestartet")
-
-        } catch (e: ActivityNotFoundException) {
-            Log.e("MainActivity", "Signal nicht installiert")
-            showSignalNotInstalledDialogForTrainer()
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Fehler beim Öffnen von Signal", e)
-            Toast.makeText(this, "Fehler beim Öffnen von Signal: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun showSignalNotInstalledDialogForTrainer() {
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Signal nicht installiert")
-            .setMessage(
-                "Um die Trainer zu kontaktieren, benötigst du die Signal-App.\n\n" +
-                        "Signal ist eine sichere, verschlüsselte Messenger-App und kostenlos.\n\n" +
-                        "Download-Quellen:\n" +
-                        "• Google Play Store\n" +
-                        "• F-Droid (Open Source)\n" +
-                        "• signal.org (direkt vom Hersteller)\n\n" +
-                        "Möchtest du Signal jetzt herunterladen?"
-            )
-            .setPositiveButton("Ja, zur Website") { _, _ ->
-                val websiteIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://signal.org/download/"))
-                startActivity(websiteIntent)
-            }
-            .setNeutralButton("Play Store") { _, _ ->
-                val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms"))
-                startActivity(playStoreIntent)
-            }
-            .setNegativeButton("Abbrechen", null)
-            .create()
-
-        dialog.show()
-
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-
-        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
-    }
-
     private fun openPrivacyPolicy() {
         val intent = Intent(this, ContentActivity::class.java).apply {
             putExtra("url", "https://wildnislehrer.com/datenschutzerklaerung/")
@@ -1201,144 +1028,6 @@ class MainActivity : SecureBaseActivity() {
                 blogAdapter.submitList(filtered)
             }
         }
-    }
-
-    private fun setupFab() {
-        Log.d("MainActivity", "setupFab() wird aufgerufen")
-
-        binding.fabMain.setOnClickListener { view ->
-            Log.d("MainActivity", "Haupt-FAB geklickt!")
-            view.isClickable = false
-            toggleFab()
-            view.postDelayed({ view.isClickable = true }, 300)
-        }
-
-        binding.fabWeather.setOnClickListener { view ->
-            Log.d("MainActivity", "Wetter FAB geklickt!")
-            view.isClickable = false
-            closeFab()
-            view.postDelayed({
-                openWeather()
-                view.isClickable = true
-            }, 300)
-        }
-
-        binding.fabLocation.setOnClickListener { view ->
-            Log.d("MainActivity", "Standort FAB geklickt!")
-            view.isClickable = false
-            closeFab()
-            view.postDelayed({
-                openLocation()
-                view.isClickable = true
-            }, 300)
-        }
-
-        binding.fabCompass.setOnClickListener { view ->
-            Log.d("MainActivity", "Kompass FAB geklickt!")
-            view.isClickable = false
-            closeFab()
-            view.postDelayed({
-                openCompass()
-                view.isClickable = true
-            }, 300)
-        }
-
-        binding.fabAltimeter.setOnClickListener { view ->
-            Log.d("MainActivity", "Höhenmesser FAB geklickt!")
-            view.isClickable = false
-            closeFab()
-            view.postDelayed({
-                openAltimeter()
-                view.isClickable = true
-            }, 300)
-        }
-
-        Log.d("MainActivity", "setupFab() abgeschlossen")
-    }
-
-    private fun toggleFab() {
-        if (isFabOpen) {
-            closeFab()
-        } else {
-            openFab()
-        }
-    }
-
-    private fun openFab() {
-        Log.d("MainActivity", "openFab() aufgerufen")
-        isFabOpen = true
-
-        binding.contentContainer.alpha = 0.3f
-
-        showFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
-        showFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
-        showFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
-        showFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 180)
-
-        binding.fabMain.animate().rotation(45f).setDuration(200).start()
-
-        binding.root.setOnClickListener {
-            closeFab()
-        }
-
-        Log.d("MainActivity", "openFab() abgeschlossen")
-    }
-
-    private fun closeFab() {
-        isFabOpen = false
-
-        binding.contentContainer.alpha = 1f
-
-        binding.root.setOnClickListener(null)
-
-        hideFabWithAnimation(binding.fabLocation, binding.fabLocationLabel, 0)
-        hideFabWithAnimation(binding.fabCompass, binding.fabCompassLabel, 60)
-        hideFabWithAnimation(binding.fabWeather, binding.fabWeatherLabel, 120)
-        hideFabWithAnimation(binding.fabAltimeter, binding.fabAltimeterLabel, 180)
-
-        binding.fabMain.animate().rotation(0f).setDuration(200).start()
-    }
-
-    private fun showFabWithAnimation(fab: View, label: View, delay: Long) {
-        fab.visibility = View.VISIBLE
-        label.visibility = View.VISIBLE
-
-        fab.alpha = 0f
-        fab.translationY = 20f
-        label.alpha = 0f
-        label.translationX = 20f
-
-        fab.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setStartDelay(delay)
-            .setDuration(200)
-            .start()
-
-        label.animate()
-            .alpha(1f)
-            .translationX(0f)
-            .setStartDelay(delay)
-            .setDuration(200)
-            .start()
-    }
-
-    private fun hideFabWithAnimation(fab: View, label: View, delay: Long) {
-        fab.animate()
-            .alpha(0f)
-            .translationY(20f)
-            .setStartDelay(delay)
-            .setDuration(200)
-            .withEndAction { fab.visibility = View.GONE }
-            .start()
-
-        label.animate()
-            .alpha(0f)
-            .translationX(20f)
-            .setStartDelay(delay)
-            .setDuration(200)
-            .withEndAction { label.visibility = View.GONE }
-            .start()
     }
 
     private fun openWeather() {

@@ -13,7 +13,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.hundewildnis.app.databinding.ActivityContentBinding
 import androidx.core.view.WindowCompat
-import com.example.app.SecureBaseActivity
+import com.hundewildnis.app.SecureBaseActivity
 
 class ContentActivity : SecureBaseActivity() {
     private lateinit var binding: ActivityContentBinding

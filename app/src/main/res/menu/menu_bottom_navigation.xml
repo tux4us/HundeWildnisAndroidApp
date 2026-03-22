@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/menu/bottom_navigation.xml -->
+<!-- GEMEINSAMES BOTTOM NAVIGATION MENU FÜR DIE GESAMTE APP -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Home Button (StarActivity) -->
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@android:drawable/ic_menu_mylocation"
+        android:title="Home" />
+    
+    <!-- Blog (MainActivity VIEW_BLOG) -->
     <item
         android:id="@+id/nav_blog"
         android:icon="@android:drawable/ic_menu_recent_history"
-        android:title="@string/blog" />
-
+        android:title="Blog" />
+    
+    <!-- Seiten (MainActivity VIEW_PAGES) -->
     <item
         android:id="@+id/nav_pages"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/pages" />
-
+        android:title="Seiten" />
+    
+    <!-- Kurse (MainActivity VIEW_COURSES) -->
     <item
         android:id="@+id/nav_courses"
         android:icon="@android:drawable/ic_menu_agenda"
-        android:title="@string/courses" />
-
+        android:title="Kurse" />
+    
+    <!-- Mehr (Dialog mit YouTube, Podcast, X, Signal) -->
     <item
-        android:id="@+id/nav_youtube"
-        android:icon="@android:drawable/ic_menu_slideshow"
-        android:title="YT" />
-
-    <!-- NEU: Podcasts statt Twitter -->
-    <item
-        android:id="@+id/nav_podcasts"
-        android:icon="@drawable/ic_podcast"
-        android:title="Podcast" />
+        android:id="@+id/nav_more"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="Mehr" />
 </menu>
