@@ -19,77 +19,129 @@
             app:titleTextColor="#FFFFFF" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Datum -->
-        <TextView
-            android:id="@+id/tvDate"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Datum"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:textAlignment="center"
-            android:padding="12dp"
-            android:background="#003b00"
-            android:layout_marginBottom="16dp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <!-- Notizfeld -->
-        <EditText
-            android:id="@+id/etNotes"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="Deine Notizen für den heutigen Tag"
-            android:textColorHint="#1B5E20"
-            android:gravity="top|start"
-            android:padding="12dp"
-            android:background="@android:drawable/edit_text"
-            android:textSize="16sp"
-            android:textColor="#000000"
-            android:inputType="textMultiLine|textCapSentences"
-            android:scrollbars="vertical"
-            android:layout_marginBottom="16dp" />
+            <!-- Datum -->
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datum"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="16dp" />
 
-        <!-- Buttons -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnExportPdf"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="📄 Als PDF exportieren"
-            android:textSize="16sp"
-            app:cornerRadius="8dp"
-            app:backgroundTint="#2d5016"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp" />
+            <!-- Notizen EditText -->
+            <EditText
+                android:id="@+id/etNotes"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:hint="Deine Notizen hier eingeben..."
+                android:textColorHint="@color/dark_green"
+                android:textColor="#000000"
+                android:gravity="top|start"
+                android:padding="12dp"
+                android:background="@android:drawable/edit_text"
+                android:inputType="textMultiLine|textCapSentences"
+                android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnShare"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="📤 Teilen"
-            android:textSize="16sp"
-            app:cornerRadius="8dp"
-            app:backgroundTint="#4a6135"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp" />
+            <!-- Foto-Bereich Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📸 Fotos"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="8dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnClear"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="🗑️ Löschen"
-            android:textSize="16sp"
-            app:cornerRadius="8dp"
-            app:backgroundTint="#757575"
-            android:textColor="#FFFFFF" />
+            <!-- Foto-Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-    </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCamera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📷 Kamera"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGallery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🖼️ Galerie"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+            <!-- Foto-Vorschau RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+            <!-- Action Buttons -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExportPdf"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="📄 Als PDF exportieren"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#2d5016"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnShare"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="📤 Teilen"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#4a6135"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnClear"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="🗑️ Löschen"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#6a8255"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
