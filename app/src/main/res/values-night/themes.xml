@@ -22,8 +22,62 @@
         <!-- Hintergrundfarben für Dark Mode -->
         <item name="android:windowBackground">#1a1a1a</item>
         <item name="android:colorBackground">#1a1a1a</item>
+
+        <!-- Material Button für AlertDialog -->
+        <item name="materialAlertDialogTheme">@style/AlertDialogTheme.Dark</item>
     </style>
 
     <style name="Theme.HundeWildnis" parent="Base.Theme.HundeWildnis" />
+
+    <!-- AlertDialog Theme für Dark Mode - KOMPLETT NEU -->
+    <style name="AlertDialogTheme.Dark" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <!-- Dialog Hintergrund -->
+        <item name="colorSurface">#2a2a2a</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+
+        <!-- Text Farben - ALLE auf WEISS -->
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#CCCCCC</item>
+        <item name="colorOnSurfaceVariant">#FFFFFF</item>
+
+        <!-- Button Farben - WICHTIG! -->
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#FFFFFF</item>
+        <item name="colorTertiary">#FFFFFF</item>
+
+        <!-- Button Bar Styles -->
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.HundeWildnis.Button.TextButton.Dialog.Dark</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.HundeWildnis.Button.TextButton.Dialog.Dark</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.HundeWildnis.Button.TextButton.Dialog.Dark</item>
+    </style>
+
+    <!-- Dialog Button Style - ULTRA EXPLICIT -->
+    <style name="Widget.HundeWildnis.Button.TextButton.Dialog.Dark" parent="Widget.Material3.Button.TextButton.Dialog">
+        <!-- Text Farbe: WEISS - ALLE Varianten -->
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+
+        <!-- Tint Farbe: WEISS -->
+        <item name="iconTint">#FFFFFF</item>
+
+        <!-- Hintergrund: TRANSPARENT -->
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+
+        <!-- Ripple: Leicht weiß -->
+        <item name="rippleColor">#33FFFFFF</item>
+
+        <!-- Material3 spezifisch -->
+        <item name="materialThemeOverlay">@style/ThemeOverlay.HundeWildnis.Button.Dark</item>
+    </style>
+
+    <!-- Material Theme Overlay für Buttons -->
+    <style name="ThemeOverlay.HundeWildnis.Button.Dark" parent="">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorContainer">#FFFFFF</item>
+        <item name="colorOnContainer">#000000</item>
+    </style>
 
 </resources>

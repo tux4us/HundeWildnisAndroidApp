@@ -18,6 +18,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.hundewildnis.app.R
 import com.hundewildnis.app.databinding.ActivityWalkingSpeedBinding
+import android.content.res.Configuration
+import android.graphics.Color
 
 /**
  * WalkingSpeedActivity - Überwacht Geh-Geschwindigkeit
@@ -100,7 +102,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         if (granted) {
             Toast.makeText(this, "✓ Benachrichtigungen erlaubt", Toast.LENGTH_SHORT).show()
         } else {
-            AlertDialog.Builder(this)
+            val dialog = AlertDialog.Builder(this)
                 .setTitle("⚠️ Benachrichtigungen deaktiviert")
                 .setMessage(
                     "Ohne Benachrichtigungen wirst du nicht gewarnt wenn du zu schnell gehst.\n\n" +
@@ -110,7 +112,10 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                     openAppSettings()
                 }
                 .setNegativeButton("Später", null)
-                .show()
+                .create()
+
+            dialog.show()
+            styleDialogButtons(dialog)  // ✅ DIESE ZEILE HINZUFÜGEN
         }
     }
 
@@ -122,7 +127,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Mein Tempo"
+            title = "Trainingstempo"
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -186,7 +191,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
 
             if (!hasNotificationPermission) {
                 // Erklärungs-Dialog für Notifications
-                AlertDialog.Builder(this)
+                val dialog = AlertDialog.Builder(this)
                     .setTitle("📬 Benachrichtigungen aktivieren")
                     .setMessage(
                         "Die App benötigt Benachrichtigungen um dich zu warnen wenn du zu schnell gehst.\n\n" +
@@ -198,7 +203,10 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                     .setNegativeButton("Überspringen") { _, _ ->
                         Toast.makeText(this, "⚠️ Keine Warnungen möglich", Toast.LENGTH_SHORT).show()
                     }
-                    .show()
+                    .create()
+
+                dialog.show()
+                styleDialogButtons(dialog)  // ✅ HIER
                 return
             }
         }
@@ -247,7 +255,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
 
             if (!hasBackgroundLocation) {
                 // Erklärungs-Dialog zeigen
-                AlertDialog.Builder(this)
+                val dialog = AlertDialog.Builder(this)
                     .setTitle("Hintergrund-Standort erforderlich")
                     .setMessage(
                         "Für GPS-Tracking im Hintergrund benötigt die App Zugriff auf deinen Standort, " +
@@ -260,13 +268,16 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                         )
                     }
                     .setNegativeButton("Abbrechen", null)
-                    .show()
+                    .create()
+
+                dialog.show()
+                styleDialogButtons(dialog)  // ✅ HIER
             }
         }
     }
 
     private fun showPermissionDeniedDialog() {
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("⚠️ Berechtigung erforderlich")
             .setMessage(
                 "Die App benötigt Zugriff auf deinen Standort für GPS-Tracking.\n\n" +
@@ -276,7 +287,10 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                 openAppSettings()
             }
             .setNegativeButton("Abbrechen", null)
-            .show()
+            .create()
+
+        dialog.show()
+        styleDialogButtons(dialog)  // ✅ HIER
     }
 
     private fun openAppSettings() {
@@ -285,6 +299,8 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
         startActivity(intent)
     }
+
+    // ERSETZE die startTracking() Methode in WalkingSpeedActivity.kt:
 
     private fun startTracking() {
         // Final Check: Alle Permissions vorhanden?
@@ -307,12 +323,56 @@ class WalkingSpeedActivity : SecureBaseActivity() {
             }
 
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+            // ✅ NEU: Warte kurz bis Service gebunden ist, dann setze Werte
+            binding.btnStartStop.postDelayed({
+                applyCurrentSettings()
+            }, 500)
+
             updateUI()
-            startUIUpdates() // Starte UI-Updates
+            startUIUpdates()
 
         } catch (e: SecurityException) {
             Toast.makeText(this, "⚠️ Fehler beim Starten: ${e.message}", Toast.LENGTH_LONG).show()
         }
+    }
+
+    // ✅ NEU: Methode zum Erzwingen weisser Schrift im AlertDialog für Buttons
+    private fun styleDialogButtons(dialog: AlertDialog) {
+        dialog.window?.decorView?.post {
+            val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+
+            val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        }
+    }
+
+    // ✅ NEU: Methode zum Anwenden der aktuellen Einstellungen
+    private fun applyCurrentSettings() {
+        // Geschwindigkeitslimit
+        val speedLimit = when (binding.radioGroup.checkedRadioButtonId) {
+            R.id.radioSpeed25 -> 2.5f
+            R.id.radioSpeed30 -> 3.0f
+            R.id.radioSpeed40 -> 4.0f
+            else -> 3.0f
+        }
+        walkingSpeedService?.setSpeedLimit(speedLimit)
+
+        // Messintervall
+        val interval = when (binding.radioGroupInterval.checkedRadioButtonId) {
+            R.id.radioInterval30 -> 30000L
+            R.id.radioInterval60 -> 60000L
+            else -> 30000L
+        }
+        walkingSpeedService?.setCheckInterval(interval)
+
+        // Vibration & Sound
+        walkingSpeedService?.setVibrationEnabled(binding.switchVibration.isChecked)
+        walkingSpeedService?.setSoundEnabled(binding.switchSound.isChecked)
     }
 
     private fun stopTracking() {
