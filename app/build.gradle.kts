@@ -13,8 +13,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 37
-        versionName = "7.0"
+        versionCode = 39
+        versionName = "8.0"
 
         // API Key aus local.properties laden - AUSSERHALB von android {}
         val localProperties = Properties()
@@ -68,4 +68,13 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.youtube.player.core)
+
+    // OPTIONAL: Für bessere Foto-Anzeige
+// Füge in build.gradle.kts (Module: app) unter dependencies ein:
+
+    implementation("com.github.bumptech.glide:glide:5.0.5")
+
+// Falls Glide nicht verfügbar: PhotoAdapter funktioniert auch ohne!
+// Der Adapter hat einen Fallback auf setImageURI()
+
 }

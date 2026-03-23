@@ -165,6 +165,11 @@ object POICategories {
             icon = "🚒",
             queries = listOf("amenity=fire_station")
         ),
+        Category(
+            name = "Notfall",
+            icon = "\uD83C\uDD98",
+            queries = listOf("amenity=emergency")
+        ),
 
         // 🌲 NATURSCHUTZ
         Category(
