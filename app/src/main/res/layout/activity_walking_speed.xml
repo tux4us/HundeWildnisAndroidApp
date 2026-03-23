@@ -35,7 +35,7 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="⚪ Tracking gestoppt"
+                android:text="🛑 Messung gestoppt"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Geschwindigkeitslimit:"
+                android:text="Geschwindigkeitswächter:"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -76,7 +76,7 @@
                     android:id="@+id/radioSpeed25"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2.5 km/h (Geländetraining)"
+                    android:text="Tempo Geländetraining"
                     android:textSize="16sp"
                     android:padding="8dp" />
 
@@ -84,7 +84,7 @@
                     android:id="@+id/radioSpeed30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="3.0 km/h (Strassentraining)"
+                    android:text="Tempo Strassentraining"
                     android:textSize="16sp"
                     android:padding="8dp"
                     android:checked="true" />
@@ -93,7 +93,7 @@
                     android:id="@+id/radioSpeed40"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4.0 km/h (Alltagstempo)"
+                    android:text="Tempo Alltagstraining"
                     android:textSize="16sp"
                     android:padding="8dp" />
             </RadioGroup>
@@ -164,7 +164,7 @@
                 android:id="@+id/btnStartStop"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Tracking starten"
+                android:text="🏁 Messung starten"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"
