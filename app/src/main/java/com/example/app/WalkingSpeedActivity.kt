@@ -2,34 +2,68 @@ package com.hundewildnis.app
 
 import android.Manifest
 import android.content.ComponentName
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.pdf.PdfDocument
+import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
+import android.provider.MediaStore
 import android.provider.Settings
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import com.hundewildnis.app.R
+import androidx.core.content.FileProvider
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.hundewildnis.app.databinding.ActivityWalkingSpeedBinding
-import android.content.res.Configuration
-import android.graphics.Color
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
- * WalkingSpeedActivity - Überwacht Geh-Geschwindigkeit
- * Benachrichtigt bei Überschreitung der eingestellten Grenze
+ * Data Classes
  */
-class WalkingSpeedActivity : SecureBaseActivity() {
+data class SpeedDataPoint(
+    val timestamp: Long,
+    val speed: Float,
+    val latitude: Double,
+    val longitude: Double
+)
+
+/**
+ * WalkingSpeedActivity - Überwacht Geh-Geschwindigkeit mit Chart & Export
+ */
+class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
     private lateinit var binding: ActivityWalkingSpeedBinding
     private var walkingSpeedService: WalkingSpeedService? = null
     private var serviceBound = false
+
+    // Chart & Daten
+    private lateinit var speedChart: LineChart
+    private val speedDataPoints = mutableListOf<SpeedDataPoint>()
+    private var sessionStartTime = 0L  // ✅ Wird beim Start korrekt gesetzt
+    private var totalDistance = 0f
+    private var exceedCount = 0
+    private var speedLimit = 3.0f
 
     // UI Update Handler
     private val uiUpdateHandler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -37,7 +71,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         override fun run() {
             updateUI()
             if (walkingSpeedService?.isTracking() == true) {
-                uiUpdateHandler.postDelayed(this, 1000) // Update jede Sekunde
+                uiUpdateHandler.postDelayed(this, 1000)
             }
         }
     }
@@ -47,9 +81,11 @@ class WalkingSpeedActivity : SecureBaseActivity() {
             val binder = service as WalkingSpeedService.LocalBinder
             walkingSpeedService = binder.getService()
             serviceBound = true
+
+            walkingSpeedService?.setSpeedUpdateListener(this@WalkingSpeedActivity)
+
             updateUI()
 
-            // Starte UI-Updates wenn Tracking läuft
             if (walkingSpeedService?.isTracking() == true) {
                 startUIUpdates()
             }
@@ -62,7 +98,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
     }
 
-    // Permission Launcher für Location
+    // Permission Launchers
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -70,21 +106,16 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
 
         if (fineLocationGranted || coarseLocationGranted) {
-            // Standort-Permission erteilt
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Jetzt Background Location anfragen
                 requestBackgroundLocation()
             } else {
-                // Android 9 und älter: Tracking kann starten
                 Toast.makeText(this, "✓ Berechtigungen erteilt", Toast.LENGTH_SHORT).show()
             }
         } else {
-            // Abgelehnt
             showPermissionDeniedDialog()
         }
     }
 
-    // Permission Launcher für Background Location (Android 10+)
     private val backgroundLocationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -95,7 +126,6 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
     }
 
-    // Permission Launcher für Notifications (Android 13+)
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -115,7 +145,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                 .create()
 
             dialog.show()
-            styleDialogButtons(dialog)  // ✅ DIESE ZEILE HINZUFÜGEN
+            styleDialogButtons(dialog)
         }
     }
 
@@ -131,13 +161,52 @@ class WalkingSpeedActivity : SecureBaseActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        setupChart()
         setupUI()
+    }
+
+    private fun setupChart() {
+        speedChart = binding.speedChart
+
+        speedChart.apply {
+            description.isEnabled = false
+            setTouchEnabled(true)
+            isDragEnabled = true
+            setScaleEnabled(true)
+            setPinchZoom(true)
+            setDrawGridBackground(false)
+
+            // X-Achse (Zeit)
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(true)
+                granularity = 1f
+                valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val seconds = value.toInt()
+                        val minutes = seconds / 60
+                        val secs = seconds % 60
+                        return String.format("%d:%02d", minutes, secs)
+                    }
+                }
+            }
+
+            // Y-Achse (Geschwindigkeit)
+            axisLeft.apply {
+                setDrawGridLines(true)
+                axisMinimum = 0f
+                axisMaximum = 6f
+            }
+
+            axisRight.isEnabled = false
+            legend.isEnabled = true
+        }
     }
 
     private fun setupUI() {
         // Speed Limit auswählen
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val speedLimit = when (checkedId) {
+            speedLimit = when (checkedId) {
                 R.id.radioSpeed25 -> 2.5f
                 R.id.radioSpeed30 -> 3.0f
                 R.id.radioSpeed40 -> 4.0f
@@ -175,22 +244,111 @@ class WalkingSpeedActivity : SecureBaseActivity() {
             }
         }
 
+        // Export Button
+        binding.btnExport.setOnClickListener {
+            exportSessionToPdf()
+        }
+
         // Defaults
         binding.radioSpeed30.isChecked = true
         binding.radioInterval30.isChecked = true
         binding.switchVibration.isChecked = true
         binding.switchSound.isChecked = true
+
+        speedLimit = 3.0f
+    }
+
+    // SpeedUpdateListener Implementation
+    override fun onSpeedUpdate(speed: Float, location: Location) {
+        runOnUiThread {
+            val dataPoint = SpeedDataPoint(
+                timestamp = System.currentTimeMillis(),
+                speed = speed,
+                latitude = location.latitude,
+                longitude = location.longitude
+            )
+            speedDataPoints.add(dataPoint)
+
+            // Distanz vom Service holen
+            totalDistance = walkingSpeedService?.getTotalDistance() ?: 0f
+
+            // Zähle Überschreitungen
+            if (speed > speedLimit) {
+                exceedCount++
+            }
+
+            updateChartData()
+            updateStatistics()
+        }
+    }
+
+    private fun updateChartData() {
+        if (speedDataPoints.isEmpty()) return
+
+        // Chart-Daten erstellen
+        val entries = speedDataPoints.map { point ->
+            val seconds = ((point.timestamp - sessionStartTime) / 1000f)
+            Entry(seconds, point.speed)
+        }
+
+        val dataSet = LineDataSet(entries, "Geschwindigkeit").apply {
+            color = Color.parseColor("#2d5016")
+            setCircleColor(Color.parseColor("#2d5016"))
+            lineWidth = 2f
+            circleRadius = 3f
+            setDrawCircleHole(false)
+            valueTextSize = 9f
+            setDrawValues(false)
+        }
+
+        // Limit-Linie hinzufügen
+        val limitEntries = entries.map { Entry(it.x, speedLimit) }
+        val limitSet = LineDataSet(limitEntries, "Limit").apply {
+            color = Color.RED
+            lineWidth = 1f
+            setDrawCircles(false)
+            setDrawValues(false)
+            enableDashedLine(10f, 5f, 0f)
+        }
+
+        speedChart.data = LineData(dataSet, limitSet)
+        speedChart.notifyDataSetChanged()
+        speedChart.invalidate()
+    }
+
+    // ✅ FIX: Korrekte Dauer-Berechnung
+    private fun updateStatistics() {
+        if (speedDataPoints.isEmpty()) {
+            binding.tvStats.text = "Starte Tracking um Statistiken zu sehen"
+            return
+        }
+
+        val avgSpeed = speedDataPoints.map { it.speed }.average().toFloat()
+        val maxSpeed = speedDataPoints.maxOf { it.speed }
+
+        // ✅ FIX: Nur Zeit seit sessionStartTime berechnen
+        val now = System.currentTimeMillis()
+        val elapsedTime = (now - sessionStartTime) / 1000  // in Sekunden
+        val hours = elapsedTime / 3600
+        val minutes = (elapsedTime % 3600) / 60
+        val seconds = elapsedTime % 60
+
+        binding.tvStats.text = """
+            Dauer: ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}
+            Strecke: ${String.format("%.2f km", totalDistance)}
+            Durchschnitt: ${String.format("%.1f km/h", avgSpeed)}
+            Maximum: ${String.format("%.1f km/h", maxSpeed)}
+            Überschreitungen: $exceedCount
+        """.trimIndent()
     }
 
     private fun requestPermissionsAndStart() {
-        // 1. Prüfe Notification Permission (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val hasNotificationPermission = ContextCompat.checkSelfPermission(
                 this, Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
 
             if (!hasNotificationPermission) {
-                // Erklärungs-Dialog für Notifications
                 val dialog = AlertDialog.Builder(this)
                     .setTitle("📬 Benachrichtigungen aktivieren")
                     .setMessage(
@@ -206,12 +364,11 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                     .create()
 
                 dialog.show()
-                styleDialogButtons(dialog)  // ✅ HIER
+                styleDialogButtons(dialog)
                 return
             }
         }
 
-        // 2. Prüfe ob Standort-Permissions bereits vorhanden
         val hasFineLocation = ContextCompat.checkSelfPermission(
             this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
@@ -221,23 +378,19 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         ) == PackageManager.PERMISSION_GRANTED
 
         if (hasFineLocation || hasCoarseLocation) {
-            // Standort-Permission vorhanden
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val hasBackgroundLocation = ContextCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
 
                 if (!hasBackgroundLocation) {
-                    // Background Location fehlt noch
                     requestBackgroundLocation()
                     return
                 }
             }
 
-            // Alle Permissions vorhanden - Tracking starten
             startTracking()
         } else {
-            // Standort-Permission anfragen
             locationPermissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -254,7 +407,6 @@ class WalkingSpeedActivity : SecureBaseActivity() {
             ) == PackageManager.PERMISSION_GRANTED
 
             if (!hasBackgroundLocation) {
-                // Erklärungs-Dialog zeigen
                 val dialog = AlertDialog.Builder(this)
                     .setTitle("Hintergrund-Standort erforderlich")
                     .setMessage(
@@ -271,7 +423,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                     .create()
 
                 dialog.show()
-                styleDialogButtons(dialog)  // ✅ HIER
+                styleDialogButtons(dialog)
             }
         }
     }
@@ -290,7 +442,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        styleDialogButtons(dialog)  // ✅ HIER
+        styleDialogButtons(dialog)
     }
 
     private fun openAppSettings() {
@@ -300,10 +452,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         startActivity(intent)
     }
 
-    // ERSETZE die startTracking() Methode in WalkingSpeedActivity.kt:
-
     private fun startTracking() {
-        // Final Check: Alle Permissions vorhanden?
         val hasFineLocation = ContextCompat.checkSelfPermission(
             this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
@@ -324,10 +473,17 @@ class WalkingSpeedActivity : SecureBaseActivity() {
 
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
 
-            // ✅ NEU: Warte kurz bis Service gebunden ist, dann setze Werte
             binding.btnStartStop.postDelayed({
                 applyCurrentSettings()
             }, 500)
+
+            // ✅ FIX: Session-Daten zurücksetzen + JETZT als Startzeit
+            speedDataPoints.clear()
+            sessionStartTime = System.currentTimeMillis()  // ✅ WICHTIG!
+            totalDistance = 0f
+            exceedCount = 0
+            speedChart.clear()
+            binding.tvStats.text = "Tracking läuft..."
 
             updateUI()
             startUIUpdates()
@@ -337,7 +493,6 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
     }
 
-    // ✅ NEU: Methode zum Erzwingen weisser Schrift im AlertDialog für Buttons
     private fun styleDialogButtons(dialog: AlertDialog) {
         dialog.window?.decorView?.post {
             val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
@@ -351,10 +506,8 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
     }
 
-    // ✅ NEU: Methode zum Anwenden der aktuellen Einstellungen
     private fun applyCurrentSettings() {
-        // Geschwindigkeitslimit
-        val speedLimit = when (binding.radioGroup.checkedRadioButtonId) {
+        speedLimit = when (binding.radioGroup.checkedRadioButtonId) {
             R.id.radioSpeed25 -> 2.5f
             R.id.radioSpeed30 -> 3.0f
             R.id.radioSpeed40 -> 4.0f
@@ -362,7 +515,6 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
         walkingSpeedService?.setSpeedLimit(speedLimit)
 
-        // Messintervall
         val interval = when (binding.radioGroupInterval.checkedRadioButtonId) {
             R.id.radioInterval30 -> 30000L
             R.id.radioInterval60 -> 60000L
@@ -370,7 +522,6 @@ class WalkingSpeedActivity : SecureBaseActivity() {
         }
         walkingSpeedService?.setCheckInterval(interval)
 
-        // Vibration & Sound
         walkingSpeedService?.setVibrationEnabled(binding.switchVibration.isChecked)
         walkingSpeedService?.setSoundEnabled(binding.switchSound.isChecked)
     }
@@ -385,12 +536,12 @@ class WalkingSpeedActivity : SecureBaseActivity() {
 
         stopService(Intent(this, WalkingSpeedService::class.java))
 
-        stopUIUpdates() // Stoppe UI-Updates
+        stopUIUpdates()
         updateUI()
     }
 
     private fun startUIUpdates() {
-        uiUpdateHandler.removeCallbacks(uiUpdateRunnable) // Vorherige stoppen
+        uiUpdateHandler.removeCallbacks(uiUpdateRunnable)
         uiUpdateHandler.post(uiUpdateRunnable)
     }
 
@@ -401,7 +552,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
     private fun updateUI() {
         val isTracking = walkingSpeedService?.isTracking() == true
 
-        binding.btnStartStop.text = if (isTracking) "Messung stoppen" else "Messung starten"
+        binding.btnStartStop.text = if (isTracking) "🛑 Messung stoppen" else "🏁 Messung starten"
         binding.btnStartStop.setBackgroundColor(
             if (isTracking)
                 getColor(android.R.color.holo_red_dark)
@@ -409,22 +560,147 @@ class WalkingSpeedActivity : SecureBaseActivity() {
                 getColor(R.color.green_primary)
         )
 
-        // Aktuelle Geschwindigkeit anzeigen
         val currentSpeed = walkingSpeedService?.getCurrentSpeed() ?: 0f
         binding.tvCurrentSpeed.text = String.format("Geschwindigkeit: %.1f km/h", currentSpeed)
 
-        // Status anzeigen
         binding.tvStatus.text = if (isTracking) {
             "\uD83D\uDD14 Messung aktiv"
         } else {
             "\uD83D\uDED1 Messung gestoppt"
         }
+
+        // Export-Button nur aktiv wenn Daten vorhanden
+        binding.btnExport.isEnabled = speedDataPoints.isNotEmpty()
+    }
+
+    // ✅ Export als PDF
+    private fun exportSessionToPdf() {
+        if (speedDataPoints.isEmpty()) {
+            Toast.makeText(this, "Keine Daten zum Exportieren", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val pdfDocument = PdfDocument()
+            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+            val page = pdfDocument.startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = android.graphics.Paint()
+
+            // Titel
+            paint.textSize = 20f
+            paint.isFakeBoldText = true
+            paint.color = Color.BLACK
+            canvas.drawText("Trainingstempo - Protokoll", 50f, 50f, paint)
+
+            // ✅ FIX: Datum mit sessionStartTime (nicht 1970!)
+            paint.textSize = 14f
+            paint.isFakeBoldText = false
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+            canvas.drawText(dateFormat.format(Date(sessionStartTime)), 50f, 80f, paint)
+
+            // Statistiken
+            paint.textSize = 12f
+            var y = 120f
+            val stats = binding.tvStats.text.toString().split("\n")
+            for (line in stats) {
+                canvas.drawText(line, 50f, y, paint)
+                y += 20f
+            }
+
+            // Chart als Bitmap
+            y += 20f
+            val chartBitmap = speedChart.chartBitmap
+            val scaledChart = Bitmap.createScaledBitmap(chartBitmap, 495, 300, true)
+            canvas.drawBitmap(scaledChart, 50f, y, null)
+
+            pdfDocument.finishPage(page)
+
+            // Speichern
+            val fileName = "Trainingstempo_${SimpleDateFormat("yyyy-MM-dd_HHmmss", Locale.GERMAN).format(Date())}.pdf"
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                savePdfToMediaStore(pdfDocument, fileName)
+            } else {
+                val documentsDir = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                    "HundeWildnis"
+                )
+                if (!documentsDir.exists()) documentsDir.mkdirs()
+
+                val file = File(documentsDir, fileName)
+                pdfDocument.writeTo(FileOutputStream(file))
+                pdfDocument.close()
+
+                showExportDialog(file)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "❌ Export-Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun savePdfToMediaStore(pdfDocument: PdfDocument, fileName: String) {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis")
+        }
+
+        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+        uri?.let {
+            contentResolver.openOutputStream(it)?.use { outputStream ->
+                pdfDocument.writeTo(outputStream)
+            }
+            pdfDocument.close()
+
+            Toast.makeText(this, "✓ PDF exportiert", Toast.LENGTH_SHORT).show()
+            shareUri(it)
+        }
+    }
+
+    private fun showExportDialog(file: File) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("✓ PDF exportiert")
+            .setMessage("${file.name}\n\nGespeichert in:\nDocuments/HundeWildnis")
+            .setPositiveButton("Teilen") { _, _ ->
+                shareFile(file)
+            }
+            .setNegativeButton("OK", null)
+            .create()
+
+        dialog.show()
+        styleDialogButtons(dialog)
+    }
+
+    private fun shareFile(file: File) {
+        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        startActivity(Intent.createChooser(intent, "PDF teilen"))
+    }
+
+    private fun shareUri(uri: Uri) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_SUBJECT, "Trainingstempo Session")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        startActivity(Intent.createChooser(intent, "PDF teilen"))
     }
 
     override fun onStart() {
         super.onStart()
 
-        // Service binden wenn bereits läuft
         if (WalkingSpeedService.isServiceRunning) {
             val intent = Intent(this, WalkingSpeedService::class.java)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -442,7 +718,7 @@ class WalkingSpeedActivity : SecureBaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopUIUpdates() // Cleanup
+        stopUIUpdates()
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -17,7 +17,7 @@ import com.hundewildnis.app.databinding.ActivityStartBinding
 
 /**
  * StartActivity - Hauptstartseite der App
- * Zeigt 4 große Buttons für tägliche Aktivitäten
+ * Zeigt 8 große Buttons für tägliche Aktivitäten
  */
 class StartActivity : BaseBottomNavActivity() {
 
@@ -185,6 +185,11 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun setupButtons() {
+        // ✅ NEU: Unterstützung
+        binding.btnSupport.setOnClickListener {
+            startActivity(Intent(this, SupportActivity::class.java))
+        }
+
         // Button 1: Übung des Tages
         binding.btnDailyExercise.setOnClickListener {
             openWebView(
@@ -230,7 +235,11 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnAltimeter.setOnClickListener {
             startActivity(Intent(this, AltimeterActivity::class.java))
         }
-    }
+
+        // ✅ Hunde-Stammdaten
+        binding.btnDogProfiles.setOnClickListener {
+            startActivity(Intent(this, DogProfileActivity::class.java)) }
+        }
 
     private fun openWebView(url: String, title: String) {
         val intent = Intent(this, ContentActivity::class.java).apply {

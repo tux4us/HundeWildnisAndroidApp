@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="#3d3d3d">
+
+    <LinearLayout
+        android:id="@+id/poiContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Haupt-Info: Icon, Name, Entfernung -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Icon & Kategorie -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginEnd="12dp">
+
+                <TextView
+                    android:id="@+id/poiIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐕"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/poiCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hund"
+                    android:textSize="9sp"
+                    android:textColor="#999999"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- Name & Details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/poiName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hundeauslauf Stadtpark"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+
+                <!-- Entfernung & Richtung -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:id="@+id/poiDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="450 m"
+                        android:textSize="13sp"
+                        android:textColor="#8fad6f"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" • "
+                        android:textColor="#666666" />
+
+                    <TextView
+                        android:id="@+id/poiDirection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="↗ NO"
+                        android:textSize="13sp"
+                        android:textColor="#999999" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Navigations-Pfeil -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▶"
+                android:textSize="20sp"
+                android:textColor="#8fad6f"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- ✅ ERWEITERTE DETAILS (konditionell sichtbar) -->
+        <!-- ═══════════════════════════════════════════ -->
+        <LinearLayout
+            android:id="@+id/poiDetailsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp"
+            android:paddingTop="8dp"
+            android:visibility="gone">
+
+            <!-- Trennlinie -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#555555"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Adresse -->
+            <LinearLayout
+                android:id="@+id/addressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Adresse:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Musterstraße 123"
+                    android:textSize="11sp"
+                    android:textColor="#CCCCCC" />
+            </LinearLayout>
+
+            <!-- Telefon -->
+            <LinearLayout
+                android:id="@+id/phoneLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="📞 Telefon:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+49 123 456789"
+                    android:textSize="11sp"
+                    android:textColor="#CCCCCC"
+                    android:autoLink="phone" />
+            </LinearLayout>
+
+            <!-- Website -->
+            <LinearLayout
+                android:id="@+id/websiteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="🌐 Website:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiWebsite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="www.example.com"
+                    android:textSize="11sp"
+                    android:textColor="#8fad6f"
+                    android:autoLink="web" />
+            </LinearLayout>
+
+            <!-- Öffnungszeiten -->
+            <LinearLayout
+                android:id="@+id/hoursLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="🕒 Öffnung:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiHours"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Mo-Fr 09:00-18:00"
+                    android:textSize="11sp"
+                    android:textColor="#CCCCCC" />
+            </LinearLayout>
+
+            <!-- Beschreibung -->
+            <LinearLayout
+                android:id="@+id/descriptionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="ℹ️ Info:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Große Wiese für Hunde"
+                    android:textSize="11sp"
+                    android:textColor="#CCCCCC"
+                    android:maxLines="3"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <!-- Betreiber -->
+            <LinearLayout
+                android:id="@+id/operatorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="👤 Betreiber:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiOperator"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Stadt Frankfurt"
+                    android:textSize="11sp"
+                    android:textColor="#CCCCCC" />
+            </LinearLayout>
+
+            <!-- Zugang -->
+            <LinearLayout
+                android:id="@+id/accessLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="🚪 Zugang:"
+                    android:textSize="11sp"
+                    android:textColor="#999999" />
+
+                <TextView
+                    android:id="@+id/poiAccess"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Frei zugänglich"
+                    android:textSize="11sp"
+                    android:textColor="#CCCCCC" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

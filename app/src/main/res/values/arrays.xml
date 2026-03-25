@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Geschlecht -->
+    <string-array name="gender_options">
+        <item>Bitte wählen</item>
+        <item>Rüde</item>
+        <item>Hündin</item>
+    </string-array>
+
+    <!-- Kastrationsstatus -->
+    <string-array name="neutered_options">
+        <item>Bitte wählen</item>
+        <item>Ja</item>
+        <item>Nein</item>
+        <item>Unbekannt</item>
+    </string-array>
+</resources>

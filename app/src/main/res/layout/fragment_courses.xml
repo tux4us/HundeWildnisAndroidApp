@@ -19,7 +19,7 @@
             android:id="@+id/btnCoursesMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🎓 Onlinekurse Hundeschule"
+            android:text="🎓 Onlinetrainer - Information"
             android:textSize="18sp"
             android:textStyle="bold"
             app:backgroundTint="#1B3A0A"
@@ -32,10 +32,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📁 Kursverzeichnis"
+            android:text="Unser umfangreicher Onlinetrainer steht allen registrierten Nutzerinnen und Nutzern zur Verfügung.🤝"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#2d5016"
+            android:textAlignment="center"
             android:layout_marginBottom="8dp" />
 
         <!--<com.google.android.material.button.MaterialButton

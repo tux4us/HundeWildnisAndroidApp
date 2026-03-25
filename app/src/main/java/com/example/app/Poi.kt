@@ -1,6 +1,6 @@
 package com.hundewildnis.app
 
-// POI Datenklasse
+// ✅ ERWEITERTE POI Datenklasse mit allen OSM-Details
 data class POI(
     val id: String,
     val name: String,
@@ -12,7 +12,16 @@ data class POI(
     val tags: Map<String, String> = emptyMap(),
     val bearing: Double = 0.0,
     val direction: String = "",
-    val directionArrow: String = ""
+    val directionArrow: String = "",
+
+    // ✅ NEU: Erweiterte Details aus OSM
+    val address: String? = null,
+    val phone: String? = null,
+    val website: String? = null,
+    val openingHours: String? = null,
+    val description: String? = null,
+    val operator: String? = null,
+    val access: String? = null
 )
 
 // POI Kategorien mit Icons
@@ -167,7 +176,7 @@ object POICategories {
         ),
         Category(
             name = "Notfall",
-            icon = "\uD83C\uDD98",
+            icon = "🆘",
             queries = listOf("amenity=emergency")
         ),
 

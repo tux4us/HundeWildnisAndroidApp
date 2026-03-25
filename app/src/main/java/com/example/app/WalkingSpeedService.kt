@@ -25,8 +25,14 @@ import java.util.Timer
 import kotlin.concurrent.schedule
 
 /**
+ * Callback-Interface für Activity
+ */
+interface SpeedUpdateListener {
+    fun onSpeedUpdate(speed: Float, location: Location)
+}
+
+/**
  * WalkingSpeedService - Background GPS Tracking Service
- * Überwacht Geschwindigkeit und benachrichtigt bei Überschreitung
  */
 class WalkingSpeedService : Service(), LocationListener {
 
@@ -35,14 +41,21 @@ class WalkingSpeedService : Service(), LocationListener {
     private lateinit var notificationManager: NotificationManager
     private lateinit var vibrator: Vibrator
 
-    private var speedLimit = 3.0f // km/h
-    private var checkInterval = 30000L // 30 Sekunden
+    private var speedLimit = 3.0f
+    private var checkInterval = 30000L
     private var vibrationEnabled = true
     private var soundEnabled = true
 
     private var currentSpeed = 0f
     private var isTracking = false
     private var checkTimer: Timer? = null
+
+    private var lastWarningTime = 0L
+
+    private var speedUpdateListener: SpeedUpdateListener? = null
+
+    private var previousLocation: Location? = null
+    private var totalDistance = 0f
 
     companion object {
         private const val NOTIFICATION_ID = 1001
@@ -67,18 +80,16 @@ class WalkingSpeedService : Service(), LocationListener {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // WICHTIG: Permissions prüfen BEVOR startForeground
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
 
-            // Permissions fehlen - Service kann nicht starten
             stopSelf()
             return START_NOT_STICKY
         }
 
-        startForeground(NOTIFICATION_ID, createNotification("Tracking gestartet"))
+        startForeground(NOTIFICATION_ID, createNotification("Tracking gestartet", false))
         startTracking()
         isServiceRunning = true
         return START_STICKY
@@ -93,7 +104,6 @@ class WalkingSpeedService : Service(), LocationListener {
 
         isTracking = true
 
-        // GPS Updates alle 5 Sekunden
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
             5000L,
@@ -101,7 +111,6 @@ class WalkingSpeedService : Service(), LocationListener {
             this
         )
 
-        // Check Timer starten
         startCheckTimer()
     }
 
@@ -109,6 +118,9 @@ class WalkingSpeedService : Service(), LocationListener {
         isTracking = false
         locationManager.removeUpdates(this)
         checkTimer?.cancel()
+        totalDistance = 0f
+        previousLocation = null
+        speedUpdateListener = null
         stopForeground(true)
         stopSelf()
         isServiceRunning = false
@@ -118,8 +130,7 @@ class WalkingSpeedService : Service(), LocationListener {
         checkTimer?.cancel()
         checkTimer = Timer()
 
-        // Erste Prüfung nach 5 Sekunden, dann wiederholt im Intervall
-        checkTimer?.schedule(5000L, checkInterval) {
+        checkTimer?.schedule(checkInterval, checkInterval) {
             checkSpeed()
         }
         android.util.Log.d("WalkingSpeedService", "✓ Timer gestartet: Intervall ${checkInterval}ms")
@@ -137,11 +148,17 @@ class WalkingSpeedService : Service(), LocationListener {
     }
 
     private fun notifySpeedExceeded() {
+        val now = System.currentTimeMillis()
+        if (now - lastWarningTime < 10000) {
+            android.util.Log.d("WalkingSpeedService", "⏭️ Warnung übersprungen (zu früh)")
+            return
+        }
+        lastWarningTime = now
+
         android.util.Log.w("WalkingSpeedService", "🚨 BENACHRICHTIGUNG: Zu schnell!")
 
         // Vibration
         if (vibrationEnabled) {
-            android.util.Log.d("WalkingSpeedService", "📳 Vibriere...")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
             } else {
@@ -152,36 +169,38 @@ class WalkingSpeedService : Service(), LocationListener {
 
         // Sound
         if (soundEnabled) {
-            android.util.Log.d("WalkingSpeedService", "🔔 Spiele Sound...")
             try {
                 val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                 val ringtone = RingtoneManager.getRingtone(applicationContext, notification)
                 ringtone.play()
             } catch (e: Exception) {
                 android.util.Log.e("WalkingSpeedService", "❌ Sound-Fehler: ${e.message}")
-                e.printStackTrace()
             }
         }
 
-        // Notification aktualisieren
+        // ✅ NUR bei Warnung Notification aktualisieren
         val notification = createNotification(
-            "⚠️ Zu schnell! ${String.format("%.1f", currentSpeed)} km/h (Limit: ${String.format("%.1f", speedLimit)} km/h)"
+            "⚠️ Zu schnell! ${String.format("%.1f", currentSpeed)} km/h (Limit: ${String.format("%.1f", speedLimit)} km/h)",
+            true
         )
         notificationManager.notify(NOTIFICATION_ID, notification)
-        android.util.Log.d("WalkingSpeedService", "✓ Notification aktualisiert")
     }
 
     override fun onLocationChanged(location: Location) {
-        // Geschwindigkeit in km/h (location.speed ist in m/s)
         currentSpeed = location.speed * 3.6f
 
-        android.util.Log.d("WalkingSpeedService", "📍 GPS: ${String.format("%.1f", currentSpeed)} km/h (${location.speed} m/s)")
+        previousLocation?.let { prev ->
+            val distance = prev.distanceTo(location)
+            totalDistance += distance
+        }
+        previousLocation = location
 
-        // Notification aktualisieren
-        val notification = createNotification(
-            "Aktuell: ${String.format("%.1f", currentSpeed)} km/h | Limit: ${String.format("%.1f", speedLimit)} km/h"
-        )
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        speedUpdateListener?.onSpeedUpdate(currentSpeed, location)
+
+        android.util.Log.d("WalkingSpeedService", "📍 GPS: ${String.format("%.1f", currentSpeed)} km/h")
+
+        // ✅ KEINE Notification-Updates mehr bei normalem GPS-Update!
+        // Die Foreground-Notification bleibt einfach bestehen
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -193,41 +212,51 @@ class WalkingSpeedService : Service(), LocationListener {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Geh-Geschwindigkeit Tracking",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_LOW  // ✅ LOW = silent
             ).apply {
                 description = "Benachrichtigungen für Geschwindigkeitsüberwachung"
+                setSound(null, null)  // ✅ Kein Sound
+                enableVibration(false)  // ✅ Keine Vibration
+                setShowBadge(false)  // ✅ Kein Badge
             }
             notificationManager.createNotificationChannel(channel)
         }
     }
 
-    private fun createNotification(text: String) = NotificationCompat.Builder(this, CHANNEL_ID)
-        .setContentTitle("🚶 Geh-Geschwindigkeit")
-        .setContentText(text)
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .setOngoing(true)
-        .setContentIntent(
-            PendingIntent.getActivity(
-                this,
-                0,
-                Intent(this, WalkingSpeedActivity::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    private fun createNotification(text: String, isWarning: Boolean) =
+        NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(if (isWarning) "⚠️ Zu schnell!" else "🚶 Trainingstempo")
+            .setContentText(text)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setOngoing(true)
+            .setPriority(if (isWarning) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_LOW)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    Intent(this, WalkingSpeedActivity::class.java),
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
             )
-        )
-        .build()
+            .setSound(null)  // ✅ Explizit kein Sound
+            .setVibrate(null)  // ✅ Explizit keine Vibration
+            .setSilent(true)  // ✅ Silent-Flag
+            .build()
 
     override fun onDestroy() {
         super.onDestroy()
         stopTracking()
     }
 
-    // Public API
+    // PUBLIC API
     fun setSpeedLimit(limit: Float) {
         speedLimit = limit
+        android.util.Log.d("WalkingSpeedService", "✓ Speed Limit gesetzt: $speedLimit km/h")
     }
 
     fun setCheckInterval(interval: Long) {
         checkInterval = interval
+        android.util.Log.d("WalkingSpeedService", "✓ Check Interval gesetzt: $checkInterval ms")
         if (isTracking) {
             startCheckTimer()
         }
@@ -235,11 +264,19 @@ class WalkingSpeedService : Service(), LocationListener {
 
     fun setVibrationEnabled(enabled: Boolean) {
         vibrationEnabled = enabled
+        android.util.Log.d("WalkingSpeedService", "✓ Vibration: $enabled")
     }
 
     fun setSoundEnabled(enabled: Boolean) {
         soundEnabled = enabled
+        android.util.Log.d("WalkingSpeedService", "✓ Sound: $enabled")
     }
+
+    fun setSpeedUpdateListener(listener: SpeedUpdateListener?) {
+        speedUpdateListener = listener
+    }
+
+    fun getTotalDistance() = totalDistance / 1000f
 
     fun getCurrentSpeed() = currentSpeed
     fun isTracking() = isTracking

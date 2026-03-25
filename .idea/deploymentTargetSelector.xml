@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-01-16T12:16:41.467795771Z">
+        <DropdownSelection timestamp="2026-03-25T15:39:11.148258704Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=GS5CTP205163" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/tuxus/.android/avd/Pixel_6_Pro_API_31.avd" />
             </handle>
           </Target>
         </DropdownSelection>
