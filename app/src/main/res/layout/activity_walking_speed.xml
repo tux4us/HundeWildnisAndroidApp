@@ -50,11 +50,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Aktuell: 0.0 km/h"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:padding="24dp"
-                android:textColor="#2d5016"
+                android:textColor="@color/green_secondary"
                 android:layout_marginBottom="24dp" />
 
             <!-- Geschwindigkeitslimit -->
@@ -135,7 +135,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Benachrichtigungen:"
+                android:text="Benachrichtigungen bei Überschreitung:"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -157,9 +157,9 @@
                 android:textSize="16sp"
                 android:padding="8dp"
                 android:checked="true"
-                android:layout_marginBottom="32dp" />
+                android:layout_marginBottom="24dp" />
 
-            <!-- Start/Stop Button -->
+            <!-- ✅ Start/Stop Button HIER (vor Chart!) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnStartStop"
                 android:layout_width="match_parent"
@@ -169,7 +169,86 @@
                 android:textStyle="bold"
                 app:cornerRadius="8dp"
                 app:backgroundTint="#2d5016"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Live-Diagramm -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📊 Geschwindigkeitsverlauf"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/speedChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Statistiken -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📈 Statistiken"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvStats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Starte Tracking um Statistiken zu sehen"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Export-Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExport"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="📄 Als PDF exportieren"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#4a6135"
+                android:textColor="#FFFFFF"
+                android:enabled="false" />
 
         </LinearLayout>
     </ScrollView>

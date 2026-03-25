@@ -27,12 +27,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
-    <!-- 1. PERMISSIONS (oberhalb <application>) -->
+    <!-- ✅ CAMERA & MEDIA (für Hunde-Stammdaten) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -42,7 +42,7 @@
         android:networkSecurityConfig="@xml/network_security_config">
 
         <!-- ════════════════════════════════════════════════ -->
-        <!-- LAUNCHER: StartActivity (NEU) -->
+        <!-- LAUNCHER: StartActivity -->
         <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.StartActivity"
@@ -55,11 +55,41 @@
         </activity>
 
         <!-- ════════════════════════════════════════════════ -->
-        <!-- NEUE ACTIVITIES -->
+        <!-- HUNDE-STAMMDATEN ACTIVITIES (NEU) -->
+        <!-- ════════════════════════════════════════════════ -->
+        <activity
+            android:name="com.hundewildnis.app.DogProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.DogEditActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.DogViewActivity"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.QRCodeActivity"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- TAGESTRAINER ACTIVITIES -->
         <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.WalkingSpeedActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.HundeWildnis"
             android:parentActivityName="com.hundewildnis.app.StartActivity" />
 
@@ -68,10 +98,48 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HundeWildnis"
-            android:parentActivityName="com.hundewildnis.app.StartActivity"/>
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
+        <activity
+            android:name="com.hundewildnis.app.SupportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
 
         <!-- ════════════════════════════════════════════════ -->
-        <!-- BESTEHENDE ACTIVITIES -->
+        <!-- NAVIGATION & TOOLS ACTIVITIES -->
+        <!-- ════════════════════════════════════════════════ -->
+        <activity
+            android:name="com.hundewildnis.app.CompassActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="fullSensor"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
+        <activity
+            android:name="com.hundewildnis.app.WeatherActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="fullSensor"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
+        <activity
+            android:name="com.hundewildnis.app.LocationActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="fullSensor"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
+        <activity
+            android:name="com.hundewildnis.app.AltimeterActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="fullSensor"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- CONTENT ACTIVITIES -->
         <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.MainActivity"
@@ -89,30 +157,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:parentActivityName="com.hundewildnis.app.MainActivity" />
-
-        <activity
-            android:name="com.hundewildnis.app.CompassActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="fullSensor"
-            android:exported="false" />
-
-        <activity
-            android:name="com.hundewildnis.app.WeatherActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="fullSensor"
-            android:exported="false" />
-
-        <activity
-            android:name="com.hundewildnis.app.LocationActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="fullSensor"
-            android:exported="false" />
-
-        <activity
-            android:name="com.hundewildnis.app.AltimeterActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="fullSensor"
-            android:exported="false" />
 
         <!-- ════════════════════════════════════════════════ -->
         <!-- SERVICE: WalkingSpeedService -->

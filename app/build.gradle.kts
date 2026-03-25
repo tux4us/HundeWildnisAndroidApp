@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -13,10 +14,10 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 39
-        versionName = "8.0"
+        versionCode = 40
+        versionName = "8.1"
 
-        // API Key aus local.properties laden - AUSSERHALB von android {}
+        // API Key aus local.properties laden
         val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
@@ -29,8 +30,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true        // ← Code Obfuscation
-            isShrinkResources = true      // ← Ressourcen optimieren
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -47,6 +48,7 @@ android {
         jvmTarget = "1.8"
     }
 
+    // ✅ HIER ist es richtig!
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -68,13 +70,12 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.youtube.player.core)
-
-    // OPTIONAL: Für bessere Foto-Anzeige
-// Füge in build.gradle.kts (Module: app) unter dependencies ein:
-
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.github.bumptech.glide:glide:5.0.5")
 
-// Falls Glide nicht verfügbar: PhotoAdapter funktioniert auch ohne!
-// Der Adapter hat einen Fallback auf setImageURI()
-
+    // ✅ HUNDE-STAMMDATEN
+    implementation("com.google.zxing:core:3.5.1")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.itextpdf:itext7-core:7.2.5")
+    implementation("com.google.code.gson:gson:2.10.1")
 }

@@ -10,28 +10,20 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.hundewildnis.app.OverpassHelper
-import com.hundewildnis.app.POI
-import com.hundewildnis.app.POICategories
-import com.hundewildnis.app.R
 import com.hundewildnis.app.databinding.ActivityLocationBinding
-import com.hundewildnis.app.databinding.ItemPoiBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -60,6 +52,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var currentRouteDistance: Double = 0.0
     private var currentRouteDuration: Double = 0.0
 
+    private var selectedCategory: POICategories.Category? = null
+
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
         private const val MIN_TIME_BETWEEN_UPDATES = 2000L
@@ -84,6 +78,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         setupButtons()
         setupOSMCopyright()
         checkLocationPermission()
+        setupCategoryButtons()
     }
 
     private fun setupMap() {
@@ -108,17 +103,313 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             }
         }
 
-        binding.btnReloadPOI.setOnClickListener {
-            currentLocation?.let { location ->
-                loadPOIs(location.latitude, location.longitude)
-            } ?: run {
-                Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         binding.shareButton.setOnClickListener {
             shareLocation()
         }
+
+        binding.btnBackToCategories.setOnClickListener {
+            showCategoryView()
+        }
+    }
+
+    private fun setupCategoryButtons() {
+        binding.categoryGrid.removeAllViews()
+
+        POICategories.ALL_CATEGORIES.forEach { category ->
+            val button = com.google.android.material.button.MaterialButton(this).apply {
+                text = "${category.icon}\n${category.name}"
+                textSize = 12f
+                gravity = android.view.Gravity.CENTER
+                setPadding(8, 16, 8, 16)
+
+                cornerRadius = 12
+                backgroundTintList = android.content.res.ColorStateList.valueOf(
+                    android.graphics.Color.parseColor(category.color)
+                )
+                setTextColor(android.graphics.Color.WHITE)
+
+                val params = android.widget.GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
+                    setMargins(8, 8, 8, 8)
+                }
+                layoutParams = params
+
+                setOnClickListener {
+                    selectedCategory = category
+                    loadPOIsForCategory(category)
+                }
+            }
+
+            binding.categoryGrid.addView(button)
+        }
+    }
+
+    private fun loadPOIsForCategory(category: POICategories.Category) {
+        currentLocation?.let { location ->
+            binding.poiProgressBar.visibility = View.VISIBLE
+            binding.categoryView.visibility = View.GONE
+            binding.poiListView.visibility = View.VISIBLE
+
+            binding.categoryTitleText.text = "${category.icon} ${category.name}"
+
+            lifecycleScope.launch {
+                try {
+                    val pois = withContext(Dispatchers.IO) {
+                        fetchPOIsForCategory(location.latitude, location.longitude, category, 3000)
+                    }
+
+                    val sortedPOIs = pois.sortedBy { it.distance }
+
+                    poiList.clear()
+                    poiList.addAll(sortedPOIs)
+
+                    binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+                    binding.poiCountText.text = "${pois.size} POI in 3 km"
+                    binding.poiProgressBar.visibility = View.GONE
+
+                    if (pois.isEmpty()) {
+                        binding.emptyPoiText.visibility = View.VISIBLE
+                        binding.emptyPoiText.text = "Keine ${category.name} im Umkreis von 3 km gefunden"
+                    } else {
+                        binding.emptyPoiText.visibility = View.GONE
+                    }
+
+                } catch (e: Exception) {
+                    binding.poiProgressBar.visibility = View.GONE
+                    Toast.makeText(this@LocationActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        } ?: run {
+            Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // ✅ ERWEITERT: Sucht node, way UND relation
+    private suspend fun fetchPOIsForCategory(
+        lat: Double,
+        lon: Double,
+        category: POICategories.Category,
+        radius: Int = 3000
+    ): List<POI> {
+        val queries = category.queries.flatMap { query ->
+            val parts = query.split("=")
+            if (parts.size == 2) {
+                listOf(
+                    """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                    """way["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                    """relation["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
+                )
+            } else {
+                emptyList()
+            }
+        }.filter { it.isNotEmpty() }
+
+        val overpassQuery = """
+            [out:json][timeout:25];
+            (
+              ${queries.joinToString("\n  ")}
+            );
+            out body;
+            >;
+            out skel qt;
+        """.trimIndent()
+
+        val json = OverpassHelper.queryWithRetry(overpassQuery)
+            ?: throw Exception("Overpass API nicht erreichbar")
+
+        val elements = json.getJSONArray("elements")
+        val pois = mutableListOf<POI>()
+
+        for (i in 0 until elements.length()) {
+            val element = elements.getJSONObject(i)
+            val elementType = element.getString("type")
+
+            when (elementType) {
+                "node" -> {
+                    createPOIFromElement(element, lat, lon, category)?.let { poi ->
+                        pois.add(poi)
+                    }
+                }
+                "way", "relation" -> {
+                    createPOIFromWayOrRelation(element, elements, lat, lon, category)?.let { poi ->
+                        pois.add(poi)
+                    }
+                }
+            }
+        }
+
+        return pois
+    }
+
+    private fun createPOIFromElement(
+        element: JSONObject,
+        userLat: Double,
+        userLon: Double,
+        category: POICategories.Category
+    ): POI? {
+        val poiLat = element.getDouble("lat")
+        val poiLon = element.getDouble("lon")
+
+        val tags = mutableMapOf<String, String>()
+        if (element.has("tags")) {
+            val tagsObj = element.getJSONObject("tags")
+            tagsObj.keys().forEach { key ->
+                tags[key] = tagsObj.getString(key)
+            }
+        }
+
+        val name = tags["name"] ?: tags["ref"] ?: category.name
+        val distance = calculateDistance(userLat, userLon, poiLat, poiLon)
+
+        val bearing = DirectionUtils.calculateBearing(userLat, userLon, poiLat, poiLon)
+        val direction = DirectionUtils.bearingToDirection(bearing)
+        val arrow = DirectionUtils.bearingToArrow(bearing)
+
+        val address = buildAddress(tags)
+        val phone = tags["phone"] ?: tags["contact:phone"]
+        val website = tags["website"] ?: tags["contact:website"] ?: tags["url"]
+        val openingHours = tags["opening_hours"]
+        val description = tags["description"] ?: tags["note"]
+        val operator = tags["operator"]
+        val access = tags["access"] ?: tags["dog"]
+
+        return POI(
+            id = element.getString("id"),
+            name = name,
+            category = category.name,
+            categoryIcon = category.icon,
+            lat = poiLat,
+            lon = poiLon,
+            distance = distance,
+            tags = tags,
+            bearing = bearing,
+            direction = direction,
+            directionArrow = arrow,
+            address = address,
+            phone = phone,
+            website = website,
+            openingHours = openingHours,
+            description = description,
+            operator = operator,
+            access = access
+        )
+    }
+
+    // ✅ NEU: Way/Relation verarbeiten
+    private fun createPOIFromWayOrRelation(
+        element: JSONObject,
+        allElements: JSONArray,
+        userLat: Double,
+        userLon: Double,
+        category: POICategories.Category
+    ): POI? {
+        val nodeIds = mutableListOf<String>()
+
+        if (element.has("nodes")) {
+            val nodesArray = element.getJSONArray("nodes")
+            for (i in 0 until nodesArray.length()) {
+                nodeIds.add(nodesArray.getString(i))
+            }
+        } else if (element.has("members")) {
+            val membersArray = element.getJSONArray("members")
+            for (i in 0 until membersArray.length()) {
+                val member = membersArray.getJSONObject(i)
+                if (member.getString("type") == "node") {
+                    nodeIds.add(member.getString("ref"))
+                }
+            }
+        }
+
+        if (nodeIds.isEmpty()) return null
+
+        var sumLat = 0.0
+        var sumLon = 0.0
+        var count = 0
+
+        for (i in 0 until allElements.length()) {
+            val node = allElements.getJSONObject(i)
+            if (node.getString("type") == "node" && nodeIds.contains(node.getString("id"))) {
+                sumLat += node.getDouble("lat")
+                sumLon += node.getDouble("lon")
+                count++
+            }
+        }
+
+        if (count == 0) return null
+
+        val centerLat = sumLat / count
+        val centerLon = sumLon / count
+
+        val tags = mutableMapOf<String, String>()
+        if (element.has("tags")) {
+            val tagsObj = element.getJSONObject("tags")
+            tagsObj.keys().forEach { key ->
+                tags[key] = tagsObj.getString(key)
+            }
+        }
+
+        val name = tags["name"] ?: tags["ref"] ?: category.name
+        val distance = calculateDistance(userLat, userLon, centerLat, centerLon)
+
+        val bearing = DirectionUtils.calculateBearing(userLat, userLon, centerLat, centerLon)
+        val direction = DirectionUtils.bearingToDirection(bearing)
+        val arrow = DirectionUtils.bearingToArrow(bearing)
+
+        val address = buildAddress(tags)
+        val phone = tags["phone"] ?: tags["contact:phone"]
+        val website = tags["website"] ?: tags["contact:website"] ?: tags["url"]
+        val openingHours = tags["opening_hours"]
+        val description = tags["description"] ?: tags["note"]
+        val operator = tags["operator"]
+        val access = tags["access"] ?: tags["dog"]
+
+        return POI(
+            id = element.getString("id"),
+            name = name,
+            category = category.name,
+            categoryIcon = category.icon,
+            lat = centerLat,
+            lon = centerLon,
+            distance = distance,
+            tags = tags,
+            bearing = bearing,
+            direction = direction,
+            directionArrow = arrow,
+            address = address,
+            phone = phone,
+            website = website,
+            openingHours = openingHours,
+            description = description,
+            operator = operator,
+            access = access
+        )
+    }
+
+    private fun buildAddress(tags: Map<String, String>): String? {
+        val parts = mutableListOf<String>()
+
+        tags["addr:street"]?.let { street ->
+            val houseNumber = tags["addr:housenumber"] ?: ""
+            parts.add("$street $houseNumber".trim())
+        }
+
+        tags["addr:postcode"]?.let { postcode ->
+            val city = tags["addr:city"] ?: ""
+            parts.add("$postcode $city".trim())
+        }
+
+        return if (parts.isNotEmpty()) parts.joinToString(", ") else null
+    }
+
+    private fun showCategoryView() {
+        selectedCategory = null
+        binding.categoryView.visibility = View.VISIBLE
+        binding.poiListView.visibility = View.GONE
+        poiList.clear()
+        binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+        stopNavigation()
     }
 
     private fun setupOSMCopyright() {
@@ -247,7 +538,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         if (isFirstLocation) {
             centerMapOnLocation(location)
-            loadPOIs(location.latitude, location.longitude)
             isFirstLocation = false
         }
 
@@ -289,92 +579,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             binding.mapView.invalidate()
             binding.btnCurrentLocation.text = "📍 Standort"
         }
-    }
-
-    private fun loadPOIs(lat: Double, lon: Double) {
-        binding.poiProgressBar.visibility = View.VISIBLE
-
-        lifecycleScope.launch {
-            try {
-                val pois = withContext(Dispatchers.IO) {
-                    fetchPOIsFromOverpass(lat, lon)
-                }
-
-                val sortedPOIs = pois.sortedBy { it.distance }
-
-                poiList.clear()
-                poiList.addAll(sortedPOIs)
-
-                binding.poiRecyclerView.adapter?.notifyDataSetChanged()
-                binding.poiCountText.text = "${pois.size} POI gefunden"
-                binding.poiProgressBar.visibility = View.GONE
-
-                if (pois.isEmpty()) {
-                    Toast.makeText(this@LocationActivity, "Keine POIs im Umkreis von 2km gefunden", Toast.LENGTH_SHORT).show()
-                }
-
-            } catch (e: Exception) {
-                binding.poiProgressBar.visibility = View.GONE
-                Toast.makeText(this@LocationActivity, "Fehler beim Laden der POIs: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    private suspend fun fetchPOIsFromOverpass(lat: Double, lon: Double): List<POI> {
-        val query = POICategories.generateOverpassQuery(lat, lon, 2000)
-
-        // Verwende OverpassHelper statt direktem API-Call
-        val json = OverpassHelper.queryWithRetry(query)
-            ?: throw Exception("Overpass API nicht erreichbar")
-
-        val elements = json.getJSONArray("elements")
-        val pois = mutableListOf<POI>()
-
-        for (i in 0 until elements.length()) {
-            val element = elements.getJSONObject(i)
-
-            if (element.getString("type") == "node") {
-                val poiLat = element.getDouble("lat")
-                val poiLon = element.getDouble("lon")
-
-                val tags = mutableMapOf<String, String>()
-                if (element.has("tags")) {
-                    val tagsObj = element.getJSONObject("tags")
-                    tagsObj.keys().forEach { key ->
-                        tags[key] = tagsObj.getString(key)
-                    }
-                }
-
-                val category = POICategories.getCategoryForTags(tags)
-                if (category != null) {
-                    val name = tags["name"] ?: category.name
-                    val distance = calculateDistance(lat, lon, poiLat, poiLon)
-
-                    // Berechne Richtung
-                    val bearing = DirectionUtils.calculateBearing(lat, lon, poiLat, poiLon)
-                    val direction = DirectionUtils.bearingToDirection(bearing)
-                    val arrow = DirectionUtils.bearingToArrow(bearing)
-
-                    pois.add(
-                        POI(
-                            id = element.getString("id"),
-                            name = name,
-                            category = category.name,
-                            categoryIcon = category.icon,
-                            lat = poiLat,
-                            lon = poiLon,
-                            distance = distance,
-                            tags = tags,
-                            bearing = bearing,
-                            direction = direction,
-                            directionArrow = arrow
-                        )
-                    )
-                }
-            }
-        }
-
-        return pois
     }
 
     private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {

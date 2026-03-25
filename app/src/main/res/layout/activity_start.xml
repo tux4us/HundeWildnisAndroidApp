@@ -30,8 +30,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="    🐕 Mein Tagestrainer 🌲"
-            android:textSize="20sp"
+            android:text="     Lernen - Trainieren - Wissen"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textAlignment="center"
             android:paddingTop="16dp"
@@ -57,12 +57,26 @@
                 android:paddingTop="0dp"
                 android:paddingBottom="140dp">
 
-                <!-- Button 1: Übung des Tages -->
+                <!-- ✅ Button 1: Unterstützung (NEU - an erster Position!) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSupport"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="💚🤝 Unterstützung 🙏🏽"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#213A10"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
+
+                <!-- Button 2: Übung des Tages -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDailyExercise"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕📖 Übung des Tages"
+                    android:text="🦮📖 Übung des Tages"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -71,12 +85,12 @@
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
 
-                <!-- Button 2: Tagesmeditation -->
+                <!-- Button 3: Tagesmeditation -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDailyMeditation"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕🧘 Meditation des Tages"
+                    android:text="🧘🐕 Meditation des Tages"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -85,12 +99,12 @@
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
 
-                <!-- Button 3: Geh-Geschwindigkeit -->
+                <!-- Button 4: Geh-Geschwindigkeit -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWalkingSpeed"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕⏱️ Mein Tempo"
+                    android:text="⏱️🔔 Trainingstempowächter"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -99,12 +113,12 @@
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
 
-                <!-- Button 4: Tagesnotizen -->
+                <!-- Button 5: Tagesnotizen -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDailyNotes"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕📝 Tagesnotizen"
+                    android:text="📝📸 Tagesnotizen"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -112,12 +126,12 @@
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Button 5: Wetter -->
+                <!-- Button 6: Wetter -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWeather"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕🌤️ Wetter"
+                    android:text="🌦📍 Wetter am Standort"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -125,12 +139,12 @@
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Button 6: Standort -->
+                <!-- Button 7: Standort -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLocation"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕📍 Standort"
+                    android:text="🗺🛰 Standort und Navigation"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -138,12 +152,12 @@
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Button 7: Kompass -->
+                <!-- Button 8: Kompass -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCompass"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕🧭 Kompass"
+                    android:text="🧭🌐 Kompass"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -151,16 +165,29 @@
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Button 8: Höhenmesser -->
+                <!-- Button 9: Höhenmesser -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAltimeter"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🐕⛰️ Höhenmesser"
+                    android:text="⛰️〽️ Höhenmesser"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#2d5016"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Button 10: Stammdaten -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDogProfiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🦮 Stammdaten"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#4a6135"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
