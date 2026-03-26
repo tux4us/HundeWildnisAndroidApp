@@ -23,7 +23,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Content Container (ersetzt SwipeRefreshLayout) -->
-    <!-- Content Container (ersetzt SwipeRefreshLayout) -->
     <FrameLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"

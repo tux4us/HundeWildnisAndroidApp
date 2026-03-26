@@ -46,7 +46,7 @@
                 android:id="@+id/etNotes"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:hint="Deine Notizen hier eingeben..."
+                android:hint="Deine Notizen hier eingeben. \nDiese sind nur in der aktuellen Sitzung verfügbar. \nZur Sicherung der Notizen und Fotos bitte 'Als PDF exportieren' oder 'Teilen'. "
                 android:textColorHint="@color/dark_green"
                 android:textColor="#000000"
                 android:gravity="top|start"
@@ -59,7 +59,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📸 Fotos"
+                android:text="📸 Fotos anhängen"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
@@ -80,7 +80,7 @@
                     android:text="📷 Kamera"
                     android:textSize="14sp"
                     app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
+                    app:backgroundTint="#01579B"
                     android:textColor="#FFFFFF"
                     android:layout_marginEnd="8dp" />
 
@@ -92,7 +92,7 @@
                     android:text="🖼️ Galerie"
                     android:textSize="14sp"
                     app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
+                    app:backgroundTint="#01579B"
                     android:textColor="#FFFFFF" />
 
             </LinearLayout>

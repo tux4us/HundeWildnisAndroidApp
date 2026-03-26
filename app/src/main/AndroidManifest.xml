@@ -55,6 +55,16 @@
         </activity>
 
         <!-- ════════════════════════════════════════════════ -->
+        <!-- BACKUP ACTIVITIES (NEU) -->
+        <!-- ════════════════════════════════════════════════ -->
+        <activity
+            android:name="com.hundewildnis.app.BackupActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <!-- ════════════════════════════════════════════════ -->
         <!-- HUNDE-STAMMDATEN ACTIVITIES (NEU) -->
         <!-- ════════════════════════════════════════════════ -->
         <activity

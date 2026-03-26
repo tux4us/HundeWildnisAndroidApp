@@ -62,7 +62,7 @@
                     android:id="@+id/btnSupport"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="💚🤝 Unterstützung 🙏🏽"
+                    android:text="💖🤝 Deine Unterstützung"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -104,7 +104,7 @@
                     android:id="@+id/btnWalkingSpeed"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="⏱️🔔 Trainingstempowächter"
+                    android:text="⏱️🔔 Trainings - Tempo"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
@@ -183,11 +183,24 @@
                     android:id="@+id/btnDogProfiles"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🦮 Stammdaten"
+                    android:text="🦮 Hunde Stammdaten"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- ✅ Button 11: Backup & Restore (NEU!) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBackup"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="📦💾 Backup App Daten"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#680C0C"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 

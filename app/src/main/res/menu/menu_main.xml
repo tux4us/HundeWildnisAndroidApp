@@ -1,56 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/menu/menu_main.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_home"
-        android:title="🏠 Home"
-        android:icon="@android:drawable/ic_menu_mylocation"
+        android:id="@+id/action_refresh"
+        android:title="🔁 Aktualisieren"
+        android:icon="@android:drawable/ic_menu_rotate"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item
         android:id="@+id/action_theme"
-        android:icon="@android:drawable/ic_menu_view"
-        android:title="@string/toggle_theme"
+        android:title="🌞🌒Theme wechseln"
+        android:icon="@android:drawable/ic_menu_day"
         app:showAsAction="never" />
 
-    <!-- NEU: Einstellungen -->
     <item
         android:id="@+id/action_settings"
         android:title="⚙️ Einstellungen"
+        android:icon="@android:drawable/ic_menu_preferences"
         app:showAsAction="never" />
 
-    <!-- NEU: Test-Button -->
+    <!-- TRENNLINIE (wird als disabled item dargestellt) -->
     <item
-        android:id="@+id/action_test_update"
-        android:title="🧪 Test Autoupdate"
+        android:id="@+id/separator_1"
+        android:title="───────────────"
+        android:enabled="false"
+        app:showAsAction="never" />
+
+    <!-- ✅ NEU: BACKUP ERSTELLEN -->
+    <item
+        android:id="@+id/action_backup_create"
+        android:title="📦 Backup erstellen"
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="never" />
+
+    <!-- ✅ NEU: BACKUP IMPORTIEREN -->
+    <item
+        android:id="@+id/action_backup_restore"
+        android:title="📥 Backup importieren"
+        android:icon="@android:drawable/ic_menu_revert"
+        app:showAsAction="never" />
+
+    <!-- TRENNLINIE -->
+    <item
+        android:id="@+id/separator_2"
+        android:title="───────────────"
+        android:enabled="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_privacy"
+        android:title="📜 Datenschutzerklärung"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:iconTint="#FFFFFF"
-        android:title="🔒 Datenschutz"
-        app:showAsAction="never"
-        app:iconTint="#FFFFFF" />
-
-    <item
-        android:id="@+id/action_imprint"
-        android:title="📇 Impressum"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh"
-        android:title="Aktualisieren"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/action_imprint"
+        android:title="📎 Impressum"
+        android:icon="@android:drawable/ic_menu_info_details"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_home"
+        android:title="🏡 Home"
+        android:icon="@android:drawable/ic_menu_compass"
+        app:showAsAction="never" />
 
 </menu>

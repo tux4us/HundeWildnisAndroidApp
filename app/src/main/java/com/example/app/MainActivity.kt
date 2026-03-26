@@ -17,26 +17,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.hundewildnis.app.AltimeterActivity
-import com.hundewildnis.app.CompassActivity
-import com.hundewildnis.app.ContentActivity
-import com.hundewildnis.app.ContentAdapter
-import com.hundewildnis.app.ContentCache
-import com.hundewildnis.app.ContentItem
-import com.hundewildnis.app.ImprintActivity
-import com.hundewildnis.app.R
-import com.hundewildnis.app.WeatherActivity
-import com.hundewildnis.app.WordPressApiParser
-import com.hundewildnis.app.YouTubeAdapter
-import com.hundewildnis.app.YouTubeParser
-import com.hundewildnis.app.YouTubeVideo
 import com.hundewildnis.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -47,9 +30,6 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import android.os.Build
 import android.view.Gravity
-import com.hundewildnis.app.LocationActivity
-import com.hundewildnis.app.SecureBaseActivity
-import com.hundewildnis.app.ContentUpdateWorker
 
 class MainActivity : BaseBottomNavActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -80,7 +60,7 @@ class MainActivity : BaseBottomNavActivity() {
         VIEW_BLOG -> R.id.nav_blog
         VIEW_PAGES -> R.id.nav_pages
         VIEW_COURSES -> R.id.nav_courses
-        VIEW_YOUTUBE -> R.id.nav_blog  // YouTube unter "Mehr", zeige Blog-Tab
+        VIEW_YOUTUBE -> R.id.nav_blog
         else -> R.id.nav_blog
     }
 
@@ -113,13 +93,13 @@ class MainActivity : BaseBottomNavActivity() {
 
         loadThemePreference()
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
 
             binding.bottomNavigation.setPadding(0, 0, 0, systemBars.bottom)
 
@@ -143,7 +123,7 @@ class MainActivity : BaseBottomNavActivity() {
                     totalBottomPadding
                 )
 
-                // Pages Menu - Padding auf LinearLayout INNERHALB des ScrollView
+                // Pages Menu
                 findViewById<View>(R.id.pagesMenu)?.let { scrollView ->
                     val linearLayout = (scrollView as? android.widget.ScrollView)?.getChildAt(0)
                     linearLayout?.setPadding(
@@ -154,7 +134,7 @@ class MainActivity : BaseBottomNavActivity() {
                     )
                 }
 
-                // Courses Menu - Padding auf LinearLayout INNERHALB des ScrollView
+                // Courses Menu
                 findViewById<View>(R.id.coursesMenu)?.let { scrollView ->
                     val linearLayout = (scrollView as? android.widget.ScrollView)?.getChildAt(0)
                     linearLayout?.setPadding(
@@ -185,7 +165,6 @@ class MainActivity : BaseBottomNavActivity() {
         setupPagesMenu()
         setupCoursesMenu()
 
-        // Initialen View NACH dem Setup setzen
         val initialView = intent.getIntExtra("INITIAL_VIEW", VIEW_BLOG)
         when (initialView) {
             VIEW_BLOG -> showBlogView()
@@ -206,7 +185,6 @@ class MainActivity : BaseBottomNavActivity() {
         requestNotificationPermission()
     }
 
-
     private fun Int.dpToPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
     }
@@ -223,7 +201,6 @@ class MainActivity : BaseBottomNavActivity() {
     }
 
     private fun setupButtons() {
-        // Bottom Navigation wird von BaseBottomNavActivity gehandhabt
         super.setupBottomNavigation()
 
         binding.btnLoadMore.setOnClickListener {
@@ -440,16 +417,10 @@ class MainActivity : BaseBottomNavActivity() {
     }
 
     private fun setupCoursesMenu() {
-        // Hauptseite & Verzeichnis
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCoursesMain)?.setOnClickListener {
             openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", "Onlinekurse Hundeschule")
         }
 
-        //binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCoursesDirectory)?.setOnClickListener {
-        //    openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/", "Kursverzeichnis")
-        //}
-
-        // Kurse
         binding.root.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCourse01)?.setOnClickListener {
             openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-01-grundlagen/", "01 Grundlagen")
         }
@@ -777,8 +748,8 @@ class MainActivity : BaseBottomNavActivity() {
             val dialog = AlertDialog.Builder(this)
                 .setTitle("Hinweis")
                 .setMessage(
-                    "Du wirst zu unserem Kanal auf YouTube weitergeleitet." +
-                            "Dabei werden Daten an Google übertragen (z.B. deine IP-Adresse)." +
+                    "Du wirst zu unserem Kanal auf YouTube weitergeleitet. " +
+                            "Dabei werden Daten an Google übertragen (z.B. deine IP-Adresse). " +
                             "Weitere Informationen findest du in der Datenschutzerklärung von YouTube.\n\n" +
                             "Pro-Tipp: auf dem Smartphone und Tablet empfiehlt sich immer die Nutzung eines vertrauenswürdigen VPN-Dienstes zum Schutz Deiner Daten und Deiner Privatsphäre\n\n" +
                             "Möchtest du fortfahren? Die App merkt sich Deine Entscheidung."
@@ -796,6 +767,7 @@ class MainActivity : BaseBottomNavActivity() {
 
             dialog.show()
 
+            // ✅ Button-Farben für Dark Mode
             val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                     Configuration.UI_MODE_NIGHT_YES
 
@@ -841,6 +813,7 @@ class MainActivity : BaseBottomNavActivity() {
         startActivity(intent)
     }
 
+    // ✅ BEREINIGT: Ohne SearchView
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
@@ -856,24 +829,11 @@ class MainActivity : BaseBottomNavActivity() {
             item.title = spanString
         }
 
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filterContent(newText ?: "")
-                return true
-            }
-        })
-
         return true
     }
 
+    // ✅ BEREINIGT: Ohne action_test_update
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d("MainActivity", "Menu geklickt: ${item.itemId} / ${item.title}")
-
         return when (item.itemId) {
             R.id.action_refresh -> {
                 contentCache.clearCache()
@@ -881,16 +841,11 @@ class MainActivity : BaseBottomNavActivity() {
                 true
             }
             R.id.action_theme -> {
-                Log.d("MainActivity", "Theme button clicked!")
                 toggleTheme()
                 true
             }
             R.id.action_settings -> {
                 showSettingsDialog()
-                true
-            }
-            R.id.action_test_update -> {
-                testBackgroundUpdate()
                 true
             }
             R.id.action_privacy -> {
@@ -910,23 +865,6 @@ class MainActivity : BaseBottomNavActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun testBackgroundUpdate() {
-        Toast.makeText(this, "Starte Test-Update in 10 Sekunden...", Toast.LENGTH_LONG).show()
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val testRequest = OneTimeWorkRequestBuilder<ContentUpdateWorker>()
-            .setConstraints(constraints)
-            .setInitialDelay(10, TimeUnit.SECONDS)
-            .build()
-
-        WorkManager.getInstance(applicationContext).enqueue(testRequest)
-
-        Log.d("MainActivity", "🧪 Test-Update gestartet - Check Logcat in 10s")
     }
 
     private fun showSettingsDialog() {
@@ -996,8 +934,8 @@ class MainActivity : BaseBottomNavActivity() {
 
         dialog.show()
 
+        // ✅ Button-Farben für Dark Mode
         val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
-
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
     }
 
@@ -1011,42 +949,6 @@ class MainActivity : BaseBottomNavActivity() {
 
     private fun openImprint() {
         val intent = Intent(this, ImprintActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun filterContent(query: String) {
-        when (currentView) {
-            VIEW_BLOG -> {
-                val filtered = if (query.isEmpty()) {
-                    allBlogPosts.take(blogAdapter.itemCount)
-                } else {
-                    allBlogPosts.filter { item ->
-                        item.title.contains(query, ignoreCase = true) ||
-                                item.excerpt.contains(query, ignoreCase = true)
-                    }
-                }
-                blogAdapter.submitList(filtered)
-            }
-        }
-    }
-
-    private fun openWeather() {
-        val intent = Intent(this, WeatherActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun openCompass() {
-        val intent = Intent(this, CompassActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun openLocation() {
-        val intent = Intent(this, LocationActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun openAltimeter() {
-        val intent = Intent(this, AltimeterActivity::class.java)
         startActivity(intent)
     }
 
@@ -1149,8 +1051,7 @@ class MainActivity : BaseBottomNavActivity() {
                         .setTitle("Benachrichtigungen aktivieren?")
                         .setMessage(
                             "HundeWildnis kann dich benachrichtigen, wenn neue Inhalte verfügbar sind:\n\n" +
-                                    "• Neue Blogbeiträge\n" +
-                                    "• Neue Videos\n\n" +
+                                    "• Neue Blogbeiträge\n\n" +
                                     "Die App prüft zweimal täglich (8 Uhr morgens & 20 Uhr abends) auf neue Inhalte.\n\n" +
                                     "Du kannst das jederzeit in den Einstellungen ändern."
                         )
@@ -1169,6 +1070,7 @@ class MainActivity : BaseBottomNavActivity() {
 
                     dialog.show()
 
+                    // ✅ Button-Farben für Dark Mode
                     val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                             Configuration.UI_MODE_NIGHT_YES
 
@@ -1187,4 +1089,3 @@ class MainActivity : BaseBottomNavActivity() {
         }
     }
 }
-

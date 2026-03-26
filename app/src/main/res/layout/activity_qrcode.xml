@@ -39,9 +39,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scannen zum Anzeigen der Stammdaten"
+            android:text="Scannen zum Anzeigen der Stammdaten."
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="#000000"
             android:textAlignment="center"
             android:layout_marginBottom="24dp" />
 
@@ -90,9 +90,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="💡 Tipp: QR-Code speichern oder per WhatsApp/E-Mail teilen"
+            android:text="💡 Bitte prüfe, mit wem Du Deine vertraulichen Daten teilst."
             android:textSize="12sp"
-            android:textColor="#999999"
+            android:textColor="#000000"
             android:textAlignment="center"
             android:layout_marginTop="16dp"
             android:paddingStart="32dp"
