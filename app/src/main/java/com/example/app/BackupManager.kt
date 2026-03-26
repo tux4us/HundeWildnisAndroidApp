@@ -17,15 +17,15 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 object BackupManager {
-    
+
     private const val BACKUP_EXTENSION = ".hundebackup"
     private const val BACKUP_DIR = "HundeWildnis_Backups"
     private const val METADATA_FILE = "metadata.json"
     private const val DATA_FILE = "backup_data.json"
     private const val PHOTOS_DIR = "photos"
-    
+
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
-    
+
     /**
      * Erstellt ein komplettes Backup aller App-Daten
      */
@@ -33,26 +33,26 @@ object BackupManager {
         val timestamp = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
         val fileName = "HundeWildnis_Backup_${dateFormat.format(Date(timestamp))}$BACKUP_EXTENSION"
-        
+
         // Backup-Verzeichnis erstellen
         val backupDir = File(context.cacheDir, "backup_temp")
         if (backupDir.exists()) {
             backupDir.deleteRecursively()
         }
         backupDir.mkdirs()
-        
+
         // Fotos-Verzeichnis
         val photosDir = File(backupDir, PHOTOS_DIR)
         photosDir.mkdirs()
-        
+
         // 1. Sammle alle Daten
         val dogs = DogProfileManager.getAllProfiles(context)
         val settings = collectSettings(context)
         val notes = collectNotes(context)
-        
+
         // 2. Kopiere Fotos und erstelle Mapping
         val photoMapping = mutableMapOf<String, String>()
-        
+
         dogs.forEachIndexed { index, dog ->
             if (dog.photoUri.isNotEmpty()) {
                 try {
@@ -65,7 +65,7 @@ object BackupManager {
                 }
             }
         }
-        
+
         // Notizen-Fotos (falls vorhanden)
         notes?.forEachIndexed { noteIndex, note ->
             note.photoUris.forEachIndexed { photoIndex, uriString ->
@@ -79,7 +79,7 @@ object BackupManager {
                 }
             }
         }
-        
+
         // 3. Erstelle Backup-Daten
         val backupData = BackupData(
             version = getAppVersion(context),
@@ -90,7 +90,7 @@ object BackupManager {
             notes = notes,
             photoMapping = photoMapping
         )
-        
+
         // 4. Erstelle Metadaten
         val metadata = BackupMetadata(
             appVersion = getAppVersion(context),
@@ -103,21 +103,21 @@ object BackupManager {
                 notes = notes?.size ?: 0
             )
         )
-        
+
         // 5. Schreibe JSON-Dateien
         File(backupDir, METADATA_FILE).writeText(gson.toJson(metadata))
         File(backupDir, DATA_FILE).writeText(gson.toJson(backupData))
-        
+
         // 6. Erstelle ZIP-Datei
         val outputFile = File(getBackupDirectory(context), fileName)
         zipDirectory(backupDir, outputFile)
-        
+
         // 7. Aufräumen
         backupDir.deleteRecursively()
-        
+
         return outputFile
     }
-    
+
     /**
      * Stellt ein Backup wieder her
      */
@@ -129,28 +129,28 @@ object BackupManager {
                 tempDir.deleteRecursively()
             }
             tempDir.mkdirs()
-            
+
             // 2. ZIP entpacken
             unzipFile(backupFile, tempDir)
-            
+
             // 3. Metadaten lesen
             val metadataFile = File(tempDir, METADATA_FILE)
             if (!metadataFile.exists()) {
                 throw Exception("Ungültiges Backup: Metadaten fehlen")
             }
-            
+
             // 4. Backup-Daten lesen
             val dataFile = File(tempDir, DATA_FILE)
             if (!dataFile.exists()) {
                 throw Exception("Ungültiges Backup: Daten fehlen")
             }
-            
+
             val backupData = gson.fromJson(dataFile.readText(), BackupData::class.java)
-            
+
             // 5. Fotos wiederherstellen
             val restoredPhotoMapping = mutableMapOf<String, String>()
             val photosDir = File(tempDir, PHOTOS_DIR)
-            
+
             if (photosDir.exists()) {
                 backupData.photoMapping.forEach { (originalUri, backupPath) ->
                     val sourceFile = File(tempDir, backupPath)
@@ -159,7 +159,7 @@ object BackupManager {
                         val destFile = File(context.filesDir, "photos/${sourceFile.name}")
                         destFile.parentFile?.mkdirs()
                         sourceFile.copyTo(destFile, overwrite = true)
-                        
+
                         // Erstelle Content-URI
                         val newUri = androidx.core.content.FileProvider.getUriForFile(
                             context,
@@ -170,7 +170,7 @@ object BackupManager {
                     }
                 }
             }
-            
+
             // 6. Hunde-Profile wiederherstellen
             backupData.dogs.forEach { dog ->
                 val restoredDog = if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri)) {
@@ -180,10 +180,10 @@ object BackupManager {
                 }
                 DogProfileManager.saveProfile(context, restoredDog)
             }
-            
+
             // 7. Einstellungen wiederherstellen
             restoreSettings(context, backupData.settings)
-            
+
             // 8. Notizen wiederherstellen (falls vorhanden)
             backupData.notes?.forEach { note ->
                 val restoredPhotoUris = note.photoUris.map { uri ->
@@ -191,46 +191,46 @@ object BackupManager {
                 }
                 restoreNote(context, note.copy(photoUris = restoredPhotoUris))
             }
-            
+
             // 9. Aufräumen
             tempDir.deleteRecursively()
-            
+
             true
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
     }
-    
+
     /**
      * Sammelt alle App-Einstellungen
      */
     private fun collectSettings(context: Context): Map<String, String> {
         val settings = mutableMapOf<String, String>()
-        
+
         // Theme-Einstellungen
         val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
         settings["is_dark_mode"] = themePrefs.getBoolean("is_dark_mode", false).toString()
-        
+
         // App-Einstellungen
         val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
         settings["background_updates_enabled"] = appPrefs.getBoolean("background_updates_enabled", true).toString()
         settings["background_updates_wifi_only"] = appPrefs.getBoolean("background_updates_wifi_only", false).toString()
         settings["notifications_enabled"] = appPrefs.getBoolean("notifications_enabled", true).toString()
-        
+
         return settings
     }
-    
+
     /**
      * Stellt Einstellungen wieder her
      */
     private fun restoreSettings(context: Context, settings: Map<String, String>) {
         // Theme
         val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        settings["is_dark_mode"]?.let { 
+        settings["is_dark_mode"]?.let {
             themePrefs.edit().putBoolean("is_dark_mode", it.toBoolean()).apply()
         }
-        
+
         // App-Einstellungen
         val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
         settings["background_updates_enabled"]?.let {
@@ -243,7 +243,7 @@ object BackupManager {
             appPrefs.edit().putBoolean("notifications_enabled", it.toBoolean()).apply()
         }
     }
-    
+
     /**
      * Sammelt Tagesnotizen (falls vorhanden)
      */
@@ -251,14 +251,14 @@ object BackupManager {
         // TODO: Implementiere, falls DailyNotesActivity Daten speichert
         return null
     }
-    
+
     /**
      * Stellt eine Notiz wieder her
      */
     private fun restoreNote(context: Context, note: DailyNoteData) {
         // TODO: Implementiere, falls DailyNotesActivity Daten speichert
     }
-    
+
     /**
      * Kopiert URI zu Datei
      */
@@ -269,7 +269,7 @@ object BackupManager {
             }
         }
     }
-    
+
     /**
      * ZIP-Verzeichnis erstellen
      */
@@ -288,7 +288,7 @@ object BackupManager {
             }
         }
     }
-    
+
     /**
      * ZIP-Datei entpacken
      */
@@ -309,20 +309,19 @@ object BackupManager {
             }
         }
     }
-    
+
     /**
      * Backup-Verzeichnis ermitteln
+     * ✅ Speichert im öffentlichen Downloads-Ordner des Nutzers!
      */
     private fun getBackupDirectory(context: Context): File {
-        val dir = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), BACKUP_DIR)
-        } else {
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), BACKUP_DIR)
-        }
+        // Öffentlicher Downloads-Ordner (für ALLE Android-Versionen)
+        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val dir = File(downloadsDir, BACKUP_DIR)
         dir.mkdirs()
         return dir
     }
-    
+
     /**
      * App-Version ermitteln
      */
