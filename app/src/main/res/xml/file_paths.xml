@@ -24,4 +24,12 @@
         name="documents"
         path="Documents/" />
 
+    <!-- ✅ NEU: Backup-Dateien --><external-files-path
+    name="backups"
+    path="Documents/HundeWildnis_Backups/" />
+    <!-- ✅ NEU: Wiederhergestellte Fotos -->
+    <files-path
+        name="restored_photos"
+        path="photos/" />
+
 </paths>

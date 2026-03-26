@@ -79,7 +79,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💳 PayPal"
+                        android:text="📲 PayPal"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
@@ -161,7 +161,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📲 Sicherer Zahlungslink"
+                        android:text="💳 Sicherer Zahlungslink"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />

@@ -44,9 +44,9 @@ class SupportActivity : SecureBaseActivity() {
             showBankDetails()
         }
 
-        // Sumup
+        // ✅ Sumup - Info-Dialog statt direktem Link
         binding.btnPatreon.setOnClickListener {
-            openUrl("https://pay.sumup.com/b2c/QMA56J4J")
+            showSumUpInfo()
         }
 
         // App bewerten
@@ -71,7 +71,7 @@ class SupportActivity : SecureBaseActivity() {
 
     private fun showBankDetails() {
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("💳 Banküberweisung")
+            .setTitle("\uD83C\uDFDB \uD83D\uDCF2 Banküberweisung")
             .setMessage("""
                 IBAN: DE10 8505 0300 3022 0011 68
                 BIC: OSDDDE81XXX
@@ -87,6 +87,47 @@ class SupportActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
+
+        // ✅ Button-Farben für Dark Mode
+        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+    }
+
+    // ✅ NEU: SumUp Info-Dialog
+    private fun showSumUpInfo() {
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("\uD83D\uDCB3 Sichere Zahlung via SumUp")
+            .setMessage("""
+                Du wirst zu unserem sicheren Zahlungsdienstleister SumUp weitergeleitet.
+                
+                Dort kannst du bequem zahlen mit:
+                • Google Pay
+                • Kreditkarte (Visa, Mastercard)
+                • Debitkarte
+                
+                Deine Zahlungsdaten werden sicher verschlüsselt und NICHT von uns gespeichert.
+                
+                Möchtest du fortfahren?
+            """.trimIndent())
+            .setPositiveButton("Ja, zu SumUp") { _, _ ->
+                openUrl("https://pay.sumup.com/b2c/QMA56J4J")
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+
+        dialog.show()
+
+        // ✅ Button-Farben für Dark Mode
+        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun copyToClipboard(text: String, label: String) {

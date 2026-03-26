@@ -1,5 +1,6 @@
 package com.hundewildnis.app
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -8,20 +9,46 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import android.content.res.Configuration
-import com.hundewildnis.app.ContentActivity
-import com.hundewildnis.app.R
+import androidx.core.content.FileProvider
 import com.hundewildnis.app.databinding.ActivityStartBinding
+import kotlinx.coroutines.*
+import java.io.File
 
 /**
  * StartActivity - Hauptstartseite der App
- * Zeigt 8 große Buttons für tägliche Aktivitäten
+ * Zeigt 11 große Buttons für tägliche Aktivitäten
+ * Backup & Restore über Button UND Menü verfügbar
  */
 class StartActivity : BaseBottomNavActivity() {
 
     private lateinit var binding: ActivityStartBinding
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
+
+    // Datei-Picker für Backup-Import (für Menü-Funktion)
+    private val pickBackupFile = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                val tempFile = File(cacheDir, "temp_backup.hundebackup")
+                try {
+                    contentResolver.openInputStream(uri)?.use { input ->
+                        tempFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    confirmRestore(tempFile)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Fehler beim Lesen: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     // BaseBottomNavActivity - Abstract Methoden
     override fun getBottomNavigationView() = binding.bottomNavigation
@@ -76,6 +103,16 @@ class StartActivity : BaseBottomNavActivity() {
             }
             R.id.action_settings -> {
                 showSettingsDialog()
+                true
+            }
+            // ✅ NEU: BACKUP ERSTELLEN
+            R.id.action_backup_create -> {
+                createBackup()
+                true
+            }
+            // ✅ NEU: BACKUP IMPORTIEREN
+            R.id.action_backup_restore -> {
+                selectBackupFile()
                 true
             }
             R.id.action_privacy -> {
@@ -185,12 +222,12 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun setupButtons() {
-        // ✅ NEU: Unterstützung
+        // Button 1: Unterstützung
         binding.btnSupport.setOnClickListener {
             startActivity(Intent(this, SupportActivity::class.java))
         }
 
-        // Button 1: Übung des Tages
+        // Button 2: Übung des Tages
         binding.btnDailyExercise.setOnClickListener {
             openWebView(
                 url = "https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-des-tages/",
@@ -198,7 +235,7 @@ class StartActivity : BaseBottomNavActivity() {
             )
         }
 
-        // Button 2: Tagesmeditation
+        // Button 3: Tagesmeditation
         binding.btnDailyMeditation.setOnClickListener {
             openWebView(
                 url = "https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/tagesmeditation/",
@@ -206,40 +243,246 @@ class StartActivity : BaseBottomNavActivity() {
             )
         }
 
-        // Button 3: Geh-Geschwindigkeit
+        // Button 4: Geh-Geschwindigkeit
         binding.btnWalkingSpeed.setOnClickListener {
             startActivity(Intent(this, WalkingSpeedActivity::class.java))
         }
 
-        // Button 4: Tagesnotizen
+        // Button 5: Tagesnotizen
         binding.btnDailyNotes.setOnClickListener {
             startActivity(Intent(this, DailyNotesActivity::class.java))
         }
 
-        // NEU: Button 5: Wetter
+        // Button 6: Wetter
         binding.btnWeather.setOnClickListener {
             startActivity(Intent(this, WeatherActivity::class.java))
         }
 
-        // NEU: Button 6: Standort
+        // Button 7: Standort
         binding.btnLocation.setOnClickListener {
             startActivity(Intent(this, LocationActivity::class.java))
         }
 
-        // NEU: Button 7: Kompass
+        // Button 8: Kompass
         binding.btnCompass.setOnClickListener {
             startActivity(Intent(this, CompassActivity::class.java))
         }
 
-        // NEU: Button 8: Höhenmesser
+        // Button 9: Höhenmesser
         binding.btnAltimeter.setOnClickListener {
             startActivity(Intent(this, AltimeterActivity::class.java))
         }
 
-        // ✅ Hunde-Stammdaten
+        // Button 10: Hunde-Stammdaten
         binding.btnDogProfiles.setOnClickListener {
-            startActivity(Intent(this, DogProfileActivity::class.java)) }
+            startActivity(Intent(this, DogProfileActivity::class.java))
         }
+
+        // Button 11: Backup & Restore
+        binding.btnBackup.setOnClickListener {
+            startActivity(Intent(this, BackupActivity::class.java))
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // BACKUP-FUNKTIONEN (FÜR MENÜ)
+    // ═══════════════════════════════════════════════════════════════
+
+    private fun createBackup() {
+        val progressDialog = AlertDialog.Builder(this)
+            .setTitle("Backup erstellen")
+            .setMessage("Bitte warten...")
+            .setCancelable(false)
+            .create()
+
+        progressDialog.show()
+
+        scope.launch {
+            try {
+                val backupFile = withContext(Dispatchers.IO) {
+                    BackupManager.createBackup(this@StartActivity)
+                }
+
+                progressDialog.dismiss()
+
+                Toast.makeText(
+                    this@StartActivity,
+                    "✅ Backup gespeichert: ${backupFile.name}",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                offerShare(backupFile)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                progressDialog.dismiss()
+
+                Toast.makeText(
+                    this@StartActivity,
+                    "❌ Backup-Fehler: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun selectBackupFile() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "*/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf(
+                "application/zip",
+                "application/octet-stream",
+                "*/*"
+            ))
+        }
+        pickBackupFile.launch(intent)
+    }
+
+    private fun confirmRestore(backupFile: File) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("⚠️ Backup wiederherstellen?")
+            .setMessage(
+                "ACHTUNG: Alle aktuellen Daten werden überschrieben!\n\n" +
+                        "Dies umfasst:\n" +
+                        "• Hunde-Stammdaten\n" +
+                        "• Tagesnotizen und Fotos\n" +
+                        "• Einstellungen\n\n" +
+                        "Möchtest du fortfahren?"
+            )
+            .setPositiveButton("Ja, wiederherstellen") { _, _ ->
+                restoreBackup(backupFile)
+            }
+            .setNegativeButton("Abbrechen") { _, _ ->
+                backupFile.delete()
+            }
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+
+        // ✅ Button-Farben für Dark Mode
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+
+        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+    }
+
+    private fun restoreBackup(backupFile: File) {
+        val progressDialog = AlertDialog.Builder(this)
+            .setTitle("Backup wiederherstellen")
+            .setMessage("Bitte warten...")
+            .setCancelable(false)
+            .create()
+
+        progressDialog.show()
+
+        scope.launch {
+            try {
+                val success = withContext(Dispatchers.IO) {
+                    BackupManager.restoreBackup(this@StartActivity, backupFile)
+                }
+
+                backupFile.delete()
+                progressDialog.dismiss()
+
+                if (success) {
+                    val successDialog = AlertDialog.Builder(this@StartActivity)
+                        .setTitle("✅ Backup wiederhergestellt")
+                        .setMessage("Die App wird jetzt neu gestartet.")
+                        .setPositiveButton("OK") { _, _ ->
+                            restartApp()
+                        }
+                        .setCancelable(false)
+                        .create()
+
+                    successDialog.show()
+
+                    // ✅ Button-Farben für Dark Mode
+                    val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                            Configuration.UI_MODE_NIGHT_YES
+
+                    val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+                    successDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+                } else {
+                    Toast.makeText(
+                        this@StartActivity,
+                        "❌ Backup konnte nicht wiederhergestellt werden",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                backupFile.delete()
+                progressDialog.dismiss()
+
+                Toast.makeText(
+                    this@StartActivity,
+                    "❌ Restore-Fehler: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun offerShare(backupFile: File) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Backup teilen?")
+            .setMessage("Möchtest du das Backup auf ein anderes Gerät übertragen?")
+            .setPositiveButton("Teilen") { _, _ ->
+                shareBackupFile(backupFile)
+            }
+            .setNegativeButton("Später") { _, _ ->
+                Toast.makeText(
+                    this,
+                    "Backup unter:\n${backupFile.absolutePath}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .create()
+
+        dialog.show()
+
+        // ✅ Button-Farben für Dark Mode
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+
+        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+    }
+
+    private fun shareBackupFile(backupFile: File) {
+        try {
+            val uri = FileProvider.getUriForFile(
+                this,
+                "${packageName}.fileprovider",
+                backupFile
+            )
+
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "application/octet-stream"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, "HundeWildnis Backup")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            startActivity(Intent.createChooser(intent, "Backup teilen"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Teilen fehlgeschlagen", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun restartApp() {
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
+        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finishAffinity()
+    }
 
     private fun openWebView(url: String, title: String) {
         val intent = Intent(this, ContentActivity::class.java).apply {
@@ -247,5 +490,10 @@ class StartActivity : BaseBottomNavActivity() {
             putExtra("title", title)
         }
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
 }

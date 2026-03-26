@@ -76,7 +76,7 @@
                     android:id="@+id/radioSpeed25"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tempo Geländetraining"
+                    android:text="Wege- und Geländetraining"
                     android:textSize="16sp"
                     android:padding="8dp" />
 
@@ -84,7 +84,7 @@
                     android:id="@+id/radioSpeed30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tempo Strassentraining"
+                    android:text="Alltags- und Strassentraining"
                     android:textSize="16sp"
                     android:padding="8dp"
                     android:checked="true" />
@@ -93,7 +93,7 @@
                     android:id="@+id/radioSpeed40"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tempo Alltagstraining"
+                    android:text="Wandertraining"
                     android:textSize="16sp"
                     android:padding="8dp" />
             </RadioGroup>
