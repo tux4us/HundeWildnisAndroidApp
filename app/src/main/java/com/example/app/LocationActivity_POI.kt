@@ -46,6 +46,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var isFirstLocation = true
 
     private val poiList = mutableListOf<POI>()
+
+    // ✅ NEU: Liste für POI-Marker
+    private val poiMarkers = mutableListOf<Marker>()
+
     private var currentPOIMarker: Marker? = null
     private var currentRoutePolyline: Polyline? = null
     private var userLocationMarker: Marker? = null
@@ -85,6 +89,24 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
         binding.mapView.controller.setZoom(15.0)
+
+        // ✅ FIX: MapEventsOverlay für zuverlässiges Touch-Handling
+        val mapEventsReceiver = object : org.osmdroid.events.MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
+                // Bei jedem Tap auf die Karte → Info-Fenster schließen
+                poiMarkers.forEach { marker ->
+                    marker.closeInfoWindow()
+                }
+                return false // Event nicht consumed, damit Map weiter funktioniert
+            }
+
+            override fun longPressHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
+                return false
+            }
+        }
+
+        val mapEventsOverlay = org.osmdroid.views.overlay.MapEventsOverlay(mapEventsReceiver)
+        binding.mapView.overlays.add(0, mapEventsOverlay)  // Als erstes Overlay hinzufügen
     }
 
     private fun setupPOIList() {
@@ -95,6 +117,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun setupButtons() {
+        styleBackButton()  // ✅ FIX 2: Dark Mode Styling
+
         binding.btnCurrentLocation.setOnClickListener {
             if (isNavigating) {
                 stopNavigation()
@@ -109,6 +133,55 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         binding.btnBackToCategories.setOnClickListener {
             showCategoryView()
+        }
+    }
+
+    // ✅ FIX 2: Zurück-Button Dark Mode Styling
+    // ✅ KORRIGIERTE VERSION - Ersetze die styleBackButton() Funktion in LocationActivity.kt
+    // ✅ FINALE KORRIGIERTE VERSION - Ersetze styleBackButton() in LocationActivity.kt
+    // ════════════════════════════════════════════════════════════════
+    // FIX 2: styleBackButton() - Größer + heller im Dark Mode
+    // ════════════════════════════════════════════════════════════════
+
+    private fun styleBackButton() {
+        val isDarkTheme = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        if (isDarkTheme) {
+            // Dark Mode: Heller + größer
+            binding.btnBackToCategories.apply {
+                text = "← Zurück"
+                textSize = 16f
+                setTextColor(android.graphics.Color.WHITE)
+                setBackgroundColor(android.graphics.Color.parseColor("#5a8038"))
+
+                // ✅ FIX: DP in Pixel umrechnen!
+                val heightInPixels = (56 * resources.displayMetrics.density).toInt()
+                layoutParams = layoutParams.apply {
+                    width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    height = heightInPixels
+                }
+
+                // ✅ FIX: Padding damit Text nicht abgeschnitten wird
+                setPadding(24, 12, 24, 12)
+            }
+        } else {
+            // Light Mode: Standard
+            binding.btnBackToCategories.apply {
+                text = "← Zurück"
+                textSize = 16f
+                setTextColor(android.graphics.Color.WHITE)
+                setBackgroundColor(android.graphics.Color.parseColor("#2d5016"))
+
+                val heightInPixels = (56 * resources.displayMetrics.density).toInt()
+                layoutParams = layoutParams.apply {
+                    width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    height = heightInPixels
+                }
+
+                setPadding(24, 12, 24, 12)
+            }
         }
     }
 
@@ -176,6 +249,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                         binding.emptyPoiText.visibility = View.GONE
                     }
 
+                    // ✅ NEU: POIs auf Karte anzeigen
+                    showPOIsOnMap(sortedPOIs, category)
+
                 } catch (e: Exception) {
                     binding.poiProgressBar.visibility = View.GONE
                     Toast.makeText(this@LocationActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
@@ -186,7 +262,118 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    // ✅ ERWEITERT: Sucht node, way UND relation
+    // ✅ NEU: Zeigt alle POIs einer Kategorie als Marker auf der Karte
+    // ════════════════════════════════════════════════════════════════
+    // FIX 1: showPOIsOnMap() - Zweiter Klick startet Navigation
+    // ════════════════════════════════════════════════════════════════
+
+    private fun showPOIsOnMap(pois: List<POI>, category: POICategories.Category) {
+        clearPOIMarkers()
+
+        pois.forEach { poi ->
+            val marker = Marker(binding.mapView).apply {
+                position = GeoPoint(poi.lat, poi.lon)
+                title = poi.name
+                snippet = "${formatDistance(poi.distance)} • ${poi.direction}"
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+                // ✅ FIX 1: Erster Klick = Info, Zweiter Klick = Navigation
+                var clickCount = 0
+                setOnMarkerClickListener { clickedMarker, _ ->
+                    clickCount++
+
+                    if (clickCount == 1) {
+                        // Erster Klick: Alle anderen schließen, dieses öffnen
+                        poiMarkers.forEach { it.closeInfoWindow() }
+                        clickedMarker.showInfoWindow()
+                    } else {
+                        // Zweiter Klick: Navigation starten
+                        clickCount = 0  // Reset für nächstes Mal
+                        startNavigationToPOI(poi)
+                    }
+
+                    true // Event consumed
+                }
+            }
+
+            poiMarkers.add(marker)
+            binding.mapView.overlays.add(marker)
+        }
+
+        binding.mapView.invalidate()
+
+        if (pois.isNotEmpty()) {
+            zoomToShowAllPOIs(pois)
+        }
+    }
+
+    // ✅ NEU: Startet Navigation zu einem POI
+    private fun startNavigationToPOI(poi: POI) {
+        showPOIOnMap(poi)
+    }
+
+    // ✅ NEU: Zoomt Karte so dass alle POIs + User-Position sichtbar sind
+    private fun zoomToShowAllPOIs(pois: List<POI>) {
+        if (pois.isEmpty()) return
+
+        val allPoints = mutableListOf<GeoPoint>()
+
+        // User-Position hinzufügen
+        currentLocation?.let {
+            allPoints.add(GeoPoint(it.latitude, it.longitude))
+        }
+
+        // Alle POI-Positionen hinzufügen
+        pois.forEach { poi ->
+            allPoints.add(GeoPoint(poi.lat, poi.lon))
+        }
+
+        if (allPoints.isEmpty()) return
+
+        // Bounding Box berechnen
+        var minLat = allPoints[0].latitude
+        var maxLat = allPoints[0].latitude
+        var minLon = allPoints[0].longitude
+        var maxLon = allPoints[0].longitude
+
+        allPoints.forEach { point ->
+            minLat = minOf(minLat, point.latitude)
+            maxLat = maxOf(maxLat, point.latitude)
+            minLon = minOf(minLon, point.longitude)
+            maxLon = maxOf(maxLon, point.longitude)
+        }
+
+        // Zentrum berechnen
+        val centerLat = (minLat + maxLat) / 2
+        val centerLon = (minLon + maxLon) / 2
+        val center = GeoPoint(centerLat, centerLon)
+
+        // Zoom-Level berechnen (je größer die Box, desto weiter rauszoomen)
+        val latDiff = maxLat - minLat
+        val lonDiff = maxLon - minLon
+        val maxDiff = maxOf(latDiff, lonDiff)
+
+        val zoomLevel = when {
+            maxDiff > 0.1 -> 12.0  // > 10 km
+            maxDiff > 0.05 -> 13.0 // 5-10 km
+            maxDiff > 0.02 -> 14.0 // 2-5 km
+            maxDiff > 0.01 -> 15.0 // 1-2 km
+            else -> 16.0           // < 1 km
+        }
+
+        binding.mapView.controller.setCenter(center)
+        binding.mapView.controller.setZoom(zoomLevel)
+    }
+
+    // ✅ NEU: Entfernt alle POI-Marker von der Karte
+    private fun clearPOIMarkers() {
+        poiMarkers.forEach { marker ->
+            binding.mapView.overlays.remove(marker)
+        }
+        poiMarkers.clear()
+        binding.mapView.invalidate()
+    }
+
     private suspend fun fetchPOIsForCategory(
         lat: Double,
         lon: Double,
@@ -297,7 +484,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         )
     }
 
-    // ✅ NEU: Way/Relation verarbeiten
     private fun createPOIFromWayOrRelation(
         element: JSONObject,
         allElements: JSONArray,
@@ -409,6 +595,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.poiListView.visibility = View.GONE
         poiList.clear()
         binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+
+        // ✅ NEU: Marker entfernen
+        clearPOIMarkers()
+
         stopNavigation()
     }
 

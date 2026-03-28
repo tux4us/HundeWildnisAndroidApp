@@ -49,6 +49,18 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_instructions"
+        android:title="📖 Anleitung zur Nutzung"
+        android:icon="@android:drawable/ic_menu_help"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_permissions"
+        android:title="🛡️ Berechtigungen der App"
+        android:icon="@android:drawable/ic_menu_info_details"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_privacy"
         android:title="📜 Datenschutzerklärung"
         android:icon="@android:drawable/ic_menu_info_details"
@@ -57,6 +69,12 @@
     <item
         android:id="@+id/action_imprint"
         android:title="📎 Impressum"
+        android:icon="@android:drawable/ic_menu_info_details"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_about"
+        android:title="ℹ️ Über die App"
         android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="never" />
 

@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:id="@+id/dogCard">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,122 +15,134 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Header mit Foto, Name, Rasse -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_marginBottom="16dp">
 
+            <!-- Foto -->
             <ImageView
                 android:id="@+id/ivPhoto"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_dog_placeholder"
-                android:contentDescription="Hundefoto" />
+                android:contentDescription="Hundefoto"
+                android:background="@drawable/ic_dog_placeholder"
+                app:cornerRadius="12dp" />
 
+            <!-- Name & Info -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginStart="16dp">
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bello"
+                    android:text="Name"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/tvBreed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Labrador"
-                    android:textSize="14sp"
-                    android:textColor="#666666" />
+                    android:text="Rasse"
+                    android:textSize="16sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:layout_marginTop="4dp" />
 
                 <TextView
                     android:id="@+id/tvInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rüde • 2020"
-                    android:textSize="12sp"
-                    android:textColor="#999999"
+                    android:text="Info"
+                    android:textSize="14sp"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="4dp" />
-
             </LinearLayout>
-
         </LinearLayout>
 
+        <!-- ✅ FIX: Größere Buttons in Grid-Layout (2 Spalten) -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:layout_marginTop="16dp">
+            android:columnCount="2"
+            android:rowCount="3"
+            android:alignmentMode="alignBounds"
+            android:columnOrderPreserved="false">
 
+            <!-- Row 1 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnView"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_columnWeight="1"
+                android:layout_margin="4dp"
                 android:text="👁 Anzeigen"
-                android:textSize="11sp"
-                android:layout_margin="4dp" />
+                android:textSize="14sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_columnWeight="1"
+                android:layout_margin="4dp"
                 android:text="✏️ Bearbeiten"
-                android:textSize="11sp"
-                android:layout_margin="4dp" />
+                android:textSize="14sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDelete"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:text="🗑 Löschen"
-                android:textSize="11sp"
-                android:layout_margin="4dp" />
-
+            <!-- Row 2 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnQR"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_columnWeight="1"
-                android:text="📱 QR"
-                android:textSize="11sp"
-                android:layout_margin="4dp" />
+                android:layout_margin="4dp"
+                android:text="📱 QR-Code"
+                android:textSize="14sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPDF"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_columnWeight="1"
+                android:layout_margin="4dp"
                 android:text="📄 PDF"
-                android:textSize="11sp"
-                android:layout_margin="4dp" />
+                android:textSize="14sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
+            <!-- Row 3 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnShare"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_columnWeight="1"
+                android:layout_margin="4dp"
                 android:text="📤 Teilen"
-                android:textSize="11sp"
-                android:layout_margin="4dp" />
+                android:textSize="14sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:text="🗑️ Löschen"
+                android:textSize="14sp"
+                android:backgroundTint="#CC0000"
+                android:textColor="#FFFFFF"
+                style="@style/Widget.MaterialComponents.Button" />
         </GridLayout>
 
     </LinearLayout>

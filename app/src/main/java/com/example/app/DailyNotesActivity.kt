@@ -1,591 +1,631 @@
 package com.hundewildnis.app
 
 import android.Manifest
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.pdf.PdfDocument
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hundewildnis.app.databinding.ActivityDailyNotesBinding
+import com.hundewildnis.app.databinding.ItemNoteSessionBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.res.Configuration
-import android.graphics.Color
-import androidx.appcompat.app.AlertDialog
-import android.content.ContentValues
-import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 
 /**
- * DailyNotesActivity - Tagesnotizen mit Fotos erstellen und teilen
+ * Data Class für gespeicherte Notizen mit GPS & Wetter Info
  */
-class DailyNotesActivity : SecureBaseActivity() {
+data class NoteSession(
+    val id: String,
+    val date: Long,
+    val title: String = "",
+    val notes: String,
+    val photoUris: List<String>,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val weatherInfo: String? = null
+)
+
+/**
+ * DailyNotesActivity - Tagesnotizen mit Fotos, GPS, Wetter und Historie
+ */
+class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private lateinit var binding: ActivityDailyNotesBinding
     private val photos = mutableListOf<Uri>()
     private lateinit var photoAdapter: PhotoAdapter
     private var currentPhotoUri: Uri? = null
 
-    // Permission Launcher für Kamera (Android 13+)
-    private val cameraPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            openCamera()
-        } else {
-            Toast.makeText(this, "⚠️ Kamera-Berechtigung erforderlich", Toast.LENGTH_SHORT).show()
-        }
+    private lateinit var locationManager: LocationManager
+
+    // Historie
+    private val historyList = mutableListOf<NoteSession>()
+    private lateinit var historyAdapter: HistoryAdapter
+    private var currentSessionId: String? = null
+    private var currentLatitude: Double? = null
+    private var currentLongitude: Double? = null
+    private var currentWeatherInfo: String? = null
+
+    // Permission Launcher
+    private val cameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) openCamera() else Toast.makeText(this, "⚠️ Kamera-Berechtigung erforderlich", Toast.LENGTH_SHORT).show()
     }
 
-    // Kamera Launcher
-    private val cameraLauncher = registerForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success && currentPhotoUri != null) {
-            addPhoto(currentPhotoUri!!)
-            Toast.makeText(this, "📸 Foto aufgenommen", Toast.LENGTH_SHORT).show()
-        }
+    private val locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) requestLocationUpdates()
     }
 
-    // Galerie Launcher
-    private val galleryLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            addPhoto(it)
-            Toast.makeText(this, "🖼️ Foto hinzugefügt", Toast.LENGTH_SHORT).show()
-        }
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success && currentPhotoUri != null) { addPhoto(currentPhotoUri!!); saveToHistory(false) }
+    }
+
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let { addPhoto(it); saveToHistory(false) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityDailyNotesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            title = "Tagesnotizen"
-            setDisplayHomeAsUpEnabled(true)
-        }
+        supportActionBar?.apply { title = "Tagesnotizen"; setDisplayHomeAsUpEnabled(true) }
+
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         setupPhotoRecyclerView()
+        setupHistoryRecyclerView()
         setupUI()
-    }
-
-    /**
-     * Färbt Dialog-Buttons weiß (Dark Mode) oder grün (Light Mode)
-     */
-    private fun styleDialogButtons(dialog: AlertDialog) {
-        dialog.window?.decorView?.post {
-            val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                    android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-            val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
-
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        }
+        loadHistory()
+        
+        startNewNote()
+        checkLocationPermission()
     }
 
     private fun setupPhotoRecyclerView() {
         photoAdapter = PhotoAdapter(photos) { position ->
-            // Foto löschen
+            // Datei aus internem Speicher löschen
+            deletePhotoFile(photos[position])
             photoAdapter.removePhoto(position)
             updatePhotoVisibility()
-            Toast.makeText(this, "Foto entfernt", Toast.LENGTH_SHORT).show()
+            saveToHistory(false)
         }
+        binding.rvPhotos.apply { layoutManager = GridLayoutManager(this@DailyNotesActivity, 3); adapter = photoAdapter }
+    }
 
-        binding.rvPhotos.apply {
-            layoutManager = GridLayoutManager(this@DailyNotesActivity, 3)
-            adapter = photoAdapter
+    private fun setupHistoryRecyclerView() {
+        historyAdapter = HistoryAdapter(historyList, 
+            onItemClick = { session -> displaySession(session) },
+            onDeleteClick = { session -> confirmDelete(session) }
+        )
+        binding.rvHistory.apply { layoutManager = LinearLayoutManager(this@DailyNotesActivity); adapter = historyAdapter }
+    }
+
+    private fun confirmDelete(session: NoteSession) {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Notiz löschen?")
+            .setMessage("Möchtest Du diese Notiz dauerhaft aus der Historie entfernen?")
+            .setPositiveButton("Löschen") { _, _ ->
+                val index = historyList.indexOfFirst { it.id == session.id }
+                if (index != -1) {
+                    // Alle zugehörigen Bilddateien löschen
+                    session.photoUris.forEach { deletePhotoFile(Uri.parse(it)) }
+                    
+                    historyList.removeAt(index)
+                    historyAdapter.notifyItemRemoved(index)
+                    saveHistoryToPrefs()
+                    if (currentSessionId == session.id) startNewNote()
+                    Toast.makeText(this, "Eintrag gelöscht", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
+    }
+
+    private fun displaySession(session: NoteSession) {
+        currentSessionId = session.id
+        binding.etTitle.setText(session.title)
+        binding.etNotes.setText(session.notes)
+        
+        photos.clear()
+        session.photoUris.forEach { photos.add(Uri.parse(it)) }
+        photoAdapter.notifyDataSetChanged()
+        updatePhotoVisibility()
+        
+        currentLatitude = session.latitude
+        currentLongitude = session.longitude
+        currentWeatherInfo = session.weatherInfo
+        
+        if (currentWeatherInfo != null) {
+            binding.tvWeatherInfo.text = currentWeatherInfo
+            binding.tvWeatherInfo.visibility = View.VISIBLE
+        } else {
+            binding.tvWeatherInfo.visibility = View.GONE
+        }
+        
+        updateDateDisplay(session.date)
+        binding.appbar.setExpanded(true)
+    }
+
+    private fun saveToHistory(isManualNew: Boolean) {
+        val title = binding.etTitle.text.toString()
+        val notes = binding.etNotes.text.toString()
+        if (title.isEmpty() && notes.isEmpty() && photos.isEmpty()) return
+
+        val session = NoteSession(
+            id = currentSessionId ?: UUID.randomUUID().toString(),
+            date = System.currentTimeMillis(),
+            title = title,
+            notes = notes,
+            photoUris = photos.map { it.toString() },
+            latitude = currentLatitude,
+            longitude = currentLongitude,
+            weatherInfo = currentWeatherInfo
+        )
+
+        val index = historyList.indexOfFirst { it.id == session.id }
+        if (index != -1) historyList[index] = session else historyList.add(0, session)
+        
+        saveHistoryToPrefs()
+        historyAdapter.notifyDataSetChanged()
+
+        if (isManualNew) {
+            startNewNote()
+            Toast.makeText(this, "✅ Notiz gesichert", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun startNewNote() {
+        currentSessionId = UUID.randomUUID().toString()
+        binding.etTitle.setText("")
+        binding.etNotes.setText("")
+        photos.clear()
+        currentWeatherInfo = null
+        binding.tvWeatherInfo.visibility = View.GONE
+        photoAdapter.notifyDataSetChanged()
+        updatePhotoVisibility()
+        updateDateDisplay(System.currentTimeMillis())
+        requestLocationUpdates()
+    }
+
+    private fun updateDateDisplay(timestamp: Long) {
+        val dateText = SimpleDateFormat("EEEE, dd. MMMM yyyy HH:mm", Locale.GERMAN).format(Date(timestamp))
+        val locText = if (currentLatitude != null) "\n📍 ${String.format(Locale.US, "%.4f", currentLatitude)}, ${String.format(Locale.US, "%.4f", currentLongitude)}" else ""
+        binding.tvDate.text = dateText + locText
+    }
+
+    private fun saveHistoryToPrefs() {
+        getSharedPreferences("notes_history", Context.MODE_PRIVATE).edit().putString("sessions", Gson().toJson(historyList)).apply()
+    }
+
+    private fun loadHistory() {
+        val json = getSharedPreferences("notes_history", Context.MODE_PRIVATE).getString("sessions", null)
+        if (json != null) {
+            val type = object : TypeToken<List<NoteSession>>() {}.type
+            val loaded: List<NoteSession> = Gson().fromJson(json, type)
+            historyList.clear(); historyList.addAll(loaded)
+            historyAdapter.notifyDataSetChanged()
         }
     }
 
     private fun setupUI() {
-        // Aktuelles Datum anzeigen
-        val dateFormat = SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.GERMAN)
-        binding.tvDate.text = dateFormat.format(Date())
-
-        // Kamera Button
-        binding.btnCamera.setOnClickListener {
-            checkCameraPermissionAndOpen()
-        }
-
-        // Galerie Button
-        binding.btnGallery.setOnClickListener {
-            galleryLauncher.launch("image/*")
-        }
-
-        // Als PDF exportieren
-        binding.btnExportPdf.setOnClickListener {
-            exportAsPdf()
-        }
-
-        // Teilen
-        binding.btnShare.setOnClickListener {
-            shareNotes()
-        }
-
-        // Löschen
+        binding.btnCamera.setOnClickListener { checkCameraPermissionAndOpen() }
+        binding.btnGallery.setOnClickListener { galleryLauncher.launch("image/*") }
+        binding.btnSaveNew.setOnClickListener { saveToHistory(true) }
+        binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf() }
+        binding.btnExportGpx.setOnClickListener { saveToHistory(false); exportAsGpx() }
+        binding.btnShare.setOnClickListener { saveToHistory(false); shareNotes() }
+        binding.btnAddWeather.setOnClickListener { addWeatherToNote() }
+        
         binding.btnClear.setOnClickListener {
-            binding.etNotes.setText("")
-            photos.clear()
-            photoAdapter.notifyDataSetChanged()
-            updatePhotoVisibility()
-            Toast.makeText(this, "Notizen gelöscht", Toast.LENGTH_SHORT).show()
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+            
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Entwurf löschen?")
+                .setMessage("Möchtest du den aktuellen Entwurf wirklich löschen?")
+                .setPositiveButton("Löschen") { _, _ -> 
+                    // Temporäre Fotos im Entwurf löschen
+                    photos.forEach { deletePhotoFile(it) }
+                    startNewNote() 
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
         }
+    }
+
+    private fun addWeatherToNote() {
+        if (currentLatitude == null) {
+            Toast.makeText(this, "Warte auf GPS-Standort...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        binding.btnAddWeather.isEnabled = false
+        lifecycleScope.launch {
+            try {
+                val weather = withContext(Dispatchers.IO) {
+                    val url = "https://api.open-meteo.com/v1/forecast?latitude=$currentLatitude&longitude=$currentLongitude&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m"
+                    val response = URL(url).readText()
+                    val json = JSONObject(response)
+                    val current = json.getJSONObject("current")
+                    
+                    val temp = current.getDouble("temperature_2m")
+                    val hum = current.getInt("relative_humidity_2m")
+                    val precip = current.getDouble("precipitation")
+                    val code = current.getInt("weather_code")
+                    val windSpeed = current.getDouble("wind_speed_10m")
+                    val windDir = current.getInt("wind_direction_10m")
+                    
+                    val desc = getWeatherDescription(code)
+                    val windDirStr = getWindDirection(windDir)
+                    
+                    "🌡️ ${String.format(Locale.GERMAN, "%.1f", temp)}°C, $desc\n💨 ${String.format(Locale.GERMAN, "%.1f", windSpeed)} km/h ($windDirStr), 💧 $hum%, 🌧️ ${String.format(Locale.GERMAN, "%.1f", precip)}mm"
+                }
+                currentWeatherInfo = weather
+                binding.tvWeatherInfo.text = weather
+                binding.tvWeatherInfo.visibility = View.VISIBLE
+                saveToHistory(false)
+                Toast.makeText(this@DailyNotesActivity, "Wetterdaten hinzugefügt", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(this@DailyNotesActivity, "Fehler beim Wetter-Abruf", Toast.LENGTH_SHORT).show()
+            } finally {
+                binding.btnAddWeather.isEnabled = true
+            }
+        }
+    }
+
+    private fun getWindDirection(degrees: Int): String {
+        val directions = arrayOf("N", "NO", "O", "SO", "S", "SW", "W", "NW")
+        return directions[((degrees + 22.5) / 45).toInt() % 8]
+    }
+
+    private fun getWeatherDescription(code: Int): String {
+        return when (code) {
+            0 -> "Klarer Himmel"; 1, 2, 3 -> "Leicht bewölkt"; 45, 48 -> "Nebel"
+            51, 53, 55 -> "Nieselregen"; 61, 63, 65 -> "Regen"; 71, 73, 75 -> "Schneefall"
+            80, 81, 82 -> "Regenschauer"; 95 -> "Gewitter"
+            else -> "Wechselhaft"
+        }
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+        } else {
+            requestLocationUpdates()
+        }
+    }
+
+    private fun requestLocationUpdates() {
+        try {
+            val lastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            lastKnown?.let {
+                currentLatitude = it.latitude
+                currentLongitude = it.longitude
+                updateDateDisplay(System.currentTimeMillis())
+            }
+            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null)
+        } catch (e: SecurityException) {}
+    }
+
+    override fun onLocationChanged(location: Location) {
+        currentLatitude = location.latitude
+        currentLongitude = location.longitude
+        updateDateDisplay(System.currentTimeMillis())
     }
 
     private fun checkCameraPermissionAndOpen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            when {
-                ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    openCamera()
-                }
-                else -> {
-                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                }
-            }
-        } else {
-            openCamera()
-        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) openCamera()
+        else cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     private fun openCamera() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Android 10+: MediaStore verwenden
-                val fileName = "HundeWildnis_${System.currentTimeMillis()}.jpg"
-
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
-                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                    put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/HundeWildnis")
-                }
-
-                currentPhotoUri = contentResolver.insert(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    contentValues
-                )
-
-                currentPhotoUri?.let {
-                    cameraLauncher.launch(it)
-                } ?: run {
-                    Toast.makeText(this, "❌ Fehler beim Erstellen der Foto-Datei", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                // Android 9 und älter: Direkter Zugriff
-                val picturesDir = File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    "HundeWildnis"
-                )
-                if (!picturesDir.exists()) {
-                    picturesDir.mkdirs()
-                }
-
-                val photoFile = File(
-                    picturesDir,
-                    "HundeWildnis_${System.currentTimeMillis()}.jpg"
-                )
-
-                currentPhotoUri = FileProvider.getUriForFile(
-                    this,
-                    "${packageName}.fileprovider",
-                    photoFile
-                )
-
-                currentPhotoUri?.let {
-                    cameraLauncher.launch(it)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "❌ Kamera-Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+        val fileName = "HundeWildnis_${System.currentTimeMillis()}.jpg"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val values = ContentValues().apply { put(MediaStore.Images.Media.DISPLAY_NAME, fileName); put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg"); put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/HundeWildnis") }
+            currentPhotoUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            currentPhotoUri?.let { cameraLauncher.launch(it) }
+        } else {
+            val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "HundeWildnis")
+            if (!dir.exists()) dir.mkdirs()
+            val file = File(dir, fileName)
+            currentPhotoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+            currentPhotoUri?.let { cameraLauncher.launch(it) }
         }
     }
 
     private fun addPhoto(uri: Uri) {
-        if (photos.size >= 5) {
-            Toast.makeText(this, "⚠️ Maximal 5 Fotos möglich", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        photoAdapter.addPhoto(uri)
-        updatePhotoVisibility()
-    }
-
-    private fun updatePhotoVisibility() {
-        binding.rvPhotos.visibility = if (photos.isEmpty()) {
-            android.view.View.GONE
+        if (photos.size >= 5) { Toast.makeText(this, "⚠️ Max. 5 Fotos", Toast.LENGTH_SHORT).show(); return }
+        
+        val internalUri = copyUriToInternal(uri)
+        if (internalUri != null) {
+            photoAdapter.addPhoto(internalUri)
+            updatePhotoVisibility()
         } else {
-            android.view.View.VISIBLE
+            Toast.makeText(this, "Fehler beim Verarbeiten des Bildes", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun exportAsPdf() {
-        val notes = binding.etNotes.text.toString()
-
-        if (notes.isEmpty() && photos.isEmpty()) {
-            Toast.makeText(this, "Bitte erst Notizen oder Fotos hinzufügen", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        try {
-            val pdfDocument = PdfDocument()
-            var pageNumber = 1
-            val paint = android.graphics.Paint()
-
-            // Seite 1: Notizen
-            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, pageNumber++).create() // A4
-            val page = pdfDocument.startPage(pageInfo)
-            val canvas = page.canvas
-
-            // Titel
-            paint.textSize = 20f
-            paint.isFakeBoldText = true
-            paint.color = android.graphics.Color.BLACK
-            canvas.drawText("Tagesnotizen", 50f, 50f, paint)
-
-            // Datum
-            paint.textSize = 14f
-            paint.isFakeBoldText = false
-            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
-            canvas.drawText(dateFormat.format(Date()), 50f, 80f, paint)
-
-            // Notizen
-            if (notes.isNotEmpty()) {
-                val lines = notes.split("\n")
-                var y = 120f
-                for (line in lines) {
-                    if (y > 800) break
-                    canvas.drawText(line, 50f, y, paint)
-                    y += 20f
-                }
-            }
-
-            pdfDocument.finishPage(page)
-
-            // Fotos hinzufügen (je 2 pro Seite)
-            var photoIndex = 0
-            while (photoIndex < photos.size) {
-                val photoPageInfo = PdfDocument.PageInfo.Builder(595, 842, pageNumber++).create()
-                val photoPage = pdfDocument.startPage(photoPageInfo)
-                val photoCanvas = photoPage.canvas
-
-                // Foto 1
-                if (photoIndex < photos.size) {
-                    val bitmap1 = loadBitmapFromUri(photos[photoIndex])
-                    bitmap1?.let {
-                        val scaled1 = scaleBitmapProportionally(it, 495, 350)
-                        val x = 50f + (495 - scaled1.width) / 2f  // Zentriert
-                        photoCanvas.drawBitmap(scaled1, x, 50f, null)
-                        scaled1.recycle()
-                        it.recycle()
-                    }
-                    photoIndex++
-                }
-
-                // Foto 2
-                if (photoIndex < photos.size) {
-                    val bitmap2 = loadBitmapFromUri(photos[photoIndex])
-                    bitmap2?.let {
-                        val scaled2 = scaleBitmapProportionally(it, 495, 350)
-                        val x = 50f + (495 - scaled2.width) / 2f  // Zentriert
-                        photoCanvas.drawBitmap(scaled2, x, 450f, null)
-                        scaled2.recycle()
-                        it.recycle()
-                    }
-                    photoIndex++
-                }
-
-                pdfDocument.finishPage(photoPage)
-            }
-
-            // ✅ NEU: Speichern in öffentlichen Documents-Ordner
-            val fileName = "Tagesnotizen_${SimpleDateFormat("yyyy-MM-dd_HHmmss", Locale.GERMAN).format(Date())}.pdf"
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Android 10+: MediaStore
-                savePdfToMediaStore(pdfDocument, fileName)
-            } else {
-                // Android 9 und älter: Direkter Zugriff
-                val documentsDir = File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                    "HundeWildnis"
-                )
-                if (!documentsDir.exists()) {
-                    documentsDir.mkdirs()
-                }
-
-                val file = File(documentsDir, fileName)
-                pdfDocument.writeTo(FileOutputStream(file))
-                pdfDocument.close()
-
-                showPdfDialog(file)
-            }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "❌ Fehler: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    /**
-     * Speichert PDF in öffentlichen Documents-Ordner (Android 10+)
-     */
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun savePdfToMediaStore(pdfDocument: PdfDocument, fileName: String) {
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis")
-        }
-
-        val resolver = contentResolver
-        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-
-        uri?.let {
-            resolver.openOutputStream(it)?.use { outputStream ->
-                pdfDocument.writeTo(outputStream)
-            }
-            pdfDocument.close()
-
-            // Dialog zeigen
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("✓ PDF erstellt")
-                .setMessage("Gespeichert in:\nDocuments/HundeWildnis/$fileName")
-                .setPositiveButton("OK", null)
-                .create()
-
-            dialog.show()
-            styleDialogButtons(dialog)
-
-            Toast.makeText(this, "✓ PDF in Documents/HundeWildnis gespeichert", Toast.LENGTH_LONG).show()
-        } ?: run {
-            Toast.makeText(this, "❌ Fehler beim Speichern", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    /**
-     * Zeigt Dialog für gespeicherte PDF (Android 9 und älter)
-     */
-    private fun showPdfDialog(file: File) {
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("✓ PDF erstellt")
-            .setMessage("Gespeichert als:\n${file.name}\n\nPfad:\n${file.absolutePath}")
-            .setPositiveButton("Öffnen") { _, _ ->
-                openPdf(file)
-            }
-            .setNegativeButton("OK", null)
-            .create()
-
-        dialog.show()
-        styleDialogButtons(dialog)
-    }
-
-    /**
-     * Öffnet PDF-Datei (für Android 9 und älter)
-     */
-    private fun openPdf(file: File) {
-        try {
-            val uri = FileProvider.getUriForFile(
-                this,
-                "${packageName}.fileprovider",
-                file
-            )
-
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, "application/pdf")
-                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NO_HISTORY
-            }
-
-            startActivity(Intent.createChooser(intent, "PDF öffnen mit"))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "Kein PDF-Viewer gefunden", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun loadBitmapFromUri(uri: Uri): Bitmap? {
+    private fun copyUriToInternal(uri: Uri): Uri? {
         return try {
-            contentResolver.openInputStream(uri)?.use { inputStream ->
-                BitmapFactory.decodeStream(inputStream)
-            }
+            val inputStream = contentResolver.openInputStream(uri) ?: return null
+            val folder = File(filesDir, "note_photos")
+            if (!folder.exists()) folder.mkdirs()
+            
+            val file = File(folder, "img_${System.currentTimeMillis()}_${UUID.randomUUID()}.jpg")
+            val outputStream = FileOutputStream(file)
+            inputStream.use { input -> outputStream.use { output -> input.copyTo(output) } }
+            Uri.fromFile(file)
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
     }
 
-    /**
-     * Skaliert Bitmap proportional in maximale Größe
-     */
-    private fun scaleBitmapProportionally(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
-        val width = bitmap.width
-        val height = bitmap.height
+    private fun deletePhotoFile(uri: Uri) {
+        try {
+            if (uri.scheme == "file") {
+                val file = File(uri.path ?: return)
+                // Nur löschen, wenn es sich in unserem speziellen Ordner befindet
+                if (file.exists() && file.absolutePath.contains("note_photos")) {
+                    file.delete()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
-        // Berechne Skalierungsfaktor (behalte Aspect Ratio)
-        val ratio = minOf(maxWidth.toFloat() / width, maxHeight.toFloat() / height)
+    private fun updatePhotoVisibility() { binding.rvPhotos.visibility = if (photos.isEmpty()) View.GONE else View.VISIBLE }
 
-        val newWidth = (width * ratio).toInt()
-        val newHeight = (height * ratio).toInt()
+    private fun exportAsPdf() {
+        val title = binding.etTitle.text.toString()
+        val notes = binding.etNotes.text.toString()
+        if (title.isEmpty() && notes.isEmpty() && photos.isEmpty()) return
+        
+        try {
+            val pdf = PdfDocument()
+            var pageNum = 1
+            val paint = android.graphics.Paint()
+            val info = PdfDocument.PageInfo.Builder(595, 842, pageNum++).create()
+            var page = pdf.startPage(info)
+            var canvas = page.canvas
+            
+            val margin = 50f
+            val maxWidth = 595f - (2 * margin)
+            
+            // Header
+            paint.textSize = 20f; paint.isFakeBoldText = true
+            canvas.drawText(if(title.isNotEmpty()) title else "Tagesnotiz", margin, 50f, paint)
+            
+            paint.textSize = 12f; paint.isFakeBoldText = false
+            val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+            canvas.drawText("Erstellt am: ${sdf.format(Date())}", margin, 75f, paint)
+            
+            if (currentLatitude != null) {
+                canvas.drawText("📍 Standort: $currentLatitude, $currentLongitude", margin, 95f, paint)
+            }
+            
+            var currentY = 115f
+            if (currentWeatherInfo != null) {
+                val weatherLines = currentWeatherInfo!!.split("\n")
+                weatherLines.forEach { line ->
+                    canvas.drawText(line, margin, currentY, paint)
+                    currentY += 20f
+                }
+            }
 
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+            // Notiztext mit automatischem Zeilenumbruch
+            currentY += 10f
+            if (notes.isNotEmpty()) {
+                paint.textSize = 12f
+                val paragraphs = notes.split("\n")
+                for (paragraph in paragraphs) {
+                    var line = paragraph
+                    while (line.isNotEmpty() && currentY < 800) {
+                        val count = paint.breakText(line, true, maxWidth, null)
+                        if (count <= 0) break
+                        
+                        var end = count
+                        if (count < line.length) {
+                            val lastSpace = line.substring(0, count).lastIndexOf(' ')
+                            if (lastSpace != -1) {
+                                end = lastSpace + 1
+                            }
+                        }
+                        
+                        canvas.drawText(line.substring(0, end).trim(), margin, currentY, paint)
+                        currentY += 20f
+                        line = line.substring(end)
+                    }
+                    if (currentY >= 800) break
+                }
+            }
+            
+            // Dynamische Fotos auf der ersten Seite (falls Platz)
+            var photoIdx = 0
+            val remainingHeight = 842f - currentY - 50f
+            if (photos.isNotEmpty() && remainingHeight > 100f) {
+                val targetHeight = minOf(remainingHeight - 20f, 250f)
+                val targetWidth = if (photos.size == 1) maxWidth else (maxWidth / 2f) - 5f
+                
+                var currentX = margin
+                while (photoIdx < photos.size && (currentY + targetHeight) < 820f) {
+                    loadBitmap(photos[photoIdx])?.let { bitmap ->
+                        val scaled = scaleBitmap(bitmap, targetWidth.toInt(), targetHeight.toInt())
+                        canvas.drawBitmap(scaled, currentX, currentY, null)
+                        
+                        if (photos.size > 1 && currentX == margin && (photoIdx + 1) < photos.size) {
+                            currentX += targetWidth + 10f
+                        } else {
+                            currentX = margin
+                            currentY += scaled.height + 10f
+                        }
+                    }
+                    photoIdx++
+                    if (currentX == margin && (currentY + 100f) > 820f) break
+                }
+            }
+            pdf.finishPage(page)
+            
+            // Restliche Fotos auf neuen Seiten
+            while (photoIdx < photos.size) {
+                val pPage = pdf.startPage(PdfDocument.PageInfo.Builder(595, 842, pageNum++).create())
+                repeat(2) { i ->
+                    if (photoIdx < photos.size) {
+                        loadBitmap(photos[photoIdx])?.let { bitmap ->
+                            val scaled = scaleBitmap(bitmap, 495, 350)
+                            pPage.canvas.drawBitmap(scaled, margin + (495 - scaled.width) / 2f, if (i == 0) 50f else 450f, null)
+                        }
+                        photoIdx++
+                    }
+                }
+                pdf.finishPage(pPage)
+            }
+
+            val fileName = "Notiz_${if(title.isNotEmpty()) title.replace(" ","_") else "Tagesbericht"}_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date())}.pdf"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) savePdfToMediaStore(pdf, fileName)
+            else {
+                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
+                if (!dir.exists()) dir.mkdirs()
+                val file = File(dir, fileName)
+                pdf.writeTo(FileOutputStream(file)); pdf.close()
+                Toast.makeText(this, "Gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) { Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show() }
+    }
+
+    private fun exportAsGpx() {
+        val title = binding.etTitle.text.toString()
+        val notes = binding.etNotes.text.toString()
+        if (currentLatitude == null) { Toast.makeText(this, "Keine GPS-Daten verfügbar", Toast.LENGTH_SHORT).show(); return }
+        try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
+            val gpx = StringBuilder().apply {
+                append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                append("<gpx version=\"1.1\" creator=\"HundeWildnis\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
+                append("  <wpt lat=\"$currentLatitude\" lon=\"$currentLongitude\">\n")
+                append("    <time>${sdf.format(Date())}</time>\n")
+                append("    <name>${if(title.isNotEmpty()) title else "HundeWildnis Notiz"}</name>\n")
+                val desc = StringBuilder(notes)
+                if (currentWeatherInfo != null) desc.append("\n\nWetter: $currentWeatherInfo")
+                append("    <desc>${desc.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</desc>\n")
+                append("    <cmt>Fotos: ${photos.size}</cmt>\n")
+                append("  </wpt>\n")
+                append("</gpx>")
+            }.toString()
+            val fileName = "Notiz_${if(title.isNotEmpty()) title.replace(" ","_") else "Bericht"}_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date())}.gpx"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, fileName); put(MediaStore.MediaColumns.MIME_TYPE, "application/gpx+xml"); put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis") }
+                val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+                uri?.let { contentResolver.openOutputStream(it)?.use { out -> out.write(gpx.toByteArray()) }; Toast.makeText(this, "GPX exportiert", Toast.LENGTH_LONG).show() }
+            } else {
+                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
+                if (!dir.exists()) dir.mkdirs()
+                val file = File(dir, fileName)
+                FileOutputStream(file).use { it.write(gpx.toByteArray()) }
+                Toast.makeText(this, "GPX gespeichert", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) { Toast.makeText(this, "GPX Fehler: ${e.message}", Toast.LENGTH_SHORT).show() }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun savePdfToMediaStore(pdf: PdfDocument, name: String) {
+        val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, name); put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf"); put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis") }
+        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+        uri?.let { contentResolver.openOutputStream(it)?.use { out -> pdf.writeTo(out) }; pdf.close(); Toast.makeText(this, "Exportiert nach Documents/HundeWildnis", Toast.LENGTH_LONG).show() }
+    }
+
+    private fun loadBitmap(uri: Uri): Bitmap? = try { contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) } } catch (e: Exception) { null }
+    private fun scaleBitmap(b: Bitmap, maxW: Int, maxH: Int): Bitmap {
+        val r = minOf(maxW.toFloat() / b.width, maxH.toFloat() / b.height)
+        return Bitmap.createScaledBitmap(b, (b.width * r).toInt(), (b.height * r).toInt(), true)
     }
 
     private fun shareNotes() {
         val notes = binding.etNotes.text.toString()
-
-        if (notes.isEmpty() && photos.isEmpty()) {
-            Toast.makeText(this, "Bitte erst Notizen oder Fotos hinzufügen", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Wenn Fotos vorhanden: Erst PDF erstellen, dann teilen
-        if (photos.isNotEmpty()) {
-            sharePdf()
-        } else {
-            // Nur Text teilen
-            shareText(notes)
+        if (notes.isEmpty() && photos.isEmpty()) return
+        if (photos.isNotEmpty()) exportAsPdf() else {
+            val intent = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, "Tagesnotizen vom ${SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Date())}\n\n$notes") }
+            startActivity(Intent.createChooser(intent, "Notizen teilen"))
         }
     }
 
-    private fun shareText(notes: String) {
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
-        val shareText = "Tagesnotizen vom ${dateFormat.format(Date())}\n\n$notes"
-
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Tagesnotizen")
-            putExtra(Intent.EXTRA_TEXT, shareText)
-        }
-
-        startActivity(Intent.createChooser(intent, "Notizen teilen über"))
-    }
-
-    private fun sharePdf() {
-        val notes = binding.etNotes.text.toString()
-
-        try {
-            // Temporäre PDF erstellen
-            val pdfDocument = PdfDocument()
-            var pageNumber = 1
-            val paint = android.graphics.Paint()
-
-            // Seite mit Notizen
-            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, pageNumber++).create()
-            val page = pdfDocument.startPage(pageInfo)
-            val canvas = page.canvas
-
-            paint.textSize = 20f
-            paint.isFakeBoldText = true
-            paint.color = android.graphics.Color.BLACK
-            canvas.drawText("Tagesnotizen", 50f, 50f, paint)
-
-            paint.textSize = 14f
-            paint.isFakeBoldText = false
-            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
-            canvas.drawText(dateFormat.format(Date()), 50f, 80f, paint)
-
-            if (notes.isNotEmpty()) {
-                val lines = notes.split("\n")
-                var y = 120f
-                for (line in lines) {
-                    if (y > 800) break
-                    canvas.drawText(line, 50f, y, paint)
-                    y += 20f
-                }
+    inner class HistoryAdapter(private val sessions: List<NoteSession>, private val onItemClick: (NoteSession) -> Unit, private val onDeleteClick: (NoteSession) -> Unit) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+        inner class ViewHolder(val binding: ItemNoteSessionBinding) : RecyclerView.ViewHolder(binding.root)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(ItemNoteSessionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val s = sessions[position]
+            val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+            holder.binding.tvNoteDate.text = sdf.format(Date(s.date))
+            
+            // Titel anzeigen wenn vorhanden
+            if (s.title.isNotEmpty()) {
+                holder.binding.tvNoteSnippet.text = "📌 ${s.title}"
+            } else {
+                holder.binding.tvNoteSnippet.text = s.notes.take(40).replace("\n", " ") + "..."
             }
 
-            pdfDocument.finishPage(page)
-
-            // Fotos hinzufügen
-            var photoIndex = 0
-            while (photoIndex < photos.size) {
-                val photoPageInfo = PdfDocument.PageInfo.Builder(595, 842, pageNumber++).create()
-                val photoPage = pdfDocument.startPage(photoPageInfo)
-                val photoCanvas = photoPage.canvas
-
-                if (photoIndex < photos.size) {
-                    val bitmap1 = loadBitmapFromUri(photos[photoIndex])
-                    bitmap1?.let {
-                        val scaled1 = scaleBitmapProportionally(it, 495, 350)
-                        val x = 50f + (495 - scaled1.width) / 2f  // Zentriert
-                        photoCanvas.drawBitmap(scaled1, x, 50f, null)
-                        scaled1.recycle()
-                        it.recycle()
-                    }
-                    photoIndex++
-                }
-
-                if (photoIndex < photos.size) {
-                    val bitmap2 = loadBitmapFromUri(photos[photoIndex])
-                    bitmap2?.let {
-                        val scaled2 = scaleBitmapProportionally(it, 495, 350)
-                        val x = 50f + (495 - scaled2.width) / 2f  // Zentriert
-                        photoCanvas.drawBitmap(scaled2, x, 450f, null)
-                        scaled2.recycle()
-                        it.recycle()
-                    }
-                    photoIndex++
-                }
-
-                pdfDocument.finishPage(photoPage)
+            if (s.latitude != null) {
+                holder.binding.tvNoteLocation.visibility = View.VISIBLE
+                holder.binding.tvNoteLocation.text = String.format(Locale.US, "📍 %.4f, %.4f", s.latitude, s.longitude)
+            } else {
+                holder.binding.tvNoteLocation.visibility = View.GONE
             }
 
-            // PDF speichern
-            val fileName = "Tagesnotizen_${SimpleDateFormat("yyyy-MM-dd_HHmmss", Locale.GERMAN).format(Date())}.pdf"
-            val file = File(cacheDir, fileName)
-
-            pdfDocument.writeTo(FileOutputStream(file))
-            pdfDocument.close()
-
-            // PDF teilen
-            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "application/pdf"
-                putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_SUBJECT, "Tagesnotizen")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-            startActivity(Intent.createChooser(intent, "PDF teilen über"))
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "❌ Fehler beim Teilen: ${e.message}", Toast.LENGTH_LONG).show()
+            holder.binding.noteClickArea.setOnClickListener { onItemClick(s) }
+            holder.binding.btnDeleteNote.setOnClickListener { onDeleteClick(s) }
         }
+        override fun getItemCount() = sessions.size
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+    override fun onStatusChanged(p: String?, s: Int, e: Bundle?) {}
+    override fun onProviderEnabled(p: String) {}
+    override fun onProviderDisabled(p: String) {}
+    override fun onSupportNavigateUp(): Boolean { finish(); return true }
 }

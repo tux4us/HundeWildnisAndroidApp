@@ -14,8 +14,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 42
-        versionName = "8.3"
+        versionCode = 47
+        versionName = "9.22"
 
         // API Key aus local.properties laden
         val localProperties = Properties()
@@ -48,7 +48,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    // ✅ HIER ist es richtig!
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -69,7 +68,9 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.coil)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.youtube.player.core)
+    
+    // Google Play Services & YouTube Player entfernt für F-Droid Kompatibilität
+
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.github.bumptech.glide:glide:5.0.5")
 

@@ -1,12 +1,14 @@
 package com.hundewildnis.app
 
 import android.content.Context
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.DocumentsContract
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -18,8 +20,8 @@ import java.util.zip.ZipOutputStream
 
 object BackupManager {
 
+    private const val TAG = "BackupManager"
     private const val BACKUP_EXTENSION = ".hundebackup"
-    private const val BACKUP_DIR = "HundeWildnis_Backups"
     private const val METADATA_FILE = "metadata.json"
     private const val DATA_FILE = "backup_data.json"
     private const val PHOTOS_DIR = "photos"
@@ -34,264 +36,252 @@ object BackupManager {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
         val fileName = "HundeWildnis_Backup_${dateFormat.format(Date(timestamp))}$BACKUP_EXTENSION"
 
-        // Backup-Verzeichnis erstellen
-        val backupDir = File(context.cacheDir, "backup_temp")
-        if (backupDir.exists()) {
-            backupDir.deleteRecursively()
-        }
-        backupDir.mkdirs()
+        // 1. Temporäres Verzeichnis für den Inhalt des Zips
+        val tempZipContentDir = File(context.cacheDir, "backup_content")
+        if (tempZipContentDir.exists()) tempZipContentDir.deleteRecursively()
+        tempZipContentDir.mkdirs()
 
-        // Fotos-Verzeichnis
-        val photosDir = File(backupDir, PHOTOS_DIR)
-        photosDir.mkdirs()
+        try {
+            // Fotos-Verzeichnis im Zip
+            val photosInZipDir = File(tempZipContentDir, PHOTOS_DIR)
+            photosInZipDir.mkdirs()
 
-        // 1. Sammle alle Daten
-        val dogs = DogProfileManager.getAllProfiles(context)
-        val settings = collectSettings(context)
-        val notes = collectNotes(context)
+            // Daten sammeln
+            val dogs = DogProfileManager.getAllProfiles(context)
+            val settings = collectSettings(context)
+            val notes = collectNotes(context)
+            val speedSessions = collectSpeedSessions(context)
 
-        // 2. Kopiere Fotos und erstelle Mapping
-        val photoMapping = mutableMapOf<String, String>()
+            val photoMapping = mutableMapOf<String, String>()
 
-        dogs.forEachIndexed { index, dog ->
-            if (dog.photoUri.isNotEmpty()) {
-                try {
-                    val sourceUri = Uri.parse(dog.photoUri)
-                    val photoFile = File(photosDir, "dog_${index}_${timestamp}.jpg")
-                    copyUriToFile(context, sourceUri, photoFile)
-                    photoMapping[dog.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            // Hunde-Fotos kopieren
+            dogs.forEachIndexed { index, dog ->
+                if (dog.photoUri.isNotEmpty()) {
+                    try {
+                        val sourceUri = Uri.parse(dog.photoUri)
+                        val photoFile = File(photosInZipDir, "dog_${index}_${timestamp}.jpg")
+                        if (copyUriToFile(context, sourceUri, photoFile)) {
+                            photoMapping[dog.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Fehler beim Kopieren von Hundefoto: ${e.message}")
+                    }
                 }
             }
-        }
 
-        // Notizen-Fotos (falls vorhanden)
-        notes?.forEachIndexed { noteIndex, note ->
-            note.photoUris.forEachIndexed { photoIndex, uriString ->
-                try {
-                    val sourceUri = Uri.parse(uriString)
-                    val photoFile = File(photosDir, "note_${noteIndex}_${photoIndex}_${timestamp}.jpg")
-                    copyUriToFile(context, sourceUri, photoFile)
-                    photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            // Notizen-Fotos kopieren
+            notes?.forEachIndexed { noteIndex, note ->
+                note.photoUris.forEachIndexed { photoIndex, uriString ->
+                    try {
+                        val sourceUri = Uri.parse(uriString)
+                        val photoFile = File(photosInZipDir, "note_${noteIndex}_${photoIndex}_${timestamp}.jpg")
+                        if (copyUriToFile(context, sourceUri, photoFile)) {
+                            photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Fehler beim Kopieren von Notizfoto: ${e.message}")
+                    }
                 }
             }
-        }
 
-        // 3. Erstelle Backup-Daten
-        val backupData = BackupData(
-            version = getAppVersion(context),
-            backupVersion = 1,
-            timestamp = timestamp,
-            dogs = dogs,
-            settings = settings,
-            notes = notes,
-            photoMapping = photoMapping
-        )
-
-        // 4. Erstelle Metadaten
-        val metadata = BackupMetadata(
-            appVersion = getAppVersion(context),
-            backupVersion = 1,
-            timestamp = timestamp,
-            deviceName = Build.MODEL,
-            itemCount = BackupItemCount(
-                dogs = dogs.size,
-                photos = photoMapping.size,
-                notes = notes?.size ?: 0
+            // Backup-Daten erstellen
+            val backupData = BackupData(
+                version = getAppVersion(context),
+                backupVersion = 2,
+                timestamp = timestamp,
+                dogs = dogs,
+                settings = settings,
+                notes = notes,
+                speedSessions = speedSessions,
+                photoMapping = photoMapping
             )
-        )
 
-        // 5. Schreibe JSON-Dateien
-        File(backupDir, METADATA_FILE).writeText(gson.toJson(metadata))
-        File(backupDir, DATA_FILE).writeText(gson.toJson(backupData))
+            // Metadaten erstellen
+            val metadata = BackupMetadata(
+                appVersion = getAppVersion(context),
+                backupVersion = 2,
+                timestamp = timestamp,
+                deviceName = Build.MODEL,
+                itemCount = BackupItemCount(
+                    dogs = dogs.size,
+                    photos = photoMapping.size,
+                    notes = notes?.size ?: 0,
+                    speedSessions = speedSessions?.size ?: 0
+                )
+            )
 
-        // 6. Erstelle ZIP-Datei
-        val outputFile = File(getBackupDirectory(context), fileName)
-        zipDirectory(backupDir, outputFile)
+            // JSON-Dateien schreiben
+            File(tempZipContentDir, METADATA_FILE).writeText(gson.toJson(metadata))
+            File(tempZipContentDir, DATA_FILE).writeText(gson.toJson(backupData))
 
-        // 7. Aufräumen
-        backupDir.deleteRecursively()
+            // ZIP-Datei am Zielort erstellen
+            val backupFolder = getBackupDirectory(context)
+            val outputFile = File(backupFolder, fileName)
+            
+            zipDirectory(tempZipContentDir, outputFile)
+            
+            // Medienscan anstoßen, damit die Datei sofort sichtbar ist
+            MediaScannerConnection.scanFile(context, arrayOf(outputFile.absolutePath), null, null)
+            
+            Log.d(TAG, "Backup erfolgreich erstellt: ${outputFile.absolutePath}")
+            return outputFile
 
-        return outputFile
+        } finally {
+            tempZipContentDir.deleteRecursively()
+        }
     }
 
     /**
      * Stellt ein Backup wieder her
      */
     fun restoreBackup(context: Context, backupFile: File): Boolean {
+        Log.d(TAG, "Starte Wiederherstellung von: ${backupFile.absolutePath}")
+        val tempUnzipDir = File(context.cacheDir, "restore_unzip")
+        if (tempUnzipDir.exists()) tempUnzipDir.deleteRecursively()
+        tempUnzipDir.mkdirs()
+
         return try {
-            // 1. Temporäres Verzeichnis
-            val tempDir = File(context.cacheDir, "restore_temp")
-            if (tempDir.exists()) {
-                tempDir.deleteRecursively()
-            }
-            tempDir.mkdirs()
+            unzipFile(backupFile, tempUnzipDir)
 
-            // 2. ZIP entpacken
-            unzipFile(backupFile, tempDir)
-
-            // 3. Metadaten lesen
-            val metadataFile = File(tempDir, METADATA_FILE)
-            if (!metadataFile.exists()) {
-                throw Exception("Ungültiges Backup: Metadaten fehlen")
-            }
-
-            // 4. Backup-Daten lesen
-            val dataFile = File(tempDir, DATA_FILE)
+            val dataFile = File(tempUnzipDir, DATA_FILE)
             if (!dataFile.exists()) {
-                throw Exception("Ungültiges Backup: Daten fehlen")
+                Log.e(TAG, "Backup-Datei $DATA_FILE nicht gefunden")
+                return false
             }
 
-            val backupData = gson.fromJson(dataFile.readText(), BackupData::class.java)
+            val jsonContent = dataFile.readText()
+            val backupData = gson.fromJson(jsonContent, BackupData::class.java)
 
-            // 5. Fotos wiederherstellen
+            // 1. Fotos wiederherstellen
             val restoredPhotoMapping = mutableMapOf<String, String>()
-            val photosDir = File(tempDir, PHOTOS_DIR)
-
-            if (photosDir.exists()) {
+            val photosInZipDir = File(tempUnzipDir, PHOTOS_DIR)
+            
+            if (photosInZipDir.exists()) {
                 backupData.photoMapping.forEach { (originalUri, backupPath) ->
-                    val sourceFile = File(tempDir, backupPath)
-                    if (sourceFile.exists()) {
-                        // Kopiere Foto in App-Verzeichnis
-                        val destFile = File(context.filesDir, "photos/${sourceFile.name}")
+                    val sourceFileInZip = File(tempUnzipDir, backupPath)
+                    if (sourceFileInZip.exists()) {
+                        val destFile = File(context.filesDir, "restored_photos/${sourceFileInZip.name}")
                         destFile.parentFile?.mkdirs()
-                        sourceFile.copyTo(destFile, overwrite = true)
+                        sourceFileInZip.copyTo(destFile, overwrite = true)
 
-                        // Erstelle Content-URI
                         val newUri = androidx.core.content.FileProvider.getUriForFile(
-                            context,
-                            "${context.packageName}.fileprovider",
-                            destFile
+                            context, "${context.packageName}.fileprovider", destFile
                         )
                         restoredPhotoMapping[originalUri] = newUri.toString()
                     }
                 }
             }
 
-            // 6. Hunde-Profile wiederherstellen
+            // 2. Hunde-Profile
             backupData.dogs.forEach { dog ->
                 val restoredDog = if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri)) {
                     dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
-                } else {
-                    dog
-                }
+                } else dog
                 DogProfileManager.saveProfile(context, restoredDog)
             }
 
-            // 7. Einstellungen wiederherstellen
+            // 3. Einstellungen
             restoreSettings(context, backupData.settings)
 
-            // 8. Notizen wiederherstellen (falls vorhanden)
-            backupData.notes?.forEach { note ->
-                val restoredPhotoUris = note.photoUris.map { uri ->
-                    restoredPhotoMapping[uri] ?: uri
+            // 4. Notizen
+            backupData.notes?.let { notes ->
+                val restoredNotes = notes.map { note ->
+                    val restoredUris = note.photoUris.map { restoredPhotoMapping[it] ?: it }
+                    note.copy(photoUris = restoredUris)
                 }
-                restoreNote(context, note.copy(photoUris = restoredPhotoUris))
+                saveNotesHistory(context, restoredNotes)
             }
 
-            // 9. Aufräumen
-            tempDir.deleteRecursively()
+            // 5. Trainingstempo
+            backupData.speedSessions?.let { sessions ->
+                saveSpeedHistory(context, sessions)
+            }
 
+            Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Fehler bei Wiederherstellung: ${e.message}", e)
+            false
+        } finally {
+            tempUnzipDir.deleteRecursively()
+        }
+    }
+
+    private fun collectSettings(context: Context): Map<String, String> {
+        val settings = mutableMapOf<String, String>()
+        val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        settings["is_dark_mode"] = themePrefs.getBoolean("is_dark_mode", false).toString()
+        val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        settings["background_updates_enabled"] = appPrefs.getBoolean("background_updates_enabled", true).toString()
+        settings["notifications_enabled"] = appPrefs.getBoolean("notifications_enabled", true).toString()
+        return settings
+    }
+
+    private fun restoreSettings(context: Context, settings: Map<String, String>) {
+        val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        settings["is_dark_mode"]?.let { themePrefs.edit().putBoolean("is_dark_mode", it.toBoolean()).apply() }
+        val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        settings["background_updates_enabled"]?.let { appPrefs.edit().putBoolean("background_updates_enabled", it.toBoolean()).apply() }
+        settings["notifications_enabled"]?.let { appPrefs.edit().putBoolean("notifications_enabled", it.toBoolean()).apply() }
+    }
+
+    private fun collectNotes(context: Context): List<NoteSession>? {
+        val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
+        val json = prefs.getString("sessions", null) ?: return null
+        return try {
+            val type = object : TypeToken<List<NoteSession>>() {}.type
+            gson.fromJson(json, type)
+        } catch (e: Exception) { null }
+    }
+
+    private fun saveNotesHistory(context: Context, notes: List<NoteSession>) {
+        val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
+        prefs.edit().putString("sessions", gson.toJson(notes)).apply()
+    }
+
+    private fun collectSpeedSessions(context: Context): List<SpeedSession>? {
+        val prefs = context.getSharedPreferences("walking_history", Context.MODE_PRIVATE)
+        val json = prefs.getString("sessions", null) ?: return null
+        return try {
+            val type = object : TypeToken<List<SpeedSession>>() {}.type
+            gson.fromJson(json, type)
+        } catch (e: Exception) { null }
+    }
+
+    private fun saveSpeedHistory(context: Context, sessions: List<SpeedSession>) {
+        val prefs = context.getSharedPreferences("walking_history", Context.MODE_PRIVATE)
+        prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+    }
+
+    private fun copyUriToFile(context: Context, uri: Uri, destFile: File): Boolean {
+        return try {
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(destFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Fehler beim Kopieren von URI $uri: ${e.message}")
             false
         }
     }
 
-    /**
-     * Sammelt alle App-Einstellungen
-     */
-    private fun collectSettings(context: Context): Map<String, String> {
-        val settings = mutableMapOf<String, String>()
-
-        // Theme-Einstellungen
-        val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        settings["is_dark_mode"] = themePrefs.getBoolean("is_dark_mode", false).toString()
-
-        // App-Einstellungen
-        val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        settings["background_updates_enabled"] = appPrefs.getBoolean("background_updates_enabled", true).toString()
-        settings["background_updates_wifi_only"] = appPrefs.getBoolean("background_updates_wifi_only", false).toString()
-        settings["notifications_enabled"] = appPrefs.getBoolean("notifications_enabled", true).toString()
-
-        return settings
-    }
-
-    /**
-     * Stellt Einstellungen wieder her
-     */
-    private fun restoreSettings(context: Context, settings: Map<String, String>) {
-        // Theme
-        val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        settings["is_dark_mode"]?.let {
-            themePrefs.edit().putBoolean("is_dark_mode", it.toBoolean()).apply()
-        }
-
-        // App-Einstellungen
-        val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        settings["background_updates_enabled"]?.let {
-            appPrefs.edit().putBoolean("background_updates_enabled", it.toBoolean()).apply()
-        }
-        settings["background_updates_wifi_only"]?.let {
-            appPrefs.edit().putBoolean("background_updates_wifi_only", it.toBoolean()).apply()
-        }
-        settings["notifications_enabled"]?.let {
-            appPrefs.edit().putBoolean("notifications_enabled", it.toBoolean()).apply()
-        }
-    }
-
-    /**
-     * Sammelt Tagesnotizen (falls vorhanden)
-     */
-    private fun collectNotes(context: Context): List<DailyNoteData>? {
-        // TODO: Implementiere, falls DailyNotesActivity Daten speichert
-        return null
-    }
-
-    /**
-     * Stellt eine Notiz wieder her
-     */
-    private fun restoreNote(context: Context, note: DailyNoteData) {
-        // TODO: Implementiere, falls DailyNotesActivity Daten speichert
-    }
-
-    /**
-     * Kopiert URI zu Datei
-     */
-    private fun copyUriToFile(context: Context, uri: Uri, destFile: File) {
-        context.contentResolver.openInputStream(uri)?.use { input ->
-            FileOutputStream(destFile).use { output ->
-                input.copyTo(output)
-            }
-        }
-    }
-
-    /**
-     * ZIP-Verzeichnis erstellen
-     */
     private fun zipDirectory(sourceDir: File, outputFile: File) {
         ZipOutputStream(FileOutputStream(outputFile)).use { zos ->
             sourceDir.walkTopDown().forEach { file ->
-                val zipFileName = file.absolutePath.removePrefix(sourceDir.absolutePath).removePrefix("/")
-                if (zipFileName.isNotEmpty()) {
-                    val entry = ZipEntry("$zipFileName${if (file.isDirectory) "/" else ""}")
-                    zos.putNextEntry(entry)
-                    if (file.isFile) {
-                        file.inputStream().use { it.copyTo(zos) }
-                    }
-                    zos.closeEntry()
+                if (file.absolutePath == sourceDir.absolutePath) return@forEach
+                val entryName = file.absolutePath.removePrefix(sourceDir.absolutePath).removePrefix("/")
+                val entry = ZipEntry(if (file.isDirectory) "$entryName/" else entryName)
+                zos.putNextEntry(entry)
+                if (file.isFile) {
+                    file.inputStream().use { it.copyTo(zos) }
                 }
+                zos.closeEntry()
             }
         }
     }
 
-    /**
-     * ZIP-Datei entpacken
-     */
     private fun unzipFile(zipFile: File, destDir: File) {
         ZipInputStream(FileInputStream(zipFile)).use { zis ->
             var entry = zis.nextEntry
@@ -301,10 +291,9 @@ object BackupManager {
                     file.mkdirs()
                 } else {
                     file.parentFile?.mkdirs()
-                    FileOutputStream(file).use { fos ->
-                        zis.copyTo(fos)
-                    }
+                    FileOutputStream(file).use { zis.copyTo(it) }
                 }
+                zis.closeEntry()
                 entry = zis.nextEntry
             }
         }
@@ -312,25 +301,18 @@ object BackupManager {
 
     /**
      * Backup-Verzeichnis ermitteln
-     * ✅ Speichert im öffentlichen Downloads-Ordner des Nutzers!
+     * ✅ Speichert im öffentlichen Download-Ordner!
      */
     private fun getBackupDirectory(context: Context): File {
-        // Öffentlicher Downloads-Ordner (für ALLE Android-Versionen)
         val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val dir = File(downloadsDir, BACKUP_DIR)
-        dir.mkdirs()
+        val dir = File(downloadsDir, "HundeWildnis_Backups")
+        if (!dir.exists()) dir.mkdirs()
         return dir
     }
 
-    /**
-     * App-Version ermitteln
-     */
     private fun getAppVersion(context: Context): String {
         return try {
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            packageInfo.versionName ?: "unknown"
-        } catch (e: Exception) {
-            "unknown"
-        }
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "unknown"
+        } catch (e: Exception) { "unknown" }
     }
 }

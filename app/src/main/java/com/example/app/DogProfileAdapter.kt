@@ -1,9 +1,12 @@
 package com.hundewildnis.app
 
+import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.hundewildnis.app.databinding.ItemDogProfileBinding
 
 class DogProfileAdapter(
@@ -16,15 +19,31 @@ class DogProfileAdapter(
     private val onPDF: (DogProfile) -> Unit
 ) : RecyclerView.Adapter<DogProfileAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemDogProfileBinding) : 
+    inner class ViewHolder(private val binding: ItemDogProfileBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        
+
         fun bind(profile: DogProfile) {
+            // ✅ FIX 3: Dark Mode für Card
+            val isDarkTheme = (binding.root.context.resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+            val card = binding.root as MaterialCardView
+            if (isDarkTheme) {
+                // Dunkelgrau mit Schatten
+                card.setCardBackgroundColor(Color.parseColor("#2D2D2D"))
+                card.strokeColor = Color.parseColor("#404040")
+                card.strokeWidth = 2
+            } else {
+                // Weiß (Standard)
+                card.setCardBackgroundColor(Color.WHITE)
+                card.strokeWidth = 0
+            }
+
             // Name, Rasse, Info
             binding.tvName.text = profile.name
             binding.tvBreed.text = profile.breed
             binding.tvInfo.text = "${profile.gender} • ${profile.birthDate}"
-            
+
             // Foto
             if (profile.photoUri.isNotEmpty()) {
                 try {
@@ -35,6 +54,25 @@ class DogProfileAdapter(
             } else {
                 binding.ivPhoto.setImageResource(R.drawable.ic_dog_placeholder)
             }
+
+            // ✅ FIX 1: Button-Farben für Dark Mode
+            val buttonTextColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+            val buttonStrokeColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+
+            // Buttons stylen
+            listOf(
+                binding.btnView,
+                binding.btnEdit,
+                binding.btnQR,
+                binding.btnPDF,
+                binding.btnShare
+            ).forEach { button ->
+                button.setTextColor(buttonTextColor)
+                button.strokeColor = android.content.res.ColorStateList.valueOf(buttonStrokeColor)
+            }
+
+            // Löschen-Button bleibt rot mit weißem Text
+            binding.btnDelete.setTextColor(Color.WHITE)
 
             // Button Callbacks
             binding.btnView.setOnClickListener { onView(profile) }

@@ -227,7 +227,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun fetchWeatherData(latitude: Double, longitude: Double): JSONObject {
-        // ERWEITERT: Alle neuen Daten-Felder
+        // ERWEITERT: alle neuen Daten-Felder
         val url = "https://api.open-meteo.com/v1/forecast?" +
                 "latitude=$latitude&longitude=$longitude" +
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature," +

@@ -19,7 +19,7 @@
             app:titleTextColor="#FFFFFF" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Datum -->
+            <!-- Datum & Ort -->
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
@@ -39,20 +39,58 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="8dp" />
+
+            <!-- Wetter Info (optional) -->
+            <TextView
+                android:id="@+id/tvWeatherInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+            <!-- Titel Eingabe -->
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Titel der Notiz"
+                android:inputType="textCapSentences"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColorHint="@color/dark_green"
+                android:textColor="#000000"
+                android:padding="12dp"
+                android:background="@android:drawable/edit_text"
+                android:layout_marginBottom="12dp" />
 
             <!-- Notizen EditText -->
             <EditText
                 android:id="@+id/etNotes"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:hint="Deine Notizen hier eingeben. \nDiese sind nur in der aktuellen Sitzung verfügbar. \nZur Sicherung der Notizen und Fotos bitte 'Als PDF exportieren' oder 'Teilen'. "
+                android:hint="Deine Notizen hier eingeben."
                 android:textColorHint="@color/dark_green"
                 android:textColor="#000000"
                 android:gravity="top|start"
                 android:padding="12dp"
                 android:background="@android:drawable/edit_text"
                 android:inputType="textMultiLine|textCapSentences"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Wetter hinzufügen Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddWeather"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🌡️ Wetterdaten hinzufügen"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#25E2C2"
                 android:layout_marginBottom="16dp" />
 
             <!-- Foto-Bereich Header -->
@@ -62,7 +100,7 @@
                 android:text="📸 Fotos anhängen"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
+                android:textColor="#33691E"
                 android:layout_marginBottom="8dp" />
 
             <!-- Foto-Buttons -->
@@ -105,43 +143,100 @@
                 android:layout_marginBottom="16dp"
                 android:visibility="gone" />
 
-            <!-- Action Buttons -->
+            <!-- Speichern & Neu Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnExportPdf"
+                android:id="@+id/btnSaveNew"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="📄 Als PDF exportieren"
+                android:text="💾 Notiz sichern &amp; Neue Notiz"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"
                 app:backgroundTint="#2d5016"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="12dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnShare"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="📤 Teilen"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#4a6135"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp" />
+                android:layout_height="1dp"
+                android:background="#33000000"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExportPdf"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="📄 PDF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExportGpx"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="🗺️ GPX"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShare"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="📤 Teilen"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnClear"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="🗑️ Löschen"
+                android:text="🗑️ Entwurf löschen"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"
                 app:backgroundTint="#6a8255"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Historie Überschrift -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🕒 Historie (Bisherige Notizen)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Liste der Sitzungen -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

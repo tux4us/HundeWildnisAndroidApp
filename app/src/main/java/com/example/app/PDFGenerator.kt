@@ -2,154 +2,185 @@ package com.hundewildnis.app
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import com.itextpdf.io.image.ImageDataFactory
-import com.itextpdf.kernel.colors.ColorConstants
 import com.itextpdf.kernel.colors.DeviceRgb
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.element.Image
 import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Table
 import com.itextpdf.layout.properties.TextAlignment
+import com.itextpdf.layout.properties.UnitValue
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 
+/**
+ * PDFGenerator - Erstellt PDF-Dokumente für Hunde-Stammdaten
+ *
+ * ✅ KORRIGIERT: Verwendet KEINE deprecated iText-Methoden mehr!
+ */
 object PDFGenerator {
 
-    fun generateDogProfilePDF(context: Context, profile: DogProfile, qrBitmap: Bitmap): File {
-        val fileName = "Hund_${profile.name.replace(" ", "_")}_${System.currentTimeMillis()}.pdf"
-        val file = File(context.cacheDir, fileName)
+    /**
+     * Generiert ein PDF mit allen Stammdaten eines Hundes
+     *
+     * @param context Android Context
+     * @param profile Hunde-Profil
+     * @param qrBitmap QR-Code als Bitmap
+     * @return PDF-Datei
+     */
+    fun generateDogProfilePDF(
+        context: Context,
+        profile: DogProfile,
+        qrBitmap: Bitmap
+    ): File {
+        // PDF-Datei erstellen
+        val pdfFile = File(context.cacheDir, "Stammdaten_${profile.name}.pdf")
 
-        // WICHTIG: PdfWriter & PdfDocument korrekt initialisieren
-        val writer = PdfWriter(file)
-        val pdfDoc = PdfDocument(writer)
-        val document = Document(pdfDoc)
+        var document: Document? = null
+        var pdfDocument: PdfDocument? = null
 
         try {
-            // === TITEL ===
-            val titleColor = DeviceRgb(45, 80, 22) // #2d5016
+            // PDF-Writer und Document erstellen
+            val writer = PdfWriter(FileOutputStream(pdfFile))
+            pdfDocument = PdfDocument(writer)
+            document = Document(pdfDocument)
+
+            // ✅ KORRIGIERT: Keine deprecated Methoden mehr!
+
+            // Farben definieren
+            val greenColor = DeviceRgb(45, 80, 22) // #2d5016
+            val grayColor = DeviceRgb(128, 128, 128)
+
+            // Titel
             val title = Paragraph("HUNDE-STAMMDATEN")
                 .setFontSize(24f)
                 .setBold()
+                .setFontColor(greenColor)
                 .setTextAlignment(TextAlignment.CENTER)
-                .setFontColor(titleColor)
-                .setMarginBottom(10f)
+                .setMarginBottom(20f)
             document.add(title)
 
-            // === FOTO ===
-            if (profile.photoUri.isNotEmpty()) {
-                try {
-                    val photoUri = Uri.parse(profile.photoUri)
-                    val inputStream = context.contentResolver.openInputStream(photoUri)
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    inputStream?.close()
+            // QR-Code hinzufügen
+            val qrBytes = ByteArrayOutputStream()
+            qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, qrBytes)
+            val qrImage = Image(ImageDataFactory.create(qrBytes.toByteArray()))
+                .setWidth(150f)
+                .setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER)
+                .setMarginBottom(20f)
+            document.add(qrImage)
 
-                    val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
-                    val imageData = ImageDataFactory.create(stream.toByteArray())
-                    val image = Image(imageData).setWidth(200f)
+            // BASIS-DATEN
+            addSectionTitle(document, "BASIS-DATEN", greenColor)
+            addDataTable(document, listOf(
+                "Name" to profile.name,
+                "Rasse" to profile.breed,
+                "Geschlecht" to profile.gender,
+                "Kastriert" to profile.neutered,
+                "Geburtsdatum" to profile.birthDate,
+                "Farbe" to profile.color
+            ))
 
-                    val imageCenter = Paragraph().add(image).setTextAlignment(TextAlignment.CENTER)
-                    document.add(imageCenter)
-                    document.add(Paragraph("\n"))
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+            // IDENTIFIKATION
+            addSectionTitle(document, "IDENTIFIKATION", greenColor)
+            addDataTable(document, listOf(
+                "Chip-Nummer" to profile.chipNumber,
+                "Steuernummer" to profile.taxNumber,
+                "TASSO-Nummer" to profile.tassoNumber
+            ))
 
-            // === BASIS-DATEN ===
-            addSection(document, "BASIS-DATEN")
-            addField(document, "Name", profile.name)
-            addField(document, "Rasse", profile.breed)
-            addField(document, "Geschlecht", profile.gender)
-            addField(document, "Kastriert", profile.neutered)
-            addField(document, "Geburtsdatum", profile.birthDate)
-            addField(document, "Farbe", profile.color)
-            document.add(Paragraph("\n"))
+            // GESUNDHEIT
+            addSectionTitle(document, "GESUNDHEIT", greenColor)
+            addDataTable(document, listOf(
+                "Impfstatus" to profile.vaccinationStatus,
+                "Letzte Entwurmung" to profile.lastDeworming,
+                "Letzte Floh/Zecke" to profile.lastFleaTick,
+                "Gewicht" to "${profile.weight} (${profile.weightDate})",
+                "Medizinische Hinweise" to profile.medicalNotes
+            ))
 
-            // === IDENTIFIKATION ===
-            addSection(document, "IDENTIFIKATION")
-            addField(document, "Chip-Nummer", profile.chipNumber)
-            addField(document, "Steuernummer", profile.taxNumber)
-            addField(document, "TASSO-Nummer", profile.tassoNumber)
-            document.add(Paragraph("\n"))
+            // KONTAKTE
+            addSectionTitle(document, "KONTAKTE", greenColor)
+            addDataTable(document, listOf(
+                "Tierarzt" to profile.veterinarian,
+                "Versicherung" to profile.insurance,
+                "Besitzer" to profile.owner,
+                "Notfallkontakt" to profile.emergencyContact
+            ))
 
-            // === GESUNDHEIT ===
-            addSection(document, "GESUNDHEIT")
-            addField(document, "Impfstatus", profile.vaccinationStatus)
-            addField(document, "Letzte Entwurmung", profile.lastDeworming)
-            addField(document, "Letzte Floh-/Zeckenprophylaxe", profile.lastFleaTick)
-            if (profile.weight.isNotEmpty()) {
-                addField(document, "Gewicht", "${profile.weight} kg (${profile.weightDate})")
-            }
-            addField(document, "Medizinische Hinweise", profile.medicalNotes)
-            document.add(Paragraph("\n"))
+            // FUTTER & VERHALTEN
+            addSectionTitle(document, "FUTTER & VERHALTEN", greenColor)
+            addDataTable(document, listOf(
+                "Futter" to profile.food,
+                "Verhalten" to profile.behavior
+            ))
 
-            // === KONTAKTE ===
-            addSection(document, "KONTAKTE")
-            addField(document, "Tierarzt", profile.veterinarian)
-            addField(document, "Versicherung", profile.insurance)
-            addField(document, "Besitzer", profile.owner)
-            addField(document, "Notfallkontakt", profile.emergencyContact)
-            document.add(Paragraph("\n"))
-
-            // === FUTTER & VERHALTEN ===
-            addSection(document, "FUTTER & VERHALTEN")
-            addField(document, "Futter", profile.food)
-            addField(document, "Besondere Verhaltensweisen", profile.behavior)
-            document.add(Paragraph("\n"))
-
-            // === QR-CODE ===
-            addSection(document, "QR-CODE")
-            document.add(Paragraph("Alle Daten als QR-Code:").setFontSize(10f).setMarginLeft(10f))
-
-            val qrStream = ByteArrayOutputStream()
-            qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, qrStream)
-            val qrImageData = ImageDataFactory.create(qrStream.toByteArray())
-            val qrImage = Image(qrImageData).setWidth(250f)
-
-            val qrCenter = Paragraph().add(qrImage).setTextAlignment(TextAlignment.CENTER)
-            document.add(qrCenter)
-
-            // === FOOTER ===
-            document.add(Paragraph("\n"))
-            val dateFormat = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMAN)
-            val footer = Paragraph("Erstellt mit HundeWildnis App - ${dateFormat.format(java.util.Date())}")
-                .setFontSize(8f)
+            // Footer
+            val footer = Paragraph("Erstellt mit HundeWildnis App")
+                .setFontSize(10f)
+                .setFontColor(grayColor)
                 .setTextAlignment(TextAlignment.CENTER)
-                .setFontColor(ColorConstants.GRAY)
+                .setMarginTop(30f)
             document.add(footer)
 
         } catch (e: Exception) {
             e.printStackTrace()
             throw e
         } finally {
-            // WICHTIG: Dokument schließen
-            document.close()
+            // ✅ WICHTIG: Dokumente schließen in finally-Block
+            try {
+                document?.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            try {
+                pdfDocument?.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
-        return file
+        return pdfFile
     }
 
-    private fun addSection(document: Document, title: String) {
-        val sectionColor = DeviceRgb(45, 80, 22)
-        val section = Paragraph(title)
+    /**
+     * Fügt einen Abschnitts-Titel hinzu
+     */
+    private fun addSectionTitle(document: Document, title: String, color: DeviceRgb) {
+        val paragraph = Paragraph(title)
             .setFontSize(14f)
             .setBold()
-            .setFontColor(sectionColor)
-            .setMarginBottom(5f)
-        document.add(section)
+            .setFontColor(color)
+            .setMarginTop(15f)
+            .setMarginBottom(10f)
+        document.add(paragraph)
     }
 
-    private fun addField(document: Document, label: String, value: String) {
-        if (value.isNotEmpty()) {
-            val field = Paragraph("$label: $value")
-                .setFontSize(11f)
-                .setMarginLeft(10f)
-                .setMarginBottom(3f)
-            document.add(field)
+    /**
+     * Fügt eine Daten-Tabelle hinzu
+     */
+    private fun addDataTable(document: Document, data: List<Pair<String, String>>) {
+        val table = Table(UnitValue.createPercentArray(floatArrayOf(35f, 65f)))
+            .useAllAvailableWidth()
+            .setMarginBottom(10f)
+
+        data.forEach { (label, value) ->
+            // Label-Zelle
+            val labelCell = com.itextpdf.layout.element.Cell()
+                .add(Paragraph(label).setBold())
+                .setPadding(5f)
+            table.addCell(labelCell)
+
+            // Wert-Zelle
+            val valueCell = com.itextpdf.layout.element.Cell()
+                .add(Paragraph(if (value.isEmpty()) "-" else value))
+                .setPadding(5f)
+            table.addCell(valueCell)
         }
+
+        document.add(table)
     }
 }
