@@ -16,95 +16,196 @@ Eine native Android-App für [wildnislehrer.com](https://wildnislehrer.com) - De
 
 ## 📱 Über die App
 
-Die **HundeWildnisApp** bietet direkten Zugriff auf alle Inhalte von [wildnislehrer.com](https://wildnislehrer.com) in einer übersichtlichen, mobiloptimierten App. Perfekt für unterwegs beim Training mit deinem Hund oder beim Lernen in der Natur.
+**HundeWildnis App** eine Anwendung das dem Anspruch gerecht wird ein gutes Werkzeug und ein hilfreicher Begleiter im Alltag, beim täglichen Training und bei allen Unternehmungen mit dem Hund zu sein.
 
+---
 
 ## ✨ Features
 
-### 📰 Inhalte & Community
+### 01 · Zentrale Funktionen
 
-- ✅ HundeWildnis-Blogeinträge
-- ✅ HundeWildnis-Webseiten
-- ✅ Onlinekurse direkt abrufbar
-- ✅ YouTube Channel
-- ✅ X-Channel (Twitter)
-- ✅ Signal 1:1 Trainer-Chat
+Die Startseite bietet direkten Zugriff auf die täglichen Werkzeuge und Management-Bereiche.
 
-### 🗺️ Navigation & Orientierung
+#### 🆘 Unterstützung
+Direkte Hilfe- und Support-Optionen.
 
-- ✅ GPS-Standortermittlung mit automatischer Aktualisierung in Bewegung
-- ✅ OpenStreetMap Karte
-- ✅ Koordinaten anzeigen & teilen
-- ✅ Wichtige Punkte (POI) für Hundehalter und Wanderfreunde im 2km vom aktuellen Standort als Liste
-- ✅ POI auswählen, in der karte anzeigen und automatisch eine Route dahin anzeigen lassen
-- ✅ POI wechseln und automatische Routenanpassung
-- ✅ Digitaler Kompass
-- ✅ Genauigkeitsanzeige
-- ✅ Barometrischer Höhenmesser
+#### 🐾 Übung des Tages
+Regelmäßig wechselnde Trainingsimpulse direkt aus der Praxis der Hundeschule.
 
-### 🌤️ Wetter & Outdoor
+#### 🧘 Tagesmeditation
+Regelmäßig wechselnde Meditationsübungen für ein entspanntes Mensch-Hund-Team.
 
-- ✅ Standortgenaue Wettervorhersage
-- ✅ 24h-Vorschau in 1h-Schritten mit Detailangaben zu jeder Stunde (alle 3h)
-- ✅ animierter Niederschlagsradar mit 2h Prognose
-- ✅ Temperatur, Luftfeuchtigkeit, Wind, Windrichtung, Bft-Index, Böen, Niederschlag
-- ✅ Luftdruck, Sichtweite & UV-Index
-- ✅ Wetterwarnungen
-- ✅ Wetter-Icons & Emojis
+#### 🏃 Trainingstempo
+Echtzeit-Überwachung der Gehgeschwindigkeit in verschiedenen Trainingsszenarien mit Warnfunktion, grafischer Auswertung, Speicherung und GPX/PDF-Export mit Teilen-Option.
+
+#### 📓 Tagesnotizen
+Digitales Trainingstagebuch mit Foto-Upload, optionalen Standortwetterdaten zur Notiz, automatischem GPS-Tagging, automatischer Sicherung und PDF-Export-, Teilen- und GPX-Exportfunktionen.
+
+#### 🌤️ Wetter
+Aktuelle Wetterdaten und Vorhersagen für den Standort. Abruf über die freie Open-Meteo API und das RainViewer-Radar – ohne Tracking durch Google oder andere kommerzielle Wetterdienste.
+
+**Aktuelle Wetterdaten (Echtzeit)**
+- **Temperatur:** Aktuelle Lufttemperatur in 2 m Höhe.
+- **Gefühlte Temperatur:** Berechnet unter Berücksichtigung von Luftfeuchtigkeit und Windchill (spezielle Berechnung bei Kälte und Wind).
+- **Wetterzustand:** Textuelle Beschreibung (z. B. „Leicht bewölkt", „Starker Regen") inklusive passendem Emoji-Icon.
+- **Luftfeuchtigkeit:** Relative Feuchte in Prozent.
+- **Luftdruck:** Aktueller Oberflächendruck in hPa.
+- **Niederschlag:** Aktuelle Niederschlagsmenge in mm.
+- **UV-Index:** Belastung durch ultraviolette Strahlung – wichtig für den Sonnenschutz von Mensch und Hund.
+
+**Wind-Informationen (Detailliert)**
+- **Windgeschwindigkeit** in km/h.
+- **Windrichtung:** Himmelsrichtung inklusive Richtungs-Pfeil (z. B. „↗ SW").
+- **Windböen:** Maximale Böengeschwindigkeit.
+- **Beaufort-Skala:** Einstufung der Windstärke (Bft 0 bis 12).
+
+**Astronomische Daten**
+- **Sonnenaufgang:** Exakte Uhrzeit für den aktuellen Tag.
+- **Sonnenuntergang:** Exakte Uhrzeit für den aktuellen Tag.
+
+**Vorhersagen & Übersichten**
+- **Stündliche 24h-Vorhersage:** Temperatur, gefühlte Temperatur, Regenwahrscheinlichkeit und Wetterzustand für jede der nächsten 24 Stunden.
+- **Tages-Min/Max:** Die erwartete Tiefst- und Höchsttemperatur des Tages.
+- **Wetterwarnung-Badge:** Ein farbiges Status-Badge (Grün/Gelb/Rot) mit Warnungen vor Gewitter, Schneefall, Nebel oder starkem Regen.
+
+**Interaktives Regenradar (Nowcast)**
+- **Historie:** Visualisierung der Regenwolken-Bewegung der letzten 6 Stunden.
+- **Vorhersage:** Animierte Projektion für die kommenden 60 Minuten (Nowcast), um Regenschauer während des Spaziergangs präzise umgehen zu können.
+
+> 📌 **Datenschutz-Hinweis:** Alle Wetterdaten werden über die freie Open-Meteo API (ohne API-Key-Zwang) und das RainViewer-Radar abgerufen. Es findet kein Tracking durch Google oder andere kommerzielle Wetterdienste statt.
+
+#### 🗺️ Standort & POI
+Interaktive Karte mit Suche nach wander- und hunderelevanten Orten via OpenStreetMap.
+
+**Karten- & Standort-Grundfunktionen**
+- **Interaktive OSM-Karte:** Nutzt das freie OpenStreetMap (Mapnik) Material für eine detaillierte Darstellung der Umgebung.
+- **Standort-Anzeige:** Zeigt die aktuelle Position auf der Karte an.
+- **Echtzeit-Tracking:** Die Karte folgt der eigenen Bewegung im Gelände (aktualisiert sich alle 5 Meter oder alle 2 Sekunden).
+- **Standort-Zentrierung:** Über den Button „📍 Standort" lässt sich die Karte jederzeit wieder auf die aktuelle Position ausrichten.
+- **Koordinaten-Anzeige:** Die exakten GPS-Daten (Breiten- und Längengrad) werden live eingeblendet.
+- **Standort teilen:** Die aktuelle Position lässt sich direkt an weitere Personen versenden oder zu anderen Apps teilen.
+
+**POI-Suche (Points of Interest)**
+
+Kategorien-Grid für schnelle Auswahl hundespezifischer Orte:
+- Hundeausläufe & Hundeparks
+- Tierärzte & Tierkliniken
+- Tierbedarf & Tierheime
+- Wanderwege & Aussichtspunkte
+- Trinkwasser & Toiletten
+- Supermärkte, Bäckereien & Restaurants
+- Notfall-Services (Apotheke, Polizei, Feuerwehr, Arztpraxen, Krankenhäuser)
+- Naturschutzgebiete & Nationalparks
+- SOS-Punkte und vieles mehr
+
+- **Radar-Suche:** Sucht automatisch in einem Umkreis von 3 km nach allen Einträgen der gewählten Kategorie via Overpass-API.
+- **Ergebnis-Vorschau:** Zeigt alle Fundorte gleichzeitig als Marker auf der Karte an und zoomt so, dass alle Ziele plus die eigene Position sichtbar sind.
+
+**Intelligente Navigation (Routing)**
+- **Wegbeschreibung:** Ein Klick auf einen Ort in der Liste oder einen Marker auf der Karte startet die Navigation.
+- **Routenberechnung:** Die App nutzt professionelle Routing-Dienste (OpenRouteService, Graphhopper oder OSRM), um den besten Weg für Fußgänger zu berechnen.
+- **Statistiken:** Zeigt die exakte Entfernung und die geschätzte Gehzeit zum Ziel an.
+- **Live-Update:** Während des Laufens wird die Route ständig an die aktuelle Position angepasst.
+- **Luftlinie-Fallback:** Sollte kein Fußweg in der Karte bekannt sein, wird automatisch eine gestrichelte Luftlinie zum Ziel angezeigt.
+
+**POI-Details**
+- **Umfassende Infos:** Sofern in OSM hinterlegt, zeigt die App Details wie Adresse, Telefonnummer, Webseite, Öffnungszeiten und Zutrittsbeschränkungen (z. B. Leinenpflicht) an.
+- **Direkt-Aktionen:** Telefonnummern und Web-Links sind klickbar, um sofort Kontakt aufzunehmen.
+- **Lokal & Frei:** Keine Nutzung von Google Maps. Der Standort wird nur für die aktuelle Suche anonym an freie Karten-Server gesendet.
+- **Zwei-Klick-Logik:** Erster Klick auf Marker zeigt Info, zweiter Klick startet die Navigation – für eine fehlerfreie Bedienung.
+
+#### 🧭 Kompass
+Digitale Orientierungshilfe für Wanderungen und Gelände.
+
+#### ⛰️ Höhenmesser
+Anzeige der aktuellen Höhe über Meeresspiegel via GPS.
+
+#### 🐕 Hunde-Stammdaten
+Verwaltung von bis zu 3 Hunde-Profilen. Die Stammdaten werden über Infokarten dargestellt und können angezeigt, bearbeitet und geteilt werden.
+
+**Basis-Informationen**
+- **Name:** Rufname des Hundes.
+- **Rasse:** Rassebezeichnung oder Mischling.
+- **Geschlecht:** Rüde oder Hündin.
+- **Kastrationsstatus:** Ja, Nein oder Unbekannt.
+- **Geburtsdatum:** Tag der Geburt.
+- **Farbe:** Fellfarbe und besondere Kennzeichen.
+- **Foto:** Ein individuelles Profilbild des Hundes.
+
+**Identifikation (Wichtig bei Verlust)**
+- **Chipnummer:** Die 15-stellige Transponder-Nummer.
+- **Tasso-Nummer:** Kennnummer der Registrierung bei Tasso e.V.
+- **Steuernummer:** Die amtliche Hundesteuer-Nummer.
+
+**Gesundheit & Vorsorge**
+- **Impfstatus:** Aktuelle Informationen zu den Schutzimpfungen.
+- **Letzte Entwurmung:** Datum der letzten Behandlung.
+- **Letzter Floh-/Zeckenschutz:** Datum der letzten Prophylaxe.
+- **Gewicht:** Aktuelles Körpergewicht inklusive Datum der Messung.
+- **Medizinische Hinweise:** Platz für chronische Krankheiten, Allergien oder notwendige Medikamente.
+
+**Kontakte & Versicherung**
+- **Tierarzt:** Name und Kontaktdaten des Haustierarztes.
+- **Versicherung:** Angaben zur Hundehaftpflicht- oder Krankenversicherung.
+- **Besitzer:** Name und Adresse des Eigentümers.
+- **Notfallkontakt:** Telefonnummer für dringende Rückfragen.
+
+**Haltung & Verhalten**
+- **Futter:** Spezielle Ernährungsanforderungen oder Futtersorten.
+- **Verhalten:** Besonderheiten im Umgang (z. B. „ängstlich bei Gewitter" oder „verträglich mit Artgenossen").
+
+**Export & Transfer**
+- **PDF mit QR-Code:** Es lässt sich eine komplette PDF inklusive QR-Code erzeugen.
+- **QR-Code-Transfer:** Die App generiert aus den Stammdaten einen QR-Code. Ein Scan (z. B. durch einen Tierarzt) überträgt die Stammdaten sofort auf das Zielgerät.
+- **Datenschutz:** Alle Daten werden ausschließlich lokal auf dem Smartphone gespeichert und verlassen das Gerät nur, wenn der Nutzer aktiv den Export (Teilen, PDF, QR-Code) nutzt.
+
+#### 💾 Datensicherung (Backup)
+Komplette Sicherung und Wiederherstellung aller angelegten App-Daten lokal auf dem Gerät. Das Backup kann auf Wunsch auch geteilt werden, um es auf weiteren Geräten bzw. nach Neuinstallation in die App zu importieren.
 
 ---
 
-## 🌟 Warum HundeWildnisApp?
+### 02 · Untere Navigationsleiste
 
-| Feature | Beschreibung |
+| Bereich | Beschreibung |
 |---------|-------------|
-| 🎯 **Alles in einer App** | Keine Navigation zwischen verschiedenen Tools mehr |
-| 🐕 **Für Hundebesitzer** | Speziell für Outdoor-Aktivitäten mit Hund entwickelt |
-| 💬 **Direkter Support** | 1:1 Signal-Chat mit Wildnislehrern |
-| 🔒 **Datenschutz** | Deine Daten bleiben bei dir - keine Google-Dienste |
-| 🔄 **Regelmäßige Updates** | Ständig neue Features und Verbesserungen |
-| 🌓 **Dark/Light Mode** | Augenschonendes dunkles Design optional |
+| 📰 **Blog** | Aktuelle Artikel, Tipps und Neuigkeiten der HundeWildnisSchule. |
+| 📄 **Seiten** | Direkter Zugriff auf Webseiten der HundeWildnisSchule. |
+| 🎓 **Kurse** | Verknüpfung zu über 40 professionellen Online-Trainingskursen (nach individueller Freischaltung über die Webseite). |
+| ▶ **YouTube** | Direkter Link zu unserem YouTube-Kanal. |
+| 🎙 **Podcast** | Zugriff auf Audiobeiträge der HundeWildnisSchule. |
+| ✕ **X (Twitter)** | Direkter Link zu unserem X-Kanal. |
+| 💬 **Signal-Kontakt** | Direkter Draht zu den Trainern Manuela und Jörg. |
 
 ---
 
-## 📱 App-Bereiche im Detail
+### 03 · System- & Hilfemenü
 
-### Blog
-- 20 neueste Beiträge
-- "Weitere laden"-Funktion
-- Durchsuchbar
+Globale Aktionen, verfügbar über das 3-Punkte-Menü in der oberen Toolbar.
 
-### Seiten
-- Hierarchische Darstellung aller Webseiten mit Einrückung
-
-### Onlinekurse
-- Dedizierter Bereich mit strukturierten Kursinhalten
-
-### Videos
-- YouTube-Kanal-Integration
-- Datenschutzfreundlich
-
-### Suche
-- Durchsuche alle Bereiche schnell und einfach
-
-### Tap-to-Refresh
-- Alle Inhalte über Aktualisierungsbutton immer auf dem Neuesten halten
-
-### X-Kanal
-- Folge uns auf X für interessante Inhalte
-
-### SIGNAL-Chat
-- Fragen, Hinweise, Hilfestellungen benötigt?
-- Kontaktiere uns datenschutzkonform und privatsphäregeschützt über SIGNAL
+| | Funktion | Beschreibung |
+|--|---------|-------------|
+| 🔁 | Aktualisieren | Manuelles Laden neuer Blog-Inhalte. |
+| 🌞🌒 | Theme wechseln | Umschalten zwischen hellem Design und augenschonendem Dark Mode. |
+| ⚙️ | Einstellungen | Verwaltung von Hintergrund-Updates und Benachrichtigungen. |
+| 📦 | Backup erstellen | Schneller Zugriff auf die Datensicherung. |
+| 📥 | Backup importieren | Einspielen einer bestehenden Sicherungsdatei. |
+| 📖 | Anleitung | Detaillierte Bedienungshilfe für alle App-Bereiche. |
+| 🛡️ | Berechtigungen | Erläuterung der genutzten System-Berechtigungen (GPS, Kamera etc.). |
+| 📜 | Datenschutz | Einsehen der aktuellen Datenschutzerklärung. |
+| 📎 | Impressum | Rechtliche Informationen zum Anbieter. |
+| ℹ️ | Über die App | Versionsinfo, Anbieterdaten und direkter Kontakt für Feedback. |
+| 🏡 | Home | Schneller Rücksprung zur Hauptübersicht. |
 
 ---
 
-## 🆕 Kommende Features
+### 04 · Besondere technische Merkmale
 
-- 🏞️ **POI-Finder** für hundefreundliche Orte (Freilaufflächen, Wasserquellen, Tierärzte)
-- 🚫 **Warnung** vor Schutz- und Verbotsgebieten (wichtig für Bußgelder!)
-- 🗺️ **Tracking** absolvierte Touren archivieren und teilen
-- 📝 **Touren-Tagebuch** zum Festhalten eurer Abenteuer
+| Merkmal | Beschreibung |
+|---------|-------------|
+| 🔒 **Privacy-First** | Keine Cloud-Synchronisation – alle Daten (GPS, Fotos, Notizen) bleiben lokal auf dem Gerät. |
+| 🚫 **Google-Free** | Vollständiger Verzicht auf proprietäre Google-Services. F-Droid-kompatibel. |
+| 📤 **Export-Stark** | Umfassende PDF-Protokollierung, Export-Optionen und GPX-Unterstützung für Tracks und Wegpunkte. |
+| 🛡️ **Screenshot-Schutz** | Aktive Sicherung sensibler Daten vor unbefugten Bildschirmfotos. |
 
 ---
 
@@ -177,7 +278,6 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe [LICENSE](LICENSE) Da
 
 - 🌐 [wildnislehrer.com](https://wildnislehrer.com)
 - 🐙 [GitHub Repository](https://github.com/tux4us/HundeWildnisAndroidApp)
-- 📱 [Google Play Store](https://play.google.com/store/apps/details?id=com.hundewildnis.app)
 
 ---
 
@@ -211,45 +311,3 @@ Bei Fragen oder Problemen:
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/tux4us/HundeWildnisAndroidApp)
 
 </div>
-
-## 🖼️ Screenshots
-
-
-<img width="1080" height="2400" alt="Screenshot_20260125-213654_HundeWildnis" src="https://github.com/user-attachments/assets/36806115-fcb6-4e6e-b707-53d31ef525ef" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210621_HundeWildnis" src="https://github.com/user-attachments/assets/a80e7733-e54c-4b5a-803b-3233944ab3f6" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210608_HundeWildnis" src="https://github.com/user-attachments/assets/6438be9a-2718-45f3-95e2-00ed7d7c8119" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210554_HundeWildnis" src="https://github.com/user-attachments/assets/1eec2469-3d33-4bba-8d6a-f48062790ec0" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210541_HundeWildnis" src="https://github.com/user-attachments/assets/d0a18b27-3e6e-4ad9-ab5f-99ec4bd10c94" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210526_HundeWildnis" src="https://github.com/user-attachments/assets/11d2ac93-5b4a-42a9-9883-972ce64eefe7" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210342_HundeWildnis" src="https://github.com/user-attachments/assets/cdd35de9-4787-4509-8e79-4b2712e6aa4b" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210320_HundeWildnis" src="https://github.com/user-attachments/assets/55318f5d-92d2-4735-93f0-f916e104a0eb" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210301_HundeWildnis" src="https://github.com/user-attachments/assets/08f19c8e-f4df-4d41-8700-713c9e004f0b" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210236_HundeWildnis" src="https://github.com/user-attachments/assets/f46a1810-2c91-4a9f-b881-308545f9d317" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210221_HundeWildnis" src="https://github.com/user-attachments/assets/8d4c18ac-fafe-4814-8413-d528adfae72e" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210209_HundeWildnis" src="https://github.com/user-attachments/assets/63149c99-55fc-4075-aaf1-2fa73d91b915" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210138_HundeWildnis" src="https://github.com/user-attachments/assets/8546e3a2-e6e5-4fbb-b70e-1964a13a4d4d" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210122_HundeWildnis" src="https://github.com/user-attachments/assets/1fc0d890-7c64-4162-a3a7-ce9f19aedb6c" />
-
-<img width="1080" height="2400" alt="Screenshot_20260125-210100_HundeWildnis" src="https://github.com/user-attachments/assets/5a103907-3d72-4e67-8a64-b6f217e9b513" />
-
-
-
-
-
-
-
-
-
