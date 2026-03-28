@@ -1,6 +1,8 @@
 package com.hundewildnis.app
 
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -109,7 +111,10 @@ class DogProfileActivity : SecureBaseActivity() {
     }
 
     private fun deleteProfile(profile: DogProfile) {
-        AlertDialog.Builder(this)
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        val dialog = AlertDialog.Builder(this)
             .setTitle("Hund löschen?")
             .setMessage("Möchtest du ${profile.name} wirklich löschen?")
             .setPositiveButton("Löschen") { _, _ ->
@@ -118,7 +123,11 @@ class DogProfileActivity : SecureBaseActivity() {
                 Toast.makeText(this, "${profile.name} gelöscht", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Abbrechen", null)
-            .show()
+            .create()
+        
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
     }
 
     private fun shareProfile(profile: DogProfile) {

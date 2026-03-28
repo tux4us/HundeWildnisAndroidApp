@@ -341,7 +341,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Versicherung (Kranken-/OP-Versicherung)"
+                android:hint="Versicherungen"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etInsurance"
@@ -403,7 +403,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Besondere Verhaltensweisen / Bedürfnisse"
+                android:hint="Besondere Verhaltensweisen / Informationen"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBehavior"

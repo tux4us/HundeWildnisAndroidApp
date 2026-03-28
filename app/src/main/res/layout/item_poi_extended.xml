@@ -180,7 +180,7 @@
                     android:layout_weight="1"
                     android:text="+49 123 456789"
                     android:textSize="11sp"
-                    android:textColor="#CCCCCC"
+                    android:textColor="#ffffff"
                     android:autoLink="phone" />
             </LinearLayout>
 

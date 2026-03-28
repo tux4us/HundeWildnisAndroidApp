@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvPermTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🛡️ App-Berechtigungen"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/green_primary"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Damit die HundeWildnis App alle Funktionen wie GPS-Tracking, Fotos und Benachrichtigungen korrekt ausführen kann, werden bestimmte Berechtigungen benötigt. Hier findest Du eine Übersicht:"
+            android:textSize="14sp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Standort -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📍 Standort (GPS)"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wird für die POI-Suche, den Geh-Geschwindigkeitswächter und das Geotagging Deiner Tagesnotizen verwendet.\n• Wähle 'Beim Benutzen der App' und für das Hintergrund-Tracking 'Immer erlauben'."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Kamera & Medien -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📸 Kamera &amp; Fotos"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wird benötigt, um Fotos für Deine Hunde-Profile aufzunehmen oder Bilder an Deine Tagesnotizen anzuhängen."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Benachrichtigungen -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔔 Benachrichtigungen"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ermöglicht der App, Dich bei Geschwindigkeitsüberschreitungen zu warnen (auch bei gesperrtem Bildschirm) und Dich über neue Blog-Inhalte zu informieren."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Vibration -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📳 Vibration"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wird für das haptische Feedback bei Warnungen im Trainingstempo-Modus genutzt."
+            android:textSize="14sp"
+            android:layout_marginBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Anleitung Aktivierung -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚙️ So aktivierst Du Berechtigungen manuell:"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Öffne die Android-Einstellungen.\n2. Gehe zu 'Apps' -> 'Alle Apps anzeigen'.\n3. Suche 'HundeWildnis' in der Liste.\n4. Tippe auf 'Berechtigungen', um Kamera, Standort etc. freizuschalten.\n5. Tippe auf 'Benachrichtigungen', um Warnungen zu erlauben."
+            android:textSize="13sp"
+            android:lineSpacingExtra="2dp"
+            android:textColor="?android:attr/textColorSecondary" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -156,13 +156,19 @@ object POICategories {
         Category(
             name = "Apotheke",
             icon = "💊",
-            queries = listOf("amenity=pharmacy"),
+            queries = listOf("amenity=pharmacy", "healthcare=pharmacy"),
             color = "#f44336"
         ),
         Category(
             name = "Arzt",
             icon = "⚕️",
-            queries = listOf("amenity=doctors", "amenity=hospital")
+            queries = listOf(
+                "amenity=doctors", 
+                "amenity=hospital", 
+                "amenity=clinic",
+                "amenity=dentist",
+                "healthcare" // ✅ Alle Healthcare-Einträge einschließen
+            )
         ),
         Category(
             name = "Polizei",
@@ -204,6 +210,9 @@ object POICategories {
                 val parts = query.split("=")
                 if (parts.size == 2) {
                     """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
+                } else if (query.isNotEmpty()) {
+                    // ✅ Unterstützt nun auch einfache Keys (z.B. "healthcare")
+                    """node["$query"](around:$radius,$lat,$lon);"""
                 } else {
                     ""
                 }
@@ -229,7 +238,8 @@ object POICategories {
                 if (parts.size == 2) {
                     tags[parts[0]] == parts[1]
                 } else {
-                    false
+                    // ✅ Prüft ob der Key existiert
+                    tags.containsKey(query)
                 }
             }
         }

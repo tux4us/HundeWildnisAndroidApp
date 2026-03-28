@@ -1,5 +1,7 @@
 package com.hundewildnis.app
 
+import android.content.res.Configuration
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +16,28 @@ class POIAdapter(
     inner class POIViewHolder(private val binding: ItemPoiExtendedBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(poi: POI) {
-            // Basis-Informationen
+            val context = binding.root.context
+            val isDarkTheme = (context.resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+            // ✅ Haupt-Daten setzen
+            binding.poiName.text = poi.name
             binding.poiIcon.text = poi.categoryIcon
             binding.poiCategory.text = poi.category
-            binding.poiName.text = poi.name
             binding.poiDistance.text = formatDistance(poi.distance)
             binding.poiDirection.text = "${poi.directionArrow} ${poi.direction}"
+
+            // ✅ Detail-Farbe: Weiß im Dark Mode, Dunkelgrün im Light Mode
+            val detailColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+
+            // Alle Detail-TextViews:
+            binding.poiAddress.setTextColor(detailColor)
+            binding.poiPhone.setTextColor(Color.WHITE)
+            binding.poiPhone.setLinkTextColor(Color.WHITE)
+            binding.poiHours.setTextColor(detailColor)
+            binding.poiDescription.setTextColor(detailColor)
+            binding.poiOperator.setTextColor(detailColor)
+            binding.poiAccess.setTextColor(detailColor)
 
             // ✅ Erweiterte Details - nur anzeigen wenn vorhanden
             var hasDetails = false
@@ -46,7 +64,8 @@ class POIAdapter(
             if (!poi.website.isNullOrEmpty()) {
                 binding.websiteLayout.visibility = View.VISIBLE
                 binding.poiWebsite.text = poi.website
-                hasDetails = true
+                binding.poiWebsite.setTextColor(Color.WHITE)
+                binding.poiWebsite.setLinkTextColor(Color.WHITE)
             } else {
                 binding.websiteLayout.visibility = View.GONE
             }
@@ -87,7 +106,6 @@ class POIAdapter(
                     "private" -> "Privat"
                     "permissive" -> "Bedingt zugänglich"
                     "leashed" -> "🐕 Nur an der Leine"
-                    "no" -> "🐕 Hunde nicht erlaubt"
                     else -> poi.access
                 }
                 hasDetails = true

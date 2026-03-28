@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvInsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📖 Bedienungsanleitung"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/green_primary"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💾 Datensicherheit"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alle Deine von Dir eingegebenen und generierten Daten gehören Dir und werden lokal auf Deinem Gerät gespeichert. Für das Teilen der Daten zu Dritten bist Du selbst verantwortlich.\n\nONLINETRAINER-KURSE\nNotizen, welche Du in den einzelnen Onlinetrainer-Kursen ablegst bleiben in Deinem Browser-Cache gespeichert und können durch das Leeren des Caches gelöscht werden. Für eine dauerhafte Sicherung der Notizen in den Onlinetrainer-Kursen gibt es die Möglichkeit des Exports bzw. zum Teilen der Notizen."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Geh-Geschwindigkeit -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🚶 Trainingstempo"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Überwache deine Geh-Geschwindigkeit beim Training. \n• Wähle ein Limit (z.B. Alltags-Training).\n• Die App warnt dich per Ton/Vibration bei Überschreitung. Dazu bitte die Benachrichtigungen in den Android-Einstellungen (Einstellungen - Apps - HundeWildnis - Benachrichtigungen) für HundeWildnis App aktivieren.\n• GPX &amp; PDF Export inkl. Historie verfügbar."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Tagesnotizen -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📝 Tagesnotizen"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dokumentiere dein Training mit Fotos und Text.\n• GPS-Koordinaten werden automatisch erfasst.\n• 'Notiz sichern' speichert den Stand in der Historie.\n• GPX &amp; PDF Export für OSM-Mapping oder Archiv."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Stammdaten -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🐕 Hunde-Stammdaten"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verwalte alle wichtigen Informationen deiner Hunde.\n• Chipnummer, Geburtsdatum, Besonderheiten.\n• QR-Code Generierung für schnelles Teilen der Daten.\n• Export als übersichtliches PDF-Stammblatt."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- POI / Standort -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📍 Standort &amp; POI"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finde hunderelevante Orte in deiner Nähe.\n• Suche nach Tierärzten, Hundeausläufen oder Trinkwasser.\n• Integrierter Kompass und Höhenmesser zur Orientierung im Gelände."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Backup -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📦 Datensicherung"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sichere deine Daten regelmäßig.\n• Das Backup umfasst Profile, Notizen, Fotos und Statistiken.\n• Speicherort: Downloads/HundeWildnis_Backups/."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipp: Nutze das 3-Punkte-Menü für schnelle Aktionen wie Backup oder Theme-Wechsel."
+            android:textSize="13sp"
+            android:textStyle="italic"
+            android:textColor="?android:attr/textColorSecondary" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

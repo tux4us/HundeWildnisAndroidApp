@@ -19,7 +19,7 @@
             app:titleTextColor="#FFFFFF" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -159,7 +159,7 @@
                 android:checked="true"
                 android:layout_marginBottom="24dp" />
 
-            <!-- ✅ Start/Stop Button HIER (vor Chart!) -->
+            <!-- Start/Stop Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnStartStop"
                 android:layout_width="match_parent"
@@ -187,6 +187,7 @@
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/tvChartTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📊 Geschwindigkeitsverlauf"
@@ -237,20 +238,72 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Export-Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnExport"
+            <!-- Export & Share Buttons -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="📄 Als PDF exportieren"
-                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExport"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="📄 PDF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:enabled="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExportGpx"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="🗺️ GPX"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#4a6135"
+                    android:textColor="#FFFFFF"
+                    android:enabled="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShare"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="📤 Teilen"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#2d5016"
+                    android:textColor="#FFFFFF"
+                    android:enabled="false" />
+            </LinearLayout>
+
+            <!-- Historie Überschrift -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🕒 Historie (Bisherige Messungen)"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#4a6135"
-                android:textColor="#FFFFFF"
-                android:enabled="false" />
+                android:layout_marginBottom="12dp" />
+
+            <!-- Liste der Sitzungen -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

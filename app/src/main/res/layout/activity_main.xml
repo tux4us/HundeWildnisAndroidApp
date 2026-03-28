@@ -22,7 +22,6 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content Container (ersetzt SwipeRefreshLayout) -->
     <FrameLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
@@ -57,19 +56,7 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <!-- YouTube RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/youtubeRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="16dp"
-            android:visibility="gone" />
-
-        <!-- "Weitere Beiträge laden" Button (schwebend) -->
+        <!-- "Weitere Beiträge laden" Button -->
         <Button
             android:id="@+id/btnLoadMore"
             android:layout_width="wrap_content"

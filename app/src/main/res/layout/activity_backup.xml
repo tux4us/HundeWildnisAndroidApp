@@ -74,7 +74,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Erstellt eine Sicherung der:\n\n• Hunde-Stammdaten (bis zu 3 Profile)\n• Fotos aller Hunde\n• App-Einstellungen"
+                        android:text="Erstellt eine vollständige Sicherung der:\n\n• Hunde-Stammdaten\n• Alle Fotos (Hunde &amp; Notizen)\n• App-Einstellungen &amp; Theme\n• Historie der Tagesnotizen\n• Historie der Geschwindigkeitsmessungen"
                         android:textSize="14sp"
                         android:textColor="#666666"
                         android:layout_marginBottom="16dp" />
