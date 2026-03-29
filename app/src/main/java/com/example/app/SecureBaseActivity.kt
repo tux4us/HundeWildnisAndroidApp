@@ -14,9 +14,10 @@ abstract class SecureBaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // FLAG_SECURE: Blockiert Screenshots & Screen Recording
-        window.setFlags(
+        /*window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
-        )
+        )*/
+
     }
 }

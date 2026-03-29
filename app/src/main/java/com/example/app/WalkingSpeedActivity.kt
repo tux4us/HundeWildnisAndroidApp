@@ -120,16 +120,25 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         }
     }
 
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+            checkNotificationPermissionAndStart()
+        } else {
+            Toast.makeText(this, "⚠️ Ohne Standort keine Messung möglich", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
             Toast.makeText(this, "✓ Benachrichtigungen erlaubt", Toast.LENGTH_SHORT).show()
-            startTracking()
         } else {
             Toast.makeText(this, "⚠️ Keine Warnungen möglich", Toast.LENGTH_SHORT).show()
-            startTracking()
         }
+        startTracking()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -549,13 +558,37 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun requestPermissionsAndStart() {
-        // Standortberechtigung prüfen
+        val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDarkThemeMode) Color.WHITE else Color.parseColor("#2d5016")
+
+        // 1. Standort-Erklärungs-Dialog
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Hier sollte ein Dialog zur Abfrage kommen, wenn nicht bereits verweigert
-            Toast.makeText(this, "Standortberechtigung erforderlich", Toast.LENGTH_SHORT).show()
-            // In einer echten App würde man hier requestPermissions aufrufen
+            AlertDialog.Builder(this)
+                .setTitle("📍 Standortdienste aktivieren")
+                .setMessage("Diese App benötigt Zugriff auf Deinen Standort für folgende Funktionen:\n\n" +
+                        "• Tempo-Messung: Um Deine Geh-Geschwindigkeit im Training präzise zu ermitteln.\n" +
+                        "• Navigation: Damit Du Standort und Navigation aufrufen und nutzen kannst.\n" +
+                        "• Standort-Infos: Für GPS-Daten in Deinen Notizen, um diese mit Deinem Standort zu verknüpfen.\n\n" +
+                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du diese Funktionen nicht nutzen. Deine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und auf Wunsch zum Teilen freigegeben.")
+                .setPositiveButton("Verstanden") { _, _ ->
+                    locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                }
+                .setNegativeButton("Abbrechen", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+                }
             return
         }
+
+        checkNotificationPermissionAndStart()
+    }
+
+    private fun checkNotificationPermissionAndStart() {
+        val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDarkThemeMode) Color.WHITE else Color.parseColor("#2d5016")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val hasPermission = ContextCompat.checkSelfPermission(
@@ -563,12 +596,9 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             ) == PackageManager.PERMISSION_GRANTED
 
             if (!hasPermission) {
-                val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                val buttonColor = if (isDarkThemeMode) Color.WHITE else Color.parseColor("#2d5016")
-
-                val dialog = AlertDialog.Builder(this)
-                    .setTitle("🔔 Benachrichtigungen aktivieren?")
-                    .setMessage("Damit der Geschwindigkeitswächter Dich auch bei ausgeschaltetem Display warnen kann, benötigt die App die Berechtigung für Benachrichtigungen.")
+                AlertDialog.Builder(this)
+                    .setTitle("🔔 Benachrichtigungen aktivieren")
+                    .setMessage("Damit der Geschwindigkeitswächter Dich auch bei ausgeschaltetem Display zuverlässig bei Überschreitung Deines Trainingstempos benachrichtigen kann, benötigen wir die Berechtigung für Benachrichtigungen.")
                     .setPositiveButton("Aktivieren") { _, _ ->
                         notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }
@@ -576,14 +606,14 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                         startTracking()
                     }
                     .create()
-                
-                dialog.show()
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+                    .apply {
+                        show()
+                        getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+                        getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+                    }
                 return
             }
         }
-
         startTracking()
     }
 
