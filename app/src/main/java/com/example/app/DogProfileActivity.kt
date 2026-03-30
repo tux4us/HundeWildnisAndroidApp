@@ -159,10 +159,31 @@ class DogProfileActivity : SecureBaseActivity() {
 
             val pdfFile = PDFGenerator.generateDogProfilePDF(this, profile, qrBitmap)
 
+            // ✅ FIX: PDF in Documents/HundeWildnis kopieren
+            val documentsDir = android.os.Environment.getExternalStoragePublicDirectory(
+                android.os.Environment.DIRECTORY_DOCUMENTS
+            )
+            val appDir = java.io.File(documentsDir, "HundeWildnis")
+            if (!appDir.exists()) {
+                appDir.mkdirs()
+            }
+
+            val targetFile = java.io.File(appDir, pdfFile.name)
+            pdfFile.copyTo(targetFile, overwrite = true)
+
+            // MediaScanner benachrichtigen
+            android.media.MediaScannerConnection.scanFile(
+                this,
+                arrayOf(targetFile.absolutePath),
+                arrayOf("application/pdf"),
+                null
+            )
+
+            // PDF öffnen (wie bisher)
             val uri = androidx.core.content.FileProvider.getUriForFile(
                 this,
                 "${packageName}.fileprovider",
-                pdfFile
+                targetFile  // ✅ Nutze targetFile statt pdfFile
             )
 
             val intent = Intent(Intent.ACTION_VIEW).apply {

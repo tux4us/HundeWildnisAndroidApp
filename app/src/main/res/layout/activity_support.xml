@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Die HundeWildnis App ist kostenlos und wird von uns allein in vielen Stunden Arbeit entwickelt. Mit Deiner Unterstützung können wir die App weiter verbessern und Eure Wünsche umsetzen. Danke für Deine Spende 🐾"
+                android:text="Gefällt Dir HundeWildnis? 💚\nUnterstütze uns gern mit einem kleinen Beitrag – so bleibt die App kostenlos und wir bekommen die Möglichkeit weiter Zeit und Arbeit in stetige Verbesserungen zu investieren.🐾"
                 android:textSize="14sp"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary"

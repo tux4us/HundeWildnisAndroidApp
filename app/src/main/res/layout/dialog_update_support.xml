@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Icon/Emoji -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="🎉"
+        android:textSize="48sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Titel -->
+    <TextView
+        android:id="@+id/tvUpdateTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Neue Version verfügbar!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Versionsnummer -->
+    <TextView
+        android:id="@+id/tvUpdateVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Version 9.31"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- ✅ NEU: ScrollView für langen Text -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:maxHeight="300dp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false">
+
+        <!-- Nachricht -->
+        <TextView
+            android:id="@+id/tvUpdateMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Diese HundeWildnis App entsteht mit vielen Stunden am PC, Leidenschaft und persönlichem Einsatz – für Dich und Deinen Hund. Dank Eurem Feedback konnten wir bereits viele Funktionen verbessern und neue Ideen umsetzen. Und genau das möchten wir weiter ausbauen.\n\nDamit wir die App auch künftig kostenlos anbieten und kontinuierlich weiterentwickeln können, brauchen wir Deine Unterstützung.\n\n🤝 Schon ein kleiner Beitrag ist eine große Wertschätzung für unsere Arbeit:\n\nEr hilft uns, neue Trainingsideen umzusetzen, hilfreiche Funktionen zu entwickeln und Dir einen noch besseren Begleiter für Deinen Alltag mit Deinem Hund zu bieten.Wenn Dir die App gefällt und Dich im Alltag unterstützt, freuen wir uns sehr, wenn Du uns unterstützt.\nAm besten mit kleinen Beträgen – dafür gern regelmäßig bei neuen Versionen. So tragen viele gemeinsam dazu bei, dass HundeWildnis weiter wächst.\n\nDiese Anfrage zeigen wir bewusst immer nur dann, wenn eine neue Version für Dich bereitsteht.\n\nVielen Dank für Deine Unterstützung 💚\nManuela und Jörg"
+            android:textSize="15sp"
+            android:lineSpacingMultiplier="1.2" />
+
+    </ScrollView>
+
+    <!-- Spacer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <!-- Button Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Unterstützen Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSupport"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="💝 Ich möchte unterstützen"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            style="@style/Widget.Material3.Button"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Später Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLater"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Jetzt nicht"
+            android:textSize="14sp"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -16,6 +16,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.view.MenuItem
+import android.view.animation.OvershootInterpolator
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -69,6 +70,9 @@ class CommunicationActivity : SecureBaseActivity() {
     private var time648Hz = 0L
     private var lastHitTimestamp = 0L
     private var lastHitFrequency: TargetFrequency? = null
+    
+    // Feedback-Symbol Timer
+    private var lastMatchFeedbackTime = 0L
 
     // Aktuelle Werte
     private var currentFrequency = 0f
@@ -97,6 +101,7 @@ class CommunicationActivity : SecureBaseActivity() {
         private const val VOICE_THRESHOLD = 0.001f  // ✅ Stark gesenkt von 0.005f (sehr empfindlich für 1-2m)
         private const val TOLERANCE_HZ = 5f
         private const val HIT_COOLDOWN_MS = 1000L
+        private const val FEEDBACK_SYMBOL_COOLDOWN = 1200L
     }
 
     private val micPermissionLauncher = registerForActivityResult(
@@ -104,18 +109,6 @@ class CommunicationActivity : SecureBaseActivity() {
     ) { granted ->
         if (granted) startRecording()
         else Toast.makeText(this, "⚠️ Mikrofon erforderlich", Toast.LENGTH_LONG).show()
-    }
-
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            // Berechtigung erteilt, jetzt Mikrofon prüfen
-            requestMicPermissionAndStart()
-        } else {
-            Toast.makeText(this, "⚠️ Ohne Benachrichtigungs-Berechtigung fehlen die Feedback-Signale", Toast.LENGTH_LONG).show()
-            requestMicPermissionAndStart() // Trotzdem starten, aber mit Hinweis
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -230,7 +223,7 @@ class CommunicationActivity : SecureBaseActivity() {
         binding.switchSound.setOnCheckedChangeListener { _, isChecked -> soundEnabled = isChecked }
 
         binding.btnStartStop.setOnClickListener {
-            if (isRecording) stopRecording() else checkPermissionsAndStart()
+            if (isRecording) stopRecording() else requestMicPermissionAndStart()
         }
 
         binding.btnExport.setOnClickListener { exportToPdf(false) }
@@ -248,35 +241,6 @@ class CommunicationActivity : SecureBaseActivity() {
         }
     }
 
-    private fun checkPermissionsAndStart() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder(this)
-                    .setTitle("🔔 Benachrichtigungen & Feedback")
-                    .setMessage("Damit Du während des Trainings akustisches und vibrierendes Feedback erhältst (auch wenn das Display aus ist), benötigt die App die Berechtigung für Benachrichtigungen.\n\n" +
-                            "Warum ist das wichtig?\n" +
-                            "• Echtzeit-Feedback: Signale beim Erreichen der Zielfrequenz.\n" +
-                            "• Training im Hintergrund: Die Analyse läuft weiter, während Du Dich auf Deinen Hund konzentrierst.")
-                    .setPositiveButton("Erlauben") { _, _ ->
-                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                    .setNegativeButton("Später") { _, _ ->
-                        requestMicPermissionAndStart()
-                    }
-                    .create().apply {
-                        show()
-                        getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                        getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
-                    }
-                return
-            }
-        }
-        requestMicPermissionAndStart()
-    }
-
     private fun requestMicPermissionAndStart() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
@@ -292,18 +256,16 @@ class CommunicationActivity : SecureBaseActivity() {
                         "Deine Aufnahmen werden NICHT gespeichert und NUR lokal auf Deinem Gerät verarbeitet. " +
                         "Es erfolgt KEINE Übertragung an Server.\n\n" +
                         "Gemäß Google Play Store Richtlinien müssen wir transparent erklären, warum diese Berechtigung benötigt wird.")
-                .setPositiveButton("Verstanden") { _, _ ->
-                    micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                }
+                .setPositiveButton("Verstanden") { _, _ -> micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
                 .setNegativeButton("Abbrechen", null)
                 .create().apply {
                     show()
                     getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
                     getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
                 }
-        } else {
-            startRecording()
+            return
         }
+        startRecording()
     }
 
     private fun startRecording() {
@@ -364,10 +326,16 @@ class CommunicationActivity : SecureBaseActivity() {
                 TargetFrequency.ALL
             }
 
+            var isAnyMatch = false
             targetFreqs.forEach { target ->
                 if (abs(frequency - target.hz) <= TOLERANCE_HZ) {
                     handleHit(target, now, elapsed)
+                    isAnyMatch = true
                 }
+            }
+            
+            if (isAnyMatch) {
+                triggerMatchFeedback()
             }
 
             binding.tvCurrentFrequency.text = "${frequency.toInt()} Hz"
@@ -409,12 +377,45 @@ class CommunicationActivity : SecureBaseActivity() {
             }
         }
 
+        val lastTime = lastHitTimestamp
         lastHitFrequency = target
         lastHitTimestamp = now
 
-        if (now - lastHitTimestamp > HIT_COOLDOWN_MS) {
+        if (now - lastTime > HIT_COOLDOWN_MS) {
             provideFeedback()
         }
+    }
+    
+    private fun triggerMatchFeedback() {
+        val now = System.currentTimeMillis()
+        if (now - lastMatchFeedbackTime > FEEDBACK_SYMBOL_COOLDOWN) {
+            lastMatchFeedbackTime = now
+            showVisualMatchFeedback()
+        }
+    }
+
+    private fun showVisualMatchFeedback() {
+        binding.tvFrequencyMatch.animate().cancel()
+        binding.tvFrequencyMatch.alpha = 0f
+        binding.tvFrequencyMatch.scaleX = 0f
+        binding.tvFrequencyMatch.scaleY = 0f
+        
+        binding.tvFrequencyMatch.animate()
+            .alpha(1f)
+            .scaleX(1.3f)
+            .scaleY(1.3f)
+            .setDuration(350)
+            .setInterpolator(OvershootInterpolator())
+            .withEndAction {
+                binding.tvFrequencyMatch.animate()
+                    .alpha(0f)
+                    .scaleX(1.0f)
+                    .scaleY(1.0f)
+                    .setStartDelay(800)
+                    .setDuration(450)
+                    .start()
+            }
+            .start()
     }
 
     private fun getNearestFrequency(freq: Float): TargetFrequency? {
@@ -604,7 +605,7 @@ class CommunicationActivity : SecureBaseActivity() {
                 📊 Ø Frequenz: ${session.avgFrequency.toInt()} Hz
                 🔽 Min: ${session.minFrequency.toInt()} Hz
                 🔼 Max: ${session.maxFrequency.toInt()} Hz
-                ⭐ Beste: ${session.getBestFrequency().name}
+                ⭐ Beste: ${session.getBestFrequency()?.name ?: "Keine Treffer"}
             """.trimIndent()
 
             // Chart-Titel aktualisieren
@@ -627,7 +628,7 @@ class CommunicationActivity : SecureBaseActivity() {
 
             Toast.makeText(
                 this,
-                "Session geladen: ${session.getBestFrequency().name} (${efficiency}% Effizienz)",
+                "Session geladen: ${session.getBestFrequency()?.name ?: "Keine Treffer"} (${efficiency}% Effizienz)",
                 Toast.LENGTH_SHORT
             ).show()
 

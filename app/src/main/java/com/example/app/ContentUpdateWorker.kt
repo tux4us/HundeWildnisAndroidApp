@@ -31,14 +31,12 @@ class ContentUpdateWorker(
                 Log.d("ContentUpdateWorker", "🔄 Hintergrund-Update gestartet")
 
                 val wordPressApi = WordPressApiParser()
-                val youtubeParser = YouTubeParser()
                 val contentCache = ContentCache(applicationContext)
 
-                // Lade alte Daten (nur Blog & YouTube)
+                // Lade alte Daten (nur Blog)
                 val oldBlogPosts = contentCache.getBlogPosts() ?: emptyList()
-                val oldVideos = contentCache.getYouTubeVideos() ?: emptyList()
 
-                Log.d("ContentUpdateWorker", "Alter Stand: ${oldBlogPosts.size} Posts, ${oldVideos.size} Videos")
+                Log.d("ContentUpdateWorker", "Alter Stand: ${oldBlogPosts.size} Posts")
 
                 // SCHRITT 1: Lade nur die neuesten 20 Posts zum Check
                 val recentPosts = try {
@@ -82,30 +80,18 @@ class ContentUpdateWorker(
                     oldBlogPosts
                 }
 
-                // Lade YouTube Videos
-                val newVideos = try {
-                    youtubeParser.loadLatestVideos()
-                } catch (e: Exception) {
-                    Log.e("ContentUpdateWorker", "YouTube-Fehler: ${e.message}")
-                    oldVideos
-                }
-
                 // Speichere neue Daten
                 contentCache.saveBlogPosts(newBlogPosts)
-                contentCache.saveYouTubeVideos(newVideos)
 
-                Log.d("ContentUpdateWorker", "Neuer Stand: ${newBlogPosts.size} Posts, ${newVideos.size} Videos")
+                Log.d("ContentUpdateWorker", "Neuer Stand: ${newBlogPosts.size} Posts")
 
                 // Berechne neue Inhalte
                 val newBlogCount = maxOf(0, newBlogPosts.size - oldBlogPosts.size)
-                val newVideosCount = maxOf(0, newVideos.size - oldVideos.size)
 
-                val totalNew = newBlogCount + newVideosCount
+                Log.d("ContentUpdateWorker", "✓ Update abgeschlossen: $newBlogCount neue Inhalte")
 
-                Log.d("ContentUpdateWorker", "✓ Update abgeschlossen: $totalNew neue Inhalte")
-
-                if (totalNew > 0) {
-                    showNotification(newBlogCount, newVideosCount)
+                if (newBlogCount > 0) {
+                    showNotification(newBlogCount)
                 } else {
                     Log.d("ContentUpdateWorker", "Keine neuen Inhalte - keine Benachrichtigung")
                 }
@@ -118,10 +104,7 @@ class ContentUpdateWorker(
         }
     }
 
-    private fun showNotification(
-        newBlogs: Int,
-        newVideos: Int
-    ) {
+    private fun showNotification(newBlogs: Int) {
         // Erstelle Notification Channel (ab Android 8.0)
         createNotificationChannel()
 
@@ -135,15 +118,7 @@ class ContentUpdateWorker(
         }
 
         // Erstelle Nachrichtentext
-        val parts = mutableListOf<String>()
-        if (newBlogs > 0) parts.add("$newBlogs ${if (newBlogs == 1) "Beitrag" else "Beiträge"}")
-        if (newVideos > 0) parts.add("$newVideos ${if (newVideos == 1) "Video" else "Videos"}")
-
-        val message = when {
-            parts.isEmpty() -> return
-            parts.size == 1 -> "Neu: ${parts[0]}"
-            else -> "Neu: ${parts.joinToString(", ")}"
-        }
+        val message = "Neu: $newBlogs ${if (newBlogs == 1) "Beitrag" else "Beiträge"}"
 
         // Intent zum Öffnen der App
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
@@ -181,7 +156,7 @@ class ContentUpdateWorker(
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Neue Inhalte"
-            val descriptionText = "Benachrichtigungen über neue Blogbeiträge und Videos"
+            val descriptionText = "Benachrichtigungen über neue Blogbeiträge"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
                 description = descriptionText

@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+    android:background="?android:attr/colorBackground">
 
-    <!-- Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
+            android:background="#2d5016"
             app:titleTextColor="#FFFFFF" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fillViewport="true">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +31,7 @@
             android:padding="16dp">
 
             <!-- ═══════════════════════════════════════════════════ -->
-            <!-- FREQUENZ-DIAGRAMM -->
+            <!-- CHART CARD -->
             <!-- ═══════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -55,12 +51,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🎵 Live Frequenz-Verlauf (5 Zielfrequenzen)"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="12dp" />
 
-                    <!-- Chart -->
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/frequencyChart"
                         android:layout_width="match_parent"
@@ -95,15 +90,38 @@
                         android:textColor="#CCCCCC"
                         android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:id="@+id/tvCurrentFrequency"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="--- Hz"
-                        android:textSize="48sp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tvCurrentFrequency"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--- Hz"
+                            android:textSize="48sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvFrequencyMatch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎯"
+                            android:textSize="44sp"
+                            android:alpha="0"
+                            android:scaleX="0"
+                            android:scaleY="0"
+                            app:layout_constraintTop_toTopOf="@id/tvCurrentFrequency"
+                            app:layout_constraintBottom_toBottomOf="@id/tvCurrentFrequency"
+                            app:layout_constraintStart_toEndOf="@id/tvCurrentFrequency"
+                            android:layout_marginStart="12dp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <ProgressBar
                         android:id="@+id/progressFrequency"
@@ -160,14 +178,14 @@
                             android:id="@+id/radioModeFree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🌈 Freies Training (Alle 5 Frequenzen)"
+                            android:text="🔆 Ganzheitliches Training"
                             android:checked="true" />
 
                         <RadioButton
                             android:id="@+id/radioModeFocus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🎯 Fokus-Training (Eine Frequenz)" />
+                            android:text="🧿 Fokus-Training" />
 
                     </RadioGroup>
 
@@ -198,32 +216,37 @@
                                 android:id="@+id/radioFreq108"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="108 Hz - Tiefenentspannung (Ruhe &amp; Erdung)"
-                                android:checked="true" />
+                                android:text="108 Hz - Tiefenentspannung - Geländetraining - Stressbewältigung"
+                                android:checked="true"
+                                android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq216"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="216 Hz - Beruhigung (Entspannung &amp; Vertrauen)" />
+                                android:text="216 Hz - Beruhigung - Vertrauensaufbau - Leinentraining, Freifolge, Freiarbeit"
+                                android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq324"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="324 Hz - Aufmerksamkeit (Fokus &amp; Konzentration)" />
+                                android:text="324 Hz - Konzentration - Unterbrechungstraining - AntiJagdTraining - Steh, Sitz, Platz - Suche"
+                                android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq432"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="432 Hz - Harmonie (Balance und Verbindung)" />
+                                android:text="432 Hz - Harmonie - Alltagstraining - Zusammenführung aller Elemente"
+                                android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq648"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="648 Hz - Motivation (Aktivierung und Freude)" />
+                                android:text="648 Hz - Motivation - Ausdauer - Heranrufen - Spiel"
+                                android:layout_marginBottom="12dp" />
 
                         </RadioGroup>
                     </LinearLayout>

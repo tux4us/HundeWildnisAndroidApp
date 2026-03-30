@@ -66,7 +66,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#213A10"
+                    app:backgroundTint="#1A3710"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
@@ -136,7 +136,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#6a8255"
+                    app:backgroundTint="#5a7145"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
@@ -145,11 +145,11 @@
                     android:id="@+id/btnWeather"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🌦📍 Wetter am Standort"
+                    android:text="🌦📍 Standort Wetter"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#6a8255"
+                    app:backgroundTint="#4a6135"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
@@ -158,11 +158,11 @@
                     android:id="@+id/btnLocation"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="🗺🛰 Standort und Navigation"
+                    android:text="🗺🛰 Standort Navigation"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#5a7145"
+                    app:backgroundTint="#2d5016"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
@@ -175,7 +175,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#4a6135"
+                    app:backgroundTint="#213A10"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 

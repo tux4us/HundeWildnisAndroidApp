@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,6 +62,9 @@ class StartActivity : BaseBottomNavActivity() {
 
         setupButtons()
         super.setupBottomNavigation()
+
+        // ✅ Update-Dialog prüfen
+        checkForUpdate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -123,9 +125,9 @@ class StartActivity : BaseBottomNavActivity() {
 
         val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val linkColor = if (isDark) Color.parseColor("#8fad6f") else Color.parseColor("#2d5016")
-        
+
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
-        
+
         val tvWeb = dialogView.findViewById<TextView>(R.id.tvAboutWeb)
         val tvEmail = dialogView.findViewById<TextView>(R.id.tvAboutEmail)
         tvWeb.setTextColor(linkColor)
@@ -276,5 +278,68 @@ class StartActivity : BaseBottomNavActivity() {
         startActivity(Intent(this, ContentActivity::class.java).apply { putExtra("url", url); putExtra("title", title) })
     }
 
-    override fun onDestroy() { super.onDestroy(); scope.cancel() }
+    // ════════════════════════════════════════════════════════════════
+    // ✅ UPDATE-DIALOG FUNKTIONEN
+    // ════════════════════════════════════════════════════════════════
+
+    private fun checkForUpdate() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val currentVersion = BuildConfig.VERSION_CODE
+        val lastSeenVersion = prefs.getInt("last_seen_version", 0)
+
+        if (currentVersion > lastSeenVersion) {
+            showUpdateDialog()
+            prefs.edit().putInt("last_seen_version", currentVersion).apply()
+        }
+    }
+
+    private fun showUpdateDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_update_support, null)
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val textColor = if (isDark) Color.parseColor("#E0E0E0") else Color.parseColor("#424242")
+        val buttonBgColor = Color.parseColor("#2d5016")
+        val buttonOutlineColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        dialogView.findViewById<TextView>(R.id.tvUpdateTitle).setTextColor(titleColor)
+        dialogView.findViewById<TextView>(R.id.tvUpdateVersion).apply {
+            text = "Version ${BuildConfig.VERSION_NAME}"
+            setTextColor(textColor)
+        }
+        dialogView.findViewById<TextView>(R.id.tvUpdateMessage).setTextColor(textColor)
+
+        // Dialog erstellen
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        // Unterstützen-Button
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSupport).apply {
+            setTextColor(Color.WHITE)
+            setBackgroundColor(buttonBgColor)
+            setOnClickListener {
+                startActivity(Intent(this@StartActivity, SupportActivity::class.java))
+                dialog.dismiss()
+            }
+        }
+
+        // Später-Button
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLater).apply {
+            setTextColor(buttonOutlineColor)
+            strokeColor = android.content.res.ColorStateList.valueOf(buttonOutlineColor)
+            strokeWidth = 2
+            setOnClickListener {
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
 }
