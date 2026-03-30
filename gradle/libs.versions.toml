@@ -5,6 +5,7 @@ appcompat = "1.7.1"
 coil = "2.7.0"
 constraintlayout = "2.2.1"
 coreKtx = "1.17.0"
+coreVersion = "2.5"
 espressoCore = "3.7.0"
 gson = "2.13.2"
 jsoup = "1.22.1"
@@ -30,6 +31,7 @@ androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+dsp-core = { module = "be.tarsos.dsp:core", version.ref = "coreVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

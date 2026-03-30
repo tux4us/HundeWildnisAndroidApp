@@ -3,6 +3,7 @@ package com.hundewildnis.app
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.location.Location
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import org.osmdroid.config.Configuration
+import org.osmdroid.config.Configuration as OsmConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
@@ -66,7 +67,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Configuration.getInstance().userAgentValue = packageName
+        OsmConfig.getInstance().userAgentValue = packageName
         binding = ActivityLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -136,25 +137,18 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    // ✅ FIX 2: Zurück-Button Dark Mode Styling
-    // ✅ KORRIGIERTE VERSION - Ersetze die styleBackButton() Funktion in LocationActivity.kt
-    // ✅ FINALE KORRIGIERTE VERSION - Ersetze styleBackButton() in LocationActivity.kt
-    // ════════════════════════════════════════════════════════════════
-    // FIX 2: styleBackButton() - Größer + heller im Dark Mode
-    // ════════════════════════════════════════════════════════════════
-
     private fun styleBackButton() {
         val isDarkTheme = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
+                Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
 
         if (isDarkTheme) {
             // Dark Mode: Heller + größer
             binding.btnBackToCategories.apply {
                 text = "← Zurück"
                 textSize = 16f
-                setTextColor(android.graphics.Color.WHITE)
-                setBackgroundColor(android.graphics.Color.parseColor("#5a8038"))
+                setTextColor(Color.WHITE)
+                setBackgroundColor(Color.parseColor("#5a8038"))
 
                 // ✅ FIX: DP in Pixel umrechnen!
                 val heightInPixels = (56 * resources.displayMetrics.density).toInt()
@@ -171,8 +165,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             binding.btnBackToCategories.apply {
                 text = "← Zurück"
                 textSize = 16f
-                setTextColor(android.graphics.Color.WHITE)
-                setBackgroundColor(android.graphics.Color.parseColor("#2d5016"))
+                setTextColor(Color.WHITE)
+                setBackgroundColor(Color.parseColor("#2d5016"))
 
                 val heightInPixels = (56 * resources.displayMetrics.density).toInt()
                 layoutParams = layoutParams.apply {
@@ -197,9 +191,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
                 cornerRadius = 12
                 backgroundTintList = android.content.res.ColorStateList.valueOf(
-                    android.graphics.Color.parseColor(category.color)
+                    Color.parseColor(category.color)
                 )
-                setTextColor(android.graphics.Color.WHITE)
+                setTextColor(Color.WHITE)
 
                 val params = android.widget.GridLayout.LayoutParams().apply {
                     width = 0
@@ -262,11 +256,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    // ✅ NEU: Zeigt alle POIs einer Kategorie als Marker auf der Karte
-    // ════════════════════════════════════════════════════════════════
-    // FIX 1: showPOIsOnMap() - Zweiter Klick startet Navigation
-    // ════════════════════════════════════════════════════════════════
-
     private fun showPOIsOnMap(pois: List<POI>, category: POICategories.Category) {
         clearPOIMarkers()
 
@@ -307,12 +296,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    // ✅ NEU: Startet Navigation zu einem POI
     private fun startNavigationToPOI(poi: POI) {
         showPOIOnMap(poi)
     }
 
-    // ✅ NEU: Zoomt Karte so dass alle POIs + User-Position sichtbar sind
     private fun zoomToShowAllPOIs(pois: List<POI>) {
         if (pois.isEmpty()) return
 
@@ -365,7 +352,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.controller.setZoom(zoomLevel)
     }
 
-    // ✅ NEU: Entfernt alle POI-Marker von der Karte
     private fun clearPOIMarkers() {
         poiMarkers.forEach { marker ->
             binding.mapView.overlays.remove(marker)
@@ -639,17 +625,33 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun checkLocationPermission() {
-        when {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
-                getLocation()
-            }
-            else -> {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    LOCATION_PERMISSION_REQUEST_CODE
-                )
-            }
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            AlertDialog.Builder(this)
+                .setTitle("📍 Standortdienste aktivieren")
+                .setMessage("Diese App benötigt Zugriff auf Deinen Standort für folgende Funktionen:\n\n" +
+                        "• Tempo-Messung: Um Deine Geh-Geschwindigkeit im Training präzise zu ermitteln.\n" +
+                        "• Navigation: Damit Du Standort und Navigation aufrufen und nutzen kannst.\n" +
+                        "• Standort-Infos: Für GPS-Daten in Deinen Notizen, um diese mit Deinem Standort zu verknüpfen.\n\n" +
+                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du diese Funktionen nicht nutzen. Deine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und auf Wunsch zum Teilen freigegeben.")
+                .setPositiveButton("Verstanden") { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                        LOCATION_PERMISSION_REQUEST_CODE
+                    )
+                }
+                .setNegativeButton("Abbrechen", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+                }
+        } else {
+            getLocation()
         }
     }
 
@@ -804,12 +806,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.invalidate()
     }
 
-    data class RouteData(val points: List<GeoPoint>, val distance: Double, val duration: Double)
-
     private fun drawRouteOSRM(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
         lifecycleScope.launch {
             try {
-                val routeData = withContext(Dispatchers.IO) {
+                val routeData: RouteData = withContext(Dispatchers.IO) {
                     fetchBestRoute(fromLat, fromLon, toLat, toLon)
                 }
 

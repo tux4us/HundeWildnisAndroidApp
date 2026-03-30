@@ -104,11 +104,25 @@
                     android:id="@+id/btnWalkingSpeed"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:text="⏱️🔔 Trainings - Tempo"
+                    android:text="⏱️🔔 Tempo - Trainer"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#5a7145"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
+
+                <!-- Button Kommunikation -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCommunication"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🗣️🎤 Sprach - Trainer"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#6a8255"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
@@ -187,7 +201,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#4a6135"
+                    app:backgroundTint="#01579B"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
