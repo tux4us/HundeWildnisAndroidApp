@@ -118,7 +118,7 @@ object PDFGenerator {
             ))
 
             // Footer
-            val footer = Paragraph("Erstellt mit HundeWildnis App")
+            val footer = Paragraph("Erstellt mit HundeWildnis App von www.wildnislehrer.de")
                 .setFontSize(10f)
                 .setFontColor(grayColor)
                 .setTextAlignment(TextAlignment.CENTER)

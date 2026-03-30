@@ -396,7 +396,7 @@ class MainActivity : BaseBottomNavActivity() {
                 val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
                 val dialog = AlertDialog.Builder(this)
                     .setTitle("🔔 Benachrichtigungen aktivieren?")
-                    .setMessage("Möchtest Du über neue Fachartikel im Blog informiert werden? \n\nZudem sind Benachrichtigungen wichtig, damit der Geschwindigkeitswächter Dich auch bei ausgeschaltetem Display zuverlässig warnen kann.")
+                    .setMessage("Möchtest Du über neue Artikel im Blog informiert werden? \n\nZudem können Dich der Tempo-Trainer und der Sprach-Trainer auch bei ausgeschaltetem Display zuverlässig im Training unterstützen. Benachrichtigungen können jederzeit in den Systemeinstellungen für die App deaktiviert oder lautlos gestellt werden")
                     .setPositiveButton("Ja, aktivieren") { _, _ -> 
                         prefs.edit().putBoolean("notification_permission_asked", true).apply()
                         requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001) 

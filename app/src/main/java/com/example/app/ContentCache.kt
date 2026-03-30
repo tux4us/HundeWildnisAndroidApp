@@ -53,12 +53,6 @@ class ContentCache(private val context: Context) {
         updateTimestamp()
     }
 
-    fun saveYouTubeVideos(videos: List<YouTubeVideo>) {
-        val json = gson.toJson(videos)
-        prefs.edit().putString(KEY_YOUTUBE, json).apply()
-        updateTimestamp()
-    }
-
     fun getBlogPosts(): List<ContentItem>? {
         val json = prefs.getString(KEY_BLOG_POSTS, null) ?: return null
         val type = object : TypeToken<List<ContentItem>>() {}.type
@@ -74,12 +68,6 @@ class ContentCache(private val context: Context) {
     fun getCourses(): List<ContentItem>? {
         val json = prefs.getString(KEY_COURSES, null) ?: return null
         val type = object : TypeToken<List<ContentItem>>() {}.type
-        return gson.fromJson(json, type)
-    }
-
-    fun getYouTubeVideos(): List<YouTubeVideo>? {
-        val json = prefs.getString(KEY_YOUTUBE, null) ?: return null
-        val type = object : TypeToken<List<YouTubeVideo>>() {}.type
         return gson.fromJson(json, type)
     }
 

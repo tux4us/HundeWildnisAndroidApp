@@ -84,7 +84,7 @@ object VoicePDFGenerator {
                 "Durchschnitt" to "${session.avgFrequency.toInt()} Hz",
                 "Minimum" to "${session.minFrequency.toInt()} Hz",
                 "Maximum" to "${session.maxFrequency.toInt()} Hz",
-                "Beste Frequenz" to session.getBestFrequency().name
+                "Beste Frequenz" to (session.getBestFrequency()?.name ?: "Keine Treffer")
             ))
 
             // TREFFER & VERWEILDAUER
@@ -139,7 +139,7 @@ object VoicePDFGenerator {
 
             // Footer
             document.add(
-                Paragraph("Erstellt mit HundeWildnis App")
+                Paragraph("Erstellt mit HundeWildnis App von www.wildnislehrer.de")
                     .setFontSize(10f)
                     .setFontColor(grayColor)
                     .setTextAlignment(TextAlignment.CENTER)
