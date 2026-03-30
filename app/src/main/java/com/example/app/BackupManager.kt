@@ -51,6 +51,7 @@ object BackupManager {
             val settings = collectSettings(context)
             val notes = collectNotes(context)
             val speedSessions = collectSpeedSessions(context)
+            val voiceSessions = collectVoiceSessions(context)
 
             val photoMapping = mutableMapOf<String, String>()
 
@@ -87,26 +88,28 @@ object BackupManager {
             // Backup-Daten erstellen
             val backupData = BackupData(
                 version = getAppVersion(context),
-                backupVersion = 2,
+                backupVersion = 3,
                 timestamp = timestamp,
                 dogs = dogs,
                 settings = settings,
                 notes = notes,
                 speedSessions = speedSessions,
+                voiceSessions = voiceSessions,
                 photoMapping = photoMapping
             )
 
             // Metadaten erstellen
             val metadata = BackupMetadata(
                 appVersion = getAppVersion(context),
-                backupVersion = 2,
+                backupVersion = 3,
                 timestamp = timestamp,
                 deviceName = Build.MODEL,
                 itemCount = BackupItemCount(
                     dogs = dogs.size,
                     photos = photoMapping.size,
                     notes = notes?.size ?: 0,
-                    speedSessions = speedSessions?.size ?: 0
+                    speedSessions = speedSessions?.size ?: 0,
+                    voiceSessions = voiceSessions?.size ?: 0
                 )
             )
 
@@ -197,6 +200,11 @@ object BackupManager {
                 saveSpeedHistory(context, sessions)
             }
 
+            // 6. Kommunikations-Sessions (NEU)
+            backupData.voiceSessions?.let { sessions ->
+                saveVoiceHistory(context, sessions)
+            }
+
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true
         } catch (e: Exception) {
@@ -250,6 +258,20 @@ object BackupManager {
 
     private fun saveSpeedHistory(context: Context, sessions: List<SpeedSession>) {
         val prefs = context.getSharedPreferences("walking_history", Context.MODE_PRIVATE)
+        prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+    }
+
+    private fun collectVoiceSessions(context: Context): List<VoiceSession>? {
+        val prefs = context.getSharedPreferences("voice_history", Context.MODE_PRIVATE)
+        val json = prefs.getString("sessions", null) ?: return null
+        return try {
+            val type = object : TypeToken<List<VoiceSession>>() {}.type
+            gson.fromJson(json, type)
+        } catch (e: Exception) { null }
+    }
+
+    private fun saveVoiceHistory(context: Context, sessions: List<VoiceSession>) {
+        val prefs = context.getSharedPreferences("voice_history", Context.MODE_PRIVATE)
         prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
     }
 

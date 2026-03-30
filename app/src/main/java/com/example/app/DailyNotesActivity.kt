@@ -13,6 +13,7 @@ import android.graphics.pdf.PdfDocument
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +26,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -48,8 +50,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Data Class für gespeicherte Notizen mit GPS & Wetter Info
+ * Data Class für gespeicherte Notizen - @Keep verhindert Obfuskierung durch R8/ProGuard
  */
+@Keep
 data class NoteSession(
     val id: String,
     val date: Long,
@@ -119,7 +122,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupPhotoRecyclerView() {
         photoAdapter = PhotoAdapter(photos) { position ->
-            // Datei aus internem Speicher löschen
             deletePhotoFile(photos[position])
             photoAdapter.removePhoto(position)
             updatePhotoVisibility()
@@ -146,9 +148,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             .setPositiveButton("Löschen") { _, _ ->
                 val index = historyList.indexOfFirst { it.id == session.id }
                 if (index != -1) {
-                    // Alle zugehörigen Bilddateien löschen
                     session.photoUris.forEach { deletePhotoFile(Uri.parse(it)) }
-                    
                     historyList.removeAt(index)
                     historyAdapter.notifyItemRemoved(index)
                     saveHistoryToPrefs()
@@ -253,7 +253,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         binding.btnCamera.setOnClickListener { checkCameraPermissionAndOpen() }
         binding.btnGallery.setOnClickListener { galleryLauncher.launch("image/*") }
         binding.btnSaveNew.setOnClickListener { saveToHistory(true) }
-        binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf() }
+        binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf(false) }
         binding.btnExportGpx.setOnClickListener { saveToHistory(false); exportAsGpx() }
         binding.btnShare.setOnClickListener { saveToHistory(false); shareNotes() }
         binding.btnAddWeather.setOnClickListener { addWeatherToNote() }
@@ -266,7 +266,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 .setTitle("Entwurf löschen?")
                 .setMessage("Möchtest du den aktuellen Entwurf wirklich löschen?")
                 .setPositiveButton("Löschen") { _, _ -> 
-                    // Temporäre Fotos im Entwurf löschen
                     photos.forEach { deletePhotoFile(it) }
                     startNewNote() 
                 }
@@ -333,8 +332,27 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun checkLocationPermission() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+            AlertDialog.Builder(this)
+                .setTitle("📍 Standortdienste aktivieren")
+                .setMessage("Diese App benötigt Zugriff auf Deinen Standort für folgende Funktionen:\n\n" +
+                        "• Tempo-Messung: Um Deine Geh-Geschwindigkeit im Training präzise zu ermitteln.\n" +
+                        "• Navigation: Damit Du Standort und Navigation aufrufen und nutzen kannst.\n" +
+                        "• Standort-Infos: Für GPS-Daten in Deinen Notizen, um diese mit Deinem Standort zu verknüpfen.\n\n" +
+                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du diese Funktionen nicht nutzen. Deine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und auf Wunsch zum Teilen freigegeben.")
+                .setPositiveButton("Verstanden") { _, _ ->
+                    locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                }
+                .setNegativeButton("Abbrechen", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+                }
         } else {
             requestLocationUpdates()
         }
@@ -411,7 +429,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         try {
             if (uri.scheme == "file") {
                 val file = File(uri.path ?: return)
-                // Nur löschen, wenn es sich in unserem speziellen Ordner befindet
                 if (file.exists() && file.absolutePath.contains("note_photos")) {
                     file.delete()
                 }
@@ -423,162 +440,195 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private fun updatePhotoVisibility() { binding.rvPhotos.visibility = if (photos.isEmpty()) View.GONE else View.VISIBLE }
 
-    private fun exportAsPdf() {
+    private fun exportAsPdf(shareAfterExport: Boolean) {
         val title = binding.etTitle.text.toString()
         val notes = binding.etNotes.text.toString()
         if (title.isEmpty() && notes.isEmpty() && photos.isEmpty()) return
         
-        try {
-            val pdf = PdfDocument()
-            var pageNum = 1
-            val paint = android.graphics.Paint()
-            val info = PdfDocument.PageInfo.Builder(595, 842, pageNum++).create()
-            var page = pdf.startPage(info)
-            var canvas = page.canvas
-            
-            val margin = 50f
-            val maxWidth = 595f - (2 * margin)
-            
-            // Header
-            paint.textSize = 20f; paint.isFakeBoldText = true
-            canvas.drawText(if(title.isNotEmpty()) title else "Tagesnotiz", margin, 50f, paint)
-            
-            paint.textSize = 12f; paint.isFakeBoldText = false
-            val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
-            canvas.drawText("Erstellt am: ${sdf.format(Date())}", margin, 75f, paint)
-            
-            if (currentLatitude != null) {
-                canvas.drawText("📍 Standort: $currentLatitude, $currentLongitude", margin, 95f, paint)
-            }
-            
-            var currentY = 115f
-            if (currentWeatherInfo != null) {
-                val weatherLines = currentWeatherInfo!!.split("\n")
-                weatherLines.forEach { line ->
-                    canvas.drawText(line, margin, currentY, paint)
-                    currentY += 20f
+        lifecycleScope.launch {
+            try {
+                val pdfFile = withContext(Dispatchers.IO) {
+                    generatePdfFile(title, notes)
                 }
-            }
 
-            // Notiztext mit automatischem Zeilenumbruch
-            currentY += 10f
-            if (notes.isNotEmpty()) {
-                paint.textSize = 12f
-                val paragraphs = notes.split("\n")
-                for (paragraph in paragraphs) {
-                    var line = paragraph
-                    while (line.isNotEmpty() && currentY < 800) {
-                        val count = paint.breakText(line, true, maxWidth, null)
-                        if (count <= 0) break
-                        
-                        var end = count
-                        if (count < line.length) {
-                            val lastSpace = line.substring(0, count).lastIndexOf(' ')
-                            if (lastSpace != -1) {
-                                end = lastSpace + 1
-                            }
-                        }
-                        
-                        canvas.drawText(line.substring(0, end).trim(), margin, currentY, paint)
-                        currentY += 20f
-                        line = line.substring(end)
-                    }
-                    if (currentY >= 800) break
+                if (shareAfterExport) {
+                    shareFile(pdfFile, "application/pdf", "Notiz teilen")
+                } else {
+                    saveFileToDocuments(pdfFile, "application/pdf")
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@DailyNotesActivity, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun generatePdfFile(title: String, notes: String): File {
+        val pdf = PdfDocument()
+        var pageNum = 1
+        val paint = android.graphics.Paint()
+        val info = PdfDocument.PageInfo.Builder(595, 842, pageNum++).create()
+        var page = pdf.startPage(info)
+        var canvas = page.canvas
+        
+        val margin = 50f
+        val maxWidth = 595f - (2 * margin)
+        
+        paint.textSize = 20f; paint.isFakeBoldText = true
+        canvas.drawText(if(title.isNotEmpty()) title else "Tagesnotiz", margin, 50f, paint)
+        
+        paint.textSize = 12f; paint.isFakeBoldText = false
+        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+        canvas.drawText("Erstellt am: ${sdf.format(Date())}", margin, 75f, paint)
+        
+        if (currentLatitude != null) {
+            canvas.drawText("📍 Standort: $currentLatitude, $currentLongitude", margin, 95f, paint)
+        }
+        
+        var currentY = 115f
+        currentWeatherInfo?.let { info ->
+            info.split("\n").forEach { line ->
+                canvas.drawText(line, margin, currentY, paint)
+                currentY += 20f
+            }
+        }
+
+        currentY += 10f
+        if (notes.isNotEmpty()) {
+            paint.textSize = 12f
+            notes.split("\n").forEach { paragraph ->
+                var line = paragraph
+                while (line.isNotEmpty() && currentY < 800) {
+                    val count = paint.breakText(line, true, maxWidth, null)
+                    if (count <= 0) break
+                    var end = if (count < line.length) (line.substring(0, count).lastIndexOf(' ').takeIf { it != -1 } ?: count) else count
+                    canvas.drawText(line.substring(0, end).trim(), margin, currentY, paint)
+                    currentY += 20f
+                    line = line.substring(end).trim()
                 }
             }
-            
-            // Dynamische Fotos auf der ersten Seite (falls Platz)
-            var photoIdx = 0
-            val remainingHeight = 842f - currentY - 50f
-            if (photos.isNotEmpty() && remainingHeight > 100f) {
-                val targetHeight = minOf(remainingHeight - 20f, 250f)
-                val targetWidth = if (photos.size == 1) maxWidth else (maxWidth / 2f) - 5f
-                
-                var currentX = margin
-                while (photoIdx < photos.size && (currentY + targetHeight) < 820f) {
+        }
+        
+        var photoIdx = 0
+        if (photos.isNotEmpty() && (842f - currentY) > 150f) {
+            val targetHeight = 250f
+            val targetWidth = if (photos.size == 1) maxWidth else (maxWidth / 2f) - 5f
+            var currentX = margin
+            while (photoIdx < photos.size && (currentY + targetHeight) < 820f) {
+                loadBitmap(photos[photoIdx])?.let { bitmap ->
+                    val scaled = scaleBitmap(bitmap, targetWidth.toInt(), targetHeight.toInt())
+                    canvas.drawBitmap(scaled, currentX, currentY, null)
+                    if (photos.size > 1 && currentX == margin && (photoIdx + 1) < photos.size) currentX += targetWidth + 10f
+                    else { currentX = margin; currentY += scaled.height + 10f }
+                }
+                photoIdx++
+            }
+        }
+        pdf.finishPage(page)
+        
+        while (photoIdx < photos.size) {
+            val pPage = pdf.startPage(PdfDocument.PageInfo.Builder(595, 842, pageNum++).create())
+            repeat(2) { i ->
+                if (photoIdx < photos.size) {
                     loadBitmap(photos[photoIdx])?.let { bitmap ->
-                        val scaled = scaleBitmap(bitmap, targetWidth.toInt(), targetHeight.toInt())
-                        canvas.drawBitmap(scaled, currentX, currentY, null)
-                        
-                        if (photos.size > 1 && currentX == margin && (photoIdx + 1) < photos.size) {
-                            currentX += targetWidth + 10f
-                        } else {
-                            currentX = margin
-                            currentY += scaled.height + 10f
-                        }
+                        val scaled = scaleBitmap(bitmap, 495, 350)
+                        pPage.canvas.drawBitmap(scaled, margin + (495 - scaled.width) / 2f, if (i == 0) 50f else 450f, null)
                     }
                     photoIdx++
-                    if (currentX == margin && (currentY + 100f) > 820f) break
                 }
             }
-            pdf.finishPage(page)
-            
-            // Restliche Fotos auf neuen Seiten
-            while (photoIdx < photos.size) {
-                val pPage = pdf.startPage(PdfDocument.PageInfo.Builder(595, 842, pageNum++).create())
-                repeat(2) { i ->
-                    if (photoIdx < photos.size) {
-                        loadBitmap(photos[photoIdx])?.let { bitmap ->
-                            val scaled = scaleBitmap(bitmap, 495, 350)
-                            pPage.canvas.drawBitmap(scaled, margin + (495 - scaled.width) / 2f, if (i == 0) 50f else 450f, null)
-                        }
-                        photoIdx++
-                    }
-                }
-                pdf.finishPage(pPage)
-            }
+            pdf.finishPage(pPage)
+        }
 
-            val fileName = "Notiz_${if(title.isNotEmpty()) title.replace(" ","_") else "Tagesbericht"}_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date())}.pdf"
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) savePdfToMediaStore(pdf, fileName)
-            else {
-                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
-                if (!dir.exists()) dir.mkdirs()
-                val file = File(dir, fileName)
-                pdf.writeTo(FileOutputStream(file)); pdf.close()
-                Toast.makeText(this, "Gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
-            }
-        } catch (e: Exception) { Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show() }
+        val fileName = "Notiz_${if(title.isNotEmpty()) title.replace(" ","_") else "Tagesbericht"}_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date())}.pdf"
+        val tempFile = File(cacheDir, fileName)
+        pdf.writeTo(FileOutputStream(tempFile))
+        pdf.close()
+        return tempFile
     }
 
     private fun exportAsGpx() {
         val title = binding.etTitle.text.toString()
         val notes = binding.etNotes.text.toString()
         if (currentLatitude == null) { Toast.makeText(this, "Keine GPS-Daten verfügbar", Toast.LENGTH_SHORT).show(); return }
-        try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
-            val gpx = StringBuilder().apply {
-                append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-                append("<gpx version=\"1.1\" creator=\"HundeWildnis\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
-                append("  <wpt lat=\"$currentLatitude\" lon=\"$currentLongitude\">\n")
-                append("    <time>${sdf.format(Date())}</time>\n")
-                append("    <name>${if(title.isNotEmpty()) title else "HundeWildnis Notiz"}</name>\n")
-                val desc = StringBuilder(notes)
-                if (currentWeatherInfo != null) desc.append("\n\nWetter: $currentWeatherInfo")
-                append("    <desc>${desc.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</desc>\n")
-                append("    <cmt>Fotos: ${photos.size}</cmt>\n")
-                append("  </wpt>\n")
-                append("</gpx>")
-            }.toString()
-            val fileName = "Notiz_${if(title.isNotEmpty()) title.replace(" ","_") else "Bericht"}_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date())}.gpx"
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, fileName); put(MediaStore.MediaColumns.MIME_TYPE, "application/gpx+xml"); put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis") }
-                val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
-                uri?.let { contentResolver.openOutputStream(it)?.use { out -> out.write(gpx.toByteArray()) }; Toast.makeText(this, "GPX exportiert", Toast.LENGTH_LONG).show() }
-            } else {
-                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
-                if (!dir.exists()) dir.mkdirs()
-                val file = File(dir, fileName)
-                FileOutputStream(file).use { it.write(gpx.toByteArray()) }
-                Toast.makeText(this, "GPX gespeichert", Toast.LENGTH_LONG).show()
+        
+        lifecycleScope.launch {
+            try {
+                val gpxFile = withContext(Dispatchers.IO) {
+                    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
+                    val gpxContent = StringBuilder().apply {
+                        append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                        append("<gpx version=\"1.1\" creator=\"HundeWildnis\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
+                        append("  <wpt lat=\"$currentLatitude\" lon=\"$currentLongitude\">\n")
+                        append("    <time>${sdf.format(Date())}</time>\n")
+                        append("    <name>${if(title.isNotEmpty()) title else "HundeWildnis Notiz"}</name>\n")
+                        val desc = StringBuilder(notes)
+                        if (currentWeatherInfo != null) desc.append("\n\nWetter: $currentWeatherInfo")
+                        append("    <desc>${desc.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</desc>\n")
+                        append("    <cmt>Fotos: ${photos.size}</cmt>\n")
+                        append("  </wpt>\n")
+                        append("</gpx>")
+                    }.toString()
+
+                    val fileName = "Notiz_${if(title.isNotEmpty()) title.replace(" ","_") else "Bericht"}_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date())}.gpx"
+                    val tempFile = File(cacheDir, fileName)
+                    tempFile.writeText(gpxContent)
+                    tempFile
+                }
+                saveFileToDocuments(gpxFile, "application/gpx+xml")
+            } catch (e: Exception) {
+                Toast.makeText(this@DailyNotesActivity, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) { Toast.makeText(this, "GPX Fehler: ${e.message}", Toast.LENGTH_SHORT).show() }
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun savePdfToMediaStore(pdf: PdfDocument, name: String) {
-        val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, name); put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf"); put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis") }
-        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
-        uri?.let { contentResolver.openOutputStream(it)?.use { out -> pdf.writeTo(out) }; pdf.close(); Toast.makeText(this, "Exportiert nach Documents/HundeWildnis", Toast.LENGTH_LONG).show() }
+    private suspend fun saveFileToDocuments(tempFile: File, mimeType: String) {
+        withContext(Dispatchers.IO) {
+            try {
+                val appDirName = "HundeWildnis"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val values = ContentValues().apply {
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, tempFile.name)
+                        put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOCUMENTS}/$appDirName")
+                    }
+                    val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+                    uri?.let {
+                        contentResolver.openOutputStream(it)?.use { output ->
+                            tempFile.inputStream().use { input -> input.copyTo(output) }
+                        }
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@DailyNotesActivity, "Datei gespeichert in Documents/$appDirName", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else {
+                    val documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    val appDir = File(documentsDir, appDirName).apply { if (!exists()) mkdirs() }
+                    val targetFile = File(appDir, tempFile.name)
+                    tempFile.copyTo(targetFile, overwrite = true)
+                    
+                    MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(targetFile.absolutePath), arrayOf(mimeType), null)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@DailyNotesActivity, "Datei gespeichert in Documents/$appDirName", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) { Toast.makeText(this@DailyNotesActivity, "Fehler beim Speichern: ${e.message}", Toast.LENGTH_LONG).show() }
+            }
+        }
+    }
+
+    private fun shareFile(file: File, mimeType: String, chooserTitle: String) {
+        try {
+            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = mimeType
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, chooserTitle))
+        } catch (e: Exception) {
+            Toast.makeText(this, "Fehler beim Teilen: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun loadBitmap(uri: Uri): Bitmap? = try { contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) } } catch (e: Exception) { null }
@@ -590,8 +640,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     private fun shareNotes() {
         val notes = binding.etNotes.text.toString()
         if (notes.isEmpty() && photos.isEmpty()) return
-        if (photos.isNotEmpty()) exportAsPdf() else {
-            val intent = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, "Tagesnotizen vom ${SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Date())}\n\n$notes") }
+        if (photos.isNotEmpty()) {
+            exportAsPdf(true) 
+        } else {
+            val intent = Intent(Intent.ACTION_SEND).apply { 
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, "Tagesnotizen vom ${SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Date())}\n\n$notes") 
+            }
             startActivity(Intent.createChooser(intent, "Notizen teilen"))
         }
     }
@@ -603,21 +658,12 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             val s = sessions[position]
             val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
             holder.binding.tvNoteDate.text = sdf.format(Date(s.date))
-            
-            // Titel anzeigen wenn vorhanden
-            if (s.title.isNotEmpty()) {
-                holder.binding.tvNoteSnippet.text = "📌 ${s.title}"
-            } else {
-                holder.binding.tvNoteSnippet.text = s.notes.take(40).replace("\n", " ") + "..."
-            }
-
+            if (s.title.isNotEmpty()) holder.binding.tvNoteSnippet.text = "📌 ${s.title}"
+            else holder.binding.tvNoteSnippet.text = s.notes.take(40).replace("\n", " ") + "..."
             if (s.latitude != null) {
                 holder.binding.tvNoteLocation.visibility = View.VISIBLE
                 holder.binding.tvNoteLocation.text = String.format(Locale.US, "📍 %.4f, %.4f", s.latitude, s.longitude)
-            } else {
-                holder.binding.tvNoteLocation.visibility = View.GONE
-            }
-
+            } else holder.binding.tvNoteLocation.visibility = View.GONE
             holder.binding.noteClickArea.setOnClickListener { onItemClick(s) }
             holder.binding.btnDeleteNote.setOnClickListener { onDeleteClick(s) }
         }

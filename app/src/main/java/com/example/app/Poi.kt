@@ -1,5 +1,14 @@
 package com.hundewildnis.app
 
+import org.osmdroid.util.GeoPoint
+
+// ✅ RouteData Definition für Navigation
+data class RouteData(
+    val points: List<GeoPoint>,
+    val distance: Double,
+    val duration: Double
+)
+
 // ✅ ERWEITERTE POI Datenklasse mit allen OSM-Details
 data class POI(
     val id: String,

@@ -204,6 +204,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnDailyExercise.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-des-tages/", "Übung des Tages") }
         binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/tagesmeditation/", "Tagesmeditation") }
         binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
+        binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
         binding.btnDailyNotes.setOnClickListener { startActivity(Intent(this, DailyNotesActivity::class.java)) }
         binding.btnWeather.setOnClickListener { startActivity(Intent(this, WeatherActivity::class.java)) }
         binding.btnLocation.setOnClickListener { startActivity(Intent(this, LocationActivity::class.java)) }

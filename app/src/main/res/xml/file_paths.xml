@@ -24,8 +24,13 @@
         name="restored_photos"
         path="restored_photos/" />
 
+    <!-- ✅ Cache für PDFs (Communication, WalkingSpeed, DailyNotes) -->
     <cache-path
         name="cache"
+        path="." />
+
+    <cache-path
+        name="pdf_cache"
         path="." />
 
 </paths>

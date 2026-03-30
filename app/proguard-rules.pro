@@ -1,28 +1,12 @@
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
 
 # Grundlegende Regeln
 -keepattributes *Annotation*
 -keepattributes Signature
+-keepattributes InnerClasses
+-keepattributes Exceptions
 -keepattributes SourceFile,LineNumberTable
 
 # App-spezifische Klassen behalten
@@ -68,6 +52,7 @@
 # SLF4J - FIX FOR MISSING StaticLoggerBinder
 # ════════════════════════════════════════════════════════════
 -dontwarn org.slf4j.**
+-keep class org.slf4j.** { *; }
 
 # ════════════════════════════════════════════════════════════
 # JSOUP - FIX FÜR RE2J FEHLER
@@ -92,3 +77,23 @@
 -keepclassmembers class kotlinx.coroutines.** {
     volatile <fields>;
 }
+
+# ════════════════════════════════════════════════════════════
+# ITEXT 7 - PDF GENERATION COMPREHENSIVE FIX
+# ════════════════════════════════════════════════════════════
+-keep class com.itextpdf.** { *; }
+-keep interface com.itextpdf.** { *; }
+-dontwarn com.itextpdf.**
+
+# iText 7 nutzt Reflection für viele interne Komponenten
+-keepclassmembers class com.itextpdf.** {
+    public <fields>;
+    public <methods>;
+}
+
+# Verhindert Warnungen über fehlende optionale Abhängigkeiten
+-dontwarn org.bouncycastle.**
+-dontwarn java.awt.**
+-dontwarn javax.xml.**
+-dontwarn org.apache.fontbox.**
+-dontwarn org.apache.pdfbox.**
