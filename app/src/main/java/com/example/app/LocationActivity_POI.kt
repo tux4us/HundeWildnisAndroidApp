@@ -48,7 +48,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private val poiList = mutableListOf<POI>()
 
-    // ✅ NEU: Liste für POI-Marker
+    // ✅ Liste für POI-Marker
     private val poiMarkers = mutableListOf<Marker>()
 
     private var currentPOIMarker: Marker? = null
@@ -91,7 +91,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.setMultiTouchControls(true)
         binding.mapView.controller.setZoom(15.0)
 
-        // ✅ FIX: MapEventsOverlay für zuverlässiges Touch-Handling
+        // ✅ MapEventsOverlay für zuverlässiges Touch-Handling
         val mapEventsReceiver = object : org.osmdroid.events.MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
                 // Bei jedem Tap auf die Karte → Info-Fenster schließen
@@ -118,7 +118,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun setupButtons() {
-        styleBackButton()  // ✅ FIX 2: Dark Mode Styling
+        styleBackButton()
 
         binding.btnCurrentLocation.setOnClickListener {
             if (isNavigating) {
@@ -150,14 +150,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 setTextColor(Color.WHITE)
                 setBackgroundColor(Color.parseColor("#5a8038"))
 
-                // ✅ FIX: DP in Pixel umrechnen!
+                // DP in Pixel umrechnen!
                 val heightInPixels = (56 * resources.displayMetrics.density).toInt()
                 layoutParams = layoutParams.apply {
                     width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
                     height = heightInPixels
                 }
 
-                // ✅ FIX: Padding damit Text nicht abgeschnitten wird
+                // Padding damit Text nicht abgeschnitten wird
                 setPadding(24, 12, 24, 12)
             }
         } else {
@@ -243,7 +243,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                         binding.emptyPoiText.visibility = View.GONE
                     }
 
-                    // ✅ NEU: POIs auf Karte anzeigen
+                    // POIs auf Karte anzeigen
                     showPOIsOnMap(sortedPOIs, category)
 
                 } catch (e: Exception) {
@@ -266,7 +266,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 snippet = "${formatDistance(poi.distance)} • ${poi.direction}"
                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
-                // ✅ FIX 1: Erster Klick = Info, Zweiter Klick = Navigation
+                // Erster Klick = Info, Zweiter Klick = Navigation
                 var clickCount = 0
                 setOnMarkerClickListener { clickedMarker, _ ->
                     clickCount++
@@ -325,9 +325,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         allPoints.forEach { point ->
             minLat = minOf(minLat, point.latitude)
-            maxLat = maxOf(maxLat, point.latitude)
-            minLon = minOf(minLon, point.longitude)
-            maxLon = maxOf(maxLon, point.longitude)
+            maxLat = maxLat.coerceAtLeast(point.latitude)
+            minLon = minLon.coerceAtMost(point.longitude)
+            maxLon = maxLon.coerceAtLeast(point.longitude)
         }
 
         // Zentrum berechnen
@@ -582,7 +582,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         poiList.clear()
         binding.poiRecyclerView.adapter?.notifyDataSetChanged()
 
-        // ✅ NEU: Marker entfernen
+        // Marker entfernen
         clearPOIMarkers()
 
         stopNavigation()
@@ -631,19 +631,17 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this)
                 .setTitle("📍 Standortdienste aktivieren")
-                .setMessage("Diese App benötigt Zugriff auf Deinen Standort für folgende Funktionen:\n\n" +
-                        "• Tempo-Messung: Um Deine Geh-Geschwindigkeit im Training präzise zu ermitteln.\n" +
-                        "• Navigation: Damit Du Standort und Navigation aufrufen und nutzen kannst.\n" +
-                        "• Standort-Infos: Für GPS-Daten in Deinen Notizen, um diese mit Deinem Standort zu verknüpfen.\n\n" +
-                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du diese Funktionen nicht nutzen. Deine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und auf Wunsch zum Teilen freigegeben.")
-                .setPositiveButton("Verstanden") { _, _ ->
+                .setMessage("HundeWildnis benötigt Zugriff auf Deinen Standort, um Deine Position auf der Karte anzuzeigen und Ziele in Deiner Umgebung zu finden.\n\n" +
+                        "WICHTIG:\nDamit die Navigation auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
+                        "DATENSCHUTZ:\nDeine Standortdaten werden ausschließlich lokal auf Deinem Gerät verarbeitet und niemals an Dritte weitergegeben.")
+                .setPositiveButton("AKTIVIEREN") { _, _ ->
                     ActivityCompat.requestPermissions(
                         this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                         LOCATION_PERMISSION_REQUEST_CODE
                     )
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton("ABLEHNEN", null)
                 .create()
                 .apply {
                     show()
@@ -1022,7 +1020,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     override fun onPause() {
         super.onPause()
         binding.mapView.onPause()
-        Log.d("LocationActivity", "onPause - Updates bleiben aktiv")
     }
 
     override fun onResume() {
@@ -1030,7 +1027,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.onResume()
 
         if (!isRequestingUpdates) {
-            Log.d("LocationActivity", "onResume - Updates neu starten")
             requestLocationUpdates()
         }
     }
@@ -1041,7 +1037,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         if (isRequestingUpdates) {
             locationManager.removeUpdates(this)
             isRequestingUpdates = false
-            Log.d("LocationActivity", "onDestroy - Updates gestoppt")
         }
     }
 

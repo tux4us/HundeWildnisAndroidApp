@@ -9,7 +9,7 @@
     <!-- Location (GPS) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- ACCESS_BACKGROUND_LOCATION entfernt, da Foreground Service genutzt wird -->
 
     <!-- Foreground Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -57,9 +57,6 @@
             </intent-filter>
         </activity>
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- BACKUP ACTIVITIES (NEU) -->
-        <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.BackupActivity"
             android:exported="false"
@@ -67,9 +64,6 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- HUNDE-STAMMDATEN ACTIVITIES (NEU) -->
-        <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.DogProfileActivity"
             android:exported="false"
@@ -96,9 +90,6 @@
             android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- TAGESTRAINER ACTIVITIES -->
-        <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.WalkingSpeedActivity"
             android:exported="false"
@@ -120,9 +111,6 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- NAVIGATION & TOOLS ACTIVITIES -->
-        <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.CompassActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -151,9 +139,6 @@
             android:exported="false"
             android:parentActivityName="com.hundewildnis.app.StartActivity" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- CONTENT ACTIVITIES -->
-        <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.MainActivity"
             android:exported="false"
@@ -171,18 +156,12 @@
             android:exported="false"
             android:parentActivityName="com.hundewildnis.app.MainActivity" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- SERVICE: WalkingSpeedService -->
-        <!-- ════════════════════════════════════════════════ -->
         <service
             android:name="com.hundewildnis.app.WalkingSpeedService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- ✅ CommunicationActivity -->
-        <!-- ════════════════════════════════════════════════ -->
         <activity
             android:name="com.hundewildnis.app.CommunicationActivity"
             android:exported="false"
@@ -190,9 +169,6 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
-        <!-- ════════════════════════════════════════════════ -->
-        <!-- FILE PROVIDER (für PDF-Sharing) -->
-        <!-- ════════════════════════════════════════════════ -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

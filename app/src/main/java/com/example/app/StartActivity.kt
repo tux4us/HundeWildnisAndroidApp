@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import androidx.core.content.FileProvider
 import com.hundewildnis.app.databinding.ActivityStartBinding
 import kotlinx.coroutines.*
@@ -46,6 +47,14 @@ class StartActivity : BaseBottomNavActivity() {
         }
     }
 
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            Toast.makeText(this, "✅ Benachrichtigungen aktiviert", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun getBottomNavigationView() = binding.bottomNavigation
     override fun getCurrentNavigationItemId() = R.id.nav_home
 
@@ -63,6 +72,9 @@ class StartActivity : BaseBottomNavActivity() {
         setupButtons()
         super.setupBottomNavigation()
 
+        // ✅ Erst-Info Dialog für Benachrichtigungen (Google Play Konform)
+        checkNotificationDisclosure()
+        
         // ✅ Update-Dialog prüfen
         checkForUpdate()
     }
@@ -100,6 +112,42 @@ class StartActivity : BaseBottomNavActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun checkNotificationDisclosure() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val hasAccepted = prefs.getBoolean("notification_disclosure_accepted", false)
+
+        if (!hasAccepted) {
+            showNotificationDisclosure()
+        }
+    }
+
+    private fun showNotificationDisclosure() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("🔔 Wichtige Informationen zu:\nBenachrichtigungen aktivieren")
+            .setMessage("HundeWildnis nutzt Benachrichtigungen für folgende Zwecke:\n\n" +
+                    "• BLOG-AKTUALISIERUNGEN:\nDamit Du immer informiert bist, wenn neue Blog-Artikel veröffentlicht werden.\n\n" +
+                    "• NAVIGATION & TEMPO-TRAINER  SPRACH-TRAINER:\nDamit Navigation, Tempo-Trainer und Sprach-Trainer auch dann zuverlässig funktionieren, wenn das Display ausgeschaltet ist oder die App in den Hintergrund verschoben wird (z.B. wenn das Handy beim Training in der Tasche steckt oder die Hände für Aktivitäten frei sein müssen). In diesem Fall wird eine dauerhafte Benachrichtigung angezeigt, um den Standortdienst aktiv zu halten.\nBei deaktivierten Benachrichtigungen funktionieren NAVIGATION, TEMPO-TRAINER und SPRACH-TRAINER nur, wenn die App im Vordergrund ist und der Bildschirm aktiv ist.\n\n" +
+                    "DATENSCHUTZ:\nEs werden keine personenbezogenen Daten für die Benachrichtigungen an externe Server übermittelt. Du kannst diese Funktion jederzeit in den Einstellungen:\nDein Gerät - Einstellungen - Apps - HundeWildnis - Benachrichtigungen\naktivieren, anpassen oder deaktivieren.")
+            .setPositiveButton("AKTIVIEREN") { _, _ ->
+                getSharedPreferences("app_prefs", MODE_PRIVATE).edit()
+                    .putBoolean("notification_disclosure_accepted", true).apply()
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+            .setNegativeButton("ABLEHNEN", null)
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
+    }
+
 
     private fun showInstructionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)

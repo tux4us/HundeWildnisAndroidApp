@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Damit die HundeWildnis App alle Funktionen wie GPS-Tracking, Fotos und Benachrichtigungen korrekt ausführen kann, werden bestimmte Berechtigungen benötigt. Hier findest Du eine Übersicht:"
+            android:text="Damit die HundeWildnis App alle Funktionen wie Standortdienste, Fotos, Mikrofon und Benachrichtigungen korrekt ausführen kann, werden bestimmte Berechtigungen benötigt. Hier findest Du eine Übersicht:"
             android:textSize="14sp"
             android:layout_marginBottom="20dp" />
 
@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wird für die POI-Suche, den Geh-Geschwindigkeitswächter und das Geotagging Deiner Tagesnotizen verwendet.\n• Wähle 'Beim Benutzen der App' und für das Hintergrund-Tracking 'Immer erlauben'."
+            android:text="Wird für die Standortermittlung, die POI-Suche, das Routing, die Navigation, das Standortwetter, den Tempo-Trainer und das optionale Geotagging Deiner Tagesnotizen verwendet.\n• Wähle 'Beim Benutzen der App'. Dank eines Vordergrunddienstes bleibt die Funktion auch bei gesperrtem Bildschirm aktiv, vorausgesetzt, dass benchrichtigungen für die App aktiviert wurden, welche technische Voraussetzung dafür sind."
             android:textSize="14sp"
             android:layout_marginBottom="16dp" />
 
@@ -52,7 +52,22 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wird benötigt, um Fotos für Deine Hunde-Profile aufzunehmen oder Bilder an Deine Tagesnotizen anzuhängen."
+            android:text="Wird benötigt, um Fotos für Deine Tagesnotizen aufzunehmen oder Bilder aus der Galerie an die Tagesnotizen anzufügen oder ein Fotos Deines Hundes in das Profil der Hunde-Stammdaten einzufügen."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Mikrofon -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🎤 Mikrofon"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wird für die Frequenz-Analyse im Sprach-Trainer benötigt. Deine Stimme wird nur lokal in Deinem Gerät analysiert, die Frequenzen grafisch und tabellarisch für Deinen Lernerfolg dargestellt. Eine Speicherung der Audiodaten erfolgt nicht."
             android:textSize="14sp"
             android:layout_marginBottom="16dp" />
 
@@ -67,7 +82,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ermöglicht der App, Dich bei Geschwindigkeitsüberschreitungen zu warnen (auch bei gesperrtem Bildschirm) und Dich über neue Blog-Inhalte zu informieren."
+            android:text="Benachrichtigungen werden benötigt, um Dich über neue Blog-Artikel zu informieren. Weiterhin kannst Du zur Unterstützung Deines Trainings Benachrichtigungen für den Tempo-Trainer aktivieren, um bei Tempoüberschreitungen gewarnt zu werden. Weiterhin kannst Du Benachrichtugungen im Sprach-Trainer nutzen, um ein Feedback beim Kommunikationstraining mit Deinem Hund bei erfolgreicher Kommunikation zu erhalten. \nDamit Navigation und Geschwindigkeits-Überwachung auch dann zuverlässig funktionieren, wenn das Display ausgeschaltet ist oder die App in den Hintergrund verschoben wird (z.B. wenn das Handy beim Training in der Tasche steckt oder die Hände für Aktivitäten frei sein müssen). In diesem Fall wird eine dauerhafte Benachrichtigung angezeigt, um den Standortdienst aktiv zu halten.\nBei deaktivierten Benachrichtigungen funktionieren NAVIGATION und TEMPO-TRAINER nur, wenn die App im Vordergrund ist und der Bildschirm aktiv ist.\n\nDATENSCHUTZ:\nEs werden keine personenbezogenen Daten für die Benachrichtigungen an externe Server übermittelt. Du kannst diese Funktion jederzeit in den Einstellungen:\nDein Gerät - Einstellungen - Apps - HundeWildnis - Benachrichtigungen\naktivieren, anpassen oder deaktivieren."
             android:textSize="14sp"
             android:layout_marginBottom="16dp" />
 
@@ -82,7 +97,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wird für das haptische Feedback bei Warnungen im Trainingstempo-Modus genutzt."
+            android:text="Kann für das haptische Feedback bei Warnungen im Tempo-Trainer und/oder Sprach-Trainer genutzt werden."
             android:textSize="14sp"
             android:layout_marginBottom="20dp" />
 
@@ -97,14 +112,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⚙️ So aktivierst Du Berechtigungen manuell:"
+            android:text="⚙️ So steuerst Du Benachrichtigungen und Berechtigungen manuell:"
             android:textStyle="bold"
             android:textSize="15sp"
             android:layout_marginBottom="8dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1. Öffne die Android-Einstellungen.\n2. Gehe zu 'Apps' -> 'Alle Apps anzeigen'.\n3. Suche 'HundeWildnis' in der Liste.\n4. Tippe auf 'Berechtigungen', um Kamera, Standort etc. freizuschalten.\n5. Tippe auf 'Benachrichtigungen', um Warnungen zu erlauben."
+            android:text="1. Öffne die Android-Einstellungen.\n2. Gehe zu 'Apps' -> 'Alle Apps anzeigen'.\n3. Suche 'HundeWildnis' in der Liste.\n4. Tippe auf 'Berechtigungen', um Kamera, Standort, Mikrofon etc. zu verwalten.\n5. Tippe auf 'Benachrichtigungen', um alle Optionen der benachrichtigungen zu verwalten."
             android:textSize="13sp"
             android:lineSpacingExtra="2dp"
             android:textColor="?android:attr/textColorSecondary" />
