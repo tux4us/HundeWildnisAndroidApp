@@ -118,7 +118,7 @@ class CommunicationActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Kommunikation"
+            title = "Sprach-Trainer"
             setDisplayHomeAsUpEnabled(true)
         }
         binding.toolbar.navigationIcon?.setTint(Color.WHITE)
@@ -247,17 +247,17 @@ class CommunicationActivity : SecureBaseActivity() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this)
-                .setTitle("🎤 Mikrofon-Zugriff erforderlich")
-                .setMessage("Diese Funktion analysiert Deine Stimmfrequenz während des Hundetrainings.\n\n" +
-                        "Warum benötigen wir Mikrofon-Zugriff?\n\n" +
+                .setTitle("🎤 Berechtigungen für Mikrofon-Zugriff erforderlich")
+                .setMessage("Diese Funktion analysiert Deine Stimmfrequenz während des Hundetrainings oder während Du Deine Stimme für die Kommunikation mit Deinem Hund trainierst.\n\n" +
+                        "Warum benötigen wir Berechtigungen für Mikrofon-Zugriff?\n\n" +
                         "• Echtzeit-Analyse: Um Deine Stimmfrequenz zu messen und Dir Feedback zu geben.\n" +
-                        "• Harmonische Kommunikation: Damit Du lernst, in den optimalen Frequenzbereichen zu sprechen.\n" +
-                        "• Training optimieren: Statistiken helfen Dir, Deine Kommunikation zu verbessern.\n\n" +
+                        "• Harmonische Kommunikation: Damit Du lernst, in dem für Hunde optimalen Frequenzbereichen zu sprechen.\n" +
+                        "• Training optimieren: Statistiken helfen Dir, Deine Kommunikation aufgrund der Ergebniss zu verbessern.\n\n" +
                         "Deine Aufnahmen werden NICHT gespeichert und NUR lokal auf Deinem Gerät verarbeitet. " +
                         "Es erfolgt KEINE Übertragung an Server.\n\n" +
-                        "Gemäß Google Play Store Richtlinien müssen wir transparent erklären, warum diese Berechtigung benötigt wird.")
-                .setPositiveButton("Verstanden") { _, _ -> micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
-                .setNegativeButton("Abbrechen", null)
+                        "Erklärung gemäß Google Play Store Richtlinien für Transparenz bei Anforderungen von Berechtigungen.")
+                .setPositiveButton("AKTIVIEREN") { _, _ -> micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
+                .setNegativeButton("ABLEHNEN", null)
                 .create().apply {
                     show()
                     getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)

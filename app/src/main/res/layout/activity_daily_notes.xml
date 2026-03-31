@@ -91,6 +91,18 @@
                 android:textSize="14sp"
                 app:cornerRadius="8dp"
                 app:backgroundTint="#25E2C2"
+                android:layout_marginBottom="8dp" />
+
+            <!-- GPS Standort hinzufügen Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddLocation"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📍 GPS-Standort hinzufügen"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#64B5F6"
                 android:layout_marginBottom="16dp" />
 
             <!-- Foto-Bereich Header -->
