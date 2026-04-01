@@ -49,9 +49,10 @@ class DogProfileActivity : SecureBaseActivity() {
             onView = { profile -> viewProfile(profile) },
             onEdit = { profile -> editProfile(profile) },
             onDelete = { profile -> deleteProfile(profile) },
-            onShare = { profile -> shareProfile(profile) },
-            onQR = { profile -> showQRCode(profile) },
-            onPDF = { profile -> generatePDF(profile) }
+            onShare = { profile, selectedFields -> shareProfile(profile, selectedFields) },
+            onQR = { profile, selectedFields -> showQRCode(profile, selectedFields) },
+            onPDF = { profile, selectedFields -> generatePDF(profile, selectedFields) },
+            onEmergency = { profile -> startEmergencyReport(profile) }
         )
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -130,8 +131,14 @@ class DogProfileActivity : SecureBaseActivity() {
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
     }
 
-    private fun shareProfile(profile: DogProfile) {
-        val shareText = profile.toQRString()
+    private fun startEmergencyReport(profile: DogProfile) {
+        val intent = Intent(this, EmergencyActivity::class.java)
+        intent.putExtra("profile", profile)
+        startActivity(intent)
+    }
+
+    private fun shareProfile(profile: DogProfile, selectedFields: Set<String>) {
+        val shareText = profile.toFilteredString(selectedFields)
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareText)
@@ -140,26 +147,33 @@ class DogProfileActivity : SecureBaseActivity() {
         startActivity(Intent.createChooser(intent, "Teilen über"))
     }
 
-    private fun showQRCode(profile: DogProfile) {
+    private fun showQRCode(profile: DogProfile, selectedFields: Set<String>) {
         val intent = Intent(this, QRCodeActivity::class.java)
         intent.putExtra("profile", profile)
+        intent.putExtra("selectedFields", selectedFields.toTypedArray())
         startActivity(intent)
     }
 
-    private fun generatePDF(profile: DogProfile) {
+    private fun generatePDF(profile: DogProfile, selectedFields: Set<String>) {
         binding.progressBar.visibility = View.VISIBLE
 
         try {
-            val qrBitmap = QRCodeGenerator.generateDogProfileQR(profile, 512)
+            val qrText = profile.toFilteredString(selectedFields)
+            val qrBitmap = QRCodeGenerator.generateQRCode(qrText, 512)
+
             if (qrBitmap == null) {
                 Toast.makeText(this, "QR-Code Fehler", Toast.LENGTH_SHORT).show()
                 binding.progressBar.visibility = View.GONE
                 return
             }
 
-            val pdfFile = PDFGenerator.generateDogProfilePDF(this, profile, qrBitmap)
+            val pdfFile = PDFGenerator.generateFilteredDogProfilePDF(
+                context = this,
+                profile = profile,
+                selectedFields = selectedFields,
+                qrBitmap = qrBitmap
+            )
 
-            // ✅ FIX: PDF in Documents/HundeWildnis kopieren
             val documentsDir = android.os.Environment.getExternalStoragePublicDirectory(
                 android.os.Environment.DIRECTORY_DOCUMENTS
             )
@@ -171,7 +185,6 @@ class DogProfileActivity : SecureBaseActivity() {
             val targetFile = java.io.File(appDir, pdfFile.name)
             pdfFile.copyTo(targetFile, overwrite = true)
 
-            // MediaScanner benachrichtigen
             android.media.MediaScannerConnection.scanFile(
                 this,
                 arrayOf(targetFile.absolutePath),
@@ -179,11 +192,10 @@ class DogProfileActivity : SecureBaseActivity() {
                 null
             )
 
-            // PDF öffnen (wie bisher)
             val uri = androidx.core.content.FileProvider.getUriForFile(
                 this,
                 "${packageName}.fileprovider",
-                targetFile  // ✅ Nutze targetFile statt pdfFile
+                targetFile
             )
 
             val intent = Intent(Intent.ACTION_VIEW).apply {

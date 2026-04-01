@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="emergency_symptoms">
+        <item>Bitte wählen (Dringlichkeit!)</item>
+        <item>Schwere Blutungen</item>
+        <item>Atemnot</item>
+        <item>Magendrehung (Verdacht)</item>
+        <item>Vergiftung (Verdacht)</item>
+        <item>Fremdkörper im Magen-Darm-Trakt</item>
+        <item>Starkes Erbrechen und Durchfall</item>
+        <item>Trauma (Sturz, Unfall)</item>
+        <item>Bissverletzungen</item>
+        <item>Krampfanfall</item>
+        <item>Hitzschlag</item>
+        <item>Schockzustand</item>
+        <item>Lähmungserscheinungen</item>
+        <item>Augenverletzung</item>
+        <item>Harnwegsprobleme / Harnverhalten</item>
+        <item>Allergischer Schock</item>
+        <item>Offener Bruch</item>
+        <item>Gebärmutterentzündung</item>
+        <item>Bewusstlosigkeit</item>
+        <item>Schwere Wunden</item>
+        <item>Herz-Kreislauf-Probleme</item>
+        <item>Sonstige Symptome</item>
+    </string-array>
+</resources>

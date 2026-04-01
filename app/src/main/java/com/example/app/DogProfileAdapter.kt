@@ -14,37 +14,33 @@ class DogProfileAdapter(
     private val onView: (DogProfile) -> Unit,
     private val onEdit: (DogProfile) -> Unit,
     private val onDelete: (DogProfile) -> Unit,
-    private val onShare: (DogProfile) -> Unit,
-    private val onQR: (DogProfile) -> Unit,
-    private val onPDF: (DogProfile) -> Unit
+    private val onShare: (DogProfile, Set<String>) -> Unit,
+    private val onQR: (DogProfile, Set<String>) -> Unit,
+    private val onPDF: (DogProfile, Set<String>) -> Unit,
+    private val onEmergency: (DogProfile) -> Unit // ✅ NEU
 ) : RecyclerView.Adapter<DogProfileAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemDogProfileBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(profile: DogProfile) {
-            // ✅ FIX 3: Dark Mode für Card
             val isDarkTheme = (binding.root.context.resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
             val card = binding.root as MaterialCardView
             if (isDarkTheme) {
-                // Dunkelgrau mit Schatten
                 card.setCardBackgroundColor(Color.parseColor("#2D2D2D"))
                 card.strokeColor = Color.parseColor("#404040")
                 card.strokeWidth = 2
             } else {
-                // Weiß (Standard)
                 card.setCardBackgroundColor(Color.WHITE)
                 card.strokeWidth = 0
             }
 
-            // Name, Rasse, Info
             binding.tvName.text = profile.name
             binding.tvBreed.text = profile.breed
             binding.tvInfo.text = "${profile.gender} • ${profile.birthDate}"
 
-            // Foto
             if (profile.photoUri.isNotEmpty()) {
                 try {
                     binding.ivPhoto.setImageURI(Uri.parse(profile.photoUri))
@@ -55,11 +51,9 @@ class DogProfileAdapter(
                 binding.ivPhoto.setImageResource(R.drawable.ic_dog_placeholder)
             }
 
-            // ✅ FIX 1: Button-Farben für Dark Mode
             val buttonTextColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
             val buttonStrokeColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
 
-            // Buttons stylen
             listOf(
                 binding.btnView,
                 binding.btnEdit,
@@ -71,16 +65,41 @@ class DogProfileAdapter(
                 button.strokeColor = android.content.res.ColorStateList.valueOf(buttonStrokeColor)
             }
 
-            // Löschen-Button bleibt rot mit weißem Text
             binding.btnDelete.setTextColor(Color.WHITE)
+            
+            // Notfall Button Styling
+            binding.btnEmergency.setOnClickListener { onEmergency(profile) }
 
-            // Button Callbacks
             binding.btnView.setOnClickListener { onView(profile) }
             binding.btnEdit.setOnClickListener { onEdit(profile) }
             binding.btnDelete.setOnClickListener { onDelete(profile) }
-            binding.btnShare.setOnClickListener { onShare(profile) }
-            binding.btnQR.setOnClickListener { onQR(profile) }
-            binding.btnPDF.setOnClickListener { onPDF(profile) }
+            binding.btnShare.setOnClickListener {
+                PrivacyDialogHelper.showFieldSelectionDialog(
+                    context = binding.root.context,
+                    profile = profile,
+                    title = "📤 Teilen Datenauswahl"
+                ) { selectedFields ->
+                    onShare(profile, selectedFields)
+                }
+            }
+            binding.btnQR.setOnClickListener {
+                PrivacyDialogHelper.showFieldSelectionDialog(
+                    context = binding.root.context,
+                    profile = profile,
+                    title = "📱 QR-Code Datenauswahl"
+                ) { selectedFields ->
+                    onQR(profile, selectedFields)
+                }
+            }
+            binding.btnPDF.setOnClickListener {
+                PrivacyDialogHelper.showFieldSelectionDialog(
+                    context = binding.root.context,
+                    profile = profile,
+                    title = "📄 PDF Datenauswahl"
+                ) { selectedFields ->
+                    onPDF(profile, selectedFields)
+                }
+            }
         }
     }
 

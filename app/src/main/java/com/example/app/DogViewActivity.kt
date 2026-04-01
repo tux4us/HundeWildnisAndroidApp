@@ -63,9 +63,9 @@ class DogViewActivity : SecureBaseActivity() {
         
         // Kontakte
         binding.tvVet.text = "Tierarzt: ${p.veterinarian.ifEmpty { "-" }}"
-        binding.tvInsurance.text = "Versicherung: ${p.insurance.ifEmpty { "-" }}"
+        binding.tvInsurance.text = "Versicherung: ${p.liabilityInsurance.ifEmpty { "-" }}"
         binding.tvOwner.text = "Besitzer: ${p.owner.ifEmpty { "-" }}"
-        binding.tvEmergency.text = "Notfall: ${p.emergencyContact.ifEmpty { "-" }}"
+        binding.tvEmergency.text = "Notfall: ${p.additionalEmergencyContact.ifEmpty { "-" }}"
         
         // Futter & Verhalten
         binding.tvFood.text = "Futter: ${p.food.ifEmpty { "-" }}"

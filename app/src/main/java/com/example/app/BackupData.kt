@@ -8,13 +8,14 @@ import com.google.gson.annotations.SerializedName
  */
 data class BackupData(
     @SerializedName("version") val version: String,
-    @SerializedName("backupVersion") val backupVersion: Int = 3,
+    @SerializedName("backupVersion") val backupVersion: Int = 4,
     @SerializedName("timestamp") val timestamp: Long,
     @SerializedName("dogs") val dogs: List<DogProfile>,
     @SerializedName("settings") val settings: Map<String, String>,
     @SerializedName("notes") val notes: List<NoteSession>?,
     @SerializedName("speedSessions") val speedSessions: List<SpeedSession>?,
     @SerializedName("voiceSessions") val voiceSessions: List<VoiceSession>?,
+    @SerializedName("emergencyReports") val emergencyReports: List<EmergencyReport>?,
     @SerializedName("photoMapping") val photoMapping: Map<String, String>
 )
 
@@ -34,5 +35,6 @@ data class BackupItemCount(
     @SerializedName("photos") val photos: Int,
     @SerializedName("notes") val notes: Int,
     @SerializedName("speedSessions") val speedSessions: Int = 0,
-    @SerializedName("voiceSessions") val voiceSessions: Int = 0
+    @SerializedName("voiceSessions") val voiceSessions: Int = 0,
+    @SerializedName("emergencyReports") val emergencyReports: Int = 0
 )
