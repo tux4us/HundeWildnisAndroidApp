@@ -52,6 +52,7 @@ object BackupManager {
             val notes = collectNotes(context)
             val speedSessions = collectSpeedSessions(context)
             val voiceSessions = collectVoiceSessions(context)
+            val emergencyReports = collectEmergencyReports(context)
 
             val photoMapping = mutableMapOf<String, String>()
 
@@ -85,23 +86,39 @@ object BackupManager {
                 }
             }
 
+            // Notfallmeldung-Fotos kopieren
+            emergencyReports?.forEachIndexed { reportIndex, report ->
+                report.photoUris.forEachIndexed { photoIndex, uriString ->
+                    try {
+                        val sourceUri = Uri.parse(uriString)
+                        val photoFile = File(photosInZipDir, "emergency_${reportIndex}_${photoIndex}_${timestamp}.jpg")
+                        if (copyUriToFile(context, sourceUri, photoFile)) {
+                            photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Fehler beim Kopieren von Notfallfoto: ${e.message}")
+                    }
+                }
+            }
+
             // Backup-Daten erstellen
             val backupData = BackupData(
                 version = getAppVersion(context),
-                backupVersion = 3,
+                backupVersion = 4,
                 timestamp = timestamp,
                 dogs = dogs,
                 settings = settings,
                 notes = notes,
                 speedSessions = speedSessions,
                 voiceSessions = voiceSessions,
+                emergencyReports = emergencyReports,
                 photoMapping = photoMapping
             )
 
             // Metadaten erstellen
             val metadata = BackupMetadata(
                 appVersion = getAppVersion(context),
-                backupVersion = 3,
+                backupVersion = 4,
                 timestamp = timestamp,
                 deviceName = Build.MODEL,
                 itemCount = BackupItemCount(
@@ -109,7 +126,8 @@ object BackupManager {
                     photos = photoMapping.size,
                     notes = notes?.size ?: 0,
                     speedSessions = speedSessions?.size ?: 0,
-                    voiceSessions = voiceSessions?.size ?: 0
+                    voiceSessions = voiceSessions?.size ?: 0,
+                    emergencyReports = emergencyReports?.size ?: 0
                 )
             )
 
@@ -200,9 +218,18 @@ object BackupManager {
                 saveSpeedHistory(context, sessions)
             }
 
-            // 6. Kommunikations-Sessions (NEU)
+            // 6. Kommunikations-Sessions
             backupData.voiceSessions?.let { sessions ->
                 saveVoiceHistory(context, sessions)
+            }
+
+            // 7. Notfallmeldungen (NEU)
+            backupData.emergencyReports?.let { reports ->
+                val restoredReports = reports.map { report ->
+                    val restoredUris = report.photoUris.map { restoredPhotoMapping[it] ?: it }
+                    report.copy(photoUris = restoredUris)
+                }
+                saveEmergencyHistory(context, restoredReports)
             }
 
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
@@ -273,6 +300,20 @@ object BackupManager {
     private fun saveVoiceHistory(context: Context, sessions: List<VoiceSession>) {
         val prefs = context.getSharedPreferences("voice_history", Context.MODE_PRIVATE)
         prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+    }
+
+    private fun collectEmergencyReports(context: Context): List<EmergencyReport>? {
+        val prefs = context.getSharedPreferences("emergency_history", Context.MODE_PRIVATE)
+        val json = prefs.getString("reports", null) ?: return null
+        return try {
+            val type = object : TypeToken<List<EmergencyReport>>() {}.type
+            gson.fromJson(json, type)
+        } catch (e: Exception) { null }
+    }
+
+    private fun saveEmergencyHistory(context: Context, reports: List<EmergencyReport>) {
+        val prefs = context.getSharedPreferences("emergency_history", Context.MODE_PRIVATE)
+        prefs.edit().putString("reports", gson.toJson(reports)).apply()
     }
 
     private fun copyUriToFile(context: Context, uri: Uri, destFile: File): Boolean {

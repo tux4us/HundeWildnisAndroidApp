@@ -91,6 +91,13 @@
             android:theme="@style/Theme.HundeWildnis" />
 
         <activity
+            android:name="com.hundewildnis.app.EmergencyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
             android:name="com.hundewildnis.app.WalkingSpeedActivity"
             android:exported="false"
             android:screenOrientation="portrait"

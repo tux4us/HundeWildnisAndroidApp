@@ -5,9 +5,13 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.hundewildnis.app.databinding.ActivityDogEditBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,6 +80,47 @@ class DogEditActivity : SecureBaseActivity() {
             android.R.layout.simple_dropdown_item_1line
         )
         binding.spinnerNeutered.setAdapter(neuteredAdapter)
+
+        // Geburtsdatum Typ
+        val birthDateTypeAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.birthdate_type_options,
+            android.R.layout.simple_dropdown_item_1line
+        )
+        binding.spinnerBirthDateType.setAdapter(birthDateTypeAdapter)
+        binding.spinnerBirthDateType.setOnItemClickListener { _, _, position, _ ->
+            updateBirthDateField(position)
+        }
+    }
+
+    private fun updateBirthDateField(position: Int) {
+        // Zuerst den Hint vom EditText entfernen, um Überlagerungen zu vermeiden
+        binding.etBirthDate.hint = null
+        
+        when (position) {
+            0 -> { // Datum bekannt
+                binding.tilBirthDate.visibility = View.VISIBLE
+                binding.etBirthDate.isEnabled = true
+                binding.tilBirthDate.placeholderText = "Tag.Monat.Jahr wählen"
+                if (binding.etBirthDate.text?.contains(".") == false) binding.etBirthDate.setText("")
+            }
+            1 -> { // Monat/Jahr bekannt
+                binding.tilBirthDate.visibility = View.VISIBLE
+                binding.etBirthDate.isEnabled = true
+                binding.tilBirthDate.placeholderText = "Monat.Jahr wählen"
+                if (!binding.etBirthDate.text.toString().matches(Regex("\\d{2}\\.\\d{4}"))) binding.etBirthDate.setText("")
+            }
+            2 -> { // Jahr bekannt
+                binding.tilBirthDate.visibility = View.VISIBLE
+                binding.etBirthDate.isEnabled = true
+                binding.tilBirthDate.placeholderText = "Jahr wählen"
+                if (!binding.etBirthDate.text.toString().matches(Regex("\\d{4}"))) binding.etBirthDate.setText("")
+            }
+            3 -> { // Unbekannt
+                binding.tilBirthDate.visibility = View.GONE
+                binding.etBirthDate.setText("Unbekannt")
+            }
+        }
     }
 
     private fun loadData() {
@@ -104,8 +149,24 @@ class DogEditActivity : SecureBaseActivity() {
                 binding.spinnerNeutered.adapter.getItem(neuteredIndex).toString(),
                 false
             )
+
+            // Geburtsdatum Typ erkennen
+            val birthDate = p.birthDate
+            val (typeIndex, displayDate) = when {
+                birthDate == "Unbekannt" || birthDate.isEmpty() -> Pair(3, "Unbekannt")
+                birthDate.matches(Regex("\\d{2}\\.\\d{2}\\.\\d{4}")) -> Pair(0, birthDate)
+                birthDate.matches(Regex("\\d{2}\\.\\d{4}")) -> Pair(1, birthDate)
+                birthDate.matches(Regex("\\d{4}")) -> Pair(2, birthDate)
+                else -> Pair(0, birthDate)
+            }
             
-            binding.etBirthDate.setText(p.birthDate)
+            binding.spinnerBirthDateType.setText(
+                binding.spinnerBirthDateType.adapter.getItem(typeIndex).toString(),
+                false
+            )
+            binding.etBirthDate.setText(displayDate)
+            updateBirthDateField(typeIndex)
+
             binding.etColor.setText(p.color)
             binding.etChipNumber.setText(p.chipNumber)
             binding.etTaxNumber.setText(p.taxNumber)
@@ -117,11 +178,19 @@ class DogEditActivity : SecureBaseActivity() {
             binding.etWeightDate.setText(p.weightDate)
             binding.etMedicalNotes.setText(p.medicalNotes)
             binding.etVeterinarian.setText(p.veterinarian)
-            binding.etInsurance.setText(p.insurance)
+            binding.etLiabilityInsurance.setText(p.liabilityInsurance)
             binding.etOwner.setText(p.owner)
-            binding.etEmergency.setText(p.emergencyContact)
+            binding.etAdditionalEmergency.setText(p.additionalEmergencyContact)
             binding.etFood.setText(p.food)
             binding.etBehavior.setText(p.behavior)
+
+            binding.etOriginCountry.setText(p.originCountry)
+            binding.etPetPassportCountry.setText(p.petPassportCountry)
+            binding.etPetPassportNumber.setText(p.petPassportNumber)
+            binding.etAdditionalVaccination.setText(p.additionalVaccination)
+            binding.etShoulderHeight.setText(p.shoulderHeight)
+            binding.etBodyLength.setText(p.bodyLength)
+            binding.etHealthInsurance.setText(p.healthInsurance)
             
             if (p.photoUri.isNotEmpty()) {
                 photoUri = p.photoUri
@@ -160,19 +229,31 @@ class DogEditActivity : SecureBaseActivity() {
 
     private fun setupDatePickers() {
         val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
         
         binding.etBirthDate.setOnClickListener {
-            DatePickerDialog(
-                this,
-                { _, year, month, day ->
-                    calendar.set(year, month, day)
-                    binding.etBirthDate.setText(dateFormat.format(calendar.time))
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            val type = binding.spinnerBirthDateType.text.toString()
+            val options = resources.getStringArray(R.array.birthdate_type_options)
+            
+            when (type) {
+                options[0] -> { // Datum bekannt
+                    DatePickerDialog(
+                        this,
+                        { _, year, month, day ->
+                            calendar.set(year, month, day)
+                            binding.etBirthDate.setText(SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(calendar.time))
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
+                options[1] -> { // Monat/Jahr
+                    showMonthYearPicker()
+                }
+                options[2] -> { // Jahr
+                    showYearPicker()
+                }
+            }
         }
 
         binding.etWeightDate.setOnClickListener {
@@ -180,13 +261,57 @@ class DogEditActivity : SecureBaseActivity() {
                 this,
                 { _, year, month, day ->
                     calendar.set(year, month, day)
-                    binding.etWeightDate.setText(dateFormat.format(calendar.time))
+                    binding.etWeightDate.setText(SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(calendar.time))
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
+    }
+
+    private fun showMonthYearPicker() {
+        val calendar = Calendar.getInstance()
+        val view = layoutInflater.inflate(R.layout.dialog_month_year_picker, null)
+        val monthPicker = view.findViewById<NumberPicker>(R.id.monthPicker)
+        val yearPicker = view.findViewById<NumberPicker>(R.id.yearPicker)
+
+        monthPicker.minValue = 1
+        monthPicker.maxValue = 12
+        monthPicker.value = calendar.get(Calendar.MONTH) + 1
+
+        val currentYear = calendar.get(Calendar.YEAR)
+        yearPicker.minValue = currentYear - 30
+        yearPicker.maxValue = currentYear
+        yearPicker.value = currentYear
+
+        AlertDialog.Builder(this)
+            .setTitle("Monat und Jahr wählen")
+            .setView(view)
+            .setPositiveButton("OK") { _, _ ->
+                val month = String.format("%02d", monthPicker.value)
+                binding.etBirthDate.setText("$month.${yearPicker.value}")
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private fun showYearPicker() {
+        val calendar = Calendar.getInstance()
+        val yearPicker = NumberPicker(this)
+        val currentYear = calendar.get(Calendar.YEAR)
+        yearPicker.minValue = currentYear - 30
+        yearPicker.maxValue = currentYear
+        yearPicker.value = currentYear
+
+        AlertDialog.Builder(this)
+            .setTitle("Jahr wählen")
+            .setView(yearPicker)
+            .setPositiveButton("OK") { _, _ ->
+                binding.etBirthDate.setText("${yearPicker.value}")
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
     }
 
     private fun save() {
@@ -213,12 +338,20 @@ class DogEditActivity : SecureBaseActivity() {
             weightDate = binding.etWeightDate.text.toString(),
             medicalNotes = binding.etMedicalNotes.text.toString(),
             veterinarian = binding.etVeterinarian.text.toString(),
-            insurance = binding.etInsurance.text.toString(),
+            liabilityInsurance = binding.etLiabilityInsurance.text.toString(),
             owner = binding.etOwner.text.toString(),
-            emergencyContact = binding.etEmergency.text.toString(),
+            additionalEmergencyContact = binding.etAdditionalEmergency.text.toString(),
             food = binding.etFood.text.toString(),
             behavior = binding.etBehavior.text.toString(),
-            photoUri = photoUri
+            photoUri = photoUri,
+            originCountry = binding.etOriginCountry.text.toString(),
+            petPassportCountry = binding.etPetPassportCountry.text.toString(),
+            petPassportNumber = binding.etPetPassportNumber.text.toString(),
+            additionalVaccination = binding.etAdditionalVaccination.text.toString(),
+            shoulderHeight = binding.etShoulderHeight.text.toString(),
+            bodyLength = binding.etBodyLength.text.toString(),
+            healthInsurance = binding.etHealthInsurance.text.toString(),
+
         )
 
         if (DogProfileManager.saveProfile(this, savedProfile)) {

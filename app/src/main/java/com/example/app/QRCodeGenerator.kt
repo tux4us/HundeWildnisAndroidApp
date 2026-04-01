@@ -7,30 +7,41 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.WriterException
 
 object QRCodeGenerator {
-    
-    fun generateQRCode(text: String, size: Int = 512): Bitmap? {
+    /**
+     * Generiert QR-Code aus Text
+     */
+    fun generateQRCode(text: String, size: Int): Bitmap? {
         return try {
-            val writer = QRCodeWriter()
-            val bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, size, size)
-            
+            val hints = hashMapOf<com.google.zxing.EncodeHintType, Any>()
+            hints[com.google.zxing.EncodeHintType.CHARACTER_SET] = "UTF-8"
+            hints[com.google.zxing.EncodeHintType.MARGIN] = 1
+
+            val writer = com.google.zxing.qrcode.QRCodeWriter()
+            val bitMatrix = writer.encode(text, com.google.zxing.BarcodeFormat.QR_CODE, size, size, hints)
+
             val width = bitMatrix.width
             val height = bitMatrix.height
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-            
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+            val pixels = IntArray(width * height)
+
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    pixels[y * width + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
                 }
             }
-            
-            bitmap
-        } catch (e: WriterException) {
+
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+                setPixels(pixels, 0, width, 0, 0, width, height)
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }
     }
-    
-    fun generateDogProfileQR(profile: DogProfile, size: Int = 512): Bitmap? {
+
+    /**
+     * Legacy-Funktion für DogProfile (alle Felder)
+     */
+    fun generateDogProfileQR(profile: DogProfile, size: Int): Bitmap? {
         return generateQRCode(profile.toQRString(), size)
     }
 }

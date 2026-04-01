@@ -14,4 +14,12 @@
         <item>Nein</item>
         <item>Unbekannt</item>
     </string-array>
+
+    <!-- Geburtsdatum Typ -->
+    <string-array name="birthdate_type_options">
+        <item>Datum bekannt</item>
+        <item>Monat/Jahr bekannt</item>
+        <item>Jahr bekannt</item>
+        <item>Unbekannt</item>
+    </string-array>
 </resources>

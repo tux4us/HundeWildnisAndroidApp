@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
-            android:rowCount="3"
+            android:rowCount="4"
             android:alignmentMode="alignBounds"
             android:columnOrderPreserved="false">
 
@@ -140,8 +140,24 @@
                 android:layout_margin="4dp"
                 android:text="🗑️ Löschen"
                 android:textSize="14sp"
-                android:backgroundTint="#CC0000"
+                android:backgroundTint="#1A237E"
                 android:textColor="#FFFFFF"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <!-- Row 4: NOTFALL BUTTON (Über gesamte Breite) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEmergency"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_columnSpan="2"
+                android:layout_margin="4dp"
+                android:text="🚨 NOTFALL"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#B00020"
+                app:icon="@android:drawable/ic_dialog_alert"
+                app:iconTint="#FFFFFF"
                 style="@style/Widget.MaterialComponents.Button" />
         </GridLayout>
 

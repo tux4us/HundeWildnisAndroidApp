@@ -148,18 +148,48 @@
                     android:text="Bitte wählen" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- GEBURTSDATUM SEKTION -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Präzision Geburtsdatum"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_marginBottom="8dp">
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerBirthDateType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="Datum bekannt" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilBirthDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Geburtsdatum"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                app:placeholderText="Tag.Monat.Jahr wählen">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBirthDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:focusable="false"
-                    android:clickable="true" />
+                    android:clickable="true"
+                    android:hint="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Herkunftsort / -land"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etOriginCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -220,6 +250,30 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Heimtierausweis Land"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPetPassportCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ausweis-Nummer"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPetPassportNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- GESUNDHEIT -->
             <TextView
                 android:layout_width="wrap_content"
@@ -241,6 +295,19 @@
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
                     android:minLines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Weitere Impfungen"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAdditionalVaccination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -302,6 +369,38 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Schulterhöhe (cm)"
+                    android:layout_marginEnd="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etShoulderHeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Körperlänge (cm)"
+                    android:layout_marginStart="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBodyLength"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -341,10 +440,23 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Versicherungen"
+                android:hint="Hundehaftpflichtversicherung"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etInsurance"
+                    android:id="@+id/etLiabilityInsurance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Hundekranken-/OP-Versicherung"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etHealthInsurance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
@@ -367,10 +479,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Notfallkontakt"
+                android:hint="Zusätzlicher Notfallkontakt"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmergency"
+                    android:id="@+id/etAdditionalEmergency"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
