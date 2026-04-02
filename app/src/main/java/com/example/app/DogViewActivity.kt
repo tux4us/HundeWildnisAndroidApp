@@ -43,15 +43,18 @@ class DogViewActivity : SecureBaseActivity() {
         binding.tvGender.text = p.gender
         binding.tvNeutered.text = "Kastriert: ${p.neutered}"
         binding.tvBirthDate.text = "Geboren: ${p.birthDate}"
+        binding.tvOriginCountry.text = "Herkunft: ${p.originCountry.ifEmpty { "-" }}"
         binding.tvColor.text = "Farbe: ${p.color}"
         
         // Identifikation
         binding.tvChip.text = "Chip: ${p.chipNumber.ifEmpty { "-" }}"
         binding.tvTax.text = "Steuernummer: ${p.taxNumber.ifEmpty { "-" }}"
         binding.tvTasso.text = "TASSO: ${p.tassoNumber.ifEmpty { "-" }}"
+        binding.tvPetPassport.text = "Heimtierausweis: ${p.petPassportCountry} ${p.petPassportNumber}".trim().ifEmpty { "-" }
         
         // Gesundheit
         binding.tvVaccination.text = "Impfstatus: ${p.vaccinationStatus.ifEmpty { "-" }}"
+        binding.tvAdditionalVaccination.text = "Weitere Impfungen: ${p.additionalVaccination.ifEmpty { "-" }}"
         binding.tvDeworming.text = "Entwurmung: ${p.lastDeworming.ifEmpty { "-" }}"
         binding.tvFleaTick.text = "Floh/Zecke: ${p.lastFleaTick.ifEmpty { "-" }}"
         binding.tvWeight.text = if (p.weight.isNotEmpty()) {
@@ -59,11 +62,14 @@ class DogViewActivity : SecureBaseActivity() {
         } else {
             "Gewicht: -"
         }
+        binding.tvShoulderHeight.text = "Schulterhöhe: ${p.shoulderHeight.ifEmpty { "-" }} cm"
+        binding.tvBodyLength.text = "Körperlänge: ${p.bodyLength.ifEmpty { "-" }} cm"
         binding.tvMedical.text = "Hinweise: ${p.medicalNotes.ifEmpty { "-" }}"
         
         // Kontakte
         binding.tvVet.text = "Tierarzt: ${p.veterinarian.ifEmpty { "-" }}"
-        binding.tvInsurance.text = "Versicherung: ${p.liabilityInsurance.ifEmpty { "-" }}"
+        binding.tvInsurance.text = "Haftpflicht: ${p.liabilityInsurance.ifEmpty { "-" }}"
+        binding.tvHealthInsurance.text = "Krankenvers.: ${p.healthInsurance.ifEmpty { "-" }}"
         binding.tvOwner.text = "Besitzer: ${p.owner.ifEmpty { "-" }}"
         binding.tvEmergency.text = "Notfall: ${p.additionalEmergencyContact.ifEmpty { "-" }}"
         
