@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -60,6 +59,8 @@ import java.io.FileOutputStream
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 
 /**
  * Data Class für gespeicherte Notizen
@@ -113,8 +114,26 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         if (success && currentPhotoUri != null) { addPhoto(currentPhotoUri!!); saveToHistory(false) }
     }
 
-    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { addPhoto(it); saveToHistory(false) }
+    // ✅ SINGLE PHOTO PICKER
+    private val singlePhotoPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let {
+            addPhoto(it)
+            saveToHistory(false)
+        }
+    }
+
+    // ✅ MULTIPLE PHOTOS PICKER
+    private val multiplePhotoPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(maxItems = 10)
+    ) { uris: List<Uri> ->
+        uris.forEach { uri ->
+            addPhoto(uri)
+        }
+        if (uris.isNotEmpty()) {
+            saveToHistory(false)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,26 +156,26 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupUI() {
         binding.btnCamera.setOnClickListener { showCameraDisclosure() }
-        binding.btnGallery.setOnClickListener { showGalleryDisclosure() }
+        binding.btnGallery.setOnClickListener { openPhotoPicker() }
         binding.btnSaveNew.setOnClickListener { saveToHistory(true) }
         binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf(false) }
         binding.btnExportGpx.setOnClickListener { saveToHistory(false); exportAsGpx() }
         binding.btnShare.setOnClickListener { saveToHistory(false); shareNotes() }
         binding.btnAddWeather.setOnClickListener { addWeatherToNote() }
-        
+
         // NEU: GPS-Button Setup
         binding.btnAddLocation.setOnClickListener { addLocationToNote() }
-        
+
         binding.btnClear.setOnClickListener {
             val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
             val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-            
+
             AlertDialog.Builder(this)
                 .setTitle("Entwurf löschen?")
                 .setMessage("Möchtest du den aktuellen Entwurf wirklich löschen?")
-                .setPositiveButton("Löschen") { _, _ -> 
+                .setPositiveButton("Löschen") { _, _ ->
                     photos.forEach { deletePhotoFile(it) }
-                    startNewNote() 
+                    startNewNote()
                 }
                 .setNegativeButton("Abbrechen", null)
                 .show().apply {
@@ -164,6 +183,18 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                     getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
                 }
         }
+    }
+
+    private fun openPhotoPicker() {
+        singlePhotoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
+    }
+
+    private fun openMultiplePhotoPicker() {
+        multiplePhotoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 
     // NEU: Wiederverwendbarer Dialog
@@ -194,37 +225,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
                 getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
-            }
-    }
-
-    private fun showGalleryDisclosure() {
-        val prefs = getSharedPreferences("daily_notes_settings", Context.MODE_PRIVATE)
-        if (prefs.getBoolean("gallery_disclosure_shown", false)) {
-            galleryLauncher.launch("image/*")
-            return
-        }
-
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-
-        AlertDialog.Builder(this)
-            .setTitle("📸 Zugriff auf Galerie & Fotos")
-            .setMessage("HundeWildnis benötigt Zugriff auf Deine Galerie für folgende Zwecke:\n\n" +
-                    "• TAGESNOTIZEN:\nDamit Du Deine Trainingsbeobachtungen oder Erlebnisse mit Fotos ergänzen und dokumentieren kannst.\n\n" +
-                    "DATENSCHUTZ:\n• Deine Fotos werden NUR lokal in der App verwendet.\n" +
-                    "• Es erfolgt KEINE Übermittlung an unsere Server oder Dritte.\n" +
-                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auswahl eines Fotos.\n\n" +
-                    "Möchtest Du den Zugriff jetzt aktivieren?")
-            .setPositiveButton("AKTIVIEREN") { _, _ ->
-                prefs.edit().putBoolean("gallery_disclosure_shown", true).apply()
-                galleryLauncher.launch("image/*")
-            }
-            .setNegativeButton("ABLEHNEN", null)
-            .create()
-            .apply {
-                show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
