@@ -18,6 +18,8 @@ Eine native Android-App als mobiler Begleiter für Hundetraining und dem Zusamme
 
 HundeWildnis App, eine Anwendung als gutes Werkzeug und hilfreicher Begleiter im Alltag, beim täglichen Training und bei allen Unternehmungen mit dem Hund.
 
+***100% Privatsphäre und Datenschutz respektierend. Kein Tracking. Kein Datenabfluss. Keine Werbung. Keine Google Services.*** 
+
 ---
 
 ## ✨ Features
