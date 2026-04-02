@@ -75,6 +75,7 @@
             android:name="com.hundewildnis.app.DogEditActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
@@ -94,6 +95,7 @@
             android:name="com.hundewildnis.app.EmergencyActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName="com.hundewildnis.app.DogProfileActivity"
             android:theme="@style/Theme.HundeWildnis" />
 

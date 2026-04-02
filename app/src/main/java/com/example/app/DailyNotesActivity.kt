@@ -9,7 +9,6 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.pdf.PdfDocument
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -39,10 +38,23 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hundewildnis.app.databinding.ActivityDailyNotesBinding
 import com.hundewildnis.app.databinding.ItemNoteSessionBinding
+import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.kernel.colors.DeviceRgb
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfWriter
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.element.AreaBreak
+import com.itextpdf.layout.element.Cell
+import com.itextpdf.layout.element.Image
+import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Table
+import com.itextpdf.layout.properties.TextAlignment
+import com.itextpdf.layout.properties.UnitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -124,8 +136,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun setupUI() {
-        binding.btnCamera.setOnClickListener { checkCameraPermissionAndOpen() }
-        binding.btnGallery.setOnClickListener { galleryLauncher.launch("image/*") }
+        binding.btnCamera.setOnClickListener { showCameraDisclosure() }
+        binding.btnGallery.setOnClickListener { showGalleryDisclosure() }
         binding.btnSaveNew.setOnClickListener { saveToHistory(true) }
         binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf(false) }
         binding.btnExportGpx.setOnClickListener { saveToHistory(false); exportAsGpx() }
@@ -160,7 +172,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📍 Standortdienste aktivieren")
+            .setTitle("📍 Standortzugriff für Notfallmeldung")
             .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
                     "• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
                     "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n" +
@@ -182,6 +194,68 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
                 getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+            }
+    }
+
+    private fun showGalleryDisclosure() {
+        val prefs = getSharedPreferences("daily_notes_settings", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("gallery_disclosure_shown", false)) {
+            galleryLauncher.launch("image/*")
+            return
+        }
+
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("📸 Zugriff auf Galerie & Fotos")
+            .setMessage("HundeWildnis benötigt Zugriff auf Deine Galerie für folgende Zwecke:\n\n" +
+                    "• TAGESNOTIZEN:\nDamit Du Deine Trainingsbeobachtungen oder Erlebnisse mit Fotos ergänzen und dokumentieren kannst.\n\n" +
+                    "DATENSCHUTZ:\n• Deine Fotos werden NUR lokal in der App verwendet.\n" +
+                    "• Es erfolgt KEINE Übermittlung an unsere Server oder Dritte.\n" +
+                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auswahl eines Fotos.\n\n" +
+                    "Möchtest Du den Zugriff jetzt aktivieren?")
+            .setPositiveButton("AKTIVIEREN") { _, _ ->
+                prefs.edit().putBoolean("gallery_disclosure_shown", true).apply()
+                galleryLauncher.launch("image/*")
+            }
+            .setNegativeButton("ABLEHNEN", null)
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
+    }
+
+    private fun showCameraDisclosure() {
+        val prefs = getSharedPreferences("daily_notes_settings", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("camera_disclosure_shown", false)) {
+            checkCameraPermissionAndOpen()
+            return
+        }
+
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("📷 Zugriff auf Kamera")
+            .setMessage("HundeWildnis benötigt Zugriff auf Deine Kamera für folgende Zwecke:\n\n" +
+                    "• TAGESNOTIZEN:\nDamit Du aktuelle Fotos von Deinem Training oder besonderen Momenten direkt aufnehmen und in Deinen Notizen dokumentieren kannst.\n\n" +
+                    "DATENSCHUTZ:\n• Deine Fotos werden NUR lokal in der App verwendet.\n" +
+                    "• Es erfolgt KEINE Übermittlung an unsere Server oder Dritte.\n" +
+                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auslösung der Kamera.\n\n" +
+                    "Möchtest Du den Zugriff jetzt aktivieren?")
+            .setPositiveButton("AKTIVIEREN") { _, _ ->
+                prefs.edit().putBoolean("camera_disclosure_shown", true).apply()
+                checkCameraPermissionAndOpen()
+            }
+            .setNegativeButton("ABLEHNEN", null)
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -220,7 +294,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             if (lastKnown != null) {
                 // ✅ WICHTIG: NUR temporär speichern, wenn Wetter-Button!
                 if (!hasExplicitLocation) {
-                    // Temporär für Wetter-Abruf
+                    // Temporär for Wetter-Abruf
                     val tempLat = lastKnown.latitude
                     val tempLon = lastKnown.longitude
 
@@ -484,9 +558,199 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    private fun exportAsPdf(share: Boolean) { /* PDF Export Logik */ }
-    private fun exportAsGpx() { /* GPX Export Logik */ }
-    private fun shareNotes() { /* Teilen Logik */ }
+    private fun exportAsPdf(share: Boolean) {
+        val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
+        val notes = binding.etNotes.text.toString()
+        val timestamp = System.currentTimeMillis()
+        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(timestamp))
+        val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(timestamp))}.pdf"
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val appDir = getAppDocumentsFolder()
+                val file = File(appDir, fileName)
+                
+                val writer = PdfWriter(FileOutputStream(file))
+                val pdf = PdfDocument(writer)
+                val document = Document(pdf)
+
+                // Content
+                document.add(Paragraph("📝 TAGESNOTIZ - HundeWildnis")
+                    .setFontSize(20f)
+                    .setBold()
+                    .setTextAlignment(TextAlignment.CENTER))
+                
+                document.add(Paragraph("Erstellt am: $dateStr")
+                    .setTextAlignment(TextAlignment.CENTER))
+                
+                document.add(Paragraph("Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de")
+                    .setFontSize(10f)
+                    .setTextAlignment(TextAlignment.CENTER))
+                
+                document.add(Paragraph("\n"))
+
+                if (title.isNotEmpty()) {
+                    document.add(Paragraph("Titel: $title").setBold().setFontSize(16f))
+                }
+
+                if (currentLatitude != null && currentLongitude != null) {
+                    val osmUrl = "https://www.openstreetmap.org/?mlat=$currentLatitude&mlon=$currentLongitude#map=18/$currentLatitude/$currentLongitude"
+                    document.add(Paragraph("📍 Standort (GPS): $currentLatitude, $currentLongitude").setBold())
+                    document.add(Paragraph("Karte (OpenStreetMap): $osmUrl").setFontColor(DeviceRgb(0, 0, 255)))
+                }
+
+                if (currentWeatherInfo != null) {
+                    document.add(Paragraph("🌤️ Wetter:\n$currentWeatherInfo"))
+                }
+
+                document.add(Paragraph("\nNotizen:").setBold())
+                document.add(Paragraph(notes))
+
+                if (photos.isNotEmpty()) {
+                    // document.add(AreaBreak()) // Removed
+                    document.add(Paragraph("\n📸 FOTOS:").setBold().setFontSize(14f))
+                    
+                    val photoTable = Table(UnitValue.createPercentArray(floatArrayOf(33f, 33f, 33f))).useAllAvailableWidth()
+                    photoTable.setMarginTop(5f)
+
+                    for (uri in photos) {
+                        try {
+                            val inputStream = contentResolver.openInputStream(uri) ?: continue
+                            val bitmap = BitmapFactory.decodeStream(inputStream) ?: continue
+                            val stream = ByteArrayOutputStream()
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream)
+                            val img = Image(ImageDataFactory.create(stream.toByteArray())).setAutoScale(true)
+                            val cell = Cell().add(img)
+                            cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                            cell.setPadding(2f)
+                            photoTable.addCell(cell)
+                        } catch (e: Exception) { e.printStackTrace() }
+                    }
+                    document.add(photoTable)
+                }
+
+                document.close()
+
+                withContext(Dispatchers.Main) {
+                    MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/pdf"), null)
+                    if (share) {
+                        sharePdfFile(file)
+                    } else {
+                        Toast.makeText(this@DailyNotesActivity, "PDF gespeichert: ${file.name}", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DailyNotesActivity, "Fehler beim Erstellen der PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun exportAsGpx() {
+        if (currentLatitude == null || currentLongitude == null) {
+            Toast.makeText(this, "Keine Standortdaten für GPX vorhanden", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
+        val timestamp = System.currentTimeMillis()
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        val timeStr = sdf.format(Date(timestamp))
+        
+        val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(timestamp))}.gpx"
+
+        val gpx = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <gpx version="1.1" creator="HundeWildnis" xmlns="http://www.topografix.com/GPX/1/1">
+              <metadata>
+                <time>$timeStr</time>
+              </metadata>
+              <wpt lat="$currentLatitude" lon="$currentLongitude">
+                <time>$timeStr</time>
+                <name>$title</name>
+                <desc>${binding.etNotes.text}</desc>
+              </wpt>
+            </gpx>
+        """.trimIndent()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val appDir = getAppDocumentsFolder()
+                val file = File(appDir, fileName)
+                file.writeText(gpx)
+                
+                withContext(Dispatchers.Main) {
+                    MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/gpx+xml"), null)
+                    Toast.makeText(this@DailyNotesActivity, "GPX gespeichert: ${file.name}", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@DailyNotesActivity, "Fehler beim Speichern: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun shareNotes() {
+        val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
+        val notes = binding.etNotes.text.toString()
+        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())
+        
+        val shareText = StringBuilder().apply {
+            append("📝 HundeWildnis - Tagesnotiz\n")
+            append("Datum: $dateStr\n\n")
+            if (title.isNotEmpty()) append("Titel: $title\n")
+            if (currentWeatherInfo != null) append("🌤️ Wetter: $currentWeatherInfo\n")
+            if (currentLatitude != null) append("📍 Standort: $currentLatitude, $currentLongitude\n")
+            append("\nNotizen:\n$notes")
+        }.toString()
+
+        val shareIntent = if (photos.isEmpty()) {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                putExtra(Intent.EXTRA_SUBJECT, title)
+            }
+        } else if (photos.size == 1) {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_STREAM, photos[0])
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                putExtra(Intent.EXTRA_SUBJECT, title)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+        } else {
+            Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "image/*"
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(photos))
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                putExtra(Intent.EXTRA_SUBJECT, title)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Notiz teilen"))
+    }
+
+    private fun getAppDocumentsFolder(): File {
+        val docsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val appDir = File(docsDir, "HundeWildnis")
+        if (!appDir.exists()) appDir.mkdirs()
+        return appDir
+    }
+
+    private fun sharePdfFile(file: File) {
+        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        startActivity(Intent.createChooser(intent, "Notiz teilen"))
+    }
 
     override fun onLocationChanged(locations: MutableList<Location>) {}
     override fun onProviderEnabled(provider: String) {}

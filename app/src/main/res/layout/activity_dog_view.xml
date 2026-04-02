@@ -103,6 +103,14 @@
                         android:layout_marginBottom="4dp" />
 
                     <TextView
+                        android:id="@+id/tvOriginCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Herkunft: -"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
                         android:id="@+id/tvColor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -154,6 +162,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TASSO: -"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPetPassport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Heimtierausweis: -"
                         android:textSize="14sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -189,6 +205,14 @@
                         android:layout_marginBottom="4dp" />
 
                     <TextView
+                        android:id="@+id/tvAdditionalVaccination"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Weitere Impfungen: -"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
                         android:id="@+id/tvDeworming"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -209,6 +233,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Gewicht: -"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvShoulderHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Schulterhöhe: -"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvBodyLength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Körperlänge: -"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
 
@@ -255,7 +295,15 @@
                         android:id="@+id/tvInsurance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Versicherung: -"
+                        android:text="Haftpflicht: -"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvHealthInsurance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Krankenvers.: -"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
 
