@@ -493,75 +493,212 @@ class EmergencyActivity : SecureBaseActivity() {
         }
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // ✅ OPTIMIERTE createEmergencyPdf() FUNKTION
+    // Ersetze die Funktion in EmergencyActivity.kt
+    // ════════════════════════════════════════════════════════════════
+
     private fun createEmergencyPdf(): File {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(Date())
         val fileName = "NOTFALL_${profile?.name}_$timestamp.pdf"
-        
+
         val docsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         if (!docsDir.exists()) docsDir.mkdirs()
-        
+
         val file = File(docsDir, fileName)
         val writer = PdfWriter(FileOutputStream(file))
         val pdf = PdfDocument(writer)
         val document = Document(pdf)
 
-        document.add(Paragraph("🚨 NOTFALLMELDUNG - HUND").setFontSize(22f).setFontColor(DeviceRgb(176, 0, 32)).setTextAlignment(TextAlignment.CENTER))
-        document.add(Paragraph("Erstellt am: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())}").setTextAlignment(TextAlignment.CENTER))
-        document.add(Paragraph("Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de").setFontSize(10f).setTextAlignment(TextAlignment.CENTER))
+        // ═══════════════════════════════════════════════════════════
+        // HEADER
+        // ═══════════════════════════════════════════════════════════
+        document.add(Paragraph("🚨 NOTFALLMELDUNG - HUND")
+            .setFontSize(22f)
+            .setFontColor(DeviceRgb(176, 0, 32))
+            .setTextAlignment(TextAlignment.CENTER))
+
+        document.add(Paragraph("Erstellt am: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())}")
+            .setTextAlignment(TextAlignment.CENTER))
+
+        document.add(Paragraph("Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de")
+            .setFontSize(10f)
+            .setTextAlignment(TextAlignment.CENTER))
+
         document.add(Paragraph("\n"))
 
-        document.add(Paragraph("MEDIZINISCHER NOTFALL:").setBold().setFontSize(16f))
-        document.add(Paragraph("Symptom: ${binding.spinnerSymptoms.text}").setFontSize(14f))
-        document.add(Paragraph("Zusatz-Info: ${binding.etNotes.text}").setFontSize(12f))
-        
+        // ═══════════════════════════════════════════════════════════
+        // NOTFALL-INFORMATION
+        // ═══════════════════════════════════════════════════════════
+        document.add(Paragraph("MEDIZINISCHER NOTFALL:")
+            .setBold()
+            .setFontSize(16f))
+
+        document.add(Paragraph("Symptom: ${binding.spinnerSymptoms.text}")
+            .setFontSize(14f))
+
+        document.add(Paragraph("Zusatz-Info: ${binding.etNotes.text}")
+            .setFontSize(12f))
+
+        // ═══════════════════════════════════════════════════════════
+        // GPS-STANDORT
+        // ═══════════════════════════════════════════════════════════
         lastLocation?.let {
             val osmUrl = "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}"
-            document.add(Paragraph("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}").setBold())
-            document.add(Paragraph("Karte (OpenStreetMap): $osmUrl").setFontColor(DeviceRgb(0, 0, 255)))
+            document.add(Paragraph("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}")
+                .setBold())
+            document.add(Paragraph("Karte (OpenStreetMap): $osmUrl")
+                .setFontColor(DeviceRgb(0, 0, 255)))
         }
+
         document.add(Paragraph("\n"))
 
-        document.add(Paragraph("STAMMDATEN DES PATIENTEN:").setBold().setFontSize(16f))
+        // ═══════════════════════════════════════════════════════════
+        // STAMMDATEN
+        // ═══════════════════════════════════════════════════════════
+        document.add(Paragraph("STAMMDATEN DES PATIENTEN:")
+            .setBold()
+            .setFontSize(16f))
+
         val table = Table(UnitValue.createPercentArray(floatArrayOf(30f, 70f))).useAllAvailableWidth()
+
         profile?.let { p ->
             table.addCell(Cell().add(Paragraph("Name:")))
             table.addCell(Cell().add(Paragraph(p.name)))
+
             table.addCell(Cell().add(Paragraph("Rasse:")))
             table.addCell(Cell().add(Paragraph(p.breed)))
+
             table.addCell(Cell().add(Paragraph("Geburtsdatum:")))
             table.addCell(Cell().add(Paragraph(p.birthDate)))
+
             table.addCell(Cell().add(Paragraph("Geschlecht:")))
             table.addCell(Cell().add(Paragraph(p.gender)))
+
             table.addCell(Cell().add(Paragraph("Gewicht:")))
             table.addCell(Cell().add(Paragraph("${p.weight} kg")))
-            table.addCell(Cell().add(Paragraph("Schulterhöhe:")))
-            table.addCell(Cell().add(Paragraph("${p.shoulderHeight} cm")))
-            table.addCell(Cell().add(Paragraph("Körperlänge:")))
-            table.addCell(Cell().add(Paragraph("${p.bodyLength} cm")))
-            table.addCell(Cell().add(Paragraph("Chip-Nr:")))
-            table.addCell(Cell().add(Paragraph(p.chipNumber)))
-            table.addCell(Cell().add(Paragraph("Impfstatus:")))
-            table.addCell(Cell().add(Paragraph(p.vaccinationStatus)))
-            table.addCell(Cell().add(Paragraph("Vorerkrankungen:")))
-            table.addCell(Cell().add(Paragraph(p.medicalNotes)))
-            table.addCell(Cell().add(Paragraph("Besitzer:")))
-            table.addCell(Cell().add(Paragraph(p.owner)))
+
+            if (p.shoulderHeight.isNotEmpty()) {
+                table.addCell(Cell().add(Paragraph("Schulterhöhe:")))
+                table.addCell(Cell().add(Paragraph("${p.shoulderHeight} cm")))
+            }
+
+            if (p.bodyLength.isNotEmpty()) {
+                table.addCell(Cell().add(Paragraph("Körperlänge:")))
+                table.addCell(Cell().add(Paragraph("${p.bodyLength} cm")))
+            }
+
+            if (p.chipNumber.isNotEmpty()) {
+                table.addCell(Cell().add(Paragraph("Chip-Nr:")))
+                table.addCell(Cell().add(Paragraph(p.chipNumber)))
+            }
+
+            if (p.vaccinationStatus.isNotEmpty()) {
+                table.addCell(Cell().add(Paragraph("Impfstatus:")))
+                table.addCell(Cell().add(Paragraph(p.vaccinationStatus)))
+            }
+
+            if (p.medicalNotes.isNotEmpty()) {
+                table.addCell(Cell().add(Paragraph("Vorerkrankungen:")))
+                table.addCell(Cell().add(Paragraph(p.medicalNotes)))
+            }
+
+            if (p.owner.isNotEmpty()) {
+                table.addCell(Cell().add(Paragraph("Besitzer:")))
+                table.addCell(Cell().add(Paragraph(p.owner)))
+            }
         }
+
         document.add(table)
 
+        // ═══════════════════════════════════════════════════════════
+        // FOTOS - ✅ OPTIMIERT: 2 BILDER PRO SEITE, HOHE AUFLÖSUNG
+        // ═══════════════════════════════════════════════════════════
         if (attachedPhotos.isNotEmpty()) {
+            // ✅ NEUE SEITE für Fotos (damit Stammdaten komplett bleiben)
             document.add(AreaBreak())
-            document.add(Paragraph("FOTOS VOM NOTFALL / PATIENTEN:").setBold().setFontSize(16f))
+
+            document.add(Paragraph("FOTOS VOM NOTFALL / PATIENTEN:")
+                .setBold()
+                .setFontSize(16f))
+
+            document.add(Paragraph("\n"))
+
+            // ✅ 2-SPALTEN-TABELLE für Bilder
+            var photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
+                .useAllAvailableWidth()
+                .setMarginTop(10f)
+
+            var imageCounter = 0
+
             for (uri in attachedPhotos) {
                 try {
-                    val inputStream = contentResolver.openInputStream(uri)
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val inputStream = contentResolver.openInputStream(uri) ?: continue
+                    val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: continue
+                    inputStream?.close()
+
+                    // ✅ HOHE AUFLÖSUNG: Maximal 800x800 px (statt 400x400)
+                    // Für medizinische Auswertung wichtig!
+                    val maxSize = 800
+                    val scaledBitmap = if (originalBitmap.width > maxSize || originalBitmap.height > maxSize) {
+                        val scale = minOf(
+                            maxSize.toFloat() / originalBitmap.width,
+                            maxSize.toFloat() / originalBitmap.height
+                        )
+                        val newWidth = (originalBitmap.width * scale).toInt()
+                        val newHeight = (originalBitmap.height * scale).toInt()
+                        Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
+                    } else {
+                        originalBitmap
+                    }
+
+                    // ✅ BESSERE QUALITÄT: 85% JPEG (statt 50%)
                     val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
-                    val img = Image(ImageDataFactory.create(stream.toByteArray())).setMaxWidth(500f)
-                    document.add(img)
-                    document.add(Paragraph("\n"))
-                } catch (e: Exception) { e.printStackTrace() }
+                    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream)
+
+                    val img = Image(ImageDataFactory.create(stream.toByteArray()))
+                        .setAutoScale(true)
+
+                    // ✅ BILD IN ZELLE EINFÜGEN
+                    val cell = Cell().add(img)
+                    cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                    cell.setPadding(10f)
+                    photoTable.addCell(cell)
+
+                    imageCounter++
+
+                    // ✅ Memory Cleanup
+                    if (scaledBitmap != originalBitmap) {
+                        scaledBitmap.recycle()
+                    }
+                    originalBitmap.recycle()
+
+                    // ✅ NEUE SEITE nach jeweils 2 Bildern (wenn noch mehr kommen)
+                    if (imageCounter % 2 == 0 && imageCounter < attachedPhotos.size) {
+                        document.add(photoTable)
+                        document.add(AreaBreak())
+
+                        // Neue Tabelle für nächste 2 Bilder
+                        photoTable.deleteOwnProperty(com.itextpdf.layout.properties.Property.PADDING_TOP)
+                        photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
+                            .useAllAvailableWidth()
+                            .setMarginTop(10f)
+                    }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            // ✅ LETZTE TABELLE HINZUFÜGEN (falls ungerade Anzahl oder Rest)
+            if (photoTable.getNumberOfRows() > 0) {
+                // ✅ Bei ungerader Anzahl: Leere Zelle hinzufügen für symmetrisches Layout
+                if (imageCounter % 2 != 0) {
+                    val emptyCell = Cell().add(Paragraph(""))
+                    emptyCell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                    photoTable.addCell(emptyCell)
+                }
+                document.add(photoTable)
             }
         }
 
