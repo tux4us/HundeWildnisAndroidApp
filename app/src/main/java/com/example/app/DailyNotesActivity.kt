@@ -569,62 +569,124 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             try {
                 val appDir = getAppDocumentsFolder()
                 val file = File(appDir, fileName)
-                
+
                 val writer = PdfWriter(FileOutputStream(file))
                 val pdf = PdfDocument(writer)
                 val document = Document(pdf)
 
-                // Content
+                // ═══════════════════════════════════════════════════════
+                // HEADER
+                // ═══════════════════════════════════════════════════════
                 document.add(Paragraph("📝 TAGESNOTIZ - HundeWildnis")
                     .setFontSize(20f)
                     .setBold()
                     .setTextAlignment(TextAlignment.CENTER))
-                
+
                 document.add(Paragraph("Erstellt am: $dateStr")
                     .setTextAlignment(TextAlignment.CENTER))
-                
+
                 document.add(Paragraph("Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de")
                     .setFontSize(10f)
                     .setTextAlignment(TextAlignment.CENTER))
-                
+
                 document.add(Paragraph("\n"))
 
+                // ═══════════════════════════════════════════════════════
+                // TITEL
+                // ═══════════════════════════════════════════════════════
                 if (title.isNotEmpty()) {
                     document.add(Paragraph("Titel: $title").setBold().setFontSize(16f))
                 }
 
+                // ═══════════════════════════════════════════════════════
+                // STANDORT (mit OpenStreetMap-Link!)
+                // ═══════════════════════════════════════════════════════
                 if (currentLatitude != null && currentLongitude != null) {
                     val osmUrl = "https://www.openstreetmap.org/?mlat=$currentLatitude&mlon=$currentLongitude#map=18/$currentLatitude/$currentLongitude"
                     document.add(Paragraph("📍 Standort (GPS): $currentLatitude, $currentLongitude").setBold())
-                    document.add(Paragraph("Karte (OpenStreetMap): $osmUrl").setFontColor(DeviceRgb(0, 0, 255)))
+                    document.add(Paragraph("Karte (OpenStreetMap): $osmUrl")
+                        .setFontColor(DeviceRgb(0, 0, 255))
+                        .setFontSize(10f))
                 }
 
+                // ═══════════════════════════════════════════════════════
+                // WETTER
+                // ═══════════════════════════════════════════════════════
                 if (currentWeatherInfo != null) {
                     document.add(Paragraph("🌤️ Wetter:\n$currentWeatherInfo"))
                 }
 
+                // ═══════════════════════════════════════════════════════
+                // NOTIZEN
+                // ═══════════════════════════════════════════════════════
                 document.add(Paragraph("\nNotizen:").setBold())
                 document.add(Paragraph(notes))
 
+                // ═══════════════════════════════════════════════════════
+                // FOTOS - ✅ INTELLIGENTE PLATZIERUNG (INTELLIGENTE SEITEN-NUTZUNG)
+                // ═══════════════════════════════════════════════════════
                 if (photos.isNotEmpty()) {
-                    // document.add(AreaBreak()) // Removed
+                    // ✅ Prüfe ob genug Platz auf aktueller Seite
+                    // Berechnung: Header (~150pt) + Titel/GPS/Wetter (~100pt) + Notizen (~20pt pro Zeile)
+                    val estimatedContentHeight = 150f + 100f + (notes.length / 60f * 20f)
+                    val pageHeight = 842f  // A4 Höhe in Punkten
+                    val availableHeight = pageHeight - estimatedContentHeight - 50f  // 50pt Margin
+
+                    val needsNewPage = availableHeight < 200f  // Mindestens 200pt für Fotos nötig
+
+                    if (needsNewPage) {
+                        // Neue Seite für Fotos
+                        document.add(AreaBreak())
+                    }
+
                     document.add(Paragraph("\n📸 FOTOS:").setBold().setFontSize(14f))
-                    
-                    val photoTable = Table(UnitValue.createPercentArray(floatArrayOf(33f, 33f, 33f))).useAllAvailableWidth()
-                    photoTable.setMarginTop(5f)
+
+                    // ✅ Fotos in 3-Spalten-Tabelle
+                    val photoTable = Table(UnitValue.createPercentArray(floatArrayOf(33f, 33f, 33f)))
+                        .useAllAvailableWidth()
+                        .setMarginTop(10f)
 
                     for (uri in photos) {
                         try {
                             val inputStream = contentResolver.openInputStream(uri) ?: continue
-                            val bitmap = BitmapFactory.decodeStream(inputStream) ?: continue
+                            val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: continue
+                            inputStream?.close()
+
+                            // ✅ SKALIERUNG: Maximal 400x400 px (KLEINERE PDF-DATEIGRÖSSE)
+                            val maxSize = 400
+                            val scaledBitmap = if (originalBitmap.width > maxSize || originalBitmap.height > maxSize) {
+                                val scale = minOf(
+                                    maxSize.toFloat() / originalBitmap.width,
+                                    maxSize.toFloat() / originalBitmap.height
+                                )
+                                val newWidth = (originalBitmap.width * scale).toInt()
+                                val newHeight = (originalBitmap.height * scale).toInt()
+                                Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
+                            } else {
+                                originalBitmap
+                            }
+
+                            // ✅ KOMPRIMIERUNG: 70% JPEG (KLEINERE PDF-DATEIGRÖSSE, SCHNELLERE GENERIERUNG)
                             val stream = ByteArrayOutputStream()
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream)
-                            val img = Image(ImageDataFactory.create(stream.toByteArray())).setAutoScale(true)
+                            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream)
+
+                            val img = Image(ImageDataFactory.create(stream.toByteArray()))
+                                .setAutoScale(true)
+
                             val cell = Cell().add(img)
                             cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
-                            cell.setPadding(2f)
+                            cell.setPadding(5f)
                             photoTable.addCell(cell)
-                        } catch (e: Exception) { e.printStackTrace() }
+
+                            // ✅ MEMORY CLEANUP (WENIGER SPEICHER-VERBRAUCH)
+                            if (scaledBitmap != originalBitmap) {
+                                scaledBitmap.recycle()
+                            }
+                            originalBitmap.recycle()
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                     document.add(photoTable)
                 }
@@ -632,17 +694,31 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 document.close()
 
                 withContext(Dispatchers.Main) {
-                    MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/pdf"), null)
+                    MediaScannerConnection.scanFile(
+                        this@DailyNotesActivity,
+                        arrayOf(file.absolutePath),
+                        arrayOf("application/pdf"),
+                        null
+                    )
+
                     if (share) {
                         sharePdfFile(file)
                     } else {
-                        Toast.makeText(this@DailyNotesActivity, "PDF gespeichert: ${file.name}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@DailyNotesActivity,
+                            "✅ PDF gespeichert nach Documents/HundeWildnis: ${file.name}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@DailyNotesActivity, "Fehler beim Erstellen der PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@DailyNotesActivity,
+                        "❌ Fehler beim Erstellen der PDF: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -684,7 +760,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 
                 withContext(Dispatchers.Main) {
                     MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/gpx+xml"), null)
-                    Toast.makeText(this@DailyNotesActivity, "GPX gespeichert: ${file.name}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@DailyNotesActivity, "GPX gespeichert nach Documents/HundeWildnis: ${file.name}", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -698,41 +774,119 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
         val notes = binding.etNotes.text.toString()
         val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())
-        
+
+        // ✅ VERBESSERTE FORMATIERUNG mit Leerzeilen zwischen Abschnitten
         val shareText = StringBuilder().apply {
             append("📝 HundeWildnis - Tagesnotiz\n")
             append("Datum: $dateStr\n\n")
-            if (title.isNotEmpty()) append("Titel: $title\n")
-            if (currentWeatherInfo != null) append("🌤️ Wetter: $currentWeatherInfo\n")
-            if (currentLatitude != null) append("📍 Standort: $currentLatitude, $currentLongitude\n")
-            append("\nNotizen:\n$notes")
+
+            if (title.isNotEmpty()) {
+                append("Titel: $title\n\n")
+            }
+
+            if (currentWeatherInfo != null) {
+                append("🌤️ Wetter:\n$currentWeatherInfo\n\n")
+            }
+
+            if (currentLatitude != null && currentLongitude != null) {
+                // ✅ OpenStreetMap-Link hinzugefügt
+                val osmUrl = "https://www.openstreetmap.org/?mlat=$currentLatitude&mlon=$currentLongitude#map=18/$currentLatitude/$currentLongitude"
+                append("📍 Standort (GPS):\n")
+                append("Koordinaten: $currentLatitude, $currentLongitude\n")
+                append("Karte: $osmUrl\n\n")
+            }
+
+            append("Notizen:\n$notes")
         }.toString()
 
-        val shareIntent = if (photos.isEmpty()) {
-            Intent(Intent.ACTION_SEND).apply {
+        if (photos.isEmpty()) {
+            // ✅ NUR TEXT - funktioniert überall
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_SUBJECT, title)
             }
-        } else if (photos.size == 1) {
-            Intent(Intent.ACTION_SEND).apply {
+            startActivity(Intent.createChooser(shareIntent, "Notiz teilen"))
+
+        } else {
+            // ✅ MIT BILDERN - Zeige Auswahl-Dialog für User-Kontrolle
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+            val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+            AlertDialog.Builder(this)
+                .setTitle("📤 Notiz teilen")
+                .setMessage("Du hast ${photos.size} Foto(s) in dieser Notiz.\n\nWie möchtest du teilen?")
+                .setPositiveButton("Text + Bilder") { _, _ ->
+                    shareTextAndPhotos(shareText, title)
+                }
+                .setNeutralButton("Nur Text") { _, _ ->
+                    val textIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                        putExtra(Intent.EXTRA_SUBJECT, title)
+                    }
+                    startActivity(Intent.createChooser(textIntent, "Notiz teilen"))
+                }
+                .setNegativeButton("Abbrechen", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+                }
+        }
+    }
+
+    /**
+     * ✅ NEUE HILFSFUNKTION: Füge diese Funktion NACH shareNotes() hinzu
+     */
+    private fun shareTextAndPhotos(shareText: String, title: String) {
+        if (photos.size == 1) {
+            // ✅ EIN BILD - Text als Caption
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/*"
                 putExtra(Intent.EXTRA_STREAM, photos[0])
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_SUBJECT, title)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-        } else {
-            Intent(Intent.ACTION_SEND_MULTIPLE).apply {
-                type = "image/*"
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(photos))
-                putExtra(Intent.EXTRA_TEXT, shareText)
-                putExtra(Intent.EXTRA_SUBJECT, title)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-        }
+            startActivity(Intent.createChooser(shareIntent, "Notiz mit Foto teilen"))
 
-        startActivity(Intent.createChooser(shareIntent, "Notiz teilen"))
+        } else {
+            // ✅ MEHRERE BILDER - Zeige DIALOG statt Toast
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+            val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+            AlertDialog.Builder(this)
+                .setTitle("⚠️ Wichtiger Hinweis")
+                .setMessage("Du hast ${photos.size} Fotos ausgewählt.\n\n" +
+                        "WICHTIG:\nViele Apps (WhatsApp, Instagram, Signal etc.) zeigen bei mehreren Bildern " +
+                        "den begleitenden Text NICHT an!\n\n" +
+                        "EMPFEHLUNG:\n" +
+                        "Nutze stattdessen 'PDF exportieren & teilen' um sicherzustellen, " +
+                        "dass alle Informationen (Titel, Notizen, Wetter, GPS und Fotos) vollständig übermittelt werden.\n\n" +
+                        "Trotzdem fortfahren?")
+                .setPositiveButton("Trotzdem teilen") { _, _ ->
+                    val shareIntent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                        type = "image/*"
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(photos))
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                        putExtra(Intent.EXTRA_SUBJECT, title)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    startActivity(Intent.createChooser(shareIntent, "Notiz mit ${photos.size} Fotos teilen"))
+                }
+                .setNegativeButton("Abbrechen", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+                }
+        }
     }
 
     private fun getAppDocumentsFolder(): File {
@@ -749,7 +903,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "Notiz teilen"))
+        startActivity(Intent.createChooser(intent, "PDF teilen"))
     }
 
     override fun onLocationChanged(locations: MutableList<Location>) {}
