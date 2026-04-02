@@ -1,6 +1,6 @@
 # HundeWildnis App 🐕🌲
 
-Eine native Android-App für [wildnislehrer.com](https://wildnislehrer.com) - Dein mobiler Begleiter für Hundeerziehung und Wildnispädagogik.
+Eine native Android-App als mobiler Begleiter für Hundetraining und dem Zusammenleben mit dem Hund.
 
 # 🐾 HundeWildnisApp
 
@@ -16,7 +16,7 @@ Eine native Android-App für [wildnislehrer.com](https://wildnislehrer.com) - De
 
 ## 📱 Über die App
 
-**HundeWildnis App** eine Anwendung das dem Anspruch gerecht wird ein gutes Werkzeug und ein hilfreicher Begleiter im Alltag, beim täglichen Training und bei allen Unternehmungen mit dem Hund zu sein.
+HundeWildnis App, eine Anwendung als gutes Werkzeug und hilfreicher Begleiter im Alltag, beim täglichen Training und bei allen Unternehmungen mit dem Hund.
 
 ---
 
@@ -27,19 +27,26 @@ Eine native Android-App für [wildnislehrer.com](https://wildnislehrer.com) - De
 Die Startseite bietet direkten Zugriff auf die täglichen Werkzeuge und Management-Bereiche.
 
 #### 🆘 Unterstützung
-Direkte Hilfe- und Support-Optionen.
+Support-Optionen für alle Nutzer, welche uns mit einem kleinen Honorar für unseren Zeit- und Energieaufwand bei der Entwicklung der App unterstützen wollen.
 
 #### 🐾 Übung des Tages
 Regelmäßig wechselnde Trainingsimpulse direkt aus der Praxis der Hundeschule.
 
-#### 🧘 Tagesmeditation
+#### 🧘 Meditation des Tages
 Regelmäßig wechselnde Meditationsübungen für ein entspanntes Mensch-Hund-Team.
 
-#### 🏃 Trainingstempo
-Echtzeit-Überwachung der Gehgeschwindigkeit in verschiedenen Trainingsszenarien mit Warnfunktion, grafischer Auswertung, Speicherung und GPX/PDF-Export mit Teilen-Option.
+#### ⏱️🔔 Tempo - Trainer
+Dein Tempo-Trainer
+Echtzeit-Überwachung der Gehgeschwindigkeit in verschiedenen Trainingsszenarien mit Warnfunktion, grafischer Echtzeitauswertung, Statistiken Speicherung und GPX/PDF-Export mit Teilen-Option. Alle Analysen werden zusätzlich abgespeichert und in einer Liste geführt, um jederzeit später wieder aufgerufen werden zu können.
+
+#### 🗣🎤 Sprach - Trainer
+Dein Sprach-Trainer 
+Sprach-Analyse als Echtzeit-Messung der Stimme, um festzustellen, ob in dem für Hunde optimalen, lernunterstützenden, harmonischen Frequenzbereichen gesprochen wird.
+Direktes Feedback durch Symbol, Vibration oder Ton sobald der Zielbereich erreicht wird.
+Auswertung: Statistiken über Sprechzeit und Effizienz zur nachhaltigen Verbesserung der Kommunikation mit dem Hund mit spürbaren Fortschritten im Training. Speicherung und PDF-Export mit Teilen-Option. Alle Analysen werden zusätzlich abgespeichert und in einer Liste geführt, um jederzeit später wieder aufgerufen werden zu können.
 
 #### 📓 Tagesnotizen
-Digitales Trainingstagebuch mit Foto-Upload, optionalen Standortwetterdaten zur Notiz, automatischem GPS-Tagging, automatischer Sicherung und PDF-Export-, Teilen- und GPX-Exportfunktionen.
+Digitales Trainings- und Beobachtungstagebuch mit Foto-Upload, optionalen Standortwetterdaten zur Notiz, automatischem GPS-Tagging, automatischer Sicherung und PDF-Export-, Teilen- und GPX-Exportfunktionen.
 
 #### 🌤️ Wetter
 Aktuelle Wetterdaten und Vorhersagen für den Standort. Abruf über die freie Open-Meteo API und das RainViewer-Radar – ohne Tracking durch Google oder andere kommerzielle Wetterdienste.
@@ -74,8 +81,8 @@ Aktuelle Wetterdaten und Vorhersagen für den Standort. Abruf über die freie Op
 
 > 📌 **Datenschutz-Hinweis:** Alle Wetterdaten werden über die freie Open-Meteo API (ohne API-Key-Zwang) und das RainViewer-Radar abgerufen. Es findet kein Tracking durch Google oder andere kommerzielle Wetterdienste statt.
 
-#### 🗺️ Standort & POI
-Interaktive Karte mit Suche nach wander- und hunderelevanten Orten via OpenStreetMap.
+#### 🗺️ Standort & Navigation
+Interaktive Karte mit Anzeige von Kategorien von wander- und hunderelevanten Orten via OpenStreetMap und Routing.
 
 **Karten- & Standort-Grundfunktionen**
 - **Interaktive OSM-Karte:** Nutzt das freie OpenStreetMap (Mapnik) Material für eine detaillierte Darstellung der Umgebung.
@@ -85,7 +92,7 @@ Interaktive Karte mit Suche nach wander- und hunderelevanten Orten via OpenStree
 - **Koordinaten-Anzeige:** Die exakten GPS-Daten (Breiten- und Längengrad) werden live eingeblendet.
 - **Standort teilen:** Die aktuelle Position lässt sich direkt an weitere Personen versenden oder zu anderen Apps teilen.
 
-**POI-Suche (Points of Interest)**
+**POI-Suche (Points of Interest) mit Detailinfos (falls in OpenStreetMap hinterlegt)**
 
 Kategorien-Grid für schnelle Auswahl hundespezifischer Orte:
 - Hundeausläufe & Hundeparks
@@ -128,35 +135,46 @@ Verwaltung von bis zu 3 Hunde-Profilen. Die Stammdaten werden über Infokarten d
 - **Rasse:** Rassebezeichnung oder Mischling.
 - **Geschlecht:** Rüde oder Hündin.
 - **Kastrationsstatus:** Ja, Nein oder Unbekannt.
-- **Geburtsdatum:** Tag der Geburt.
+- **Geburtsdatum:** Tag-Monat-Jahr, Monat-Jahr, Jahr oder unbekannt eintragen.
+- **Herkunft:** Herkunftsort / -land.
 - **Farbe:** Fellfarbe und besondere Kennzeichen.
-- **Foto:** Ein individuelles Profilbild des Hundes.
+- **Foto:** Ein individuelles Profilbild des Hundes aus der Galerie ins Profil einfügen.
 
 **Identifikation (Wichtig bei Verlust)**
 - **Chipnummer:** Die 15-stellige Transponder-Nummer.
+- **Steuernummer:** Steuernummer und Gemeinde
 - **Tasso-Nummer:** Kennnummer der Registrierung bei Tasso e.V.
-- **Steuernummer:** Die amtliche Hundesteuer-Nummer.
+- **Heimtierausweis Land:** Ausstellungsland des Heimtierausweises.
+- **Ausweisnummer:** Nummer des Heimtierausweises.
 
 **Gesundheit & Vorsorge**
-- **Impfstatus:** Aktuelle Informationen zu den Schutzimpfungen.
+- **Impfstatus:** Aktuelle Information zur Schutzimpfung.
+- **Weitere Impfungen:** Raum für weitere Eintragungen zu Impfungen.
 - **Letzte Entwurmung:** Datum der letzten Behandlung.
 - **Letzter Floh-/Zeckenschutz:** Datum der letzten Prophylaxe.
 - **Gewicht:** Aktuelles Körpergewicht inklusive Datum der Messung.
+- **Körpermaße:** Schulterhöhe und Körperlänge
 - **Medizinische Hinweise:** Platz für chronische Krankheiten, Allergien oder notwendige Medikamente.
 
 **Kontakte & Versicherung**
 - **Tierarzt:** Name und Kontaktdaten des Haustierarztes.
-- **Versicherung:** Angaben zur Hundehaftpflicht- oder Krankenversicherung.
+- **Versicherung:** Angaben zur Hundehaftpflichtversicherung.
+- **Versicherung:** Angaben zur Kranken- /OP-versicherung.
 - **Besitzer:** Name und Adresse des Eigentümers.
-- **Notfallkontakt:** Telefonnummer für dringende Rückfragen.
+- **Notfallkontakt:** Telefonnummern für dringende Rückfragen.
 
 **Haltung & Verhalten**
 - **Futter:** Spezielle Ernährungsanforderungen oder Futtersorten.
 - **Verhalten:** Besonderheiten im Umgang (z. B. „ängstlich bei Gewitter" oder „verträglich mit Artgenossen").
 
-**Export & Transfer**
-- **PDF mit QR-Code:** Es lässt sich eine komplette PDF inklusive QR-Code erzeugen.
-- **QR-Code-Transfer:** Die App generiert aus den Stammdaten einen QR-Code. Ein Scan (z. B. durch einen Tierarzt) überträgt die Stammdaten sofort auf das Zielgerät.
+**Anzeige, Export & Transfer**
+- **Anzeigen:** Zeigt alle Stammdaten übersichtlich auf dem Bildschirm an.
+- **Bearbeiten:** Öffnet die Stammdaten des Hundes zum Bearbeiten.
+- **QR-Code:** Öffnet eine Auswahlliste aller Stammdateneinträge. Nach erfolgter Auswahl wird ein entsprechender QR-Code generiert, welcher geteilt, vom Empfänger gescannt und/oder abgespeichert werden kann.
+- **PDF:** Öffnet eine Auswahlliste aller Stammdateneinträge. Die App generiert aus den gewählten Stammdaten eine PDF incl. QR-Code. Diese PDF kann geteilt und abgespeichert werden.
+- **Teilen:** Öffnet eine Auswahlliste aller Stammdateneinträge. Die App generiert eine Liste der gewählten Einträge, welche schnell kopiert bzw. an eine Zielapp der eigenen Wahl geteilt und darüber versendet oder weiterverarbeitet werden kann.
+- **🚨NOTFALL:** Im Falle einer schnell auftretenden Erkrankung, eines Unfalls oder anderen Notlagen erstellt die App eine Notfallmeldung mit allen wichtigen Informationen für den Tierarzt, die Tierklinik bzw. die Tierrettung. Voreingetragen sind Name, Rasse, Geschlecht und Gewicht des betroffenen Hundes. Aus einer Auswahlliste kann ein Symptom hinzugefügt werden und per Textfeld eine Beschreibung der Notlage ergänzt werden. Im Bedarfsfall können noch der GPS-Standort und Fotos per Kamera bzw. aus Galerie beigefügt werden. 
+Der Button **"Kontaktmeldung absenden"** generiert eine PDF mit allen Informationen und Fotos, welche über das Kontextmenü sofort geteilt und verschickt werden kann, damit Tierarzt, Tierklinik, Tierrettung bereits im Vorfeld alle wichtigen Informationen erhalten. Je nach App wird zudem ein Text mit allen Informationen beigefügt, damit alle wichtigen Informationen für den Empfänger auch ohne PDF-Anzeige lesbar sind. GPS Daten werden als Link für OpenStreetMap generiert, um sofort im Browser oder NavigationsApp verfügbar zu sein.  
 - **Datenschutz:** Alle Daten werden ausschließlich lokal auf dem Smartphone gespeichert und verlassen das Gerät nur, wenn der Nutzer aktiv den Export (Teilen, PDF, QR-Code) nutzt.
 
 #### 💾 Datensicherung (Backup)
@@ -256,7 +274,7 @@ Open-Meteo API
 
 ## 🤝 Beitragen
 
-Contributions sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Issue.
+Unterstützungen sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Issue.
 
 ---
 
