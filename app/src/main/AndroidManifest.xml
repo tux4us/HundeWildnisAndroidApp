@@ -24,12 +24,9 @@
     <!-- Storage (für PDF-Export) -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
 
     <!-- ✅ CAMERA & MEDIA (für Hunde-Stammdaten) -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />

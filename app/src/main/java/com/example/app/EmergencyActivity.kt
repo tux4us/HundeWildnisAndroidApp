@@ -54,6 +54,11 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.activity.result.PickVisualMediaRequest
+import android.content.ContentValues
+import android.os.Build
+import androidx.annotation.RequiresApi
+import java.io.IOException
 
 data class EmergencyReport(
     val id: String = UUID.randomUUID().toString(),
@@ -65,7 +70,8 @@ data class EmergencyReport(
     val latitude: Double?,
     val longitude: Double?,
     val photoUris: List<String>,
-    val pdfPath: String
+    val pdfPath: String,
+    val contentUri: String? = null  // ← NEU!
 )
 
 class EmergencyActivity : SecureBaseActivity() {
@@ -87,13 +93,11 @@ class EmergencyActivity : SecureBaseActivity() {
         }
     }
 
-    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data?.let { uri -> 
-                contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                addPhoto(uri) 
-            }
-        }
+    // ✅ NEUEN LAUNCHER HINZUFÜGEN:
+    private val photoPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(maxItems = 5)
+    ) { uris: List<Uri> ->
+        uris.forEach { uri -> addPhoto(uri) }
     }
 
     private val locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -146,8 +150,8 @@ class EmergencyActivity : SecureBaseActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnCamera.setOnClickListener { showCameraGalleryDisclosure(true) }
-        binding.btnGallery.setOnClickListener { showCameraGalleryDisclosure(false) }
+        binding.btnCamera.setOnClickListener { showCameraDisclosure() }
+        binding.btnGallery.setOnClickListener { openPhotoPicker() }
         binding.btnReset.setOnClickListener { resetForm() }
         binding.btnSend.setOnClickListener { generateAndSendReport() }
 
@@ -174,9 +178,15 @@ class EmergencyActivity : SecureBaseActivity() {
         })
     }
 
+    private fun openPhotoPicker() {
+        photoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
+    }
+
     private fun setupHistory() {
         historyAdapter = EmergencyHistoryAdapter(historyList,
-            onItemClick = { report -> openPdf(File(report.pdfPath)) },
+            onItemClick = { report -> openPdf(report) },
             onDeleteClick = { report -> confirmDelete(report) }
         )
         binding.rvEmergencyHistory.apply {
@@ -293,22 +303,31 @@ class EmergencyActivity : SecureBaseActivity() {
             }
     }
 
-    private fun showCameraGalleryDisclosure(isCamera: Boolean) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    // ✅ NEUER NAME (nur für Kamera):
+    private fun showCameraDisclosure() {
+        val prefs = getSharedPreferences("emergency_settings", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("camera_disclosure_shown", false)) {
+            checkCameraPermissionAndOpen()
+            return
+        }
+
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📸 Zugriff auf Kamera & Fotos")
-            .setMessage("HundeWildnis benötigt Zugriff auf Deine Kamera oder Galerie für folgende Zwecke:\n\n" +
+            .setTitle("📸 Zugriff auf Kamera")
+            .setMessage("HundeWildnis benötigt Zugriff auf Deine Kamera für folgende Zwecke:\n\n" +
                     "• NOTFALL-DOKUMENTATION:\n\nDamit Du aktuelle Fotos vom Zustand Deines Hundes oder der Verletzung direkt in die Notfallmeldung (PDF) einfügen kannst.\n\n" +
                     "Dies hilft Tierärzten, die Situation vorab besser einzuschätzen.\n\n" +
                     "DATENSCHUTZ:\n• Deine Fotos werden NUR lokal in das PDF-Dokument eingebunden.\n" +
                     "• Es erfolgt KEINE Übermittlung an andere Server.\n" +
                     "• Nur Du allein entscheidest im Sendevorgang über das Teilen der Notfalldaten incl. beigefügter Fotos.\n" +
-                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auswahl.\n\n" +
-                    "Möchtest Du den Zugriff auf Kamera und Fotos jetzt aktivieren?")
+                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auslösung.\n\n" +
+                    "Möchtest Du den Zugriff auf die Kamera jetzt aktivieren?")
             .setPositiveButton("AKTIVIEREN") { _, _ ->
-                if (isCamera) checkCameraPermissionAndOpen() else openGallery()
+                prefs.edit().putBoolean("camera_disclosure_shown", true).apply()
+                checkCameraPermissionAndOpen()
             }
             .setNegativeButton("ABLEHNEN", null)
             .create()
@@ -364,14 +383,6 @@ class EmergencyActivity : SecureBaseActivity() {
             putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
         cameraLauncher.launch(intent)
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "image/*"
-        }
-        galleryLauncher.launch(intent)
     }
 
     @SuppressLint("MissingPermission")
@@ -463,8 +474,8 @@ class EmergencyActivity : SecureBaseActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val pdfFile = createEmergencyPdf()
-                
+                val (pdfFile, contentUri) = createEmergencyPdf()
+
                 val report = EmergencyReport(
                     timestamp = System.currentTimeMillis(),
                     dogId = profile?.id ?: "",
@@ -474,14 +485,21 @@ class EmergencyActivity : SecureBaseActivity() {
                     latitude = lastLocation?.latitude,
                     longitude = lastLocation?.longitude,
                     photoUris = attachedPhotos.map { it.toString() },
-                    pdfPath = pdfFile.absolutePath
+                    pdfPath = pdfFile?.absolutePath ?: "",
+                    contentUri = contentUri?.toString()
                 )
 
                 withContext(Dispatchers.Main) {
                     historyList.add(0, report)
                     historyAdapter.notifyItemInserted(0)
                     saveHistory()
-                    shareReport(pdfFile)
+
+                    if (contentUri != null) {
+                        shareReportViaUri(contentUri)
+                    } else if (pdfFile != null) {
+                        shareReport(pdfFile)
+                    }
+
                     clearCache()
                 }
             } catch (e: Exception) {
@@ -498,10 +516,53 @@ class EmergencyActivity : SecureBaseActivity() {
     // Ersetze die Funktion in EmergencyActivity.kt
     // ════════════════════════════════════════════════════════════════
 
-    private fun createEmergencyPdf(): File {
+    private fun createEmergencyPdf(): Pair<File?, Uri?> {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(Date())
         val fileName = "NOTFALL_${profile?.name}_$timestamp.pdf"
 
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            createPdfViaMediaStore(fileName)
+        } else {
+            val file = createPdfOldWay(fileName)
+            Pair(file, null)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun createPdfViaMediaStore(fileName: String): Pair<File?, Uri?> {
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis")
+        }
+
+        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+            ?: throw IOException("MediaStore insert failed")
+
+        contentResolver.openOutputStream(uri)?.use { outputStream ->
+            val writer = PdfWriter(outputStream)
+            val pdf = PdfDocument(writer)
+            val document = Document(pdf)
+            writePdfContent(document)
+            document.close()
+        } ?: throw IOException("Failed to open output stream")
+
+        var filePath: String? = null
+        val projection = arrayOf(MediaStore.MediaColumns.DATA)
+        contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA)
+                if (columnIndex >= 0) {
+                    filePath = cursor.getString(columnIndex)
+                }
+            }
+        }
+
+        val file = if (filePath != null) File(filePath) else null
+        return Pair(file, uri)
+    }
+
+    private fun createPdfOldWay(fileName: String): File {
         val docsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         if (!docsDir.exists()) docsDir.mkdirs()
 
@@ -509,10 +570,12 @@ class EmergencyActivity : SecureBaseActivity() {
         val writer = PdfWriter(FileOutputStream(file))
         val pdf = PdfDocument(writer)
         val document = Document(pdf)
+        writePdfContent(document)
+        document.close()
+        return file
+    }
 
-        // ═══════════════════════════════════════════════════════════
-        // HEADER
-        // ═══════════════════════════════════════════════════════════
+    private fun writePdfContent(document: Document) {
         document.add(Paragraph("🚨 NOTFALLMELDUNG - HUND")
             .setFontSize(22f)
             .setFontColor(DeviceRgb(176, 0, 32))
@@ -527,9 +590,6 @@ class EmergencyActivity : SecureBaseActivity() {
 
         document.add(Paragraph("\n"))
 
-        // ═══════════════════════════════════════════════════════════
-        // NOTFALL-INFORMATION
-        // ═══════════════════════════════════════════════════════════
         document.add(Paragraph("MEDIZINISCHER NOTFALL:")
             .setBold()
             .setFontSize(16f))
@@ -540,9 +600,6 @@ class EmergencyActivity : SecureBaseActivity() {
         document.add(Paragraph("Zusatz-Info: ${binding.etNotes.text}")
             .setFontSize(12f))
 
-        // ═══════════════════════════════════════════════════════════
-        // GPS-STANDORT
-        // ═══════════════════════════════════════════════════════════
         lastLocation?.let {
             val osmUrl = "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}"
             document.add(Paragraph("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}")
@@ -553,9 +610,6 @@ class EmergencyActivity : SecureBaseActivity() {
 
         document.add(Paragraph("\n"))
 
-        // ═══════════════════════════════════════════════════════════
-        // STAMMDATEN
-        // ═══════════════════════════════════════════════════════════
         document.add(Paragraph("STAMMDATEN DES PATIENTEN:")
             .setBold()
             .setFontSize(16f))
@@ -611,11 +665,7 @@ class EmergencyActivity : SecureBaseActivity() {
 
         document.add(table)
 
-        // ═══════════════════════════════════════════════════════════
-        // FOTOS - ✅ OPTIMIERT: 2 BILDER PRO SEITE, HOHE AUFLÖSUNG
-        // ═══════════════════════════════════════════════════════════
         if (attachedPhotos.isNotEmpty()) {
-            // ✅ NEUE SEITE für Fotos (damit Stammdaten komplett bleiben)
             document.add(AreaBreak())
 
             document.add(Paragraph("FOTOS VOM NOTFALL / PATIENTEN:")
@@ -624,7 +674,6 @@ class EmergencyActivity : SecureBaseActivity() {
 
             document.add(Paragraph("\n"))
 
-            // ✅ 2-SPALTEN-TABELLE für Bilder
             var photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
                 .useAllAvailableWidth()
                 .setMarginTop(10f)
@@ -637,8 +686,6 @@ class EmergencyActivity : SecureBaseActivity() {
                     val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: continue
                     inputStream?.close()
 
-                    // ✅ HOHE AUFLÖSUNG: Maximal 800x800 px (statt 400x400)
-                    // Für medizinische Auswertung wichtig!
                     val maxSize = 800
                     val scaledBitmap = if (originalBitmap.width > maxSize || originalBitmap.height > maxSize) {
                         val scale = minOf(
@@ -652,14 +699,12 @@ class EmergencyActivity : SecureBaseActivity() {
                         originalBitmap
                     }
 
-                    // ✅ BESSERE QUALITÄT: 85% JPEG (statt 50%)
                     val stream = ByteArrayOutputStream()
                     scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream)
 
                     val img = Image(ImageDataFactory.create(stream.toByteArray()))
                         .setAutoScale(true)
 
-                    // ✅ BILD IN ZELLE EINFÜGEN
                     val cell = Cell().add(img)
                     cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
                     cell.setPadding(10f)
@@ -667,19 +712,15 @@ class EmergencyActivity : SecureBaseActivity() {
 
                     imageCounter++
 
-                    // ✅ Memory Cleanup
                     if (scaledBitmap != originalBitmap) {
                         scaledBitmap.recycle()
                     }
                     originalBitmap.recycle()
 
-                    // ✅ NEUE SEITE nach jeweils 2 Bildern (wenn noch mehr kommen)
                     if (imageCounter % 2 == 0 && imageCounter < attachedPhotos.size) {
                         document.add(photoTable)
                         document.add(AreaBreak())
 
-                        // Neue Tabelle für nächste 2 Bilder
-                        photoTable.deleteOwnProperty(com.itextpdf.layout.properties.Property.PADDING_TOP)
                         photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
                             .useAllAvailableWidth()
                             .setMarginTop(10f)
@@ -690,9 +731,7 @@ class EmergencyActivity : SecureBaseActivity() {
                 }
             }
 
-            // ✅ LETZTE TABELLE HINZUFÜGEN (falls ungerade Anzahl oder Rest)
             if (photoTable.getNumberOfRows() > 0) {
-                // ✅ Bei ungerader Anzahl: Leere Zelle hinzufügen für symmetrisches Layout
                 if (imageCounter % 2 != 0) {
                     val emptyCell = Cell().add(Paragraph(""))
                     emptyCell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
@@ -701,9 +740,6 @@ class EmergencyActivity : SecureBaseActivity() {
                 document.add(photoTable)
             }
         }
-
-        document.close()
-        return file
     }
 
     private fun shareReport(file: File) {
@@ -732,17 +768,106 @@ class EmergencyActivity : SecureBaseActivity() {
         startActivity(Intent.createChooser(intent, "Notfallmeldung teilen via..."))
     }
 
-    private fun openPdf(file: File) {
-        if (!file.exists()) {
-            Toast.makeText(this, "PDF Datei nicht gefunden", Toast.LENGTH_SHORT).show()
-            return
+    private fun shareReportViaUri(uri: Uri) {
+        val shareText = StringBuilder().apply {
+            append("🚨 NOTFALLMELDUNG 🚨\n")
+            append("Hund: ${profile?.name}\n")
+            append("Symptom: ${binding.spinnerSymptoms.text}\n")
+            append("Info: ${binding.etNotes.text}\n")
+            lastLocation?.let {
+                append("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}\n")
+                append("Karte (OSM): https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}\n")
+            }
+            append("\nMedizinische Daten im PDF-Anhang.")
+        }.toString()
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_TEXT, shareText)
+            putExtra(Intent.EXTRA_SUBJECT, "🚨 NOTFALLMELDUNG: ${profile?.name}")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+
+        startActivity(Intent.createChooser(intent, "Notfallmeldung teilen via..."))
+    }
+
+    private fun openPdf(report: EmergencyReport) {
+        try {
+            if (!report.contentUri.isNullOrEmpty()) {
+                val uri = Uri.parse(report.contentUri)
+                openPdfViaUri(uri)
+                return
+            }
+
+            if (report.pdfPath.isNotEmpty()) {
+                val file = File(report.pdfPath)
+                if (file.exists()) {
+                    val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+                    openPdfViaUri(uri)
+                    return
+                }
+            }
+
+            Toast.makeText(this, "PDF nicht gefunden", Toast.LENGTH_SHORT).show()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun openPdfViaUri(uri: Uri) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, "application/pdf")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         }
+
+        val resInfoList = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        for (resolveInfo in resInfoList) {
+            val packageName = resolveInfo.activityInfo.packageName
+            grantUriPermission(
+                packageName,
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        }
+
         startActivity(Intent.createChooser(intent, "PDF öffnen"))
+    }
+
+    private fun openPdf(file: File) {
+        if (!file.exists()) {
+            Toast.makeText(this, "PDF nicht gefunden: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/pdf")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            }
+
+            val resInfoList = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+
+            for (resolveInfo in resInfoList) {
+                val pkgName = resolveInfo.activityInfo.packageName
+                grantUriPermission(
+                    pkgName,
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+
+            startActivity(Intent.createChooser(intent, "PDF öffnen"))
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Fehler: ${e.message}\n\nPfad: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onPause() {
