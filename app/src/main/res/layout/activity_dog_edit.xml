@@ -527,6 +527,336 @@
                     android:minLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Trennlinie -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🧠 WESENSMERKMALE"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Für personalisierte Trainingsempfehlungen im Trainingstagebuch"
+                android:textSize="13sp"
+                android:alpha="0.7"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Quick-Profil Auswahl -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📋 Schnellauswahl: Profil wählen"
+                android:textSize="15sp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Slider 1: Grundtemperament -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Grundtemperament"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nruhig"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderTemperament"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    android:value="3"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nlebhaft"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+            </LinearLayout>
+
+            <!-- Slider 2: Selbstbewusstsein -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selbstbewusstsein"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nängstlich"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderConfidence"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    android:value="3"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nselbstsicher"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+            </LinearLayout>
+
+            <!-- Slider 3: Sozialverhalten -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sozialverhalten"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Zurück-\nhaltend"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderSocial"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    android:value="3"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nkontaktfreudig"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+            </LinearLayout>
+
+            <!-- Slider 4: Erregbarkeit -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Erregbarkeit"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\ngelassen"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderExcitability"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    android:value="3"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leicht\nerregbar"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+            </LinearLayout>
+
+            <!-- Slider 5: Lerngeschwindigkeit -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lerngeschwindigkeit"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nlangsam"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderLearning"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    android:value="3"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nschnell"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+            </LinearLayout>
+
+            <!-- Slider 6: Frustrationstoleranz -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Frustrationstoleranz"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nniedrig"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderFrustration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    android:value="3"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sehr\nhoch"
+                    android:textSize="11sp"
+                    android:alpha="0.7"
+                    android:gravity="center"
+                    android:minWidth="50dp" />
+            </LinearLayout>
+
+            <!-- Notizen -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Besonderheiten im Wesen (optional)"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCharacterNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="3"
+                    android:maxLines="5"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine|textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- EXTRA SPACE FOR KEYBOARD -->
             <View
                 android:layout_width="match_parent"

@@ -56,6 +56,11 @@ object BackupManager {
 
             val photoMapping = mutableMapOf<String, String>()
 
+            // ✅ NEU: Trainingstagebuch laden
+            val trainingSessions = loadTrainingSessions(context)
+            val trainingProgress = loadTrainingProgress(context)
+            val trainingMilestones = loadTrainingMilestones(context)
+
             // Hunde-Fotos kopieren
             dogs.forEachIndexed { index, dog ->
                 if (dog.photoUri.isNotEmpty()) {
@@ -104,7 +109,7 @@ object BackupManager {
             // Backup-Daten erstellen
             val backupData = BackupData(
                 version = getAppVersion(context),
-                backupVersion = 4,
+                backupVersion = 5,
                 timestamp = timestamp,
                 dogs = dogs,
                 settings = settings,
@@ -112,7 +117,11 @@ object BackupManager {
                 speedSessions = speedSessions,
                 voiceSessions = voiceSessions,
                 emergencyReports = emergencyReports,
-                photoMapping = photoMapping
+                photoMapping = photoMapping,
+                // ✅ NEU: Trainingstagebuch
+                trainingSessions = trainingSessions,
+                trainingProgress = trainingProgress,
+                trainingMilestones = trainingMilestones
             )
 
             // Metadaten erstellen
@@ -127,7 +136,10 @@ object BackupManager {
                     notes = notes?.size ?: 0,
                     speedSessions = speedSessions?.size ?: 0,
                     voiceSessions = voiceSessions?.size ?: 0,
-                    emergencyReports = emergencyReports?.size ?: 0
+                    emergencyReports = emergencyReports?.size ?: 0,
+                    trainingSessions = trainingSessions?.size ?: 0,
+                    trainingProgress = trainingProgress?.size ?: 0,
+                    trainingMilestones = trainingMilestones?.size ?: 0
                 )
             )
 
@@ -138,12 +150,12 @@ object BackupManager {
             // ZIP-Datei am Zielort erstellen
             val backupFolder = getBackupDirectory(context)
             val outputFile = File(backupFolder, fileName)
-            
+
             zipDirectory(tempZipContentDir, outputFile)
-            
+
             // Medienscan anstoßen, damit die Datei sofort sichtbar ist
             MediaScannerConnection.scanFile(context, arrayOf(outputFile.absolutePath), null, null)
-            
+
             Log.d(TAG, "Backup erfolgreich erstellt: ${outputFile.absolutePath}")
             return outputFile
 
@@ -176,7 +188,7 @@ object BackupManager {
             // 1. Fotos wiederherstellen
             val restoredPhotoMapping = mutableMapOf<String, String>()
             val photosInZipDir = File(tempUnzipDir, PHOTOS_DIR)
-            
+
             if (photosInZipDir.exists()) {
                 backupData.photoMapping.forEach { (originalUri, backupPath) ->
                     val sourceFileInZip = File(tempUnzipDir, backupPath)
@@ -232,6 +244,16 @@ object BackupManager {
                 saveEmergencyHistory(context, restoredReports)
             }
 
+            backupData.trainingSessions?.let { sessions ->
+                saveTrainingSessions(context, sessions)
+            }
+            backupData.trainingProgress?.let { progressList ->
+                saveTrainingProgress(context, progressList)
+            }
+            backupData.trainingMilestones?.let { milestones ->
+                saveTrainingMilestones(context, milestones)
+            }
+
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true
         } catch (e: Exception) {
@@ -267,6 +289,45 @@ object BackupManager {
             val type = object : TypeToken<List<NoteSession>>() {}.type
             gson.fromJson(json, type)
         } catch (e: Exception) { null }
+    }
+
+    private fun loadTrainingSessions(context: Context): List<TrainingSession> {
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+        val json = prefs.getString("sessions", "[]") ?: "[]"
+
+        return try {
+            val type = object : com.google.gson.reflect.TypeToken<List<TrainingSession>>() {}.type
+            com.google.gson.Gson().fromJson(json, type) ?: emptyList()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    private fun loadTrainingProgress(context: Context): List<TrainingProgress> {
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+        val json = prefs.getString("progress", "[]") ?: "[]"
+
+        return try {
+            val type = object : com.google.gson.reflect.TypeToken<List<TrainingProgress>>() {}.type
+            com.google.gson.Gson().fromJson(json, type) ?: emptyList()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    private fun loadTrainingMilestones(context: Context): List<Milestone> {
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+        val json = prefs.getString("milestones", "[]") ?: "[]"
+
+        return try {
+            val type = object : com.google.gson.reflect.TypeToken<List<Milestone>>() {}.type
+            com.google.gson.Gson().fromJson(json, type) ?: emptyList()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
     }
 
     private fun saveNotesHistory(context: Context, notes: List<NoteSession>) {
@@ -309,6 +370,21 @@ object BackupManager {
             val type = object : TypeToken<List<EmergencyReport>>() {}.type
             gson.fromJson(json, type)
         } catch (e: Exception) { null }
+    }
+
+    private fun saveTrainingSessions(context: Context, sessions: List<TrainingSession>) {
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+        prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+    }
+
+    private fun saveTrainingProgress(context: Context, progressList: List<TrainingProgress>) {
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+        prefs.edit().putString("progress", gson.toJson(progressList)).apply()
+    }
+
+    private fun saveTrainingMilestones(context: Context, milestones: List<Milestone>) {
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+        prefs.edit().putString("milestones", gson.toJson(milestones)).apply()
     }
 
     private fun saveEmergencyHistory(context: Context, reports: List<EmergencyReport>) {

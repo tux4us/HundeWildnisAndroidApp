@@ -62,6 +62,7 @@ class DogEditActivity : SecureBaseActivity() {
         loadData()
         setupButtons()
         setupDatePickers()
+        setupCharacterSliders()
     }
 
     private fun setupSpinners() {
@@ -91,6 +92,60 @@ class DogEditActivity : SecureBaseActivity() {
         binding.spinnerBirthDateType.setOnItemClickListener { _, _, position, _ ->
             updateBirthDateField(position)
         }
+    }
+
+    private fun setupCharacterSliders() {
+        // Quick-Profil Button
+        binding.btnQuickProfile.setOnClickListener {
+            showQuickProfileDialog()
+        }
+
+        // Lade gespeicherte Werte (falls Hund bearbeitet wird)
+        if (profile != null) {
+            binding.sliderTemperament.value = profile!!.characterTemperament.toFloat()
+            binding.sliderConfidence.value = profile!!.characterConfidence.toFloat()
+            binding.sliderSocial.value = profile!!.characterSocial.toFloat()
+            binding.sliderExcitability.value = profile!!.characterExcitability.toFloat()
+            binding.sliderLearning.value = profile!!.characterLearning.toFloat()
+            binding.sliderFrustration.value = profile!!.characterFrustration.toFloat()
+            binding.etCharacterNotes.setText(profile!!.characterNotes)
+        }
+    }
+
+    private fun showQuickProfileDialog() {
+        val profiles = QuickCharacterProfile.values()
+        val profileNames = profiles.map { "${it.displayName}\n${it.description}" }.toTypedArray()
+
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("📋 Wesens-Profil wählen")
+            .setItems(profileNames) { _, which ->
+                applyQuickProfile(profiles[which])
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+            .apply {
+                show()
+                getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
+    }
+
+    private fun applyQuickProfile(profile: QuickCharacterProfile) {
+        binding.sliderTemperament.value = profile.temperament.toFloat()
+        binding.sliderConfidence.value = profile.confidence.toFloat()
+        binding.sliderSocial.value = profile.social.toFloat()
+        binding.sliderExcitability.value = profile.excitability.toFloat()
+        binding.sliderLearning.value = profile.learning.toFloat()
+        binding.sliderFrustration.value = profile.frustration.toFloat()
+
+        android.widget.Toast.makeText(
+            this,
+            "✅ Profil '${profile.displayName}' angewendet",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun updateBirthDateField(position: Int) {
@@ -351,7 +406,13 @@ class DogEditActivity : SecureBaseActivity() {
             shoulderHeight = binding.etShoulderHeight.text.toString(),
             bodyLength = binding.etBodyLength.text.toString(),
             healthInsurance = binding.etHealthInsurance.text.toString(),
-
+            characterTemperament = binding.sliderTemperament.value.toInt(),
+            characterConfidence = binding.sliderConfidence.value.toInt(),
+            characterSocial = binding.sliderSocial.value.toInt(),
+            characterExcitability = binding.sliderExcitability.value.toInt(),
+            characterLearning = binding.sliderLearning.value.toInt(),
+            characterFrustration = binding.sliderFrustration.value.toInt(),
+            characterNotes = binding.etCharacterNotes.text.toString()
         )
 
         if (DogProfileManager.saveProfile(this, savedProfile)) {

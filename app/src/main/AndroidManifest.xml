@@ -185,5 +185,37 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- ✅ TRAININGSTAGEBUCH (NEU!) -->
+        <!-- ════════════════════════════════════════════════ -->
+        <activity
+            android:name="com.hundewildnis.app.TrainingDiaryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.CategoryListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.TrainingDiaryActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.TrainingDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.CategoryListActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.AddSessionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName="com.hundewildnis.app.TrainingDetailActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
     </application>
 </manifest>
