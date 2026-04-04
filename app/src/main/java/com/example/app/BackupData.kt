@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName
 /**
  * Backup-Datenstruktur für komplettes App-Backup
  * Wir nutzen GSON für die Serialisierung im Backup, daher kein Parcelize nötig.
+ *
+ * ✅ VERSION 5: Trainingstagebuch hinzugefügt
  */
 data class BackupData(
     @SerializedName("version") val version: String,
-    @SerializedName("backupVersion") val backupVersion: Int = 4,
+    @SerializedName("backupVersion") val backupVersion: Int = 5,  // ✅ VERSION ERHÖHT!
     @SerializedName("timestamp") val timestamp: Long,
     @SerializedName("dogs") val dogs: List<DogProfile>,
     @SerializedName("settings") val settings: Map<String, String>,
@@ -16,7 +18,12 @@ data class BackupData(
     @SerializedName("speedSessions") val speedSessions: List<SpeedSession>?,
     @SerializedName("voiceSessions") val voiceSessions: List<VoiceSession>?,
     @SerializedName("emergencyReports") val emergencyReports: List<EmergencyReport>?,
-    @SerializedName("photoMapping") val photoMapping: Map<String, String>
+    @SerializedName("photoMapping") val photoMapping: Map<String, String>,
+
+    // ✅ NEU: Trainingstagebuch
+    @SerializedName("trainingSessions") val trainingSessions: List<TrainingSession>?,
+    @SerializedName("trainingProgress") val trainingProgress: List<TrainingProgress>?,
+    @SerializedName("trainingMilestones") val trainingMilestones: List<Milestone>?
 )
 
 /**
@@ -36,5 +43,10 @@ data class BackupItemCount(
     @SerializedName("notes") val notes: Int,
     @SerializedName("speedSessions") val speedSessions: Int = 0,
     @SerializedName("voiceSessions") val voiceSessions: Int = 0,
-    @SerializedName("emergencyReports") val emergencyReports: Int = 0
+    @SerializedName("emergencyReports") val emergencyReports: Int = 0,
+
+    // ✅ NEU: Trainingstagebuch
+    @SerializedName("trainingSessions") val trainingSessions: Int = 0,
+    @SerializedName("trainingProgress") val trainingProgress: Int = 0,
+    @SerializedName("trainingMilestones") val trainingMilestones: Int = 0
 )
