@@ -173,13 +173,13 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 
 ##### 🎯 Design-Prinzipien
 
-###### Professioneller Ansatz
+###### 👍🏼 Professioneller Ansatz
 - **Keine Social-Media-Gamification**: Seriöse, trainingsunterstützende Formulierungen
 - **Wissenschaftlich fundiert**: Empfehlungen basieren auf Trainingsmethodik
 - **Individuell anpassbar**: Alle Parameter zentral konfigurierbar
 - **Langfristige Begleitung**: System wächst mit dem Trainingsfortschritt
 
-###### Nutzerfreundlichkeit
+###### 🤝 Nutzerfreundlichkeit
 - **Minimale Eingaben**: Schnelle Session-Erfassung (< 1 Minute)
 - **Intelligente Defaults**: Sinnvolle Voreinstellungen
 - **Klare Visualisierung**: Fortschritt auf einen Blick
