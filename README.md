@@ -31,15 +31,23 @@ Die Startseite bietet direkten Zugriff auf die täglichen Werkzeuge und Manageme
 #### 🆘 Unterstützung
 Support-Optionen für alle Nutzer, welche uns mit einem kleinen Honorar für unseren Zeit- und Energieaufwand bei der Entwicklung der App unterstützen wollen.
 
+---
+
 #### 🐾 Übung des Tages
 Regelmäßig wechselnde Trainingsimpulse direkt aus der Praxis der Hundeschule.
+
+---
 
 #### 🧘 Meditation des Tages
 Regelmäßig wechselnde Meditationsübungen für ein entspanntes Mensch-Hund-Team.
 
+---
+
 #### ⏱️🔔 Tempo - Trainer
 Dein Tempo-Trainer
 Echtzeit-Überwachung der Gehgeschwindigkeit in verschiedenen Trainingsszenarien mit Warnfunktion, grafischer Echtzeitauswertung, Statistiken Speicherung und GPX/PDF-Export mit Teilen-Option. Alle Analysen werden zusätzlich abgespeichert und in einer Liste geführt, um jederzeit später wieder aufgerufen werden zu können.
+
+---
 
 #### 🗣🎤 Sprach - Trainer
 Dein Sprach-Trainer 
@@ -47,18 +55,20 @@ Sprach-Analyse als Echtzeit-Messung der Stimme, um festzustellen, ob in dem für
 Direktes Feedback durch Symbol, Vibration oder Ton sobald der Zielbereich erreicht wird.
 Auswertung: Statistiken über Sprechzeit und Effizienz zur nachhaltigen Verbesserung der Kommunikation mit dem Hund mit spürbaren Fortschritten im Training. Speicherung und PDF-Export mit Teilen-Option. Alle Analysen werden zusätzlich abgespeichert und in einer Liste geführt, um jederzeit später wieder aufgerufen werden zu können.
 
+---
+
 #### 📊 Trainingstagebuch
 
 Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokumentation und Analyse des Hundetrainings. Es bietet personalisierte Empfehlungen basierend auf dem individuellen Trainingsfortschritt und den Wesensmerkmalen jedes Hundes.
 
 ##### ✨ Hauptfunktionen
 
-### 📋 Trainings-Kategorien
+###### 📋 Trainings-Kategorien
 - **18 spezialisierte Trainingsbereiche** aus den HundeWildnis-Onlinekursen
 - Kategorien: Leinenarbeit, Fuß, Sitz, Platz, Steh, Sozialisierungstechniken, Langleinentraining, Distanzunterbrechungen, Freilauf, Freifolge, Teamwalk, Scouttechniken, Jagdvermeidung, Nasenarbeit, Leinenführigkeit, Begegnungssituationen, Stresstoleranztraining, Straßenroutinen
 - Hundeindividuelle Fortschritts-Dokumentation pro Kategorie
 
-### 📝 Session-Erfassung
+###### 📝 Session-Erfassung
 - **Trainingseinheiten dokumentieren** mit detaillierten Parametern:
   - Dauer (5-60 Minuten, anpassbar via Slider)
   - Erfolgsbewertung (4-Stufen-Skala: Schwierigkeiten, Teilweise, Erfolgreich, Sehr erfolgreich)
@@ -67,7 +77,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
   - Optional: Wetterbedingungen, Trainingsort, Notizen
 - **Chronologische Historie** aller Trainingseinheiten
 
-### 📈 Intelligente Fortschritts-Analyse
+###### 📈 Intelligente Fortschritts-Analyse
 - **Automatische Berechnung** von:
   - Trainingsfortschritt in Prozent (0-100%)
   - Aktueller Trainingsstand (Beginn, Grundlagen, Aufbau, Festigung, Etabliert)
@@ -79,7 +89,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
   - Verbesserung in Prozent
   - Regelmäßigkeit des Trainings (Konsistenz-Score)
 
-### 💡 Personalisierte Empfehlungen
+###### 💡 Personalisierte Empfehlungen
 - **Intelligente Trainingstipps** basierend auf:
   - Aktuellem Fortschritt
   - Letzten 3 Trainingseinheiten
@@ -91,7 +101,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
   - Empfehlung für Trainingspausen bei Überforderung
   - Berücksichtigung von Lerngeschwindigkeit und Frustrationstoleranz
 
-### 🎯 Meilensteine & Erfolge
+###### 🎯 Meilensteine & Erfolge
 - **Automatische Erkennung** von Trainings-Erfolgen:
   - Erste Trainingseinheit einer Kategorie
   - 5, 10, 20+ Sessions in einer Kategorie
@@ -100,7 +110,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
   - Erfolgsserien (5+ sehr erfolgreiche Sessions)
 - **Motivations-System** ohne Social-Media-Charakter (professionell, trainingsunterstützend)
 
-### 🧠 Wesensmerkmale-System
+###### 🧠 Wesensmerkmale-System
 - **6 Charaktereigenschaften** zur Personalisierung:
   - Grundtemperament (Sehr ruhig ↔ Sehr lebhaft)
   - Selbstbewusstsein (Ängstlich ↔ Selbstsicher)
@@ -114,28 +124,28 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
   - Arbeitshund, Sehr sozial, Eigenständig, Tierschutzhund
 - **Automatische Anpassung** der Trainingsempfehlungen basierend auf Wesensmerkmalen
 
-## 🛠️ Technische Details
+##### 🛠️ Technische Details
 
-### Datenmodelle
+###### Datenmodelle
 - `TrainingSession`: Einzelne Trainingseinheit mit allen Details
 - `TrainingProgress`: Fortschritts-Tracking pro Hund und Kategorie
 - `Milestone`: Automatisch erkannte Trainings-Erfolge
 - `DogCharacter`: Wesensmerkmale für personalisierte Empfehlungen
 
-### Empfehlungs-Engine
+###### Empfehlungs-Engine
 - **TrainingRecommendationEngine**: Intelligente Analyse-Engine
   - Berücksichtigt letzte Sessions, Gesamtfortschritt und Hundecharakter
   - 5 Haupt-Szenarien mit spezifischen Empfehlungen
   - Anpassbare Parameter (Schwellenwerte, Trainingszeiten)
   - Trend-Analyse mit Verbesserungsberechnung
 
-### Datenspeicherung
+###### Datenspeicherung
 - **SharedPreferences** (JSON via Gson)
 - Vollständig in Backup-System integriert (BackupData Version 5)
 - Keine externen Dependencies erforderlich
 - 100% lokale Datenhaltung (Privacy-First)
 
-### UI/UX
+###### UI/UX
 - **4 Activities**:
   - `TrainingDiaryActivity`: Hundekarten-Auswahl
   - `CategoryListActivity`: 18 Trainingskategorien
@@ -145,7 +155,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 - Vollständige Dark Mode Unterstützung
 - Responsive Layouts mit NestedScrollView
 
-## 🔒 Datenschutz & Compliance
+##### 🔒 Datenschutz & Compliance
 
 - ✅ **F-Droid kompatibel**: Keine proprietären Bibliotheken
 - ✅ **Play Store konform**: Keine neuen Permissions erforderlich
@@ -153,7 +163,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 - ✅ **DSGVO-konform**: Keine Datenübertragung, keine Analytics
 - ✅ **Open Source**: Vollständig einsehbarer Code
 
-## 📦 Verwendete Technologien
+##### 📦 Verwendete Technologien
 
 - **Kotlin**: Moderne Android-Entwicklung
 - **Material Components**: UI-Framework
@@ -161,21 +171,21 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 - **ViewBinding**: Type-safe View-Zugriff
 - **SharedPreferences**: Lokale Datenpersistenz
 
-## 🎯 Design-Prinzipien
+##### 🎯 Design-Prinzipien
 
-### Professioneller Ansatz
+###### Professioneller Ansatz
 - **Keine Social-Media-Gamification**: Seriöse, trainingsunterstützende Formulierungen
 - **Wissenschaftlich fundiert**: Empfehlungen basieren auf Trainingsmethodik
 - **Individuell anpassbar**: Alle Parameter zentral konfigurierbar
 - **Langfristige Begleitung**: System wächst mit dem Trainingsfortschritt
 
-### Nutzerfreundlichkeit
+###### Nutzerfreundlichkeit
 - **Minimale Eingaben**: Schnelle Session-Erfassung (< 1 Minute)
 - **Intelligente Defaults**: Sinnvolle Voreinstellungen
 - **Klare Visualisierung**: Fortschritt auf einen Blick
 - **Handlungsorientiert**: Konkrete, umsetzbare Empfehlungen
 
-## 🚀 Zukünftige Erweiterungen (geplant)
+##### 🚀 Zukünftige Erweiterungen (geplant)
 
 - Export von Trainingsstatistiken (PDF/CSV)
 - Trainings-Erinnerungen (optional)
@@ -183,20 +193,23 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 - Erweiterte Statistiken und Visualisierungen
 - Import/Export einzelner Kategorien
 
-## 📊 Integration mit anderen Features
+##### 📊 Integration mit anderen Features
 
 - **Stammdaten**: Nutzt erweiterte Hundeprofile mit Wesensmerkmalen
 - **Backup-System**: Vollständig in App-Backup integriert (Version 5)
 - **Navigation**: Konsistente Benutzerführung mit Toolbar und Back-Navigation
 - **Tagesnotizen**: Ergänzende Dokumentation neben strukturiertem Training
 
----
-
 **Das Trainingstagebuch mit voller Kontrolle über die eigenen Daten und ohne Abhängigkeit von Cloud-Diensten.**
+
+
+---
 
 
 #### 📓 Tagesnotizen
 Digitales Trainings- und Beobachtungstagebuch mit Foto-Upload, optionalen Standortwetterdaten zur Notiz, automatischem GPS-Tagging, automatischer Sicherung und PDF-Export-, Teilen- und GPX-Exportfunktionen.
+
+---
 
 #### 🌤️ Wetter
 Aktuelle Wetterdaten und Vorhersagen für den Standort. Abruf über die freie Open-Meteo API und das RainViewer-Radar – ohne Tracking durch Google oder andere kommerzielle Wetterdienste.
@@ -230,6 +243,8 @@ Aktuelle Wetterdaten und Vorhersagen für den Standort. Abruf über die freie Op
 - **Vorhersage:** Animierte Projektion für die kommenden 60 Minuten (Nowcast), um Regenschauer während des Spaziergangs präzise umgehen zu können.
 
 > 📌 **Datenschutz-Hinweis:** Alle Wetterdaten werden über die freie Open-Meteo API (ohne API-Key-Zwang) und das RainViewer-Radar abgerufen. Es findet kein Tracking durch Google oder andere kommerzielle Wetterdienste statt.
+
+---
 
 #### 🗺️ Standort & Navigation
 Interaktive Karte mit Anzeige von Kategorien von wander- und hunderelevanten Orten via OpenStreetMap und Routing.
@@ -271,11 +286,17 @@ Kategorien-Grid für schnelle Auswahl hundespezifischer Orte:
 - **Lokal & Frei:** Keine Nutzung von Google Maps. Der Standort wird nur für die aktuelle Suche anonym an freie Karten-Server gesendet.
 - **Zwei-Klick-Logik:** Erster Klick auf Marker zeigt Info, zweiter Klick startet die Navigation – für eine fehlerfreie Bedienung.
 
+---
+
 #### 🧭 Kompass
 Digitale Orientierungshilfe für Wanderungen und Gelände.
 
+---
+
 #### ⛰️ Höhenmesser
 Anzeige der aktuellen Höhe über Meeresspiegel via GPS.
+
+---
 
 #### 🐕 Hunde-Stammdaten
 Verwaltung von bis zu 3 Hunde-Profilen. Die Stammdaten werden über Infokarten dargestellt und können angezeigt, bearbeitet und geteilt werden.
