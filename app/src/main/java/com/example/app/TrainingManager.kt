@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 // TRAINING MANAGER - Komplett mit allen Funktionen
 // ════════════════════════════════════════════════════════════════
 
-class TrainingManager(context: Context) {
+class TrainingManager(private val context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
@@ -19,7 +19,7 @@ class TrainingManager(context: Context) {
     // ════════════════════════════════════════════════════════════
 
     fun saveSession(session: TrainingSession) {
-        val sessions = getAllSessions(prefs.context).toMutableList()
+        val sessions = getAllSessions(context).toMutableList()
         sessions.add(session)
 
         val json = gson.toJson(sessions)
@@ -33,7 +33,7 @@ class TrainingManager(context: Context) {
     }
 
     fun getSessionsForCategory(dogId: String, category: TrainingCategory): List<TrainingSession> {
-        return getAllSessions(prefs.context).filter {
+        return getAllSessions(context).filter {
             it.dogId == dogId && it.category == category
         }
     }
@@ -142,7 +142,7 @@ class TrainingManager(context: Context) {
     // ════════════════════════════════════════════════════════════
 
     fun getProgress(dogId: String, category: TrainingCategory): TrainingProgress {
-        val allProgress = getAllProgress(prefs.context)
+        val allProgress = getAllProgress(context)
         return allProgress.find { it.dogId == dogId && it.category == category }
             ?: TrainingProgress(dogId = dogId, category = category)
     }
@@ -170,7 +170,7 @@ class TrainingManager(context: Context) {
     private fun updateProgress(session: TrainingSession) {
         val progress = getProgress(session.dogId, session.category)
         val updatedProgress = progress.updateWithSession(session)
-        saveProgress(prefs.context, updatedProgress)
+        saveProgress(context, updatedProgress)
     }
 
     private fun deleteProgress(context: Context, dogId: String, category: TrainingCategory) {
@@ -185,7 +185,7 @@ class TrainingManager(context: Context) {
      * ✅ NEU: Wochenstatistik für einen Hund (Instanz-Methode)
      */
     fun getWeeklyStats(dogId: String): WeeklyStats {
-        val allSessions = getAllSessions(prefs.context).filter { it.dogId == dogId }
+        val allSessions = getAllSessions(context).filter { it.dogId == dogId }
 
         // Letzte 7 Tage
         val oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
@@ -212,7 +212,7 @@ class TrainingManager(context: Context) {
     // ════════════════════════════════════════════════════════════
 
     fun getMilestones(dogId: String, category: TrainingCategory): List<Milestone> {
-        return getAllMilestones(prefs.context).filter {
+        return getAllMilestones(context).filter {
             it.dogId == dogId && it.category == category
         }
     }
@@ -229,7 +229,7 @@ class TrainingManager(context: Context) {
     }
 
     private fun saveMilestone(milestone: Milestone) {
-        val milestones = getAllMilestones(prefs.context).toMutableList()
+        val milestones = getAllMilestones(context).toMutableList()
 
         // Duplikate vermeiden
         if (milestones.any {
@@ -329,12 +329,6 @@ class TrainingManager(context: Context) {
     // ════════════════════════════════════════════════════════════
     // CONTEXT HELPER
     // ════════════════════════════════════════════════════════════
-
-    private val SharedPreferences.context: Context
-        get() = when {
-            this is Context -> this
-            else -> throw IllegalStateException("SharedPreferences must be created with Context")
-        }
 
     companion object {
         private const val PREFS_NAME = "training_diary"
