@@ -3,10 +3,14 @@ package com.hundewildnis.app
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hundewildnis.app.databinding.ActivityTrainingDetailBinding
+import com.hundewildnis.app.databinding.DialogSessionDetailBinding
 import com.hundewildnis.app.databinding.ItemSessionHistoryBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,7 +22,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
     private lateinit var category: TrainingCategory
     private lateinit var manager: TrainingManager
     private lateinit var sessionAdapter: SessionHistoryAdapter
-    
+
     private val sessions = mutableListOf<TrainingSession>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +33,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
         profile = intent.getParcelableExtra("profile")!!
         val categoryId = intent.getIntExtra("category_id", 13)
         category = TrainingCategory.fromId(categoryId)!!
-        
+
         manager = TrainingManager(this)
 
         setupUI()
@@ -41,12 +45,16 @@ class TrainingDetailActivity : SecureBaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = category.displayName
-        
+
         binding.tvDogName.text = profile.name
         binding.tvCategoryTitle.text = category.displayName
-        
-        // RecyclerView für Historie
-        sessionAdapter = SessionHistoryAdapter(sessions)
+
+        // RecyclerView mit Callbacks
+        sessionAdapter = SessionHistoryAdapter(
+            sessions = sessions,
+            onViewClick = { session -> showSessionDetailDialog(session) },
+            onDeleteClick = { session -> showDeleteSessionDialog(session) }
+        )
         binding.rvSessionHistory.layoutManager = LinearLayoutManager(this)
         binding.rvSessionHistory.adapter = sessionAdapter
     }
@@ -58,20 +66,17 @@ class TrainingDetailActivity : SecureBaseActivity() {
     }
 
     private fun loadData() {
-        // Lade Fortschritt
         val progress = manager.getProgress(profile.id, category)
         displayProgress(progress)
 
-        // Lade Sessions
         sessions.clear()
         sessions.addAll(manager.getSessionsForCategory(profile.id, category))
         sessionAdapter.notifyDataSetChanged()
 
-        // ✅ Empfehlung mit Hundecharakter
         val dogCharacter = try {
-            profile.toCharacter()  // Wenn DogProfile erweitert wurde
+            profile.toCharacter()
         } catch (e: Exception) {
-            null  // Falls toCharacter() fehlt, null verwenden
+            null
         }
 
         val recommendation = manager.getRecommendation(
@@ -81,27 +86,22 @@ class TrainingDetailActivity : SecureBaseActivity() {
         )
         displayRecommendation(recommendation)
 
-        // Lade Trend-Analyse
         val analysis = manager.getProgressAnalysis(profile.id, category)
         displayAnalysis(analysis)
     }
 
     private fun displayProgress(progress: TrainingProgress) {
-        // Fortschrittsbalken
         binding.progressBar.progress = progress.progressPercentage
         binding.tvProgressPercent.text = "${progress.progressPercentage}%"
         binding.tvProgressLevel.text = progress.currentLevel.displayName
 
-        // Statistiken
         binding.tvTotalSessions.text = "${progress.totalSessions} Einheiten"
         binding.tvTotalMinutes.text = "${progress.totalMinutes} Min"
         binding.tvConsecutiveDays.text = "${progress.consecutiveDays} Tage"
 
-        // Durchschnitte
         val avgSuccess = String.format(Locale.GERMAN, "%.1f", progress.averageSuccess)
         binding.tvAverageSuccess.text = "Ø $avgSuccess / 4.0"
 
-        // ✅ Meilensteine (aus Manager holen, nicht aus Progress!)
         val milestones = manager.getMilestones(progress.dogId, progress.category)
         if (milestones.isNotEmpty()) {
             val latest = milestones.last()
@@ -115,15 +115,14 @@ class TrainingDetailActivity : SecureBaseActivity() {
         binding.tvRecommendationTitle.text = "Trainerempfehlung"
         binding.tvRecommendation.text = recommendation.recommendation
         binding.tvRecommendationReason.text = recommendation.reasoning
-        
-        // Farbe basierend auf Priorität
+
         val color = when (recommendation.priority) {
             RecommendationPriority.HIGH -> android.graphics.Color.parseColor("#d32f2f")
             RecommendationPriority.MEDIUM -> android.graphics.Color.parseColor("#f57c00")
             RecommendationPriority.LOW -> android.graphics.Color.parseColor("#388e3c")
         }
         binding.cardRecommendation.setCardBackgroundColor(
-            android.graphics.Color.argb(20, 
+            android.graphics.Color.argb(20,
                 android.graphics.Color.red(color),
                 android.graphics.Color.green(color),
                 android.graphics.Color.blue(color)
@@ -134,16 +133,148 @@ class TrainingDetailActivity : SecureBaseActivity() {
     private fun displayAnalysis(analysis: ProgressAnalysis) {
         binding.tvTrendIcon.text = analysis.trend.icon
         binding.tvTrendText.text = analysis.trend.displayName
-        
+
         val improvementText = when {
             analysis.improvement > 0 -> String.format(Locale.GERMAN, "+%.1f%%", analysis.improvement)
             analysis.improvement < 0 -> String.format(Locale.GERMAN, "%.1f%%", analysis.improvement)
             else -> "±0%"
         }
         binding.tvImprovement.text = "Entwicklung: $improvementText"
-        
+
         val consistencyText = String.format(Locale.GERMAN, "%.0f%%", analysis.consistency)
         binding.tvConsistency.text = "Regelmäßigkeit: $consistencyText"
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // SESSION DETAIL DIALOG
+    // ════════════════════════════════════════════════════════════
+
+    private fun showSessionDetailDialog(session: TrainingSession) {
+        val dialogBinding = DialogSessionDetailBinding.inflate(layoutInflater)
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+
+        // Daten füllen
+        dialogBinding.tvDetailDate.text = dateFormat.format(Date(session.date))
+        dialogBinding.tvDetailDuration.text = "${session.durationMinutes} Minuten"
+        dialogBinding.tvDetailSuccess.text = session.getSuccessText()
+        dialogBinding.tvDetailDistraction.text = session.distractionLevel.displayName
+        dialogBinding.tvDetailDifficulty.text = session.difficulty.displayName
+
+        // Optional: Wetter
+        if (session.weatherData.isNotEmpty()) {
+            dialogBinding.layoutWeather.visibility = View.VISIBLE
+            dialogBinding.tvDetailWeather.text = session.weatherData
+        }
+
+        // Optional: GPS
+        if (session.gpsLatitude != null && session.gpsLongitude != null) {
+            dialogBinding.layoutGps.visibility = View.VISIBLE
+            dialogBinding.tvDetailGps.text = session.getGpsShortFormat()
+        }
+
+        // Optional: Notizen
+        if (session.notes.isNotEmpty()) {
+            dialogBinding.layoutNotes.visibility = View.VISIBLE
+            dialogBinding.tvDetailNotes.text = session.notes
+        }
+
+        // Dialog erstellen
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
+
+        // Button-Handler
+        dialogBinding.btnExportPdf.setOnClickListener {
+            exportSessionPdf(session)
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnExportCsv.setOnClickListener {
+            exportSessionCsv(session)
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // EXPORT FUNKTIONEN
+    // ════════════════════════════════════════════════════════════
+
+    private fun exportSessionPdf(session: TrainingSession) {
+        val file = TrainingExportManager.exportSession(
+            context = this,
+            dog = profile,
+            session = session,
+            format = ExportFormat.PDF
+        )
+
+        if (file != null) {
+            Toast.makeText(this, "✅ PDF erstellt", Toast.LENGTH_SHORT).show()
+            TrainingExportManager.shareFile(this, file)
+        } else {
+            Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun exportSessionCsv(session: TrainingSession) {
+        val file = TrainingExportManager.exportSession(
+            context = this,
+            dog = profile,
+            session = session,
+            format = ExportFormat.CSV
+        )
+
+        if (file != null) {
+            Toast.makeText(this, "✅ CSV erstellt", Toast.LENGTH_SHORT).show()
+            TrainingExportManager.shareFile(this, file)
+        } else {
+            Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // DELETE FUNKTIONEN
+    // ════════════════════════════════════════════════════════════
+
+    private fun showDeleteSessionDialog(session: TrainingSession) {
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+
+        AlertDialog.Builder(this)
+            .setTitle("⚠️ Session löschen?")
+            .setMessage("Möchtest du diese Trainingseinheit wirklich löschen?\n\n" +
+                    "📅 ${dateFormat.format(Date(session.date))}\n" +
+                    "⏱️ ${session.durationMinutes} Minuten\n\n" +
+                    "Der Fortschritt wird automatisch neu berechnet.")
+            .setPositiveButton("Löschen") { _, _ ->
+                deleteSession(session)
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(android.graphics.Color.RED)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
+    }
+
+    private fun deleteSession(session: TrainingSession) {
+        val success = manager.deleteSession(this, session.id)
+
+        if (success) {
+            Toast.makeText(this, "✅ Session gelöscht", Toast.LENGTH_SHORT).show()
+            loadData()
+        } else {
+            Toast.makeText(this, "❌ Fehler beim Löschen", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun openAddSession() {
@@ -160,19 +291,21 @@ class TrainingDetailActivity : SecureBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadData()  // Aktualisiere wenn man zurückkommt
+        loadData()
     }
 }
 
 // ════════════════════════════════════════════════════════════════
-// ADAPTER FÜR SESSION-HISTORIE
+// SESSION HISTORY ADAPTER
 // ════════════════════════════════════════════════════════════════
 
 class SessionHistoryAdapter(
-    private val sessions: List<TrainingSession>
+    private val sessions: List<TrainingSession>,
+    private val onViewClick: (TrainingSession) -> Unit,
+    private val onDeleteClick: (TrainingSession) -> Unit
 ) : RecyclerView.Adapter<SessionHistoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemSessionHistoryBinding) : 
+    inner class ViewHolder(val binding: ItemSessionHistoryBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -185,11 +318,10 @@ class SessionHistoryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val session = sessions[position]
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
-        
+
         holder.binding.tvSessionDate.text = dateFormat.format(Date(session.date))
         holder.binding.tvSessionDuration.text = "${session.durationMinutes} Min"
-        
-        // Erfolgs-Rating als Emoji/Text
+
         val successText = when (session.successRating) {
             1 -> "🔴 Schwierigkeiten"
             2 -> "🟡 Teilweise"
@@ -198,13 +330,22 @@ class SessionHistoryAdapter(
             else -> "–"
         }
         holder.binding.tvSessionSuccess.text = successText
-        
+
         holder.binding.tvSessionDetails.text = buildString {
             append("${session.difficulty.displayName}")
             append(" • ${session.distractionLevel.displayName}")
             if (session.notes.isNotEmpty()) {
                 append("\n${session.notes}")
             }
+        }
+
+        // Button Handler
+        holder.binding.btnViewSession.setOnClickListener {
+            onViewClick(session)
+        }
+
+        holder.binding.btnDeleteSession.setOnClickListener {
+            onDeleteClick(session)
         }
     }
 

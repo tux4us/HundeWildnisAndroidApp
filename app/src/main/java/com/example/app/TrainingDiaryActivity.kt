@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.hundewildnis.app.databinding.ActivityTrainingDiaryBinding
 import com.hundewildnis.app.databinding.ItemDogCardBinding
@@ -79,7 +80,6 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         binding.layoutDogCards.visibility = View.VISIBLE
         binding.tvNoDogs.visibility = View.GONE
 
-        // Karte 1
         if (profiles.size >= 1) {
             setupDogCard(binding.dogCard1, profiles[0])
             binding.dogCard1.root.visibility = View.VISIBLE
@@ -87,7 +87,6 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             binding.dogCard1.root.visibility = View.GONE
         }
 
-        // Karte 2
         if (profiles.size >= 2) {
             setupDogCard(binding.dogCard2, profiles[1])
             binding.dogCard2.root.visibility = View.VISIBLE
@@ -95,7 +94,6 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             binding.dogCard2.root.visibility = View.GONE
         }
 
-        // Karte 3
         if (profiles.size >= 3) {
             setupDogCard(binding.dogCard3, profiles[2])
             binding.dogCard3.root.visibility = View.VISIBLE
@@ -114,7 +112,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             cardBinding.ivDogPhoto.setImageResource(R.drawable.ic_dog_placeholder)
         }
 
-        // Zeige Mini-Statistik
+        // Statistik
         val manager = TrainingManager(this)
         val weeklyStats = manager.getWeeklyStats(profile.id)
 
@@ -124,8 +122,99 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             append("${weeklyStats.totalMinutes} Minuten")
         }
 
-        cardBinding.root.setOnClickListener {
+        // ✅ Click auf Hunde-Info → Kategorien öffnen
+        cardBinding.layoutDogInfo.setOnClickListener {
             openCategoryList(profile)
+        }
+
+        // ✅ PDF Export Button
+        cardBinding.btnExportPdf.setOnClickListener {
+            exportDogDiaryPdf(profile)
+        }
+
+        // ✅ CSV Export Button
+        cardBinding.btnExportCsv.setOnClickListener {
+            exportDogDiaryCsv(profile)
+        }
+
+        // ✅ Delete Button
+        cardBinding.btnDeleteTrainingData.setOnClickListener {
+            showDeleteAllTrainingDataDialog(profile)
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // EXPORT FUNKTIONEN
+    // ════════════════════════════════════════════════════════════
+
+    private fun exportDogDiaryPdf(profile: DogProfile) {
+        val file = TrainingExportManager.exportCompleteDiary(
+            context = this,
+            dog = profile,
+            format = ExportFormat.PDF
+        )
+
+        if (file != null) {
+            Toast.makeText(this, "✅ PDF erstellt: ${file.name}", Toast.LENGTH_LONG).show()
+            TrainingExportManager.shareFile(this, file)
+        } else {
+            Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun exportDogDiaryCsv(profile: DogProfile) {
+        val file = TrainingExportManager.exportCompleteDiary(
+            context = this,
+            dog = profile,
+            format = ExportFormat.CSV
+        )
+
+        if (file != null) {
+            Toast.makeText(this, "✅ CSV erstellt: ${file.name}", Toast.LENGTH_LONG).show()
+            TrainingExportManager.shareFile(this, file)
+        } else {
+            Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // DELETE FUNKTIONEN
+    // ════════════════════════════════════════════════════════════
+
+    private fun showDeleteAllTrainingDataDialog(profile: DogProfile) {
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("⚠️ Alle Trainingsdaten löschen?")
+            .setMessage("Möchtest du ALLE Trainingsdaten von ${profile.name} löschen?\n\n" +
+                    "❌ Alle Sessions werden gelöscht\n" +
+                    "❌ Alle Fortschritte werden gelöscht\n" +
+                    "❌ Alle Meilensteine werden gelöscht\n\n" +
+                    "⚠️ Diese Aktion kann NICHT rückgängig gemacht werden!\n\n" +
+                    "✅ Die Stammdaten (Name, Rasse, etc.) bleiben erhalten.")
+            .setPositiveButton("ALLES LÖSCHEN") { _, _ ->
+                deleteAllTrainingData(profile)
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
+    }
+
+    private fun deleteAllTrainingData(profile: DogProfile) {
+        val manager = TrainingManager(this)
+        val success = manager.deleteDogTrainingData(this, profile.id)
+
+        if (success) {
+            Toast.makeText(this, "✅ Alle Trainingsdaten von ${profile.name} gelöscht", Toast.LENGTH_LONG).show()
+            loadProfiles()
+        } else {
+            Toast.makeText(this, "❌ Fehler beim Löschen", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -142,6 +231,6 @@ class TrainingDiaryActivity : SecureBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadProfiles()  // Refresh wenn man zurückkommt
+        loadProfiles()
     }
 }
