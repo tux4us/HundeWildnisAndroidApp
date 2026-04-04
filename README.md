@@ -47,6 +47,154 @@ Sprach-Analyse als Echtzeit-Messung der Stimme, um festzustellen, ob in dem für
 Direktes Feedback durch Symbol, Vibration oder Ton sobald der Zielbereich erreicht wird.
 Auswertung: Statistiken über Sprechzeit und Effizienz zur nachhaltigen Verbesserung der Kommunikation mit dem Hund mit spürbaren Fortschritten im Training. Speicherung und PDF-Export mit Teilen-Option. Alle Analysen werden zusätzlich abgespeichert und in einer Liste geführt, um jederzeit später wieder aufgerufen werden zu können.
 
+# 📊 Trainingstagebuch
+
+Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokumentation und Analyse des Hundetrainings. Es bietet personalisierte Empfehlungen basierend auf dem individuellen Trainingsfortschritt und den Wesensmerkmalen jedes Hundes.
+
+## ✨ Hauptfunktionen
+
+### 📋 Trainings-Kategorien
+- **18 spezialisierte Trainingsbereiche** aus den HundeWildnis-Onlinekursen
+- Kategorien: Leinenarbeit, Fuß, Sitz, Platz, Steh, Sozialisierungstechniken, Langleinentraining, Distanzunterbrechungen, Freilauf, Freifolge, Teamwalk, Scouttechniken, Jagdvermeidung, Nasenarbeit, Leinenführigkeit, Begegnungssituationen, Stresstoleranztraining, Straßenroutinen
+- Hundeindividuelle Fortschritts-Dokumentation pro Kategorie
+
+### 📝 Session-Erfassung
+- **Trainingseinheiten dokumentieren** mit detaillierten Parametern:
+  - Dauer (5-60 Minuten, anpassbar via Slider)
+  - Erfolgsbewertung (4-Stufen-Skala: Schwierigkeiten, Teilweise, Erfolgreich, Sehr erfolgreich)
+  - Ablenkungslevel (Keine, Gering, Mittel, Hoch)
+  - Schwierigkeitsgrad (Leicht, Normal, Schwer)
+  - Optional: Wetterbedingungen, Trainingsort, Notizen
+- **Chronologische Historie** aller Trainingseinheiten
+
+### 📈 Intelligente Fortschritts-Analyse
+- **Automatische Berechnung** von:
+  - Trainingsfortschritt in Prozent (0-100%)
+  - Aktueller Trainingsstand (Beginn, Grundlagen, Aufbau, Festigung, Etabliert)
+  - Gesamtanzahl Sessions und Trainingsminuten
+  - Aufeinanderfolgende Trainingstage (Streak)
+  - Durchschnittliche Erfolgsrate
+- **Trend-Analyse**:
+  - Entwicklung über Zeit (Positiv, Stabil, Rückläufig)
+  - Verbesserung in Prozent
+  - Regelmäßigkeit des Trainings (Konsistenz-Score)
+
+### 💡 Personalisierte Empfehlungen
+- **Intelligente Trainingstipps** basierend auf:
+  - Aktuellem Fortschritt
+  - Letzten 3 Trainingseinheiten
+  - Hundecharakter (Wesensmerkmale)
+  - Aufeinanderfolgenden Trainingstagen
+- **Kontextbasierte Anpassungen**:
+  - Empfohlene Trainingsdauer (angepasst an Hundecharakter)
+  - Schwierigkeitsgrad-Empfehlungen
+  - Empfehlung für Trainingspausen bei Überforderung
+  - Berücksichtigung von Lerngeschwindigkeit und Frustrationstoleranz
+
+### 🎯 Meilensteine & Erfolge
+- **Automatische Erkennung** von Trainings-Erfolgen:
+  - Erste Trainingseinheit einer Kategorie
+  - 5, 10, 20+ Sessions in einer Kategorie
+  - 5+ aufeinanderfolgende Trainingstage
+  - Fortschritts-Meilensteine (50%, 75%, 100%)
+  - Erfolgsserien (5+ sehr erfolgreiche Sessions)
+- **Motivations-System** ohne Social-Media-Charakter (professionell, trainingsunterstützend)
+
+### 🧠 Wesensmerkmale-System
+- **6 Charaktereigenschaften** zur Personalisierung:
+  - Grundtemperament (Sehr ruhig ↔ Sehr lebhaft)
+  - Selbstbewusstsein (Ängstlich ↔ Selbstsicher)
+  - Sozialverhalten (Zurückhaltend ↔ Kontaktfreudig)
+  - Erregbarkeit (Gelassen ↔ Leicht erregbar)
+  - Lerngeschwindigkeit (Langsam ↔ Schnell)
+  - Frustrationstoleranz (Niedrig ↔ Hoch)
+- **11 Quick-Profile** für schnelle Charakterisierung:
+  - Ausgeglichen, Energiegeladen, Sehr ruhig, Unsicher
+  - Sehr selbstbewusst, Welpe (4-8 Monate), Senior (8+ Jahre)
+  - Arbeitshund, Sehr sozial, Eigenständig, Tierschutzhund
+- **Automatische Anpassung** der Trainingsempfehlungen basierend auf Wesensmerkmalen
+
+## 🛠️ Technische Details
+
+### Datenmodelle
+- `TrainingSession`: Einzelne Trainingseinheit mit allen Details
+- `TrainingProgress`: Fortschritts-Tracking pro Hund und Kategorie
+- `Milestone`: Automatisch erkannte Trainings-Erfolge
+- `DogCharacter`: Wesensmerkmale für personalisierte Empfehlungen
+
+### Empfehlungs-Engine
+- **TrainingRecommendationEngine**: Intelligente Analyse-Engine
+  - Berücksichtigt letzte Sessions, Gesamtfortschritt und Hundecharakter
+  - 5 Haupt-Szenarien mit spezifischen Empfehlungen
+  - Anpassbare Parameter (Schwellenwerte, Trainingszeiten)
+  - Trend-Analyse mit Verbesserungsberechnung
+
+### Datenspeicherung
+- **SharedPreferences** (JSON via Gson)
+- Vollständig in Backup-System integriert (BackupData Version 5)
+- Keine externen Dependencies erforderlich
+- 100% lokale Datenhaltung (Privacy-First)
+
+### UI/UX
+- **4 Activities**:
+  - `TrainingDiaryActivity`: Hundekarten-Auswahl
+  - `CategoryListActivity`: 18 Trainingskategorien
+  - `TrainingDetailActivity`: Fortschritt, Empfehlungen, Historie
+  - `AddSessionActivity`: Neue Trainingseinheit erfassen
+- **Material Design 3** mit Konsistenz zur Haupt-App
+- Vollständige Dark Mode Unterstützung
+- Responsive Layouts mit NestedScrollView
+
+## 🔒 Datenschutz & Compliance
+
+- ✅ **F-Droid kompatibel**: Keine proprietären Bibliotheken
+- ✅ **Play Store konform**: Keine neuen Permissions erforderlich
+- ✅ **Privacy-First**: Alle Daten bleiben lokal auf dem Gerät
+- ✅ **DSGVO-konform**: Keine Datenübertragung, keine Analytics
+- ✅ **Open Source**: Vollständig einsehbarer Code
+
+## 📦 Verwendete Technologien
+
+- **Kotlin**: Moderne Android-Entwicklung
+- **Material Components**: UI-Framework
+- **Gson**: JSON-Serialisierung (bereits in App vorhanden)
+- **ViewBinding**: Type-safe View-Zugriff
+- **SharedPreferences**: Lokale Datenpersistenz
+
+## 🎯 Design-Prinzipien
+
+### Professioneller Ansatz
+- **Keine Social-Media-Gamification**: Seriöse, trainingsunterstützende Formulierungen
+- **Wissenschaftlich fundiert**: Empfehlungen basieren auf Trainingsmethodik
+- **Individuell anpassbar**: Alle Parameter zentral konfigurierbar
+- **Langfristige Begleitung**: System wächst mit dem Trainingsfortschritt
+
+### Nutzerfreundlichkeit
+- **Minimale Eingaben**: Schnelle Session-Erfassung (< 1 Minute)
+- **Intelligente Defaults**: Sinnvolle Voreinstellungen
+- **Klare Visualisierung**: Fortschritt auf einen Blick
+- **Handlungsorientiert**: Konkrete, umsetzbare Empfehlungen
+
+## 🚀 Zukünftige Erweiterungen (geplant)
+
+- Export von Trainingsstatistiken (PDF/CSV)
+- Trainings-Erinnerungen (optional)
+- Vergleich mehrerer Hunde
+- Erweiterte Statistiken und Visualisierungen
+- Import/Export einzelner Kategorien
+
+## 📊 Integration mit anderen Features
+
+- **Stammdaten**: Nutzt erweiterte Hundeprofile mit Wesensmerkmalen
+- **Backup-System**: Vollständig in App-Backup integriert (Version 5)
+- **Navigation**: Konsistente Benutzerführung mit Toolbar und Back-Navigation
+- **Tagesnotizen**: Ergänzende Dokumentation neben strukturiertem Training
+
+---
+
+**Das Trainingstagebuch wurde entwickelt, um Hundehaltern ein professionelles Werkzeug zur strukturierten Trainingsdokumentation und -optimierung zu bieten – mit voller Kontrolle über die eigenen Daten und ohne Abhängigkeit von Cloud-Diensten.**
+
+
 #### 📓 Tagesnotizen
 Digitales Trainings- und Beobachtungstagebuch mit Foto-Upload, optionalen Standortwetterdaten zur Notiz, automatischem GPS-Tagging, automatischer Sicherung und PDF-Export-, Teilen- und GPX-Exportfunktionen.
 
