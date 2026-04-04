@@ -414,14 +414,22 @@ object TrainingExportManager {
         if (bold) paragraph.setBold()
         return Cell().add(paragraph).setPadding(5f)
     }
-    
+
     private fun createTempFile(context: Context, fileName: String): File {
+        // ✅ EINHEITLICHER PFAD: Documents/HundeWildnis
         val dir = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Trainingstagebuch")
+            // Android 10+ (Scoped Storage)
+            File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         } else {
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis/Trainingstagebuch")
+            // Android 9 und älter
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         }
-        dir.mkdirs()
+
+        // Erstelle Verzeichnis falls nicht vorhanden
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+
         return File(dir, fileName)
     }
     
