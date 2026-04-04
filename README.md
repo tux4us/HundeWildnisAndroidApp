@@ -192,7 +192,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 
 ---
 
-**Das Trainingstagebuch wurde entwickelt, um Hundehaltern ein professionelles Werkzeug zur strukturierten Trainingsdokumentation und -optimierung zu bieten – mit voller Kontrolle über die eigenen Daten und ohne Abhängigkeit von Cloud-Diensten.**
+**Das Trainingstagebuch mit voller Kontrolle über die eigenen Daten und ohne Abhängigkeit von Cloud-Diensten.**
 
 
 #### 📓 Tagesnotizen
