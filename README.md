@@ -47,11 +47,11 @@ Sprach-Analyse als Echtzeit-Messung der Stimme, um festzustellen, ob in dem für
 Direktes Feedback durch Symbol, Vibration oder Ton sobald der Zielbereich erreicht wird.
 Auswertung: Statistiken über Sprechzeit und Effizienz zur nachhaltigen Verbesserung der Kommunikation mit dem Hund mit spürbaren Fortschritten im Training. Speicherung und PDF-Export mit Teilen-Option. Alle Analysen werden zusätzlich abgespeichert und in einer Liste geführt, um jederzeit später wieder aufgerufen werden zu können.
 
-# 📊 Trainingstagebuch
+#### 📊 Trainingstagebuch
 
 Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokumentation und Analyse des Hundetrainings. Es bietet personalisierte Empfehlungen basierend auf dem individuellen Trainingsfortschritt und den Wesensmerkmalen jedes Hundes.
 
-## ✨ Hauptfunktionen
+##### ✨ Hauptfunktionen
 
 ### 📋 Trainings-Kategorien
 - **18 spezialisierte Trainingsbereiche** aus den HundeWildnis-Onlinekursen
