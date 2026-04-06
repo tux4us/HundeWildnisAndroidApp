@@ -219,6 +219,19 @@
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
+                <!-- NOTFALL-BUTTON (nach btnTrainingDiary) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEmergency"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:text="🚨 NOTFALL 🚨"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#BD0000"
+                    app:cornerRadius="12dp"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
+
                 <!-- ✅ Button 11: Backup & Restore (NEU!) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBackup"
@@ -228,7 +241,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#680C0C"
+                    app:backgroundTint="#311B92"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
