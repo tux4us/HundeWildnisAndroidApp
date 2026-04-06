@@ -34,6 +34,9 @@
     <!-- ✅ MIKROFON Permission -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Vibration für HLW-Timer Feedback -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_hundewildnis"
@@ -216,6 +219,34 @@
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName="com.hundewildnis.app.TrainingDetailActivity"
             android:theme="@style/Theme.HundeWildnis" />
+
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- ✅ ERSTE HILFE WIZZARD (NEU!) -->
+        <!-- ════════════════════════════════════════════════ -->
+
+        <!-- Erste-Hilfe Wizard -->
+        <activity
+            android:name=".FirstAidWizardActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <!-- Erste-Hilfe Anleitung -->
+        <activity
+            android:name=".FirstAidInstructionActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <!-- HLW Timer -->
+        <activity
+            android:name=".HLWTimerActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+
+        <!-- Einfacher Timer (optional für Hitzschlag etc.) -->
+        <activity
+            android:name=".SimpleTimerActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
     </application>
 </manifest>

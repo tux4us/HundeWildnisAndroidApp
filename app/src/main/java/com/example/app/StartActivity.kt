@@ -19,6 +19,7 @@ import android.os.Build
 import androidx.core.content.FileProvider
 import com.hundewildnis.app.databinding.ActivityStartBinding
 import kotlinx.coroutines.*
+import com.hundewildnis.app.BuildConfig
 import java.io.File
 
 /**
@@ -262,7 +263,59 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnCompass.setOnClickListener { startActivity(Intent(this, CompassActivity::class.java)) }
         binding.btnAltimeter.setOnClickListener { startActivity(Intent(this, AltimeterActivity::class.java)) }
         binding.btnDogProfiles.setOnClickListener { startActivity(Intent(this, DogProfileActivity::class.java)) }
+        binding.btnEmergency.setOnClickListener { openEmergencyWizard() }
         binding.btnBackup.setOnClickListener { startActivity(Intent(this, BackupActivity::class.java)) }
+    }
+
+    private fun openEmergencyWizard() {
+        // Prüfe ob Hunde vorhanden
+        val profiles = DogProfileManager.getAllProfiles(this)
+
+        if (profiles.isEmpty()) {
+            // Kein Hund vorhanden - zeige Hinweis
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+            AlertDialog.Builder(this)
+                .setTitle("🐕 Kein Hund angelegt")
+                .setMessage("Bitte lege zuerst einen Hund in den Stammdaten an.\n\n" +
+                        "Die Erste-Hilfe Funktion benötigt die Stammdaten für die Notfallmeldung.")
+                .setPositiveButton("Zu Stammdaten") { _, _ ->
+                    startActivity(Intent(this, DogProfileActivity::class.java))
+                }
+                .setNegativeButton("Abbrechen", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+                }
+            return
+        }
+
+        // Mehrere Hunde? Auswahl anzeigen
+        if (profiles.size > 1) {
+            val dogNames = profiles.map { it.name }.toTypedArray()
+
+            AlertDialog.Builder(this)
+                .setTitle("🐕 Welcher Hund?")
+                .setItems(dogNames) { _, which ->
+                    val selectedProfile = profiles[which]
+                    openFirstAidWizard(selectedProfile)
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+        } else {
+            // Nur ein Hund - direkt öffnen
+            openFirstAidWizard(profiles[0])
+        }
+    }
+
+    private fun openFirstAidWizard(profile: DogProfile) {
+        val intent = Intent(this, FirstAidWizardActivity::class.java)
+        intent.putExtra("profile", profile)
+        startActivity(intent)
     }
 
     private fun createBackup() {

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ════════════════════════════════════════════════════════════════
+     activity_hlw_timer.xml - AUTOMATISCHES METRONOM
+     Kein Button-Drücken! Nur Metronom-Takt befolgen
+     ════════════════════════════════════════════════════════════════ -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#d32f2f"
+            app:titleTextColor="@android:color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
+
+            <!-- Gesamt-Zeit -->
+            <TextView
+                android:id="@+id/tvElapsedTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
+
+            <!-- Nächster Puls-Check -->
+            <TextView
+                android:id="@+id/tvNextPulseCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Puls-Check in: 02:00"
+                android:textSize="16sp"
+                android:textColor="#AAAAAA" />
+
+            <!-- Zyklen -->
+            <TextView
+                android:id="@+id/tvCycleCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Zyklen: 0"
+                android:textSize="14sp"
+                android:textColor="#AAAAAA" />
+
+            <!-- PERMANENTE INSTRUKTION -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#1a1a1a"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:text="💓 30 Kompressionen (15 Sek im Takt) → 🫁 2 Beatmungen (5 Sek)\n⏱️ Alle 2 Min: Puls prüfen"
+                    android:textSize="13sp"
+                    android:textColor="#CCCCCC"
+                    android:gravity="center"
+                    android:lineSpacingExtra="2dp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Instruktionen -->
+            <TextView
+                android:id="@+id/tvInstructions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Bereit zum Start"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tvPhase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="#CCCCCC"
+                android:gravity="center" />
+
+            <!-- Herz-Icon (blinkt im Takt) -->
+            <TextView
+                android:id="@+id/tvHeartBeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="💓"
+                android:textSize="72sp" />
+
+            <!-- KOMPRESSIONSPHASE -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCompressionPhase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#1a1a1a"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvPhaseTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="15 Sek"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:id="@+id/tvCompressionCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="0 / 30"
+                        android:textSize="24sp"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center" />
+
+                    <ProgressBar
+                        android:id="@+id/progressPhase"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="12dp"
+                        android:max="30"
+                        android:progress="0"
+                        android:progressTint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Folge dem Metronom-Takt!\n2 pro Sekunde"
+                        android:textSize="14sp"
+                        android:textColor="#AAAAAA"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- BEATMUNGSPHASE -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardVentilationPhase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#f57c00"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:id="@+id/tvVentilationTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="5 Sek"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="🫁 JETZT BEATMEN!\n\n2x über die Nase\nMaul geschlossen halten"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Puls-Check Erinnerung -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPulseCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#2196F3"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp"
+                    android:text="⏱️ PULS PRÜFEN!\n\nOberschenkelinnenseite\n15 Sekunden fühlen"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Controls -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#000000">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReset"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="🔄 RESET"
+            android:textColor="#FFFFFF"
+            app:strokeColor="#FFFFFF" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="▶️ HLW STARTEN"
+            android:backgroundTint="#4CAF50" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

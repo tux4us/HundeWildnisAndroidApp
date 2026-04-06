@@ -110,4 +110,26 @@
     <string name="rainviewer_source">Quelle: RainViewer</string>
     <string name="location_determining">📍 Standort wird ermittelt...</string>
     <string name="open_meteo_source">Daten: Open-Meteo.com</string>
+
+    <!-- Emergency Strings -->
+    <string name="emergency_title">Erste Hilfe</string>
+    <string name="emergency_what_happened">Was ist passiert?</string>
+    <string name="emergency_call_112">NOTRUF 112</string>
+    <string name="emergency_send_report">NOTFALL JETZT MELDEN</string>
+    <string name="emergency_hlw_timer">HLW-TIMER STARTEN</string>
+    <string name="emergency_back">Zurück</string>
+
+    <!-- Urgency Levels -->
+    <string name="urgency_critical">🔴 LEBENSBEDROHLICH</string>
+    <string name="urgency_urgent">🟡 DRINGEND</string>
+    <string name="urgency_moderate">🟢 BEOBACHTEN</string>
+
+    <!-- Instructions -->
+    <string name="instructions_symptoms">SYMPTOME</string>
+    <string name="instructions_immediate">SOFORT HANDELN</string>
+    <string name="instructions_do">WAS TUN</string>
+    <string name="instructions_dont">WAS NICHT TUN</string>
+    <string name="instructions_transport">TRANSPORT</string>
+    <string name="instructions_important">WICHTIG</string>
+
 </resources>
