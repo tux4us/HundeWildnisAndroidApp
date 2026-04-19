@@ -81,22 +81,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📄 PDF"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnExportCsv"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📊 CSV"
-                android:textSize="12sp" />
+                android:text="📊 CSV Daten"
+                android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteTrainingData"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🗑️"
+                android:text="🗑️ Löschen"
                 android:textSize="16sp"
                 android:textColor="#d32f2f" />
 

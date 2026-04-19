@@ -1,13 +1,20 @@
 package com.hundewildnis.app
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityAddSessionBinding
 import android.content.res.Configuration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddSessionActivity : SecureBaseActivity() {
 
@@ -24,6 +31,38 @@ class AddSessionActivity : SecureBaseActivity() {
     private var gpsLongitude: Double? = null
     private var gpsLocationName: String = ""
 
+    // ✅ Permission Launcher
+    private val locationPermissionLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> {
+                // Permission granted - führe ursprüngliche Aktion aus
+                when (pendingAction) {
+                    PendingAction.WEATHER -> fetchWeatherData()
+                    PendingAction.GPS -> fetchGpsLocation()
+                    PendingAction.NONE -> {}
+                }
+                pendingAction = PendingAction.NONE
+            }
+            else -> {
+                Toast.makeText(
+                    this,
+                    "⚠️ Standort-Berechtigung erforderlich für diese Funktion",
+                    Toast.LENGTH_LONG
+                ).show()
+                pendingAction = PendingAction.NONE
+            }
+        }
+    }
+
+    // ✅ Merkt sich welche Aktion nach Permission-Grant ausgeführt werden soll
+    private var pendingAction = PendingAction.NONE
+
+    private enum class PendingAction {
+        NONE, WEATHER, GPS
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddSessionBinding.inflate(layoutInflater)
@@ -37,9 +76,25 @@ class AddSessionActivity : SecureBaseActivity() {
 
         setupUI()
         setupListeners()
-        setupSuccessButtons()  // ✅ Korrigierte Funktion
+        setupSuccessButtons()
         setupWeatherButton()
         setupGpsButton()
+
+        // ✅ FIX: Button-Farben für Dark Mode
+        applyButtonColors()
+    }
+
+    // ✅ NEU: Button-Farben für Dark Mode
+    private fun applyButtonColors() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+
+        if (isDark) {
+            // Im Dark Mode: Weiße Schrift für OutlinedButtons/TextButtons
+            binding.btnFetchWeather.setTextColor(android.graphics.Color.WHITE)
+            binding.btnFetchGps.setTextColor(android.graphics.Color.WHITE)
+            binding.btnCancel.setTextColor(android.graphics.Color.WHITE)
+        }
     }
 
     private fun setupUI() {
@@ -98,7 +153,6 @@ class AddSessionActivity : SecureBaseActivity() {
         binding.btnCancel.setOnClickListener { finish() }
     }
 
-    // ✅ NUR EINE setupSuccessButtons() Funktion!
     private fun setupSuccessButtons() {
         val buttons = listOf(
             binding.btnSuccess1,
@@ -119,9 +173,9 @@ class AddSessionActivity : SecureBaseActivity() {
 
         val textColorActive = Color.WHITE
         val textColorInactive = if (isDark) {
-            Color.WHITE  // ✅ Weiß im Dark Mode
+            Color.WHITE
         } else {
-            Color.parseColor("#4a6135")  // Grün im Light Mode
+            Color.parseColor("#4a6135")
         }
 
         buttons.forEachIndexed { index, button ->
@@ -151,13 +205,23 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun showWeatherPermissionDialog() {
+        // ✅ Prüfe erst Permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission fehlt → Zeige Disclosure
+            showProminentDisclosure(PendingAction.WEATHER)
+            return
+        }
+
+        // Permission vorhanden → Direkt Dialog
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle("📍 Wetter abrufen")
-            .setMessage("Möchtest du die aktuellen Wetterdaten von deinem Standort abrufen?\n\nDies nutzt die gleiche Funktion wie in der Wetter-Activity.")
+            .setMessage("Möchtest du die aktuellen Wetterdaten von deinem Standort abrufen?\n\n" +
+                    "Dies nutzt deinen aktuellen GPS-Standort und ruft Live-Wetterdaten ab.")
             .setPositiveButton("Ja, abrufen") { _, _ ->
                 fetchWeatherData()
             }
@@ -170,23 +234,167 @@ class AddSessionActivity : SecureBaseActivity() {
             }
     }
 
-    private fun fetchWeatherData() {
-        val prefs = getSharedPreferences("weather_data", MODE_PRIVATE)
-        val lastWeather = prefs.getString("last_weather", "")
-        val lastTemp = prefs.getString("last_temp", "")
+    // ✅ PROMINENT DISCLOSURE (Google Play Policy)
+    private fun showProminentDisclosure(action: PendingAction) {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
-        if (lastWeather.isNullOrEmpty()) {
+        AlertDialog.Builder(this)
+            .setTitle("📍 Standortzugriff für Trainingstagebuch")
+            .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
+                    "• TRAININGSTAGEBUCH:\n" +
+                    "Du kannst Deine Trainingseinheiten optional mit Wetterdaten und GPS-Koordinaten ergänzen, " +
+                    "um später nachvollziehen zu können, unter welchen Bedingungen das Training stattgefunden hat.\n\n" +
+                    "• NOTFALLMELDUNG:\n" +
+                    "Um Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort " +
+                    "erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
+                    "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n\n" +
+                    "• NAVIGATION:\n" +
+                    "Damit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten " +
+                    "in der Nähe aufrufen und nutzen kannst.\n\n" +
+                    "• STANDORT WETTER:\n" +
+                    "Damit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n" +
+                    "• TAGESNOTIZEN:\n" +
+                    "Du kannst Deine Tagesnotizen optional mit Wetterdaten und GPS-Daten Deines Standortes ergänzen.\n\n" +
+                    "DATENSCHUTZ:\n" +
+                    "Deine Daten werden nur lokal verarbeitet, ausschließlich auf Deinem Gerät gespeichert und nur von Dir " +
+                    "allein verwaltet und nur auf Deinen Wunsch zur Teilenfunktion freigegeben.\n\n" +
+                    "Zur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server " +
+                    "mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\n" +
+                    "Du kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n" +
+                    "Dein Gerät → Einstellungen → Apps → HundeWildnis → Berechtigungen → Standort verwalten → " +
+                    "Zugriff nur während der Nutzung der App zulassen.\n\n" +
+                    "Dort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden.")
+            .setPositiveButton("AKTIVIEREN") { _, _ ->
+                // Merke Aktion für nach Permission-Grant
+                pendingAction = action
+                // Fordere Permission an
+                locationPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
+            .setNegativeButton("ABLEHNEN") { _, _ ->
+                Toast.makeText(
+                    this,
+                    "⚠️ Standort-Berechtigung erforderlich für diese Funktion",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+            }
+    }
+
+    private fun fetchWeatherData() {
+        // ✅ Permission wurde bereits in showWeatherPermissionDialog() geprüft
+
+        // ✅ Hole aktuellen Standort
+        val locationManager = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
+
+        try {
+            val lastKnown = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
+                ?: locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
+
+            if (lastKnown == null) {
+                Toast.makeText(
+                    this,
+                    "Kein GPS-Signal. Bitte warte einen Moment und versuche es erneut.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return
+            }
+
+            // ✅ Wetter abrufen mit GPS-Koordinaten
+            fetchWeatherFromAPI(lastKnown.latitude, lastKnown.longitude)
+
+        } catch (e: SecurityException) {
             Toast.makeText(
                 this,
-                "Keine Wetterdaten verfügbar. Bitte erst Wetter-Activity öffnen.",
+                "Standort-Berechtigung fehlt",
                 Toast.LENGTH_LONG
             ).show()
-        } else {
-            weatherData = "$lastWeather, $lastTemp°C"
-            binding.tvWeatherDisplay.text = "☀️ $weatherData"
-            binding.tvWeatherDisplay.visibility = View.VISIBLE
-            Toast.makeText(this, "✅ Wetter hinzugefügt", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun fetchWeatherFromAPI(lat: Double, lon: Double) {
+        // Zeige Lade-Zustand
+        binding.btnFetchWeather.isEnabled = false
+        binding.btnFetchWeather.text = "⏳ Lädt..."
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val weather = withContext(Dispatchers.IO) {
+                    val url = "https://api.open-meteo.com/v1/forecast?" +
+                            "latitude=$lat&longitude=$lon" +
+                            "&current=temperature_2m,relative_humidity_2m,precipitation," +
+                            "weather_code,wind_speed_10m,wind_direction_10m"
+
+                    val response = java.net.URL(url).readText()
+                    val json = org.json.JSONObject(response)
+                    val current = json.getJSONObject("current")
+
+                    val temp = current.getDouble("temperature_2m")
+                    val hum = current.getInt("relative_humidity_2m")
+                    val precip = current.getDouble("precipitation")
+                    val code = current.getInt("weather_code")
+                    val windSpeed = current.getDouble("wind_speed_10m")
+                    val windDir = current.getInt("wind_direction_10m")
+
+                    val desc = getWeatherDescription(code)
+                    val windDirStr = getWindDirection(windDir)
+
+                    "🌡️ ${String.format(java.util.Locale.GERMAN, "%.1f", temp)}°C, $desc\n" +
+                            "💨 ${String.format(java.util.Locale.GERMAN, "%.1f", windSpeed)} km/h ($windDirStr), " +
+                            "💧 $hum%, 🌧️ ${String.format(java.util.Locale.GERMAN, "%.1f", precip)}mm"
+                }
+
+                // ✅ Wetter anzeigen
+                weatherData = weather
+                binding.tvWeatherDisplay.text = "☀️ $weatherData"
+                binding.tvWeatherDisplay.visibility = View.VISIBLE
+
+                binding.btnFetchWeather.isEnabled = true
+                binding.btnFetchWeather.text = "☀️ Wetter abrufen"
+
+                Toast.makeText(this@AddSessionActivity, "✅ Wetter hinzugefügt", Toast.LENGTH_SHORT).show()
+
+            } catch (e: Exception) {
+                binding.btnFetchWeather.isEnabled = true
+                binding.btnFetchWeather.text = "☀️ Wetter abrufen"
+
+                Toast.makeText(
+                    this@AddSessionActivity,
+                    "❌ Fehler beim Wetter-Abruf: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun getWeatherDescription(code: Int): String {
+        return when (code) {
+            0 -> "Klarer Himmel"
+            1, 2, 3 -> "Leicht bewölkt"
+            45, 48 -> "Nebel"
+            51, 53, 55 -> "Nieselregen"
+            61, 63, 65 -> "Regen"
+            71, 73, 75 -> "Schneefall"
+            80, 81, 82 -> "Regenschauer"
+            95 -> "Gewitter"
+            else -> "Wechselhaft"
+        }
+    }
+
+    private fun getWindDirection(degrees: Int): String {
+        val directions = arrayOf("N", "NO", "O", "SO", "S", "SW", "W", "NW")
+        return directions[((degrees + 22.5) / 45).toInt() % 8]
     }
 
     private fun setupGpsButton() {
@@ -196,13 +404,23 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun showGpsPermissionDialog() {
+        // ✅ Prüfe erst Permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission fehlt → Zeige Disclosure
+            showProminentDisclosure(PendingAction.GPS)
+            return
+        }
+
+        // Permission vorhanden → Direkt Dialog
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle("📍 GPS-Standort abrufen")
-            .setMessage("Möchtest du deinen aktuellen Standort für diese Trainingseinheit speichern?\n\nDer Standort wird als Koordinaten und OpenStreetMap-Link gespeichert.")
+            .setMessage("Möchtest du deinen aktuellen Standort für diese Trainingseinheit speichern?\n\n" +
+                    "Der Standort wird als Koordinaten gespeichert.")
             .setPositiveButton("Ja, Standort abrufen") { _, _ ->
                 fetchGpsLocation()
             }
@@ -216,31 +434,41 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun fetchGpsLocation() {
-        val prefs = getSharedPreferences("location_data", MODE_PRIVATE)
-        val lastLat = prefs.getString("last_latitude", "")
-        val lastLon = prefs.getString("last_longitude", "")
-        val lastLocationName = prefs.getString("last_location_name", "")
+        // ✅ Permission wurde bereits in showGpsPermissionDialog() geprüft
 
-        if (lastLat.isNullOrEmpty() || lastLon.isNullOrEmpty()) {
-            Toast.makeText(
-                this,
-                "Kein GPS verfügbar. Bitte erst Standort in Navigation aktivieren.",
-                Toast.LENGTH_LONG
-            ).show()
-        } else {
-            gpsLatitude = lastLat.toDoubleOrNull()
-            gpsLongitude = lastLon.toDoubleOrNull()
-            gpsLocationName = lastLocationName ?: ""
+        // ✅ Hole aktuellen Standort
+        val locationManager = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
 
-            val displayText = if (gpsLocationName.isNotEmpty()) {
-                "📍 $gpsLocationName"
-            } else {
-                "📍 ${String.format("%.4f, %.4f", gpsLatitude, gpsLongitude)}"
+        try {
+            val lastKnown = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
+                ?: locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
+
+            if (lastKnown == null) {
+                Toast.makeText(
+                    this,
+                    "Kein GPS verfügbar. Bitte warte einen Moment und versuche es erneut.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return
             }
+
+            // ✅ GPS-Daten speichern
+            gpsLatitude = lastKnown.latitude
+            gpsLongitude = lastKnown.longitude
+            gpsLocationName = "" // Optional: Reverse Geocoding könnte hier Namen ermitteln
+
+            val displayText = String.format("📍 %.4f, %.4f", gpsLatitude, gpsLongitude)
 
             binding.tvGpsDisplay.text = displayText
             binding.tvGpsDisplay.visibility = View.VISIBLE
             Toast.makeText(this, "✅ Standort hinzugefügt", Toast.LENGTH_SHORT).show()
+
+        } catch (e: SecurityException) {
+            Toast.makeText(
+                this,
+                "Standort-Berechtigung fehlt",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -275,7 +503,7 @@ class AddSessionActivity : SecureBaseActivity() {
             dogId = profile.id,
             category = category,
             durationMinutes = selectedDuration,
-            successRating = selectedSuccessRating,  // ✅ Nutze selectedSuccessRating
+            successRating = selectedSuccessRating,
             distractionLevel = distraction,
             difficulty = difficulty,
             notes = binding.etNotes.text.toString(),
