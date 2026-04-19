@@ -122,6 +122,16 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             append("${weeklyStats.totalMinutes} Minuten")
         }
 
+        // ✅ FIX: Button-Farben für Dark Mode
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        if (isDark) {
+            cardBinding.btnExportPdf.setTextColor(Color.WHITE)
+            cardBinding.btnExportCsv.setTextColor(Color.WHITE)
+            // btnDeleteTrainingData bleibt rot (ist schon im XML gesetzt)
+        }
+
         // ✅ Click auf Hunde-Info → Kategorien öffnen
         cardBinding.layoutDogInfo.setOnClickListener {
             openCategoryList(profile)
@@ -182,9 +192,10 @@ class TrainingDiaryActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════
 
     private fun showDeleteAllTrainingDataDialog(profile: DogProfile) {
+        // ✅ DARK MODE FIX
         val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
                 android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle("⚠️ Alle Trainingsdaten löschen?")
@@ -201,8 +212,8 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)  // Rot bleibt immer Rot
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(colorNormal)  // ✅ FIX
             }
     }
 

@@ -31,6 +31,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import org.osmdroid.views.overlay.ScaleBarOverlay
 import java.net.URL
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -108,6 +109,21 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         val mapEventsOverlay = org.osmdroid.views.overlay.MapEventsOverlay(mapEventsReceiver)
         binding.mapView.overlays.add(0, mapEventsOverlay)  // Als erstes Overlay hinzufügen
+
+        // ✅ Maßstabsbalken (ScaleBar) hinzufügen
+        val scaleBarOverlay = ScaleBarOverlay(binding.mapView)
+        scaleBarOverlay.setAlignRight(true)
+        scaleBarOverlay.setAlignBottom(true)
+        
+        // WICHTIG: Metrisches System explizit setzen
+        scaleBarOverlay.setUnitsOfMeasure(ScaleBarOverlay.UnitsOfMeasure.metric)
+        
+        // Zentrierung und Genauigkeit verbessern
+        scaleBarOverlay.setCentred(false)
+
+        // Offset für Abstand zum Rand (in Pixeln)
+        scaleBarOverlay.setScaleBarOffset(20, 20)
+        binding.mapView.overlays.add(scaleBarOverlay)
     }
 
     private fun setupPOIList() {
