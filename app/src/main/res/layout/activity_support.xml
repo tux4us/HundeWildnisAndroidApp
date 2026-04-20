@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Gefällt Dir HundeWildnis? 💚\nUnterstütze uns gern mit einem kleinen Beitrag – so bleibt die App kostenlos und wir bekommen die Möglichkeit weiter Zeit und Arbeit in stetige Verbesserungen zu investieren.🐾"
+                android:text="Gefällt Dir die App HundeWildnis? 💚\nUnterstütze uns gern mit einem kleinen Beitrag – so bleibt die App kostenlos und wir können weiter Zeit und Arbeit in stetige Funktionserweiterungen und Verbesserungen zu investieren.🐾"
                 android:textSize="14sp"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary"
@@ -56,11 +56,52 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Wir haben sichere Zahlungswege für Eure frei wählbare Unterstützung an uns eingerichtet"
+                android:text="Wir haben sichere Zahlungswege für Eure Unterstützung an uns eingerichtet"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="16dp" />
+
+            <!-- ✅ WERO (an erster Stelle!) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📱 Wero - Sicher und direkt"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Direkt über Banking-App unterstützen (Sparkasse, Volksbank, etc.)"
+                        android:textSize="14sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWero"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="Über Wero unterstützen 🤝"
+                        app:cornerRadius="8dp"
+                        app:backgroundTint="#1B5E20"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- PayPal -->
             <com.google.android.material.card.MaterialCardView
@@ -98,7 +139,7 @@
                         android:layout_height="50dp"
                         android:text="Über PayPal spenden 🤝"
                         app:cornerRadius="8dp"
-                        app:backgroundTint="#498323"
+                        app:backgroundTint="#1B5E20"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -139,12 +180,12 @@
                         android:layout_height="50dp"
                         android:text="Bankdaten anzeigen 🤝"
                         app:cornerRadius="8dp"
-                        app:backgroundTint="#2d5016"
+                        app:backgroundTint="#1B5E20"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Patreon / Ko-fi -->
+            <!-- SumUp -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -180,7 +221,7 @@
                         android:layout_height="50dp"
                         android:text="Zum sicheren Zahlungslink 🤝"
                         app:cornerRadius="8dp"
-                        app:backgroundTint="#203A10"
+                        app:backgroundTint="#1B5E20"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -234,7 +275,7 @@
                         android:layout_height="50dp"
                         android:text="Jetzt bewerten"
                         app:cornerRadius="8dp"
-                        app:backgroundTint="#4a6135"
+                        app:backgroundTint="#1B5E20"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -274,7 +315,7 @@
                         android:layout_height="50dp"
                         android:text="App teilen"
                         app:cornerRadius="8dp"
-                        app:backgroundTint="#5a7145"
+                        app:backgroundTint="#1B5E20"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

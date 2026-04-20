@@ -49,7 +49,7 @@
             android:id="@+id/tvUpdateMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Diese HundeWildnis App entsteht mit vielen Stunden Arbeit und Leidenschaft – für Euch und Eure Hunde. Dank Eurem Feedback konnten wir bereits viele Funktionen und neue Ideen entwicklen. Und genau das möchten wir auch in Zukunft.\nDamit wir die App auch künftig kostenlos anbieten und kontinuierlich weiterentwickeln können, brauchen wir Deine Unterstützung.\n🤝 Schon ein kleiner Beitrag ist eine große Wertschätzung für unsere Arbeit.\n\nVielen Dank für Deine Unterstützung 💚\nManuela und Jörg\n\nDu kannst die App auch ohne uns zu unterstützen nutzen."
+            android:text="Die App HundeWildnis entsteht in vielen Stunden Arbeit und mit großer Leidenschaft – für Euch und Eure Hunde.\nDank Eurem Feedback entwickeln wir die App immer weiter.\nDamit wir die App auch künftig kostenlos anbieten können brauchen wir Deine Unterstützung.\n🤝 Jeder, gern auch regelmäßiger Beitrag ist eine große Wertschätzung für unsere Arbeit.\n\nVielen Dank für Deine Unterstützung 💚\nManuela und Jörg\n\nNatürlich kannst Du die App, auch ohne uns zu unterstützen, nutzen. 😇"
             android:textSize="15sp"
             android:lineSpacingMultiplier="1.2" />
 
