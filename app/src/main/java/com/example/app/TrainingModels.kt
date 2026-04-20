@@ -64,6 +64,20 @@ enum class DifficultyLevel(val displayName: String) : Parcelable {
 }
 
 /**
+ * Messungstyp für Trainingseinheiten
+ */
+enum class MeasurementType(val displayName: String) {
+    TIME("Minuten"),
+    REPETITIONS("Wiederholungen");
+
+    companion object {
+        fun fromString(value: String): MeasurementType {
+            return values().find { it.name == value } ?: TIME
+        }
+    }
+}
+
+/**
  * Wetterbedingungen (optional)
  */
 @Parcelize
@@ -140,8 +154,10 @@ data class TrainingSession(
     val date: Long = System.currentTimeMillis(),
 
     // Core Training Data
-    val durationMinutes: Int,  // 5-60
-    val successRating: Int,     // 1-4
+    val measurementType: MeasurementType = MeasurementType.TIME,  // ← NEU!
+    val durationMinutes: Int? = null,  // ← Nullable gemacht!
+    val repetitions: Int? = null,       // ← NEU!
+    val successRating: Int,
     val distractionLevel: DistractionLevel,
     val difficulty: DifficultyLevel,
 
@@ -211,6 +227,22 @@ data class TrainingSession(
             else -> "Unbekannt"
         }
     }
+
+    // ✅ NEU: Diese 2 Funktionen hinzufügen
+    fun getEffortValue(): Int {
+        return when (measurementType) {
+            MeasurementType.TIME -> durationMinutes ?: 0
+            MeasurementType.REPETITIONS -> repetitions ?: 0
+        }
+    }
+
+    fun getEffortText(): String {
+        return when (measurementType) {
+            MeasurementType.TIME -> "${durationMinutes ?: 0} Min"
+            MeasurementType.REPETITIONS -> "${repetitions ?: 0}x"
+        }
+    }
+
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -245,7 +277,13 @@ data class TrainingProgress(
      */
     fun updateWithSession(session: TrainingSession): TrainingProgress {
         val newTotalSessions = totalSessions + 1
-        val newTotalMinutes = totalMinutes + session.durationMinutes
+
+        // ✅ Nur Minuten addieren wenn TIME
+        val newTotalMinutes = if (session.measurementType == MeasurementType.TIME) {
+            totalMinutes + (session.durationMinutes ?: 0)
+        } else {
+            totalMinutes
+        }
 
         // Neue durchschnittliche Erfolgsrate
         val newAverageSuccess = ((averageSuccess * totalSessions) + session.successRating) / newTotalSessions
@@ -253,17 +291,18 @@ data class TrainingProgress(
         // Streak berechnen
         val newConsecutiveDays = calculateStreak(session.date)
 
-        // Fortschritt berechnen (basierend auf Sessions, Erfolg, Minuten)
+        // ✅ HIER: Effort berechnen und Progress berechnen
+        val effort = session.getEffortValue()  // Nutzt die Helper-Funktion!
         val newProgressPercentage = calculateProgressPercentage(
             sessions = newTotalSessions,
             avgSuccess = newAverageSuccess,
-            minutes = newTotalMinutes
+            effort = newTotalMinutes + effort
         )
 
         // Level basierend auf Fortschritt
         val newLevel = TrainingLevel.fromProgress(newProgressPercentage)
 
-        // Trend berechnen (letzte 3 vs. vorherige Sessions)
+        // Trend berechnen
         val newImprovement = calculateImprovement(session)
 
         return copy(
@@ -281,17 +320,12 @@ data class TrainingProgress(
     /**
      * Berechnet Fortschritt in Prozent
      */
-    private fun calculateProgressPercentage(sessions: Int, avgSuccess: Double, minutes: Int): Int {
-        // Gewichtung:
-        // - Sessions: 40% (max 50 Sessions = 100%)
-        // - Erfolgsrate: 40% (4.0 = 100%)
-        // - Trainingszeit: 20% (max 500 Min = 100%)
-
+    private fun calculateProgressPercentage(sessions: Int, avgSuccess: Double, effort: Int): Int {
         val sessionScore = (sessions.coerceAtMost(50) / 50.0) * 40
-        val successScore = ((avgSuccess - 1.0) / 3.0) * 40  // 1.0-4.0 → 0-100%
-        val timeScore = (minutes.coerceAtMost(500) / 500.0) * 20
+        val successScore = ((avgSuccess - 1.0) / 3.0) * 40
+        val effortScore = (effort.coerceAtMost(500) / 500.0) * 20
 
-        return (sessionScore + successScore + timeScore).toInt().coerceIn(0, 100)
+        return (sessionScore + successScore + effortScore).toInt().coerceIn(0, 100)
     }
 
     /**
@@ -303,17 +337,16 @@ data class TrainingProgress(
         val daysDiff = ((newSessionDate - lastTrainingDate) / (1000 * 60 * 60 * 24)).toInt()
 
         return when {
-            daysDiff == 0 -> consecutiveDays  // Gleicher Tag
-            daysDiff == 1 -> consecutiveDays + 1  // Nächster Tag
-            else -> 1  // Streak unterbrochen
+            daysDiff == 0 -> consecutiveDays
+            daysDiff == 1 -> consecutiveDays + 1
+            else -> 1
         }
     }
 
     /**
-     * Berechnet Verbesserung (letzte 3 Sessions vs. davor)
+     * Berechnet Verbesserung
      */
     private fun calculateImprovement(newSession: TrainingSession): Double {
-        // Vereinfacht: Vergleiche neue Session mit Durchschnitt
         if (totalSessions == 0) return 0.0
 
         val improvement = ((newSession.successRating - averageSuccess) / averageSuccess) * 100
@@ -519,6 +552,7 @@ enum class ProgressTrend(
 data class WeeklyStats(
     val totalSessions: Int = 0,
     val totalMinutes: Int = 0,
+    val totalRepetitions: Int = 0,  // ← NEU!
     val categoriesUsed: Int = 0,
     val averageSuccess: Double = 0.0
 ) : Parcelable
