@@ -24,8 +24,10 @@ class AddSessionActivity : SecureBaseActivity() {
     private lateinit var manager: TrainingManager
 
     // ✅ Alle Variablen konsolidiert
+    private var selectedMeasurementType: MeasurementType = MeasurementType.TIME  // ← NEU
     private var selectedSuccessRating: Int = 3  // Default: Erfolgreich
     private var selectedDuration: Int = 15  // Default: 15 Min
+    private var selectedRepetitions: Int = 10  // ← NEU: Default 10 Wiederholungen
     private var weatherData: String = ""
     private var gpsLatitude: Double? = null
     private var gpsLongitude: Double? = null
@@ -37,7 +39,6 @@ class AddSessionActivity : SecureBaseActivity() {
     ) { permissions ->
         when {
             permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> {
-                // Permission granted - führe ursprüngliche Aktion aus
                 when (pendingAction) {
                     PendingAction.WEATHER -> fetchWeatherData()
                     PendingAction.GPS -> fetchGpsLocation()
@@ -56,7 +57,6 @@ class AddSessionActivity : SecureBaseActivity() {
         }
     }
 
-    // ✅ Merkt sich welche Aktion nach Permission-Grant ausgeführt werden soll
     private var pendingAction = PendingAction.NONE
 
     private enum class PendingAction {
@@ -79,18 +79,16 @@ class AddSessionActivity : SecureBaseActivity() {
         setupSuccessButtons()
         setupWeatherButton()
         setupGpsButton()
+        setupMeasurementTypeToggle()  // ← NEU!
 
-        // ✅ FIX: Button-Farben für Dark Mode
         applyButtonColors()
     }
 
-    // ✅ NEU: Button-Farben für Dark Mode
     private fun applyButtonColors() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
 
         if (isDark) {
-            // Im Dark Mode: Weiße Schrift für OutlinedButtons/TextButtons
             binding.btnFetchWeather.setTextColor(android.graphics.Color.WHITE)
             binding.btnFetchGps.setTextColor(android.graphics.Color.WHITE)
             binding.btnCancel.setTextColor(android.graphics.Color.WHITE)
@@ -105,14 +103,81 @@ class AddSessionActivity : SecureBaseActivity() {
         binding.tvCategoryName.text = category.displayName
         binding.tvDogName.text = profile.name
 
-        // Dauer-Slider
-        binding.sliderDuration.valueFrom = TrainingConfig.MIN_TRAINING_DURATION.toFloat()
-        binding.sliderDuration.valueTo = TrainingConfig.MAX_TRAINING_DURATION.toFloat()
-        binding.sliderDuration.value = TrainingConfig.IDEAL_TRAINING_DURATION.toFloat()
-        binding.tvDurationValue.text = "${TrainingConfig.IDEAL_TRAINING_DURATION} Min"
+        // ✅ Dauer-Slider (initial)
+        updateSliderForMeasurementType()
 
-        // Dropdowns
         setupDropdowns()
+    }
+
+    // ✅ NEU: Toggle zwischen Zeit und Wiederholungen
+    private fun setupMeasurementTypeToggle() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+
+        val colorActive = Color.parseColor("#4a6135")  // Dunkelgrün
+        val colorInactive = if (isDark) {
+            Color.parseColor("#424242")  // Dunkelgrau
+        } else {
+            Color.parseColor("#E0E0E0")  // Hellgrau
+        }
+
+        val textColorActive = Color.WHITE
+        val textColorInactive = if (isDark) {
+            Color.WHITE
+        } else {
+            Color.parseColor("#4a6135")
+        }
+
+        // ✅ Zeit-Button
+        binding.btnMeasurementTime.setOnClickListener {
+            selectedMeasurementType = MeasurementType.TIME
+
+            // Update Button-Farben
+            binding.btnMeasurementTime.setBackgroundColor(colorActive)
+            binding.btnMeasurementTime.setTextColor(textColorActive)
+            binding.btnMeasurementReps.setBackgroundColor(colorInactive)
+            binding.btnMeasurementReps.setTextColor(textColorInactive)
+
+            // Update Slider
+            updateSliderForMeasurementType()
+        }
+
+        // ✅ Wiederholungen-Button
+        binding.btnMeasurementReps.setOnClickListener {
+            selectedMeasurementType = MeasurementType.REPETITIONS
+
+            // Update Button-Farben
+            binding.btnMeasurementReps.setBackgroundColor(colorActive)
+            binding.btnMeasurementReps.setTextColor(textColorActive)
+            binding.btnMeasurementTime.setBackgroundColor(colorInactive)
+            binding.btnMeasurementTime.setTextColor(textColorInactive)
+
+            // Update Slider
+            updateSliderForMeasurementType()
+        }
+
+        // ✅ Standard: Zeit vorauswählen
+        binding.btnMeasurementTime.performClick()
+    }
+
+    // ✅ NEU: Slider anpassen je nach Messungstyp
+    private fun updateSliderForMeasurementType() {
+        when (selectedMeasurementType) {
+            MeasurementType.TIME -> {
+                binding.sliderDuration.valueFrom = TrainingConfig.MIN_TRAINING_DURATION.toFloat()
+                binding.sliderDuration.valueTo = TrainingConfig.MAX_TRAINING_DURATION.toFloat()
+                binding.sliderDuration.value = selectedDuration.toFloat()
+                binding.tvDurationLabel.text = "⏱️ Dauer"
+                binding.tvDurationValue.text = "$selectedDuration Min"
+            }
+            MeasurementType.REPETITIONS -> {
+                binding.sliderDuration.valueFrom = TrainingConfig.MIN_REPETITIONS.toFloat()
+                binding.sliderDuration.valueTo = TrainingConfig.MAX_REPETITIONS.toFloat()
+                binding.sliderDuration.value = selectedRepetitions.toFloat()
+                binding.tvDurationLabel.text = "🔢 Wiederholungen"
+                binding.tvDurationValue.text = "${selectedRepetitions}x"
+            }
+        }
     }
 
     private fun setupDropdowns() {
@@ -142,13 +207,20 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun setupListeners() {
-        // Dauer-Slider
+        // ✅ Slider - aktualisiert je nach Messungstyp
         binding.sliderDuration.addOnChangeListener { _, value, _ ->
-            selectedDuration = value.toInt()
-            binding.tvDurationValue.text = "$selectedDuration Min"
+            when (selectedMeasurementType) {
+                MeasurementType.TIME -> {
+                    selectedDuration = value.toInt()
+                    binding.tvDurationValue.text = "$selectedDuration Min"
+                }
+                MeasurementType.REPETITIONS -> {
+                    selectedRepetitions = value.toInt()
+                    binding.tvDurationValue.text = "${selectedRepetitions}x"
+                }
+            }
         }
 
-        // Speichern & Abbrechen
         binding.btnSave.setOnClickListener { saveSession() }
         binding.btnCancel.setOnClickListener { finish() }
     }
@@ -164,11 +236,11 @@ class AddSessionActivity : SecureBaseActivity() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
 
-        val colorActive = Color.parseColor("#4a6135")  // Dunkelgrün
+        val colorActive = Color.parseColor("#4a6135")
         val colorInactive = if (isDark) {
-            Color.parseColor("#424242")  // Dunkelgrau
+            Color.parseColor("#424242")
         } else {
-            Color.parseColor("#E0E0E0")  // Hellgrau
+            Color.parseColor("#E0E0E0")
         }
 
         val textColorActive = Color.WHITE
@@ -180,24 +252,22 @@ class AddSessionActivity : SecureBaseActivity() {
 
         buttons.forEachIndexed { index, button ->
             button.setOnClickListener {
-                selectedSuccessRating = index + 1  // 1-4
+                selectedSuccessRating = index + 1
 
-                // Alle Buttons zurücksetzen
                 buttons.forEach { btn ->
                     btn.setBackgroundColor(colorInactive)
                     btn.setTextColor(textColorInactive)
                 }
 
-                // Gewählten Button hervorheben
                 button.setBackgroundColor(colorActive)
                 button.setTextColor(textColorActive)
             }
         }
 
-        // Standard: Button 3 (Erfolgreich) vorauswählen
         buttons[2].performClick()
     }
 
+    // ✅ Wetter & GPS Funktionen bleiben gleich
     private fun setupWeatherButton() {
         binding.btnFetchWeather.setOnClickListener {
             showWeatherPermissionDialog()
@@ -205,15 +275,12 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun showWeatherPermissionDialog() {
-        // ✅ Prüfe erst Permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
-            // Permission fehlt → Zeige Disclosure
             showProminentDisclosure(PendingAction.WEATHER)
             return
         }
 
-        // Permission vorhanden → Direkt Dialog
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
@@ -234,7 +301,6 @@ class AddSessionActivity : SecureBaseActivity() {
             }
     }
 
-    // ✅ PROMINENT DISCLOSURE (Google Play Policy)
     private fun showProminentDisclosure(action: PendingAction) {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
@@ -267,9 +333,7 @@ class AddSessionActivity : SecureBaseActivity() {
                     "Zugriff nur während der Nutzung der App zulassen.\n\n" +
                     "Dort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden.")
             .setPositiveButton("AKTIVIEREN") { _, _ ->
-                // Merke Aktion für nach Permission-Grant
                 pendingAction = action
-                // Fordere Permission an
                 locationPermissionLauncher.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -293,9 +357,6 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun fetchWeatherData() {
-        // ✅ Permission wurde bereits in showWeatherPermissionDialog() geprüft
-
-        // ✅ Hole aktuellen Standort
         val locationManager = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
 
         try {
@@ -311,7 +372,6 @@ class AddSessionActivity : SecureBaseActivity() {
                 return
             }
 
-            // ✅ Wetter abrufen mit GPS-Koordinaten
             fetchWeatherFromAPI(lastKnown.latitude, lastKnown.longitude)
 
         } catch (e: SecurityException) {
@@ -324,7 +384,6 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun fetchWeatherFromAPI(lat: Double, lon: Double) {
-        // Zeige Lade-Zustand
         binding.btnFetchWeather.isEnabled = false
         binding.btnFetchWeather.text = "⏳ Lädt..."
 
@@ -355,7 +414,6 @@ class AddSessionActivity : SecureBaseActivity() {
                             "💧 $hum%, 🌧️ ${String.format(java.util.Locale.GERMAN, "%.1f", precip)}mm"
                 }
 
-                // ✅ Wetter anzeigen
                 weatherData = weather
                 binding.tvWeatherDisplay.text = "☀️ $weatherData"
                 binding.tvWeatherDisplay.visibility = View.VISIBLE
@@ -404,15 +462,12 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun showGpsPermissionDialog() {
-        // ✅ Prüfe erst Permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
-            // Permission fehlt → Zeige Disclosure
             showProminentDisclosure(PendingAction.GPS)
             return
         }
 
-        // Permission vorhanden → Direkt Dialog
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
@@ -434,9 +489,6 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun fetchGpsLocation() {
-        // ✅ Permission wurde bereits in showGpsPermissionDialog() geprüft
-
-        // ✅ Hole aktuellen Standort
         val locationManager = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
 
         try {
@@ -452,10 +504,9 @@ class AddSessionActivity : SecureBaseActivity() {
                 return
             }
 
-            // ✅ GPS-Daten speichern
             gpsLatitude = lastKnown.latitude
             gpsLongitude = lastKnown.longitude
-            gpsLocationName = "" // Optional: Reverse Geocoding könnte hier Namen ermitteln
+            gpsLocationName = ""
 
             val displayText = String.format("📍 %.4f, %.4f", gpsLatitude, gpsLongitude)
 
@@ -473,7 +524,6 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun saveSession() {
-        // Validierung
         val distractionText = binding.spinnerDistraction.text.toString()
         val difficultyText = binding.spinnerDifficulty.text.toString()
 
@@ -482,44 +532,39 @@ class AddSessionActivity : SecureBaseActivity() {
             return
         }
 
-        // Parse Enums
         val distraction = DistractionLevel.values().find { it.displayName == distractionText }
             ?: DistractionLevel.LOW
         val difficulty = DifficultyLevel.values().find { it.displayName == difficultyText }
             ?: DifficultyLevel.NORMAL
 
-        // Optional: Wetter
         val weatherText = binding.spinnerWeather.text.toString()
         val weather = if (weatherText == "Nicht angegeben") null
         else WeatherCondition.values().find { it.displayName == weatherText }
 
-        // Optional: Ort
         val locationText = binding.spinnerLocation.text.toString()
         val location = if (locationText == "Nicht angegeben") null
         else LocationType.values().find { it.displayName == locationText }
 
-        // ✅ Erstelle Session mit allen neuen Feldern
+        // ✅ Session erstellen - mit measurementType!
         val session = TrainingSession(
             dogId = profile.id,
             category = category,
-            durationMinutes = selectedDuration,
+            measurementType = selectedMeasurementType,  // ← NEU!
+            durationMinutes = if (selectedMeasurementType == MeasurementType.TIME) selectedDuration else null,
+            repetitions = if (selectedMeasurementType == MeasurementType.REPETITIONS) selectedRepetitions else null,
             successRating = selectedSuccessRating,
             distractionLevel = distraction,
             difficulty = difficulty,
             notes = binding.etNotes.text.toString(),
             weatherCondition = weather,
             location = location,
-            // ✅ NEU: Wetter & GPS Daten
             weatherData = weatherData,
             gpsLatitude = gpsLatitude,
             gpsLongitude = gpsLongitude,
             gpsLocationName = gpsLocationName
         )
 
-        // Speichern
         manager.saveSession(session)
-
-        // Erfolgsmeldung
         showSuccessDialog()
     }
 

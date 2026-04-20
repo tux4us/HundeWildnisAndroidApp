@@ -186,8 +186,6 @@ class TrainingManager(private val context: Context) {
      */
     fun getWeeklyStats(dogId: String): WeeklyStats {
         val allSessions = getAllSessions(context).filter { it.dogId == dogId }
-
-        // Letzte 7 Tage
         val oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
         val recentSessions = allSessions.filter { it.date >= oneWeekAgo }
 
@@ -195,13 +193,22 @@ class TrainingManager(private val context: Context) {
             return WeeklyStats()
         }
 
-        val totalMinutes = recentSessions.sumOf { it.durationMinutes }
+        // ✅ GEÄNDERT: Summiere Zeit UND Wiederholungen getrennt
+        val totalMinutes = recentSessions
+            .filter { it.measurementType == MeasurementType.TIME }
+            .sumOf { it.durationMinutes ?: 0 }
+
+        val totalRepetitions = recentSessions
+            .filter { it.measurementType == MeasurementType.REPETITIONS }
+            .sumOf { it.repetitions ?: 0 }
+
         val categoriesUsed = recentSessions.map { it.category }.distinct().size
         val avgSuccess = recentSessions.map { it.successRating }.average()
 
         return WeeklyStats(
             totalSessions = recentSessions.size,
             totalMinutes = totalMinutes,
+            totalRepetitions = totalRepetitions,  // ← NEU!
             categoriesUsed = categoriesUsed,
             averageSuccess = avgSuccess
         )

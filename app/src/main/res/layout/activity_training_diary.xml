@@ -50,13 +50,11 @@
 
                 <include
                     android:id="@+id/dogCard2"
-                    layout="@layout/item_dog_card"
-                    android:layout_marginTop="16dp" />
+                    layout="@layout/item_dog_card" />
 
                 <include
                     android:id="@+id/dogCard3"
-                    layout="@layout/item_dog_card"
-                    android:layout_marginTop="16dp" />
+                    layout="@layout/item_dog_card" />
             </LinearLayout>
 
             <!-- Keine Hunde Nachricht -->
