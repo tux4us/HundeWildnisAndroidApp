@@ -18,6 +18,13 @@ import com.hundewildnis.app.SecureBaseActivity
 class ContentActivity : SecureBaseActivity() {
     private lateinit var binding: ActivityContentBinding
 
+    // ✅ NEU: Quelle merken (woher kommt der User?)
+    private var sourceView: Int = MainActivity.VIEW_BLOG
+
+    companion object {
+        const val EXTRA_SOURCE_VIEW = "source_view"
+    }
+
     // ── Share-Interface ──────────────────────────────────────────────────────
     inner class AndroidShareInterface {
         @JavascriptInterface
@@ -51,6 +58,9 @@ class ContentActivity : SecureBaseActivity() {
 
         val url   = intent.getStringExtra("url")   ?: ""
         val title = intent.getStringExtra("title") ?: ""
+
+        // ✅ NEU: Quelle merken (Blog/Pages/Courses)
+        sourceView = intent.getIntExtra(EXTRA_SOURCE_VIEW, MainActivity.VIEW_BLOG)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -88,19 +98,58 @@ class ContentActivity : SecureBaseActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 binding.progressBar.visibility = View.GONE
 
-                // 1) Header/Footer ausblenden (dein bisheriger Code)
+                // ✅ NUR Header, Footer, Navigation - NICHT den Content!
                 view?.evaluateJavascript("""
                     (function() {
-                        var selectors = [
-                            'header', 'footer', '.header', '.footer', '#header', '#footer',
-                            '.td-header-wrap', '.td-footer-wrap', '.td-sub-footer-wrap',
-                            '.td-footer-template-wrap', '.mobile-header-menu-wrap'
+                        // ✅ PRÄZISE: Nur diese Elemente verstecken
+                        var hideSelectors = [
+                            // WordPress Admin Bar
+                            '#wpadminbar',
+                            
+                            // ShiftNav (das Hamburger-Menü Plugin)
+                            '#shiftnav-toggle-main',
+                            '.shiftnav-toggle',
+                            '.shiftnav',
+                            
+                            // Header & Navigation
+                            '#masthead',
+                            '.site-header',
+                            '.site-header-main',
+                            '#site-header-menu',
+                            '#primary-menu-wrapper',
+                            '#site-navigation',
+                            '.main-navigation',
+                            '#menu-toggle',
+                            '.menu-toggle',
+                            '.menu-toggle-wrapper',
+                            
+                            // Footer
+                            '#colophon',
+                            '.site-footer',
+                            '#site-generator',
+                            '.site-info',
+                            
+                            // Scroll-up Button
+                            '#scrollup',
+                            '.backtotop',
+                            
+                            // Breadcrumbs
+                            '.breadcrumb',
+                            '.breadcrumbs'
                         ];
-                        selectors.forEach(function(selector) {
-                            document.querySelectorAll(selector).forEach(function(el) {
-                                el.style.display = 'none';
-                            });
+                        
+                        hideSelectors.forEach(function(selector) {
+                            try {
+                                document.querySelectorAll(selector).forEach(function(el) {
+                                    el.style.display = 'none';
+                                    el.style.visibility = 'hidden';
+                                });
+                            } catch(e) {}
                         });
+                        
+                        // Body-Padding anpassen
+                        document.body.style.paddingTop = '0';
+                        document.body.style.marginTop = '0';
                     })();
                 """.trimIndent(), null)
 
@@ -132,13 +181,29 @@ class ContentActivity : SecureBaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> { onBackPressed(); true }
+            android.R.id.home -> {
+                // ✅ GEÄNDERT: Nicht mehr onBackPressed(), sondern direkt zurück
+                returnToMainActivity()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onBackPressed() {
-        if (binding.webView.canGoBack()) binding.webView.goBack()
-        else super.onBackPressed()
+        // ✅ GEÄNDERT: IMMER zurück zur MainActivity, nie WebView-History
+        returnToMainActivity()
+    }
+
+    // ✅ NEU: Zurück zur MainActivity mit richtiger View
+    private fun returnToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            // Zur richtigen Ansicht zurück (Blog/Pages/Courses)
+            putExtra("INITIAL_VIEW", sourceView)
+            // Alle vorherigen Activities aus dem Stack entfernen
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
+        finish()
     }
 }
