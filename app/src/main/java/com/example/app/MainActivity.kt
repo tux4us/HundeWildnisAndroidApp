@@ -231,12 +231,20 @@ class MainActivity : BaseBottomNavActivity() {
     private fun getCourseName(i: Int) = when(i) { 1 -> "Grundlagen"; 2 -> "Motivation"; 3 -> "Korrektur"; 4 -> "Harmonie"; 5 -> "Mentaltraining"; 6 -> "Körpersprache"; 7 -> "Sprachkommunikation"; 8 -> "Sinneswahrnehmung"; 9 -> "Teamarbeit"; 10 -> "Routinen"; 11 -> "Unfallschutz"; 12 -> "Junghundeprägung"; 13 -> "Leinenarbeit"; 14 -> "Unterbrechungen"; 15 -> "Fuss"; 16 -> "Sitz"; 17 -> "Platz"; 18 -> "Steh"; 19 -> "Sozialisierungstechniken"; 20 -> "Langleinentraining"; 21 -> "Distanzunterbrechungen"; 22 -> "Freilauf"; 23 -> "Freifolge"; 24 -> "Teamwalk"; 25 -> "Scouttechniken"; 26 -> "Jagdvermeidung"; 27 -> "Nasenarbeit"; 28 -> "Leinenfühigkeit"; 29 -> "Begegnungssituationen"; 30 -> "Stresstoleranztraining"; 31 -> "Strassenroutinen"; 32 -> "Hundekonflikte"; 33 -> "Menschenkonflikte"; 34 -> "Umweltkonflikte"; 35 -> "Besitzerkonflikte"; 36 -> "Tierschutzhunde"; 37 -> "Hunde mit Vorbesitzern"; 38 -> "Kranke Hunde"; 39 -> "Traumahunde"; 40 -> "Erste Hilfe Set"; 41 -> "Erste Hilfe am Hund"; else -> "" }
 
     private fun openContent(item: ContentItem) {
-        val intent = Intent(this, ContentActivity::class.java).apply { putExtra("url", item.url); putExtra("title", item.title) }
+        val intent = Intent(this, ContentActivity::class.java).apply {
+            putExtra("url", item.url)
+            putExtra("title", item.title)
+            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, currentView)  // ← NEU!
+        }
         startActivity(intent)
     }
 
     private fun openUrl(url: String, title: String) {
-        val intent = Intent(this, ContentActivity::class.java).apply { putExtra("url", url); putExtra("title", title) }
+        val intent = Intent(this, ContentActivity::class.java).apply {
+            putExtra("url", url)
+            putExtra("title", title)
+            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, currentView)  // ← NEU!
+        }
         startActivity(intent)
     }
 
