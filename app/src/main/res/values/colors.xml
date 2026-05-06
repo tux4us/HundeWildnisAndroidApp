@@ -13,4 +13,10 @@
 
     <!-- Dark Theme -->
     <color name="green_dark">#1B3A0A</color>
+
+    <color name="search_field_background">#FFFFFF</color>
+    <color name="search_field_stroke">#CCCCCC</color>
+    <color name="search_field_text">#000000</color>
+    <color name="search_field_hint">#999999</color>
+
 </resources>

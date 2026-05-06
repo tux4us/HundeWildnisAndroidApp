@@ -151,7 +151,16 @@ object POICategories {
         Category(
             name = "Restaurant",
             icon = "🍽️",
-            queries = listOf("amenity=restaurant", "amenity=cafe")
+            queries = listOf(
+                "amenity=restaurant",
+                "amenity=cafe",
+                "amenity=fast_food",
+                "amenity=pub",
+                "amenity=bar",
+                "amenity=biergarten",
+                "amenity=food_court",
+                "amenity=ice_cream"
+            )
         ),
 
         // 🅿️ PARKEN
@@ -166,7 +175,6 @@ object POICategories {
             name = "Apotheke",
             icon = "💊",
             queries = listOf("amenity=pharmacy", "healthcare=pharmacy"),
-            color = "#f44336"
         ),
         Category(
             name = "Arzt",
@@ -192,7 +200,38 @@ object POICategories {
         Category(
             name = "Notfall",
             icon = "🆘",
-            queries = listOf("amenity=emergency")
+            queries = listOf(
+                // Defibrillator (AED) - am wichtigsten!
+                "emergency=defibrillator",
+
+                // Rettungsdienst & Stationen
+                "emergency=ambulance_station",
+                "amenity=rescue_station",
+                "emergency=mountain_rescue",
+
+                // Zugang & Rettungspunkte
+                "emergency=access_point",
+                "emergency=assembly_point",
+
+                // Erste Hilfe
+                "emergency=first_aid_kit",
+                "emergency=rescue_box",
+
+                // Wasserrettung
+                "emergency=lifeguard",
+                "emergency=life_ring",
+
+                // Katastrophen
+                "emergency=disaster_help_point",
+                "emergency=siren",
+
+                // Krankenhaus mit Notaufnahme
+                "healthcare=hospital",
+
+                // ✅ Fallback für alle anderen emergency-Tags
+                "emergency"
+            ),
+            color = "#550000"
         ),
 
         // 🌲 NATURSCHUTZ
@@ -215,15 +254,22 @@ object POICategories {
     // Overpass Query für alle Kategorien generieren
     fun generateOverpassQuery(lat: Double, lon: Double, radius: Int = 10000): String {
         val queries = ALL_CATEGORIES.flatMap { category ->
-            category.queries.map { query ->
+            category.queries.flatMap { query ->
                 val parts = query.split("=")
                 if (parts.size == 2) {
-                    """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
+                    listOf(
+                        """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                        """way["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                        """relation["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
+                    )
                 } else if (query.isNotEmpty()) {
-                    // ✅ Unterstützt nun auch einfache Keys (z.B. "healthcare")
-                    """node["$query"](around:$radius,$lat,$lon);"""
+                    listOf(
+                        """node["$query"](around:$radius,$lat,$lon);""",
+                        """way["$query"](around:$radius,$lat,$lon);""",
+                        """relation["$query"](around:$radius,$lat,$lon);"""
+                    )
                 } else {
-                    ""
+                    emptyList()
                 }
             }
         }.filter { it.isNotEmpty() }

@@ -9,7 +9,10 @@ import android.graphics.DashPathEffect
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.content.Context
 import android.os.Bundle
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
@@ -37,6 +40,11 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import java.net.URLEncoder
+import android.text.Editable
+import android.text.TextWatcher
 
 class LocationActivity : SecureBaseActivity(), LocationListener {
 
@@ -59,6 +67,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var currentRouteDuration: Double = 0.0
 
     private var selectedCategory: POICategories.Category? = null
+
+    private var searchResultMarkers = mutableListOf<Marker>()
+    private lateinit var myLocationOverlay: MyLocationNewOverlay
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
@@ -85,6 +96,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         setupOSMCopyright()
         checkLocationPermission()
         setupCategoryButtons()
+        setupPOISearch()
     }
 
     private fun setupMap() {
@@ -124,6 +136,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         // Offset für Abstand zum Rand (in Pixeln)
         scaleBarOverlay.setScaleBarOffset(20, 20)
         binding.mapView.overlays.add(scaleBarOverlay)
+
+        // ✅ MyLocationOverlay initialisieren
+        myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), binding.mapView)
+        myLocationOverlay.enableMyLocation()
+        binding.mapView.overlays.add(myLocationOverlay)
     }
 
     private fun setupPOIList() {
@@ -627,6 +644,472 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
+    // ──────────────────────────────────────────────────────────────
+    // 3. SETUP-FUNKTION FÜR SUCHFELD (in onCreate aufrufen)
+    // ──────────────────────────────────────────────────────────────
+    private fun setupPOISearch() {
+        binding.etPOISearch.apply {
+            // Enter-Taste drücken = Suche starten
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    val query = text.toString().trim()
+                    if (query.isNotEmpty()) {
+                        searchPOI(query)
+                        hideKeyboard()
+                    }
+                    true
+                } else {
+                    false
+                }
+            }
+
+            // X-Button zum Löschen
+            setOnTouchListener { _, event ->
+                if (event.action == android.view.MotionEvent.ACTION_UP) {
+                    if (event.rawX >= (right - compoundDrawables[2].bounds.width())) {
+                        setText("")
+                        clearSearchResults()
+                        return@setOnTouchListener true
+                    }
+                }
+                false
+            }
+        }
+
+        // Such-Button
+        binding.btnSearchPOI.setOnClickListener {
+            val query = binding.etPOISearch.text.toString().trim()
+            if (query.isNotEmpty()) {
+                searchPOI(query)
+                hideKeyboard()
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // 4. POI-SUCHE FUNKTION (OSM Nominatim API)
+    // ──────────────────────────────────────────────────────────────
+    private fun searchPOI(query: String) {
+        // Standort abrufen (Overlay oder Fallback auf Manager)
+        val currentLocation = myLocationOverlay.myLocation ?: run {
+            val lastKnown = try {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                } else null
+            } catch (e: Exception) { null }
+
+            lastKnown?.let { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) }
+        }
+
+        if (currentLocation == null) {
+            Toast.makeText(this, "Standort wird noch ermittelt...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Alte Suchergebnisse löschen
+        clearSearchResults()
+
+        // Loading anzeigen
+        binding.progressSearch.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            try {
+                val results = withContext(Dispatchers.IO) {
+                    searchNearbyPOIs(
+                        query = query,
+                        lat = currentLocation.latitude,
+                        lon = currentLocation.longitude,
+                        radius = 3000 // 3km Radius für die Suche
+                    )
+                }
+
+                binding.progressSearch.visibility = View.GONE
+
+                if (results.isEmpty()) {
+                    Toast.makeText(
+                        this@LocationActivity,
+                        "Keine Ergebnisse für '$query' in der Nähe gefunden",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    displaySearchResults(results)
+                    Toast.makeText(
+                        this@LocationActivity,
+                        "${results.size} Ergebnis(se) gefunden",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            } catch (e: Exception) {
+                binding.progressSearch.visibility = View.GONE
+                Log.e("POI_SEARCH", "Suche fehlgeschlagen", e)
+                Toast.makeText(
+                    this@LocationActivity,
+                    "Suche fehlgeschlagen: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+// OPTIMIERTE POI-SUCHE - OVERPASS MIT NOMINATIM FALLBACK
+//
+// STRATEGIE:
+// 1. Versuche Overpass (bessere Ergebnisse)
+// 2. Bei Timeout/Fehler: Fallback auf Nominatim (schneller)
+// ════════════════════════════════════════════════════════════════
+
+    private fun searchNearbyPOIs(
+        query: String,
+        lat: Double,
+        lon: Double,
+        radius: Int
+    ): List<POI> {
+        Log.d("POI_SEARCH", "searchNearbyPOIs()")
+        Log.d("POI_SEARCH", "  Query: $query")
+        Log.d("POI_SEARCH", "  Location: $lat, $lon")
+        Log.d("POI_SEARCH", "  Radius: ${radius}m")
+
+        // STRATEGIE 1: Versuche Overpass (bessere Ergebnisse)
+        try {
+            val results = searchViaOverpass(query, lat, lon, radius)
+            if (results.isNotEmpty()) {
+                Log.i("POI_SEARCH", "✅ Overpass erfolgreich: ${results.size} Treffer")
+                return results
+            }
+        } catch (e: java.net.SocketTimeoutException) {
+            Log.w("POI_SEARCH", "⏱️ Overpass Timeout - Fallback auf Nominatim")
+        } catch (e: Exception) {
+            Log.w("POI_SEARCH", "⚠️ Overpass Fehler: ${e.message} - Fallback auf Nominatim")
+        }
+
+        // STRATEGIE 2: Fallback auf Nominatim (schneller)
+        try {
+            val results = searchViaNominatim(query, lat, lon, radius)
+            Log.i("POI_SEARCH", "✅ Nominatim Fallback: ${results.size} Treffer")
+            return results
+        } catch (e: Exception) {
+            Log.e("POI_SEARCH", "❌ Auch Nominatim fehlgeschlagen: ${e.message}")
+            throw e
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────
+// OVERPASS-SUCHE (OPTIMIERT - weniger Tags)
+// ──────────────────────────────────────────────────────────────
+    private fun searchViaOverpass(
+        query: String,
+        lat: Double,
+        lon: Double,
+        radius: Int
+    ): List<POI> {
+
+        // ✅ OPTIMIERT: Nur die wichtigsten Tags, kürzeres Timeout
+        val overpassQuery = """
+        [out:json][timeout:15];
+        (
+          node["name"~"$query",i](around:$radius,$lat,$lon);
+          node["brand"~"$query",i](around:$radius,$lat,$lon);
+          node["operator"~"$query",i](around:$radius,$lat,$lon);
+        );
+        out center;
+    """.trimIndent()
+
+        val url = "https://overpass-api.de/api/interpreter"
+
+        Log.d("POI_SEARCH", "Overpass: ${overpassQuery.take(100)}...")
+
+        val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        connection.requestMethod = "POST"
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+        connection.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+        connection.doOutput = true
+
+        // ✅ KÜRZERE Timeouts für schnelleren Fallback
+        connection.connectTimeout = 10000  // 10s (war 30s)
+        connection.readTimeout = 15000     // 15s (war 30s)
+
+        // Query senden
+        connection.outputStream.use { os ->
+            val data = "data=${URLEncoder.encode(overpassQuery, "UTF-8")}"
+            os.write(data.toByteArray())
+        }
+
+        val responseCode = connection.responseCode
+        Log.d("POI_SEARCH", "Overpass Response: $responseCode")
+
+        if (responseCode != 200) {
+            Log.e("POI_SEARCH", "Overpass HTTP Error: $responseCode")
+            return emptyList()
+        }
+
+        val response = connection.inputStream.bufferedReader().use { it.readText() }
+
+        return parseOverpassResponse(response, lat, lon)
+    }
+
+    // ──────────────────────────────────────────────────────────────
+// NOMINATIM-SUCHE (FALLBACK - schnell und zuverlässig)
+// ──────────────────────────────────────────────────────────────
+    private fun searchViaNominatim(
+        query: String,
+        lat: Double,
+        lon: Double,
+        radius: Int
+    ): List<POI> {
+
+        val encodedQuery = URLEncoder.encode(query, "UTF-8")
+
+        // Viewbox für lokale Suche
+        val delta = 0.05  // ca. 5km
+        val viewbox = "${lon - delta},${lat + delta},${lon + delta},${lat - delta}"
+
+        val url = "https://nominatim.openstreetmap.org/search?" +
+                "q=$encodedQuery&" +
+                "format=json&" +
+                "viewbox=$viewbox&" +
+                "bounded=1&" +  // ✅ NUR innerhalb viewbox
+                "addressdetails=1&" +
+                "limit=30"
+
+        Log.d("POI_SEARCH", "Nominatim: $url")
+
+        val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        connection.requestMethod = "GET"
+        connection.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+        connection.connectTimeout = 8000
+        connection.readTimeout = 8000
+
+        val response = connection.inputStream.bufferedReader().use { it.readText() }
+
+        return parseNominatimResponse(response, lat, lon, radius)
+    }
+
+    // ──────────────────────────────────────────────────────────────
+// OVERPASS RESPONSE PARSEN
+// ──────────────────────────────────────────────────────────────
+    private fun parseOverpassResponse(response: String, userLat: Double, userLon: Double): List<POI> {
+        val jsonObject = JSONObject(response)
+        val elements = jsonObject.getJSONArray("elements")
+
+        Log.d("POI_SEARCH", "Overpass: ${elements.length()} Elemente")
+
+        val results = mutableListOf<POI>()
+        val currentGeo = GeoPoint(userLat, userLon)
+
+        for (i in 0 until elements.length()) {
+            val element = elements.getJSONObject(i)
+
+            val poiLat: Double
+            val poiLon: Double
+
+            when (element.getString("type")) {
+                "node" -> {
+                    poiLat = element.getDouble("lat")
+                    poiLon = element.getDouble("lon")
+                }
+                "way", "relation" -> {
+                    val center = element.optJSONObject("center") ?: continue
+                    poiLat = center.getDouble("lat")
+                    poiLon = center.getDouble("lon")
+                }
+                else -> continue
+            }
+
+            val poiGeo = GeoPoint(poiLat, poiLon)
+            val distance = currentGeo.distanceToAsDouble(poiGeo)
+
+            val tags = element.optJSONObject("tags") ?: JSONObject()
+
+            val name = tags.optString("name").ifEmpty {
+                tags.optString("brand").ifEmpty {
+                    tags.optString("operator").ifEmpty { "Unbenannt" }
+                }
+            }
+
+            val categoryIcon = when {
+                tags.has("shop") && tags.getString("shop") == "supermarket" -> "🛒"
+                tags.has("shop") && tags.getString("shop") == "bakery" -> "🥖"
+                tags.has("amenity") && tags.getString("amenity") == "pharmacy" -> "💊"
+                tags.has("amenity") && tags.getString("amenity") == "restaurant" -> "🍽️"
+                tags.has("amenity") && tags.getString("amenity") == "cafe" -> "☕"
+                tags.has("shop") -> "🏪"
+                else -> "🔍"
+            }
+
+            val address = buildString {
+                tags.optString("addr:street").let { if (it.isNotEmpty()) append("$it ") }
+                tags.optString("addr:housenumber").let { if (it.isNotEmpty()) append(it) }
+                tags.optString("addr:postcode").let { if (it.isNotEmpty()) append(", $it") }
+                tags.optString("addr:city").let { if (it.isNotEmpty()) append(" $it") }
+            }.trim()
+
+            results.add(POI(
+                id = element.optLong("id", 0).toString(),
+                name = name,
+                category = "Suchergebnis",
+                categoryIcon = categoryIcon,
+                lat = poiLat,
+                lon = poiLon,
+                distance = distance,
+                address = address.ifEmpty { null },
+                tags = (0 until tags.length()).associate {
+                    val key = tags.names()?.getString(it) ?: ""
+                    key to tags.optString(key, "")
+                }
+            ))
+        }
+
+        return results.sortedBy { it.distance }
+    }
+
+    // ──────────────────────────────────────────────────────────────
+// NOMINATIM RESPONSE PARSEN
+// ──────────────────────────────────────────────────────────────
+    private fun parseNominatimResponse(
+        response: String,
+        userLat: Double,
+        userLon: Double,
+        radius: Int
+    ): List<POI> {
+
+        val jsonArray = JSONArray(response)
+        val results = mutableListOf<POI>()
+        val currentGeo = GeoPoint(userLat, userLon)
+
+        Log.d("POI_SEARCH", "Nominatim: ${jsonArray.length()} Ergebnisse")
+
+        for (i in 0 until jsonArray.length()) {
+            val item = jsonArray.getJSONObject(i)
+
+            val poiLat = item.optString("lat").toDoubleOrNull() ?: continue
+            val poiLon = item.optString("lon").toDoubleOrNull() ?: continue
+
+            val poiGeo = GeoPoint(poiLat, poiLon)
+            val distance = currentGeo.distanceToAsDouble(poiGeo)
+
+            // Filter: Nur im Radius
+            if (distance > radius) continue
+
+            val displayName = item.optString("display_name", "")
+            val shortName = displayName.split(",").firstOrNull()?.trim() ?: "Unbenannt"
+
+            results.add(POI(
+                id = item.optString("place_id", i.toString()),
+                name = shortName,
+                category = "Suchergebnis",
+                categoryIcon = "🔍",
+                lat = poiLat,
+                lon = poiLon,
+                distance = distance,
+                address = displayName
+            ))
+        }
+
+        return results.sortedBy { it.distance }
+    }
+
+
+    // ──────────────────────────────────────────────────────────────
+    // 6. SUCHERGEBNISSE ALS MARKER ANZEIGEN
+    // ──────────────────────────────────────────────────────────────
+    private fun displaySearchResults(results: List<POI>) {
+        results.forEach { poi ->
+            val marker = Marker(binding.mapView).apply {
+                position = GeoPoint(poi.lat, poi.lon)
+                title = "${poi.categoryIcon} ${poi.name}"
+                snippet = buildString {
+                    append("📍 ${String.format("%.0f", poi.distance)}m entfernt\n")
+                    poi.address?.let { append("📬 $it") }
+                }
+
+                // Icon
+                icon = ContextCompat.getDrawable(
+                    this@LocationActivity,
+                    R.drawable.ic_search_result // Du musst dieses Icon erstellen
+                )
+
+                // Klick-Listener für Navigation
+                setOnMarkerClickListener { clickedMarker, _ ->
+                    showNavigationDialog(poi)
+                    true
+                }
+            }
+
+            binding.mapView.overlays.add(marker)
+            searchResultMarkers.add(marker)
+        }
+
+        // Karte aktualisieren
+        binding.mapView.invalidate()
+
+        // Zoom auf erstes Ergebnis
+        if (results.isNotEmpty()) {
+            binding.mapView.controller.animateTo(
+                GeoPoint(results[0].lat, results[0].lon)
+            )
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // 7. ALTE SUCHERGEBNISSE LÖSCHEN
+    // ──────────────────────────────────────────────────────────────
+    private fun clearSearchResults() {
+        searchResultMarkers.forEach { marker ->
+            binding.mapView.overlays.remove(marker)
+        }
+        searchResultMarkers.clear()
+        binding.mapView.invalidate()
+    }
+
+    // ──────────────────────────────────────────────────────────────
+// 8. TASTATUR VERSTECKEN
+// ──────────────────────────────────────────────────────────────
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etPOISearch.windowToken, 0)
+    }
+
+    // ──────────────────────────────────────────────────────────────
+// 9. NAVIGATION-DIALOG (bereits vorhanden erweitern)
+// ──────────────────────────────────────────────────────────────
+    private fun showNavigationDialog(poi: POI) {
+        val myLocation = myLocationOverlay.myLocation ?: run {
+            Toast.makeText(this, "Standort nicht verfügbar", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val distance = myLocation.distanceToAsDouble(GeoPoint(poi.lat, poi.lon))
+
+        // ✅ NEU: Dark Mode Erkennung
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("${poi.categoryIcon} ${poi.name}")
+            .setMessage(buildString {
+                append("📍 ${String.format("%.0f", distance)}m entfernt\n\n")
+                poi.address?.let { append("📬 $it\n\n") }
+                append("Navigation starten?")
+            })
+            .setPositiveButton("Navigation starten") { _, _ ->
+                startNavigationToPOI(poi)
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+
+        // ✅ Dialog anzeigen
+        dialog.show()
+
+        // ✅ WICHTIG: Button-Farben NACH show() setzen!
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+    }
+
+
     private fun showOSMLicense() {
         val webView = WebView(this)
         webView.settings.javaScriptEnabled = true
@@ -1045,11 +1528,18 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     override fun onPause() {
         super.onPause()
         binding.mapView.onPause()
+        if (::myLocationOverlay.isInitialized) {
+            myLocationOverlay.disableMyLocation()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
+
+        if (::myLocationOverlay.isInitialized) {
+            myLocationOverlay.enableMyLocation()
+        }
 
         if (!isRequestingUpdates) {
             requestLocationUpdates()
