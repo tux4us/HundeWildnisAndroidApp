@@ -70,7 +70,7 @@ Das **Trainingstagebuch** ist ein intelligentes System zur strukturierten Dokume
 
 ###### 📝 Session-Erfassung
 - **Trainingseinheiten dokumentieren** mit detaillierten Parametern:
-  - Dauer (5-60 Minuten, anpassbar via Slider)
+  - Dauer (max. 120 Minuten) bzw. Wiederholungen (max. 100 je Session) - anpassbar via Slider
   - Erfolgsbewertung (4-Stufen-Skala: Schwierigkeiten, Teilweise, Erfolgreich, Sehr erfolgreich)
   - Ablenkungslevel (Keine, Gering, Mittel, Hoch)
   - Schwierigkeitsgrad (Leicht, Normal, Schwer)
