@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:background="#1a1a1a">
 
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- TOOLBAR -->
+    <!-- ════════════════════════════════════════════════════════════ -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -20,10 +23,66 @@
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- POI SUCHFELD - UNTER TOOLBAR -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutPOISearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="?android:attr/windowBackground"
+        android:elevation="4dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <EditText
+            android:id="@+id/etPOISearch"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:hint="🔍 POI suchen (z.B. Bahnhof)"
+            android:textSize="14sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="10dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:textColor="@color/search_field_text"
+            android:textColorHint="@color/search_field_hint"
+            android:background="@drawable/bg_search_field"
+            android:drawableTint="@color/search_field_text"
+            android:maxLines="1"
+            android:drawableEnd="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSearchPOI"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="🔍"
+            android:textSize="20sp"
+            app:backgroundTint="#2d5016"
+            app:cornerRadius="24dp" />
+
+        <ProgressBar
+            android:id="@+id/progressSearch"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT - KARTE + BOTTOM CARD -->
+    <!-- ════════════════════════════════════════════════════════════ -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="72dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Map container -->
