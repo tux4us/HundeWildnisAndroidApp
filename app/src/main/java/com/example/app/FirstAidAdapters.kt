@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hundewildnis.app.databinding.ItemEmergencyCategoryBinding
 import com.hundewildnis.app.databinding.ItemEmergencySubcategoryBinding
 import com.hundewildnis.app.databinding.ItemSymptomCheckBinding
+import android.content.res.Configuration
+import android.view.HapticFeedbackConstants
 
 // ════════════════════════════════════════════════════════════════
 // ADAPTER FÜR ERSTE-HILFE WIZARD
@@ -117,9 +119,11 @@ class IllnessTypeAdapter(
     override fun getItemCount() = types.size
 }
 
-// ═══════════════════════════════════════════════════════════
-// SYMPTOM-CHECK ADAPTER
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// SYMPTOM-CHECK ADAPTER - MIT VISUELLEM FEEDBACK
+// KOMPLETTE VERSION ZUM ERSETZEN
+// ════════════════════════════════════════════════════════════════
+
 class SymptomCheckAdapter(
     private val questions: List<SymptomCheckQuestion>,
     private val onAllAnswered: (Map<String, Boolean>) -> Unit
@@ -127,7 +131,7 @@ class SymptomCheckAdapter(
 
     private val answers = mutableMapOf<Int, Boolean>()
 
-    inner class ViewHolder(val binding: ItemSymptomCheckBinding) : 
+    inner class ViewHolder(val binding: ItemSymptomCheckBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -139,38 +143,99 @@ class SymptomCheckAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question = questions[position]
-        
+
         holder.binding.tvQuestion.text = question.question
-        
-        // Reset
-        holder.binding.btnYes.isSelected = false
-        holder.binding.btnNo.isSelected = false
-        
-        // Zeige bereits gegebene Antwort
+
+        // ✅ Dark Mode Detection
+        val context = holder.binding.root.context
+        val isDarkTheme = (context.resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        // ✅ Farben definieren
+        val selectedYesColor = Color.parseColor("#4CAF50")      // Grün
+        val selectedNoColor = Color.parseColor("#F44336")        // Rot
+        val unselectedBgColor = if (isDarkTheme) Color.parseColor("#2d2d2d") else Color.WHITE
+        val unselectedStrokeColor = if (isDarkTheme) Color.parseColor("#555555") else Color.parseColor("#CCCCCC")
+
+        // ✅ Reset auf Standardzustand
+        resetButtonStyle(holder.binding.btnYes, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+        resetButtonStyle(holder.binding.btnNo, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+
+        // ✅ Zeige bereits gegebene Antwort
         answers[position]?.let { answer ->
             if (answer) {
-                holder.binding.btnYes.isSelected = true
+                setButtonSelected(holder.binding.btnYes, selectedYesColor, Color.WHITE)
             } else {
-                holder.binding.btnNo.isSelected = true
+                setButtonSelected(holder.binding.btnNo, selectedNoColor, Color.WHITE)
             }
         }
-        
-        holder.binding.btnYes.setOnClickListener {
+
+        // ✅ JA Button Listener
+        holder.binding.btnYes.setOnClickListener { button ->
+            // Haptisches Feedback (optional)
+            button.performHapticFeedback(android.view.HapticFeedbackConstants.CONTEXT_CLICK)
+
             answers[position] = true
-            holder.binding.btnYes.isSelected = true
-            holder.binding.btnNo.isSelected = false
+
+            // Visuelles Feedback
+            setButtonSelected(holder.binding.btnYes, selectedYesColor, Color.WHITE)
+            resetButtonStyle(holder.binding.btnNo, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+
             checkIfAllAnswered()
         }
-        
-        holder.binding.btnNo.setOnClickListener {
+
+        // ✅ NEIN Button Listener
+        holder.binding.btnNo.setOnClickListener { button ->
+            // Haptisches Feedback (optional)
+            button.performHapticFeedback(android.view.HapticFeedbackConstants.CONTEXT_CLICK)
+
             answers[position] = false
-            holder.binding.btnNo.isSelected = true
-            holder.binding.btnYes.isSelected = false
+
+            // Visuelles Feedback
+            setButtonSelected(holder.binding.btnNo, selectedNoColor, Color.WHITE)
+            resetButtonStyle(holder.binding.btnYes, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+
             checkIfAllAnswered()
         }
     }
 
     override fun getItemCount() = questions.size
+
+    // ✅ NEUE HILFSFUNKTION: Button als ausgewählt markieren
+    private fun setButtonSelected(
+        button: com.google.android.material.button.MaterialButton,
+        backgroundColor: Int,
+        textColor: Int
+    ) {
+        button.apply {
+            setBackgroundColor(backgroundColor)
+            setTextColor(textColor)
+            strokeWidth = 0  // Kein Rand bei ausgewählt
+            elevation = 4f   // Leichte Erhebung für 3D-Effekt
+        }
+    }
+
+    // ✅ NEUE HILFSFUNKTION: Button zurücksetzen
+    private fun resetButtonStyle(
+        button: com.google.android.material.button.MaterialButton,
+        backgroundColor: Int,
+        strokeColorInt: Int,
+        isDarkTheme: Boolean
+    ) {
+        button.apply {
+            setBackgroundColor(backgroundColor)
+            setTextColor(if (isDarkTheme) Color.WHITE else Color.BLACK)
+            setStrokeColorResource(android.R.color.transparent)
+            strokeWidth = 2  // Dünner Rand
+            elevation = 0f
+
+            // Stroke explizit setzen
+            val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
+            val colors = intArrayOf(strokeColorInt)
+            this.strokeColor = android.content.res.ColorStateList(states, colors)
+        }
+    }
 
     private fun checkIfAllAnswered() {
         if (answers.size == questions.size) {
@@ -178,8 +243,9 @@ class SymptomCheckAdapter(
             val results = questions.mapIndexed { index, question ->
                 question.question to (answers[index] ?: false)
             }.toMap()
-            
+
             onAllAnswered(results)
         }
     }
 }
+

@@ -167,22 +167,51 @@ class HLWTimerActivity : SecureBaseActivity() {
         try {
             Log.d(TAG, "resetHLW: Resetting")
 
+            // ✅ Timer stoppen
             isRunning = false
+            stopMetronome()
+            stopPhaseTimer()
+            stopClock()
+
+            // ✅ Variablen zurücksetzen
             currentPhase = Phase.COMPRESSION
             cycleCount = 0
             totalElapsedSeconds = 0
             compressionCount = 0
 
-            stopMetronome()
-            stopPhaseTimer()
-            stopClock()
-
+            // ✅ Button
             binding.btnStart.text = "▶️ HLW STARTEN"
 
-            updateUI()
+            // ✅ WICHTIG: Zeitanzeigen zurücksetzen
+            binding.tvElapsedTime.text = "00:00"
+            binding.tvCycleCount.text = "Zyklen: 0"
+            binding.tvNextPulseCheck.text = "Puls-Check in: 02:00"
+
+            // ✅ Phase-Anzeigen
+            binding.tvInstructions.text = "💓 KOMPRESSIONEN"
+            binding.tvPhase.text = "30 Kompressionen im Takt\n120 BPM (2 pro Sekunde)"
+
+            // ✅ Cards
+            binding.cardCompressionPhase.visibility = View.VISIBLE
+            binding.cardVentilationPhase.visibility = View.GONE
+            binding.cardPulseCheck.visibility = View.GONE
+
+            // ✅ Kompressions-Counter
+            binding.tvCompressionCount.text = "0 / 30"
+            binding.tvPhaseTime.text = "15 Sek"
+            binding.progressPhase.progress = 0
+
+            // ✅ Beatmung
+            binding.tvVentilationTime.text = "5 Sek"
+
+            // ✅ Herz-Icon
+            binding.tvHeartBeat.alpha = 1.0f
+
+            Log.d(TAG, "resetHLW: Complete")
 
         } catch (e: Exception) {
             Log.e(TAG, "resetHLW: Error", e)
+            Toast.makeText(this, "Fehler beim Zurücksetzen", Toast.LENGTH_SHORT).show()
         }
     }
 

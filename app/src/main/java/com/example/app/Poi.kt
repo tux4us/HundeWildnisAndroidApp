@@ -41,7 +41,7 @@ object POICategories {
         val name: String,
         val icon: String,
         val queries: List<String>,
-        val color: String = "#8fad6f"
+        val color: String = "#424200"
     )
 
     val ALL_CATEGORIES = listOf(
@@ -50,13 +50,13 @@ object POICategories {
         Category(
             name = "Hundeauslauf",
             icon = "🐕",
-            queries = listOf("leisure=dog_park"),
-            color = "#8fad6f"
+            queries = listOf("leisure=dog_park")
         ),
         Category(
             name = "Tierarzt",
             icon = "🏥",
-            queries = listOf("amenity=veterinary")
+            queries = listOf("amenity=veterinary"),
+            color = "#aa0000"
         ),
         Category(
             name = "Tierbedarf",
@@ -175,6 +175,7 @@ object POICategories {
             name = "Apotheke",
             icon = "💊",
             queries = listOf("amenity=pharmacy", "healthcare=pharmacy"),
+            color = "#aa0000"
         ),
         Category(
             name = "Arzt",
@@ -185,17 +186,20 @@ object POICategories {
                 "amenity=clinic",
                 "amenity=dentist",
                 "healthcare" // ✅ Alle Healthcare-Einträge einschließen
-            )
+            ),
+            color = "#aa0000"
         ),
         Category(
             name = "Polizei",
             icon = "🚔",
-            queries = listOf("amenity=police")
+            queries = listOf("amenity=police"),
+            color = "#aa0000"
         ),
         Category(
             name = "Feuerwehr",
             icon = "🚒",
-            queries = listOf("amenity=fire_station")
+            queries = listOf("amenity=fire_station"),
+            color = "#aa0000"
         ),
         Category(
             name = "Notfall",
@@ -241,8 +245,7 @@ object POICategories {
             queries = listOf(
                 "leisure=nature_reserve",
                 "boundary=protected_area"
-            ),
-            color = "#4CAF50"
+            )
         ),
         Category(
             name = "Nationalpark",
