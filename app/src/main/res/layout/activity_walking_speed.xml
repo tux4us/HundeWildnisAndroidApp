@@ -53,8 +53,21 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:padding="24dp"
-                android:textColor="@color/green_secondary"
+                android:padding="12dp"
+                android:textColor="#aa0000"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Start/Stop Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStartStop"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="🏁 Messung starten"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#2d5016"
+                android:textColor="#FFFFFF"
                 android:layout_marginBottom="24dp" />
 
             <!-- Geschwindigkeitslimit -->
@@ -62,8 +75,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Geschwindigkeitswächter:"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hier kannst Du Dein Trainingsszenario wählen. Ein Wechsel des Modus während des Trainings ist möglich (z.B. bei Wechsel von Geländetraining zu Strassentraining)."
+                android:textSize="12sp"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -105,6 +125,13 @@
                 android:text="Messintervall:"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hier kannst Du Dein Messintervall wählen. Ein Wechsel des Intervalls während des Trainings ist möglich. Bei längeren Trainingssessions empfiehlt sich ein 60 Sekunden Intervall."
+                android:textSize="12sp"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -157,19 +184,6 @@
                 android:textSize="16sp"
                 android:padding="8dp"
                 android:checked="true"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Start/Stop Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnStartStop"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="🏁 Messung starten"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#2d5016"
-                android:textColor="#FFFFFF"
                 android:layout_marginBottom="24dp" />
 
             <!-- Live-Diagramm -->
