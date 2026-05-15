@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ERWEITERT: Mit Sonnenzeiten, Tages-Min/Max, Warnung-Badge -->
+<!-- ERWEITERT: Mit Pfotenwetter-Index, Temperatur-Chart, Tageslänge -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:background="#1a1a1a">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -39,7 +39,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:text="☀️"
-                android:textSize="80sp" />
+                android:textSize="72sp" />
 
             <!-- Temperatur -->
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="--°C"
                 android:textColor="#8fad6f"
-                android:textSize="64sp"
+                android:textSize="48sp"
                 android:textStyle="bold" />
 
             <!-- Wetterbeschreibung -->
@@ -62,9 +62,9 @@
                 android:layout_marginBottom="16dp"
                 android:text="Lade Wetterdaten..."
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
-            <!-- NEU: Wetterwarnung-Badge (IMMER sichtbar) -->
+            <!-- Wetterwarnung-Badge -->
             <TextView
                 android:id="@+id/warningBadgeText"
                 android:layout_width="wrap_content"
@@ -81,40 +81,230 @@
                 android:textStyle="bold"
                 android:visibility="visible" />
 
-            <!-- NEU: Tages Min/Max & Sonnenzeiten -->
-            <LinearLayout
+            <!-- ════════════════════════════════════════════════════════════════ -->
+            <!-- NEU 1: TRAININGSWETTER-INDEX CARD -->
+            <!-- ════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/pawWeatherCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#2d2d2d"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
 
-                <TextView
-                    android:id="@+id/dailyMinMaxText"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Min: --°C • Max: --°C"
-                    android:textColor="#999999"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="16dp" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/sunriseText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🌅 --:--"
-                    android:textColor="#999999"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🐾 Trainingswetter-Index"
+                        android:textColor="#8fad6f"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
 
-                <TextView
-                    android:id="@+id/sunsetText"
-                    android:layout_width="wrap_content"
+                    <!-- Warnungen -->
+                    <TextView
+                        android:id="@+id/pawWeatherIndexText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Wird berechnet..."
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- HINWEISE -->
+                    <TextView
+                        android:id="@+id/groomingTipsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FFC107"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:visibility="gone"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Beste TRAININGS-Zeiten -->
+                    <TextView
+                        android:id="@+id/walkingTimesText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#64B5F6"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ════════════════════════════════════════════════════════════════ -->
+            <!-- NEU 2: TAGESLÄNGE & DÄMMERUNG CARD -->
+            <!-- ════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/daylightCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#2d2d2d"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🌇 --:--"
-                    android:textColor="#999999"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌅 Tageslicht und Dämmerung"
+                        android:textColor="#8fad6f"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Tageslänge -->
+                    <TextView
+                        android:id="@+id/daylightDurationText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="☀️ Tageslänge: --h --m"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Trend -->
+                    <TextView
+                        android:id="@+id/daylightTrendText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#64B5F6"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Morgendämmerung -->
+                    <TextView
+                        android:id="@+id/dawnText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🌄 Morgendämmerung: --:--"
+                        android:textColor="#C8C8C8"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Sonnenaufgang (schon vorhanden) -->
+                    <TextView
+                        android:id="@+id/sunriseText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🌅 Sonnenaufgang: --:--"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Sonnenuntergang (schon vorhanden) -->
+                    <TextView
+                        android:id="@+id/sunsetText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🌇 Sonnenuntergang: --:--"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Abenddämmerung -->
+                    <TextView
+                        android:id="@+id/duskText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🌆 Abenddämmerung: --:--"
+                        android:textColor="#CECDCD"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Licht-Empfehlung -->
+                    <TextView
+                        android:id="@+id/lightRecommendationText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FFF18C"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:visibility="gone"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Goldene Stunde -->
+                    <TextView
+                        android:id="@+id/goldenHourText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FFCA80"
+                        android:textSize="12sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Min/Max Temperatur -->
+            <TextView
+                android:id="@+id/dailyMinMaxText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Minimal: --°C • Maximal: --°C"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- ════════════════════════════════════════════════════════════════ -->
+            <!-- NEU 3: TEMPERATUR-VERLAUFSGRAFIK -->
+            <!-- ════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#2d2d2d"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📊 24h-Temperaturverlauf"
+                        android:textColor="#8fad6f"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:padding="16dp"
+                        android:paddingBottom="8dp" />
+
+                    <!-- Custom Temperature Chart View -->
+                    <com.hundewildnis.app.TemperatureChartView
+                        android:id="@+id/temperatureChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Aktuelles Wetter Card -->
             <com.google.android.material.card.MaterialCardView
@@ -136,7 +326,7 @@
                         android:layout_height="wrap_content"
                         android:text="Aktuelles Wetter"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
 
@@ -153,7 +343,7 @@
                             android:layout_weight="1"
                             android:text="Gefühlt"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/feelsLikeText"
@@ -178,7 +368,7 @@
                             android:layout_weight="1"
                             android:text="Luftfeuchtigkeit"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/humidityText"
@@ -186,11 +376,36 @@
                             android:layout_height="wrap_content"
                             android:text="--%"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Wind (ERWEITERT: Mit Beaufort, Richtung, Böen) -->
+                    <!-- Windstärke (Beaufort Text) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Windstärke"
+                            android:textColor="#999999"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/windStrengthText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Wind -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -203,7 +418,7 @@
                             android:layout_weight="1"
                             android:text="Wind und Richtung"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/windText"
@@ -228,7 +443,7 @@
                             android:layout_weight="1"
                             android:text="Niederschlag"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/precipitationText"
@@ -236,7 +451,7 @@
                             android:layout_height="wrap_content"
                             android:text="-- mm"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -262,7 +477,7 @@
                         android:layout_height="wrap_content"
                         android:text="Weitere Details"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
 
@@ -279,7 +494,7 @@
                             android:layout_weight="1"
                             android:text="Luftdruck"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/pressureText"
@@ -287,7 +502,7 @@
                             android:layout_height="wrap_content"
                             android:text="-- hPa"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -304,7 +519,7 @@
                             android:layout_weight="1"
                             android:text="Sichtweite"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/visibilityText"
@@ -312,7 +527,7 @@
                             android:layout_height="wrap_content"
                             android:text="> 10 km"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -328,7 +543,7 @@
                             android:layout_weight="1"
                             android:text="UV-Index"
                             android:textColor="#999999"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/uvIndexText"
@@ -336,13 +551,13 @@
                             android:layout_height="wrap_content"
                             android:text="--"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 24h Vorhersage Card (ERWEITERT: Stündlich mit Klick-Details) -->
+            <!-- 24h Vorhersage Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -361,7 +576,7 @@
                         android:layout_height="wrap_content"
                         android:text="24h-Vorhersage (stündlich)"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:padding="16dp"
                         android:paddingBottom="8dp" />
@@ -369,9 +584,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tippe für Details und verschiebe für weitere Stunden "
-                        android:textColor="#F57F17"
-                        android:textSize="11sp"
+                        android:text="Tippe👆🏼 für Details. Verschiebe 👉🏼 für weitere Stunden"
+                        android:textColor="#E9E375"
+                        android:textSize="12sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="8dp" />
@@ -387,7 +602,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Regenradar Card (ERWEITERT: Mit Nowcast) -->
+            <!-- NEU: Niederschlags-Diagramm Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -404,16 +619,51 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2h Niederschlagsradar + 1h Vorhersage"
+                        android:text="🌧️ 24h-Niederschlagsmenge"
+                        android:textColor="#2196F3"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:padding="16dp"
+                        android:paddingBottom="8dp" />
+
+                    <!-- Custom Precipitation Chart View -->
+                    <com.hundewildnis.app.PrecipitationChartView
+                        android:id="@+id/precipitationChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Regenradar Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#2d2d2d"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2h Niederschlagsradar"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:padding="16dp"
                         android:paddingBottom="8dp" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="400dp">
+                        android:layout_height="360dp">
 
                         <WebView
                             android:id="@+id/radarWebView"
@@ -425,9 +675,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔮 = Vorhersage (Nowcast) • 📡 = Aktuelle Daten"
+                        android:text="📡 = Aktuelle Daten"
                         android:textColor="#666666"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:padding="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -439,8 +689,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="📍 Standort wird ermittelt..."
-                android:textColor="#999999"
-                android:textSize="14sp" />
+                android:textColor="#FAFAFA"
+                android:textSize="16sp" />
 
             <!-- Datenquelle -->
             <TextView
@@ -450,7 +700,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Daten: © Open-Meteo (CC BY 4.0)"
                 android:textColor="#666666"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:autoLink="web"
                 android:linksClickable="true" />
 

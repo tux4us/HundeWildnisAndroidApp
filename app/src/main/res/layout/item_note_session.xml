@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="📝"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_body_medium"
             android:layout_marginEnd="12dp" />
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01.01.2024 12:00"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary" />
 
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📍 0.0000, 0.0000"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="?android:attr/textColorSecondary"
                 android:visibility="gone" />
 
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hier steht ein Teil der Notiz..."
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="?android:attr/textColorSecondary"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -64,7 +64,7 @@
         <ImageButton
             android:id="@+id/btnDeleteNote"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             app:tint="@android:color/holo_red_dark"
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="▶"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textColor="@color/green_primary"
             android:layout_marginStart="8dp" />
 

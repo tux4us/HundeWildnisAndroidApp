@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:paddingBottom="120dp">
+        android:paddingBottom="180dp">
 
         <!-- Hauptseite -->
         <com.google.android.material.button.MaterialButton
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="🎓 Onlinetrainer - Information"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             app:backgroundTint="#1B3A0A"
             android:textColor="@android:color/white"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Unser umfangreicher Onlinetrainer steht allen registrierten Nutzerinnen und Nutzern zur Verfügung.🤝"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textColor="#2d5016"
             android:textAlignment="center"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="📖 Kurse"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textColor="#2d5016"
             android:layout_marginBottom="8dp" /> -->

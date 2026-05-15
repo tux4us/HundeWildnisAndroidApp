@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -50,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="📷 FOTO"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
 
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📋 BASIS-DATEN"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
 
@@ -211,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🔖 IDENTIFIKATION"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="12dp" />
@@ -281,7 +281,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="💉 GESUNDHEIT"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="12dp" />
@@ -421,7 +421,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="👨‍⚕️ KONTAKTE"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="12dp" />
@@ -496,7 +496,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🍖 FUTTER und VERHALTEN"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="12dp" />
@@ -540,7 +540,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🧠 WESENSMERKMALE"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface"
                 android:layout_marginBottom="4dp" />
@@ -549,7 +549,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Für personalisierte Trainingsempfehlungen im Trainingstagebuch"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_body_medium"
                 android:alpha="0.7"
                 android:layout_marginBottom="16dp" />
 
@@ -559,7 +559,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📋 Schnellauswahl: Profil wählen"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_body_medium"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_marginBottom="24dp" />
 
@@ -568,7 +568,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Grundtemperament"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -583,7 +583,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nruhig"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -603,7 +603,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nlebhaft"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -614,7 +614,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Selbstbewusstsein"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -629,7 +629,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nängstlich"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -649,7 +649,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nselbstsicher"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -660,7 +660,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sozialverhalten"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -675,7 +675,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Zurück-\nhaltend"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -695,7 +695,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nkontaktfreudig"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -706,7 +706,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Erregbarkeit"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -721,7 +721,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\ngelassen"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -741,7 +741,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Leicht\nerregbar"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -752,7 +752,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Lerngeschwindigkeit"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -767,7 +767,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nlangsam"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -787,7 +787,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nschnell"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -798,7 +798,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Frustrationstoleranz"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -813,7 +813,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nniedrig"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -833,7 +833,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sehr\nhoch"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
                     android:minWidth="50dp" />
@@ -860,7 +860,7 @@
             <!-- EXTRA SPACE FOR KEYBOARD -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="100dp" />
 
             <!-- BUTTONS -->
             <LinearLayout
@@ -874,7 +874,7 @@
                     android:id="@+id/btnCancel"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Abbrechen"
                     android:layout_marginEnd="8dp" />
@@ -882,7 +882,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSave"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="💾 Speichern"
                     app:backgroundTint="#2d5016"

@@ -9,7 +9,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🛑 Messung gestoppt"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:textAlignment="center"
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Aktuell: 0.0 km/h"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:padding="12dp"
@@ -61,9 +61,9 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnStartStop"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:text="🏁 Messung starten"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"
                 app:backgroundTint="#2d5016"
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Geschwindigkeitswächter:"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hier kannst Du Dein Trainingsszenario wählen. Ein Wechsel des Modus während des Trainings ist möglich (z.B. bei Wechsel von Geländetraining zu Strassentraining)."
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Wege- und Geländetraining"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:padding="8dp" />
 
                 <RadioButton
@@ -105,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Alltags- und Strassentraining"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:padding="8dp"
                     android:checked="true" />
 
@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Wandertraining"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:padding="8dp" />
             </RadioGroup>
 
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Messintervall:"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -131,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hier kannst Du Dein Messintervall wählen. Ein Wechsel des Intervalls während des Trainings ist möglich. Bei längeren Trainingssessions empfiehlt sich ein 60 Sekunden Intervall."
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -145,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Alle 30 Sekunden"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:padding="8dp"
                     android:checked="true" />
 
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Alle 60 Sekunden"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:padding="8dp" />
             </RadioGroup>
 
@@ -163,7 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Benachrichtigungen bei Überschreitung:"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -172,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Vibration"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:padding="8dp"
                 android:checked="true" />
 
@@ -181,7 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Ton"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:padding="8dp"
                 android:checked="true"
                 android:layout_marginBottom="24dp" />
@@ -189,14 +189,14 @@
             <!-- Live-Diagramm -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
 
@@ -205,7 +205,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📊 Geschwindigkeitsverlauf"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="8dp" />
@@ -213,7 +213,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/speedChart"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="300dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -236,7 +236,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📈 Statistiken"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="8dp" />
@@ -247,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:text="Starte Tracking um Statistiken zu sehen"
                         android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_body_medium" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -262,11 +262,11 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnExport"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:text="📄 PDF"
-                    android:textSize="14sp"
+                    android:text="🖨📄\nPDF"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     app:cornerRadius="8dp"
                     app:backgroundTint="#4a6135"
@@ -276,11 +276,11 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnExportGpx"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:text="🗺️ GPX"
-                    android:textSize="14sp"
+                    android:text="🧭🗺️\nGPX"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     app:cornerRadius="8dp"
                     app:backgroundTint="#4a6135"
@@ -290,10 +290,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShare"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="📤 Teilen"
-                    android:textSize="14sp"
+                    android:text="📤\nTeilen"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     app:cornerRadius="8dp"
                     app:backgroundTint="#2d5016"
@@ -306,7 +306,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🕒 Historie (Bisherige Messungen)"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
 

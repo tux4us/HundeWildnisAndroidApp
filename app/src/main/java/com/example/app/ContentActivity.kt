@@ -51,8 +51,6 @@ class ContentActivity : SecureBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         binding = ActivityContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

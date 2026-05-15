@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:background="#1a1a1a">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:text="⛰️"
-                android:textSize="80sp" />
+                android:textSize="@dimen/text_body_medium" />
 
             <!-- Höhen-Anzeige (groß) -->
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="-- m"
                 android:textColor="#8fad6f"
-                android:textSize="72sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 
             <TextView
@@ -57,7 +57,7 @@
                 android:layout_marginBottom="32dp"
                 android:text="Höhe über NN"
                 android:textColor="#999999"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_body_medium" />
 
             <!-- GPS Höhe Card -->
             <com.google.android.material.card.MaterialCardView
@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:text="📍 GPS-Höhe"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
 
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:text="-- m"
                         android:textColor="#FFFFFF"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
                     <TextView
@@ -98,7 +98,7 @@
                         android:layout_marginTop="4dp"
                         android:text="Basiert auf GPS-Daten"
                         android:textColor="#999999"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:text="🌡️ Barometer-Höhe"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
 
@@ -133,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:text="-- m"
                         android:textColor="#FFFFFF"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
                     <TextView
@@ -142,7 +142,7 @@
                         android:layout_marginTop="4dp"
                         android:text="Basiert auf Luftdruck"
                         android:textColor="#999999"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -167,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:text="Luftdruck"
                         android:textColor="#8fad6f"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
 
@@ -177,7 +177,7 @@
                         android:layout_height="wrap_content"
                         android:text="-- hPa"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -188,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:text="Genauigkeit: ± -- m"
                 android:textColor="#999999"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:layout_marginBottom="16dp" />
 
             <!-- Status Text -->
@@ -199,7 +199,7 @@
                 android:text="Höhe wird ermittelt..."
                 android:textAlignment="center"
                 android:textColor="#8fad6f"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 
         </LinearLayout>

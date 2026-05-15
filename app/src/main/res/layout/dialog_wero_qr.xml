@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="📱 Wero - Direkt und sicher"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textAlignment="center"
             android:textColor="?android:attr/textColorPrimary"
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Vielen Dank für Deine Unterstützung 🙏🏽"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textAlignment="center"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="24dp" />
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📱 Direkt unterstützen"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
                     android:layout_marginBottom="8dp" />
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Am einfachsten:\n1️⃣ Tippe auf den Button\n2️⃣ Wähle deine Bank\n3️⃣ Fertig!"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:lineSpacingExtra="4dp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginBottom="12dp" />
@@ -75,9 +75,9 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWeroLink"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:text="Weiter zu Wero 📱"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     app:cornerRadius="8dp"
                     app:backgroundTint="#1B5E20"
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="  ODER  "
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorSecondary" />
 
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📱📱 QR-Code scannen (2 Geräte)"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textAlignment="center"
@@ -151,7 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="QR-Code mit einem 2.Gerät scannen:"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textAlignment="center"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginBottom="12dp" />
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Banking-App öffnen → QR scannen → Fertig!"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textAlignment="center"
                         android:textColor="?android:attr/textColorSecondary" />
 
@@ -203,7 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Unterstütze uns gern mit einem Betrag Deiner Wahl. Herzlichen Dank! 🙏🏽❤️"
-            android:textSize="15sp"
+            android:textSize="@dimen/text_body_medium"
             android:textAlignment="center"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="16dp" />
@@ -213,7 +213,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="🔒 DATENSCHUTZ:\nWero wird von europäischen Banken betrieben. Deine Zahlungsdaten werden nicht an uns übermittelt."
-            android:textSize="12sp"
+            android:textSize="@dimen/text_body_medium"
             android:textAlignment="center"
             android:textColor="?android:attr/textColorSecondary"
             android:alpha="0.7"

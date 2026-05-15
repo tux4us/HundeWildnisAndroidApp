@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- res/values/styles_responsive.xml -->
+    <!-- DIESE STYLES SORGEN FÜR EINE BESSERE SKALIERUNG BEI INDIVIDUELLEN SCHRIFTGRÖSSEN -->
+
+    <!-- Custom Button mit Auto-Scaling -->
+    <style name="Widget.App.Button" parent="Widget.Material3.Button">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_button_large</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:minHeight">60dp</item>
+    </style>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- TEXT APPEARANCE STYLES (Punkt-Notation für Vererbung) -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
+    <style name="TextAppearance.App" parent="TextAppearance.Material3.BodyMedium" />
+    <style name="TextAppearance.App.Headline" parent="TextAppearance.App" />
+    <style name="TextAppearance.App.Body" parent="TextAppearance.App" />
+
+    <style name="TextAppearance.App.Headline.Large">
+        <item name="android:textSize">@dimen/text_headline_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.App.Headline.Medium">
+        <item name="android:textSize">@dimen/text_headline_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.App.Body.Large">
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.App.Body.Medium">
+        <item name="android:textSize">@dimen/text_body_medium</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.App.Label">
+        <item name="android:textSize">@dimen/text_label_medium</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <!-- Button Style ohne Auto-Scaling für kleine/spezielle Buttons -->
+    <style name="Widget.App.Button.Fixed" parent="Widget.Material3.Button">
+        <item name="autoSizeTextType">none</item>
+        <item name="android:textSize">@dimen/text_body_small</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">88dp</item>
+    </style>
+
+    <!-- Bottom Navigation Styling -->
+    <style name="Widget.App.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#4D8fad6f</item> <!-- 30% transparentes Grün -->
+        <item name="marginHorizontal">12dp</item>
+    </style>
+
+    <style name="TextAppearance.App.BottomNav.Active" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="TextAppearance.App.BottomNav.Inactive" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#E6FFFFFF</item>
+    </style>
+</resources>

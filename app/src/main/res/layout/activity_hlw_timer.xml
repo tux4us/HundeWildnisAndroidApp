@@ -10,10 +10,10 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00"
-                android:textSize="36sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF" />
 
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Puls-Check in: 02:00"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="#FFFFFF" />
 
             <!-- Zyklen -->
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Zyklen: 0"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="#FFFFFF" />
 
             <!-- Instruktionen -->
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Bereit zum Start"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:gravity="center" />
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text=""
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="#FFFFFF"
                 android:gravity="center" />
 
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="💓"
-                android:textSize="48sp" />
+                android:textSize="@dimen/text_body_medium" />
 
             <!-- KOMPRESSIONSPHASE -->
             <com.google.android.material.card.MaterialCardView
@@ -121,7 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="15 Sek"
-                        android:textSize="32sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
                         android:gravity="center" />
@@ -132,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="0 / 30"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="#FFFFFF"
                         android:gravity="center" />
 
@@ -140,7 +140,7 @@
                         android:id="@+id/progressPhase"
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="20dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:max="30"
                         android:progress="0"
@@ -151,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="Folge dem Metronom-Takt!\n2 pro Sekunde"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="#AAAAAA"
                         android:gravity="center" />
 
@@ -181,7 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="5 Sek"
-                        android:textSize="32sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
                         android:gravity="center" />
@@ -191,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="🫁 JETZT BEATMEN!\n\n2x über die Nase\nMaul geschlossen halten"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
                         android:gravity="center" />
@@ -216,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:padding="24dp"
                     android:text="⏱️ PULS PRÜFEN!\n\nOberschenkelinnenseite\n15 Sekunden fühlen"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
                     android:gravity="center" />
@@ -237,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:padding="12dp"
                     android:text="💓 30 Kompressionen (15 Sek im Takt) → 🫁 2 Beatmungen (5 Sek)\n⏱️ Alle 2 Min: Puls prüfen"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textColor="#FACE7E"
                     android:gravity="center"
                     android:lineSpacingExtra="2dp" />

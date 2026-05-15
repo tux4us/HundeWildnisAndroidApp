@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hundewildnis.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Internet & Network -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -34,8 +33,6 @@
     <!-- ✅ MIKROFON Permission -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Vibration für HLW-Timer Feedback -->
-    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"

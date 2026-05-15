@@ -31,6 +31,8 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
+import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 class WeatherActivity : SecureBaseActivity(), LocationListener {
 
@@ -48,14 +50,12 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Standortwetter"
+            title = "Wetterinformationen"
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -253,10 +253,11 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature," +
                 "precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m," +
                 "wind_gusts_10m,uv_index" + // NEU: Windböen
-                "&hourly=temperature_2m,precipitation_probability,weather_code," +
-                "temperature_2m,apparent_temperature" + // NEU: Stündliche Daten
+                "&hourly=temperature_2m,precipitation,precipitation_probability,weather_code," +
+                "apparent_temperature" + // NEU: Stündliche Daten
                 "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset," + // NEU: Min/Max, Sonne
                 "weather_code,precipitation_probability_max" + // NEU: Tageswarnungen
+                "&past_days=1" + // NEU: Gestern laden für Trend-Vergleich
                 "&forecast_days=2" +
                 "&timezone=auto"
 
@@ -298,6 +299,10 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         // NEU: Wind mit Beaufort-Skala, Richtung UND Böen (IMMER angezeigt)
         val windDirectionText = getWindDirection(windDirection)
         val beaufort = getBeaufortScale(windSpeed)
+
+        // ✅ NEU: Windstärke-Text (Attribute wie "Leichte Brise")
+        binding.windStrengthText.text = getBeaufortDescription(beaufort)
+
         binding.windText.text = String.format(
             Locale.GERMAN,
             "%.1f km/h %s (Bft %d)\nBöen: %.1f km/h",
@@ -325,6 +330,12 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
         // Regenradar mit Nowcast
         setupRainRadar()
+
+        // ✅ NEU: Alle Features aufrufen
+        displayPawWeather(data, windSpeed, windGusts)
+        displayTemperatureChart(data)
+        displayPrecipitationChart(data)
+        displayDaylightInfo(data)
     }
 
     // NEU: Windchill berechnen (gefühlte Temperatur bei Wind)
@@ -360,16 +371,36 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
+    // ✅ NEU: Beaufort Beschreibungstext
+    private fun getBeaufortDescription(beaufort: Int): String {
+        return when (beaufort) {
+            0 -> "Windstille"
+            1 -> "Leiser Zug"
+            2 -> "Leichte Brise"
+            3 -> "Schwache Brise"
+            4 -> "Mäßige Brise"
+            5 -> "Frische Brise"
+            6 -> "Starker Wind"
+            7 -> "Steifer Wind"
+            8 -> "Stürmischer Wind"
+            9 -> "Sturm"
+            10 -> "Schwerer Sturm"
+            11 -> "Orkanartiger Sturm"
+            12 -> "Orkan"
+            else -> "Unbekannt"
+        }
+    }
+
     private fun getWindDirection(degrees: Double): String {
         return when {
-            degrees >= 337.5 || degrees < 22.5 -> "↓ N"
-            degrees >= 22.5 && degrees < 67.5 -> "↙ NO"
-            degrees >= 67.5 && degrees < 112.5 -> "← O"
-            degrees >= 112.5 && degrees < 157.5 -> "↖ SO"
-            degrees >= 157.5 && degrees < 202.5 -> "↑ S"
-            degrees >= 202.5 && degrees < 247.5 -> "↗ SW"
-            degrees >= 247.5 && degrees < 292.5 -> "→ W"
-            degrees >= 292.5 && degrees < 337.5 -> "↘ NW"
+            degrees >= 337.5 || degrees < 22.5 -> "↓ Nord"
+            degrees >= 22.5 && degrees < 67.5 -> "↙ NordOst"
+            degrees >= 67.5 && degrees < 112.5 -> "← Ost"
+            degrees >= 112.5 && degrees < 157.5 -> "↖ SüdOst"
+            degrees >= 157.5 && degrees < 202.5 -> "↑ Süd"
+            degrees >= 202.5 && degrees < 247.5 -> "↗ SüdWest"
+            degrees >= 247.5 && degrees < 292.5 -> "→ West"
+            degrees >= 292.5 && degrees < 337.5 -> "↘ NordWest"
             else -> ""
         }
     }
@@ -381,9 +412,10 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             val sunriseArray = daily.getJSONArray("sunrise")
             val sunsetArray = daily.getJSONArray("sunset")
 
-            if (sunriseArray.length() > 0 && sunsetArray.length() > 0) {
-                val sunriseStr = sunriseArray.getString(0)
-                val sunsetStr = sunsetArray.getString(0)
+            if (sunriseArray.length() > 1 && sunsetArray.length() > 1) {
+                // Index 1 ist HEUTE (Index 0 ist Gestern wegen past_days=1)
+                val sunriseStr = sunriseArray.getString(1)
+                val sunsetStr = sunsetArray.getString(1)
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
                 val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
@@ -410,11 +442,12 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             val weatherCodes = daily.getJSONArray("weather_code")
             val precipProbs = daily.getJSONArray("precipitation_probability_max")
 
-            if (minTemps.length() > 0) {
-                val minTemp = minTemps.getDouble(0)
-                val maxTemp = maxTemps.getDouble(0)
-                val code = weatherCodes.getInt(0)
-                val precipProb = precipProbs.getInt(0)
+            if (minTemps.length() > 1) {
+                // Index 1 ist HEUTE
+                val minTemp = minTemps.getDouble(1)
+                val maxTemp = maxTemps.getDouble(1)
+                val code = weatherCodes.getInt(1)
+                val precipProb = precipProbs.getInt(1)
 
                 binding.dailyMinMaxText.text = String.format(
                     Locale.GERMAN,
@@ -457,16 +490,18 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private fun getWeatherWarningBadge(code: Int, precipProb: Int): String {
         return when {
             code >= 95 -> "⚠️ Gewitter"
-            code >= 71 -> "❄️ Schneefall"
+            code >= 85 -> "❄️ Schneeschauer" // 85, 86 sind Schneeschauer
+            code >= 80 -> "🌦️ Schauer"       // 80-82 sind Regenschauer
+            code >= 71 -> "❄️ Schneefall"    // 71-77 sind Schneefall
             code >= 61 && precipProb >= 70 -> "🌧️ Starker Regen"
             precipProb >= 80 -> "☔ Hohe Regenwahrscheinlichkeit"
-            code >= 80 -> "🌦️ Schauer"
             precipProb >= 50 -> "🌂 Möglicher Regen (${precipProb}%)"
             code >= 45 -> "🌫️ Nebel"
             code >= 3 -> "☁️ Bewölkt"
-            else -> "✅ Keine Wetterwarnung" // IMMER etwas anzeigen
+            else -> "✅ Keine Wetterwarnung"
         }
     }
+
 
     // NEU: Stündliche 24h-Vorhersage (24 Einträge statt 8)
     private fun display24HourForecast(data: JSONObject) {
@@ -482,8 +517,9 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
 
         val now = System.currentTimeMillis()
+        val oneHour = 3600000L
 
-        // NEU: 24 stündliche Einträge (statt 8 x 3h)
+        // NEU: 24 stündliche Einträge (stündlich ab JETZT)
         var count = 0
         for (i in 0 until times.length()) {
             if (count >= 24) break // Genau 24 Stunden
@@ -492,7 +528,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 val timeStr = times.getString(i)
                 val date = dateFormat.parse(timeStr)
 
-                if (date != null && date.time >= now) {
+                // Zeige Daten ab der aktuellen Stunde
+                if (date != null && date.time >= now - oneHour) {
                     val displayTime = timeFormat.format(date)
                     val temp = temperatures.getDouble(i)
                     val code = weatherCodes.getInt(i)
@@ -535,14 +572,24 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             Regen: ${item.precipitation.toInt()}%
         """.trimIndent()
 
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Vorhersage Details")
             .setMessage(message)
             .setPositiveButton("OK", null)
-            .show()
+            .create().apply {
+                show()
+                getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+            }
     }
 
-    // ERWEITERT: Regenradar mit Nowcast
+    // ════════════════════════════════════════════════════════════════
+    // REGENRADAR: 2 Stunden Radar-Historie (RainViewer API)
+    // ════════════════════════════════════════════════════════════════
+
     private fun setupRainRadar() {
         currentLocation?.let { location ->
             val lat = location.latitude
@@ -570,7 +617,6 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 }
             }
 
-            // NEU: Mit Nowcast (Vorhersage)
             val html = """
             <!DOCTYPE html>
             <html>
@@ -647,20 +693,13 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                     marker = L.marker([$lat, $lon]).addTo(map);
                     marker.bindPopup('Dein Standort').openPopup();
                     
-                    // NEU: Mit Nowcast (Vergangenheit + Vorhersage)
-                    // ERWEITERT: 6h Historie statt 2h
                     fetch('https://api.rainviewer.com/public/weather-maps.json')
                         .then(response => response.json())
                         .then(apiData => {
-                            if (apiData.radar && apiData.radar.past && apiData.radar.nowcast) {
-                                // Kombiniere: Letzte 36 Vergangenheit (6h) + 6 Nowcast (Vorhersage)
-                                // RainViewer liefert alle 10 Min einen Frame
-                                // 36 Frames = 6 Stunden Historie
-                                const pastFrames = apiData.radar.past.slice(-36);
-                                const nowcastFrames = apiData.radar.nowcast.slice(0, 6);
-                                timestamps = pastFrames.concat(nowcastFrames);
+                            if (apiData.radar && apiData.radar.past) {
+                                timestamps = apiData.radar.past;
                                 
-                                timestamps.forEach((item, index) => {
+                                timestamps.forEach((item) => {
                                     const radarUrl = 'https://tilecache.rainviewer.com' + 
                                         item.path + '/256/{z}/{x}/{y}/2/1_1.png';
                                     
@@ -674,16 +713,16 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                                     radarLayers.push(layer);
                                 });
                                 
-                                // Zeige letzten Vergangenheits-Frame (aktuell)
                                 if (radarLayers.length > 0) {
-                                    currentFrame = pastFrames.length - 1; // Letzter Vergangenheits-Frame
+                                    currentFrame = radarLayers.length - 1;
                                     radarLayers[currentFrame].addTo(map);
                                     updateTimestamp();
                                 }
+                            } else {
+                                document.getElementById('timestamp').textContent = 'Radar nicht verfügbar';
                             }
                         })
                         .catch(err => {
-                            console.error('Radar error:', err);
                             document.getElementById('timestamp').textContent = 'Radar nicht verfügbar';
                         });
                     
@@ -701,13 +740,12 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                         isPlaying = true;
                         document.getElementById('playBtn').innerHTML = '⏸ Pause';
                         
-                        // GEDROSSELT: 750ms pro Frame (50% langsamer)
                         animationInterval = setInterval(() => {
                             radarLayers[currentFrame].remove();
                             currentFrame = (currentFrame + 1) % radarLayers.length;
                             radarLayers[currentFrame].addTo(map);
                             updateTimestamp();
-                        }, 750); // War 500ms, jetzt 750ms
+                        }, 500);
                     }
                     
                     function pauseAnimation() {
@@ -724,7 +762,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                         
                         if (radarLayers.length > 0) {
                             radarLayers[currentFrame].remove();
-                            currentFrame = timestamps.length > 6 ? timestamps.length - 7 : 0; // Zurück zu "jetzt" (36. Frame bei 6h Historie)
+                            currentFrame = radarLayers.length - 1;
                             radarLayers[currentFrame].addTo(map);
                             updateTimestamp();
                         }
@@ -738,14 +776,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                                 minute: '2-digit' 
                             });
                             
-                            // NEU: Markiere Nowcast (Vorhersage)
-                            // Mit 6h Historie: Frame 0-35 = Vergangenheit, Frame 36+ = Vorhersage
-                            const pastFrameCount = timestamps.length > 6 ? timestamps.length - 6 : 0;
-                            const isNowcast = currentFrame >= pastFrameCount;
-                            const label = isNowcast ? '🔮 Vorhersage' : '📡 Radar';
-                            
                             document.getElementById('timestamp').textContent = 
-                                label + ': ' + timeStr + ' Uhr';
+                                '📡 Radar: ' + timeStr + ' Uhr';
                         }
                     }
                 </script>
@@ -824,4 +856,479 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         finish()
         return true
     }
+
+    // ════════════════════════════════════════════════════════════════
+// FEATURE 1: TRAININGSWETTER-INDEX
+// ════════════════════════════════════════════════════════════════
+
+    private fun displayPawWeather(data: JSONObject, windSpeed: Double, windGusts: Double) {
+        val current = data.getJSONObject("current")
+
+        val temperature = current.getDouble("temperature_2m")
+        val feelsLike = current.getDouble("apparent_temperature")
+        val weatherCode = current.getInt("weather_code")
+        val uvIndex = current.getDouble("uv_index")
+        val precipitation = current.getDouble("precipitation")
+
+        // Pfotenwetter-Index berechnen
+        var pawResult = calculatePawWeatherIndex(
+            temperature, feelsLike, weatherCode, uvIndex, precipitation
+        )
+
+        // Wind-Warnung hinzufügen
+        pawResult = addWindWarning(pawResult, windSpeed, windGusts)
+
+        // Anzeigen
+        binding.pawWeatherIndexText.text = pawResult.warnings.joinToString("\n\n")
+        binding.pawWeatherIndexText.setTextColor(pawResult.severity.getColor())
+
+        // Pflegetipps
+        val groomingTips = getGroomingTips(weatherCode, precipitation)
+        if (groomingTips.isNotEmpty()) {
+            binding.groomingTipsText.text = "\n" + groomingTips.joinToString("\n")
+            binding.groomingTipsText.visibility = View.VISIBLE
+        } else {
+            binding.groomingTipsText.visibility = View.GONE
+        }
+
+        // Gassi-Zeiten Empfehlung
+        if (temperature >= 25 || temperature <= 5) {
+            try {
+                val hourly = data.getJSONObject("hourly")
+                val temps = hourly.getJSONArray("temperature_2m")
+                val times = hourly.getJSONArray("time")
+
+                // ✅ KORREKTUR: Nächste 24h ab jetzt finden
+                val now = System.currentTimeMillis()
+                val oneHour = 3600000L
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+                
+                var startIndex = 0
+                for (i in 0 until times.length()) {
+                    val date = dateFormat.parse(times.getString(i))
+                    if (date != null && date.time >= now - oneHour) {
+                        startIndex = i
+                        break
+                    }
+                }
+                
+                val endIndex = (startIndex + 24).coerceAtMost(temps.length())
+
+                val hourlyTemps = (startIndex until endIndex).map {
+                    temps.getDouble(it)
+                }
+                val hourlyTimes = (startIndex until endIndex).map {
+                    val timeStr = times.getString(it)
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+                        .parse(timeStr)?.let { date ->
+                            SimpleDateFormat("HH:mm", Locale.GERMAN).format(date)
+                        } ?: ""
+                }
+
+                val recommendations = recommendWalkingTimes(temperature, hourlyTemps, hourlyTimes)
+                binding.walkingTimesText.text = "\n" + recommendations.joinToString("\n")
+                binding.walkingTimesText.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                android.util.Log.e("WeatherActivity", "Fehler bei geeigneten Trainings-Zeiten", e)
+                binding.walkingTimesText.visibility = View.GONE
+            }
+        } else {
+            binding.walkingTimesText.visibility = View.GONE
+        }
+    }
+
+    private fun calculatePawWeatherIndex(
+        temperature: Double,
+        feelsLike: Double,
+        weatherCode: Int,
+        uvIndex: Double,
+        precipitation: Double
+    ): PawWeatherResult {
+        val warnings = mutableListOf<String>()
+        var severity = PawWeatherSeverity.GOOD
+
+        // 1. HEISSER ASPHALT
+        when {
+            temperature >= 35 -> {
+                warnings.add("🔥 EXTREM: Asphalt und Strassenpflaster bis zu 65°C! Gefahr ernster gesundheitlicher Schäden! Hitzeschockrisiko. Den Hund bitte nicht belasten.")
+                severity = PawWeatherSeverity.CRITICAL
+            }
+            temperature >= 30 -> {
+                warnings.add("⚠️ WARNUNG: Asphalt und Strassenpflaster kann 50-60°C erreichen. Gefahr gesundheitlicher Beeinträchtigungen! Diese Oberflächen bitte meiden.")
+                severity = maxOf(severity, PawWeatherSeverity.WARNING)
+            }
+            temperature >= 25 -> {
+                warnings.add("⚡ VORSICHT: Asphalt wird heiß (45°C+). Erhöhte Belastung für den Hund! Schatten nutzen.")
+                severity = maxOf(severity, PawWeatherSeverity.CAUTION)
+            }
+        }
+
+        // 2. KÄLTE & EIS
+        when {
+            temperature <= -10 -> {
+                warnings.add("❄️ EXTREM KALT: Gesundheitsgefahr für unangepasste Rassen! Hund in stetiger Bewegung halten.")
+                severity = maxOf(severity, PawWeatherSeverity.CRITICAL)
+            }
+            temperature <= -5 -> {
+                warnings.add("🧊 Sehr kalt: Pfotenschutz empfohlen. Salz auf Wegen beachten! Hund in stetiger Bewegung halten.")
+                severity = maxOf(severity, PawWeatherSeverity.WARNING)
+            }
+            temperature <= 0 -> {
+                warnings.add("🌨️ Frost: Achtung vor Streusalz und Eis. Achtung bei kalter Nässe. Hund zeitnah abtrocknen und aufwärmen lassen.")
+                severity = maxOf(severity, PawWeatherSeverity.CAUTION)
+            }
+        }
+
+        // 3. ZECKENRISIKO
+        if (temperature in 7.0..25.0 && precipitation < 5.0) {
+            warnings.add("🕷️ Erhöhtes Zeckenrisiko. Hund regelmäßig absuchen und Zecken zeitnah entfernen!")
+            severity = maxOf(severity, PawWeatherSeverity.INFO)
+        }
+
+        // 4. UV-SCHUTZ
+        if (uvIndex >= 6.0) {
+            warnings.add("☀️ Hohe UV-Strahlung: Schattige Wege bevorzugen! Keine anstrengenden Aktionen durchführen.")
+            severity = maxOf(severity, PawWeatherSeverity.INFO)
+        }
+
+        // 5. GEWITTER
+        if (weatherCode >= 95) {
+            warnings.add("⛈️ Gewitter: Achte auf Deinen Hund und auf Eure Sicherheit. Ängstliche Hunde nicht ableinen.")
+            severity = maxOf(severity, PawWeatherSeverity.WARNING)
+        }
+
+        // 6. STARKER REGEN
+        if (precipitation >= 10.0 || weatherCode in 80..82) {
+            warnings.add("🌧️ Starker Regen: Rutschgefahr auf nässenempfindlichen Boden!")
+            severity = maxOf(severity, PawWeatherSeverity.CAUTION)
+        }
+
+        if (warnings.isEmpty()) {
+            warnings.add("✅ Sehr gutes Trainingswetter.")
+            severity = PawWeatherSeverity.GOOD
+        }
+
+        return PawWeatherResult(warnings, severity)
+    }
+
+    private fun addWindWarning(
+        result: PawWeatherResult,
+        windSpeed: Double,
+        windGusts: Double
+    ): PawWeatherResult {
+        val warnings = result.warnings.toMutableList()
+        var severity = result.severity
+
+        when {
+            windGusts >= 75 -> {
+                warnings.add("💨 STURM: Gefahr durch umstürzende Äste! Training verschieben!")
+                severity = maxOf(severity, PawWeatherSeverity.CRITICAL)
+            }
+            windGusts >= 50 -> {
+                warnings.add("🌪️ Starker Wind: Im Gelände aufmerksam unterwegs sein.")
+                severity = maxOf(severity, PawWeatherSeverity.WARNING)
+            }
+            windSpeed >= 40 -> {
+                warnings.add("💨 Windige Bedingungen: Gerüche über große Entfernungen wahrnehmbar. Unzuverlässige Hunde bitte an der Leine führen..")
+                severity = maxOf(severity, PawWeatherSeverity.INFO)
+            }
+        }
+
+        return PawWeatherResult(warnings, severity)
+    }
+
+    private fun recommendWalkingTimes(
+        currentTemp: Double,
+        hourlyTemps: List<Double>,
+        hourlyTimes: List<String>
+    ): List<String> {
+        val recommendations = mutableListOf<String>()
+
+        if (currentTemp >= 25) {
+            val coolestHours = hourlyTemps
+                .mapIndexed { index, temp -> index to temp }
+                .sortedBy { it.second }
+                .take(3)
+                .map { hourlyTimes[it.first] }
+
+            recommendations.add("🌅 Beste Zeiten bei Hitze:")
+            coolestHours.forEach { time ->
+                recommendations.add("  • $time Uhr (kühlste Phase)")
+            }
+        }
+
+        if (currentTemp <= 5) {
+            val warmestHours = hourlyTemps
+                .mapIndexed { index, temp -> index to temp }
+                .sortedByDescending { it.second }
+                .take(3)
+                .map { hourlyTimes[it.first] }
+
+            recommendations.add("☀️ Beste Zeiten bei Kälte:")
+            warmestHours.forEach { time ->
+                recommendations.add("  • $time Uhr (wärmste Phase)")
+            }
+        }
+
+        return recommendations
+    }
+
+    private fun getGroomingTips(weatherCode: Int, precipitation: Double): List<String> {
+        val tips = mutableListOf<String>()
+
+        when {
+            weatherCode in 61..67 || weatherCode in 80..82 -> {
+                tips.add("🛁 Nach der Runde: Pfoten und Fell trocknen und dabei auf Zecken achten.")
+                tips.add("\uD83D\uDC36 Ohren auf Nässe und Verschmutzungen prüfen")
+            }
+            weatherCode in 71..77 || weatherCode in 85..86 -> {
+                tips.add("❄️ Eisklumpen zwischen Zehen entfernen")
+                tips.add("🧴 Pfotenbalsam verwenden gegen Risse")
+            }
+            precipitation >= 5.0 -> {
+                tips.add("🚿 Matschige Pfoten vor dem Reingehen säubern")
+            }
+            precipitation == 0.0 && weatherCode <= 3 -> {
+                tips.add("\uD83E\uDDAE Hundefreundliches Wetter - bei intensiven Training an 💧 Trinkwasser denken.")
+            }
+        }
+
+        return tips
+    }
+
+    data class PawWeatherResult(
+        val warnings: List<String>,
+        val severity: PawWeatherSeverity
+    )
+
+    enum class PawWeatherSeverity {
+        GOOD, INFO, CAUTION, WARNING, CRITICAL;
+
+        fun getColor(): Int {
+            return when (this) {
+                GOOD -> Color.parseColor("#4CAF50")
+                INFO -> Color.parseColor("#2196F3")
+                CAUTION -> Color.parseColor("#FFC107")
+                WARNING -> Color.parseColor("#FF9800")
+                CRITICAL -> Color.parseColor("#F44336")
+            }
+        }
+    }
+
+// ════════════════════════════════════════════════════════════════
+// FEATURE 2: TEMPERATUR-VERLAUFSGRAFIK
+// ════════════════════════════════════════════════════════════════
+
+    private fun displayTemperatureChart(data: JSONObject) {
+        try {
+            val hourly = data.getJSONObject("hourly")
+            val times = hourly.getJSONArray("time")
+            val temperatures = hourly.getJSONArray("temperature_2m")
+
+            val temps = mutableListOf<Double>()
+            val labels = mutableListOf<String>()
+
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+
+            // ✅ KORREKTUR: Nächste 24h ab jetzt finden
+            val now = System.currentTimeMillis()
+            val oneHour = 3600000L
+            
+            var startIndex = 0
+            for (i in 0 until times.length()) {
+                val date = dateFormat.parse(times.getString(i))
+                if (date != null && date.time >= now - oneHour) {
+                    startIndex = i
+                    break
+                }
+            }
+            
+            val limit = (startIndex + 24).coerceAtMost(temperatures.length())
+
+            for (i in startIndex until limit) {
+                temps.add(temperatures.getDouble(i))
+
+                val timeStr = times.getString(i)
+                val date = dateFormat.parse(timeStr)
+                labels.add(date?.let { timeFormat.format(it) } ?: "")
+            }
+
+            binding.temperatureChart.setData(temps, labels)
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Temperatur-Chart", e)
+        }
+    }
+
+// ════════════════════════════════════════════════════════════════
+// FEATURE: NIEDERSCHLAGS-VERLAUFSGRAFIK
+// ════════════════════════════════════════════════════════════════
+
+    private fun displayPrecipitationChart(data: JSONObject) {
+        try {
+            val hourly = data.getJSONObject("hourly")
+            val times = hourly.getJSONArray("time")
+            val precipitationArray = hourly.getJSONArray("precipitation")
+
+            val precipValues = mutableListOf<Double>()
+            val labels = mutableListOf<String>()
+
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+
+            // ✅ KORREKTUR: Nächste 24h ab jetzt finden
+            val now = System.currentTimeMillis()
+            val oneHour = 3600000L
+            
+            var startIndex = 0
+            for (i in 0 until times.length()) {
+                val date = dateFormat.parse(times.getString(i))
+                if (date != null && date.time >= now - oneHour) {
+                    startIndex = i
+                    break
+                }
+            }
+
+            val limit = (startIndex + 24).coerceAtMost(precipitationArray.length())
+
+            for (i in startIndex until limit) {
+                precipValues.add(precipitationArray.getDouble(i))
+
+                val timeStr = times.getString(i)
+                val date = dateFormat.parse(timeStr)
+                labels.add(date?.let { timeFormat.format(it) } ?: "")
+            }
+
+            binding.precipitationChart.setData(precipValues, labels)
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Niederschlags-Chart", e)
+        }
+    }
+
+// ════════════════════════════════════════════════════════════════
+// FEATURE 3: TAGESLÄNGE & DÄMMERUNG
+// ════════════════════════════════════════════════════════════════
+
+    // NEU: Tageslänge & Dämmerung
+    private fun displayDaylightInfo(data: JSONObject) {
+        try {
+            val daily = data.getJSONObject("daily")
+            val sunriseArray = daily.getJSONArray("sunrise")
+            val sunsetArray = daily.getJSONArray("sunset")
+
+            if (sunriseArray.length() >= 2 && sunsetArray.length() >= 2) {
+                // ✅ KORREKTUR: Gestern (Index 0) und Heute (Index 1)
+                val yesterdaySunriseStr = sunriseArray.getString(0)
+                val yesterdaySunsetStr = sunsetArray.getString(0)
+                val todaySunriseStr = sunriseArray.getString(1)
+                val todaySunsetStr = sunsetArray.getString(1)
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+
+                val sunrise = dateFormat.parse(todaySunriseStr)
+                val sunset = dateFormat.parse(todaySunsetStr)
+
+                val yesterdaySunrise = dateFormat.parse(yesterdaySunriseStr)
+                val yesterdaySunset = dateFormat.parse(yesterdaySunsetStr)
+
+                if (sunrise != null && sunset != null) {
+                    // Tageslänge heute
+                    val daylightMillis = sunset.time - sunrise.time
+                    val hours = TimeUnit.MILLISECONDS.toHours(daylightMillis)
+                    val minutes = TimeUnit.MILLISECONDS.toMinutes(daylightMillis) % 60
+
+                    binding.daylightDurationText.text = String.format(
+                        Locale.GERMAN,
+                        "☀️ Tageslänge: %dh %dm",
+                        hours,
+                        minutes
+                    )
+
+                    // Dämmerungszeiten
+                    val civilTwilightDuration = 35 * 60 * 1000L
+                    val dawnStart = Date(sunrise.time - civilTwilightDuration)
+                    val duskEnd = Date(sunset.time + civilTwilightDuration)
+
+                    binding.dawnText.text = String.format("🌄 Morgendämmerung: %s Uhr", timeFormat.format(dawnStart))
+                    binding.duskText.text = String.format("🌆 Abenddämmerung: %s Uhr", timeFormat.format(duskEnd))
+
+                    // ✅ KORREKTUR: Trend-Berechnung mit echtem Gestern
+                    if (yesterdaySunrise != null && yesterdaySunset != null) {
+                        val yesterdayDaylight = yesterdaySunset.time - yesterdaySunrise.time
+                        val change = daylightMillis - yesterdayDaylight
+                        val changeMinutes = TimeUnit.MILLISECONDS.toMinutes(change)
+
+                        val trend = when {
+                            changeMinutes > 0 -> "📈 +$changeMinutes Min länger"
+                            changeMinutes < 0 -> "📉 ${-changeMinutes} Min kürzer"
+                            else -> "➡️ Gleich lang"
+                        }
+
+                        binding.daylightTrendText.text = "Tendenz: $trend als gestern"
+                        binding.daylightTrendText.visibility = View.VISIBLE
+                    }
+
+                    displayLightBasedRecommendation(sunrise, sunset)
+                    displayGoldenHour(sunrise, sunset)
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Tageslänge", e)
+        }
+    }
+
+    private fun displayLightBasedRecommendation(sunrise: Date, sunset: Date) {
+        val now = Date()
+        val recommendations = mutableListOf<String>()
+
+        if (now.before(sunrise)) {
+            val minutesUntilSunrise = TimeUnit.MILLISECONDS.toMinutes(sunrise.time - now.time)
+
+            if (minutesUntilSunrise < 60) {
+                recommendations.add("🌅 Sonnenaufgang in ${minutesUntilSunrise}Min - Perfekt für Morgenrunde!")
+            } else {
+                recommendations.add("🌃 Noch dunkel - Achtet auf Eigensicherung und Reflektoren bei gefährlichen Strassensituationen!")
+            }
+        }
+
+        if (now.before(sunset)) {
+            val minutesUntilSunset = TimeUnit.MILLISECONDS.toMinutes(sunset.time - now.time)
+
+            if (minutesUntilSunset < 120) {
+                recommendations.add("🌇 Sonnenuntergang in ${minutesUntilSunset}Min - Ideal für Abendrunde!")
+            }
+        } else {
+            recommendations.add("🌙 Dunkel - Achtet auf Eigensicherung und Lampe nicht vergessen!")
+        }
+
+        if (recommendations.isNotEmpty()) {
+            binding.lightRecommendationText.text = recommendations.joinToString("\n")
+            binding.lightRecommendationText.visibility = View.VISIBLE
+        } else {
+            binding.lightRecommendationText.visibility = View.GONE
+        }
+    }
+
+    private fun displayGoldenHour(sunrise: Date, sunset: Date) {
+        val goldenHourDuration = 60 * 60 * 1000L
+
+        val morningGoldenStart = sunrise
+        val morningGoldenEnd = Date(sunrise.time + goldenHourDuration)
+
+        val eveningGoldenStart = Date(sunset.time - goldenHourDuration)
+        val eveningGoldenEnd = sunset
+
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+
+        val goldenHourText = """
+        📸 Goldene Stunde (schönes Licht für Fotos):
+        Morgens: ${timeFormat.format(morningGoldenStart)} - ${timeFormat.format(morningGoldenEnd)}
+        Abends: ${timeFormat.format(eveningGoldenStart)} - ${timeFormat.format(eveningGoldenEnd)}
+    """.trimIndent()
+
+        binding.goldenHourText.text = goldenHourText
+        binding.goldenHourText.visibility = View.VISIBLE
+    }
+
 }

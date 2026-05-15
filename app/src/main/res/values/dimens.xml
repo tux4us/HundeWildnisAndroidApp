@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/dimens.xml -->
+<resources>
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- GLOBALE TEXTGRÖSSEN - RESPONSIVE -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
+    <!-- Display Größen -->
+    <dimen name="text_display_large">24sp</dimen>
+    <dimen name="text_display_medium">20sp</dimen>
+    <dimen name="text_display_small">18sp</dimen>
+
+    <!-- Headline Größen -->
+    <dimen name="text_headline_large">22sp</dimen>
+    <dimen name="text_headline_medium">20sp</dimen>
+    <dimen name="text_headline_small">18sp</dimen>
+
+    <!-- Body Größen -->
+    <dimen name="text_body_large">16sp</dimen>
+    <dimen name="text_body_medium">14sp</dimen>
+    <dimen name="text_body_small">12sp</dimen>
+    <dimen name="text_body_very_small">10sp</dimen>
+
+    <!-- Label/Button Größen -->
+    <dimen name="text_label_large">14sp</dimen>
+    <dimen name="text_label_medium">12sp</dimen>
+    <dimen name="text_label_small">12sp</dimen>
+
+    <!-- Button Textgrößen - GRÖSSER für bessere Skalierung! -->
+    <dimen name="text_button_large">20sp</dimen>
+    <dimen name="text_button_medium">18sp</dimen>
+    <dimen name="text_button_small">16sp</dimen>
+
+    <!-- Titel/Header (NEU!) -->
+    <dimen name="text_title_large">24sp</dimen>
+    <dimen name="text_title_medium">20sp</dimen>
+    <dimen name="text_subtitle">18sp</dimen>
+
+    <!-- Body Text (NEU!) -->
+    <dimen name="text_normal">16sp</dimen>
+    <dimen name="text_small">14sp</dimen>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- PADDING & MARGINS -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
+    <dimen name="padding_tiny">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_xlarge">24dp</dimen>
+
+    <dimen name="margin_tiny">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_xlarge">24dp</dimen>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- BUTTON & CARD SIZES -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
+    <dimen name="button_height_small">48dp</dimen>
+    <dimen name="button_height_medium">56dp</dimen>
+    <dimen name="button_height_large">64dp</dimen>
+
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">8dp</dimen>
+
+</resources>

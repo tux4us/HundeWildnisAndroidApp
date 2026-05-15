@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🚨"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_body_medium"
             android:layout_marginEnd="12dp" />
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01.01.2024 12:00"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary" />
 
@@ -45,14 +45,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Symptom: ..."
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="?android:attr/textColorSecondary" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnDeleteReport"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             app:tint="@android:color/holo_red_dark"
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="▶"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textColor="#B00020"
             android:layout_marginStart="8dp" />
 

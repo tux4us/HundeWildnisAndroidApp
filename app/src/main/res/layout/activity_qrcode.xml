@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="📱 QR-CODE"
-            android:textSize="24sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textColor="#1B3A0A"
             android:layout_marginBottom="16dp" />
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Scannen zum Anzeigen der Stammdaten."
-            android:textSize="14sp"
+            android:textSize="@dimen/text_body_medium"
             android:textColor="#000000"
             android:textAlignment="center"
             android:layout_marginBottom="24dp" />
@@ -78,9 +78,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnShare"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:text="📤 QR-Code teilen"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             app:backgroundTint="#2d5016"
             android:textColor="#FFFFFF"
@@ -90,9 +90,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:text="💾 In Galerie speichern"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             style="@style/Widget.Material3.Button.OutlinedButton"
             app:cornerRadius="12dp"
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="💡 Bitte prüfe, mit wem Du Deine vertraulichen Daten teilst."
-            android:textSize="12sp"
+            android:textSize="@dimen/text_body_medium"
             android:textColor="#000000"
             android:textAlignment="center"
             android:layout_marginTop="16dp"

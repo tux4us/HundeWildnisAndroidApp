@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,7 +27,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="8dp" />
 
@@ -38,7 +38,7 @@
             android:layout_gravity="center"
             android:text="🐕 Noch keine Hunde\n\nTippe auf ➕ um einen Hund hinzuzufügen"
             android:textAlignment="center"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textColor="#666666"
             android:visibility="gone"
             android:layout_marginTop="100dp" />
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="➕ Hund hinzufügen (3 von 3)"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             app:backgroundTint="#2d5016"
             android:textColor="#FFFFFF"
             android:layout_margin="16dp"

@@ -30,16 +30,25 @@
                 android:id="@+id/titleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?android:textColorPrimary" />
+
+            <TextView
+                android:id="@+id/dateText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="12sp"
+                android:textColor="?android:textColorSecondary"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/excerptText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="?android:textColorSecondary"
                 android:maxLines="3"
                 android:ellipsize="end" />

@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="⋯ Mehr"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textAlignment="center"
             android:paddingBottom="16dp"
@@ -62,9 +62,9 @@
 
                 <TextView
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="🎥"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:gravity="center"
                     android:layout_marginEnd="16dp" />
 
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Folge uns auf YouTube"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorPrimary" />
 
             </LinearLayout>
@@ -97,9 +97,9 @@
 
                 <TextView
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="🎙️"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:gravity="center"
                     android:layout_marginEnd="16dp" />
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="HundeWildnis Podcast"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorPrimary" />
 
             </LinearLayout>
@@ -132,9 +132,9 @@
 
                 <TextView
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="🐦"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:gravity="center"
                     android:layout_marginEnd="16dp" />
 
@@ -143,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Folge uns auf X"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorPrimary" />
 
             </LinearLayout>
@@ -167,9 +167,9 @@
 
                 <TextView
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="💬"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:gravity="center"
                     android:layout_marginEnd="16dp" />
 
@@ -183,14 +183,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="SIGNAL Chat mit Manuela"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fragen und Antworten"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>
@@ -216,9 +216,9 @@
 
                 <TextView
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="💬"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:gravity="center"
                     android:layout_marginEnd="16dp" />
 
@@ -232,14 +232,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="SIGNAL Chat mit Jörg"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fragen und Antworten"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>

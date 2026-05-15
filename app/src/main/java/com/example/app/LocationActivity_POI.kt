@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hundewildnis.app.databinding.ActivityLocationBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -85,7 +86,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Standort & Ziele"
+            title = "Navigation und Orte"
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -97,6 +98,13 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         checkLocationPermission()
         setupCategoryButtons()
         setupPOISearch()
+
+        // Insets für Toolbar/StatusBar anwenden
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            findViewById<View>(R.id.appbar)?.setPadding(0, systemBars.top, 0, 0)
+            insets
+        }
     }
 
     private fun setupMap() {
@@ -1223,6 +1231,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         updateLocation(location)
 
         if (isNavigating) {
+            // ✅ Automatische Kartendrehung in Bewegungsrichtung
+            if (location.hasBearing() && location.speed > 0.5f) {
+                binding.mapView.setMapOrientation(-location.bearing)
+            }
+
             centerMapOnLocation(location)
             currentPOIMarker?.let {
                 drawRouteOSRM(location.latitude, location.longitude, it.position.latitude, it.position.longitude)
@@ -1304,12 +1317,32 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         currentLocation?.let { location ->
             drawRouteOSRM(location.latitude, location.longitude, poi.lat, poi.lon)
+            
+            // ✅ Verzögerter Zoom auf die gesamte Route (5 Sek.)
+            lifecycleScope.launch {
+                delay(5000)
+                if (isNavigating) { // Nur zoomen, wenn Navigation noch aktiv ist
+                    zoomToFitRoute(location, poiPosition)
+                }
+            }
         }
 
-        binding.mapView.controller.animateTo(poiPosition)
         binding.btnCurrentLocation.text = "🧭 Navigation beenden"
         isNavigating = true
         binding.mapView.invalidate()
+    }
+
+    /**
+     * Zoomt die Karte so, dass sowohl der User als auch das Ziel sichtbar sind
+     */
+    private fun zoomToFitRoute(userLoc: Location, target: GeoPoint) {
+        val points = mutableListOf<GeoPoint>()
+        points.add(GeoPoint(userLoc.latitude, userLoc.longitude))
+        points.add(target)
+
+        // BoundingBox mit etwas Padding (200 Pixel)
+        val boundingBox = org.osmdroid.util.BoundingBox.fromGeoPoints(points)
+        binding.mapView.zoomToBoundingBox(boundingBox, true, 200)
     }
 
     private fun drawRouteOSRM(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
@@ -1499,6 +1532,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         isNavigating = false
         binding.btnCurrentLocation.text = "📍 Standort"
         binding.navigationInfoText.visibility = View.GONE
+        
+        // ✅ Karte wieder nach Norden ausrichten
+        binding.mapView.setMapOrientation(0f)
+
         currentPOIMarker?.let { binding.mapView.overlays.remove(it) }
         currentPOIMarker = null
         currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }

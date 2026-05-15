@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Farbe wenn ausgewählt: REINWEISS -->
+    <item android:state_checked="true" android:color="#FFFFFF" />
+    <!-- Farbe wenn NICHT ausgewählt: WEISS (sehr gut sichtbar) -->
+    <item android:color="#E6FFFFFF" />
+</selector>

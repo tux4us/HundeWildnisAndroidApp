@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -30,19 +30,133 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="     Lernen - Trainieren - Wissen"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/start_header_text"
+            android:textSize="@dimen/text_headline_medium"
+            android:textStyle="italic"
             android:textAlignment="center"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:textColor="?android:attr/textColorPrimary" />
 
+        <!-- NEU: Blog-Preview Card für activity_start.xml -->
+        <com.google.android.material.card.MaterialCardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cardLatestBlogPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Header: "Neuester Blog-Beitrag" -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:background="#2d5016"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="💬 Neuester Blog-Beitrag"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Alle anzeigen ›"
+                        android:textColor="#A4B395"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Blog-Bild (optional) -->
+                <ImageView
+                    android:id="@+id/blogPreviewImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    android:contentDescription="Blog-Bild" />
+
+                <!-- Blog-Inhalt -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Titel -->
+                    <TextView
+                        android:id="@+id/blogPreviewTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Lädt..."
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:textColorPrimary"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+
+                    <!-- Datum -->
+                    <TextView
+                        android:id="@+id/blogPreviewDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text=""
+                        android:textSize="12sp"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <!-- Excerpt -->
+                    <TextView
+                        android:id="@+id/blogPreviewExcerpt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:textColor="?android:textColorSecondary"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <!-- Loading Indicator -->
+                <ProgressBar
+                    android:id="@+id/blogPreviewLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="32dp"
+                    android:indeterminateTint="#2d5016"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Scrollable Buttons -->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollViewContent"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fillViewport="false"
             android:clipToPadding="false"
@@ -54,30 +168,17 @@
                 android:orientation="vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:paddingTop="0dp"
+                android:paddingTop="20dp"
                 android:paddingBottom="140dp">
-
-                <!-- ✅ Button 1: Unterstützung (NEU - an erster Position!) -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSupport"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="💖🤝 Deine Unterstützung"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#1A3710"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
 
                 <!-- Button 2: Übung des Tages -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDailyExercise"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="🦮📖 Übung des Tages"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:text="🦮📖 Übung der Woche"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#2d5016"
@@ -89,9 +190,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDailyMeditation"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="🧘🐕 Meditation des Tages"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:text="🧘🐕 Meditationsübung"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#4a6135"
@@ -103,9 +205,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWalkingSpeed"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="⏱️🔔 Tempo - Trainer"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#5a7145"
@@ -117,9 +220,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCommunication"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="🗣️🎤 Sprach - Trainer"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#6a8255"
@@ -127,13 +231,14 @@
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
 
-                <!-- ✅ Button Trainingstagebuch (NEU!) -->
+                <!-- ✅ Button Trainingstagebuch -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTrainingDiary"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="🦮🗓 Trainingstagebuch"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:text="🦮📖 Hundetraining"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#0D47A1"
@@ -145,9 +250,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDailyNotes"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="📝📸 Tagesnotizen"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#5a7145"
@@ -158,9 +264,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWeather"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="🌦📍 Standort Wetter"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:text="🌦💦 Revier - Wetter"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#4a6135"
@@ -171,9 +278,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLocation"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="🗺🛰 Standort Navigation"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:text="🗺🛰 Revier - Navigation"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#2d5016"
@@ -184,9 +292,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCompass"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="🧭🌐 Kompass"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#213A10"
@@ -197,12 +306,13 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAltimeter"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="⛰️〽️ Höhenmesser"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#2d5016"
+                    app:backgroundTint="#1e340e"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
@@ -210,40 +320,58 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDogProfiles"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="🦮 Hunde Stammdaten"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     app:backgroundTint="#01579B"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- NOTFALL-BUTTON (nach btnTrainingDiary) -->
+                <!-- NOTFALL-BUTTON -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnEmergency"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="🚨 NOTFALL 🚨"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     android:backgroundTint="#BD0000"
                     app:cornerRadius="12dp"
                     android:layout_marginBottom="16dp"
                     app:iconGravity="start" />
 
-                <!-- ✅ Button 11: Backup & Restore (NEU!) -->
+                <!-- ✅ Button 11: Backup & Restore -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBackup"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
                     android:text="📦💾 Backup App Daten"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_button_large"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="#311B92"
+                    app:backgroundTint="#E76E04"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp" />
+
+                <!-- ✅ Button 1: Unterstützung -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSupport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:text="💖🤝 Deine Unterstützung"
+                    android:textSize="@dimen/text_button_large"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#006064"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    app:iconGravity="start" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
@@ -257,10 +385,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:backgroundTint="#1B3A0A"
-        app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@color/bottom_nav_colors"
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:itemRippleColor="#338fad6f"
+        app:itemActiveIndicatorStyle="@style/Widget.App.BottomNav.Indicator"
+        app:itemTextAppearanceActive="@style/TextAppearance.App.BottomNav.Active"
+        app:itemTextAppearanceInactive="@style/TextAppearance.App.BottomNav.Inactive"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_navigation"
-        app:elevation="8dp" />
+        app:elevation="16dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

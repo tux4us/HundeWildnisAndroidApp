@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -71,36 +72,12 @@ class MainActivity : BaseBottomNavActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loadThemePreference()
-        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
-            binding.bottomNavigation.setPadding(0, 0, 0, systemBars.bottom)
-            binding.bottomNavigation.post {
-                val bottomNavHeight = binding.bottomNavigation.height
-                val totalBottomPadding = bottomNavHeight + systemBars.bottom
-                binding.blogRecyclerView.setPadding(binding.blogRecyclerView.paddingLeft, binding.blogRecyclerView.paddingTop, binding.blogRecyclerView.paddingRight, totalBottomPadding)
-                
-                findViewById<View>(R.id.pagesMenu)?.let { scrollView ->
-                    val linearLayout = (scrollView as? android.widget.ScrollView)?.getChildAt(0)
-                    linearLayout?.setPadding(linearLayout.paddingLeft, linearLayout.paddingTop, linearLayout.paddingRight, totalBottomPadding)
-                }
-                findViewById<View>(R.id.coursesMenu)?.let { scrollView ->
-                    val linearLayout = (scrollView as? android.widget.ScrollView)?.getChildAt(0)
-                    linearLayout?.setPadding(linearLayout.paddingLeft, linearLayout.paddingTop, linearLayout.paddingRight, totalBottomPadding)
-                }
-                val buttonParams = binding.btnLoadMore.layoutParams as FrameLayout.LayoutParams
-                buttonParams.bottomMargin = bottomNavHeight + systemBars.bottom + 16.dpToPx()
-                binding.btnLoadMore.layoutParams = buttonParams
-            }
-            insets
-        }
-
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
-        binding.toolbar.overflowIcon?.setTint(Color.WHITE)
+        binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)
         contentCache = ContentCache(this)
         setupRecyclerViews()
         setupButtons()
@@ -122,7 +99,7 @@ class MainActivity : BaseBottomNavActivity() {
         }
 
         loadContent()
-        scheduleContentUpdates()
+        UpdateHelper.scheduleContentUpdates(this)
         requestNotificationPermission()
     }
 
@@ -364,8 +341,8 @@ class MainActivity : BaseBottomNavActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val csl = android.content.res.ColorStateList.valueOf(color)
         listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
-        s1.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_enabled", isChecked).apply(); if (isChecked) scheduleContentUpdates() else WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_morning"); s2.isEnabled = isChecked; s3.isEnabled = isChecked }
-        s2.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_wifi_only", isChecked).apply(); scheduleContentUpdates() }
+        s1.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_enabled", isChecked).apply(); if (isChecked) UpdateHelper.scheduleContentUpdates(this) else WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_morning"); s2.isEnabled = isChecked; s3.isEnabled = isChecked }
+        s2.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_wifi_only", isChecked).apply(); UpdateHelper.scheduleContentUpdates(this) }
         s3.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("notifications_enabled", isChecked).apply() }
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
         val dialog = AlertDialog.Builder(this).setTitle("⚙️ Einstellungen").setView(view).setPositiveButton("Fertig", null).create()
@@ -380,20 +357,6 @@ class MainActivity : BaseBottomNavActivity() {
         getSharedPreferences("theme_prefs", MODE_PRIVATE).edit().putBoolean("is_dark_mode", !isDark).apply()
         AppCompatDelegate.setDefaultNightMode(if (isDark) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
         recreate()
-    }
-
-    private fun scheduleContentUpdates() {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        if (!prefs.getBoolean("background_updates_enabled", true)) { WorkManager.getInstance(applicationContext).cancelAllWork(); return }
-        val constraints = Constraints.Builder().setRequiredNetworkType(if (prefs.getBoolean("background_updates_wifi_only", false)) NetworkType.UNMETERED else NetworkType.CONNECTED).setRequiresBatteryNotLow(true).build()
-        val morningRequest = PeriodicWorkRequestBuilder<ContentUpdateWorker>(12, TimeUnit.HOURS, 1, TimeUnit.HOURS).setConstraints(constraints).setInitialDelay(calculateDelayUntil(8), TimeUnit.MILLISECONDS).build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork("content_updates_morning", ExistingPeriodicWorkPolicy.KEEP, morningRequest)
-    }
-
-    private fun calculateDelayUntil(hour: Int): Long {
-        val now = Calendar.getInstance()
-        val due = Calendar.getInstance().apply { set(Calendar.HOUR_OF_DAY, hour); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); if (before(now)) add(Calendar.DAY_OF_MONTH, 1) }
-        return due.timeInMillis - now.timeInMillis
     }
 
     private fun requestNotificationPermission() {
