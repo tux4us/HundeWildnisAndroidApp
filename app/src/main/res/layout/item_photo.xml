@@ -16,9 +16,10 @@
         <ImageView
             android:id="@+id/ivPhoto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="120dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Foto" />
+            android:contentDescription="Foto"
+            android:background="#333333" />
 
         <!-- Löschen-Button -->
         <ImageButton

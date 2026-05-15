@@ -87,7 +87,23 @@ class ContentActivity : SecureBaseActivity() {
 
             override fun shouldOverrideUrlLoading(
                 view: WebView?, request: WebResourceRequest?
-            ): Boolean = false
+            ): Boolean {
+                val url = request?.url?.toString() ?: return false
+                
+                // ✅ INTERNE LINKS (wildnislehrer.com) -> In der WebView lassen
+                if (url.contains("wildnislehrer.com")) {
+                    return false
+                }
+                
+                // ✅ EXTERNE LINKS -> Im externen Browser öffnen
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, request.url)
+                    view?.context?.startActivity(intent)
+                    return true
+                } catch (e: Exception) {
+                    return false
+                }
+            }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 binding.progressBar.visibility = View.VISIBLE
