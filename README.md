@@ -229,7 +229,14 @@ Umfangreicher Wetterbericht für Deinen aktuellen Standort zur Planung Deiner Ak
 
 ### 📊 24h-Temperaturverlauf
 
-- Grafische Darstellung der Temperaturentwicklung über 24 Stunden
+- Grafische Darstellung der Temperaturentwicklung über die nächsten 24 Stunden
+- Auto-Skalierung für optimale Lesbarkeit
+- Zeitmarkierungen alle 3 Stunden
+- Min/Max-Anzeige
+
+### 📊 24h-Niederschlagsmenge
+
+- Grafische Darstellung der Niederschlagsentwicklung über die nächsten 24 Stunden
 - Auto-Skalierung für optimale Lesbarkeit
 - Zeitmarkierungen alle 3 Stunden
 - Min/Max-Anzeige
@@ -242,10 +249,8 @@ Umfangreicher Wetterbericht für Deinen aktuellen Standort zur Planung Deiner Ak
 
 ### 🌧️ Interaktives Regenradar (Nowcast)
 
-- **Historie:** Visualisierung der Regenwolken-Bewegung der letzten 6 Stunden
-- **Vorhersage:** Animierte Projektion für die kommenden 60 Minuten (Nowcast), um Regenschauer während des Spaziergangs präzise umgehen zu können
+- **Historie:** Visualisierung der Regenwolken-Bewegung der letzten 2 Stunden
 - **Play/Pause-Steuerung** für Animation
-- **Zeitstempel-Anzeige** für jeden Frame
 
 > **📌 Datenschutz-Hinweis:** Alle Wetterdaten werden über die freie Open-Meteo API (CC BY 4.0) und das RainViewer-Radar abgerufen. Es findet kein Tracking durch Google oder andere kommerzielle Wetterdienste statt.
 
