@@ -444,8 +444,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun addPhoto(uri: Uri) {
-        photos.add(uri)
-        photoAdapter.notifyItemInserted(photos.size - 1)
+        photoAdapter.addPhoto(uri)
         updatePhotoVisibility()
     }
 

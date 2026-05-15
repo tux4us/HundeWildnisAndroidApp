@@ -31,15 +31,17 @@ class PhotoAdapter(
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photoUri = photos[position]
         
-        // Foto laden mit Glide (oder direkt setzen)
+        // Foto laden mit Glide
         try {
             Glide.with(holder.itemView.context)
                 .load(photoUri)
+                .placeholder(R.drawable.ic_placeholder_image)
+                .error(R.drawable.ic_error_image)
                 .centerCrop()
                 .into(holder.imageView)
         } catch (e: Exception) {
             // Fallback: Direkt setzen
-            holder.imageView.setImageURI(photoUri)
+            holder.imageView.setImageResource(R.drawable.ic_error_image)
         }
         
         // Löschen-Button
