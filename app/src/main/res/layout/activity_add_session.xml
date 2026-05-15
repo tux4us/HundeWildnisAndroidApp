@@ -8,10 +8,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hundename"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kategorie"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="24dp" />
 
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📊 Trainingserfassung"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -76,22 +76,22 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMeasurementTime"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
-                    android:text="⏱️ Minuten"
-                    android:textSize="14sp"
+                    android:text="⏱️\nMinuten"
+                    android:textSize="@dimen/text_body_medium"
                     app:cornerRadius="8dp"
                     style="@style/Widget.Material3.Button" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMeasurementReps"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
-                    android:text="🔢 Wiederholungen"
-                    android:textSize="14sp"
+                    android:text="🔢\nWiederholungen"
+                    android:textSize="@dimen/text_body_medium"
                     app:cornerRadius="8dp"
                     style="@style/Widget.Material3.Button" />
 
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="⏱️ Dauer"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="15 Min"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textAlignment="center"
                 android:layout_marginBottom="24dp" />
 
@@ -134,7 +134,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="⭐ Erfolg"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -148,7 +148,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSuccess1"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
                     android:text="🔴"
@@ -157,7 +157,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSuccess2"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
                     android:text="🟡"
@@ -166,7 +166,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSuccess3"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
                     android:text="🟢"
@@ -175,7 +175,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSuccess4"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="🟢🟢"
                     app:cornerRadius="8dp" />
@@ -187,7 +187,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🎯 Ablenkungslevel"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -210,7 +210,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📊 Schwierigkeitsgrad"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -233,7 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🌤️ Optional: Bedingungen"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
@@ -250,8 +250,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
-                    android:text="☀️ Wetter abrufen"
-                    android:textSize="12sp" />
+                    android:text="☀️ Wetterdaten"
+                    android:textSize="@dimen/text_body_medium" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnFetchGps"
@@ -260,8 +260,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
-                    android:text="📍 GPS Standort"
-                    android:textSize="12sp" />
+                    android:text="📍 Standort"
+                    android:textSize="@dimen/text_body_medium" />
 
             </LinearLayout>
 
@@ -270,7 +270,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:padding="8dp"
                 android:background="?attr/selectableItemBackground"
                 android:layout_marginBottom="4dp" />
@@ -280,7 +280,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_body_medium"
                 android:padding="8dp"
                 android:background="?attr/selectableItemBackground"
                 android:layout_marginBottom="16dp" />
@@ -322,7 +322,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📝 Notizen"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 

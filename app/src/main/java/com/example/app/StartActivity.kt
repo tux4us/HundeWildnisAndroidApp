@@ -17,10 +17,19 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
+import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityStartBinding
 import kotlinx.coroutines.*
 import com.hundewildnis.app.BuildConfig
 import java.io.File
+import android.view.View
+import coil.load
+import coil.size.Scale
+import coil.request.CachePolicy
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 /**
  * StartActivity - Hauptstartseite der App
@@ -59,7 +68,9 @@ class StartActivity : BaseBottomNavActivity() {
     override fun getBottomNavigationView() = binding.bottomNavigation
     override fun getCurrentNavigationItemId() = R.id.nav_home
 
-    override fun onHomeSelected() {}
+    override fun onHomeSelected() {
+        // Falls wir schon in StartActivity sind, nichts tun
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +79,16 @@ class StartActivity : BaseBottomNavActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
-        binding.toolbar.overflowIcon?.setTint(Color.WHITE)
+        binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)
 
         setupButtons()
         super.setupBottomNavigation()
+
+        // ✅ Hintergrund-Updates initialisieren (Wichtig bei Neuinstallation!)
+        UpdateHelper.scheduleContentUpdates(this)
+
+        // ✅ NEU: Blog-Preview laden
+        loadLatestBlogPost()
 
         // ✅ Erst-Info Dialog für Benachrichtigungen (Google Play Konform)
         checkNotificationDisclosure()
@@ -251,7 +268,6 @@ class StartActivity : BaseBottomNavActivity() {
     private fun openImprint() { startActivity(Intent(this, ImprintActivity::class.java)) }
 
     private fun setupButtons() {
-        binding.btnSupport.setOnClickListener { startActivity(Intent(this, SupportActivity::class.java)) }
         binding.btnDailyExercise.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-des-tages/", "Übung des Tages") }
         binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/tagesmeditation/", "Tagesmeditation") }
         binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
@@ -265,6 +281,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnDogProfiles.setOnClickListener { startActivity(Intent(this, DogProfileActivity::class.java)) }
         binding.btnEmergency.setOnClickListener { openEmergencyWizard() }
         binding.btnBackup.setOnClickListener { startActivity(Intent(this, BackupActivity::class.java)) }
+        binding.btnSupport.setOnClickListener { startActivity(Intent(this, SupportActivity::class.java)) }
     }
 
     private fun openEmergencyWizard() {
@@ -297,6 +314,8 @@ class StartActivity : BaseBottomNavActivity() {
         // Mehrere Hunde? Auswahl anzeigen
         if (profiles.size > 1) {
             val dogNames = profiles.map { it.name }.toTypedArray()
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
                 .setTitle("🐕 Welcher Hund?")
@@ -305,7 +324,10 @@ class StartActivity : BaseBottomNavActivity() {
                     openFirstAidWizard(selectedProfile)
                 }
                 .setNegativeButton("Abbrechen", null)
-                .show()
+                .create().apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+                }
         } else {
             // Nur ein Hund - direkt öffnen
             openFirstAidWizard(profiles[0])
@@ -362,7 +384,18 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun offerShare(file: File) {
-        AlertDialog.Builder(this).setTitle("Backup teilen?").setPositiveButton("Teilen") { _, _ -> shareBackupFile(file) }.setNegativeButton("Später", null).show()
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("Backup teilen?")
+            .setPositiveButton("Teilen") { _, _ -> shareBackupFile(file) }
+            .setNegativeButton("Später", null)
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
     }
 
     private fun shareBackupFile(file: File) {
@@ -438,6 +471,176 @@ class StartActivity : BaseBottomNavActivity() {
         }
 
         dialog.show()
+    }
+
+    /**
+     * Lädt den neuesten Blog-Beitrag für die Preview-Card
+     */
+    private fun loadLatestBlogPost() {
+        scope.launch {
+            try {
+                // Zeige initialen Status
+                binding.cardLatestBlogPost.visibility = View.VISIBLE
+                binding.blogPreviewLoading.visibility = View.VISIBLE
+
+                val contentCache = ContentCache(this@StartActivity)
+                var cachedPost: ContentItem? = null
+
+                // 1. ZUERST: Versuche aus Cache zu laden für sofortige Anzeige
+                val cachedPosts = contentCache.getBlogPosts()
+                if (cachedPosts != null && cachedPosts.isNotEmpty()) {
+                    cachedPost = cachedPosts.first()
+                    displayBlogPreview(cachedPost)
+                    binding.blogPreviewLoading.visibility = View.GONE
+                    android.util.Log.d("StartActivity", "Blog-Preview aus Cache angezeigt")
+                } else {
+                    binding.blogPreviewTitle.text = "Lädt..."
+                }
+
+                // 2. DANN: Immer im Hintergrund prüfen, ob es einen neueren Post gibt
+                val newestPost = withContext(Dispatchers.IO) {
+                    try {
+                        val api = WordPressApiParser()
+                        // Lade nur den allerneuesten Post
+                        val posts = api.loadBlogPosts(page = 1, perPage = 1)
+                        if (posts.isNotEmpty()) posts.first() else null
+                    } catch (e: Exception) {
+                        android.util.Log.e("StartActivity", "Netzwerk-Check fehlgeschlagen: ${e.message}")
+                        null
+                    }
+                }
+
+                // 3. VERGLEICH & UPDATE
+                if (newestPost != null) {
+                    if (cachedPost == null || newestPost.url != cachedPost.url) {
+                        android.util.Log.d("StartActivity", "Neuer Post gefunden oder Cache war leer. Aktualisiere Anzeige.")
+                        displayBlogPreview(newestPost)
+                        
+                        // Wenn es wirklich ein neuer Post ist -> Vollständiges Hintergrund-Update triggern
+                        if (cachedPost != null && newestPost.url != cachedPost.url) {
+                            UpdateHelper.triggerImmediateUpdate(this@StartActivity)
+                        }
+                    }
+                } else if (cachedPost == null) {
+                    // Gar nichts gefunden (weder Cache noch Netz)
+                    hideBlogPreview()
+                }
+
+                binding.blogPreviewLoading.visibility = View.GONE
+
+            } catch (e: Exception) {
+                android.util.Log.e("StartActivity", "Fehler bei Blog-Preview", e)
+                if (binding.blogPreviewTitle.text == "Lädt...") {
+                    hideBlogPreview()
+                }
+            }
+        }
+    }
+
+    /**
+     * Zeigt den Blog-Post in der Preview-Card
+     */
+    private fun displayBlogPreview(post: ContentItem) {
+        binding.blogPreviewLoading.visibility = View.GONE
+
+        // Titel
+        binding.blogPreviewTitle.text = post.title
+
+        // Datum
+        if (post.date.isNotEmpty()) {
+            binding.blogPreviewDate.text = post.date
+            binding.blogPreviewDate.visibility = View.VISIBLE
+        } else {
+            binding.blogPreviewDate.visibility = View.GONE
+        }
+
+        // Excerpt
+        if (post.excerpt.isNotEmpty()) {
+            binding.blogPreviewExcerpt.text = post.excerpt
+            binding.blogPreviewExcerpt.visibility = View.VISIBLE
+        } else {
+            binding.blogPreviewExcerpt.visibility = View.GONE
+        }
+
+        // Bild (falls vorhanden)
+        if (post.imageUrl.isNotEmpty()) {
+            binding.blogPreviewImage.visibility = View.VISIBLE
+            binding.blogPreviewImage.load(post.imageUrl) {
+                size(800) // Mittelgroßes Bild
+                scale(Scale.FIT)
+                diskCachePolicy(CachePolicy.ENABLED)
+                memoryCachePolicy(CachePolicy.ENABLED)
+                placeholder(R.drawable.ic_placeholder_image)
+                error(R.drawable.ic_error_image)
+                crossfade(200)
+            }
+        } else {
+            binding.blogPreviewImage.visibility = View.GONE
+        }
+
+        // Click-Handler: Lade ZUERST alle Blog-Posts, DANN öffne MainActivity
+        binding.cardLatestBlogPost.setOnClickListener {
+            // Zeige kurz Loading-Feedback
+            binding.blogPreviewTitle.alpha = 0.5f
+
+            scope.launch {
+                try {
+                    // Lade Blog-Posts im Hintergrund (genau wie MainActivity)
+                    withContext(Dispatchers.IO) {
+                        val api = WordPressApiParser()
+                        val contentCache = ContentCache(this@StartActivity)
+
+                        // Prüfe ob Cache veraltet ist
+                        if (contentCache.isCacheExpired() || contentCache.getBlogPosts().isNullOrEmpty()) {
+                            android.util.Log.d("StartActivity", "Lade Blog-Posts vor Wechsel...")
+
+                            // ✅ VEREINFACHT: Lade nur 100 Posts (wie MainActivity)
+                            val posts = api.loadBlogPosts(perPage = 100)
+
+                            // Speichere im Cache
+                            if (posts.isNotEmpty()) {
+                                contentCache.saveBlogPosts(posts)
+                                android.util.Log.d("StartActivity", "✓ ${posts.size} Blog-Posts geladen und gecacht")
+                            }
+                        } else {
+                            android.util.Log.d("StartActivity", "Cache noch gültig, überspringe Laden")
+                        }
+                    }
+
+                    // JETZT öffne MainActivity - Cache ist gefüllt!
+                    binding.blogPreviewTitle.alpha = 1.0f
+                    val intent = Intent(this@StartActivity, MainActivity::class.java).apply {
+                        putExtra("INITIAL_VIEW", MainActivity.VIEW_BLOG)
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                    startActivity(intent)
+
+                } catch (e: Exception) {
+                    android.util.Log.e("StartActivity", "Fehler beim Vorladen", e)
+                    binding.blogPreviewTitle.alpha = 1.0f
+
+                    // Öffne trotzdem MainActivity (lädt dann selbst)
+                    val intent = Intent(this@StartActivity, MainActivity::class.java).apply {
+                        putExtra("INITIAL_VIEW", MainActivity.VIEW_BLOG)
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
+    /**
+     * Versteckt die Blog-Preview bei Fehler
+     */
+    private fun hideBlogPreview() {
+        binding.cardLatestBlogPost.visibility = View.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // WICHTIG: Auswahl in der BottomNav zurücksetzen, wenn wir zu Home zurückkehren
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
     }
 
     override fun onDestroy() {

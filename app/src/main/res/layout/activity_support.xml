@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="💚 🤝 Vielen Dank für deine Unterstützung! "
-                android:textSize="22sp"
+                android:textSize="@dimen/text_headline_large"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorPrimary"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Gefällt Dir die App HundeWildnis? 💚\nUnterstütze uns gern mit einem kleinen Beitrag – so bleibt die App kostenlos und wir können weiter Zeit und Arbeit in stetige Funktionserweiterungen und Verbesserungen zu investieren.🐾"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="32dp" />
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Wir haben sichere Zahlungswege für Eure Unterstützung an uns eingerichtet"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_headline_small"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="16dp" />
@@ -80,7 +80,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📱 Wero - Sicher und direkt"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
@@ -88,14 +88,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Direkt über Banking-App unterstützen (Sparkasse, Volksbank, etc.)"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnWero"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
                         android:text="Über Wero unterstützen 🤝"
                         app:cornerRadius="8dp"
                         app:backgroundTint="#1B5E20"
@@ -121,7 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📲 PayPal"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
@@ -129,14 +130,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Spende via PayPal"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnPaypal"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
                         android:text="Über PayPal spenden 🤝"
                         app:cornerRadius="8dp"
                         app:backgroundTint="#1B5E20"
@@ -162,7 +164,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏦 Banküberweisung"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
@@ -170,14 +172,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Spende via Banküberweisung"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnBankTransfer"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
                         android:text="Bankdaten anzeigen 🤝"
                         app:cornerRadius="8dp"
                         app:backgroundTint="#1B5E20"
@@ -203,7 +206,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="💳 Sicherer Zahlungslink"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
@@ -211,14 +214,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Spende via direkten Zahlungslink (SumUp) mit GPay oder Karte"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnPatreon"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
                         android:text="Zum sicheren Zahlungslink 🤝"
                         app:cornerRadius="8dp"
                         app:backgroundTint="#1B5E20"
@@ -234,7 +238,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🌟 Kostenlose Unterstützung"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_headline_small"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="16dp" />
@@ -257,7 +261,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="⭐ App bewerten"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
@@ -265,14 +269,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Eine positive Bewertung im Play Store hilft uns sehr!"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnRateApp"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
                         android:text="Jetzt bewerten"
                         app:cornerRadius="8dp"
                         app:backgroundTint="#1B5E20"
@@ -297,7 +302,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📢 App weiterempfehlen"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
@@ -305,14 +310,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Teile die App mit Deinen Freunden!"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnShareApp"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
                         android:text="App teilen"
                         app:cornerRadius="8dp"
                         app:backgroundTint="#1B5E20"
@@ -325,7 +331,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Vielen Dank für Deine Unterstützung! 🐕💚"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginTop="32dp"

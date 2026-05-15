@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Name"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary" />
 
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rasse"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="4dp" />
 
@@ -64,13 +64,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Info"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="4dp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ✅ FIX: Größere Buttons in Grid-Layout (2 Spalten) -->
+        <!-- ✅ FIX: Bessere Button-Skalierung -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,63 +83,87 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnView"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:text="👁 Anzeigen"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:text="✏️ Bearbeiten"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <!-- Row 2 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnQR"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:text="📱 QR-Code"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPDF"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:text="📄 PDF"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <!-- Row 3 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnShare"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:text="📤 Teilen"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDelete"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:text="🗑️ Löschen"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:backgroundTint="#1A237E"
                 android:textColor="#FFFFFF"
                 style="@style/Widget.MaterialComponents.Button" />
@@ -148,13 +172,14 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEmergency"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="wrap_content"
                 android:layout_columnSpan="2"
                 android:layout_margin="4dp"
                 android:text="🚨 NOTFALL"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
+                android:maxLines="1"
                 app:backgroundTint="#B00020"
                 app:icon="@android:drawable/ic_dialog_alert"
                 app:iconTint="#FFFFFF"

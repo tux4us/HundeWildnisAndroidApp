@@ -27,7 +27,7 @@
                 android:id="@+id/tvSessionDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -40,20 +40,20 @@
                     android:id="@+id/tvSessionDuration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_body_medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" • "
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_body_medium" />
 
                 <TextView
                     android:id="@+id/tvSessionSuccess"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_body_medium" />
 
             </LinearLayout>
 
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="11sp" />
+                android:textSize="@dimen/text_body_medium" />
 
         </LinearLayout>
 
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="👁️ Anzeigen"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_body_medium" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteSession"
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🗑️ Löschen"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textColor="#d32f2f" />
 
         </LinearLayout>

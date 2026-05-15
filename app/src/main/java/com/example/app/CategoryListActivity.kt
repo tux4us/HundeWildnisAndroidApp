@@ -32,7 +32,7 @@ class CategoryListActivity : SecureBaseActivity() {
         supportActionBar?.title = "Trainingskategorien"
         
         binding.tvDogName.text = profile.name
-        binding.tvDogInfo.text = "Wähle eine Kategorie für das Trainingstagebuch"
+        binding.tvDogInfo.text = "Wähle eine Kategorie für das Training"
     }
 
     private fun setupRecyclerView() {

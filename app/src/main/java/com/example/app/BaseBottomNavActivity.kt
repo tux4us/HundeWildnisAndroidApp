@@ -7,8 +7,12 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
@@ -25,6 +29,19 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
     protected open fun onCoursesSelected() { navigateToMainActivity(MainActivity.VIEW_COURSES) }
     protected open fun onHomeSelected() { /* Von StartActivity überschrieben */ }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Insets werden in setupBottomNavigation oder spezifischen Activities gehandelt
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // WICHTIG: Auswahl synchronisieren, wenn man per Back-Button zurückkommt
+        getBottomNavigationView().post {
+            getBottomNavigationView().selectedItemId = getCurrentNavigationItemId()
+        }
+    }
+
     protected fun setupBottomNavigation() {
         val bottomNav = getBottomNavigationView()
         bottomNav.setOnItemSelectedListener { item ->
@@ -38,6 +55,13 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
             }
         }
         bottomNav.selectedItemId = getCurrentNavigationItemId()
+
+        // Insets für die Bottom Navigation (Navigationsleiste unten)
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { _, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            bottomNav.setPadding(0, 0, 0, systemBars.bottom)
+            insets
+        }
     }
 
     private fun navigateToMainActivity(viewType: Int) {

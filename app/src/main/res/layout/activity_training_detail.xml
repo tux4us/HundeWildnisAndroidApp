@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hundename"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
 
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kategorie"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="24dp" />
 
@@ -65,7 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📊 Trainingsfortschritt"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
 
@@ -81,7 +81,7 @@
                             android:id="@+id/progressBar"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="0dp"
-                            android:layout_height="20dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:max="100"
                             android:progress="0" />
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:text="0%"
                             android:textStyle="bold"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_body_medium"
                             android:layout_marginStart="12dp" />
                     </LinearLayout>
 
@@ -101,7 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Trainingsstand: Beginn"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="16dp" />
 
                     <!-- Statistiken Grid -->
@@ -124,13 +124,13 @@
                                 android:layout_height="wrap_content"
                                 android:text="0 Einheiten"
                                 android:textStyle="bold"
-                                android:textSize="16sp" />
+                                android:textSize="@dimen/text_body_medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Sessions"
-                                android:textSize="12sp"
+                                android:textSize="@dimen/text_body_medium"
                                 android:alpha="0.7" />
                         </LinearLayout>
 
@@ -147,13 +147,13 @@
                                 android:layout_height="wrap_content"
                                 android:text="0 Min"
                                 android:textStyle="bold"
-                                android:textSize="16sp" />
+                                android:textSize="@dimen/text_body_medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Trainingszeit"
-                                android:textSize="12sp"
+                                android:textSize="@dimen/text_body_medium"
                                 android:alpha="0.7" />
                         </LinearLayout>
 
@@ -170,13 +170,13 @@
                                 android:layout_height="wrap_content"
                                 android:text="0 Tage"
                                 android:textStyle="bold"
-                                android:textSize="16sp" />
+                                android:textSize="@dimen/text_body_medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Aktuell"
-                                android:textSize="12sp"
+                                android:textSize="@dimen/text_body_medium"
                                 android:alpha="0.7" />
                         </LinearLayout>
                     </LinearLayout>
@@ -199,14 +199,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Ø Erfolg:"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_body_medium" />
 
                         <TextView
                             android:id="@+id/tvAverageSuccess"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Ø 0.0 / 4.0"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_body_medium"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -216,7 +216,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Noch keine Meilensteine"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:layout_marginTop="8dp"
                         android:alpha="0.7" />
                 </LinearLayout>
@@ -240,7 +240,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📈 Entwicklung"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
 
@@ -255,7 +255,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="→"
-                            android:textSize="32sp"
+                            android:textSize="@dimen/text_body_medium"
                             android:layout_marginEnd="12dp" />
 
                         <LinearLayout
@@ -269,7 +269,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Neutral"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_body_medium"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -277,14 +277,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Entwicklung: ±0%"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_body_medium" />
 
                             <TextView
                                 android:id="@+id/tvConsistency"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Regelmäßigkeit: 0%"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_body_medium" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -310,7 +310,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="💡 Trainerempfehlung"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
 
@@ -319,7 +319,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Empfehlung wird geladen..."
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="8dp" />
 
                     <TextView
@@ -327,7 +327,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Begründung"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/text_body_medium"
                         android:alpha="0.7"
                         android:textStyle="italic" />
                 </LinearLayout>
@@ -339,7 +339,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="+ Neue Trainingseinheit"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:padding="16dp"
                 app:cornerRadius="12dp"
                 android:layout_marginBottom="16dp" />
@@ -349,7 +349,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📋 Trainingshistorie"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
 

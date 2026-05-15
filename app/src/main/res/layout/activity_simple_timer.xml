@@ -8,10 +8,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hitzschlag"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:gravity="center" />
 
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Timer: 15 Minuten"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_medium"
                 android:gravity="center" />
 
             <!-- Timer Display -->
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
                 android:text="15:00"
-                android:textSize="72sp"
+                android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 
             <!-- Progress -->
@@ -70,7 +70,7 @@
                 android:id="@+id/progressTimer"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:max="100"
                 android:progress="0"
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:padding="24dp"
                     android:text="⏱️ ZEIT ABGELAUFEN!\n\nZum Tierarzt!"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
                     android:gravity="center" />
@@ -102,7 +102,7 @@
             <!-- Spacer -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="1dp"
                 android:layout_weight="1" />
 
             <!-- Controls -->

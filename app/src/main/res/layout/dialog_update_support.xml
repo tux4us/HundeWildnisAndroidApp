@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="🎉"
-        android:textSize="48sp"
+        android:textSize="@dimen/text_body_medium"
         android:layout_marginBottom="16dp" />
 
     <!-- Titel -->
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Neue Version verfügbar!"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="16dp" />
@@ -31,14 +31,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Version 9.31"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_body_medium"
         android:gravity="center"
         android:layout_marginBottom="20dp" />
 
     <!-- ✅ NEU: ScrollView für langen Text -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:maxHeight="300dp"
         android:scrollbars="vertical"
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Die App HundeWildnis entsteht in vielen Stunden Arbeit und mit großer Leidenschaft – für Euch und Eure Hunde.\nDank Eurem Feedback entwickeln wir die App immer weiter.\nDamit wir die App auch künftig kostenlos anbieten können brauchen wir Deine Unterstützung.\n🤝 Jeder, gern auch regelmäßiger Beitrag ist eine große Wertschätzung für unsere Arbeit.\n\nVielen Dank für Deine Unterstützung 💚\nManuela und Jörg\n\nNatürlich kannst Du die App, auch ohne uns zu unterstützen, nutzen. 😇"
-            android:textSize="15sp"
+            android:textSize="@dimen/text_body_medium"
             android:lineSpacingMultiplier="1.2" />
 
     </ScrollView>
@@ -71,9 +71,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSupport"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:text="💝 Ich möchte unterstützen"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             style="@style/Widget.Material3.Button"
             android:layout_marginBottom="12dp" />
@@ -82,9 +82,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLater"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="Jetzt nicht"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_body_medium"
             style="@style/Widget.Material3.Button.OutlinedButton" />
 
     </LinearLayout>

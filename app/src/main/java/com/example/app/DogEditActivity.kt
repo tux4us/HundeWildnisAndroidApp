@@ -340,6 +340,10 @@ class DogEditActivity : SecureBaseActivity() {
         yearPicker.maxValue = currentYear
         yearPicker.value = currentYear
 
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+
         AlertDialog.Builder(this)
             .setTitle("Monat und Jahr wählen")
             .setView(view)
@@ -348,7 +352,11 @@ class DogEditActivity : SecureBaseActivity() {
                 binding.etBirthDate.setText("$month.${yearPicker.value}")
             }
             .setNegativeButton("Abbrechen", null)
-            .show()
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
     }
 
     private fun showYearPicker() {
@@ -359,6 +367,10 @@ class DogEditActivity : SecureBaseActivity() {
         yearPicker.maxValue = currentYear
         yearPicker.value = currentYear
 
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+
         AlertDialog.Builder(this)
             .setTitle("Jahr wählen")
             .setView(yearPicker)
@@ -366,7 +378,11 @@ class DogEditActivity : SecureBaseActivity() {
                 binding.etBirthDate.setText("${yearPicker.value}")
             }
             .setNegativeButton("Abbrechen", null)
-            .show()
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+            }
     }
 
     private fun save() {

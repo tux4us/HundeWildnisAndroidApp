@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kategoriename"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface" />
 
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Beschreibung der Kategorie"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_body_medium"
             android:layout_marginTop="4dp"
             android:alpha="0.7"
             android:textColor="?attr/colorOnSurface" />

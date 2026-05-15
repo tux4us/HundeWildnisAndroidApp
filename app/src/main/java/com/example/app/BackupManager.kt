@@ -406,6 +406,603 @@ object BackupManager {
         }
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // SELECTIVE BACKUP - NEU!
+    // ════════════════════════════════════════════════════════════════
+
+    /**
+     * Erstellt Backup mit Auswahl welche Daten gesichert werden sollen
+     */
+    fun createSelectiveBackup(
+        context: Context,
+        selectedTypes: Set<BackupDataType>
+    ): File {
+        val timestamp = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
+        val fileName = "HundeWildnis_Selective_${dateFormat.format(Date(timestamp))}.json"
+
+        val backupData = SelectiveBackupContainer(
+            version = getAppVersion(context),
+            timestamp = timestamp,
+            includedTypes = selectedTypes.map { it.name },
+            data = mutableMapOf()
+        )
+
+        try {
+            // Nur ausgewählte Daten einpacken
+            if (BackupDataType.PROFILES in selectedTypes) {
+                backupData.data["profiles"] = DogProfileManager.getAllProfiles(context)
+            }
+
+            if (BackupDataType.DIARY in selectedTypes) {
+                backupData.data["trainingSessions"] = loadTrainingSessions(context)
+                backupData.data["trainingProgress"] = loadTrainingProgress(context)
+                backupData.data["trainingMilestones"] = loadTrainingMilestones(context)
+            }
+
+            if (BackupDataType.WALKING_SPEED in selectedTypes) {
+                backupData.data["speedSessions"] = collectSpeedSessions(context)
+            }
+
+            if (BackupDataType.NOTES in selectedTypes) {
+                backupData.data["notes"] = collectNotes(context)
+            }
+
+            if (BackupDataType.VOICE in selectedTypes) {
+                backupData.data["voiceSessions"] = collectVoiceSessions(context)
+            }
+
+            if (BackupDataType.EMERGENCY in selectedTypes) {
+                backupData.data["emergencyReports"] = collectEmergencyReports(context)
+            }
+
+            if (BackupDataType.APP_SETTINGS in selectedTypes) {
+                backupData.data["settings"] = collectSettings(context)
+            }
+
+            // Als JSON speichern
+            val backupFolder = getBackupDirectory(context)
+            val outputFile = File(backupFolder, fileName)
+            outputFile.writeText(gson.toJson(backupData))
+
+            // Medienscan anstoßen
+            MediaScannerConnection.scanFile(context, arrayOf(outputFile.absolutePath), null, null)
+
+            Log.d(TAG, "Selective backup created: ${outputFile.absolutePath}")
+            return outputFile
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error creating selective backup", e)
+            throw e
+        }
+    }
+
+    /**
+     * Stellt Backup mit Auswahl wieder her
+     */
+    fun restoreSelectiveBackup(
+        context: Context,
+        backupFile: File,
+        selectedTypes: Set<BackupDataType>,
+        mergeMode: MergeMode = MergeMode.ADD_NEW
+    ): SelectiveRestoreResult {
+
+        Log.d(TAG, "Restoring selective backup with mode: ${mergeMode.name}")
+
+        return try {
+            // Backup laden
+            val json = backupFile.readText()
+            val backup = gson.fromJson(json, SelectiveBackupContainer::class.java)
+
+            // Nur ausgewählte Daten wiederherstellen
+            if (BackupDataType.PROFILES in selectedTypes && backup.data.containsKey("profiles")) {
+                restoreProfilesSelective(context, backup.data["profiles"], mergeMode)
+            }
+
+            if (BackupDataType.DIARY in selectedTypes) {
+                if (backup.data.containsKey("trainingSessions")) {
+                    restoreTrainingSessionsSelective(context, backup.data["trainingSessions"], mergeMode)
+                }
+                if (backup.data.containsKey("trainingProgress")) {
+                    restoreTrainingProgressSelective(context, backup.data["trainingProgress"], mergeMode)
+                }
+                if (backup.data.containsKey("trainingMilestones")) {
+                    restoreTrainingMilestonesSelective(context, backup.data["trainingMilestones"], mergeMode)
+                }
+            }
+
+            if (BackupDataType.WALKING_SPEED in selectedTypes && backup.data.containsKey("speedSessions")) {
+                restoreSpeedSessionsSelective(context, backup.data["speedSessions"], mergeMode)
+            }
+
+            if (BackupDataType.NOTES in selectedTypes && backup.data.containsKey("notes")) {
+                restoreNotesSelective(context, backup.data["notes"], mergeMode)
+            }
+
+            if (BackupDataType.VOICE in selectedTypes && backup.data.containsKey("voiceSessions")) {
+                restoreVoiceSessionsSelective(context, backup.data["voiceSessions"], mergeMode)
+            }
+
+            if (BackupDataType.EMERGENCY in selectedTypes && backup.data.containsKey("emergencyReports")) {
+                restoreEmergencyReportsSelective(context, backup.data["emergencyReports"], mergeMode)
+            }
+
+            if (BackupDataType.APP_SETTINGS in selectedTypes && backup.data.containsKey("settings")) {
+                val settingsData = backup.data["settings"]
+                if (settingsData is Map<*, *>) {
+                    @Suppress("UNCHECKED_CAST")
+                    restoreSettings(context, settingsData as Map<String, String>)
+                }
+            }
+
+            Log.d(TAG, "Selective backup restored successfully")
+            SelectiveRestoreResult.Success("✅ Backup erfolgreich wiederhergestellt")
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error restoring selective backup", e)
+            SelectiveRestoreResult.Error("❌ Fehler: ${e.message}")
+        }
+    }
+
+    /**
+     * Liest Backup-Datei und gibt verfügbare Datentypen zurück
+     */
+    fun getAvailableTypesInBackup(backupFile: File): List<BackupDataType> {
+        return try {
+            val json = backupFile.readText()
+
+            // Versuche als SelectiveBackup zu parsen
+            val backup = try {
+                gson.fromJson(json, SelectiveBackupContainer::class.java)
+            } catch (e: Exception) {
+                // Falls altes Full-Backup: Alle Typen verfügbar
+                return BackupDataType.values().toList()
+            }
+
+            backup.includedTypes.mapNotNull { typeName ->
+                try {
+                    BackupDataType.valueOf(typeName)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reading backup types", e)
+            emptyList()
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+// KORRIGIERTE RESTORE-FUNKTIONEN MIT EXPLIZITEN TYPEN
+// Ersetze die entsprechenden Funktionen in BackupManager.kt
+// ════════════════════════════════════════════════════════════════
+
+    private fun restoreProfilesSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<DogProfile>>() {}.type
+        val profiles: List<DogProfile> = gson.fromJson(gson.toJson(data), type)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing = DogProfileManager.getAllProfiles(context)
+                val existingIds = existing.map { it.id }.toSet()
+                profiles.forEach { profile ->
+                    if (profile.id !in existingIds) {
+                        DogProfileManager.saveProfile(context, profile)
+                    }
+                }
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                val existing = DogProfileManager.getAllProfiles(context)
+                existing.forEach { DogProfileManager.deleteProfile(context, it.id) }
+                profiles.forEach { DogProfileManager.saveProfile(context, it) }
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                // Da Profile keinen Timestamp haben, einfach saveProfile (überschreibt bei gleicher ID)
+                profiles.forEach { DogProfileManager.saveProfile(context, it) }
+            }
+        }
+    }
+
+    private fun restoreTrainingSessionsSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<TrainingSession>>() {}.type
+        val sessions: List<TrainingSession> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<TrainingSession> = loadTrainingSessions(context)
+                val existingIds: Set<String> = existing.map { it.id }.toSet()
+                val newSessions: List<TrainingSession> = sessions.filter { it.id !in existingIds }
+
+                val merged: List<TrainingSession> = existing + newSessions
+                Log.d(TAG, "ADD_NEW: ${newSessions.size} new training sessions")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all training sessions")
+                prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<TrainingSession> = loadTrainingSessions(context)
+                val merged = mergeSessionsByTimestamp(existing, sessions)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} training sessions")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreTrainingProgressSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<TrainingProgress>>() {}.type
+        val progressList: List<TrainingProgress> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<TrainingProgress> = loadTrainingProgress(context)
+                val existingKeys: Set<String> = existing.map { "${it.dogId}_${it.category.name}" }.toSet()
+                val newProgress: List<TrainingProgress> = progressList.filter { "${it.dogId}_${it.category.name}" !in existingKeys }
+
+                val merged: List<TrainingProgress> = existing + newProgress
+                Log.d(TAG, "ADD_NEW: ${newProgress.size} new training progress")
+                prefs.edit().putString("progress", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all training progress")
+                prefs.edit().putString("progress", gson.toJson(progressList)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<TrainingProgress> = loadTrainingProgress(context)
+                val merged = mergeProgressByTimestamp(existing, progressList)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} training progress")
+                prefs.edit().putString("progress", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreTrainingMilestonesSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<Milestone>>() {}.type
+        val milestones: List<Milestone> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("training_diary", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<Milestone> = loadTrainingMilestones(context)
+                val existingIds: Set<String> = existing.map { it.id }.toSet()
+                val newMilestones: List<Milestone> = milestones.filter { it.id !in existingIds }
+
+                val merged: List<Milestone> = existing + newMilestones
+                Log.d(TAG, "ADD_NEW: ${newMilestones.size} new milestones")
+                prefs.edit().putString("milestones", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all milestones")
+                prefs.edit().putString("milestones", gson.toJson(milestones)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<Milestone> = loadTrainingMilestones(context)
+                val merged = mergeMilestonesByTimestamp(existing, milestones)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} milestones")
+                prefs.edit().putString("milestones", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreSpeedSessionsSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<SpeedSession>>() {}.type
+        val sessions: List<SpeedSession> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("walking_history", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<SpeedSession> = collectSpeedSessions(context) ?: emptyList()
+                val existingIds: Set<String> = existing.map { it.startTime.toString() }.toSet()
+                val newSessions: List<SpeedSession> = sessions.filter { it.startTime.toString() !in existingIds }
+
+                val merged: List<SpeedSession> = existing + newSessions
+                Log.d(TAG, "ADD_NEW: ${newSessions.size} new speed sessions")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all speed sessions")
+                prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<SpeedSession> = collectSpeedSessions(context) ?: emptyList()
+                val merged = mergeSpeedSessionsByTimestamp(existing, sessions)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} speed sessions")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreNotesSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<NoteSession>>() {}.type
+        val notes: List<NoteSession> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<NoteSession> = collectNotes(context) ?: emptyList()
+                val existingIds: Set<String> = existing.map { it.id }.toSet()
+                val newNotes: List<NoteSession> = notes.filter { it.id !in existingIds }
+
+                val merged: List<NoteSession> = existing + newNotes
+                Log.d(TAG, "ADD_NEW: ${newNotes.size} new notes")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all notes")
+                prefs.edit().putString("sessions", gson.toJson(notes)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<NoteSession> = collectNotes(context) ?: emptyList()
+                val merged = mergeNotesByTimestamp(existing, notes)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} notes")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreVoiceSessionsSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<VoiceSession>>() {}.type
+        val sessions: List<VoiceSession> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("voice_history", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<VoiceSession> = collectVoiceSessions(context) ?: emptyList()
+                val existingIds: Set<String> = existing.map { it.startTime.toString() }.toSet()
+                val newSessions: List<VoiceSession> = sessions.filter { it.startTime.toString() !in existingIds }
+
+                val merged: List<VoiceSession> = existing + newSessions
+                Log.d(TAG, "ADD_NEW: ${newSessions.size} new voice sessions")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all voice sessions")
+                prefs.edit().putString("sessions", gson.toJson(sessions)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<VoiceSession> = collectVoiceSessions(context) ?: emptyList()
+                val merged = mergeVoiceSessionsByTimestamp(existing, sessions)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} voice sessions")
+                prefs.edit().putString("sessions", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreEmergencyReportsSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<EmergencyReport>>() {}.type
+        val reports: List<EmergencyReport> = gson.fromJson(gson.toJson(data), type)
+
+        val prefs = context.getSharedPreferences("emergency_history", Context.MODE_PRIVATE)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing: List<EmergencyReport> = collectEmergencyReports(context) ?: emptyList()
+                val existingIds: Set<String> = existing.map { it.id }.toSet()
+                val newReports: List<EmergencyReport> = reports.filter { it.id !in existingIds }
+
+                val merged: List<EmergencyReport> = existing + newReports
+                Log.d(TAG, "ADD_NEW: ${newReports.size} new emergency reports")
+                prefs.edit().putString("reports", gson.toJson(merged)).apply()
+            }
+
+            MergeMode.REPLACE_ALL -> {
+                Log.d(TAG, "REPLACE_ALL: Replacing all emergency reports")
+                prefs.edit().putString("reports", gson.toJson(reports)).apply()
+            }
+
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing: List<EmergencyReport> = collectEmergencyReports(context) ?: emptyList()
+                val merged = mergeEmergencyReportsByTimestamp(existing, reports)
+
+                Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} emergency reports")
+                prefs.edit().putString("reports", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // MERGE HELPERS
+    // ════════════════════════════════════════════════════════════════
+
+    private fun mergeSessionsByTimestamp(
+        existing: List<TrainingSession>,
+        backup: List<TrainingSession>
+    ): List<TrainingSession> {
+        val allIds = (existing.map { it.id } + backup.map { it.id }).distinct()
+
+        return allIds.mapNotNull { id: String ->
+            val existingSession = existing.find { it.id == id }
+            val backupSession = backup.find { it.id == id }
+
+            when {
+                existingSession == null -> backupSession
+                backupSession == null -> existingSession
+                backupSession.date > existingSession.date -> backupSession
+                else -> existingSession
+            }
+        }
+    }
+
+    private fun mergeProgressByTimestamp(
+        existing: List<TrainingProgress>,
+        backup: List<TrainingProgress>
+    ): List<TrainingProgress> {
+        val allKeys = (existing.map { "${it.dogId}_${it.category.name}" } + 
+                       backup.map { "${it.dogId}_${it.category.name}" }).distinct()
+
+        return allKeys.mapNotNull { key ->
+            val existingProgress = existing.find { "${it.dogId}_${it.category.name}" == key }
+            val backupProgress = backup.find { "${it.dogId}_${it.category.name}" == key }
+
+            when {
+                existingProgress == null -> backupProgress
+                backupProgress == null -> existingProgress
+                backupProgress.lastTrainingDate > existingProgress.lastTrainingDate -> backupProgress
+                else -> existingProgress
+            }
+        }
+    }
+
+    private fun mergeMilestonesByTimestamp(
+        existing: List<Milestone>,
+        backup: List<Milestone>
+    ): List<Milestone> {
+        val allIds = (existing.map { it.id } + backup.map { it.id }).distinct()
+
+        return allIds.mapNotNull { id: String ->
+            val existingMilestone = existing.find { it.id == id }
+            val backupMilestone = backup.find { it.id == id }
+
+            when {
+                existingMilestone == null -> backupMilestone
+                backupMilestone == null -> existingMilestone
+                backupMilestone.achievedDate > existingMilestone.achievedDate -> backupMilestone
+                else -> existingMilestone
+            }
+        }
+    }
+
+    private fun mergeSpeedSessionsByTimestamp(
+        existing: List<SpeedSession>,
+        backup: List<SpeedSession>
+    ): List<SpeedSession> {
+        val allTimes = (existing.map { it.startTime } + backup.map { it.startTime }).distinct()
+
+        return allTimes.mapNotNull { startTime ->
+            val existingSession = existing.find { it.startTime == startTime }
+            val backupSession = backup.find { it.startTime == startTime }
+
+            when {
+                existingSession == null -> backupSession
+                backupSession == null -> existingSession
+                backupSession.startTime > existingSession.startTime -> backupSession
+                else -> existingSession
+            }
+        }
+    }
+
+    private fun mergeNotesByTimestamp(
+        existing: List<NoteSession>,
+        backup: List<NoteSession>
+    ): List<NoteSession> {
+        val allIds = (existing.map { it.id } + backup.map { it.id }).distinct()
+
+        return allIds.mapNotNull { id: String ->
+            val existingNote = existing.find { it.id == id }
+            val backupNote = backup.find { it.id == id }
+
+            when {
+                existingNote == null -> backupNote
+                backupNote == null -> existingNote
+                backupNote.date > existingNote.date -> backupNote
+                else -> existingNote
+            }
+        }
+    }
+
+    private fun mergeVoiceSessionsByTimestamp(
+        existing: List<VoiceSession>,
+        backup: List<VoiceSession>
+    ): List<VoiceSession> {
+        val allTimes = (existing.map { it.startTime } + backup.map { it.startTime }).distinct()
+
+        return allTimes.mapNotNull { startTime ->
+            val existingSession = existing.find { it.startTime == startTime }
+            val backupSession = backup.find { it.startTime == startTime }
+
+            when {
+                existingSession == null -> backupSession
+                backupSession == null -> existingSession
+                backupSession.startTime > existingSession.startTime -> backupSession
+                else -> existingSession
+            }
+        }
+    }
+
+    private fun mergeEmergencyReportsByTimestamp(
+        existing: List<EmergencyReport>,
+        backup: List<EmergencyReport>
+    ): List<EmergencyReport> {
+        val allIds = (existing.map { it.id } + backup.map { it.id }).distinct()
+
+        return allIds.mapNotNull { id: String ->
+            val existingReport = existing.find { it.id == id }
+            val backupReport = backup.find { it.id == id }
+
+            when {
+                existingReport == null -> backupReport
+                backupReport == null -> existingReport
+                backupReport.timestamp > existingReport.timestamp -> backupReport
+                else -> existingReport
+            }
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // UTILITY FUNCTIONS
+    // ════════════════════════════════════════════════════════════════
+
     private fun zipDirectory(sourceDir: File, outputFile: File) {
         ZipOutputStream(FileOutputStream(outputFile)).use { zos ->
             sourceDir.walkTopDown().forEach { file ->

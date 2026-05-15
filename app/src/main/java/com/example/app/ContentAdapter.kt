@@ -111,12 +111,17 @@ class ContentAdapter(
                 }
             }
 
-            // Excerpt
-            binding.excerptText.text = if (item.excerpt.isNotEmpty()) item.excerpt
-            else if (item.date.isNotEmpty()) item.date
-            else ""
+            // Datum (nur für Blog-Beiträge einblenden)
+            if (item.type == "blog" && item.date.isNotEmpty()) {
+                binding.dateText.text = item.date
+                binding.dateText.visibility = android.view.View.VISIBLE
+            } else {
+                binding.dateText.visibility = android.view.View.GONE
+            }
 
-            binding.excerptText.visibility = if (binding.excerptText.text.isEmpty())
+            // Excerpt
+            binding.excerptText.text = item.excerpt
+            binding.excerptText.visibility = if (item.excerpt.isEmpty())
                 android.view.View.GONE else android.view.View.VISIBLE
 
             // ⚡ OPTIMIERT: Bild-Loading mit Coil

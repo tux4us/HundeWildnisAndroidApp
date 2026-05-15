@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="HundeWildnis"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="@color/green_primary"
         android:layout_marginBottom="4dp" />
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Version 1.0.0"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_body_medium"
         android:textColor="?android:attr/textColorSecondary"
         android:layout_marginBottom="24dp" />
 
@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Anbieter:"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorSecondary"
         android:textAllCaps="true" />
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_body_medium"
         android:textColor="?android:attr/textColorPrimary"
         android:layout_marginBottom="16dp" />
 
@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Webadresse:"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorSecondary"
         android:textAllCaps="true" />
@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="www.wildnislehrer.com"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_body_medium"
         android:textColor="@color/green_primary"
         android:layout_marginBottom="16dp" />
 
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Fehlermeldungen an:"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorSecondary"
         android:textAllCaps="true" />
@@ -90,7 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="hundewildnisschuleapp@online.de"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_body_medium"
         android:textColor="@color/green_primary"
         android:layout_marginBottom="24dp" />
 
@@ -98,7 +98,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Entwickelt mit Herz, Erfahrung und Liebe ❤️"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_body_medium"
         android:textStyle="italic"
         android:gravity="center"
         android:textColor="?android:attr/textColorSecondary" />
