@@ -2,14 +2,121 @@ package com.hundewildnis.app
 
 import org.osmdroid.util.GeoPoint
 
-// ✅ RouteData Definition für Navigation
+// ═══════════════════════════════════════════════════════════
+// ROUTE DATA - Navigationsdaten inkl. Höhen & Oberfläche
+// ═══════════════════════════════════════════════════════════
+
+data class SurfaceSummary(
+    val code: Int,
+    val name: String,
+    val emoji: String,
+    val distance: Double,
+    val percentage: Double
+)
+
 data class RouteData(
     val points: List<GeoPoint>,
     val distance: Double,
-    val duration: Double
+    val duration: Double,
+    val elevationPoints: List<Double> = emptyList(),
+    val totalAscent: Double = 0.0,
+    val totalDescent: Double = 0.0,
+    val minElevation: Double = 0.0,
+    val maxElevation: Double = 0.0,
+    val surfaceSummary: List<SurfaceSummary> = emptyList(),
+    val wayTypeSummary: List<SurfaceSummary> = emptyList()
 )
 
-// ✅ ERWEITERTE POI Datenklasse mit allen OSM-Details
+// ═══════════════════════════════════════════════════════════
+// OBERFLÄCHEN- UND WEGTYP-HILFSFUNKTIONEN
+// ═══════════════════════════════════════════════════════════
+
+object RouteInfoHelper {
+
+    fun getSurfaceName(code: Int): String = when (code) {
+        0  -> "Unbekannt"
+        1  -> "Befestigt"
+        2  -> "Unbefestigt"
+        3  -> "Asphalt"
+        4  -> "Beton"
+        5  -> "Kopfsteinpflaster"
+        6  -> "Metall"
+        7  -> "Holz"
+        8  -> "Schotterpfad"
+        9  -> "Feinschotter"
+        10 -> "Schotter"
+        11 -> "Erde"
+        12 -> "Untergrund"
+        13 -> "Eis"
+        14 -> "Pflastersteine"
+        15 -> "Sand"
+        16 -> "Holzspäne"
+        17 -> "Gras"
+        18 -> "Rasengitter"
+        else -> "Sonstige"
+    }
+
+    fun getSurfaceEmoji(code: Int): String = when (code) {
+        3, 4     -> "🛣️"
+        5, 14    -> "🧱"
+        7        -> "🪵"
+        8, 9, 10 -> "⛰️"
+        11, 12   -> "🌿"
+        13       -> "🧊"
+        15       -> "🏖️"
+        17       -> "🌾"
+        else     -> "🛤️"
+    }
+
+    fun getSurfaceColor(code: Int): Int = when (code) {
+        3, 4     -> android.graphics.Color.parseColor("#888888")
+        5, 14    -> android.graphics.Color.parseColor("#9E9E9E")
+        8, 9, 10 -> android.graphics.Color.parseColor("#A0845C")
+        11, 12   -> android.graphics.Color.parseColor("#795548")
+        17       -> android.graphics.Color.parseColor("#66BB6A")
+        15       -> android.graphics.Color.parseColor("#FFB74D")
+        else     -> android.graphics.Color.parseColor("#8FC357")
+    }
+
+    fun getWayTypeName(code: Int): String = when (code) {
+        0  -> "Unbekannt"
+        1  -> "Staatsstraße"
+        2  -> "Straße"
+        3  -> "Straße"
+        4  -> "Pfad"
+        5  -> "Wirtschaftsweg"
+        6  -> "Radweg"
+        7  -> "Fußweg"
+        8  -> "Treppen"
+        9  -> "Fähre"
+        10 -> "Baustelle"
+        else -> "Sonstige"
+    }
+
+    fun getWayTypeEmoji(code: Int): String = when (code) {
+        1, 2, 3 -> "🛣️"
+        4       -> "🥾"
+        5       -> "🌲"
+        6       -> "🚴"
+        7       -> "🚶"
+        8       -> "🪜"
+        9       -> "⛵"
+        else    -> "🛤️"
+    }
+
+    fun getWayTypeColor(code: Int): Int = when (code) {
+        1, 2, 3 -> android.graphics.Color.parseColor("#78909C")
+        4, 5    -> android.graphics.Color.parseColor("#8D6E63")
+        7       -> android.graphics.Color.parseColor("#8FC357")
+        8       -> android.graphics.Color.parseColor("#FF7043")
+        else    -> android.graphics.Color.parseColor("#8FC357")
+    }
+}
+
+// ═══════════════════════════════════════════════════════════
+// POI DATENKLASSE
+// ═══════════════════════════════════════════════════════════
+
 data class POI(
     val id: String,
     val name: String,
@@ -22,8 +129,6 @@ data class POI(
     val bearing: Double = 0.0,
     val direction: String = "",
     val directionArrow: String = "",
-
-    // ✅ NEU: Erweiterte Details aus OSM
     val address: String? = null,
     val phone: String? = null,
     val website: String? = null,
@@ -33,10 +138,12 @@ data class POI(
     val access: String? = null
 )
 
-// POI Kategorien mit Icons
+// ═══════════════════════════════════════════════════════════
+// POI KATEGORIEN
+// ═══════════════════════════════════════════════════════════
+
 object POICategories {
 
-    // Kategorie-Definition
     data class Category(
         val name: String,
         val icon: String,
@@ -45,216 +152,33 @@ object POICategories {
     )
 
     val ALL_CATEGORIES = listOf(
-
-        // 🐕 HUND & TIER
-        Category(
-            name = "Hundeauslauf",
-            icon = "🐕",
-            queries = listOf("leisure=dog_park")
-        ),
-        Category(
-            name = "Tierarzt",
-            icon = "🏥",
-            queries = listOf("amenity=veterinary"),
-            color = "#aa0000"
-        ),
-        Category(
-            name = "Tierbedarf",
-            icon = "🛒",
-            queries = listOf("shop=pet")
-        ),
-        Category(
-            name = "Tierheim",
-            icon = "🏠",
-            queries = listOf("amenity=animal_shelter", "amenity=animal_boarding")
-        ),
-
-        // 🥾 WANDERN & WEGE
-        Category(
-            name = "Wanderweg",
-            icon = "🥾",
-            queries = listOf(
-                "highway=footway",
-                "highway=path",
-                "highway=track"
-            ),
-            color = "#ff9800"
-        ),
-        Category(
-            name = "Aussichtspunkt",
-            icon = "🏔️",
-            queries = listOf("tourism=viewpoint", "natural=peak")
-        ),
-        Category(
-            name = "Wegweiser",
-            icon = "🪧",
-            queries = listOf(
-                "tourism=information",
-                "information=guidepost",
-                "information=board"
-            )
-        ),
-
-        // 🏕️ RAST & UNTERSTAND
-        Category(
-            name = "Schutzhütte",
-            icon = "⛺",
-            queries = listOf("amenity=shelter")
-        ),
-        Category(
-            name = "Picknickplatz",
-            icon = "🧺",
-            queries = listOf("leisure=picnic_site")
-        ),
-        Category(
-            name = "Sitzbank",
-            icon = "🪑",
-            queries = listOf("amenity=bench")
-        ),
-        Category(
-            name = "Feuerstelle",
-            icon = "🔥",
-            queries = listOf("leisure=firepit", "amenity=bbq")
-        ),
-
-        // 💧 WASSER & VERSORGUNG
-        Category(
-            name = "Trinkwasser",
-            icon = "💧",
-            queries = listOf(
-                "amenity=drinking_water",
-                "amenity=water_point",
-                "natural=spring"
-            ),
-            color = "#2196F3"
-        ),
-        Category(
-            name = "Toilette",
-            icon = "🚻",
-            queries = listOf("amenity=toilets")
-        ),
-        Category(
-            name = "Supermarkt",
-            icon = "🏪",
-            queries = listOf("shop=supermarket", "shop=convenience")
-        ),
-        Category(
-            name = "Bäckerei",
-            icon = "🥖",
-            queries = listOf("shop=bakery")
-        ),
-        Category(
-            name = "Outdoor-Shop",
-            icon = "🎒",
-            queries = listOf("shop=outdoor")
-        ),
-        Category(
-            name = "Restaurant",
-            icon = "🍽️",
-            queries = listOf(
-                "amenity=restaurant",
-                "amenity=cafe",
-                "amenity=fast_food",
-                "amenity=pub",
-                "amenity=bar",
-                "amenity=biergarten",
-                "amenity=food_court",
-                "amenity=ice_cream"
-            )
-        ),
-
-        // 🅿️ PARKEN
-        Category(
-            name = "Parkplatz",
-            icon = "🅿️",
-            queries = listOf("amenity=parking")
-        ),
-
-        // 🚨 NOTFALL & GESUNDHEIT
-        Category(
-            name = "Apotheke",
-            icon = "💊",
-            queries = listOf("amenity=pharmacy", "healthcare=pharmacy"),
-            color = "#aa0000"
-        ),
-        Category(
-            name = "Arzt",
-            icon = "⚕️",
-            queries = listOf(
-                "amenity=doctors", 
-                "amenity=hospital", 
-                "amenity=clinic",
-                "amenity=dentist",
-                "healthcare" // ✅ Alle Healthcare-Einträge einschließen
-            ),
-            color = "#aa0000"
-        ),
-        Category(
-            name = "Polizei",
-            icon = "🚔",
-            queries = listOf("amenity=police"),
-            color = "#aa0000"
-        ),
-        Category(
-            name = "Feuerwehr",
-            icon = "🚒",
-            queries = listOf("amenity=fire_station"),
-            color = "#aa0000"
-        ),
-        Category(
-            name = "Notfall",
-            icon = "🆘",
-            queries = listOf(
-                // Defibrillator (AED) - am wichtigsten!
-                "emergency=defibrillator",
-
-                // Rettungsdienst & Stationen
-                "emergency=ambulance_station",
-                "amenity=rescue_station",
-                "emergency=mountain_rescue",
-
-                // Zugang & Rettungspunkte
-                "emergency=access_point",
-                "emergency=assembly_point",
-
-                // Erste Hilfe
-                "emergency=first_aid_kit",
-                "emergency=rescue_box",
-
-                // Wasserrettung
-                "emergency=lifeguard",
-                "emergency=life_ring",
-
-                // Katastrophen
-                "emergency=disaster_help_point",
-                "emergency=siren",
-
-                // Krankenhaus mit Notaufnahme
-                "healthcare=hospital",
-
-                // ✅ Fallback für alle anderen emergency-Tags
-                "emergency"
-            ),
-            color = "#550000"
-        ),
-
-        // 🌲 NATURSCHUTZ
-        Category(
-            name = "Naturschutzgebiet",
-            icon = "🌲",
-            queries = listOf(
-                "leisure=nature_reserve",
-                "boundary=protected_area"
-            )
-        ),
-        Category(
-            name = "Nationalpark",
-            icon = "🏞️",
-            queries = listOf("boundary=national_park")
-        )
+        Category(name = "Hundeauslauf",      icon = "🐕", queries = listOf("leisure=dog_park")),
+        Category(name = "Tierarzt",          icon = "🏥", queries = listOf("amenity=veterinary"), color = "#aa0000"),
+        Category(name = "Tierbedarf",        icon = "🛒", queries = listOf("shop=pet")),
+        Category(name = "Tierheim",          icon = "🏠", queries = listOf("amenity=animal_shelter", "amenity=animal_boarding")),
+        Category(name = "Wanderweg",         icon = "🥾", queries = listOf("highway=footway", "highway=path", "highway=track"), color = "#ff9800"),
+        Category(name = "Aussichtspunkt",    icon = "🏔️", queries = listOf("tourism=viewpoint", "natural=peak")),
+        Category(name = "Wegweiser",         icon = "🪧", queries = listOf("tourism=information", "information=guidepost", "information=board")),
+        Category(name = "Schutzhütte",       icon = "⛺", queries = listOf("amenity=shelter")),
+        Category(name = "Picknickplatz",     icon = "🧺", queries = listOf("leisure=picnic_site")),
+        Category(name = "Sitzbank",          icon = "🪑", queries = listOf("amenity=bench")),
+        Category(name = "Feuerstelle",       icon = "🔥", queries = listOf("leisure=firepit", "amenity=bbq")),
+        Category(name = "Trinkwasser",       icon = "💧", queries = listOf("amenity=drinking_water", "amenity=water_point", "natural=spring"), color = "#2196F3"),
+        Category(name = "Toilette",          icon = "🚻", queries = listOf("amenity=toilets")),
+        Category(name = "Supermarkt",        icon = "🏪", queries = listOf("shop=supermarket", "shop=convenience")),
+        Category(name = "Bäckerei",          icon = "🥖", queries = listOf("shop=bakery")),
+        Category(name = "Outdoor-Shop",      icon = "🎒", queries = listOf("shop=outdoor")),
+        Category(name = "Restaurant",        icon = "🍽️", queries = listOf("amenity=restaurant", "amenity=cafe", "amenity=fast_food", "amenity=pub", "amenity=bar", "amenity=biergarten")),
+        Category(name = "Parkplatz",         icon = "🅿️", queries = listOf("amenity=parking")),
+        Category(name = "Apotheke",          icon = "💊", queries = listOf("amenity=pharmacy", "healthcare=pharmacy"), color = "#aa0000"),
+        Category(name = "Arzt",              icon = "⚕️", queries = listOf("amenity=doctors", "amenity=hospital", "amenity=clinic", "amenity=dentist", "healthcare"), color = "#aa0000"),
+        Category(name = "Polizei",           icon = "🚔", queries = listOf("amenity=police"), color = "#aa0000"),
+        Category(name = "Feuerwehr",         icon = "🚒", queries = listOf("amenity=fire_station"), color = "#aa0000"),
+        Category(name = "Notfall",           icon = "🆘", queries = listOf("emergency=defibrillator", "emergency=ambulance_station", "amenity=rescue_station", "emergency=mountain_rescue", "emergency=access_point", "emergency=first_aid_kit", "emergency=lifeguard", "healthcare=hospital", "emergency"), color = "#550000"),
+        Category(name = "Naturschutzgebiet", icon = "🌲", queries = listOf("leisure=nature_reserve", "boundary=protected_area")),
+        Category(name = "Nationalpark",      icon = "🏞️", queries = listOf("boundary=national_park"))
     )
 
-    // Overpass Query für alle Kategorien generieren
     fun generateOverpassQuery(lat: Double, lon: Double, radius: Int = 10000): String {
         val queries = ALL_CATEGORIES.flatMap { category ->
             category.queries.flatMap { query ->
@@ -271,9 +195,7 @@ object POICategories {
                         """way["$query"](around:$radius,$lat,$lon);""",
                         """relation["$query"](around:$radius,$lat,$lon);"""
                     )
-                } else {
-                    emptyList()
-                }
+                } else emptyList()
             }
         }.filter { it.isNotEmpty() }
 
@@ -288,17 +210,12 @@ object POICategories {
         """.trimIndent()
     }
 
-    // Kategorie aus OSM-Tags bestimmen
     fun getCategoryForTags(tags: Map<String, String>): Category? {
         return ALL_CATEGORIES.firstOrNull { category ->
             category.queries.any { query ->
                 val parts = query.split("=")
-                if (parts.size == 2) {
-                    tags[parts[0]] == parts[1]
-                } else {
-                    // ✅ Prüft ob der Key existiert
-                    tags.containsKey(query)
-                }
+                if (parts.size == 2) tags[parts[0]] == parts[1]
+                else tags.containsKey(query)
             }
         }
     }
