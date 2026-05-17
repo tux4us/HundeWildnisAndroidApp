@@ -6,9 +6,9 @@
     android:fitsSystemWindows="false"
     android:background="#1a1a1a">
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- TOOLBAR -->
-    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- TOOLBAR                                            -->
+    <!-- ═══════════════════════════════════════════════════ -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -24,9 +24,9 @@
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- POI SUCHFELD - UNTER TOOLBAR -->
-    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SUCHFELD                                           -->
+    <!-- ═══════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/layoutPOISearch"
         android:layout_width="match_parent"
@@ -52,8 +52,19 @@
             android:textColorHint="@color/search_field_hint"
             android:background="@drawable/bg_search_field"
             android:drawableTint="@color/search_field_text"
-            android:maxLines="1"
-            android:drawableEnd="@android:drawable/ic_menu_close_clear_cancel" />
+            android:maxLines="1"/>
+
+        <!-- NEU: Separater Clear-Button mit großer Trefferzone -->
+        <ImageButton
+            android:id="@+id/btnClearSearch"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="4dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Suche löschen"
+            android:visibility="gone"
+            android:padding="10dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSearchPOI"
@@ -76,9 +87,9 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- MAIN CONTENT - KARTE + BOTTOM CARD -->
-    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- HAUPTINHALT: KARTE + BOTTOM-PANEL                  -->
+    <!-- ═══════════════════════════════════════════════════ -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
@@ -86,7 +97,7 @@
         android:layout_marginTop="72dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Map container -->
+        <!-- ─── Karte (obere 50%) ──────────────────────── -->
         <FrameLayout
             android:id="@+id/mapFrame"
             android:layout_width="0dp"
@@ -101,6 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <!-- Copyright -->
             <TextView
                 android:id="@+id/osmCopyrightText"
                 android:layout_width="wrap_content"
@@ -119,12 +131,13 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground" />
 
+            <!-- Karten-Buttons (rechts oben) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
                 android:layout_margin="12dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:background="@drawable/button_bg_rounded"
                 android:padding="4dp"
                 android:elevation="4dp">
@@ -166,6 +179,7 @@
                     app:autoSizeTextType="none" />
             </LinearLayout>
 
+            <!-- Koordinaten -->
             <TextView
                 android:id="@+id/coordinatesText"
                 android:layout_width="wrap_content"
@@ -179,6 +193,7 @@
                 android:padding="6dp"
                 android:elevation="4dp" />
 
+            <!-- Navigation Distanz/Zeit Info -->
             <TextView
                 android:id="@+id/navigationInfoText"
                 android:layout_width="wrap_content"
@@ -203,7 +218,7 @@
                 android:visibility="gone" />
         </FrameLayout>
 
-        <!-- Bottom Card mit Kategorien ODER POI-Liste -->
+        <!-- ─── Bottom Panel (untere 50%) ─────────────── -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/bottomCard"
             android:layout_width="0dp"
@@ -221,9 +236,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- ═══════════════════════════════════════════ -->
-                <!-- KATEGORIEN-ANSICHT (initial sichtbar) -->
-                <!-- ═══════════════════════════════════════════ -->
+                <!-- ═══════════════════════════════════════ -->
+                <!-- KATEGORIEN-ANSICHT                      -->
+                <!-- ═══════════════════════════════════════ -->
                 <LinearLayout
                     android:id="@+id/categoryView"
                     android:layout_width="match_parent"
@@ -231,7 +246,6 @@
                     android:orientation="vertical"
                     android:visibility="visible">
 
-                    <!-- Header -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -243,7 +257,6 @@
                         android:textAlignment="center"
                         android:background="#3d3d3d" />
 
-                    <!-- Kategorien-Grid (scrollbar) -->
                     <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -262,12 +275,11 @@
                             android:useDefaultMargins="true" />
 
                     </androidx.core.widget.NestedScrollView>
-
                 </LinearLayout>
 
-                <!-- ═══════════════════════════════════════════ -->
-                <!-- POI-LISTE (nach Kategorie-Auswahl) -->
-                <!-- ═══════════════════════════════════════════ -->
+                <!-- ═══════════════════════════════════════ -->
+                <!-- POI-LISTE                               -->
+                <!-- ═══════════════════════════════════════ -->
                 <LinearLayout
                     android:id="@+id/poiListView"
                     android:layout_width="match_parent"
@@ -275,7 +287,6 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <!-- Header mit Zurück-Button -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -318,10 +329,8 @@
                                 android:textColor="#999999"
                                 android:textSize="@dimen/text_body_medium" />
                         </LinearLayout>
-
                     </LinearLayout>
 
-                    <!-- POI Liste -->
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -353,11 +362,543 @@
                             android:textAlignment="center"
                             android:visibility="gone" />
                     </FrameLayout>
-
                 </LinearLayout>
 
-            </FrameLayout>
+                <!-- ═══════════════════════════════════════ -->
+                <!-- NAVIGATIONS-CARDS (während Navigation)  -->
+                <!-- ═══════════════════════════════════════ -->
+                <LinearLayout
+                    android:id="@+id/navigationCardsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:background="#2d2d2d">
 
+                    <!-- Nav-Header -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="#3d3d3d"
+                        android:padding="12dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🧭 Navigation aktiv"
+                            android:textColor="#8FC357"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvNavHeaderInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#CCCCCC"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <!-- Horizontal scrollbare Cards -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="none"
+                        android:fillViewport="false"
+                        android:clipToPadding="false">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:gravity="fill_vertical">
+
+                            <!-- ─── CARD 1: Höhenprofil ─────────── -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="270dp"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#3a3a3a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                android:layout_marginEnd="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="📈  Höhenprofil"
+                                        android:textColor="#8FC357"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:layout_marginBottom="4dp" />
+
+                                    <com.hundewildnis.app.ElevationChartView
+                                        android:id="@+id/elevationChart"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0dp"
+                                        android:layout_weight="1" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- ─── CARD 2: Höheninfos ──────────── -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/cardElevationStats"
+                                android:layout_width="205dp"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#3a3a3a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                android:layout_marginEnd="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="⛰️  Höheninformationen"
+                                        android:textColor="#8FC357"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:layout_marginBottom="14dp" />
+
+                                    <!-- Bergauf / Bergab -->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:layout_marginBottom="16dp">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="⬆️ Bergauf"
+                                                android:textColor="#999999"
+                                                android:textSize="11sp" />
+                                            <TextView
+                                                android:id="@+id/tvAscentValue"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#8FC357"
+                                                android:textStyle="bold"
+                                                android:textSize="18sp" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="⬇️ Bergab"
+                                                android:textColor="#999999"
+                                                android:textSize="11sp" />
+                                            <TextView
+                                                android:id="@+id/tvDescentValue"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#FF8A65"
+                                                android:textStyle="bold"
+                                                android:textSize="18sp" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                    <!-- Min / Max -->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="📉 Min"
+                                                android:textColor="#999999"
+                                                android:textSize="11sp" />
+                                            <TextView
+                                                android:id="@+id/tvMinElevationValue"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#FFFFFF"
+                                                android:textStyle="bold"
+                                                android:textSize="15sp" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="📈 Max"
+                                                android:textColor="#999999"
+                                                android:textSize="11sp" />
+                                            <TextView
+                                                android:id="@+id/tvMaxElevationValue"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#FFFFFF"
+                                                android:textStyle="bold"
+                                                android:textSize="15sp" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- ─── CARD 3: Oberfläche & Wegtyp ─── -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="230dp"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#3a3a3a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp">
+
+                                <ScrollView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scrollbars="none">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:padding="12dp">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="🛤️  Oberfläche"
+                                            android:textColor="#8FC357"
+                                            android:textStyle="bold"
+                                            android:textSize="13sp"
+                                            android:layout_marginBottom="8dp" />
+
+                                        <!-- Oberflächen-Einträge (dynamisch befüllt) -->
+                                        <LinearLayout
+                                            android:id="@+id/surfaceInfoContainer"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical"
+                                            android:layout_marginBottom="10dp" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1dp"
+                                            android:background="#484848"
+                                            android:layout_marginBottom="10dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="🛣️  Wegtyp"
+                                            android:textColor="#8FC357"
+                                            android:textStyle="bold"
+                                            android:textSize="13sp"
+                                            android:layout_marginBottom="8dp" />
+
+                                        <!-- Wegtyp-Einträge (dynamisch befüllt) -->
+                                        <LinearLayout
+                                            android:id="@+id/wayTypeInfoContainer"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical" />
+
+                                    </LinearLayout>
+                                </ScrollView>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- ─── CARD 4: Wetter am Ziel ──────────── -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="220dp"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#3a3a3a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                android:layout_marginStart="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="⛅  Wetter am Ziel"
+                                        android:textColor="#8FC357"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:layout_marginBottom="8dp" />
+
+                                    <!-- Icon + Beschreibung -->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:layout_marginBottom="10dp">
+
+                                        <TextView
+                                            android:id="@+id/tvWeatherIcon"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="…"
+                                            android:textSize="28sp"
+                                            android:layout_marginEnd="8dp" />
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:id="@+id/tvWeatherDesc"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Laden…"
+                                                android:textColor="#CCCCCC"
+                                                android:textSize="11sp" />
+
+                                            <TextView
+                                                android:id="@+id/tvWeatherArrivalLabel"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text=""
+                                                android:textColor="#777777"
+                                                android:textSize="10sp" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                    <!-- Temperatur -->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:layout_marginBottom="8dp">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="🌡️ Temp"
+                                                android:textColor="#999999"
+                                                android:textSize="10sp" />
+                                            <TextView
+                                                android:id="@+id/tvWeatherTemp"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#FFFFFF"
+                                                android:textStyle="bold"
+                                                android:textSize="16sp" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="🌧️ Regen"
+                                                android:textColor="#999999"
+                                                android:textSize="10sp" />
+                                            <TextView
+                                                android:id="@+id/tvWeatherPrecip"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#64B5F6"
+                                                android:textStyle="bold"
+                                                android:textSize="16sp" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                    <!-- Wind + Luftfeuchte -->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:layout_marginBottom="10dp">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="💨 Wind"
+                                                android:textColor="#999999"
+                                                android:textSize="10sp" />
+                                            <TextView
+                                                android:id="@+id/tvWeatherWind"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#FFFFFF"
+                                                android:textSize="12sp" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="💧 Feuchte"
+                                                android:textColor="#999999"
+                                                android:textSize="10sp" />
+                                            <TextView
+                                                android:id="@+id/tvWeatherHumidity"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="—"
+                                                android:textColor="#FFFFFF"
+                                                android:textSize="12sp" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                    <!-- Trennlinie -->
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="#484848"
+                                        android:layout_marginBottom="8dp" />
+
+                                    <!-- Sonnenauf- / untergang -->
+                                    <TextView
+                                        android:id="@+id/tvWeatherSunrise"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="🌅 —"
+                                        android:textColor="#CCCCCC"
+                                        android:textSize="11sp"
+                                        android:layout_marginBottom="4dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvWeatherSunset"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="🌇 —"
+                                        android:textColor="#CCCCCC"
+                                        android:textSize="11sp" />
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="#484848"
+                                        android:layout_marginTop="8dp"
+                                        android:layout_marginBottom="8dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvWeatherSafetyInfo"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textSize="10.5sp"
+                                        android:textStyle="bold"
+                                        android:lineSpacingExtra="2dp" />
+
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- ─── CARD 5: POIs entlang der Route ── -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="230dp"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#3a3a3a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                android:layout_marginStart="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="🗺️  Route-POIs"
+                                        android:textColor="#8FC357"
+                                        android:textStyle="bold"
+                                        android:textSize="13sp"
+                                        android:layout_marginBottom="8dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvRoutePOIsStatus"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Wird geladen…"
+                                        android:textColor="#777777"
+                                        android:textSize="11sp"
+                                        android:visibility="visible" />
+
+                                    <ScrollView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0dp"
+                                        android:layout_weight="1"
+                                        android:scrollbars="none">
+
+                                        <LinearLayout
+                                            android:id="@+id/routePOIsContainer"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical" />
+
+                                    </ScrollView>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+                <!-- ═ Ende navigationCardsView ═══════════════ -->
+
+            </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

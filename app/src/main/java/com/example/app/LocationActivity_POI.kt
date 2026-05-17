@@ -11,6 +11,10 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import android.util.Log
@@ -57,8 +61,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var isFirstLocation = true
 
     private val poiList = mutableListOf<POI>()
-
-    // ✅ Liste für POI-Marker
     private val poiMarkers = mutableListOf<Marker>()
 
     private var currentPOIMarker: Marker? = null
@@ -68,15 +70,37 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var currentRouteDuration: Double = 0.0
 
     private var selectedCategory: POICategories.Category? = null
-
     private var searchResultMarkers = mutableListOf<Marker>()
     private lateinit var myLocationOverlay: MyLocationNewOverlay
+
+    // ── Aktuelle Routendaten für Positions-Tracking ──────────
+    private var currentRouteData: RouteData? = null
+    private var closestRoutePointIndex: Int = 0
+
+    private var isShowingSearchResults = false
+
+    private var tapMarker: Marker? = null
+
+    private var finalDestination: GeoPoint? = null
+    private val waypointQueue: ArrayDeque<POI> = ArrayDeque()
+    private var isAtWaypoint: Boolean = false
+    private var waypointReachedDialogShown: Boolean = false
+    private var lastPOIFetchLocation: Location? = null
+
+    private val waypointMarkers: MutableList<Marker> = mutableListOf()
+
+    private var sunriseRouteMarker: Marker? = null
+    private var sunsetRouteMarker: Marker? = null
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
         private const val MIN_TIME_BETWEEN_UPDATES = 2000L
         private const val MIN_DISTANCE_CHANGE = 5f
     }
+
+    // ════════════════════════════════════════════════════════
+    // LIFECYCLE
+    // ════════════════════════════════════════════════════════
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +123,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         setupCategoryButtons()
         setupPOISearch()
 
-        // Insets für Toolbar/StatusBar anwenden
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
             findViewById<View>(R.id.appbar)?.setPadding(0, systemBars.top, 0, 0)
@@ -107,45 +130,37 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
+    // ════════════════════════════════════════════════════════
+    // KARTE
+    // ════════════════════════════════════════════════════════
+
     private fun setupMap() {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
         binding.mapView.controller.setZoom(15.0)
 
-        // ✅ MapEventsOverlay für zuverlässiges Touch-Handling
         val mapEventsReceiver = object : org.osmdroid.events.MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
-                // Bei jedem Tap auf die Karte → Info-Fenster schließen
-                poiMarkers.forEach { marker ->
-                    marker.closeInfoWindow()
+                poiMarkers.forEach { it.closeInfoWindow() }
+                if (!isNavigating && p != null) {
+                    placeTapMarkerAndShowInfo(p.latitude, p.longitude)
                 }
-                return false // Event nicht consumed, damit Map weiter funktioniert
-            }
-
-            override fun longPressHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
                 return false
             }
+            override fun longPressHelper(p: org.osmdroid.util.GeoPoint?) = false
         }
-
         val mapEventsOverlay = org.osmdroid.views.overlay.MapEventsOverlay(mapEventsReceiver)
-        binding.mapView.overlays.add(0, mapEventsOverlay)  // Als erstes Overlay hinzufügen
+        binding.mapView.overlays.add(0, mapEventsOverlay)
 
-        // ✅ Maßstabsbalken (ScaleBar) hinzufügen
-        val scaleBarOverlay = ScaleBarOverlay(binding.mapView)
-        scaleBarOverlay.setAlignRight(true)
-        scaleBarOverlay.setAlignBottom(true)
-        
-        // WICHTIG: Metrisches System explizit setzen
-        scaleBarOverlay.setUnitsOfMeasure(ScaleBarOverlay.UnitsOfMeasure.metric)
-        
-        // Zentrierung und Genauigkeit verbessern
-        scaleBarOverlay.setCentred(false)
-
-        // Offset für Abstand zum Rand (in Pixeln)
-        scaleBarOverlay.setScaleBarOffset(20, 20)
+        val scaleBarOverlay = ScaleBarOverlay(binding.mapView).apply {
+            setAlignRight(true)
+            setAlignBottom(true)
+            setUnitsOfMeasure(ScaleBarOverlay.UnitsOfMeasure.metric)
+            setCentred(false)
+            setScaleBarOffset(20, 20)
+        }
         binding.mapView.overlays.add(scaleBarOverlay)
 
-        // ✅ MyLocationOverlay initialisieren
         myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), binding.mapView)
         myLocationOverlay.enableMyLocation()
         binding.mapView.overlays.add(myLocationOverlay)
@@ -153,1105 +168,108 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupPOIList() {
         binding.poiRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi ->
-            showPOIOnMap(poi)
-        }
+        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPOIOnMap(poi) }
     }
 
     private fun setupButtons() {
         styleBackButton()
 
         binding.btnCurrentLocation.setOnClickListener {
-            if (isNavigating) {
-                stopNavigation()
-            } else {
-                centerOnCurrentLocation()
-            }
+            if (isNavigating) stopNavigation()
+            else centerOnCurrentLocation()
         }
 
-        binding.shareButton.setOnClickListener {
-            shareLocation()
-        }
-
-        binding.btnBackToCategories.setOnClickListener {
-            showCategoryView()
-        }
+        binding.shareButton.setOnClickListener { shareLocation() }
+        binding.btnBackToCategories.setOnClickListener { showCategoryView() }
     }
 
-    private fun styleBackButton() {
-        val isDarkTheme = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-
-        if (isDarkTheme) {
-            // Dark Mode: Heller + größer
-            binding.btnBackToCategories.apply {
-                text = "← Zurück"
-                textSize = 16f
-                setTextColor(Color.WHITE)
-                setBackgroundColor(Color.parseColor("#5a8038"))
-
-                // DP in Pixel umrechnen!
-                val heightInPixels = (56 * resources.displayMetrics.density).toInt()
-                layoutParams = layoutParams.apply {
-                    width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-                    height = heightInPixels
-                }
-
-                // Padding damit Text nicht abgeschnitten wird
-                setPadding(24, 12, 24, 12)
-            }
-        } else {
-            // Light Mode: Standard
-            binding.btnBackToCategories.apply {
-                text = "← Zurück"
-                textSize = 16f
-                setTextColor(Color.WHITE)
-                setBackgroundColor(Color.parseColor("#2d5016"))
-
-                val heightInPixels = (56 * resources.displayMetrics.density).toInt()
-                layoutParams = layoutParams.apply {
-                    width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-                    height = heightInPixels
-                }
-
-                setPadding(24, 12, 24, 12)
-            }
-        }
-    }
-
-    private fun setupCategoryButtons() {
-        binding.categoryGrid.removeAllViews()
-
-        POICategories.ALL_CATEGORIES.forEach { category ->
-            val button = com.google.android.material.button.MaterialButton(this).apply {
-                text = "${category.icon}\n${category.name}"
-                textSize = 12f
-                gravity = android.view.Gravity.CENTER
-                setPadding(8, 16, 8, 16)
-
-                cornerRadius = 12
-                backgroundTintList = android.content.res.ColorStateList.valueOf(
-                    Color.parseColor(category.color)
-                )
-                setTextColor(Color.WHITE)
-
-                val params = android.widget.GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
-                    setMargins(8, 8, 8, 8)
-                }
-                layoutParams = params
-
-                setOnClickListener {
-                    selectedCategory = category
-                    loadPOIsForCategory(category)
-                }
-            }
-
-            binding.categoryGrid.addView(button)
-        }
-    }
-
-    private fun loadPOIsForCategory(category: POICategories.Category) {
-        currentLocation?.let { location ->
-            binding.poiProgressBar.visibility = View.VISIBLE
-            binding.categoryView.visibility = View.GONE
-            binding.poiListView.visibility = View.VISIBLE
-
-            binding.categoryTitleText.text = "${category.icon} ${category.name}"
-
-            lifecycleScope.launch {
-                try {
-                    val pois = withContext(Dispatchers.IO) {
-                        fetchPOIsForCategory(location.latitude, location.longitude, category, 3000)
-                    }
-
-                    val sortedPOIs = pois.sortedBy { it.distance }
-
-                    poiList.clear()
-                    poiList.addAll(sortedPOIs)
-
-                    binding.poiRecyclerView.adapter?.notifyDataSetChanged()
-                    binding.poiCountText.text = "${pois.size} POI in 3 km"
-                    binding.poiProgressBar.visibility = View.GONE
-
-                    if (pois.isEmpty()) {
-                        binding.emptyPoiText.visibility = View.VISIBLE
-                        binding.emptyPoiText.text = "Keine ${category.name} im Umkreis von 3 km gefunden"
-                    } else {
-                        binding.emptyPoiText.visibility = View.GONE
-                    }
-
-                    // POIs auf Karte anzeigen
-                    showPOIsOnMap(sortedPOIs, category)
-
-                } catch (e: Exception) {
-                    binding.poiProgressBar.visibility = View.GONE
-                    Toast.makeText(this@LocationActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-        } ?: run {
-            Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun showPOIsOnMap(pois: List<POI>, category: POICategories.Category) {
-        clearPOIMarkers()
-
-        pois.forEach { poi ->
-            val marker = Marker(binding.mapView).apply {
-                position = GeoPoint(poi.lat, poi.lon)
-                title = poi.name
-                snippet = "${formatDistance(poi.distance)} • ${poi.direction}"
-                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-
-                // Erster Klick = Info, Zweiter Klick = Navigation
-                var clickCount = 0
-                setOnMarkerClickListener { clickedMarker, _ ->
-                    clickCount++
-
-                    if (clickCount == 1) {
-                        // Erster Klick: Alle anderen schließen, dieses öffnen
-                        poiMarkers.forEach { it.closeInfoWindow() }
-                        clickedMarker.showInfoWindow()
-                    } else {
-                        // Zweiter Klick: Navigation starten
-                        clickCount = 0  // Reset für nächstes Mal
-                        startNavigationToPOI(poi)
-                    }
-
-                    true // Event consumed
-                }
-            }
-
-            poiMarkers.add(marker)
-            binding.mapView.overlays.add(marker)
-        }
-
-        binding.mapView.invalidate()
-
-        if (pois.isNotEmpty()) {
-            zoomToShowAllPOIs(pois)
-        }
-    }
-
-    private fun startNavigationToPOI(poi: POI) {
-        showPOIOnMap(poi)
-    }
-
-    private fun zoomToShowAllPOIs(pois: List<POI>) {
-        if (pois.isEmpty()) return
-
-        val allPoints = mutableListOf<GeoPoint>()
-
-        // User-Position hinzufügen
-        currentLocation?.let {
-            allPoints.add(GeoPoint(it.latitude, it.longitude))
-        }
-
-        // Alle POI-Positionen hinzufügen
-        pois.forEach { poi ->
-            allPoints.add(GeoPoint(poi.lat, poi.lon))
-        }
-
-        if (allPoints.isEmpty()) return
-
-        // Bounding Box berechnen
-        var minLat = allPoints[0].latitude
-        var maxLat = allPoints[0].latitude
-        var minLon = allPoints[0].longitude
-        var maxLon = allPoints[0].longitude
-
-        allPoints.forEach { point ->
-            minLat = minOf(minLat, point.latitude)
-            maxLat = maxLat.coerceAtLeast(point.latitude)
-            minLon = minLon.coerceAtMost(point.longitude)
-            maxLon = maxLon.coerceAtLeast(point.longitude)
-        }
-
-        // Zentrum berechnen
-        val centerLat = (minLat + maxLat) / 2
-        val centerLon = (minLon + maxLon) / 2
-        val center = GeoPoint(centerLat, centerLon)
-
-        // Zoom-Level berechnen (je größer die Box, desto weiter rauszoomen)
-        val latDiff = maxLat - minLat
-        val lonDiff = maxLon - minLon
-        val maxDiff = maxOf(latDiff, lonDiff)
-
-        val zoomLevel = when {
-            maxDiff > 0.1 -> 12.0  // > 10 km
-            maxDiff > 0.05 -> 13.0 // 5-10 km
-            maxDiff > 0.02 -> 14.0 // 2-5 km
-            maxDiff > 0.01 -> 15.0 // 1-2 km
-            else -> 16.0           // < 1 km
-        }
-
-        binding.mapView.controller.setCenter(center)
-        binding.mapView.controller.setZoom(zoomLevel)
-    }
-
-    private fun clearPOIMarkers() {
-        poiMarkers.forEach { marker ->
-            binding.mapView.overlays.remove(marker)
-        }
-        poiMarkers.clear()
-        binding.mapView.invalidate()
-    }
-
-    private suspend fun fetchPOIsForCategory(
-        lat: Double,
-        lon: Double,
-        category: POICategories.Category,
-        radius: Int = 3000
-    ): List<POI> {
-        val queries = category.queries.flatMap { query ->
-            val parts = query.split("=")
-            if (parts.size == 2) {
-                listOf(
-                    """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
-                    """way["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
-                    """relation["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
-                )
-            } else {
-                emptyList()
-            }
-        }.filter { it.isNotEmpty() }
-
-        val overpassQuery = """
-            [out:json][timeout:25];
-            (
-              ${queries.joinToString("\n  ")}
-            );
-            out body;
-            >;
-            out skel qt;
-        """.trimIndent()
-
-        val json = OverpassHelper.queryWithRetry(overpassQuery)
-            ?: throw Exception("Overpass API nicht erreichbar")
-
-        val elements = json.getJSONArray("elements")
-        val pois = mutableListOf<POI>()
-
-        for (i in 0 until elements.length()) {
-            val element = elements.getJSONObject(i)
-            val elementType = element.getString("type")
-
-            when (elementType) {
-                "node" -> {
-                    createPOIFromElement(element, lat, lon, category)?.let { poi ->
-                        pois.add(poi)
-                    }
-                }
-                "way", "relation" -> {
-                    createPOIFromWayOrRelation(element, elements, lat, lon, category)?.let { poi ->
-                        pois.add(poi)
-                    }
-                }
-            }
-        }
-
-        return pois
-    }
-
-    private fun createPOIFromElement(
-        element: JSONObject,
-        userLat: Double,
-        userLon: Double,
-        category: POICategories.Category
-    ): POI? {
-        val poiLat = element.getDouble("lat")
-        val poiLon = element.getDouble("lon")
-
-        val tags = mutableMapOf<String, String>()
-        if (element.has("tags")) {
-            val tagsObj = element.getJSONObject("tags")
-            tagsObj.keys().forEach { key ->
-                tags[key] = tagsObj.getString(key)
-            }
-        }
-
-        val name = tags["name"] ?: tags["ref"] ?: category.name
-        val distance = calculateDistance(userLat, userLon, poiLat, poiLon)
-
-        val bearing = DirectionUtils.calculateBearing(userLat, userLon, poiLat, poiLon)
-        val direction = DirectionUtils.bearingToDirection(bearing)
-        val arrow = DirectionUtils.bearingToArrow(bearing)
-
-        val address = buildAddress(tags)
-        val phone = tags["phone"] ?: tags["contact:phone"]
-        val website = tags["website"] ?: tags["contact:website"] ?: tags["url"]
-        val openingHours = tags["opening_hours"]
-        val description = tags["description"] ?: tags["note"]
-        val operator = tags["operator"]
-        val access = tags["access"] ?: tags["dog"]
-
-        return POI(
-            id = element.getString("id"),
-            name = name,
-            category = category.name,
-            categoryIcon = category.icon,
-            lat = poiLat,
-            lon = poiLon,
-            distance = distance,
-            tags = tags,
-            bearing = bearing,
-            direction = direction,
-            directionArrow = arrow,
-            address = address,
-            phone = phone,
-            website = website,
-            openingHours = openingHours,
-            description = description,
-            operator = operator,
-            access = access
-        )
-    }
-
-    private fun createPOIFromWayOrRelation(
-        element: JSONObject,
-        allElements: JSONArray,
-        userLat: Double,
-        userLon: Double,
-        category: POICategories.Category
-    ): POI? {
-        val nodeIds = mutableListOf<String>()
-
-        if (element.has("nodes")) {
-            val nodesArray = element.getJSONArray("nodes")
-            for (i in 0 until nodesArray.length()) {
-                nodeIds.add(nodesArray.getString(i))
-            }
-        } else if (element.has("members")) {
-            val membersArray = element.getJSONArray("members")
-            for (i in 0 until membersArray.length()) {
-                val member = membersArray.getJSONObject(i)
-                if (member.getString("type") == "node") {
-                    nodeIds.add(member.getString("ref"))
-                }
-            }
-        }
-
-        if (nodeIds.isEmpty()) return null
-
-        var sumLat = 0.0
-        var sumLon = 0.0
-        var count = 0
-
-        for (i in 0 until allElements.length()) {
-            val node = allElements.getJSONObject(i)
-            if (node.getString("type") == "node" && nodeIds.contains(node.getString("id"))) {
-                sumLat += node.getDouble("lat")
-                sumLon += node.getDouble("lon")
-                count++
-            }
-        }
-
-        if (count == 0) return null
-
-        val centerLat = sumLat / count
-        val centerLon = sumLon / count
-
-        val tags = mutableMapOf<String, String>()
-        if (element.has("tags")) {
-            val tagsObj = element.getJSONObject("tags")
-            tagsObj.keys().forEach { key ->
-                tags[key] = tagsObj.getString(key)
-            }
-        }
-
-        val name = tags["name"] ?: tags["ref"] ?: category.name
-        val distance = calculateDistance(userLat, userLon, centerLat, centerLon)
-
-        val bearing = DirectionUtils.calculateBearing(userLat, userLon, centerLat, centerLon)
-        val direction = DirectionUtils.bearingToDirection(bearing)
-        val arrow = DirectionUtils.bearingToArrow(bearing)
-
-        val address = buildAddress(tags)
-        val phone = tags["phone"] ?: tags["contact:phone"]
-        val website = tags["website"] ?: tags["contact:website"] ?: tags["url"]
-        val openingHours = tags["opening_hours"]
-        val description = tags["description"] ?: tags["note"]
-        val operator = tags["operator"]
-        val access = tags["access"] ?: tags["dog"]
-
-        return POI(
-            id = element.getString("id"),
-            name = name,
-            category = category.name,
-            categoryIcon = category.icon,
-            lat = centerLat,
-            lon = centerLon,
-            distance = distance,
-            tags = tags,
-            bearing = bearing,
-            direction = direction,
-            directionArrow = arrow,
-            address = address,
-            phone = phone,
-            website = website,
-            openingHours = openingHours,
-            description = description,
-            operator = operator,
-            access = access
-        )
-    }
-
-    private fun buildAddress(tags: Map<String, String>): String? {
-        val parts = mutableListOf<String>()
-
-        tags["addr:street"]?.let { street ->
-            val houseNumber = tags["addr:housenumber"] ?: ""
-            parts.add("$street $houseNumber".trim())
-        }
-
-        tags["addr:postcode"]?.let { postcode ->
-            val city = tags["addr:city"] ?: ""
-            parts.add("$postcode $city".trim())
-        }
-
-        return if (parts.isNotEmpty()) parts.joinToString(", ") else null
-    }
-
-    private fun showCategoryView() {
-        selectedCategory = null
-        binding.categoryView.visibility = View.VISIBLE
-        binding.poiListView.visibility = View.GONE
-        poiList.clear()
-        binding.poiRecyclerView.adapter?.notifyDataSetChanged()
-
-        // Marker entfernen
-        clearPOIMarkers()
-
-        stopNavigation()
-    }
-
-    private fun setupOSMCopyright() {
-        binding.osmCopyrightText.setOnClickListener {
-            showOSMLicense()
-        }
-    }
-
-    private fun shareLocation() {
-        currentLocation?.let { location ->
-            val shareText = "Mein aktueller Standort:\n" +
-                    "https://www.openstreetmap.org/?mlat=${location.latitude}&mlon=${location.longitude}#map=15/${location.latitude}/${location.longitude}"
-
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, shareText)
-                type = "text/plain"
-            }
-
-            startActivity(Intent.createChooser(shareIntent, "Standort teilen über"))
-        } ?: run {
-            Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────────
-    // 3. SETUP-FUNKTION FÜR SUCHFELD (in onCreate aufrufen)
-    // ──────────────────────────────────────────────────────────────
-    private fun setupPOISearch() {
-        binding.etPOISearch.apply {
-            // Enter-Taste drücken = Suche starten
-            setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    val query = text.toString().trim()
-                    if (query.isNotEmpty()) {
-                        searchPOI(query)
-                        hideKeyboard()
-                    }
-                    true
-                } else {
-                    false
-                }
-            }
-
-            // X-Button zum Löschen
-            setOnTouchListener { _, event ->
-                if (event.action == android.view.MotionEvent.ACTION_UP) {
-                    if (event.rawX >= (right - compoundDrawables[2].bounds.width())) {
-                        setText("")
-                        clearSearchResults()
-                        return@setOnTouchListener true
-                    }
-                }
-                false
-            }
-        }
-
-        // Such-Button
-        binding.btnSearchPOI.setOnClickListener {
-            val query = binding.etPOISearch.text.toString().trim()
-            if (query.isNotEmpty()) {
-                searchPOI(query)
-                hideKeyboard()
-            }
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────────
-    // 4. POI-SUCHE FUNKTION (OSM Nominatim API)
-    // ──────────────────────────────────────────────────────────────
-    private fun searchPOI(query: String) {
-        // Standort abrufen (Overlay oder Fallback auf Manager)
-        val currentLocation = myLocationOverlay.myLocation ?: run {
-            val lastKnown = try {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                } else null
-            } catch (e: Exception) { null }
-
-            lastKnown?.let { org.osmdroid.util.GeoPoint(it.latitude, it.longitude) }
-        }
-
-        if (currentLocation == null) {
-            Toast.makeText(this, "Standort wird noch ermittelt...", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Alte Suchergebnisse löschen
-        clearSearchResults()
-
-        // Loading anzeigen
-        binding.progressSearch.visibility = View.VISIBLE
-
-        lifecycleScope.launch {
-            try {
-                val results = withContext(Dispatchers.IO) {
-                    searchNearbyPOIs(
-                        query = query,
-                        lat = currentLocation.latitude,
-                        lon = currentLocation.longitude,
-                        radius = 3000 // 3km Radius für die Suche
-                    )
-                }
-
-                binding.progressSearch.visibility = View.GONE
-
-                if (results.isEmpty()) {
-                    Toast.makeText(
-                        this@LocationActivity,
-                        "Keine Ergebnisse für '$query' in der Nähe gefunden",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    displaySearchResults(results)
-                    Toast.makeText(
-                        this@LocationActivity,
-                        "${results.size} Ergebnis(se) gefunden",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-            } catch (e: Exception) {
-                binding.progressSearch.visibility = View.GONE
-                Log.e("POI_SEARCH", "Suche fehlgeschlagen", e)
-                Toast.makeText(
-                    this@LocationActivity,
-                    "Suche fehlgeschlagen: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    // ════════════════════════════════════════════════════════════════
-// OPTIMIERTE POI-SUCHE - OVERPASS MIT NOMINATIM FALLBACK
-//
-// STRATEGIE:
-// 1. Versuche Overpass (bessere Ergebnisse)
-// 2. Bei Timeout/Fehler: Fallback auf Nominatim (schneller)
-// ════════════════════════════════════════════════════════════════
-
-    private fun searchNearbyPOIs(
-        query: String,
-        lat: Double,
-        lon: Double,
-        radius: Int
-    ): List<POI> {
-        Log.d("POI_SEARCH", "searchNearbyPOIs()")
-        Log.d("POI_SEARCH", "  Query: $query")
-        Log.d("POI_SEARCH", "  Location: $lat, $lon")
-        Log.d("POI_SEARCH", "  Radius: ${radius}m")
-
-        // STRATEGIE 1: Versuche Overpass (bessere Ergebnisse)
-        try {
-            val results = searchViaOverpass(query, lat, lon, radius)
-            if (results.isNotEmpty()) {
-                Log.i("POI_SEARCH", "✅ Overpass erfolgreich: ${results.size} Treffer")
-                return results
-            }
-        } catch (e: java.net.SocketTimeoutException) {
-            Log.w("POI_SEARCH", "⏱️ Overpass Timeout - Fallback auf Nominatim")
-        } catch (e: Exception) {
-            Log.w("POI_SEARCH", "⚠️ Overpass Fehler: ${e.message} - Fallback auf Nominatim")
-        }
-
-        // STRATEGIE 2: Fallback auf Nominatim (schneller)
-        try {
-            val results = searchViaNominatim(query, lat, lon, radius)
-            Log.i("POI_SEARCH", "✅ Nominatim Fallback: ${results.size} Treffer")
-            return results
-        } catch (e: Exception) {
-            Log.e("POI_SEARCH", "❌ Auch Nominatim fehlgeschlagen: ${e.message}")
-            throw e
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────────
-// OVERPASS-SUCHE (OPTIMIERT - weniger Tags)
-// ──────────────────────────────────────────────────────────────
-    private fun searchViaOverpass(
-        query: String,
-        lat: Double,
-        lon: Double,
-        radius: Int
-    ): List<POI> {
-
-        // ✅ OPTIMIERT: Nur die wichtigsten Tags, kürzeres Timeout
-        val overpassQuery = """
-        [out:json][timeout:15];
-        (
-          node["name"~"$query",i](around:$radius,$lat,$lon);
-          node["brand"~"$query",i](around:$radius,$lat,$lon);
-          node["operator"~"$query",i](around:$radius,$lat,$lon);
-        );
-        out center;
-    """.trimIndent()
-
-        val url = "https://overpass-api.de/api/interpreter"
-
-        Log.d("POI_SEARCH", "Overpass: ${overpassQuery.take(100)}...")
-
-        val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
-        connection.requestMethod = "POST"
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-        connection.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
-        connection.doOutput = true
-
-        // ✅ KÜRZERE Timeouts für schnelleren Fallback
-        connection.connectTimeout = 10000  // 10s (war 30s)
-        connection.readTimeout = 15000     // 15s (war 30s)
-
-        // Query senden
-        connection.outputStream.use { os ->
-            val data = "data=${URLEncoder.encode(overpassQuery, "UTF-8")}"
-            os.write(data.toByteArray())
-        }
-
-        val responseCode = connection.responseCode
-        Log.d("POI_SEARCH", "Overpass Response: $responseCode")
-
-        if (responseCode != 200) {
-            Log.e("POI_SEARCH", "Overpass HTTP Error: $responseCode")
-            return emptyList()
-        }
-
-        val response = connection.inputStream.bufferedReader().use { it.readText() }
-
-        return parseOverpassResponse(response, lat, lon)
-    }
-
-    // ──────────────────────────────────────────────────────────────
-// NOMINATIM-SUCHE (FALLBACK - schnell und zuverlässig)
-// ──────────────────────────────────────────────────────────────
-    private fun searchViaNominatim(
-        query: String,
-        lat: Double,
-        lon: Double,
-        radius: Int
-    ): List<POI> {
-
-        val encodedQuery = URLEncoder.encode(query, "UTF-8")
-
-        // Viewbox für lokale Suche
-        val delta = 0.05  // ca. 5km
-        val viewbox = "${lon - delta},${lat + delta},${lon + delta},${lat - delta}"
-
-        val url = "https://nominatim.openstreetmap.org/search?" +
-                "q=$encodedQuery&" +
-                "format=json&" +
-                "viewbox=$viewbox&" +
-                "bounded=1&" +  // ✅ NUR innerhalb viewbox
-                "addressdetails=1&" +
-                "limit=30"
-
-        Log.d("POI_SEARCH", "Nominatim: $url")
-
-        val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
-        connection.requestMethod = "GET"
-        connection.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
-        connection.connectTimeout = 8000
-        connection.readTimeout = 8000
-
-        val response = connection.inputStream.bufferedReader().use { it.readText() }
-
-        return parseNominatimResponse(response, lat, lon, radius)
-    }
-
-    // ──────────────────────────────────────────────────────────────
-// OVERPASS RESPONSE PARSEN
-// ──────────────────────────────────────────────────────────────
-    private fun parseOverpassResponse(response: String, userLat: Double, userLon: Double): List<POI> {
-        val jsonObject = JSONObject(response)
-        val elements = jsonObject.getJSONArray("elements")
-
-        Log.d("POI_SEARCH", "Overpass: ${elements.length()} Elemente")
-
-        val results = mutableListOf<POI>()
-        val currentGeo = GeoPoint(userLat, userLon)
-
-        for (i in 0 until elements.length()) {
-            val element = elements.getJSONObject(i)
-
-            val poiLat: Double
-            val poiLon: Double
-
-            when (element.getString("type")) {
-                "node" -> {
-                    poiLat = element.getDouble("lat")
-                    poiLon = element.getDouble("lon")
-                }
-                "way", "relation" -> {
-                    val center = element.optJSONObject("center") ?: continue
-                    poiLat = center.getDouble("lat")
-                    poiLon = center.getDouble("lon")
-                }
-                else -> continue
-            }
-
-            val poiGeo = GeoPoint(poiLat, poiLon)
-            val distance = currentGeo.distanceToAsDouble(poiGeo)
-
-            val tags = element.optJSONObject("tags") ?: JSONObject()
-
-            val name = tags.optString("name").ifEmpty {
-                tags.optString("brand").ifEmpty {
-                    tags.optString("operator").ifEmpty { "Unbenannt" }
-                }
-            }
-
-            val categoryIcon = when {
-                tags.has("shop") && tags.getString("shop") == "supermarket" -> "🛒"
-                tags.has("shop") && tags.getString("shop") == "bakery" -> "🥖"
-                tags.has("amenity") && tags.getString("amenity") == "pharmacy" -> "💊"
-                tags.has("amenity") && tags.getString("amenity") == "restaurant" -> "🍽️"
-                tags.has("amenity") && tags.getString("amenity") == "cafe" -> "☕"
-                tags.has("shop") -> "🏪"
-                else -> "🔍"
-            }
-
-            val address = buildString {
-                tags.optString("addr:street").let { if (it.isNotEmpty()) append("$it ") }
-                tags.optString("addr:housenumber").let { if (it.isNotEmpty()) append(it) }
-                tags.optString("addr:postcode").let { if (it.isNotEmpty()) append(", $it") }
-                tags.optString("addr:city").let { if (it.isNotEmpty()) append(" $it") }
-            }.trim()
-
-            results.add(POI(
-                id = element.optLong("id", 0).toString(),
-                name = name,
-                category = "Suchergebnis",
-                categoryIcon = categoryIcon,
-                lat = poiLat,
-                lon = poiLon,
-                distance = distance,
-                address = address.ifEmpty { null },
-                tags = (0 until tags.length()).associate {
-                    val key = tags.names()?.getString(it) ?: ""
-                    key to tags.optString(key, "")
-                }
-            ))
-        }
-
-        return results.sortedBy { it.distance }
-    }
-
-    // ──────────────────────────────────────────────────────────────
-// NOMINATIM RESPONSE PARSEN
-// ──────────────────────────────────────────────────────────────
-    private fun parseNominatimResponse(
-        response: String,
-        userLat: Double,
-        userLon: Double,
-        radius: Int
-    ): List<POI> {
-
-        val jsonArray = JSONArray(response)
-        val results = mutableListOf<POI>()
-        val currentGeo = GeoPoint(userLat, userLon)
-
-        Log.d("POI_SEARCH", "Nominatim: ${jsonArray.length()} Ergebnisse")
-
-        for (i in 0 until jsonArray.length()) {
-            val item = jsonArray.getJSONObject(i)
-
-            val poiLat = item.optString("lat").toDoubleOrNull() ?: continue
-            val poiLon = item.optString("lon").toDoubleOrNull() ?: continue
-
-            val poiGeo = GeoPoint(poiLat, poiLon)
-            val distance = currentGeo.distanceToAsDouble(poiGeo)
-
-            // Filter: Nur im Radius
-            if (distance > radius) continue
-
-            val displayName = item.optString("display_name", "")
-            val shortName = displayName.split(",").firstOrNull()?.trim() ?: "Unbenannt"
-
-            results.add(POI(
-                id = item.optString("place_id", i.toString()),
-                name = shortName,
-                category = "Suchergebnis",
-                categoryIcon = "🔍",
-                lat = poiLat,
-                lon = poiLon,
-                distance = distance,
-                address = displayName
-            ))
-        }
-
-        return results.sortedBy { it.distance }
-    }
-
-
-    // ──────────────────────────────────────────────────────────────
-    // 6. SUCHERGEBNISSE ALS MARKER ANZEIGEN
-    // ──────────────────────────────────────────────────────────────
-    private fun displaySearchResults(results: List<POI>) {
-        results.forEach { poi ->
-            val marker = Marker(binding.mapView).apply {
-                position = GeoPoint(poi.lat, poi.lon)
-                title = "${poi.categoryIcon} ${poi.name}"
-                snippet = buildString {
-                    append("📍 ${String.format("%.0f", poi.distance)}m entfernt\n")
-                    poi.address?.let { append("📬 $it") }
-                }
-
-                // Icon
-                icon = ContextCompat.getDrawable(
-                    this@LocationActivity,
-                    R.drawable.ic_search_result // Du musst dieses Icon erstellen
-                )
-
-                // Klick-Listener für Navigation
-                setOnMarkerClickListener { clickedMarker, _ ->
-                    showNavigationDialog(poi)
-                    true
-                }
-            }
-
-            binding.mapView.overlays.add(marker)
-            searchResultMarkers.add(marker)
-        }
-
-        // Karte aktualisieren
-        binding.mapView.invalidate()
-
-        // Zoom auf erstes Ergebnis
-        if (results.isNotEmpty()) {
-            binding.mapView.controller.animateTo(
-                GeoPoint(results[0].lat, results[0].lon)
-            )
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────────
-    // 7. ALTE SUCHERGEBNISSE LÖSCHEN
-    // ──────────────────────────────────────────────────────────────
-    private fun clearSearchResults() {
-        searchResultMarkers.forEach { marker ->
-            binding.mapView.overlays.remove(marker)
-        }
-        searchResultMarkers.clear()
-        binding.mapView.invalidate()
-    }
-
-    // ──────────────────────────────────────────────────────────────
-// 8. TASTATUR VERSTECKEN
-// ──────────────────────────────────────────────────────────────
-    private fun hideKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etPOISearch.windowToken, 0)
-    }
-
-    // ──────────────────────────────────────────────────────────────
-// 9. NAVIGATION-DIALOG (bereits vorhanden erweitern)
-// ──────────────────────────────────────────────────────────────
-    private fun showNavigationDialog(poi: POI) {
-        val myLocation = myLocationOverlay.myLocation ?: run {
-            Toast.makeText(this, "Standort nicht verfügbar", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val distance = myLocation.distanceToAsDouble(GeoPoint(poi.lat, poi.lon))
-
-        // ✅ NEU: Dark Mode Erkennung
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("${poi.categoryIcon} ${poi.name}")
-            .setMessage(buildString {
-                append("📍 ${String.format("%.0f", distance)}m entfernt\n\n")
-                poi.address?.let { append("📬 $it\n\n") }
-                append("Navigation starten?")
-            })
-            .setPositiveButton("Navigation starten") { _, _ ->
-                startNavigationToPOI(poi)
-            }
-            .setNegativeButton("Abbrechen", null)
-            .create()
-
-        // ✅ Dialog anzeigen
-        dialog.show()
-
-        // ✅ WICHTIG: Button-Farben NACH show() setzen!
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
-    }
-
-
-    private fun showOSMLicense() {
-        val webView = WebView(this)
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
-        webView.loadUrl("https://www.openstreetmap.org/copyright")
-
-        AlertDialog.Builder(this)
-            .setTitle("OpenStreetMap Lizenz")
-            .setView(webView)
-            .setPositiveButton("Schließen", null)
-            .show()
-    }
-
-    private fun checkLocationPermission() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            AlertDialog.Builder(this)
-                .setTitle("📍 Standortdienste aktivieren")
-                .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
-                        "• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
-                        "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n" +
-                        "• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n" +
-                        "• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n" +
-                        "• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n" +
-                        "• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n" +
-                        "• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n" +
-                        "• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n" +
-                        "• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\n" +
-                        "WICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
-                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden")
-                .setPositiveButton("AKTIVIEREN") { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                        LOCATION_PERMISSION_REQUEST_CODE
-                    )
-                }
-                .setNegativeButton("ABLEHNEN", null)
-                .create()
-                .apply {
-                    show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
-                }
-        } else {
-            getLocation()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation()
-                } else {
-                    Toast.makeText(this, "Standortberechtigung benötigt", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-    private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        binding.progressBar.visibility = View.VISIBLE
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-
-        var bestLocation: Location? = null
-
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            bestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        }
-
-        if (bestLocation == null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            bestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        }
-
-        if (bestLocation != null) {
-            updateLocation(bestLocation)
-        }
-
-        requestLocationUpdates()
-    }
-
-    private fun requestLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        isRequestingUpdates = true
-
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
-            Log.d("LocationActivity", "GPS Updates gestartet")
-        }
-
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
-            Log.d("LocationActivity", "Network Updates gestartet")
-        }
-    }
+    // ════════════════════════════════════════════════════════
+    // LOCATION UPDATES
+    // ════════════════════════════════════════════════════════
 
     override fun onLocationChanged(location: Location) {
-        Log.d("LocationActivity", "📍 Location Update: ${location.latitude}, ${location.longitude}")
-
+        Log.d("LocationActivity", "📍 Location: ${location.latitude}, ${location.longitude}")
         updateLocation(location)
 
         if (isNavigating) {
-            // ✅ Automatische Kartendrehung in Bewegungsrichtung
-            if (location.hasBearing() && location.speed > 0.5f) {
-                binding.mapView.setMapOrientation(-location.bearing)
+            if (!isAtWaypoint) {
+                // Zwischenziel-Ankunft prüfen
+                waypointQueue.firstOrNull()?.let { wp ->
+                    val distToWp = calculateDistance(location.latitude, location.longitude, wp.lat, wp.lon)
+                    if (distToWp < 25.0 && !waypointReachedDialogShown) {
+                        waypointReachedDialogShown = true
+                        isAtWaypoint = true
+                        showWaypointReachedDialog(wp)
+                        return
+                    }
+                }
+
+                // Route nur neu berechnen wenn Abweichung > 30m
+                if (isDeviatingFromRoute(location)) {
+                    val dest = finalDestination
+                    if (dest != null) {
+                        if (waypointQueue.isEmpty()) {
+                            drawRouteOSRM(location.latitude, location.longitude,
+                                dest.latitude, dest.longitude)
+                        } else {
+                            lifecycleScope.launch {
+                                try {
+                                    val routeData = withContext(Dispatchers.IO) {
+                                        fetchRouteWithWaypoints(location.latitude, location.longitude,
+                                            waypointQueue.toList(), dest.latitude, dest.longitude)
+                                    }
+                                    applyNewRoute(routeData, dest)
+                                } catch (e: Exception) {
+                                    Log.e("LocationActivity", "Waypoint-Rerouting Fehler: ${e.message}")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // POI-Liste alle 1km aktualisieren
+                val distSinceLastFetch = lastPOIFetchLocation?.let {
+                    calculateDistance(it.latitude, it.longitude, location.latitude, location.longitude)
+                } ?: 1001.0
+                if (distSinceLastFetch >= 1000.0) {
+                    lastPOIFetchLocation = location
+                    currentRouteData?.let { refreshRoutePOIs(it.points, location) }
+                }
             }
+            if (isAtWaypoint) return
 
             centerMapOnLocation(location)
-            currentPOIMarker?.let {
-                drawRouteOSRM(location.latitude, location.longitude, it.position.latitude, it.position.longitude)
-            }
+            updateElevationMarker(location)
+        }
+    }
+
+    /**
+     * Findet den nächsten Routenpunkt zur aktuellen Position
+     * und aktualisiert den blauen Marker im Höhenprofil.
+     */
+    private fun updateElevationMarker(location: Location) {
+        val route = currentRouteData ?: return
+        if (route.elevationPoints.isEmpty() || route.points.isEmpty()) return
+
+        var minDist = Double.MAX_VALUE
+        var closestIdx = 0
+        route.points.forEachIndexed { idx, point ->
+            val d = calculateDistance(location.latitude, location.longitude, point.latitude, point.longitude)
+            if (d < minDist) { minDist = d; closestIdx = idx }
+        }
+        if (closestIdx != closestRoutePointIndex) {
+            closestRoutePointIndex = closestIdx
+            // Höhenprofil-Index ist proportional zur Punktanzahl
+            val chartIdx = (closestIdx.toDouble() / route.points.size * route.elevationPoints.size).toInt()
+                .coerceIn(0, route.elevationPoints.size - 1)
+            binding.elevationChart.setCurrentPosition(chartIdx)
         }
     }
 
     private fun updateLocation(location: Location) {
         currentLocation = location
         updateUserLocationMarker(location)
-
-        if (isFirstLocation) {
-            centerMapOnLocation(location)
-            isFirstLocation = false
-        }
-
+        if (isFirstLocation) { centerMapOnLocation(location); isFirstLocation = false }
         binding.progressBar.visibility = View.GONE
         binding.coordinatesText.text = String.format("📍 %.4f°, %.4f°", location.latitude, location.longitude)
         binding.shareButton.isEnabled = true
@@ -1259,7 +277,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun updateUserLocationMarker(location: Location) {
         val position = GeoPoint(location.latitude, location.longitude)
-
         if (userLocationMarker == null) {
             userLocationMarker = Marker(binding.mapView).apply {
                 this.position = position
@@ -1271,37 +288,16 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         } else {
             userLocationMarker?.position = position
         }
-
         binding.mapView.invalidate()
     }
 
     private fun centerMapOnLocation(location: Location) {
-        val point = GeoPoint(location.latitude, location.longitude)
-        binding.mapView.controller.animateTo(point)
+        binding.mapView.controller.animateTo(GeoPoint(location.latitude, location.longitude))
     }
 
-    private fun centerOnCurrentLocation() {
-        currentLocation?.let { location ->
-            centerMapOnLocation(location)
-            currentPOIMarker?.let { binding.mapView.overlays.remove(it) }
-            currentPOIMarker = null
-            currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
-            currentRoutePolyline = null
-            binding.mapView.invalidate()
-            binding.btnCurrentLocation.text = "📍 Standort"
-        }
-    }
-
-    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val r = 6371000.0
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = sin(dLat / 2) * sin(dLat / 2) +
-                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2) * sin(dLon / 2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return r * c
-    }
+    // ════════════════════════════════════════════════════════
+    // NAVIGATION STARTEN / STOPPEN
+    // ════════════════════════════════════════════════════════
 
     private fun showPOIOnMap(poi: POI) {
         currentPOIMarker?.let { binding.mapView.overlays.remove(it) }
@@ -1315,35 +311,283 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
         binding.mapView.overlays.add(currentPOIMarker)
 
+        isNavigating = true
+        finalDestination = GeoPoint(poi.lat, poi.lon)
+        isAtWaypoint = false
+        waypointReachedDialogShown = false
+        waypointQueue.clear()
+        waypointMarkers.forEach { binding.mapView.overlays.remove(it) }
+        waypointMarkers.clear()
+        isAtWaypoint = false
+        waypointReachedDialogShown = false
+        lastPOIFetchLocation = null
+        finalDestination = GeoPoint(poi.lat, poi.lon)
+        binding.btnCurrentLocation.text = "🧭 Navigation beenden"
+        clearPOIMarkers()   // ← NEU: Marker ausblenden
+        binding.mapView.invalidate()
+
+        // Navigation Cards einblenden (zunächst mit Platzhaltern)
+        showNavigationCardsPanel()
+
+        //Tap-Marker aufräumen
+        tapMarker?.let { binding.mapView.overlays.remove(it) }
+        tapMarker = null
+
         currentLocation?.let { location ->
             drawRouteOSRM(location.latitude, location.longitude, poi.lat, poi.lon)
-            
-            // ✅ Verzögerter Zoom auf die gesamte Route (5 Sek.)
+
             lifecycleScope.launch {
                 delay(5000)
-                if (isNavigating) { // Nur zoomen, wenn Navigation noch aktiv ist
+                if (isNavigating) {
                     zoomToFitRoute(location, poiPosition)
                 }
             }
         }
+    }
 
-        binding.btnCurrentLocation.text = "🧭 Navigation beenden"
-        isNavigating = true
+    private fun stopNavigation() {
+        isNavigating = false
+        binding.btnCurrentLocation.text = "📍 Standort"
+        binding.navigationInfoText.visibility = View.GONE
+
+        // Karte wieder nach Norden ausrichten
+        binding.mapView.setMapOrientation(0f)
+
+        currentPOIMarker?.let { binding.mapView.overlays.remove(it) }
+        currentPOIMarker = null
+        currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
+        currentRoutePolyline = null
+        currentRouteData = null
+        closestRoutePointIndex = 0
+        finalDestination = null
+        isAtWaypoint = false
+        waypointReachedDialogShown = false
+        // Alle Zwischenziel-Marker entfernen
+        waypointMarkers.forEach { binding.mapView.overlays.remove(it) }
+        waypointMarkers.clear()
+        waypointQueue.clear()
+        isAtWaypoint = false
+        waypointReachedDialogShown = false
+        finalDestination = null
+        lastPOIFetchLocation = null
+
+        sunriseRouteMarker?.let { binding.mapView.overlays.remove(it) }
+        sunriseRouteMarker = null
+        sunsetRouteMarker?.let { binding.mapView.overlays.remove(it) }
+        sunsetRouteMarker = null
+
         binding.mapView.invalidate()
+        currentLocation?.let { centerMapOnLocation(it) }
+
+        // Navigation Cards ausblenden, vorherige Ansicht wiederherstellen
+        hideNavigationCardsPanel()
+
+        //Tap-Marker aufräumen
+        tapMarker?.let { binding.mapView.overlays.remove(it) }
+        tapMarker = null
+
+
+        // ← NEU: Marker wieder einblenden falls eine Kategorie aktiv ist
+        selectedCategory?.let { category ->
+            currentLocation?.let { location ->
+                lifecycleScope.launch {
+                    try {
+                        val pois = withContext(Dispatchers.IO) {
+                            fetchPOIsForCategory(location.latitude, location.longitude, category, 3000)
+                        }
+                        showPOIsOnMap(pois.sortedBy { it.distance }, category)
+                    } catch (e: Exception) {
+                        Log.e("LocationActivity", "POI Reload Fehler: ${e.message}")
+                    }
+                }
+            }
+        }
+    }
+
+    // ════════════════════════════════════════════════════════
+    // NAVIGATION CARDS: EINBLENDEN / AUSBLENDEN / BEFÜLLEN
+    // ════════════════════════════════════════════════════════
+
+    private fun showNavigationCardsPanel() {
+        binding.categoryView.visibility = View.GONE
+        binding.poiListView.visibility = View.GONE
+        binding.navigationCardsView.visibility = View.VISIBLE
+
+        // Platzhalter-Zustand: Daten kommen gleich via updateNavigationCards
+        binding.tvAscentValue.text = "…"
+        binding.tvDescentValue.text = "…"
+        binding.tvMinElevationValue.text = "…"
+        binding.tvMaxElevationValue.text = "…"
+        binding.surfaceInfoContainer.removeAllViews()
+        binding.wayTypeInfoContainer.removeAllViews()
+    }
+
+    // 4. hideNavigationCardsPanel() anpassen:
+    private fun hideNavigationCardsPanel() {
+        binding.navigationCardsView.visibility = View.GONE
+        when {
+            selectedCategory != null -> binding.poiListView.visibility = View.VISIBLE
+            isShowingSearchResults   -> binding.poiListView.visibility = View.VISIBLE  // ← NEU
+            else                     -> binding.categoryView.visibility = View.VISIBLE
+        }
     }
 
     /**
-     * Zoomt die Karte so, dass sowohl der User als auch das Ziel sichtbar sind
+     * Befüllt alle drei Navigations-Cards mit den echten Routendaten.
+     * Wird aufgerufen, sobald die Route vom Server zurückgekommen ist.
      */
-    private fun zoomToFitRoute(userLoc: Location, target: GeoPoint) {
-        val points = mutableListOf<GeoPoint>()
-        points.add(GeoPoint(userLoc.latitude, userLoc.longitude))
-        points.add(target)
+    private fun updateNavigationCards(routeData: RouteData, destLat: Double, destLon: Double) {
+        currentRouteData = routeData
 
-        // BoundingBox mit etwas Padding (200 Pixel)
-        val boundingBox = org.osmdroid.util.BoundingBox.fromGeoPoints(points)
-        binding.mapView.zoomToBoundingBox(boundingBox, true, 200)
+        // ── Card 1: Höhenprofil ──────────────────────────
+        binding.elevationChart.setElevationData(routeData.elevationPoints)
+
+        // ── Card 2: Höhenstatistik ───────────────────────
+        if (routeData.elevationPoints.isNotEmpty()) {
+            binding.tvAscentValue.text       = "+${routeData.totalAscent.toInt()} m"
+            binding.tvDescentValue.text      = "−${routeData.totalDescent.toInt()} m"
+            binding.tvMinElevationValue.text = "${routeData.minElevation.toInt()} m ü.NN"
+            binding.tvMaxElevationValue.text = "${routeData.maxElevation.toInt()} m ü.NN"
+        } else {
+            binding.tvAscentValue.text       = "—"
+            binding.tvDescentValue.text      = "—"
+            binding.tvMinElevationValue.text = "—"
+            binding.tvMaxElevationValue.text = "—"
+        }
+
+        // ── Card 3: Oberfläche & Wegtyp ──────────────────
+        updateSurfaceCard(routeData.surfaceSummary, routeData.wayTypeSummary)
+        if (lastPOIFetchLocation == null) {
+            lastPOIFetchLocation = currentLocation
+            currentLocation?.let { loc -> refreshRoutePOIs(routeData.points, loc) }
+        }
+
+
+        // Am Ende der Funktion ergänzen (nach updateSurfaceCard):
+        val arrivalTimeMs = System.currentTimeMillis() + (routeData.duration * 1000).toLong()
+        lifecycleScope.launch {
+            try {
+                val weatherData = withContext(Dispatchers.IO) {
+                    fetchWeatherAtDestination(destLat, destLon)
+                }
+                updateWeatherCard(weatherData, arrivalTimeMs)
+            } catch (e: Exception) {
+                Log.w("LocationActivity", "Wetter am Ziel fehlgeschlagen: ${e.message}")
+            }
+        }
+
+        // ── Header-Info aktualisieren ────────────────────
+        val km   = routeData.distance / 1000.0
+        val totalMins = (routeData.duration / 60.0).toInt()
+
+        val timeText = if (totalMins < 60) {
+            "$totalMins Min"
+        } else {
+            val h   = totalMins / 60
+            val min = totalMins % 60
+            if (min == 0) "${h}h" else "${h}h ${min}min"
+        }
+
+        binding.tvNavHeaderInfo.text =
+            if (km < 1.0) "${routeData.distance.toInt()} m  •  $timeText"
+            else          "${"%.1f".format(km)} km  •  $timeText"
     }
+
+    private fun updateSurfaceCard(
+        surfaces: List<SurfaceSummary>,
+        wayTypes: List<SurfaceSummary>
+    ) {
+        binding.surfaceInfoContainer.removeAllViews()
+        binding.wayTypeInfoContainer.removeAllViews()
+
+        if (surfaces.isEmpty()) {
+            addPlaceholderText(binding.surfaceInfoContainer, "Keine Daten von Routing-Service")
+        } else {
+            surfaces.sortedByDescending { it.percentage }.take(5).forEach { s ->
+                addSurfaceRow(binding.surfaceInfoContainer, s.emoji, s.name, s.percentage, s.distance,
+                    RouteInfoHelper.getSurfaceColor(s.code))
+            }
+        }
+
+        if (wayTypes.isEmpty()) {
+            addPlaceholderText(binding.wayTypeInfoContainer, "Keine Daten von Routing-Service")
+        } else {
+            wayTypes.sortedByDescending { it.percentage }.take(4).forEach { w ->
+                addSurfaceRow(binding.wayTypeInfoContainer, w.emoji, w.name, w.percentage, w.distance,
+                    RouteInfoHelper.getWayTypeColor(w.code))
+            }
+        }
+    }
+
+    /** Fügt eine Zeile (Label + Fortschrittsbalken) in den Container ein */
+    private fun addSurfaceRow(
+        container: LinearLayout,
+        emoji: String,
+        name: String,
+        percent: Double,
+        distanceM: Double,
+        barColor: Int
+    ) {
+        val dp = resources.displayMetrics.density
+
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (7 * dp).toInt() }
+        }
+
+        // Label-Zeile: Emoji + Name   •   XX% (XXXm)
+        val labelRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+
+        val tvLabel = TextView(this).apply {
+            text = "$emoji $name"
+            textSize = 11.5f
+            setTextColor(Color.parseColor("#CCCCCC"))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val tvPercent = TextView(this).apply {
+            text = "${percent.toInt()}%  ${formatDistance(distanceM)}"
+            textSize = 10.5f
+            setTextColor(Color.parseColor("#AAAAAA"))
+        }
+
+        labelRow.addView(tvLabel)
+        labelRow.addView(tvPercent)
+
+        // Fortschrittsbalken
+        val bar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = percent.toInt()
+            progressTintList = android.content.res.ColorStateList.valueOf(barColor)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (5 * dp).toInt()
+            ).also { it.topMargin = (3 * dp).toInt() }
+        }
+
+        row.addView(labelRow)
+        row.addView(bar)
+        container.addView(row)
+    }
+
+    private fun addPlaceholderText(container: LinearLayout, text: String) {
+        container.addView(TextView(this).apply {
+            setText(text)
+            textSize = 11f
+            setTextColor(Color.parseColor("#777777"))
+            setPadding(0, 4, 0, 4)
+        })
+    }
+
+    // ════════════════════════════════════════════════════════
+    // ROUTING
+    // ════════════════════════════════════════════════════════
 
     private fun drawRouteOSRM(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
         lifecycleScope.launch {
@@ -1363,10 +607,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                         outlinePaint.color = Color.parseColor("#2196F3")
                         outlinePaint.strokeWidth = 10f
                     }
-
                     binding.mapView.overlays.add(currentRoutePolyline)
                     binding.mapView.invalidate()
+
                     updateNavigationInfo()
+                    updateNavigationCards(routeData, toLat, toLon) // ← Cards befüllen
                 } else {
                     drawRouteStraightLine(fromLat, fromLon, toLat, toLon)
                 }
@@ -1377,223 +622,1703 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    private fun fetchOSRMRouteWithDetails(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): RouteData {
-        val url = "https://router.project-osrm.org/route/v1/foot/$fromLon,$fromLat;$toLon,$toLat?overview=full&geometries=geojson"
-        val response = URL(url).readText()
-        val json = JSONObject(response)
+    // ════════════════════════════════════════════════════════════════
+// ERSATZ FÜR fetchOpenRouteServiceRoute() UND fetchBestRoute()
+// in LocationActivity_POI.kt
+//
+// Änderungen:
+//  - extra_info "waytype" (Singular) statt "waytypes"/"way_types"
+//  - Fallback-Kette: ORS voll → ORS nur Elevation → Luftlinie
+//    (GraphHopper + OSRM entfernt, da deren öffentliche Server ausgefallen)
+// ════════════════════════════════════════════════════════════════
 
-        if (json.getString("code") != "Ok") return RouteData(emptyList(), 0.0, 0.0)
+    private fun fetchOpenRouteServiceRoute(
+        fromLat: Double, fromLon: Double,
+        toLat: Double,   toLon: Double,
+        withExtras: Boolean = true           // false = nur Route + Höhe, kein extra_info
+    ): RouteData {
 
-        val routes = json.getJSONArray("routes")
-        if (routes.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
-
-        val route = routes.getJSONObject(0)
-        val distance = route.getDouble("distance")
-        val duration = route.getDouble("duration")
-        val geometry = route.getJSONObject("geometry")
-        val coordinates = geometry.getJSONArray("coordinates")
-
-        val points = mutableListOf<GeoPoint>()
-        for (i in 0 until coordinates.length()) {
-            val coord = coordinates.getJSONArray(i)
-            points.add(GeoPoint(coord.getDouble(1), coord.getDouble(0)))
-        }
-
-        return RouteData(points, distance, duration)
-    }
-
-    private fun fetchGraphhopperRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): RouteData {
-        val url = "https://graphhopper.com/api/1/route?point=$fromLat,$fromLon&point=$toLat,$toLon&vehicle=foot&locale=de&points_encoded=false&profile=foot"
-        val response = URL(url).readText()
-        val json = JSONObject(response)
-
-        if (!json.has("paths")) return RouteData(emptyList(), 0.0, 0.0)
-
-        val paths = json.getJSONArray("paths")
-        if (paths.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
-
-        val path = paths.getJSONObject(0)
-        val distance = path.getDouble("distance")
-        val duration = path.getDouble("time") / 1000.0
-        val coordinates = path.getJSONObject("points").getJSONArray("coordinates")
-
-        val points = mutableListOf<GeoPoint>()
-        for (i in 0 until coordinates.length()) {
-            val coord = coordinates.getJSONArray(i)
-            points.add(GeoPoint(coord.getDouble(1), coord.getDouble(0)))
-        }
-
-        return RouteData(points, distance, duration)
-    }
-
-    private fun fetchOpenRouteServiceRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): RouteData {
         val apiKey = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjBkODg2NmJmMGM4NTRlNDlhZWI2MjliMWM5YTJmYzM1IiwiaCI6Im11cm11cjY0In0="
-        val url = "https://api.openrouteservice.org/v2/directions/foot-hiking?api_key=$apiKey&start=$fromLon,$fromLat&end=$toLon,$toLat"
-        val response = URL(url).readText()
-        val json = JSONObject(response)
+        val url    = "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson"
 
+        val bodyObj = JSONObject().apply {
+            put("coordinates", JSONArray().apply {
+                put(JSONArray().apply { put(fromLon); put(fromLat) })
+                put(JSONArray().apply { put(toLon);   put(toLat)   })
+            })
+            put("elevation", true)
+            if (withExtras) {
+                put("extra_info", JSONArray().apply {
+                    put("surface")
+                    put("waytype")   // ← Singular! Nicht "waytypes" oder "way_types"
+                })
+            }
+            put("language", "de")
+        }
+
+        val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
+        conn.setRequestProperty("Accept",        "application/json, application/geo+json")
+        conn.setRequestProperty("Authorization", apiKey)
+        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.connectTimeout = 15000
+        conn.readTimeout    = 20000
+        conn.doOutput       = true
+        conn.outputStream.use { it.write(bodyObj.toString().toByteArray(Charsets.UTF_8)) }
+
+        val responseCode = conn.responseCode
+        if (responseCode != 200) {
+            val error = conn.errorStream?.bufferedReader()?.use { it.readText() } ?: "HTTP $responseCode"
+            Log.e("Routing", "ORS Fehler $responseCode (withExtras=$withExtras): $error")
+            return RouteData(emptyList(), 0.0, 0.0)
+        }
+
+        val json     = JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
         val features = json.getJSONArray("features")
         if (features.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
 
-        val feature = features.getJSONObject(0)
+        val feature    = features.getJSONObject(0)
         val properties = feature.getJSONObject("properties")
-        val geometry = feature.getJSONObject("geometry")
+        val geometry   = feature.getJSONObject("geometry")
 
-        val distance = properties.getJSONObject("summary").getDouble("distance")
-        val duration = properties.getJSONObject("summary").getDouble("duration")
-        val coordinates = geometry.getJSONArray("coordinates")
+        val summary  = properties.getJSONObject("summary")
+        val distance = summary.getDouble("distance")
+        val duration = summary.getDouble("duration")
 
-        val points = mutableListOf<GeoPoint>()
+        // Auf-/Abstieg
+        var totalAscent = 0.0; var totalDescent = 0.0
+        if (properties.has("segments")) {
+            val segs = properties.getJSONArray("segments")
+            for (i in 0 until segs.length()) {
+                val seg = segs.getJSONObject(i)
+                totalAscent  += seg.optDouble("ascent",  0.0)
+                totalDescent += seg.optDouble("descent", 0.0)
+            }
+        }
+
+        // Koordinaten & Höhenpunkte
+        val coordinates     = geometry.getJSONArray("coordinates")
+        val points          = mutableListOf<GeoPoint>()
+        val elevationPoints = mutableListOf<Double>()
         for (i in 0 until coordinates.length()) {
             val coord = coordinates.getJSONArray(i)
             points.add(GeoPoint(coord.getDouble(1), coord.getDouble(0)))
+            if (coord.length() >= 3) elevationPoints.add(coord.getDouble(2))
         }
 
-        return RouteData(points, distance, duration)
+        // Oberfläche & Wegtyp
+        val surfaceSummary = mutableListOf<SurfaceSummary>()
+        val wayTypeSummary = mutableListOf<SurfaceSummary>()
+
+        if (withExtras && properties.has("extras")) {
+            val extras = properties.getJSONObject("extras")
+
+            if (extras.has("surface")) {
+                val arr = extras.getJSONObject("surface").getJSONArray("summary")
+                for (i in 0 until arr.length()) {
+                    val item = arr.getJSONObject(i)
+                    val code = item.getInt("value")
+                    surfaceSummary.add(SurfaceSummary(
+                        code = code, name = RouteInfoHelper.getSurfaceName(code),
+                        emoji = RouteInfoHelper.getSurfaceEmoji(code),
+                        distance = item.getDouble("distance"), percentage = item.getDouble("amount")
+                    ))
+                }
+            }
+
+            if (extras.has("waytype")) {
+                val arr = extras.getJSONObject("waytype").getJSONArray("summary")
+                for (i in 0 until arr.length()) {
+                    val item = arr.getJSONObject(i)
+                    val code = item.getInt("value")
+                    wayTypeSummary.add(SurfaceSummary(
+                        code = code, name = RouteInfoHelper.getWayTypeName(code),
+                        emoji = RouteInfoHelper.getWayTypeEmoji(code),
+                        distance = item.getDouble("distance"), percentage = item.getDouble("amount")
+                    ))
+                }
+            }
+        }
+
+        return RouteData(
+            points = points, distance = distance, duration = duration,
+            elevationPoints = elevationPoints, totalAscent = totalAscent, totalDescent = totalDescent,
+            minElevation = elevationPoints.minOrNull() ?: 0.0,
+            maxElevation = elevationPoints.maxOrNull() ?: 0.0,
+            surfaceSummary = surfaceSummary, wayTypeSummary = wayTypeSummary
+        )
     }
 
-    private fun fetchBestRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): RouteData {
+// ── Neue fetchBestRoute: nur noch ORS, zwei Stufen ──────────────
+
+    private fun fetchBestRoute(
+        fromLat: Double, fromLon: Double,
+        toLat: Double,   toLon: Double
+    ): RouteData {
+
+        // Stufe 1: ORS mit Höhe + Oberfläche + Wegtyp
         try {
-            val route = fetchOpenRouteServiceRoute(fromLat, fromLon, toLat, toLon)
+            val route = fetchOpenRouteServiceRoute(fromLat, fromLon, toLat, toLon, withExtras = true)
             if (route.points.isNotEmpty()) {
-                Log.i("Routing", "✅ OpenRouteService")
+                Log.i("Routing", "✅ ORS voll (Höhe + Oberfläche)")
                 return route
             }
         } catch (e: Exception) {
-            Log.w("Routing", "OpenRouteService fehlgeschlagen: ${e.message}")
+            Log.w("Routing", "ORS voll fehlgeschlagen: ${e.message}")
         }
 
+        // Stufe 2: ORS nur mit Höhendaten (kein extra_info)
         try {
-            val route = fetchGraphhopperRoute(fromLat, fromLon, toLat, toLon)
+            val route = fetchOpenRouteServiceRoute(fromLat, fromLon, toLat, toLon, withExtras = false)
             if (route.points.isNotEmpty()) {
-                Log.i("Routing", "✅ Graphhopper")
+                Log.i("Routing", "✅ ORS nur Elevation")
                 return route
             }
         } catch (e: Exception) {
-            Log.w("Routing", "Graphhopper fehlgeschlagen: ${e.message}")
+            Log.w("Routing", "ORS Elevation fehlgeschlagen: ${e.message}")
         }
 
-        try {
-            val route = fetchOSRMRouteWithDetails(fromLat, fromLon, toLat, toLon)
-            if (route.points.isNotEmpty()) {
-                Log.i("Routing", "⚠️ OSRM Fallback")
-                return route
-            }
-        } catch (e: Exception) {
-            Log.w("Routing", "OSRM fehlgeschlagen: ${e.message}")
-        }
-
-        Log.e("Routing", "❌ Alle Routing-Services fehlgeschlagen")
+        Log.e("Routing", "❌ ORS nicht erreichbar – Luftlinie wird gezeichnet")
         return RouteData(emptyList(), 0.0, 0.0)
-    }
-
-    private fun updateNavigationInfo() {
-        if (!isNavigating) {
-            binding.navigationInfoText.visibility = View.GONE
-            return
-        }
-
-        val distanceKm = currentRouteDistance / 1000.0
-        val durationMin = (currentRouteDuration / 60.0).toInt()
-
-        val infoText = if (distanceKm < 1.0) {
-            "${currentRouteDistance.toInt()} m • $durationMin Min"
-        } else {
-            "${String.format("%.1f", distanceKm)} km • $durationMin Min"
-        }
-
-        binding.navigationInfoText.text = "🧭 $infoText"
-        binding.navigationInfoText.visibility = View.VISIBLE
     }
 
     private fun drawRouteStraightLine(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
         currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
-
         val points = listOf(GeoPoint(fromLat, fromLon), GeoPoint(toLat, toLon))
-
         currentRoutePolyline = Polyline().apply {
             setPoints(points)
             outlinePaint.color = Color.parseColor("#FF9800")
             outlinePaint.strokeWidth = 10f
             outlinePaint.pathEffect = DashPathEffect(floatArrayOf(20f, 10f), 0f)
         }
-
         binding.mapView.overlays.add(currentRoutePolyline)
         binding.mapView.invalidate()
 
         if (isNavigating) {
             currentRouteDistance = calculateDistance(fromLat, fromLon, toLat, toLon)
-            currentRouteDuration = (currentRouteDistance / 1.4)
+            currentRouteDuration = currentRouteDistance / 1.4
             updateNavigationInfo()
         }
     }
 
-    private fun stopNavigation() {
-        isNavigating = false
-        binding.btnCurrentLocation.text = "📍 Standort"
-        binding.navigationInfoText.visibility = View.GONE
-        
-        // ✅ Karte wieder nach Norden ausrichten
-        binding.mapView.setMapOrientation(0f)
+    private fun updateNavigationInfo() {
+        if (!isNavigating) { binding.navigationInfoText.visibility = View.GONE; return }
 
-        currentPOIMarker?.let { binding.mapView.overlays.remove(it) }
-        currentPOIMarker = null
-        currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
-        currentRoutePolyline = null
-        binding.mapView.invalidate()
-        currentLocation?.let { centerMapOnLocation(it) }
+        val km   = currentRouteDistance / 1000.0
+        val totalMins = (currentRouteDuration / 60.0).toInt()
+
+        val distText = if (km < 1.0) "${currentRouteDistance.toInt()} m"
+        else          "${"%.1f".format(km)} km"
+
+        val timeText = if (totalMins < 60) {
+            "$totalMins Min"
+        } else {
+            val h   = totalMins / 60
+            val min = totalMins % 60
+            if (min == 0) "${h}h" else "${h}h ${min}min"
+        }
+
+        binding.navigationInfoText.text    = "🧭 $distText  •  $timeText"
+        binding.navigationInfoText.visibility = View.VISIBLE
     }
 
-    private fun formatDistance(meters: Double): String {
-        return when {
-            meters < 1000 -> "${meters.toInt()} m"
-            else -> "${String.format("%.1f", meters / 1000)} km"
+    private fun zoomToFitRoute(userLoc: Location, target: GeoPoint) {
+        val points = mutableListOf(GeoPoint(userLoc.latitude, userLoc.longitude), target)
+        val boundingBox = org.osmdroid.util.BoundingBox.fromGeoPoints(points)
+        binding.mapView.zoomToBoundingBox(boundingBox, true, 200)
+    }
+
+    // ════════════════════════════════════════════════════════
+    // POI KATEGORIEN & LISTE
+    // ════════════════════════════════════════════════════════
+
+    private fun setupCategoryButtons() {
+        binding.categoryGrid.removeAllViews()
+        POICategories.ALL_CATEGORIES.forEach { category ->
+            val button = com.google.android.material.button.MaterialButton(this).apply {
+                text = "${category.icon}\n${category.name}"
+                textSize = 12f
+                gravity = android.view.Gravity.CENTER
+                setPadding(8, 16, 8, 16)
+                cornerRadius = 12
+                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor(category.color))
+                setTextColor(Color.WHITE)
+                layoutParams = android.widget.GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
+                    setMargins(8, 8, 8, 8)
+                }
+                setOnClickListener { selectedCategory = category; loadPOIsForCategory(category) }
+            }
+            binding.categoryGrid.addView(button)
         }
     }
 
-    override fun onProviderEnabled(provider: String) {
-        Log.d("LocationActivity", "Provider enabled: $provider")
+    private fun loadPOIsForCategory(category: POICategories.Category) {
+        currentLocation?.let { location ->
+            binding.poiProgressBar.visibility = View.VISIBLE
+            binding.categoryView.visibility = View.GONE
+            binding.poiListView.visibility = View.VISIBLE
+            binding.categoryTitleText.text = "${category.icon} ${category.name}"
+
+            lifecycleScope.launch {
+                try {
+                    val pois = withContext(Dispatchers.IO) {
+                        fetchPOIsForCategory(location.latitude, location.longitude, category, 3000)
+                    }
+                    val sorted = pois.sortedBy { it.distance }
+                    poiList.clear(); poiList.addAll(sorted)
+                    binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+                    binding.poiCountText.text = "${pois.size} POI in 3 km"
+                    binding.poiProgressBar.visibility = View.GONE
+                    binding.emptyPoiText.visibility = if (pois.isEmpty()) View.VISIBLE else View.GONE
+                    if (pois.isEmpty()) binding.emptyPoiText.text = "Keine ${category.name} im Umkreis von 3 km gefunden"
+                    showPOIsOnMap(sorted, category)
+                } catch (e: Exception) {
+                    binding.poiProgressBar.visibility = View.GONE
+                    Toast.makeText(this@LocationActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        } ?: Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onProviderDisabled(provider: String) {
-        Log.d("LocationActivity", "Provider disabled: $provider")
+    private fun showCategoryView() {
+        selectedCategory = null
+        binding.categoryView.visibility = View.VISIBLE
+        binding.poiListView.visibility = View.GONE
+        poiList.clear()
+        binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+        clearPOIMarkers()
+        stopNavigation()
     }
 
+    private fun showPOIsOnMap(pois: List<POI>, category: POICategories.Category) {
+        clearPOIMarkers()
+        pois.forEach { poi ->
+            val marker = Marker(binding.mapView).apply {
+                position = GeoPoint(poi.lat, poi.lon)
+                title   = poi.name
+                snippet = "${formatDistance(poi.distance)} • ${poi.direction}"
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                var clickCount = 0
+                setOnMarkerClickListener { _, _ ->
+                    showPointInfoDialog(poi.lat, poi.lon, poi)
+                    true
+                }
+            }
+            poiMarkers.add(marker)
+            binding.mapView.overlays.add(marker)
+        }
+        binding.mapView.invalidate()
+        if (pois.isNotEmpty()) zoomToShowAllPOIs(pois)
+    }
+
+    private fun startNavigationToPOI(poi: POI) = showPOIOnMap(poi)
+
+    private fun clearPOIMarkers() {
+        poiMarkers.forEach { binding.mapView.overlays.remove(it) }
+        poiMarkers.clear()
+        binding.mapView.invalidate()
+    }
+
+    private fun zoomToShowAllPOIs(pois: List<POI>) {
+        val allPoints = mutableListOf<GeoPoint>()
+        currentLocation?.let { allPoints.add(GeoPoint(it.latitude, it.longitude)) }
+        pois.forEach { allPoints.add(GeoPoint(it.lat, it.lon)) }
+        if (allPoints.isEmpty()) return
+
+        var minLat = allPoints[0].latitude; var maxLat = minLat
+        var minLon = allPoints[0].longitude; var maxLon = minLon
+        allPoints.forEach {
+            minLat = minOf(minLat, it.latitude);  maxLat = maxOf(maxLat, it.latitude)
+            minLon = minOf(minLon, it.longitude); maxLon = maxOf(maxLon, it.longitude)
+        }
+        val maxDiff = maxOf(maxLat - minLat, maxLon - minLon)
+        val zoom = when {
+            maxDiff > 0.1  -> 12.0; maxDiff > 0.05 -> 13.0; maxDiff > 0.02 -> 14.0
+            maxDiff > 0.01 -> 15.0; else -> 16.0
+        }
+        binding.mapView.controller.setCenter(GeoPoint((minLat + maxLat) / 2, (minLon + maxLon) / 2))
+        binding.mapView.controller.setZoom(zoom)
+    }
+
+    // ════════════════════════════════════════════════════════
+    // OVERPASS FETCH
+    // ════════════════════════════════════════════════════════
+
+    private suspend fun fetchPOIsForCategory(lat: Double, lon: Double, category: POICategories.Category, radius: Int = 3000): List<POI> {
+        val queries = category.queries.flatMap { query ->
+            val parts = query.split("=")
+            if (parts.size == 2) listOf(
+                """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                """way["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                """relation["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
+            ) else emptyList()
+        }.filter { it.isNotEmpty() }
+
+        val overpassQuery = """
+            [out:json][timeout:25];
+            (
+              ${queries.joinToString("\n  ")}
+            );
+            out body; >; out skel qt;
+        """.trimIndent()
+
+        val json     = OverpassHelper.queryWithRetry(overpassQuery) ?: throw Exception("Overpass API nicht erreichbar")
+        val elements = json.getJSONArray("elements")
+        val pois     = mutableListOf<POI>()
+
+        for (i in 0 until elements.length()) {
+            val el   = elements.getJSONObject(i)
+            val type = el.getString("type")
+            when (type) {
+                "node"            -> createPOIFromElement(el, lat, lon, category)?.let { pois.add(it) }
+                "way", "relation" -> createPOIFromWayOrRelation(el, elements, lat, lon, category)?.let { pois.add(it) }
+            }
+        }
+        return pois
+    }
+
+    private fun createPOIFromElement(element: JSONObject, userLat: Double, userLon: Double, category: POICategories.Category): POI? {
+        val poiLat = element.getDouble("lat")
+        val poiLon = element.getDouble("lon")
+        val tags   = parseTags(element)
+        val name   = tags["name"] ?: tags["ref"] ?: category.name
+        val dist   = calculateDistance(userLat, userLon, poiLat, poiLon)
+        val bearing = DirectionUtils.calculateBearing(userLat, userLon, poiLat, poiLon)
+        return POI(
+            id = element.getString("id"), name = name, category = category.name, categoryIcon = category.icon,
+            lat = poiLat, lon = poiLon, distance = dist, tags = tags,
+            bearing = bearing, direction = DirectionUtils.bearingToDirection(bearing),
+            directionArrow = DirectionUtils.bearingToArrow(bearing),
+            address = buildAddress(tags), phone = tags["phone"] ?: tags["contact:phone"],
+            website = tags["website"] ?: tags["contact:website"] ?: tags["url"],
+            openingHours = tags["opening_hours"], description = tags["description"] ?: tags["note"],
+            operator = tags["operator"], access = tags["access"] ?: tags["dog"]
+        )
+    }
+
+    private fun createPOIFromWayOrRelation(element: JSONObject, allElements: JSONArray, userLat: Double, userLon: Double, category: POICategories.Category): POI? {
+        val nodeIds = mutableListOf<String>()
+        if (element.has("nodes")) {
+            val arr = element.getJSONArray("nodes")
+            for (i in 0 until arr.length()) nodeIds.add(arr.getString(i))
+        } else if (element.has("members")) {
+            val arr = element.getJSONArray("members")
+            for (i in 0 until arr.length()) {
+                val m = arr.getJSONObject(i)
+                if (m.getString("type") == "node") nodeIds.add(m.getString("ref"))
+            }
+        }
+        if (nodeIds.isEmpty()) return null
+
+        var sumLat = 0.0; var sumLon = 0.0; var count = 0
+        for (i in 0 until allElements.length()) {
+            val node = allElements.getJSONObject(i)
+            if (node.getString("type") == "node" && nodeIds.contains(node.getString("id"))) {
+                sumLat += node.getDouble("lat"); sumLon += node.getDouble("lon"); count++
+            }
+        }
+        if (count == 0) return null
+
+        val centerLat = sumLat / count; val centerLon = sumLon / count
+        val tags      = parseTags(element)
+        val name      = tags["name"] ?: tags["ref"] ?: category.name
+        val dist      = calculateDistance(userLat, userLon, centerLat, centerLon)
+        val bearing   = DirectionUtils.calculateBearing(userLat, userLon, centerLat, centerLon)
+        return POI(
+            id = element.getString("id"), name = name, category = category.name, categoryIcon = category.icon,
+            lat = centerLat, lon = centerLon, distance = dist, tags = tags,
+            bearing = bearing, direction = DirectionUtils.bearingToDirection(bearing),
+            directionArrow = DirectionUtils.bearingToArrow(bearing),
+            address = buildAddress(tags), phone = tags["phone"] ?: tags["contact:phone"],
+            website = tags["website"] ?: tags["contact:website"] ?: tags["url"],
+            openingHours = tags["opening_hours"], description = tags["description"] ?: tags["note"],
+            operator = tags["operator"], access = tags["access"] ?: tags["dog"]
+        )
+    }
+
+    private fun parseTags(element: JSONObject): Map<String, String> {
+        val tags = mutableMapOf<String, String>()
+        if (element.has("tags")) {
+            val tagsObj = element.getJSONObject("tags")
+            tagsObj.keys().forEach { tags[it] = tagsObj.getString(it) }
+        }
+        return tags
+    }
+
+    private fun buildAddress(tags: Map<String, String>): String? {
+        val parts = mutableListOf<String>()
+        tags["addr:street"]?.let { parts.add("$it ${tags["addr:housenumber"] ?: ""}".trim()) }
+        tags["addr:postcode"]?.let { parts.add("$it ${tags["addr:city"] ?: ""}".trim()) }
+        return parts.joinToString(", ").ifEmpty { null }
+    }
+
+    // ════════════════════════════════════════════════════════
+    // NOMINATIM SUCHE
+    // ════════════════════════════════════════════════════════
+
+    private fun setupPOISearch() {
+        binding.etPOISearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val q = binding.etPOISearch.text.toString().trim()
+                if (q.isNotEmpty()) { searchPOI(q); hideKeyboard() }
+                true
+            } else false
+        }
+
+        // Clear-Button ein-/ausblenden je nach Textinhalt
+        binding.etPOISearch.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                binding.btnClearSearch.visibility =
+                    if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+            }
+        })
+
+        // Clear-Button Klick
+        binding.btnClearSearch.setOnClickListener {
+            binding.etPOISearch.setText("")
+            binding.btnClearSearch.visibility = View.GONE
+            clearSearchResults()
+            hideKeyboard()
+        }
+
+        binding.btnSearchPOI.setOnClickListener {
+            val q = binding.etPOISearch.text.toString().trim()
+            if (q.isNotEmpty()) { searchPOI(q); hideKeyboard() }
+        }
+    }
+
+    private fun searchPOI(query: String) {
+        val loc = myLocationOverlay.myLocation ?: run {
+            val last = try {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                else null
+            } catch (e: Exception) { null }
+            last?.let { GeoPoint(it.latitude, it.longitude) }
+        }
+
+        if (loc == null) { Toast.makeText(this, "Standort wird noch ermittelt...", Toast.LENGTH_SHORT).show(); return }
+
+        clearSearchResults()
+        binding.progressSearch.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            try {
+                val results = withContext(Dispatchers.IO) { searchNearbyPOIs(query, loc.latitude, loc.longitude, 20000) }
+                binding.progressSearch.visibility = View.GONE
+                if (results.isEmpty()) {
+                    Toast.makeText(this@LocationActivity, "Keine Ergebnisse für '$query' in der Nähe gefunden", Toast.LENGTH_SHORT).show()
+                } else {
+                    displaySearchResults(results)
+                    Toast.makeText(this@LocationActivity, "${results.size} Ergebnis(se) gefunden", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                binding.progressSearch.visibility = View.GONE
+                Toast.makeText(this@LocationActivity, "Suche fehlgeschlagen: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun searchNearbyPOIs(query: String, lat: Double, lon: Double, radius: Int): List<POI> {
+        return try {
+            val r = searchViaOverpass(query, lat, lon, radius)
+            if (r.isNotEmpty()) r else searchViaNominatim(query, lat, lon, radius)
+        } catch (e: java.net.SocketTimeoutException) {
+            searchViaNominatim(query, lat, lon, radius)
+        } catch (e: Exception) {
+            searchViaNominatim(query, lat, lon, radius)
+        }
+    }
+
+    private fun searchViaOverpass(query: String, lat: Double, lon: Double, radius: Int): List<POI> {
+        val overpassQuery = """
+            [out:json][timeout:15];
+            (
+              node["name"~"$query",i](around:$radius,$lat,$lon);
+              node["brand"~"$query",i](around:$radius,$lat,$lon);
+              node["operator"~"$query",i](around:$radius,$lat,$lon);
+            );
+            out center;
+        """.trimIndent()
+        val url = "https://overpass-api.de/api/interpreter"
+        val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+        conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+        conn.doOutput = true
+        conn.connectTimeout = 10000; conn.readTimeout = 15000
+        conn.outputStream.use { it.write("data=${URLEncoder.encode(overpassQuery, "UTF-8")}".toByteArray()) }
+        if (conn.responseCode != 200) return emptyList()
+        return parseOverpassResponse(conn.inputStream.bufferedReader().use { it.readText() }, lat, lon)
+    }
+
+    private fun searchViaNominatim(query: String, lat: Double, lon: Double, radius: Int): List<POI> {
+        val delta = 0.18
+        val viewbox = "${lon - delta},${lat + delta},${lon + delta},${lat - delta}"
+        val url = "https://nominatim.openstreetmap.org/search?q=${URLEncoder.encode(query, "UTF-8")}&format=json&viewbox=$viewbox&bounded=1&addressdetails=1&limit=30"
+        val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        conn.requestMethod = "GET"
+        conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+        conn.connectTimeout = 8000; conn.readTimeout = 8000
+        return parseNominatimResponse(conn.inputStream.bufferedReader().use { it.readText() }, lat, lon, radius)
+    }
+
+    private fun parseOverpassResponse(response: String, userLat: Double, userLon: Double): List<POI> {
+        val elements = JSONObject(response).getJSONArray("elements")
+        val results  = mutableListOf<POI>()
+        val userGeo  = GeoPoint(userLat, userLon)
+
+        for (i in 0 until elements.length()) {
+            val el = elements.getJSONObject(i)
+            val (pLat, pLon) = when (el.getString("type")) {
+                "node"           -> el.getDouble("lat") to el.getDouble("lon")
+                "way","relation" -> el.optJSONObject("center")?.let { it.getDouble("lat") to it.getDouble("lon") } ?: continue
+                else             -> continue
+            }
+            val tags     = el.optJSONObject("tags") ?: JSONObject()
+            val name     = tags.optString("name").ifEmpty { tags.optString("brand").ifEmpty { tags.optString("operator").ifEmpty { "Unbenannt" } } }
+            val icon     = when {
+                tags.optString("shop") == "supermarket" -> "🛒"
+                tags.optString("shop") == "bakery"      -> "🥖"
+                tags.optString("amenity") == "pharmacy" -> "💊"
+                tags.optString("amenity") == "restaurant" -> "🍽️"
+                tags.optString("amenity") == "cafe"     -> "☕"
+                tags.has("shop")                        -> "🏪"
+                else                                    -> "🔍"
+            }
+            results.add(POI(id = el.optLong("id", 0).toString(), name = name, category = "Suchergebnis", categoryIcon = icon,
+                lat = pLat, lon = pLon, distance = userGeo.distanceToAsDouble(GeoPoint(pLat, pLon))))
+        }
+        return results.sortedBy { it.distance }
+    }
+
+    private fun parseNominatimResponse(response: String, userLat: Double, userLon: Double, radius: Int): List<POI> {
+        val arr     = JSONArray(response)
+        val results = mutableListOf<POI>()
+        val userGeo = GeoPoint(userLat, userLon)
+        for (i in 0 until arr.length()) {
+            val item  = arr.getJSONObject(i)
+            val pLat  = item.optString("lat").toDoubleOrNull() ?: continue
+            val pLon  = item.optString("lon").toDoubleOrNull() ?: continue
+            val dist  = userGeo.distanceToAsDouble(GeoPoint(pLat, pLon))
+            if (dist > radius) continue
+            val name  = item.optString("display_name", "").split(",").firstOrNull()?.trim() ?: "Unbenannt"
+            results.add(POI(id = item.optString("place_id", i.toString()), name = name, category = "Suchergebnis", categoryIcon = "🔍",
+                lat = pLat, lon = pLon, distance = dist, address = item.optString("display_name")))
+        }
+        return results.sortedBy { it.distance }
+    }
+
+    private fun displaySearchResults(results: List<POI>) {
+        // Marker auf Karte
+        results.forEach { poi ->
+            val marker = Marker(binding.mapView).apply {
+                position = GeoPoint(poi.lat, poi.lon)
+                title   = "${poi.categoryIcon} ${poi.name}"
+                snippet = "📍 ${"%.0f".format(poi.distance)}m entfernt\n${poi.address ?: ""}"
+                icon    = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
+                setOnMarkerClickListener { _, _ -> showNavigationDialog(poi); true }
+            }
+            binding.mapView.overlays.add(marker)
+            searchResultMarkers.add(marker)
+        }
+        binding.mapView.invalidate()
+        if (results.isNotEmpty()) binding.mapView.controller.animateTo(GeoPoint(results[0].lat, results[0].lon))
+
+        // Ergebnisliste unter der Karte einblenden
+        poiList.clear()
+        poiList.addAll(results)
+        binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+        binding.categoryTitleText.text = "🔍 Suchergebnisse"
+        binding.poiCountText.text      = "${results.size} Ergebnis(se) in 20 km"
+        binding.emptyPoiText.visibility = View.GONE
+        binding.categoryView.visibility = View.GONE
+        binding.poiListView.visibility  = View.VISIBLE
+        isShowingSearchResults = true
+    }
+
+    private fun clearSearchResults() {
+        searchResultMarkers.forEach { binding.mapView.overlays.remove(it) }
+        searchResultMarkers.clear()
+        binding.mapView.invalidate()
+
+        // Liste wieder ausblenden und Kategorienansicht zeigen
+        poiList.clear()
+        binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+        binding.poiListView.visibility  = View.GONE
+        binding.categoryView.visibility = View.VISIBLE
+        isShowingSearchResults = false
+    }
+
+    private fun hideKeyboard() {
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(binding.etPOISearch.windowToken, 0)
+    }
+
+    private fun showNavigationDialog(poi: POI) {
+        val myLoc = myLocationOverlay.myLocation ?: run {
+            Toast.makeText(this, "Standort nicht verfügbar", Toast.LENGTH_SHORT).show(); return
+        }
+        val isDark       = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor  = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val distance     = myLoc.distanceToAsDouble(GeoPoint(poi.lat, poi.lon))
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("${poi.categoryIcon} ${poi.name}")
+            .setMessage("📍 ${"%.0f".format(distance)}m entfernt\n\n${poi.address?.let { "📬 $it\n\n" } ?: ""}Navigation starten?")
+            .setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(poi) }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+    }
+
+    // ════════════════════════════════════════════════════════
+    // HILFSFUNKTIONEN
+    // ════════════════════════════════════════════════════════
+
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val r = 6371000.0
+        val dLat = Math.toRadians(lat2 - lat1); val dLon = Math.toRadians(lon2 - lon1)
+        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2) * sin(dLon / 2)
+        return r * 2 * atan2(sqrt(a), sqrt(1 - a))
+    }
+
+    private fun formatDistance(meters: Double) =
+        if (meters < 1000) "${meters.toInt()} m" else "${"%.1f".format(meters / 1000)} km"
+
+    private fun centerOnCurrentLocation() {
+        currentLocation?.let {
+            centerMapOnLocation(it)
+            currentPOIMarker?.let { m -> binding.mapView.overlays.remove(m) }; currentPOIMarker = null
+            currentRoutePolyline?.let { l -> binding.mapView.overlays.remove(l) }; currentRoutePolyline = null
+            binding.mapView.invalidate()
+            binding.btnCurrentLocation.text = "📍 Standort"
+        }
+    }
+
+    private fun shareLocation() {
+        currentLocation?.let {
+            val text = "Mein aktueller Standort:\nhttps://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=15/${it.latitude}/${it.longitude}"
+            startActivity(Intent.createChooser(Intent().apply { action = Intent.ACTION_SEND; putExtra(Intent.EXTRA_TEXT, text); type = "text/plain" }, "Standort teilen über"))
+        } ?: Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupOSMCopyright() {
+        binding.osmCopyrightText.setOnClickListener {
+            val webView = WebView(this).apply { settings.javaScriptEnabled = true; webViewClient = WebViewClient(); loadUrl("https://www.openstreetmap.org/copyright") }
+            AlertDialog.Builder(this).setTitle("OpenStreetMap Lizenz").setView(webView).setPositiveButton("Schließen", null).show()
+        }
+    }
+
+    // ════════════════════════════════════════════════════════
+    // LOCATION PERMISSION
+    // ════════════════════════════════════════════════════════
+
+    private fun checkLocationPermission() {
+        val isDark       = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor  = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            AlertDialog.Builder(this).setTitle("📍 Standortdienste aktivieren")
+                .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für Navigation, Wetteranzeige und weitere Funktionen.\n\nDeine Daten werden nur lokal verarbeitet und nicht an Dritte übermittelt.")
+                .setPositiveButton("AKTIVIEREN") { _, _ ->
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+                }
+                .setNegativeButton("ABLEHNEN", null)
+                .create().apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+                }
+        } else {
+            getLocation()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE &&
+            grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocation()
+        else Toast.makeText(this, "Standortberechtigung benötigt", Toast.LENGTH_LONG).show()
+    }
+
+    private fun getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
+        binding.progressBar.visibility = View.VISIBLE
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+
+        var bestLocation: Location? = null
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            bestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        if (bestLocation == null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            bestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        bestLocation?.let { updateLocation(it) }
+        requestLocationUpdates()
+    }
+
+    private fun requestLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
+        isRequestingUpdates = true
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
+    }
+
+    // ════════════════════════════════════════════════════════
+    // STYLING
+    // ════════════════════════════════════════════════════════
+
+    private fun styleBackButton() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val bgColor = if (isDark) Color.parseColor("#5a8038") else Color.parseColor("#2d5016")
+        val heightPx = (56 * resources.displayMetrics.density).toInt()
+        binding.btnBackToCategories.apply {
+            text = "← Zurück"; textSize = 16f
+            setTextColor(Color.WHITE); setBackgroundColor(bgColor)
+            layoutParams = layoutParams.apply { width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT; height = heightPx }
+            setPadding(24, 12, 24, 12)
+        }
+    }
+
+    // ════════════════════════════════════════════════════════
+    // LIFECYCLE CALLBACKS
+    // ════════════════════════════════════════════════════════
+
+    override fun onProviderEnabled(provider: String)  {}
+    override fun onProviderDisabled(provider: String) {}
     @Deprecated("Deprecated in Java")
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
     override fun onPause() {
         super.onPause()
         binding.mapView.onPause()
-        if (::myLocationOverlay.isInitialized) {
-            myLocationOverlay.disableMyLocation()
-        }
+        if (::myLocationOverlay.isInitialized) myLocationOverlay.disableMyLocation()
     }
 
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
-
-        if (::myLocationOverlay.isInitialized) {
-            myLocationOverlay.enableMyLocation()
-        }
-
-        if (!isRequestingUpdates) {
-            requestLocationUpdates()
-        }
+        if (::myLocationOverlay.isInitialized) myLocationOverlay.enableMyLocation()
+        if (!isRequestingUpdates) requestLocationUpdates()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        if (isRequestingUpdates) { locationManager.removeUpdates(this); isRequestingUpdates = false }
+    }
 
-        if (isRequestingUpdates) {
-            locationManager.removeUpdates(this)
-            isRequestingUpdates = false
+    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+
+    // ── C: Wetter-Fetch Funktion (neu, ans Ende der Klasse) ──────
+    private fun fetchWeatherAtDestination(lat: Double, lon: Double): JSONObject {
+        val url = "https://api.open-meteo.com/v1/forecast?" +
+                "latitude=$lat&longitude=$lon" +
+                "&hourly=temperature_2m,relative_humidity_2m,precipitation_probability," +
+                "weather_code,wind_speed_10m,wind_gusts_10m" +
+                "&daily=sunrise,sunset" +
+                "&forecast_days=2" +
+                "&timezone=auto"
+        return JSONObject(URL(url).readText())
+    }
+
+    // ── D: Wetter-Card befüllen (neu, ans Ende der Klasse) ───────
+    private fun updateWeatherCard(data: JSONObject, arrivalTimeMs: Long) {
+        try {
+            val hourly   = data.getJSONObject("hourly")
+            val times    = hourly.getJSONArray("time")
+            val temps    = hourly.getJSONArray("temperature_2m")
+            val humidity = hourly.getJSONArray("relative_humidity_2m")
+            val precipP  = hourly.getJSONArray("precipitation_probability")
+            val codes    = hourly.getJSONArray("weather_code")
+            val wind     = hourly.getJSONArray("wind_speed_10m")
+
+            // Stunde finden die der Ankunftszeit am nächsten liegt
+            val fmt = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm", java.util.Locale.GERMAN)
+            var closestIdx = 0
+            var minDiff = Long.MAX_VALUE
+            for (i in 0 until times.length()) {
+                val t = fmt.parse(times.getString(i))?.time ?: continue
+                val diff = Math.abs(t - arrivalTimeMs)
+                if (diff < minDiff) { minDiff = diff; closestIdx = i }
+            }
+
+            val temp       = temps.getDouble(closestIdx)
+            val hum        = humidity.getInt(closestIdx)
+            val precip     = precipP.getInt(closestIdx)
+            val code       = codes.getInt(closestIdx)
+            val windKmh    = wind.getDouble(closestIdx)
+            val beaufort   = when {
+                windKmh < 1   -> 0;  windKmh < 6   -> 1;  windKmh < 12  -> 2
+                windKmh < 20  -> 3;  windKmh < 29  -> 4;  windKmh < 39  -> 5
+                windKmh < 50  -> 6;  windKmh < 62  -> 7;  windKmh < 75  -> 8
+                windKmh < 89  -> 9;  windKmh < 103 -> 10; windKmh < 118 -> 11
+                else -> 12
+            }
+
+            val (desc, icon) = when (code) {
+                0            -> "Klar"               to "☀️"
+                1            -> "Leicht bewölkt"     to "🌤️"
+                2            -> "Teilw. bewölkt"     to "⛅"
+                3            -> "Bewölkt"            to "☁️"
+                45, 48       -> "Nebel"              to "🌫️"
+                in 51..57    -> "Nieselregen"        to "🌦️"
+                in 61..67    -> "Regen"              to "🌧️"
+                in 71..77    -> "Schneefall"         to "🌨️"
+                in 80..82    -> "Regenschauer"       to "🌦️"
+                in 85..86    -> "Schneeschauer"      to "🌨️"
+                in 95..99    -> "Gewitter"           to "⛈️"
+                else         -> "Wetter $code"       to "🌡️"
+            }
+
+            // Ankunftszeit formatieren
+            val arrivalTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.GERMAN)
+                .format(java.util.Date(arrivalTimeMs))
+
+            binding.tvWeatherIcon.text         = icon
+            binding.tvWeatherDesc.text         = desc
+            binding.tvWeatherArrivalLabel.text = "Ankunft ~$arrivalTime Uhr"
+            binding.tvWeatherTemp.text         = "${"%.1f".format(temp)}°C"
+            binding.tvWeatherPrecip.text       = "$precip%"
+            binding.tvWeatherWind.text         = "${"%.0f".format(windKmh)} km/h\nBft $beaufort"
+            binding.tvWeatherHumidity.text     = "$hum%"
+
+            // Sonnenauf-/untergang
+            // NEU — alle verfügbaren Tage auslesen:
+            val daily   = data.getJSONObject("daily")
+            val timeFmt = java.text.SimpleDateFormat("HH:mm", java.util.Locale.GERMAN)
+            val dateFmt = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm", java.util.Locale.GERMAN)
+
+            val sunriseArr = daily.getJSONArray("sunrise")
+            val sunsetArr  = daily.getJSONArray("sunset")
+            val now = System.currentTimeMillis()
+
+            val sunriseTimes = mutableListOf<Long>()
+            val sunsetTimes  = mutableListOf<Long>()
+            for (i in 0 until sunriseArr.length()) {
+                dateFmt.parse(sunriseArr.getString(i))?.time?.let { sunriseTimes.add(it) }
+            }
+            for (i in 0 until sunsetArr.length()) {
+                dateFmt.parse(sunsetArr.getString(i))?.time?.let { sunsetTimes.add(it) }
+            }
+
+// Card-Anzeige: nächster Sonnenauf-/-untergang ab jetzt
+            val displaySunriseMs = sunriseTimes.firstOrNull { it > now } ?: sunriseTimes.firstOrNull()
+            val displaySunsetMs  = sunsetTimes.firstOrNull  { it > now } ?: sunsetTimes.firstOrNull()
+            displaySunriseMs?.let { binding.tvWeatherSunrise.text = "🌅 ${timeFmt.format(java.util.Date(it))} Uhr" }
+            displaySunsetMs?.let  { binding.tvWeatherSunset.text  = "🌇 ${timeFmt.format(java.util.Date(it))} Uhr" }
+
+// Licht-Situation bei Ankunft:
+// Welcher Sonnenauf-/-untergang liegt zuletzt VOR der Ankunftszeit?
+            val lastSunriseBeforeArrival = sunriseTimes.filter { it <= arrivalTimeMs }.maxOrNull()
+            val lastSunsetBeforeArrival  = sunsetTimes.filter  { it <= arrivalTimeMs }.maxOrNull()
+            val nextSunriseAfterNow      = sunriseTimes.firstOrNull { it > now }
+            val nextSunsetAfterNow       = sunsetTimes.firstOrNull  { it > now }
+
+// Tageslicht bei Ankunft wenn letzter Sonnenaufgang nach letztem Sonnenuntergang
+            val isArrivalDaylight = when {
+                lastSunriseBeforeArrival == null -> false
+                lastSunsetBeforeArrival  == null -> true
+                else -> lastSunriseBeforeArrival > lastSunsetBeforeArrival
+            }
+
+            val safetyText: String
+            val safetyColor: Int
+
+            if (isArrivalDaylight) {
+                when {
+                    nextSunriseAfterNow != null &&
+                            arrivalTimeMs in nextSunriseAfterNow..(nextSunriseAfterNow + 30 * 60000L) -> {
+                        safetyText  = "🌅 Ankunft kurz nach Sonnenaufgang"
+                        safetyColor = Color.parseColor("#FFA726")
+                    }
+                    nextSunsetAfterNow != null &&
+                            arrivalTimeMs in (nextSunsetAfterNow - 30 * 60000L)..nextSunsetAfterNow -> {
+                        safetyText  = "🌇 Ankunft kurz vor Sonnenuntergang"
+                        safetyColor = Color.parseColor("#FFA726")
+                    }
+                    else -> {
+                        safetyText  = "☀️ Ankunft bei Tageslicht"
+                        safetyColor = Color.parseColor("#8FC357")
+                    }
+                }
+            } else {
+                if (nextSunriseAfterNow != null && nextSunriseAfterNow > arrivalTimeMs) {
+                    val diff = ((nextSunriseAfterNow - arrivalTimeMs) / 60000).toInt()
+                    safetyText  = "🌙 Ankunft $diff Min vor Sonnenaufgang — Dunkel!"
+                    safetyColor = Color.parseColor("#FF7043")
+                } else if (lastSunsetBeforeArrival != null) {
+                    val diff = ((arrivalTimeMs - lastSunsetBeforeArrival) / 60000).toInt()
+                    safetyText  = "🌙 Ankunft $diff Min nach Sonnenuntergang — Dunkel!"
+                    safetyColor = Color.parseColor("#FF7043")
+                } else {
+                    safetyText  = "🌙 Ankunft im Dunkeln"
+                    safetyColor = Color.parseColor("#FF7043")
+                }
+            }
+
+            binding.tvWeatherSafetyInfo.text = safetyText
+            binding.tvWeatherSafetyInfo.setTextColor(safetyColor)
+
+// Nur Sonnen-Events die tatsächlich auf der Route liegen als Marker setzen
+            val routeSunriseMs = nextSunriseAfterNow?.takeIf { it in now..arrivalTimeMs }
+            val routeSunsetMs  = nextSunsetAfterNow?.takeIf  { it in now..arrivalTimeMs }
+            currentRouteData?.let { route ->
+                updateSunEventMarkersOnRoute(route, routeSunriseMs, routeSunsetMs, timeFmt)
+            }
+
+        } catch (e: Exception) {
+            Log.e("LocationActivity", "Wetter-Card Fehler: ${e.message}")
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
+    // 5. Neue Funktion: Tap-Marker setzen + Overpass abfragen:
+    private fun placeTapMarkerAndShowInfo(lat: Double, lon: Double) {
+        tapMarker?.let { binding.mapView.overlays.remove(it) }
+        tapMarker = Marker(binding.mapView).apply {
+            position = GeoPoint(lat, lon)
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            icon = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
+                ?.mutate()?.also {
+                    it.setTint(Color.parseColor("#FF5722")) // Orange — unterscheidet sich von grünen POI-Markern
+                }
+        }
+        binding.mapView.overlays.add(tapMarker)
+        binding.mapView.invalidate()
+
+        lifecycleScope.launch {
+            val nearestPoi = withContext(Dispatchers.IO) {
+                try { fetchNearestOSMElement(lat, lon) } catch (e: Exception) { null }
+            }
+            showPointInfoDialog(lat, lon, nearestPoi)
+        }
+    }
+
+    // 6. Neue Funktion: Nächsten OSM-Punkt suchen:
+    private suspend fun fetchNearestOSMElement(lat: Double, lon: Double): POI? {
+        val query = """
+        [out:json][timeout:10];
+        (
+          node(around:50,$lat,$lon)["name"];
+          way(around:50,$lat,$lon)["name"];
+        );
+        out center 1;
+    """.trimIndent()
+
+        val json     = OverpassHelper.queryWithRetry(query) ?: return null
+        val elements = json.getJSONArray("elements")
+        if (elements.length() == 0) return null
+
+        val el = elements.getJSONObject(0)
+        val elLat: Double; val elLon: Double
+        when (el.getString("type")) {
+            "node"            -> { elLat = el.getDouble("lat"); elLon = el.getDouble("lon") }
+            "way", "relation" -> {
+                val center = el.optJSONObject("center") ?: return null
+                elLat = center.getDouble("lat"); elLon = center.getDouble("lon")
+            }
+            else -> return null
+        }
+
+        val tags     = parseTags(el)
+        val name     = tags["name"] ?: return null
+        val dist     = calculateDistance(lat, lon, elLat, elLon)
+        val category = POICategories.getCategoryForTags(tags)
+
+        return POI(
+            id            = el.optString("id", "tap"),
+            name          = name,
+            category      = category?.name ?: tags["amenity"] ?: tags["shop"] ?: tags["leisure"] ?: "Ort",
+            categoryIcon  = category?.icon ?: "📍",
+            lat           = elLat, lon = elLon, distance = dist, tags = tags,
+            address       = buildAddress(tags),
+            phone         = tags["phone"] ?: tags["contact:phone"],
+            website       = tags["website"] ?: tags["contact:website"],
+            openingHours  = tags["opening_hours"],
+            description   = tags["description"] ?: tags["note"]
+        )
+    }
+
+    // 7. Neue Funktion: Infobox anzeigen (für Tap UND für POI-Marker):
+    private fun showPointInfoDialog(tapLat: Double, tapLon: Double, poi: POI?) {
+        val isDark      = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        val title: String
+        val msg = StringBuilder()
+
+        if (poi != null) {
+            title = "${poi.categoryIcon} ${poi.name}"
+            msg.append("📂 ${poi.category}\n")
+            poi.address?.let      { msg.append("📬 $it\n") }
+            poi.phone?.let        { msg.append("📞 $it\n") }
+            poi.openingHours?.let { msg.append("🕐 $it\n") }
+            poi.description?.let  { msg.append("\nℹ️ $it\n") }
+            msg.append("\n📍 ${"%.5f".format(tapLat)}, ${"%.5f".format(tapLon)}")
+            msg.append("\n📏 ${formatDistance(poi.distance)} entfernt")
+        } else {
+            title = "📍 Gewählter Punkt"
+            msg.append("Kein benannter Ort in 50 m gefunden.\n\n")
+            msg.append("📍 ${"%.5f".format(tapLat)}, ${"%.5f".format(tapLon)}")
+            val dist = currentLocation?.let {
+                calculateDistance(it.latitude, it.longitude, tapLat, tapLon)
+            } ?: 0.0
+            msg.append("\n📏 ${formatDistance(dist)} entfernt")
+        }
+
+        // Navigation immer zum getippten Punkt, nicht zum OSM-Element
+        val navTarget = POI(
+            id           = "tap_${System.currentTimeMillis()}",
+            name         = poi?.name ?: "Gewählter Punkt",
+            category     = poi?.category ?: "Kartenpunkt",
+            categoryIcon = poi?.categoryIcon ?: "📍",
+            lat          = tapLat,
+            lon          = tapLon,
+            distance     = currentLocation?.let {
+                calculateDistance(it.latitude, it.longitude, tapLat, tapLon)
+            } ?: 0.0
+        )
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(msg.toString())
+            .setPositiveButton("🧭 Navigation starten") { _, _ ->
+                startNavigationToPOI(navTarget)
+            }
+            .setNegativeButton("Schließen") { _, _ ->
+                tapMarker?.let { binding.mapView.overlays.remove(it) }
+                tapMarker = null
+                binding.mapView.invalidate()
+            }
+            .create()
+
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+    }
+
+    private fun sampleRoutePoints(
+        points: List<GeoPoint>,
+        intervalMeters: Double,
+        maxPoints: Int = 25
+    ): List<GeoPoint> {
+        if (points.isEmpty()) return emptyList()
+        val sampled = mutableListOf(points.first())
+        var accumulated = 0.0
+        for (i in 1 until points.size) {
+            val d = calculateDistance(
+                points[i-1].latitude, points[i-1].longitude,
+                points[i].latitude,   points[i].longitude
+            )
+            accumulated += d
+            if (accumulated >= intervalMeters) {
+                sampled.add(points[i])
+                accumulated = 0.0
+                if (sampled.size >= maxPoints) break
+            }
+        }
+        if (sampled.last() != points.last() && sampled.size < maxPoints)
+            sampled.add(points.last())
+        return sampled
+    }
+
+    private suspend fun fetchPOIsAlongRoute(routePoints: List<GeoPoint>): List<POI> {
+        if (routePoints.isEmpty()) return emptyList()
+
+        val sampled  = sampleRoutePoints(routePoints, 150.0, 25)
+        val coordStr = sampled.joinToString(",") { "${it.latitude},${it.longitude}" }
+
+        val query = """
+        [out:json][timeout:25];
+        (
+          node(around:500,$coordStr)[amenity~"bench|drinking_water|toilets|bbq"];
+          node(around:500,$coordStr)[leisure=firepit];
+          node(around:500,$coordStr)[natural=spring];
+          node(around:1000,$coordStr)[tourism=viewpoint];
+          node(around:1000,$coordStr)[natural=peak];
+          node(around:1000,$coordStr)[amenity=shelter];
+          node(around:1000,$coordStr)[leisure=picnic_site];
+          node(around:1000,$coordStr)[emergency];
+          node(around:1000,$coordStr)[leisure=nature_reserve];
+          way(around:1000,$coordStr)[leisure=nature_reserve];
+          way(around:1000,$coordStr)[boundary=national_park];
+          relation(around:1000,$coordStr)[boundary=national_park];
+        );
+        out center;
+    """.trimIndent()
+
+        val json     = OverpassHelper.queryWithRetry(query) ?: return emptyList()
+        val elements = json.getJSONArray("elements")
+        val result   = mutableListOf<POI>()
+        val seen     = mutableSetOf<String>()
+
+        for (i in 0 until elements.length()) {
+            val el   = elements.getJSONObject(i)
+            val tags = parseTags(el)
+            val (icon, catName) = getRoutePOIInfo(tags) ?: continue
+
+            val elLat: Double; val elLon: Double
+            when (el.getString("type")) {
+                "node" -> { elLat = el.getDouble("lat"); elLon = el.getDouble("lon") }
+                "way", "relation" -> {
+                    val center = el.optJSONObject("center") ?: continue
+                    elLat = center.getDouble("lat"); elLon = center.getDouble("lon")
+                }
+                else -> continue
+            }
+
+            val name = tags["name"] ?: catName
+            val key  = "${"%.4f".format(elLat)},${"%.4f".format(elLon)},$catName"
+            if (key in seen) continue
+            seen.add(key)
+
+            val distToUser = currentLocation?.let {
+                calculateDistance(it.latitude, it.longitude, elLat, elLon)
+            } ?: 0.0
+
+            result.add(POI(
+                id           = el.optString("id", "$i"),
+                name         = name,
+                category     = catName,
+                categoryIcon = icon,
+                lat          = elLat, lon = elLon,
+                distance     = distToUser,
+                tags         = tags,
+                address      = buildAddress(tags),
+                phone        = tags["phone"] ?: tags["contact:phone"],
+                openingHours = tags["opening_hours"],
+                description  = tags["description"] ?: tags["note"]
+            ))
+        }
+
+        return result.sortedBy { it.distance }
+    }
+
+    private fun getRoutePOIInfo(tags: Map<String, String>): Pair<String, String>? = when {
+        tags["amenity"] == "bench"           -> "🪑" to "Sitzbank"
+        tags["amenity"] == "drinking_water"  -> "💧" to "Trinkwasser"
+        tags["natural"] == "spring"          -> "💧" to "Quelle"
+        tags["amenity"] == "toilets"         -> "🚻" to "Toilette"
+        tags["leisure"] == "firepit"         -> "🔥" to "Feuerstelle"
+        tags["amenity"] == "bbq"             -> "🔥" to "Grillplatz"
+        tags["tourism"] == "viewpoint"       -> "🏔️" to "Aussichtspunkt"
+        tags["natural"] == "peak"            -> "🏔️" to "Gipfel"
+        tags["amenity"] == "shelter"         -> "⛺" to "Schutzhütte"
+        tags["leisure"] == "picnic_site"     -> "🧺" to "Picknickplatz"
+        tags["emergency"] != null            -> "🆘" to "Notfall"
+        tags["leisure"] == "nature_reserve"  -> "🌲" to "Naturschutzgebiet"
+        tags["boundary"] == "national_park"  -> "🏞️" to "Nationalpark"
+        else -> null
+    }
+
+    private fun updateRoutePOIsCard(pois: List<POI>) {
+        binding.routePOIsContainer.removeAllViews()
+        binding.tvRoutePOIsStatus.visibility = View.GONE
+
+        if (pois.isEmpty()) {
+            binding.tvRoutePOIsStatus.visibility = View.VISIBLE
+            binding.tvRoutePOIsStatus.text = "Keine POIs in den nächsten 5 km"
+            return
+        }
+
+// Hinweis-Text oben in der Liste einfügen:
+        val dp = resources.displayMetrics.density
+        binding.routePOIsContainer.addView(TextView(this).apply {
+            text      = "📍 Nächste 5 km ab Standort • aktualisiert alle 1 km"
+            textSize  = 9.5f
+            setTextColor(Color.parseColor("#666666"))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (8 * dp).toInt() }
+        })
+
+        pois.forEach { poi ->
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity     = Gravity.CENTER_VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also { it.bottomMargin = (6 * dp).toInt() }
+                setOnClickListener { showRoutePOIDialog(poi) }
+                setPadding(0, (4 * dp).toInt(), 0, (4 * dp).toInt())
+                isClickable  = true
+                isFocusable  = true
+            }
+
+            row.addView(TextView(this).apply {
+                text   = poi.categoryIcon
+                textSize = 18f
+                layoutParams = LinearLayout.LayoutParams(
+                    (30 * dp).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                gravity = Gravity.CENTER
+            })
+
+            val infoCol = LinearLayout(this).apply {
+                orientation  = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            infoCol.addView(TextView(this).apply {
+                text      = poi.name
+                textSize  = 11.5f
+                setTextColor(Color.parseColor("#CCCCCC"))
+                maxLines  = 1
+                ellipsize = android.text.TextUtils.TruncateAt.END
+            })
+            infoCol.addView(TextView(this).apply {
+                text     = "${poi.category} • ${formatDistance(poi.distance)}"
+                textSize = 10f
+                setTextColor(Color.parseColor("#888888"))
+            })
+
+            row.addView(infoCol)
+            binding.routePOIsContainer.addView(row)
+
+            // Trennlinie
+            binding.routePOIsContainer.addView(View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 1
+                ).also { it.bottomMargin = (4 * dp).toInt() }
+                setBackgroundColor(Color.parseColor("#484848"))
+            })
+        }
+    }
+
+    private fun showRoutePOIDialog(poi: POI) {
+        val isDark      = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        val msg = StringBuilder()
+        msg.append("📂 ${poi.category}\n")
+        msg.append("📏 ${formatDistance(poi.distance)} von Dir entfernt\n")
+        poi.address?.let      { msg.append("📬 $it\n") }
+        poi.phone?.let        { msg.append("📞 $it\n") }
+        poi.openingHours?.let { msg.append("🕐 $it\n") }
+        poi.description?.let  { msg.append("\nℹ️ $it\n") }
+        msg.append("\n📍 ${"%.5f".format(poi.lat)}, ${"%.5f".format(poi.lon)}")
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("${poi.categoryIcon} ${poi.name}")
+            .setMessage(msg.toString())
+            .setPositiveButton("🧭 Als Zwischenziel") { _, _ ->
+                addWaypointToNavigation(poi)
+            }
+            .setNegativeButton("Schließen", null)
+            .create()
+
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+    }
+
+    private fun addWaypointToNavigation(waypoint: POI) {
+        val dest = finalDestination ?: return
+        val loc  = currentLocation ?: return
+
+        waypointQueue.addLast(waypoint)
+
+        // Marker mit Nummerierung
+        val num = waypointQueue.size
+        val marker = Marker(binding.mapView).apply {
+            position = GeoPoint(waypoint.lat, waypoint.lon)
+            title    = "${waypoint.categoryIcon} ${waypoint.name}"
+            snippet  = "Zwischenziel $num"
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            icon = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
+                ?.mutate()?.also { it.setTint(Color.parseColor("#9C27B0")) }
+        }
+        waypointMarkers.add(marker)
+        binding.mapView.overlays.add(marker)
+        binding.mapView.invalidate()
+
+        lifecycleScope.launch {
+            try {
+                val routeData = withContext(Dispatchers.IO) {
+                    fetchRouteWithWaypoints(loc.latitude, loc.longitude,
+                        waypointQueue.toList(), dest.latitude, dest.longitude)
+                }
+                applyNewRoute(routeData, dest)
+                Toast.makeText(this@LocationActivity,
+                    "Zwischenziel $num: ${waypoint.name} hinzugefügt ✓", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                // Marker wieder entfernen bei Fehler
+                waypointQueue.removeLast()
+                binding.mapView.overlays.remove(waypointMarkers.removeAt(waypointMarkers.lastIndex))
+                binding.mapView.invalidate()
+                Toast.makeText(this@LocationActivity,
+                    "Zwischenziel konnte nicht hinzugefügt werden", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showWaypointReachedDialog(waypoint: POI) {
+        val isDark      = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        val nextInfo = when {
+            waypointQueue.size > 1 -> "Nächstes Zwischenziel: ${waypointQueue.elementAt(1).name}"
+            waypointQueue.size == 1 -> "Weiter zum Ziel"
+            else -> "Weiter zum Ziel"
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("${waypoint.categoryIcon} Zwischenziel erreicht!")
+            .setMessage("Du hast ${waypoint.name} erreicht.\n\nNavigation pausiert.\n$nextInfo")
+            .setPositiveButton("▶️ Weiter") { _, _ -> continueNavigation() }
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
+    }
+
+    private fun continueNavigation() {
+        val dest = finalDestination ?: return
+        val loc  = currentLocation ?: return
+
+        // Erstes Zwischenziel aus Queue entfernen + Marker löschen
+        if (waypointQueue.isNotEmpty()) {
+            waypointQueue.removeFirst()
+            if (waypointMarkers.isNotEmpty()) {
+                binding.mapView.overlays.remove(waypointMarkers.removeAt(0))
+                binding.mapView.invalidate()
+            }
+        }
+
+        isAtWaypoint               = false
+        waypointReachedDialogShown = false
+
+        lifecycleScope.launch {
+            try {
+                val routeData = withContext(Dispatchers.IO) {
+                    fetchRouteWithWaypoints(loc.latitude, loc.longitude,
+                        waypointQueue.toList(), dest.latitude, dest.longitude)
+                }
+                applyNewRoute(routeData, dest)
+            } catch (e: Exception) {
+                Log.e("LocationActivity", "Weiternavigation Fehler: ${e.message}")
+            }
+        }
+    }
+
+    private fun fetchRouteWithWaypoints(
+        fromLat: Double, fromLon: Double,
+        waypoints: List<POI>,
+        toLat: Double, toLon: Double
+    ): RouteData {
+        val apiKey = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjBkODg2NmJmMGM4NTRlNDlhZWI2MjliMWM5YTJmYzM1IiwiaCI6Im11cm11cjY0In0="
+        val url    = "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson"
+
+        val coords = JSONArray().apply {
+            put(JSONArray().apply { put(fromLon); put(fromLat) })
+            waypoints.forEach { wp -> put(JSONArray().apply { put(wp.lon); put(wp.lat) }) }
+            put(JSONArray().apply { put(toLon); put(toLat) })
+        }
+
+        val bodyObj = JSONObject().apply {
+            put("coordinates", coords)
+            put("elevation", true)
+            put("extra_info", JSONArray().apply { put("surface"); put("waytype") })
+            put("language", "de")
+        }
+
+        val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
+        conn.setRequestProperty("Accept",        "application/json, application/geo+json")
+        conn.setRequestProperty("Authorization", apiKey)
+        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.connectTimeout = 15000; conn.readTimeout = 20000
+        conn.doOutput = true
+        conn.outputStream.use { it.write(bodyObj.toString().toByteArray(Charsets.UTF_8)) }
+
+        if (conn.responseCode != 200) return RouteData(emptyList(), 0.0, 0.0)
+
+        val json       = JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
+        val features   = json.getJSONArray("features")
+        if (features.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
+
+        val feature    = features.getJSONObject(0)
+        val properties = feature.getJSONObject("properties")
+        val geometry   = feature.getJSONObject("geometry")
+        val summary    = properties.getJSONObject("summary")
+
+        var totalAscent = 0.0; var totalDescent = 0.0
+        if (properties.has("segments")) {
+            val segs = properties.getJSONArray("segments")
+            for (i in 0 until segs.length()) {
+                val seg = segs.getJSONObject(i)
+                totalAscent  += seg.optDouble("ascent",  0.0)
+                totalDescent += seg.optDouble("descent", 0.0)
+            }
+        }
+
+        val coordinates     = geometry.getJSONArray("coordinates")
+        val points          = mutableListOf<GeoPoint>()
+        val elevationPoints = mutableListOf<Double>()
+        for (i in 0 until coordinates.length()) {
+            val coord = coordinates.getJSONArray(i)
+            points.add(GeoPoint(coord.getDouble(1), coord.getDouble(0)))
+            if (coord.length() >= 3) elevationPoints.add(coord.getDouble(2))
+        }
+
+        // ── Oberfläche & Wegtyp parsen ───────────────────────
+        val surfaceSummary = mutableListOf<SurfaceSummary>()
+        val wayTypeSummary = mutableListOf<SurfaceSummary>()
+
+        if (properties.has("extras")) {
+            val extras = properties.getJSONObject("extras")
+            if (extras.has("surface")) {
+                val arr = extras.getJSONObject("surface").getJSONArray("summary")
+                for (i in 0 until arr.length()) {
+                    val item = arr.getJSONObject(i)
+                    val code = item.getInt("value")
+                    surfaceSummary.add(SurfaceSummary(
+                        code = code, name = RouteInfoHelper.getSurfaceName(code),
+                        emoji = RouteInfoHelper.getSurfaceEmoji(code),
+                        distance = item.getDouble("distance"), percentage = item.getDouble("amount")
+                    ))
+                }
+            }
+            if (extras.has("waytype")) {
+                val arr = extras.getJSONObject("waytype").getJSONArray("summary")
+                for (i in 0 until arr.length()) {
+                    val item = arr.getJSONObject(i)
+                    val code = item.getInt("value")
+                    wayTypeSummary.add(SurfaceSummary(
+                        code = code, name = RouteInfoHelper.getWayTypeName(code),
+                        emoji = RouteInfoHelper.getWayTypeEmoji(code),
+                        distance = item.getDouble("distance"), percentage = item.getDouble("amount")
+                    ))
+                }
+            }
+        }
+
+        return RouteData(
+            points          = points,
+            distance        = summary.getDouble("distance"),
+            duration        = summary.getDouble("duration"),
+            elevationPoints = elevationPoints,
+            totalAscent     = totalAscent,
+            totalDescent    = totalDescent,
+            minElevation    = elevationPoints.minOrNull() ?: 0.0,
+            maxElevation    = elevationPoints.maxOrNull() ?: 0.0,
+            surfaceSummary  = surfaceSummary,   // ← jetzt übergeben
+            wayTypeSummary  = wayTypeSummary    // ← jetzt übergeben
+        )
+    }
+
+    // Route anwenden (wird von mehreren Stellen genutzt)
+    private fun applyNewRoute(routeData: RouteData, dest: GeoPoint) {
+        currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
+        if (routeData.points.isNotEmpty()) {
+            currentRouteDistance = routeData.distance
+            currentRouteDuration = routeData.duration
+            currentRoutePolyline = Polyline().apply {
+                setPoints(routeData.points)
+                outlinePaint.color       = Color.parseColor("#2196F3")
+                outlinePaint.strokeWidth = 10f
+            }
+            binding.mapView.overlays.add(currentRoutePolyline)
+            binding.mapView.invalidate()
+            updateNavigationInfo()
+            updateNavigationCards(routeData, dest.latitude, dest.longitude)
+        }
+    }
+
+    // Nächste 5km der Route ab aktuellem Standort extrahieren
+    private fun getNextRouteSegment(
+        routePoints: List<GeoPoint>,
+        currentLoc: Location,
+        maxDistanceM: Double = 5000.0
+    ): List<GeoPoint> {
+        if (routePoints.isEmpty()) return emptyList()
+
+        // Nächsten Routenpunkt finden
+        var closestIdx = 0
+        var minDist    = Double.MAX_VALUE
+        routePoints.forEachIndexed { idx, point ->
+            val d = calculateDistance(currentLoc.latitude, currentLoc.longitude,
+                point.latitude, point.longitude)
+            if (d < minDist) { minDist = d; closestIdx = idx }
+        }
+
+        // Vorwärts bis 5km akkumulieren
+        val segment     = mutableListOf(routePoints[closestIdx])
+        var accumulated = 0.0
+        for (i in closestIdx + 1 until routePoints.size) {
+            val d = calculateDistance(
+                routePoints[i-1].latitude, routePoints[i-1].longitude,
+                routePoints[i].latitude,   routePoints[i].longitude
+            )
+            accumulated += d
+            segment.add(routePoints[i])
+            if (accumulated >= maxDistanceM) break
+        }
+        return segment
+    }
+
+    // POI-Refresh mit 5km-Segment
+    private fun refreshRoutePOIs(routePoints: List<GeoPoint>, currentLoc: Location) {
+        val segment = getNextRouteSegment(routePoints, currentLoc, 5000.0)
+        binding.tvRoutePOIsStatus.visibility = View.VISIBLE
+        binding.tvRoutePOIsStatus.text       = "Aktualisiere…"
+        binding.routePOIsContainer.removeAllViews()
+
+        lifecycleScope.launch {
+            try {
+                val pois = withContext(Dispatchers.IO) { fetchPOIsAlongRoute(segment) }
+                updateRoutePOIsCard(pois)
+            } catch (e: Exception) {
+                Log.w("LocationActivity", "Route-POI Refresh fehlgeschlagen: ${e.message}")
+                binding.tvRoutePOIsStatus.text = "Nicht verfügbar"
+            }
+        }
+    }
+
+
+
+    private fun isDeviatingFromRoute(location: Location): Boolean {
+        val route = currentRouteData ?: return true
+        if (route.points.isEmpty()) return true
+        val minDist = route.points.minOf { point ->
+            calculateDistance(location.latitude, location.longitude,
+                point.latitude, point.longitude)
+        }
+        return minDist > 30.0  // Neu berechnen erst ab 30m Abweichung
+    }
+
+    // Zwei neue Funktionen:
+
+    /**
+     * Berechnet die interpolierte Position auf der Route
+     * zum Zeitpunkt eines Sonn-Events (Auf-/Untergang).
+     */
+    private fun getPositionOnRouteAtTime(
+        routePoints: List<GeoPoint>,
+        routeDistance: Double,
+        routeDuration: Double,
+        eventTimeMs: Long
+    ): GeoPoint? {
+        val secondsUntilEvent = (eventTimeMs - System.currentTimeMillis()) / 1000.0
+        if (secondsUntilEvent <= 0 || secondsUntilEvent > routeDuration) return null
+
+        val targetDistM = routeDistance * (secondsUntilEvent / routeDuration)
+        var accumulated = 0.0
+
+        for (i in 1 until routePoints.size) {
+            val d = calculateDistance(
+                routePoints[i-1].latitude, routePoints[i-1].longitude,
+                routePoints[i].latitude,   routePoints[i].longitude
+            )
+            if (accumulated + d >= targetDistM) {
+                val t   = if (d > 0) (targetDistM - accumulated) / d else 0.0
+                val lat = routePoints[i-1].latitude  + t * (routePoints[i].latitude  - routePoints[i-1].latitude)
+                val lon = routePoints[i-1].longitude + t * (routePoints[i].longitude - routePoints[i-1].longitude)
+                return GeoPoint(lat, lon)
+            }
+            accumulated += d
+        }
+        return routePoints.lastOrNull()
+    }
+
+    /**
+     * Setzt Sonnenaufgang/Sonnenuntergang-Marker
+     * an der erwarteten Position auf der Route.
+     */
+    private fun updateSunEventMarkersOnRoute(
+        route: RouteData,
+        sunriseMs: Long?,
+        sunsetMs: Long?,
+        timeFmt: java.text.SimpleDateFormat
+    ) {
+        // Alte Marker entfernen
+        sunriseRouteMarker?.let { binding.mapView.overlays.remove(it) }
+        sunsetRouteMarker?.let  { binding.mapView.overlays.remove(it) }
+        sunriseRouteMarker = null
+        sunsetRouteMarker  = null
+
+        // Sonnenaufgang-Marker
+        if (sunriseMs != null) {
+            getPositionOnRouteAtTime(route.points, route.distance, route.duration, sunriseMs)?.let { pos ->
+                sunriseRouteMarker = Marker(binding.mapView).apply {
+                    position = pos
+                    title    = "🌅 Sonnenaufgang"
+                    snippet  = timeFmt.format(java.util.Date(sunriseMs)) + " Uhr — Du wirst hier sein"
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    icon = createSunMarkerDrawable("🌅 Sonnenaufgang", Color.parseColor("#E65100"))
+                }
+                binding.mapView.overlays.add(sunriseRouteMarker)
+            }
+        }
+
+        // Sonnenuntergang-Marker
+        if (sunsetMs != null) {
+            getPositionOnRouteAtTime(route.points, route.distance, route.duration, sunsetMs)?.let { pos ->
+                sunsetRouteMarker = Marker(binding.mapView).apply {
+                    position = pos
+                    title    = "🌇 Sonnenuntergang"
+                    snippet  = timeFmt.format(java.util.Date(sunsetMs)) + " Uhr — Du wirst hier sein"
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    icon = createSunMarkerDrawable("🌇 Sonnenuntergang", Color.parseColor("#B71C1C"))
+                }
+                binding.mapView.overlays.add(sunsetRouteMarker)
+            }
+        }
+
+        binding.mapView.invalidate()
+    }
+
+    private fun createSunMarkerDrawable(label: String, color: Int): android.graphics.drawable.Drawable {
+        val dp     = resources.displayMetrics.density
+        val width  = (130 * dp).toInt()   // breiter für den Text
+        val height = (44 * dp).toInt()    // etwas flacher
+        val r      = 6 * dp
+
+        val bitmap = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bitmap)
+
+        // 90% transparent = Alpha 26 (10% von 255)
+        val bgColor = Color.argb(26, Color.red(color), Color.green(color), Color.blue(color))
+
+        val bgPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            this.color = bgColor
+            style = android.graphics.Paint.Style.FILL
+        }
+        val bubbleBottom = height * 0.72f
+        canvas.drawRoundRect(android.graphics.RectF(0f, 0f, width.toFloat(), bubbleBottom), r, r, bgPaint)
+
+        // Zeiger-Dreieck
+        val path = android.graphics.Path().apply {
+            moveTo(width / 2f - 6 * dp, bubbleBottom)
+            lineTo(width / 2f + 6 * dp, bubbleBottom)
+            lineTo(width / 2f, height.toFloat())
+            close()
+        }
+        canvas.drawPath(path, bgPaint)
+
+        // Text — kleiner damit er passt, mit Schatten für Lesbarkeit
+        val textPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            this.color = android.graphics.Color.WHITE
+            textSize   = 9f * dp
+            textAlign  = android.graphics.Paint.Align.CENTER
+            typeface   = android.graphics.Typeface.DEFAULT_BOLD
+            setShadowLayer(2f * dp, 0f, 1f * dp, android.graphics.Color.BLACK)
+        }
+        val textY = bubbleBottom / 2f - (textPaint.descent() + textPaint.ascent()) / 2f
+        canvas.drawText(label, width / 2f, textY, textPaint)
+
+        return android.graphics.drawable.BitmapDrawable(resources, bitmap)
     }
 }
