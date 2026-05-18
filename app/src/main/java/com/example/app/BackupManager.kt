@@ -167,8 +167,8 @@ object BackupManager {
     /**
      * Stellt ein Backup wieder her
      */
-    fun restoreBackup(context: Context, backupFile: File): Boolean {
-        Log.d(TAG, "Starte Wiederherstellung von: ${backupFile.absolutePath}")
+    fun restoreBackup(context: Context, backupFile: File, mergeMode: Boolean = false): Boolean {
+        Log.d(TAG, "Starte Wiederherstellung von: ${backupFile.absolutePath}, mergeMode=$mergeMode")
         val tempUnzipDir = File(context.cacheDir, "restore_unzip")
         if (tempUnzipDir.exists()) tempUnzipDir.deleteRecursively()
         tempUnzipDir.mkdirs()
@@ -206,14 +206,33 @@ object BackupManager {
             }
 
             // 2. Hunde-Profile
-            backupData.dogs.forEach { dog ->
-                val restoredDog = if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri)) {
-                    dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
-                } else dog
-                DogProfileManager.saveProfile(context, restoredDog)
+            // ✅ FIX: Bestehende Profile zuerst löschen, damit beim Full-Restore keine
+            // Duplikate entstehen, wenn dasselbe Profil mit unterschiedlicher ID vorliegt.
+            if (mergeMode) {
+                val existing = DogProfileManager.getAllProfiles(context)
+                val merged = mergeProfiles(
+                    backup = backupData.dogs.map { dog ->
+                        if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri))
+                            dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
+                        else dog
+                    },
+                    existing = existing
+                )
+                existing.forEach { DogProfileManager.deleteProfile(context, it.id) }
+                merged.forEach { DogProfileManager.saveProfile(context, it) }
+            } else {
+                DogProfileManager.getAllProfiles(context).forEach {
+                    DogProfileManager.deleteProfile(context, it.id)
+                }
+                backupData.dogs.forEach { dog ->
+                    val restoredDog = if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri)) {
+                        dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
+                    } else dog
+                    DogProfileManager.saveProfile(context, restoredDog)
+                }
             }
 
-            // 3. Einstellungen
+            // 3. Einstellungen (immer übernehmen)
             restoreSettings(context, backupData.settings)
 
             // 4. Notizen
@@ -222,36 +241,87 @@ object BackupManager {
                     val restoredUris = note.photoUris.map { restoredPhotoMapping[it] ?: it }
                     note.copy(photoUris = restoredUris)
                 }
-                saveNotesHistory(context, restoredNotes)
+                if (mergeMode) {
+                    // ✅ Merge: nur neue Notizen hinzufügen (Deduplizierung per ID)
+                    val existing = collectNotes(context) ?: emptyList()
+                    val existingIds = existing.map { it.id }.toSet()
+                    val merged = existing + restoredNotes.filter { it.id !in existingIds }
+                    saveNotesHistory(context, merged)
+                } else {
+                    saveNotesHistory(context, restoredNotes)
+                }
             }
 
             // 5. Trainingstempo
             backupData.speedSessions?.let { sessions ->
-                saveSpeedHistory(context, sessions)
+                if (mergeMode) {
+                    val existing = collectSpeedSessions(context) ?: emptyList()
+                    val existingTimes = existing.map { it.startTime }.toSet()
+                    val merged = existing + sessions.filter { it.startTime !in existingTimes }
+                    saveSpeedHistory(context, merged)
+                } else {
+                    saveSpeedHistory(context, sessions)
+                }
             }
 
             // 6. Kommunikations-Sessions
             backupData.voiceSessions?.let { sessions ->
-                saveVoiceHistory(context, sessions)
+                if (mergeMode) {
+                    val existing = collectVoiceSessions(context) ?: emptyList()
+                    val existingTimes = existing.map { it.startTime }.toSet()
+                    val merged = existing + sessions.filter { it.startTime !in existingTimes }
+                    saveVoiceHistory(context, merged)
+                } else {
+                    saveVoiceHistory(context, sessions)
+                }
             }
 
-            // 7. Notfallmeldungen (NEU)
+            // 7. Notfallmeldungen
             backupData.emergencyReports?.let { reports ->
                 val restoredReports = reports.map { report ->
                     val restoredUris = report.photoUris.map { restoredPhotoMapping[it] ?: it }
                     report.copy(photoUris = restoredUris)
                 }
-                saveEmergencyHistory(context, restoredReports)
+                if (mergeMode) {
+                    val existing = collectEmergencyReports(context) ?: emptyList()
+                    val existingIds = existing.map { it.id }.toSet()
+                    val merged = existing + restoredReports.filter { it.id !in existingIds }
+                    saveEmergencyHistory(context, merged)
+                } else {
+                    saveEmergencyHistory(context, restoredReports)
+                }
             }
 
+            // 8. Trainingstagebuch
             backupData.trainingSessions?.let { sessions ->
-                saveTrainingSessions(context, sessions)
+                if (mergeMode) {
+                    val existing = loadTrainingSessions(context)
+                    val existingIds = existing.map { it.id }.toSet()
+                    val merged = existing + sessions.filter { it.id !in existingIds }
+                    saveTrainingSessions(context, merged)
+                } else {
+                    saveTrainingSessions(context, sessions)
+                }
             }
             backupData.trainingProgress?.let { progressList ->
-                saveTrainingProgress(context, progressList)
+                if (mergeMode) {
+                    val existing = loadTrainingProgress(context)
+                    val existingKeys = existing.map { "${it.dogId}_${it.category.name}" }.toSet()
+                    val merged = existing + progressList.filter { "${it.dogId}_${it.category.name}" !in existingKeys }
+                    saveTrainingProgress(context, merged)
+                } else {
+                    saveTrainingProgress(context, progressList)
+                }
             }
             backupData.trainingMilestones?.let { milestones ->
-                saveTrainingMilestones(context, milestones)
+                if (mergeMode) {
+                    val existing = loadTrainingMilestones(context)
+                    val existingIds = existing.map { it.id }.toSet()
+                    val merged = existing + milestones.filter { it.id !in existingIds }
+                    saveTrainingMilestones(context, merged)
+                } else {
+                    saveTrainingMilestones(context, milestones)
+                }
             }
 
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
@@ -589,8 +659,15 @@ object BackupManager {
             MergeMode.ADD_NEW -> {
                 val existing = DogProfileManager.getAllProfiles(context)
                 val existingIds = existing.map { it.id }.toSet()
+                // ✅ Stufe 2: Chip-Nummer statt Name+Geburtsdatum (kein Schreibfehler-Risiko)
+                val existingChips = existing
+                    .map { it.chipNumber.filter { c -> c.isDigit() } }
+                    .filter { it.isNotEmpty() }
+                    .toSet()
                 profiles.forEach { profile ->
-                    if (profile.id !in existingIds) {
+                    val chip = profile.chipNumber.filter { it.isDigit() }
+                    val chipAlreadyExists = chip.isNotEmpty() && chip in existingChips
+                    if (profile.id !in existingIds && !chipAlreadyExists) {
                         DogProfileManager.saveProfile(context, profile)
                     }
                 }
@@ -603,8 +680,11 @@ object BackupManager {
             }
 
             MergeMode.MERGE_BY_TIMESTAMP -> {
-                // Da Profile keinen Timestamp haben, einfach saveProfile (überschreibt bei gleicher ID)
-                profiles.forEach { DogProfileManager.saveProfile(context, it) }
+                val existing = DogProfileManager.getAllProfiles(context)
+                val merged = mergeProfiles(profiles, existing)
+                // Alle löschen und merged-Liste speichern
+                existing.forEach { DogProfileManager.deleteProfile(context, it.id) }
+                merged.forEach { DogProfileManager.saveProfile(context, it) }
             }
         }
     }
@@ -888,8 +968,8 @@ object BackupManager {
         existing: List<TrainingProgress>,
         backup: List<TrainingProgress>
     ): List<TrainingProgress> {
-        val allKeys = (existing.map { "${it.dogId}_${it.category.name}" } + 
-                       backup.map { "${it.dogId}_${it.category.name}" }).distinct()
+        val allKeys = (existing.map { "${it.dogId}_${it.category.name}" } +
+                backup.map { "${it.dogId}_${it.category.name}" }).distinct()
 
         return allKeys.mapNotNull { key ->
             val existingProgress = existing.find { "${it.dogId}_${it.category.name}" == key }
@@ -997,6 +1077,47 @@ object BackupManager {
                 else -> existingReport
             }
         }
+    }
+
+    private fun mergeProfiles(
+        backup: List<DogProfile>,
+        existing: List<DogProfile>
+    ): List<DogProfile> {
+        val merged = existing.toMutableList()
+
+        backup.forEach { backupProfile ->
+
+            // Stufe 1: Übereinstimmung per UUID
+            val byId = merged.indexOfFirst { it.id == backupProfile.id }
+            if (byId >= 0) {
+                val existingProfile = merged[byId]
+                if (backupProfile.lastModified > existingProfile.lastModified) {
+                    merged[byId] = backupProfile
+                }
+                return@forEach
+            }
+
+            // Stufe 2: Übereinstimmung per Chip-Nummer (normalisiert)
+            val backupChip = backupProfile.chipNumber.filter { it.isDigit() }
+            if (backupChip.isNotEmpty()) {
+                val byChip = merged.indexOfFirst { existingProfile ->
+                    val existingChip = existingProfile.chipNumber.filter { it.isDigit() }
+                    existingChip.isNotEmpty() && existingChip == backupChip
+                }
+                if (byChip >= 0) {
+                    val existingProfile = merged[byChip]
+                    if (backupProfile.lastModified > existingProfile.lastModified) {
+                        merged[byChip] = backupProfile.copy(id = existingProfile.id)
+                    }
+                    return@forEach
+                }
+            }
+
+            // Kein Match → neues Profil hinzufügen
+            merged.add(backupProfile)
+        }
+
+        return merged
     }
 
     // ════════════════════════════════════════════════════════════════

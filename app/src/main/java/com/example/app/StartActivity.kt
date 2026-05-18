@@ -268,8 +268,12 @@ class StartActivity : BaseBottomNavActivity() {
     private fun openImprint() { startActivity(Intent(this, ImprintActivity::class.java)) }
 
     private fun setupButtons() {
-        binding.btnDailyExercise.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-des-tages/", "Übung des Tages") }
-        binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/tagesmeditation/", "Tagesmeditation") }
+        binding.btnNavBlog.setOnClickListener { openMainActivity(MainActivity.VIEW_BLOG) }
+        binding.btnNavPages.setOnClickListener { openMainActivity(MainActivity.VIEW_PAGES) }
+        binding.btnNavCourses.setOnClickListener { openMainActivity(MainActivity.VIEW_COURSES) }
+
+        binding.btnDailyExercise.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", "Übung der Woche") }
+        binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", "Meditation der Woche") }
         binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
         binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
         binding.btnTrainingDiary.setOnClickListener { startActivity(Intent(this, TrainingDiaryActivity::class.java)) }
@@ -346,7 +350,7 @@ class StartActivity : BaseBottomNavActivity() {
             try {
                 val file = withContext(Dispatchers.IO) { BackupManager.createBackup(this@StartActivity) }
                 progress.dismiss()
-                Toast.makeText(this@StartActivity, "✅ Backup gespeichert", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@StartActivity, "✅ Backup gespeichert in Downloads/HundeWildnis_Backups", Toast.LENGTH_LONG).show()
                 offerShare(file)
             } catch (e: Exception) {
                 progress.dismiss()
@@ -407,6 +411,14 @@ class StartActivity : BaseBottomNavActivity() {
         val intent = packageManager.getLaunchIntentForPackage(packageName)
         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent); finishAffinity()
+    }
+
+    private fun openMainActivity(viewType: Int) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("INITIAL_VIEW", viewType)
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
     }
 
     private fun openWebView(url: String, title: String) {

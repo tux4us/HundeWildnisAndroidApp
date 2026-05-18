@@ -759,7 +759,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 
                 withContext(Dispatchers.Main) {
                     MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/gpx+xml"), null)
-                    Toast.makeText(this@DailyNotesActivity, "GPX gespeichert nach Documents/HundeWildnis: ${file.name}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@DailyNotesActivity, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

@@ -357,8 +357,8 @@ object TrainingExportManager {
     // ════════════════════════════════════════════════════════════
     
     private fun addSessionToDocument(document: Document, session: TrainingSession, detailed: Boolean = false) {
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(30f, 70f)))
-            .useAllAvailableWidth()
+        // ✅ Fix: Absolute Breite statt 100% (verhindert Überlauf bei langen Inhalten)
+        val table = Table(UnitValue.createPointArray(floatArrayOf(100f, 400f)))
             .setMarginBottom(10f)
         
         table.addCell(createCell("Datum:", true))
@@ -369,8 +369,8 @@ object TrainingExportManager {
             table.addCell(createCell(session.category.displayName))
         }
         
-        table.addCell(createCell("Dauer:", true))
-        table.addCell(createCell("${session.durationMinutes} Minuten"))
+        table.addCell(createCell("Aufwand:", true))
+        table.addCell(createCell(session.getEffortText()))
         
         table.addCell(createCell("Erfolg:", true))
         table.addCell(createCell("${session.getSuccessIcon()} ${session.getSuccessText()}"))
@@ -397,46 +397,78 @@ object TrainingExportManager {
             
             session.getOpenStreetMapLink()?.let { link ->
                 table.addCell(createCell("Karte:", true))
-                table.addCell(createCell(link))
+                // ✅ Fix: Link-Text verkleinern falls zu lang
+                table.addCell(createCell(link, fontSize = 8f))
             }
         }
         
         if (session.notes.isNotEmpty()) {
             table.addCell(createCell("Notizen:", true))
+            // ✅ Fix: Notizen-Zelle bekommt automatischen Zeilenumbruch
             table.addCell(createCell(session.notes))
         }
         
         document.add(table)
     }
     
-    private fun createCell(text: String, bold: Boolean = false): Cell {
-        val paragraph = Paragraph(text).setFontSize(10f)
+    private fun createCell(text: String, bold: Boolean = false, fontSize: Float = 10f): Cell {
+        val paragraph = Paragraph(text).setFontSize(fontSize)
         if (bold) paragraph.setBold()
-        return Cell().add(paragraph).setPadding(5f)
+        
+        return Cell().add(paragraph)
+            .setPadding(5f)
+            .setKeepTogether(true) // Verhindert unschöne Seitenumbrüche innerhalb einer Zeile
     }
 
     private fun createTempFile(context: Context, fileName: String): File {
-        // ✅ EINHEITLICHER PFAD: Documents/HundeWildnis
-        val dir = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10+ (Scoped Storage)
-            File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
-        } else {
-            // Android 9 und älter
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
-        }
-
-        // Erstelle Verzeichnis falls nicht vorhanden
-        if (!dir.exists()) {
-            dir.mkdirs()
-        }
-
+        // ✅ Scoped Storage kompatibel: Erst im App-Ordner erstellen
+        val dir = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
+        if (!dir.exists()) dir.mkdirs()
         return File(dir, fileName)
     }
-    
+
+    /**
+     * Kopiert die Datei in den öffentlichen Documents-Ordner
+     */
+    private fun saveToPublicDocuments(context: Context, file: File) {
+        try {
+            val resolver = context.contentResolver
+            val contentValues = android.content.ContentValues().apply {
+                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, file.name)
+                put(android.provider.MediaStore.MediaColumns.MIME_TYPE, if (file.extension == "pdf") "application/pdf" else "text/csv")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/HundeWildnis")
+                }
+            }
+
+            val uri = resolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
+            uri?.let {
+                resolver.openOutputStream(it)?.use { outputStream ->
+                    file.inputStream().use { inputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+                
+                // MediaScanner benachrichtigen
+                android.media.MediaScannerConnection.scanFile(
+                    context,
+                    arrayOf(android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/HundeWildnis/" + file.name),
+                    null,
+                    null
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     /**
      * Teilen-Intent erstellen
      */
     fun shareFile(context: Context, file: File) {
+        // Erst öffentlich speichern für den User
+        saveToPublicDocuments(context, file)
+
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = if (file.extension == "pdf") "application/pdf" else "text/csv"

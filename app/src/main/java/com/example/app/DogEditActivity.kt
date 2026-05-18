@@ -21,7 +21,7 @@ class DogEditActivity : SecureBaseActivity() {
     private lateinit var binding: ActivityDogEditBinding
     private var profile: DogProfile? = null
     private var photoUri: String = ""
-    
+
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -50,7 +50,7 @@ class DogEditActivity : SecureBaseActivity() {
         setContentView(binding.root)
 
         profile = intent.getParcelableExtra("profile")
-        
+
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             title = if (profile == null) "🐕 Neuer Hund" else "🐕 ${profile?.name} bearbeiten"
@@ -151,7 +151,7 @@ class DogEditActivity : SecureBaseActivity() {
     private fun updateBirthDateField(position: Int) {
         // Zuerst den Hint vom EditText entfernen, um Überlagerungen zu vermeiden
         binding.etBirthDate.hint = null
-        
+
         when (position) {
             0 -> { // Datum bekannt
                 binding.tilBirthDate.visibility = View.VISIBLE
@@ -182,7 +182,7 @@ class DogEditActivity : SecureBaseActivity() {
         profile?.let { p ->
             binding.etName.setText(p.name)
             binding.etBreed.setText(p.breed)
-            
+
             // Spinner setzen
             val genderIndex = when(p.gender) {
                 "Rüde" -> 1
@@ -193,7 +193,7 @@ class DogEditActivity : SecureBaseActivity() {
                 binding.spinnerGender.adapter.getItem(genderIndex).toString(),
                 false
             )
-            
+
             val neuteredIndex = when(p.neutered) {
                 "Ja" -> 1
                 "Nein" -> 2
@@ -214,7 +214,7 @@ class DogEditActivity : SecureBaseActivity() {
                 birthDate.matches(Regex("\\d{4}")) -> Pair(2, birthDate)
                 else -> Pair(0, birthDate)
             }
-            
+
             binding.spinnerBirthDateType.setText(
                 binding.spinnerBirthDateType.adapter.getItem(typeIndex).toString(),
                 false
@@ -246,7 +246,7 @@ class DogEditActivity : SecureBaseActivity() {
             binding.etShoulderHeight.setText(p.shoulderHeight)
             binding.etBodyLength.setText(p.bodyLength)
             binding.etHealthInsurance.setText(p.healthInsurance)
-            
+
             if (p.photoUri.isNotEmpty()) {
                 photoUri = p.photoUri
                 try {
@@ -265,8 +265,8 @@ class DogEditActivity : SecureBaseActivity() {
                 type = "image/*"
                 addCategory(Intent.CATEGORY_OPENABLE)
                 addFlags(
-                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or 
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
             }
             pickImage.launch(intent)
@@ -284,11 +284,11 @@ class DogEditActivity : SecureBaseActivity() {
 
     private fun setupDatePickers() {
         val calendar = Calendar.getInstance()
-        
+
         binding.etBirthDate.setOnClickListener {
             val type = binding.spinnerBirthDateType.text.toString()
             val options = resources.getStringArray(R.array.birthdate_type_options)
-            
+
             when (type) {
                 options[0] -> { // Datum bekannt
                     DatePickerDialog(
@@ -428,7 +428,8 @@ class DogEditActivity : SecureBaseActivity() {
             characterExcitability = binding.sliderExcitability.value.toInt(),
             characterLearning = binding.sliderLearning.value.toInt(),
             characterFrustration = binding.sliderFrustration.value.toInt(),
-            characterNotes = binding.etCharacterNotes.text.toString()
+            characterNotes = binding.etCharacterNotes.text.toString(),
+            lastModified = System.currentTimeMillis()
         )
 
         if (DogProfileManager.saveProfile(this, savedProfile)) {
