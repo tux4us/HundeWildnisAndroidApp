@@ -165,7 +165,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         )
 
         if (file != null) {
-            Toast.makeText(this, "✅ PDF erstellt: ${file.name}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
             TrainingExportManager.shareFile(this, file)
         } else {
             Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
@@ -180,7 +180,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         )
 
         if (file != null) {
-            Toast.makeText(this, "✅ CSV erstellt: ${file.name}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "✅ CSV gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
             TrainingExportManager.shareFile(this, file)
         } else {
             Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()

@@ -494,6 +494,10 @@ class EmergencyActivity : SecureBaseActivity() {
                     historyAdapter.notifyItemInserted(0)
                     saveHistory()
 
+                    if (contentUri != null || pdfFile != null) {
+                        Toast.makeText(this@EmergencyActivity, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                    }
+
                     if (contentUri != null) {
                         shareReportViaUri(contentUri)
                     } else if (pdfFile != null) {

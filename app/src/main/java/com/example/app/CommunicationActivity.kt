@@ -769,7 +769,7 @@ class CommunicationActivity : SecureBaseActivity() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@CommunicationActivity,
-                        "PDF gespeichert:\n${targetFile.absolutePath}",
+                        "✅ PDF gespeichert in Documents/HundeWildnis",
                         Toast.LENGTH_LONG
                     ).show()
                 }

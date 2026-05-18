@@ -171,207 +171,402 @@
                 android:paddingTop="20dp"
                 android:paddingBottom="140dp">
 
-                <!-- Button 2: Übung des Tages -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDailyExercise"
+                <!-- GRUPPE 1: Wochen-Übungen -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🦮📖 Übung der Woche"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#2d5016"
-                    android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <!-- Button 3: Tagesmeditation -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDailyMeditation"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Übungen der Woche"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <!-- Button 1: Übung der Woche -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDailyExercise"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🦮📖 Übung der Woche"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#2d5016"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
+                            app:iconGravity="start" />
+
+                        <!-- Button 2: Meditation der Woche -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDailyMeditation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🧘🐕 Meditationsübung"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#4a6135"
+                            android:textColor="#FFFFFF"
+                            app:iconGravity="start" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- GRUPPE 2: Trainingswerkzeuge -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🧘🐕 Meditationsübung"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <!-- Button 4: Geh-Geschwindigkeit -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnWalkingSpeed"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Trainingswerkzeuge"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <!-- Button 3: Geh-Geschwindigkeit -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnWalkingSpeed"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="⏱️🔔 Tempo - Trainer"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#5a7145"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
+                            app:iconGravity="start" />
+
+                        <!-- Button 4: Kommunikation -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCommunication"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🗣️🎤 Sprach - Trainer"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#6a8255"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
+                            app:iconGravity="start" />
+
+                        <!-- ✅ Button 5: Trainingstagebuch -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTrainingDiary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🦮📖 Hundetraining"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#4C6238"
+                            android:textColor="#FFFFFF"
+                            app:iconGravity="start" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- GRUPPE 3: Outdoorwerkzeuge -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="⏱️🔔 Tempo - Trainer"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#5a7145"
-                    android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <!-- Button Kommunikation -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCommunication"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Outdoorwerkzeuge"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <!-- Button 6: Tagesnotizen -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDailyNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="📝📸 Tagesnotizen"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#43592F"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Button 7: Wetter -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnWeather"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🌦💦 Revier - Wetter"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#354923"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Button 8: Standort -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLocation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🗺🛰 Revier - Navigation"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#234210"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Button 9: Kompass -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCompass"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🧭🌐 Kompass"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#213A10"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Button 10: Höhenmesser -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAltimeter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="⛰️〽️ Höhenmesser"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#1e340e"
+                            android:textColor="#FFFFFF" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- GRUPPE 4: Hunde & Notfall -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🗣️🎤 Sprach - Trainer"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#6a8255"
-                    android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <!-- ✅ Button Trainingstagebuch -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnTrainingDiary"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hund und Notfall"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <!-- Button 11: Stammdaten -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDogProfiles"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🦮 Hunde Stammdaten"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#01579B"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Button 12: NOTFALL-BUTTON -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnEmergency"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🚨 NOTFALL 🚨"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:backgroundTint="#BD0000"
+                            app:cornerRadius="12dp"
+                            app:iconGravity="start" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- GRUPPE 5: Informationen und Lernen -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🦮📖 Hundetraining"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#0D47A1"
-                    android:textColor="#FFFFFF"
                     android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <!-- Button 5: Tagesnotizen -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDailyNotes"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Informationen und Lernen"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <!-- Button 13: Blog Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnNavBlog"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="💬 HundeWildnis Blog"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#283C16"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
+                            app:iconGravity="start" />
+
+                        <!-- Button 14: Seiten Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnNavPages"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="ℹ️ HundeWildnis Seiten"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#364E21"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
+                            app:iconGravity="start" />
+
+                        <!-- Button 15: Kurse Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnNavCourses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🎓 Online-Kurse"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#4F6A36"
+                            android:textColor="#FFFFFF"
+                            app:iconGravity="start" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- GRUPPE 6: App-Service -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="📝📸 Tagesnotizen"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#5a7145"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Button 6: Wetter -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnWeather"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🌦💦 Revier - Wetter"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Button 7: Standort -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🗺🛰 Revier - Navigation"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#2d5016"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Button 8: Kompass -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCompass"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🧭🌐 Kompass"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#213A10"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Button 9: Höhenmesser -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAltimeter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="⛰️〽️ Höhenmesser"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#1e340e"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Button 10: Stammdaten -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDogProfiles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🦮 Hunde Stammdaten"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#01579B"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- NOTFALL-BUTTON -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEmergency"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="🚨 NOTFALL 🚨"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    android:backgroundTint="#BD0000"
-                    app:cornerRadius="12dp"
                     android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <!-- ✅ Button 11: Backup & Restore -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBackup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="📦💾 Backup App Daten"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#E76E04"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
-                <!-- ✅ Button 1: Unterstützung -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSupport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:text="💖🤝 Deine Unterstützung"
-                    android:textSize="@dimen/text_button_large"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:backgroundTint="#006064"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp"
-                    app:iconGravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="App-Service"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <!-- Button 16: Backup & Restore -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnBackup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="📦💾 Backup App Daten"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#003A3C"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Button 17: Unterstützung -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSupport"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="💖🤝 Deine Unterstützung"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#006064"
+                            android:textColor="#FFFFFF"
+                            app:iconGravity="start" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

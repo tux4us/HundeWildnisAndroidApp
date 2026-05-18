@@ -124,19 +124,56 @@ class BackupActivity : SecureBaseActivity() {
     }
 
     private fun confirmRestore(backupFile: File) {
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("⚠️ Backup wiederherstellen?")
+        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+
+        val modeDialog = AlertDialog.Builder(this)
+            .setTitle("📦 Backup importieren")
             .setMessage(
-                "ACHTUNG: Alle aktuellen Daten werden überschrieben!\n\n" +
-                        "Dies umfasst:\n" +
-                        "• Hunde-Stammdaten\n" +
-                        "• Fotos\n" +
-                        "• Einstellungen\n" +
-                        "• Tagesnotizen\n\n" +
-                        "Möchtest du fortfahren?"
+                "Wie möchtest du das Backup importieren?\n\n" +
+                        "➕ Zusammenführen (empfohlen)\n" +
+                        "Deine vorhandenen Daten bleiben erhalten. Aus dem Backup werden " +
+                        "nur Einträge ergänzt, die noch nicht vorhanden sind. " +
+                        "Ideal, wenn du Daten von einem zweiten Gerät übernehmen möchtest.\n\n" +
+                        "🔄 Ersetzen\n" +
+                        "Alle deine aktuellen Daten werden gelöscht und vollständig durch " +
+                        "das Backup ersetzt. Sinnvoll nach einem Gerätewechsel oder wenn " +
+                        "du die App auf einen früheren Stand zurücksetzen möchtest."
             )
-            .setPositiveButton("Ja, wiederherstellen") { _, _ ->
-                restoreBackup(backupFile)
+            .setPositiveButton("➕ Zusammenführen") { _, _ ->
+                confirmMergeRestore(backupFile, buttonColor)
+            }
+            .setNeutralButton("🔄 Ersetzen") { _, _ ->
+                confirmReplaceRestore(backupFile, buttonColor)
+            }
+            .setNegativeButton("Abbrechen") { _, _ ->
+                backupFile.delete()
+            }
+            .setCancelable(false)
+            .create()
+
+        modeDialog.show()
+        modeDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+        modeDialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
+        modeDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+    }
+
+    private fun confirmReplaceRestore(backupFile: File, buttonColor: Int) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("⚠️ Wirklich alle Daten ersetzen?")
+            .setMessage(
+                "Achtung: Diese Aktion kann nicht rückgängig gemacht werden!\n\n" +
+                        "Folgende Daten werden unwiderruflich gelöscht und durch das " +
+                        "Backup ersetzt:\n" +
+                        "• Hunde-Stammdaten & Fotos\n" +
+                        "• Trainingstagebuch\n" +
+                        "• Tagesnotizen\n" +
+                        "• Einstellungen\n\n" +
+                        "Bist du sicher?"
+            )
+            .setPositiveButton("Ja, alles ersetzen") { _, _ ->
+                restoreBackup(backupFile, mergeMode = false)
             }
             .setNegativeButton("Abbrechen") { _, _ ->
                 backupFile.delete()
@@ -145,17 +182,36 @@ class BackupActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.parseColor("#F44336"))
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+    }
 
-        // ✅ Button-Farben für Dark Mode
-        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
+    private fun confirmMergeRestore(backupFile: File, buttonColor: Int) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("➕ Backup zusammenführen?")
+            .setMessage(
+                "Deine vorhandenen Daten bleiben vollständig erhalten.\n\n" +
+                        "Aus dem Backup werden nur Einträge hinzugefügt, die noch nicht " +
+                        "vorhanden sind – erkannt anhand der Hunde-ID und Chip-Nummer.\n\n" +
+                        "Bereits vorhandene Hunde werden nur aktualisiert, wenn die " +
+                        "Version im Backup neuer ist als deine aktuelle Version.\n\n" +
+                        "Möchtest du fortfahren?"
+            )
+            .setPositiveButton("Ja, zusammenführen") { _, _ ->
+                restoreBackup(backupFile, mergeMode = true)
+            }
+            .setNegativeButton("Abbrechen") { _, _ ->
+                backupFile.delete()
+            }
+            .setCancelable(false)
+            .create()
 
-        val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
-    private fun restoreBackup(backupFile: File) {
+    private fun restoreBackup(backupFile: File, mergeMode: Boolean = false) {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnCreateBackup.isEnabled = false
         binding.btnRestoreBackup.isEnabled = false
@@ -165,7 +221,7 @@ class BackupActivity : SecureBaseActivity() {
         scope.launch {
             try {
                 val success = withContext(Dispatchers.IO) {
-                    BackupManager.restoreBackup(this@BackupActivity, backupFile)
+                    BackupManager.restoreBackup(this@BackupActivity, backupFile, mergeMode)
                 }
 
                 backupFile.delete()

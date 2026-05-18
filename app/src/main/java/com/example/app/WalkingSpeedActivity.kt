@@ -966,9 +966,8 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
             if (shareAfterExport) {
                 sharePdfFile(file)
-            } else {
-                Toast.makeText(this, "PDF gespeichert unter Documents/HundeWildnis", Toast.LENGTH_LONG).show()
             }
+            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -986,9 +985,8 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
             if (shareAfterExport) {
                 sharePdfUri(it)
-            } else {
-                Toast.makeText(this, "PDF exportiert nach Documents/HundeWildnis", Toast.LENGTH_LONG).show()
             }
+            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -1036,7 +1034,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 if (!dir.exists()) dir.mkdirs()
                 val file = File(dir, fileName)
                 FileOutputStream(file).use { it.write(gpxBuilder.toString().toByteArray()) }
-                Toast.makeText(this, "GPX gespeichert unter Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
             }
         } catch (e: Exception) {
             Toast.makeText(this, "Fehler beim GPX-Export: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -1069,7 +1067,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
         uri?.let {
             contentResolver.openOutputStream(it)?.use { it.write(gpxContent.toByteArray()) }
-            Toast.makeText(this, "GPX exportiert nach Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
         }
     }
 

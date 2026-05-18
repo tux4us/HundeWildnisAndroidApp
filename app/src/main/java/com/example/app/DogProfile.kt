@@ -68,7 +68,15 @@ data class DogProfile(
     var characterNotes: String = "",        // Freitext für Besonderheiten
 
     // Foto
-    var photoUri: String = ""
+    var photoUri: String = "",
+
+    // ═══════════════════════════════════════════════════════════
+    // ✅ MERGE-TRACKING: Zeitstempel der letzten Änderung
+    // Default 0L → alte Backups ohne dieses Feld sind immer
+    // "älter" und werden beim Merge korrekt behandelt.
+    // ═══════════════════════════════════════════════════════════
+    var lastModified: Long = 0L
+
 ) : Parcelable {
 
     fun isComplete(): Boolean {
@@ -81,7 +89,7 @@ data class DogProfile(
     fun toCharacter(): DogCharacter {
         return DogCharacter(
             temperament = characterTemperament,
-            selfConfidence = characterConfidence,      // ✅ KORRIGIERT!
+            selfConfidence = characterConfidence,
             socialBehavior = characterSocial,
             excitability = characterExcitability,
             learningSpeed = characterLearning,
@@ -240,141 +248,84 @@ data class DogProfile(
 enum class QuickCharacterProfile(
     val displayName: String,
     val description: String,
-    val temperament: Int,      // 1-5
-    val confidence: Int,       // 1-5
-    val social: Int,           // 1-5
-    val excitability: Int,     // 1-5
-    val learning: Int,         // 1-5
-    val frustration: Int       // 1-5
+    val temperament: Int,
+    val confidence: Int,
+    val social: Int,
+    val excitability: Int,
+    val learning: Int,
+    val frustration: Int
 ) {
     BALANCED(
         displayName = "Ausgeglichen",
         description = "Normales, ausgeglichenes Wesen ohne besondere Auffälligkeiten",
-        temperament = 3,
-        confidence = 3,
-        social = 3,
-        excitability = 3,
-        learning = 3,
-        frustration = 3
+        temperament = 3, confidence = 3, social = 3,
+        excitability = 3, learning = 3, frustration = 3
     ),
-
     ENERGETIC(
         displayName = "Energiegeladen",
         description = "Sehr aktiv, lebhaft, immer in Bewegung, braucht viel Auslastung",
-        temperament = 5,
-        confidence = 4,
-        social = 4,
-        excitability = 5,
-        learning = 4,
-        frustration = 3
+        temperament = 5, confidence = 4, social = 4,
+        excitability = 5, learning = 4, frustration = 3
     ),
-
     CALM(
         displayName = "Sehr ruhig",
         description = "Gelassen, entspannt, wenig Bewegungsdrang, genießt Ruhe",
-        temperament = 1,
-        confidence = 3,
-        social = 3,
-        excitability = 1,
-        learning = 2,
-        frustration = 4
+        temperament = 1, confidence = 3, social = 3,
+        excitability = 1, learning = 2, frustration = 4
     ),
-
     ANXIOUS(
         displayName = "Unsicher",
         description = "Ängstlich, zurückhaltend, braucht viel Sicherheit und Geduld",
-        temperament = 2,
-        confidence = 1,
-        social = 2,
-        excitability = 4,
-        learning = 3,
-        frustration = 2
+        temperament = 2, confidence = 1, social = 2,
+        excitability = 4, learning = 3, frustration = 2
     ),
-
     CONFIDENT(
         displayName = "Sehr selbstbewusst",
         description = "Selbstsicher, mutig, geht neue Situationen aktiv an",
-        temperament = 4,
-        confidence = 5,
-        social = 4,
-        excitability = 3,
-        learning = 4,
-        frustration = 4
+        temperament = 4, confidence = 5, social = 4,
+        excitability = 3, learning = 4, frustration = 4
     ),
-
     PUPPY(
         displayName = "Welpe (4-8 Monate)",
         description = "Verspielt, neugierig, leicht ablenkbar, lernt schnell aber unkonzentriert",
-        temperament = 4,
-        confidence = 3,
-        social = 4,
-        excitability = 5,
-        learning = 4,
-        frustration = 2
+        temperament = 4, confidence = 3, social = 4,
+        excitability = 5, learning = 4, frustration = 2
     ),
-
     SENIOR(
         displayName = "Senior (8+ Jahre)",
         description = "Ruhiger, bedächtiger, braucht längere Lernphasen und Ruhepausen",
-        temperament = 2,
-        confidence = 3,
-        social = 3,
-        excitability = 2,
-        learning = 2,
-        frustration = 4
+        temperament = 2, confidence = 3, social = 3,
+        excitability = 2, learning = 2, frustration = 4
     ),
-
     WORKING_DOG(
         displayName = "Arbeitshund",
         description = "Fokussiert, ausdauernd, braucht klare Aufgaben und Struktur",
-        temperament = 4,
-        confidence = 4,
-        social = 3,
-        excitability = 3,
-        learning = 5,
-        frustration = 4
+        temperament = 4, confidence = 4, social = 3,
+        excitability = 3, learning = 5, frustration = 4
     ),
-
     SOCIAL_BUTTERFLY(
         displayName = "Sehr sozial",
         description = "Liebt andere Hunde und Menschen, sehr kontaktfreudig",
-        temperament = 4,
-        confidence = 4,
-        social = 5,
-        excitability = 4,
-        learning = 3,
-        frustration = 3
+        temperament = 4, confidence = 4, social = 5,
+        excitability = 4, learning = 3, frustration = 3
     ),
-
     INDEPENDENT(
         displayName = "Eigenständig",
         description = "Selbstständig, braucht weniger Führung, arbeitet gerne allein",
-        temperament = 3,
-        confidence = 4,
-        social = 2,
-        excitability = 2,
-        learning = 3,
-        frustration = 4
+        temperament = 3, confidence = 4, social = 2,
+        excitability = 2, learning = 3, frustration = 4
     ),
-
     RESCUE_DOG(
         displayName = "Tierschutzhund",
         description = "Vorsichtig, braucht Zeit zum Vertrauen aufbauen, sensibel",
-        temperament = 2,
-        confidence = 2,
-        social = 2,
-        excitability = 3,
-        learning = 3,
-        frustration = 2
+        temperament = 2, confidence = 2, social = 2,
+        excitability = 3, learning = 3, frustration = 2
     );
 
-    /**
-     * Erstellt DogCharacter aus diesem Profil
-     */
     fun toCharacter(): DogCharacter {
         return DogCharacter(
             temperament = temperament,
-            selfConfidence = confidence,               // ✅ KORRIGIERT!
+            selfConfidence = confidence,
             socialBehavior = social,
             excitability = excitability,
             learningSpeed = learning,

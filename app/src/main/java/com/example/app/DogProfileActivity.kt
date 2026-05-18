@@ -192,6 +192,8 @@ class DogProfileActivity : SecureBaseActivity() {
                 null
             )
 
+            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+
             val uri = androidx.core.content.FileProvider.getUriForFile(
                 this,
                 "${packageName}.fileprovider",
