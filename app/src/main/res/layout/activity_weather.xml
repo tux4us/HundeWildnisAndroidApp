@@ -258,6 +258,195 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/moonPhaseCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#1e2233"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Titel -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌙 Mondphase"
+                        android:textColor="#C8A8E8"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Großes Mond-Emoji + Phasenname nebeneinander -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <com.hundewildnis.app.MoonPhaseView
+                            android:id="@+id/moonPhaseView"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginEnd="20dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/moonPhaseNameText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vollmond"
+                                android:textColor="#E8D5FF"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:id="@+id/moonAgeText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mondalter: -- von 29,5 Tagen"
+                                android:textColor="#E5E5EF"
+                                android:textSize="12sp"
+                                android:layout_marginBottom="6dp" />
+
+                            <TextView
+                                android:id="@+id/moonIlluminationText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Beleuchtung: --%"
+                                android:textColor="#C8A8E8"
+                                android:textSize="13sp"
+                                android:layout_marginBottom="6dp" />
+
+                            <!-- Beleuchtungs-Fortschrittsbalken -->
+                            <ProgressBar
+                                android:id="@+id/moonIlluminationBar"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="6dp"
+                                android:max="100"
+                                android:progress="100"
+                                android:progressTint="#C8A8E8"
+                                android:progressBackgroundTint="#333355" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#333355"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Nächste Mondphasen -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:id="@+id/moonNextFullText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🌕 Vollmond: in -- Tagen"
+                            android:textColor="#D7D1CC"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/moonNextNewText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🌑 Neumond: in -- Tagen"
+                            android:textColor="#C8C8D9"
+                            android:textSize="13sp"
+                            android:gravity="end" />
+                    </LinearLayout>
+
+                    <!-- Mondzeichen -->
+                    <TextView
+                        android:id="@+id/moonZodiacText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔯 Mondzeichen: --"
+                        android:textColor="#F0F0F8"
+                        android:textSize="12sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#333355"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Astronomische Information -->
+                    <TextView
+                        android:id="@+id/moonAstronomyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔭 Astronomie: wird geladen..."
+                        android:textColor="#C8C8DD"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.4"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#333355"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Natur & Tierwelt -->
+                    <TextView
+                        android:id="@+id/moonNatureText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🌿 Natur &amp; Tierwelt: wird geladen..."
+                        android:textColor="#A8CCA8"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.4"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#333355"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Hund & Training -->
+                    <TextView
+                        android:id="@+id/moonDogTipsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🐕 Hund &amp; Training: wird geladen..."
+                        android:textColor="#F0C87A"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.4" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
             <!-- Min/Max Temperatur -->
             <TextView
                 android:id="@+id/dailyMinMaxText"

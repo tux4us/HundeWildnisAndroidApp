@@ -10,6 +10,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -50,6 +51,12 @@ import android.view.inputmethod.InputMethodManager
 import java.net.URLEncoder
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.transition.TransitionManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import android.app.NotificationManager
+import android.app.PendingIntent
+import androidx.core.app.NotificationCompat
 
 class LocationActivity : SecureBaseActivity(), LocationListener {
 
@@ -72,6 +79,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var selectedCategory: POICategories.Category? = null
     private var searchResultMarkers = mutableListOf<Marker>()
     private lateinit var myLocationOverlay: MyLocationNewOverlay
+    private lateinit var navBottomSheet: BottomSheetBehavior<LinearLayout>
 
     // ── Aktuelle Routendaten für Positions-Tracking ──────────
     private var currentRouteData: RouteData? = null
@@ -91,6 +99,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private var sunriseRouteMarker: Marker? = null
     private var sunsetRouteMarker: Marker? = null
+
+    private var isShowingFavorites = false
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
@@ -122,6 +132,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         checkLocationPermission()
         setupCategoryButtons()
         setupPOISearch()
+
+        // Bottom Sheet initialisieren
+        navBottomSheet = BottomSheetBehavior.from(binding.navigationCardsView)
+        navBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+        navBottomSheet.isHideable = true
 
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
@@ -181,6 +196,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         binding.shareButton.setOnClickListener { shareLocation() }
         binding.btnBackToCategories.setOnClickListener { showCategoryView() }
+        binding.btnManageFavorites.setOnClickListener { showFavoritesManagement() }
     }
 
     // ════════════════════════════════════════════════════════
@@ -312,7 +328,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.overlays.add(currentPOIMarker)
 
         isNavigating = true
+        startNavigationService(poi.name)
         finalDestination = GeoPoint(poi.lat, poi.lon)
+        NavigationForegroundService.savedDestLat = poi.lat
+        NavigationForegroundService.savedDestLon = poi.lon
         isAtWaypoint = false
         waypointReachedDialogShown = false
         waypointQueue.clear()
@@ -346,6 +365,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun stopNavigation() {
+        stopNavigationService()
+        NavigationForegroundService.savedDestLat = 0.0
+        NavigationForegroundService.savedDestLon = 0.0
         isNavigating = false
         binding.btnCurrentLocation.text = "📍 Standort"
         binding.navigationInfoText.visibility = View.GONE
@@ -410,26 +432,61 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun showNavigationCardsPanel() {
         binding.categoryView.visibility = View.GONE
-        binding.poiListView.visibility = View.GONE
-        binding.navigationCardsView.visibility = View.VISIBLE
+        binding.poiListView.visibility  = View.GONE
 
-        // Platzhalter-Zustand: Daten kommen gleich via updateNavigationCards
+        // Karte auf Vollbild
+        TransitionManager.beginDelayedTransition(binding.mainContent)
+        val lp = binding.mapFrame.layoutParams as ConstraintLayout.LayoutParams
+        lp.matchConstraintPercentHeight = 1.0f
+        lp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        binding.mapFrame.layoutParams = lp
+        binding.bottomCard.visibility = View.GONE
+
+        // Bottom Sheet einblenden (eingeklappt — nur Header sichtbar)
+        binding.navigationCardsView.visibility = View.VISIBLE
+        navBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // Platzhalter
         binding.tvAscentValue.text = "…"
         binding.tvDescentValue.text = "…"
         binding.tvMinElevationValue.text = "…"
         binding.tvMaxElevationValue.text = "…"
         binding.surfaceInfoContainer.removeAllViews()
         binding.wayTypeInfoContainer.removeAllViews()
+
+        binding.mainContent.post {
+            binding.navigationCardsView.layoutParams.height = binding.mainContent.height
+            binding.navigationCardsView.requestLayout()
+        }
     }
 
-    // 4. hideNavigationCardsPanel() anpassen:
     private fun hideNavigationCardsPanel() {
+        // Bottom Sheet verstecken
+        navBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         binding.navigationCardsView.visibility = View.GONE
-        when {
-            selectedCategory != null -> binding.poiListView.visibility = View.VISIBLE
-            isShowingSearchResults   -> binding.poiListView.visibility = View.VISIBLE  // ← NEU
-            else                     -> binding.categoryView.visibility = View.VISIBLE
+
+        // Karte wieder verkleinern
+        TransitionManager.beginDelayedTransition(binding.mainContent)
+        val lp = binding.mapFrame.layoutParams as ConstraintLayout.LayoutParams
+        lp.matchConstraintPercentHeight = 0.5f
+        lp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+        binding.mapFrame.layoutParams = lp
+
+        binding.bottomCard.visibility = View.VISIBLE
+
+        // Ansicht wiederherstellen (POI-Liste oder Kategorien)
+        if (selectedCategory != null || isShowingSearchResults || isShowingFavorites) {
+            binding.poiListView.visibility  = View.VISIBLE
+            binding.categoryView.visibility = View.GONE
+        } else {
+            binding.categoryView.visibility = View.VISIBLE
+            binding.poiListView.visibility  = View.GONE
         }
+
+        // Sheet-Höhe beim Beenden der Navigation zurücksetzen:
+        binding.navigationCardsView.layoutParams.height =
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT
+        binding.navigationCardsView.requestLayout()
     }
 
     /**
@@ -821,6 +878,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         binding.navigationInfoText.text    = "🧭 $distText  •  $timeText"
         binding.navigationInfoText.visibility = View.VISIBLE
+
+        updateNavNotification("$distText  •  $timeText")
     }
 
     private fun zoomToFitRoute(userLoc: Location, target: GeoPoint) {
@@ -835,26 +894,46 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupCategoryButtons() {
         binding.categoryGrid.removeAllViews()
+
+        // ── Favoriten-Button (immer erste Position) ───────────────
+        binding.categoryGrid.addView(
+            buildCategoryButton("⭐", "Favoriten", "#7A5C00") { loadFavorites() }
+        )
+
+        // ── Reguläre Kategorien ───────────────────────────────────
         POICategories.ALL_CATEGORIES.forEach { category ->
-            val button = com.google.android.material.button.MaterialButton(this).apply {
-                text = "${category.icon}\n${category.name}"
-                textSize = 12f
-                gravity = android.view.Gravity.CENTER
-                setPadding(8, 16, 8, 16)
-                cornerRadius = 12
-                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor(category.color))
-                setTextColor(Color.WHITE)
-                layoutParams = android.widget.GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
-                    setMargins(8, 8, 8, 8)
+            binding.categoryGrid.addView(
+                buildCategoryButton(category.icon, category.name, category.color) {
+                    selectedCategory = category
+                    loadPOIsForCategory(category)
                 }
-                setOnClickListener { selectedCategory = category; loadPOIsForCategory(category) }
-            }
-            binding.categoryGrid.addView(button)
+            )
         }
     }
+
+    /** Extrahiert die Button-Erstellung um Doppelung zu vermeiden */
+    private fun buildCategoryButton(
+        icon: String, name: String, color: String,
+        onClick: () -> Unit
+    ): com.google.android.material.button.MaterialButton =
+        com.google.android.material.button.MaterialButton(this).apply {
+            text = "$icon\n$name"
+            textSize = 12f
+            gravity = android.view.Gravity.CENTER
+            setPadding(8, 16, 8, 16)
+            cornerRadius = 12
+            backgroundTintList = android.content.res.ColorStateList.valueOf(
+                android.graphics.Color.parseColor(color))
+            setTextColor(android.graphics.Color.WHITE)
+            layoutParams = android.widget.GridLayout.LayoutParams().apply {
+                width  = 0
+                height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = android.widget.GridLayout.spec(
+                    android.widget.GridLayout.UNDEFINED, 1f)
+                setMargins(8, 8, 8, 8)
+            }
+            setOnClickListener { onClick() }
+        }
 
     private fun loadPOIsForCategory(category: POICategories.Category) {
         currentLocation?.let { location ->
@@ -870,7 +949,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     }
                     val sorted = pois.sortedBy { it.distance }
                     poiList.clear(); poiList.addAll(sorted)
-                    binding.poiRecyclerView.adapter?.notifyDataSetChanged()
+                    binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPOIOnMap(poi) }
                     binding.poiCountText.text = "${pois.size} POI in 3 km"
                     binding.poiProgressBar.visibility = View.GONE
                     binding.emptyPoiText.visibility = if (pois.isEmpty()) View.VISIBLE else View.GONE
@@ -885,13 +964,15 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun showCategoryView() {
-        selectedCategory = null
+        selectedCategory    = null
+        isShowingFavorites  = false          // ← NEU
         binding.categoryView.visibility = View.VISIBLE
-        binding.poiListView.visibility = View.GONE
+        binding.poiListView.visibility  = View.GONE
         poiList.clear()
         binding.poiRecyclerView.adapter?.notifyDataSetChanged()
         clearPOIMarkers()
         stopNavigation()
+        binding.btnManageFavorites.visibility = View.GONE  // ← NEU
     }
 
     private fun showPOIsOnMap(pois: List<POI>, category: POICategories.Category) {
@@ -1264,22 +1345,50 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun showNavigationDialog(poi: POI) {
         val myLoc = myLocationOverlay.myLocation ?: run {
-            Toast.makeText(this, "Standort nicht verfügbar", Toast.LENGTH_SHORT).show(); return
+            Toast.makeText(this, "Standort nicht verfügbar", Toast.LENGTH_SHORT).show()
+            return
         }
-        val isDark       = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor  = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-        val distance     = myLoc.distanceToAsDouble(GeoPoint(poi.lat, poi.lon))
+        val isDark      = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) android.graphics.Color.WHITE
+        else android.graphics.Color.parseColor("#2d5016")
+        val distance    = myLoc.distanceToAsDouble(GeoPoint(poi.lat, poi.lon))
+        val alreadyFav  = FavoritesManager.isFavorite(this, poi.lat, poi.lon)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("${poi.categoryIcon} ${poi.name}")
-            .setMessage("📍 ${"%.0f".format(distance)}m entfernt\n\n${poi.address?.let { "📬 $it\n\n" } ?: ""}Navigation starten?")
+            .setMessage(
+                "📍 ${"%.0f".format(distance)}m entfernt\n\n" +
+                        "${poi.address?.let { "📬 $it\n\n" } ?: ""}" +
+                        "Navigation starten?"
+            )
             .setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(poi) }
+            .setNeutralButton(if (alreadyFav) "✓ In Favoriten" else "⭐ Favorit") { _, _ -> }
             .setNegativeButton("Abbrechen", null)
             .create()
 
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+
+        val neutralBtn = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+        if (alreadyFav) {
+            neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
+            neutralBtn.isEnabled = false
+        } else {
+            neutralBtn.setTextColor(android.graphics.Color.parseColor("#FFA000"))
+            neutralBtn.setOnClickListener {
+                FavoritesManager.add(
+                    this,
+                    buildFavoritePOI(poi.lat, poi.lon, poi.name, poi.categoryIcon, poi.address)
+                )
+                neutralBtn.text = "✓ In Favoriten"
+                neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
+                neutralBtn.isEnabled = false
+                Toast.makeText(this, "⭐ Als Favorit gespeichert", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     // ════════════════════════════════════════════════════════
@@ -1341,6 +1450,17 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 }
         } else {
             getLocation()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1002
+                )
+            }
         }
     }
 
@@ -1410,6 +1530,23 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.onResume()
         if (::myLocationOverlay.isInitialized) myLocationOverlay.enableMyLocation()
         if (!isRequestingUpdates) requestLocationUpdates()
+
+        // Navigation wiederherstellen falls Activity neu erstellt wurde
+        if (!isNavigating &&
+            NavigationForegroundService.isRunning &&
+            NavigationForegroundService.savedDestLat != 0.0) {
+            showPOIOnMap(
+                POI(
+                    id           = "nav_restored",
+                    name         = NavigationForegroundService.destinationName,
+                    category     = "Navigation",
+                    categoryIcon = "🧭",
+                    lat          = NavigationForegroundService.savedDestLat,
+                    lon          = NavigationForegroundService.savedDestLon,
+                    distance     = 0.0
+                )
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -1650,8 +1787,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     // 7. Neue Funktion: Infobox anzeigen (für Tap UND für POI-Marker):
     private fun showPointInfoDialog(tapLat: Double, tapLon: Double, poi: POI?) {
-        val isDark      = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val isDark      = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val buttonColor = if (isDark) android.graphics.Color.WHITE
+        else android.graphics.Color.parseColor("#2d5016")
 
         val title: String
         val msg = StringBuilder()
@@ -1675,35 +1815,52 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             msg.append("\n📏 ${formatDistance(dist)} entfernt")
         }
 
-        // Navigation immer zum getippten Punkt, nicht zum OSM-Element
         val navTarget = POI(
-            id           = "tap_${System.currentTimeMillis()}",
-            name         = poi?.name ?: "Gewählter Punkt",
-            category     = poi?.category ?: "Kartenpunkt",
+            id = "tap_${System.currentTimeMillis()}",
+            name = poi?.name ?: "Gewählter Punkt",
+            category = poi?.category ?: "Kartenpunkt",
             categoryIcon = poi?.categoryIcon ?: "📍",
-            lat          = tapLat,
-            lon          = tapLon,
-            distance     = currentLocation?.let {
+            lat = tapLat, lon = tapLon,
+            distance = currentLocation?.let {
                 calculateDistance(it.latitude, it.longitude, tapLat, tapLon)
             } ?: 0.0
         )
 
+        val alreadyFav = FavoritesManager.isFavorite(this, tapLat, tapLon)
+
         val dialog = AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(msg.toString())
-            .setPositiveButton("🧭 Navigation starten") { _, _ ->
-                startNavigationToPOI(navTarget)
-            }
-            .setNegativeButton("Schließen") { _, _ ->
-                tapMarker?.let { binding.mapView.overlays.remove(it) }
-                tapMarker = null
-                binding.mapView.invalidate()
-            }
+            .setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(navTarget) }
+            .setNeutralButton(if (alreadyFav) "✓ In Favoriten" else "⭐ Favorit") { _, _ -> }
+            .setNegativeButton("Abbrechen", null)
             .create()
 
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
+
+        // ⭐ Neutral-Button: kein Auto-Dismiss, Text nach Klick aktualisieren
+        val neutralBtn = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+        if (alreadyFav) {
+            neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
+            neutralBtn.isEnabled = false
+        } else {
+            neutralBtn.setTextColor(android.graphics.Color.parseColor("#FFA000"))
+            neutralBtn.setOnClickListener {
+                FavoritesManager.add(
+                    this,
+                    buildFavoritePOI(tapLat, tapLon,
+                        poi?.name ?: "Gewählter Punkt",
+                        poi?.categoryIcon ?: "📍",
+                        poi?.address)
+                )
+                neutralBtn.text = "✓ In Favoriten"
+                neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
+                neutralBtn.isEnabled = false
+                Toast.makeText(this, "⭐ Als Favorit gespeichert", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun sampleRoutePoints(
@@ -2320,5 +2477,131 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         canvas.drawText(label, width / 2f, textY, textPaint)
 
         return android.graphics.drawable.BitmapDrawable(resources, bitmap)
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // FAVORITEN
+    // ════════════════════════════════════════════════════════════
+
+    private fun loadFavorites() {
+        selectedCategory       = null
+        isShowingSearchResults = false
+        isShowingFavorites     = true
+
+        binding.categoryView.visibility       = View.GONE
+        binding.poiListView.visibility        = View.VISIBLE
+        binding.categoryTitleText.text        = "⭐  Favoriten"
+        binding.btnManageFavorites.visibility = View.VISIBLE  // Verwalten-Button einblenden
+
+        val favs = FavoritesManager.getAll(this)
+        poiList.clear()
+        clearPOIMarkers()
+
+        val loc = currentLocation
+        favs.forEach { fav ->
+            val dist = loc?.let {
+                calculateDistance(it.latitude, it.longitude, fav.lat, fav.lon)
+            } ?: 0.0
+            poiList.add(
+                POI(
+                    id           = fav.id,
+                    name         = fav.displayName,
+                    category     = "Favoriten",
+                    categoryIcon = fav.categoryIcon,
+                    lat          = fav.lat,
+                    lon          = fav.lon,
+                    distance     = dist,
+                    address      = fav.address
+                )
+            )
+        }
+
+        // Klick → Info-Dialog (nicht direkt Navigation)
+        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi ->
+            showPointInfoDialog(poi.lat, poi.lon, poi)
+        }
+
+        binding.poiCountText.text = "${favs.size} gespeicherte Favoriten"
+        binding.emptyPoiText.visibility =
+            if (favs.isEmpty()) View.VISIBLE else View.GONE
+        if (favs.isEmpty()) {
+            binding.emptyPoiText.text =
+                "Noch keine Favoriten.\nNavigationsziele über ⭐ speichern."
+        }
+
+        // Marker auf Karte
+        poiList.forEach { poi ->
+            val marker = Marker(binding.mapView).apply {
+                position = GeoPoint(poi.lat, poi.lon)
+                title    = "${poi.categoryIcon}  ${poi.name}"
+                snippet  = poi.address ?: "%.4f°, %.4f°".format(poi.lat, poi.lon)
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                setOnMarkerClickListener { _, _ ->
+                    showPointInfoDialog(poi.lat, poi.lon, poi); true
+                }
+            }
+            poiMarkers.add(marker)
+            binding.mapView.overlays.add(marker)
+        }
+        binding.mapView.invalidate()
+        if (poiList.isNotEmpty()) zoomToShowAllPOIs(poiList)
+    }
+
+    private fun showFavoritesManagement() {
+        FavoritesManagementSheet().apply {
+            onDismissed = { loadFavorites() }          // Liste nach Verwaltung neu laden
+        }.show(supportFragmentManager, "fav_mgmt")
+    }
+
+    /** Erstellt FavoritePOI aus einem POI oder einem Kartenklick-Punkt */
+    private fun buildFavoritePOI(
+        lat:  Double, lon: Double,
+        name: String, icon: String,
+        address: String?
+    ) = FavoritePOI(
+        name         = name,
+        lat          = lat,
+        lon          = lon,
+        categoryIcon = icon,
+        address      = address
+    )
+
+    private fun startNavigationService(destinationName: String) {
+        ContextCompat.startForegroundService(
+            this,
+            Intent(this, NavigationForegroundService::class.java).apply {
+                putExtra("destination", destinationName)
+            }
+        )
+    }
+
+    private fun stopNavigationService() {
+        stopService(Intent(this, NavigationForegroundService::class.java))
+    }
+
+    private fun updateNavNotification(infoText: String) {
+        if (!NavigationForegroundService.isRunning) return
+        NavigationForegroundService.notificationInfo = infoText
+        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val pi = PendingIntent.getActivity(
+            this, 0,
+            Intent(this, LocationActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                        Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        nm.notify(
+            NavigationForegroundService.NOTIFICATION_ID,
+            NotificationCompat.Builder(this, NavigationForegroundService.CHANNEL_ID)
+                .setContentTitle("🧭 ${NavigationForegroundService.destinationName}")
+                .setContentText(infoText)
+                .setSmallIcon(R.drawable.ic_my_location)
+                .setContentIntent(pi)
+                .setOngoing(true)
+                .setSilent(true)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .build()
+        )
     }
 }

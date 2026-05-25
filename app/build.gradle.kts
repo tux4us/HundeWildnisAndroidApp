@@ -14,8 +14,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 68
-        versionName = "12.3"
+        versionCode = 69
+        versionName = "12.4"
 
         // API Key aus local.properties laden
         val localProperties = Properties()
@@ -86,4 +86,6 @@ dependencies {
 
     //PhotoPicker für F-Droid Kompatibilität und PlayStore Konformität
     implementation("androidx.activity:activity-ktx:1.8.2")
+
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }
