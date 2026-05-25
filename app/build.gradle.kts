@@ -82,10 +82,4 @@ dependencies {
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.itextpdf:itext7-core:7.2.5")
-    implementation("com.google.code.gson:gson:2.10.1")
-
-    //PhotoPicker für F-Droid Kompatibilität und PlayStore Konformität
-    implementation("androidx.activity:activity-ktx:1.8.2")
-
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }
