@@ -33,6 +33,11 @@
     <!-- ✅ MIKROFON Permission -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Direkt nach den bestehenden uses-permission-Zeilen: -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
 
     <application
         android:allowBackup="true"
@@ -133,7 +138,7 @@
 
         <activity
             android:name="com.hundewildnis.app.LocationActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:screenOrientation="fullSensor"
             android:exported="false"
             android:parentActivityName="com.hundewildnis.app.StartActivity" />
@@ -174,6 +179,11 @@
             android:screenOrientation="portrait"
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
+
+        <service
+            android:name="com.hundewildnis.app.NavigationForegroundService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -244,6 +254,14 @@
             android:name=".SimpleTimerActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
+
+        <activity
+            android:name=".HeatCycleActivity"
+            android:label="Läufigkeit"
+            android:parentActivityName=".DogViewActivity" />
+
+        <!-- WorkManager Worker braucht KEINE separate Manifest-Eintragung -->
+
 
     </application>
 </manifest>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="#1a1a1a">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2d5016"
+            app:titleTextColor="#FFFFFF"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- KOPFZEILE: Zyklusnummer                -->
+            <!-- ══════════════════════════════════════ -->
+            <TextView
+                android:id="@+id/tvCycleNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Läufigkeit #1"
+                android:textColor="#8fad6f"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- ZEITRAUM                               -->
+            <!-- ══════════════════════════════════════ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zeitraum"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Startdatum *"
+                        android:textColor="#999999"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvStartDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="@string/tap_to_select"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                        app:drawableTint="#FFFFFF" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enddatum"
+                        android:textColor="#999999"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvEndDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="@string/tap_to_select_optional"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                        app:drawableTint="#FFFFFF" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- INTENSITÄT                             -->
+            <!-- ══════════════════════════════════════ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Intensität"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <RadioGroup
+                android:id="@+id/rgIntensity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <RadioButton
+                    android:id="@+id/rbLeicht"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:text="Leicht" />
+
+                <RadioButton
+                    android:id="@+id/rbMittel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:text="Mittel"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rbStark"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:text="Stark" />
+            </RadioGroup>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- KÖRPERLICHE SYMPTOME (Freitext)        -->
+            <!-- ══════════════════════════════════════ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Körperliche Symptome"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/etSymptoms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="z.B. Schwellung, Blutung, Verhalten …"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top"
+                android:layout_marginBottom="16dp" />
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- VERHALTENSMERKMALE (Checkboxen)        -->
+            <!-- ══════════════════════════════════════ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verhaltensmerkmale"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Beobachtete Verhaltensänderungen:"
+                android:textColor="#999999"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Checkboxen werden dynamisch in HeatCycleActivity hinzugefügt -->
+            <LinearLayout
+                android:id="@+id/llBehaviorSigns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etBehaviorNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Weitere Verhaltensnotizen …"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:gravity="top"
+                android:layout_marginBottom="16dp" />
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- SCHEINTRÄCHTIGKEIT                     -->
+            <!-- ══════════════════════════════════════ -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#3d3d3d"
+                android:layout_marginBottom="12dp" />
+
+            <Switch
+                android:id="@+id/switchPseudoPregnancy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scheinträchtigkeit beobachtet"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Scheinträchtigkeits-Sektion (ein-/ausgeblendet per Switch) -->
+            <LinearLayout
+                android:id="@+id/llPseudoSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Anzeichen der Scheinträchtigkeit:"
+                    android:textColor="#999999"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp" />
+
+                <!-- Checkboxen werden dynamisch in HeatCycleActivity hinzugefügt -->
+                <LinearLayout
+                    android:id="@+id/llPseudoSigns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/etPseudoNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Weitere Notizen zur Scheinträchtigkeit …"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#666666"
+                    android:inputType="textMultiLine"
+                    android:minLines="2"
+                    android:gravity="top"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- BUTTONS                                -->
+            <!-- ══════════════════════════════════════ -->
+            <Button
+                android:id="@+id/btnSaveHeatCycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Speichern"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnDeleteHeatCycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Läufigkeit löschen"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -94,18 +94,27 @@ class ElevationChartView @JvmOverloads constructor(
 
         val w = width.toFloat()
         val h = height.toFloat()
-        val padLeft   = 52f
+
+        val minEl = elevationPoints.min()
+        val maxEl = elevationPoints.max()
+        val range = (maxEl - minEl).coerceAtLeast(10.0)
+        val midEl = (minEl + maxEl) / 2.0
+
+        val maxLabel   = "${maxEl.toInt()}m"
+        val midLabel   = "${midEl.toInt()}m"
+        val minLabel   = "${minEl.toInt()}m"
+        val labelWidth = maxOf(
+            labelPaint.measureText(maxLabel),
+            labelPaint.measureText(midLabel),
+            labelPaint.measureText(minLabel)
+        )
+        val padLeft = labelWidth + 8f
         val padRight  = 10f
         val padTop    = 16f
         val padBottom = 8f
 
         val chartW = w - padLeft - padRight
         val chartH = h - padTop - padBottom
-
-        val minEl = elevationPoints.min()
-        val maxEl = elevationPoints.max()
-        val range = (maxEl - minEl).coerceAtLeast(10.0)
-        val midEl = (minEl + maxEl) / 2.0
 
         val n = elevationPoints.size
 

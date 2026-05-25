@@ -71,7 +71,7 @@ data class EmergencyReport(
     val longitude: Double?,
     val photoUris: List<String>,
     val pdfPath: String,
-    val contentUri: String? = null  // ← NEU!
+    val contentUri: String? = null
 )
 
 class EmergencyActivity : SecureBaseActivity() {
@@ -80,7 +80,7 @@ class EmergencyActivity : SecureBaseActivity() {
     private var profile: DogProfile? = null
     private val attachedPhotos = mutableListOf<Uri>()
     private var lastLocation: Location? = null
-    
+
     private val historyList = mutableListOf<EmergencyReport>()
     private lateinit var historyAdapter: EmergencyHistoryAdapter
 
@@ -93,7 +93,6 @@ class EmergencyActivity : SecureBaseActivity() {
         }
     }
 
-    // ✅ NEUEN LAUNCHER HINZUFÜGEN:
     private val photoPickerLauncher = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(maxItems = 5)
     ) { uris: List<Uri> ->
@@ -118,7 +117,20 @@ class EmergencyActivity : SecureBaseActivity() {
         binding = ActivityEmergencyReportBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        profile = intent.getParcelableExtra("profile")
+        // Profil aus Intent lesen ...
+        val intentProfile = intent.getParcelableExtra<DogProfile>("profile")
+
+        // ... dann IMMER frisch aus dem DogProfileManager laden.
+        // Grund: DogProfileActivity übergibt die Profil-Instanz aus
+        // ihrer gecachten Liste. Wenn der Nutzer zwischenzeitlich
+        // in DogViewActivity Läufigkeitsdaten eingetragen hat, sind
+        // diese im gecachten Objekt noch nicht vorhanden.
+        // DogProfileManager liest aus SharedPreferences und hat immer
+        // den aktuellen Stand.
+        profile = intentProfile?.id
+            ?.let { DogProfileManager.getProfile(this, it) }
+            ?: intentProfile  // Fallback falls ID nicht auffindbar
+
         if (profile == null) {
             Toast.makeText(this, "Fehler: Kein Profil gefunden", Toast.LENGTH_SHORT).show()
             finish()
@@ -169,7 +181,6 @@ class EmergencyActivity : SecureBaseActivity() {
             }
         }
 
-        // Cache listeners
         binding.spinnerSymptoms.setOnItemClickListener { _, _, _, _ -> saveCache() }
         binding.etNotes.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -214,9 +225,7 @@ class EmergencyActivity : SecureBaseActivity() {
         if (!symptom.isNullOrEmpty()) binding.spinnerSymptoms.setText(symptom, false)
         if (!notes.isNullOrEmpty()) binding.etNotes.setText(notes)
         photos?.forEach { uriString ->
-            try {
-                addPhoto(Uri.parse(uriString))
-            } catch (e: Exception) {}
+            try { addPhoto(Uri.parse(uriString)) } catch (e: Exception) {}
         }
     }
 
@@ -286,24 +295,16 @@ class EmergencyActivity : SecureBaseActivity() {
                     "• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\n" +
                     "WICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
                     "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden")
-            .setPositiveButton("AKTIVIEREN") { _, _ ->
-                requestLocation()
-            }
-            .setNegativeButton("ABLEHNEN") { _, _ ->
-                binding.switchGps.isChecked = false
-            }
-            .setOnCancelListener {
-                binding.switchGps.isChecked = false
-            }
-            .create()
-            .apply {
+            .setPositiveButton("AKTIVIEREN") { _, _ -> requestLocation() }
+            .setNegativeButton("ABLEHNEN") { _, _ -> binding.switchGps.isChecked = false }
+            .setOnCancelListener { binding.switchGps.isChecked = false }
+            .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
                 getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
-    // ✅ NEUER NAME (nur für Kamera):
     private fun showCameraDisclosure() {
         val prefs = getSharedPreferences("emergency_settings", Context.MODE_PRIVATE)
         if (prefs.getBoolean("camera_disclosure_shown", false)) {
@@ -330,8 +331,7 @@ class EmergencyActivity : SecureBaseActivity() {
                 checkCameraPermissionAndOpen()
             }
             .setNegativeButton("ABLEHNEN", null)
-            .create()
-            .apply {
+            .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
                 getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
@@ -391,12 +391,11 @@ class EmergencyActivity : SecureBaseActivity() {
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             return
         }
-        
-        stopLocationUpdates()
 
+        stopLocationUpdates()
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && 
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
             !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Toast.makeText(this, "Bitte aktiviere GPS in Deinen Einstellungen", Toast.LENGTH_LONG).show()
             binding.switchGps.isChecked = false
@@ -410,40 +409,29 @@ class EmergencyActivity : SecureBaseActivity() {
         var bestLocation: Location? = null
         for (provider in providers) {
             val l = locationManager.getLastKnownLocation(provider) ?: continue
-            if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
-                bestLocation = l
-            }
+            if (bestLocation == null || l.accuracy < bestLocation.accuracy) bestLocation = l
         }
-        
-        if (bestLocation != null) {
-            updateLocationUI(bestLocation)
-        }
+        if (bestLocation != null) updateLocationUI(bestLocation)
 
-        // Always register listener to get a fresh/better location
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 if (bestLocation == null || location.accuracy <= (bestLocation?.accuracy ?: Float.MAX_VALUE)) {
                     updateLocationUI(location)
                     bestLocation = location
                 }
-                // Stop updates once we have a decent accuracy (optional)
-                if (location.accuracy < 30) {
-                    locationManager.removeUpdates(this)
-                }
+                if (location.accuracy < 30) locationManager.removeUpdates(this)
             }
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
             override fun onProviderEnabled(provider: String) {}
             override fun onProviderDisabled(provider: String) {}
         }
         locationListener = listener
-        
+
         try {
-            if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+            if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER))
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 0f, listener)
-            }
-            if (locationManager.allProviders.contains(LocationManager.GPS_PROVIDER)) {
+            if (locationManager.allProviders.contains(LocationManager.GPS_PROVIDER))
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 0f, listener)
-            }
         } catch (e: Exception) {
             binding.tvGpsStatus.text = "⚠️ Fehler beim Erfassen des Standorts"
         }
@@ -498,11 +486,8 @@ class EmergencyActivity : SecureBaseActivity() {
                         Toast.makeText(this@EmergencyActivity, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
                     }
 
-                    if (contentUri != null) {
-                        shareReportViaUri(contentUri)
-                    } else if (pdfFile != null) {
-                        shareReport(pdfFile)
-                    }
+                    if (contentUri != null) shareReportViaUri(contentUri)
+                    else if (pdfFile != null) shareReport(pdfFile)
 
                     clearCache()
                 }
@@ -514,11 +499,6 @@ class EmergencyActivity : SecureBaseActivity() {
             }
         }
     }
-
-    // ════════════════════════════════════════════════════════════════
-    // ✅ OPTIMIERTE createEmergencyPdf() FUNKTION
-    // Ersetze die Funktion in EmergencyActivity.kt
-    // ════════════════════════════════════════════════════════════════
 
     private fun createEmergencyPdf(): Pair<File?, Uri?> {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(Date())
@@ -556,9 +536,7 @@ class EmergencyActivity : SecureBaseActivity() {
         contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA)
-                if (columnIndex >= 0) {
-                    filePath = cursor.getString(columnIndex)
-                }
+                if (columnIndex >= 0) filePath = cursor.getString(columnIndex)
             }
         }
 
@@ -569,7 +547,6 @@ class EmergencyActivity : SecureBaseActivity() {
     private fun createPdfOldWay(fileName: String): File {
         val docsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         if (!docsDir.exists()) docsDir.mkdirs()
-
         val file = File(docsDir, fileName)
         val writer = PdfWriter(FileOutputStream(file))
         val pdf = PdfDocument(writer)
@@ -578,6 +555,10 @@ class EmergencyActivity : SecureBaseActivity() {
         document.close()
         return file
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // PDF-INHALT
+    // ════════════════════════════════════════════════════════════════
 
     private fun writePdfContent(document: Document) {
         document.add(Paragraph("🚨 NOTFALLMELDUNG - HUND")
@@ -595,28 +576,21 @@ class EmergencyActivity : SecureBaseActivity() {
         document.add(Paragraph("\n"))
 
         document.add(Paragraph("MEDIZINISCHER NOTFALL:")
-            .setBold()
-            .setFontSize(16f))
-
-        document.add(Paragraph("Symptom: ${binding.spinnerSymptoms.text}")
-            .setFontSize(14f))
-
-        document.add(Paragraph("Zusatz-Info: ${binding.etNotes.text}")
-            .setFontSize(12f))
+            .setBold().setFontSize(16f))
+        document.add(Paragraph("Symptom: ${binding.spinnerSymptoms.text}").setFontSize(14f))
+        document.add(Paragraph("Zusatz-Info: ${binding.etNotes.text}").setFontSize(12f))
 
         lastLocation?.let {
             val osmUrl = "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}"
-            document.add(Paragraph("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}")
-                .setBold())
-            document.add(Paragraph("Karte (OpenStreetMap): $osmUrl")
-                .setFontColor(DeviceRgb(0, 0, 255)))
+            document.add(Paragraph("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}").setBold())
+            document.add(Paragraph("Karte (OpenStreetMap): $osmUrl").setFontColor(DeviceRgb(0, 0, 255)))
         }
 
         document.add(Paragraph("\n"))
 
+        // ── STAMMDATEN ───────────────────────────────────────────────
         document.add(Paragraph("STAMMDATEN DES PATIENTEN:")
-            .setBold()
-            .setFontSize(16f))
+            .setBold().setFontSize(16f))
 
         val table = Table(UnitValue.createPercentArray(floatArrayOf(30f, 70f))).useAllAvailableWidth()
 
@@ -633,6 +607,9 @@ class EmergencyActivity : SecureBaseActivity() {
             table.addCell(Cell().add(Paragraph("Geschlecht:")))
             table.addCell(Cell().add(Paragraph(p.gender)))
 
+            table.addCell(Cell().add(Paragraph("Kastriert:")))
+            table.addCell(Cell().add(Paragraph(p.neutered.ifEmpty { "Unbekannt" })))
+
             table.addCell(Cell().add(Paragraph("Gewicht:")))
             table.addCell(Cell().add(Paragraph("${p.weight} kg")))
 
@@ -640,27 +617,22 @@ class EmergencyActivity : SecureBaseActivity() {
                 table.addCell(Cell().add(Paragraph("Schulterhöhe:")))
                 table.addCell(Cell().add(Paragraph("${p.shoulderHeight} cm")))
             }
-
             if (p.bodyLength.isNotEmpty()) {
                 table.addCell(Cell().add(Paragraph("Körperlänge:")))
                 table.addCell(Cell().add(Paragraph("${p.bodyLength} cm")))
             }
-
             if (p.chipNumber.isNotEmpty()) {
                 table.addCell(Cell().add(Paragraph("Chip-Nr:")))
                 table.addCell(Cell().add(Paragraph(p.chipNumber)))
             }
-
             if (p.vaccinationStatus.isNotEmpty()) {
                 table.addCell(Cell().add(Paragraph("Impfstatus:")))
                 table.addCell(Cell().add(Paragraph(p.vaccinationStatus)))
             }
-
             if (p.medicalNotes.isNotEmpty()) {
                 table.addCell(Cell().add(Paragraph("Vorerkrankungen:")))
                 table.addCell(Cell().add(Paragraph(p.medicalNotes)))
             }
-
             if (p.owner.isNotEmpty()) {
                 table.addCell(Cell().add(Paragraph("Besitzer:")))
                 table.addCell(Cell().add(Paragraph(p.owner)))
@@ -669,70 +641,57 @@ class EmergencyActivity : SecureBaseActivity() {
 
         document.add(table)
 
+        // ── LÄUFIGKEIT (nur Hündinnen, nicht kastriert) ──────────────
+        profile?.let { p ->
+            if (p.gender == "Hündin" && p.neutered != "Ja") {
+                document.add(Paragraph("\n"))
+                writeHeatCyclePdfSection(document, p)
+            }
+        }
+
+        // ── FOTOS ────────────────────────────────────────────────────
         if (attachedPhotos.isNotEmpty()) {
             document.add(AreaBreak())
-
             document.add(Paragraph("FOTOS VOM NOTFALL / PATIENTEN:")
-                .setBold()
-                .setFontSize(16f))
-
+                .setBold().setFontSize(16f))
             document.add(Paragraph("\n"))
 
             var photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
-                .useAllAvailableWidth()
-                .setMarginTop(10f)
-
+                .useAllAvailableWidth().setMarginTop(10f)
             var imageCounter = 0
 
             for (uri in attachedPhotos) {
                 try {
                     val inputStream = contentResolver.openInputStream(uri) ?: continue
                     val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: continue
-                    inputStream?.close()
+                    inputStream.close()
 
                     val maxSize = 800
                     val scaledBitmap = if (originalBitmap.width > maxSize || originalBitmap.height > maxSize) {
-                        val scale = minOf(
-                            maxSize.toFloat() / originalBitmap.width,
-                            maxSize.toFloat() / originalBitmap.height
-                        )
-                        val newWidth = (originalBitmap.width * scale).toInt()
-                        val newHeight = (originalBitmap.height * scale).toInt()
-                        Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
-                    } else {
-                        originalBitmap
-                    }
+                        val scale = minOf(maxSize.toFloat() / originalBitmap.width, maxSize.toFloat() / originalBitmap.height)
+                        Bitmap.createScaledBitmap(originalBitmap, (originalBitmap.width * scale).toInt(), (originalBitmap.height * scale).toInt(), true)
+                    } else originalBitmap
 
                     val stream = ByteArrayOutputStream()
                     scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream)
 
-                    val img = Image(ImageDataFactory.create(stream.toByteArray()))
-                        .setAutoScale(true)
-
+                    val img = Image(ImageDataFactory.create(stream.toByteArray())).setAutoScale(true)
                     val cell = Cell().add(img)
                     cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
                     cell.setPadding(10f)
                     photoTable.addCell(cell)
-
                     imageCounter++
 
-                    if (scaledBitmap != originalBitmap) {
-                        scaledBitmap.recycle()
-                    }
+                    if (scaledBitmap != originalBitmap) scaledBitmap.recycle()
                     originalBitmap.recycle()
 
                     if (imageCounter % 2 == 0 && imageCounter < attachedPhotos.size) {
                         document.add(photoTable)
                         document.add(AreaBreak())
-
                         photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
-                            .useAllAvailableWidth()
-                            .setMarginTop(10f)
+                            .useAllAvailableWidth().setMarginTop(10f)
                     }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                } catch (e: Exception) { e.printStackTrace() }
             }
 
             if (photoTable.getNumberOfRows() > 0) {
@@ -746,75 +705,157 @@ class EmergencyActivity : SecureBaseActivity() {
         }
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // LÄUFIGKEIT — PDF-ABSCHNITT
+    // Wird nur für intakte Hündinnen eingefügt.
+    // ════════════════════════════════════════════════════════════════
+
+    private fun writeHeatCyclePdfSection(document: Document, p: DogProfile) {
+        val cycles = p.heatCycles
+
+        document.add(Paragraph("LÄUFIGKEIT / REPRODUKTIONSSTATUS:")
+            .setBold().setFontSize(16f))
+
+        val heatTable = Table(UnitValue.createPercentArray(floatArrayOf(40f, 60f))).useAllAvailableWidth()
+
+        // ── Aktueller Status ─────────────────────────────────────────
+        val activeCycle = cycles.firstOrNull { it.isActive }
+        val statusText = when {
+            activeCycle != null -> "⚠️ AKTUELL LÄUFIG (seit ${activeCycle.startDate})"
+            cycles.isEmpty()    -> "Keine Daten erfasst"
+            else                -> "Nicht läufig"
+        }
+        heatTable.addCell(Cell().add(Paragraph("Aktueller Status:").setBold()))
+        heatTable.addCell(Cell().add(Paragraph(statusText)))
+
+        // ── Letzte Läufigkeit ────────────────────────────────────────
+        val lastCycle = cycles.filter { !it.isActive }.maxByOrNull { it.startDate }
+        if (lastCycle != null) {
+            val lastInfo = buildString {
+                append("${lastCycle.startDate}")
+                if (lastCycle.endDate.isNotEmpty()) append(" – ${lastCycle.endDate} (${lastCycle.durationLabel})")
+                append(" · Intensität: ${lastCycle.intensity}")
+            }
+            heatTable.addCell(Cell().add(Paragraph("Letzte Läufigkeit:").setBold()))
+            heatTable.addCell(Cell().add(Paragraph(lastInfo)))
+
+            if (lastCycle.behaviorSigns.isNotEmpty()) {
+                heatTable.addCell(Cell().add(Paragraph("Verhaltensänderungen:").setBold()))
+                heatTable.addCell(Cell().add(Paragraph(lastCycle.behaviorSigns.joinToString(", "))))
+            }
+            if (lastCycle.symptoms.isNotEmpty()) {
+                heatTable.addCell(Cell().add(Paragraph("Körperliche Symptome:").setBold()))
+                heatTable.addCell(Cell().add(Paragraph(lastCycle.symptoms)))
+            }
+            if (lastCycle.hasPseudoPregnancy) {
+                val pseudoText = if (lastCycle.pseudoPregnancySigns.isNotEmpty()) {
+                    lastCycle.pseudoPregnancySigns.joinToString(", ")
+                } else "Beobachtet"
+                heatTable.addCell(Cell().add(Paragraph("Scheinträchtigkeit:").setBold()))
+                heatTable.addCell(Cell().add(Paragraph(pseudoText)))
+            }
+        }
+
+        // ── Zyklusstatistik ──────────────────────────────────────────
+        val analysis = HeatCycleManager.analyze(cycles)
+        val avgText = when (analysis.pattern) {
+            CyclePattern.UNKNOWN -> "Noch nicht berechenbar (mind. 2 Läufigkeiten)"
+            else -> "${analysis.averageDays} Tage · ${analysis.pattern.descriptionShort}" +
+               if (analysis.zwischenlaeufe > 0)
+                   " (${analysis.zwischenlaeufe} Zwischenläufigkeit(en) herausgefiltert)"
+               else ""
+   }
+   heatTable.addCell(Cell().add(Paragraph(avgText)))
+
+
+        document.add(heatTable)
+
+        // Hinweisbox wenn aktuell läufig — medizinisch relevant
+        if (activeCycle != null) {
+            document.add(Paragraph("\n"))
+            document.add(Paragraph(
+                "⚠️ HINWEIS FÜR DEN BEHANDELNDEN TIERARZT: " +
+                        "Die Hündin befindet sich aktuell in der Läufigkeit (seit ${activeCycle.startDate}). " +
+                        "Dies kann bei der Behandlung, Narkose und Medikamentendosierung relevant sein."
+            ).setFontSize(11f)
+                .setFontColor(DeviceRgb(176, 0, 32))
+                .setBold())
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // SHARE-TEXT — inkl. Läufigkeits-Kurzinfo
+    // ════════════════════════════════════════════════════════════════
+
+    private fun buildShareText(): String = buildString {
+        append("🚨 NOTFALLMELDUNG 🚨\n")
+        append("Hund: ${profile?.name}\n")
+        append("Symptom: ${binding.spinnerSymptoms.text}\n")
+        append("Info: ${binding.etNotes.text}\n")
+
+        lastLocation?.let {
+            append("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}\n")
+            append("Karte (OSM): https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}\n")
+        }
+
+        // Läufigkeit — nur für intakte Hündinnen, nur wenn Daten vorhanden
+        profile?.let { p ->
+            if (p.gender == "Hündin" && p.neutered != "Ja" && p.heatCycles.isNotEmpty()) {
+                append("\n🌸 LÄUFIGKEIT:\n")
+                val activeCycle = p.heatCycles.firstOrNull { it.isActive }
+                if (activeCycle != null) {
+                    append("⚠️ Aktuell läufig seit ${activeCycle.startDate}\n")
+                } else {
+                    val last = p.heatCycles.filter { !it.isActive }.maxByOrNull { it.startDate }
+                    last?.let { append("Letzte Läufigkeit: ${it.startDate}" +
+                            (if (it.endDate.isNotEmpty()) " – ${it.endDate}" else "") + "\n") }
+                }
+                HeatCycleManager.averageCycleLengthDays(p.heatCycles)
+                    ?.let { append("Ø Zyklus: $it Tage\n") }
+            }
+        }
+
+        append("\nMedizinische Daten im PDF-Anhang.")
+    }
+
     private fun shareReport(file: File) {
         val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-        
-        val shareText = StringBuilder().apply {
-            append("🚨 NOTFALLMELDUNG 🚨\n")
-            append("Hund: ${profile?.name}\n")
-            append("Symptom: ${binding.spinnerSymptoms.text}\n")
-            append("Info: ${binding.etNotes.text}\n")
-            lastLocation?.let { 
-                append("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}\n")
-                append("Karte (OSM): https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}\n")
-            }
-            append("\nMedizinische Daten im PDF-Anhang.")
-        }.toString()
-
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "application/pdf"
             putExtra(Intent.EXTRA_STREAM, uri)
-            putExtra(Intent.EXTRA_TEXT, shareText)
+            putExtra(Intent.EXTRA_TEXT, buildShareText())
             putExtra(Intent.EXTRA_SUBJECT, "🚨 NOTFALLMELDUNG: ${profile?.name}")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-
         startActivity(Intent.createChooser(intent, "Notfallmeldung teilen via..."))
     }
 
     private fun shareReportViaUri(uri: Uri) {
-        val shareText = StringBuilder().apply {
-            append("🚨 NOTFALLMELDUNG 🚨\n")
-            append("Hund: ${profile?.name}\n")
-            append("Symptom: ${binding.spinnerSymptoms.text}\n")
-            append("Info: ${binding.etNotes.text}\n")
-            lastLocation?.let {
-                append("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}\n")
-                append("Karte (OSM): https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}\n")
-            }
-            append("\nMedizinische Daten im PDF-Anhang.")
-        }.toString()
-
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "application/pdf"
             putExtra(Intent.EXTRA_STREAM, uri)
-            putExtra(Intent.EXTRA_TEXT, shareText)
+            putExtra(Intent.EXTRA_TEXT, buildShareText())
             putExtra(Intent.EXTRA_SUBJECT, "🚨 NOTFALLMELDUNG: ${profile?.name}")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-
         startActivity(Intent.createChooser(intent, "Notfallmeldung teilen via..."))
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // PDF ÖFFNEN
+    // ════════════════════════════════════════════════════════════════
 
     private fun openPdf(report: EmergencyReport) {
         try {
             if (!report.contentUri.isNullOrEmpty()) {
-                val uri = Uri.parse(report.contentUri)
-                openPdfViaUri(uri)
+                openPdfViaUri(Uri.parse(report.contentUri))
                 return
             }
-
             if (report.pdfPath.isNotEmpty()) {
                 val file = File(report.pdfPath)
-                if (file.exists()) {
-                    val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-                    openPdfViaUri(uri)
-                    return
-                }
+                if (file.exists()) { openPdfViaUri(FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)); return }
             }
-
             Toast.makeText(this, "PDF nicht gefunden", Toast.LENGTH_SHORT).show()
-
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
@@ -827,51 +868,12 @@ class EmergencyActivity : SecureBaseActivity() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         }
-
         val resInfoList = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
         for (resolveInfo in resInfoList) {
-            val packageName = resolveInfo.activityInfo.packageName
-            grantUriPermission(
-                packageName,
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
+            grantUriPermission(resolveInfo.activityInfo.packageName, uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         }
-
         startActivity(Intent.createChooser(intent, "PDF öffnen"))
-    }
-
-    private fun openPdf(file: File) {
-        if (!file.exists()) {
-            Toast.makeText(this, "PDF nicht gefunden: ${file.absolutePath}", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        try {
-            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, "application/pdf")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            }
-
-            val resInfoList = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-
-            for (resolveInfo in resInfoList) {
-                val pkgName = resolveInfo.activityInfo.packageName
-                grantUriPermission(
-                    pkgName,
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-            }
-
-            startActivity(Intent.createChooser(intent, "PDF öffnen"))
-
-        } catch (e: Exception) {
-            Toast.makeText(this, "Fehler: ${e.message}\n\nPfad: ${file.absolutePath}", Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onPause() {
@@ -884,6 +886,10 @@ class EmergencyActivity : SecureBaseActivity() {
         return true
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // HISTORY ADAPTER
+    // ════════════════════════════════════════════════════════════════
+
     inner class EmergencyHistoryAdapter(
         private val reports: List<EmergencyReport>,
         private val onItemClick: (EmergencyReport) -> Unit,
@@ -892,9 +898,8 @@ class EmergencyActivity : SecureBaseActivity() {
 
         inner class ViewHolder(val binding: ItemEmergencyReportBinding) : RecyclerView.ViewHolder(binding.root)
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            return ViewHolder(ItemEmergencyReportBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            ViewHolder(ItemEmergencyReportBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val report = reports[position]

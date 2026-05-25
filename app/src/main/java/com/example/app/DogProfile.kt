@@ -71,10 +71,13 @@ data class DogProfile(
     var photoUri: String = "",
 
     // ═══════════════════════════════════════════════════════════
-    // ✅ MERGE-TRACKING: Zeitstempel der letzten Änderung
-    // Default 0L → alte Backups ohne dieses Feld sind immer
-    // "älter" und werden beim Merge korrekt behandelt.
+    // LÄUFIGKEIT
+    // Nur befüllt wenn gender == "Hündin" && neutered != "Ja"
+    // Gson serialisiert/deserialisiert die Liste automatisch mit.
     // ═══════════════════════════════════════════════════════════
+    var heatCycles: List<HeatCycleEntry> = emptyList(),
+
+    // lastModified bleibt das letzte Feld (bereits vorhanden):
     var lastModified: Long = 0L
 
 ) : Parcelable {

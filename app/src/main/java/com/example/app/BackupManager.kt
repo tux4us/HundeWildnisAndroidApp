@@ -35,6 +35,7 @@ object BackupManager {
         val timestamp = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
         val fileName = "HundeWildnis_Backup_${dateFormat.format(Date(timestamp))}$BACKUP_EXTENSION"
+        val favorites = FavoritesManager.getAll(context)
 
         // 1. Temporäres Verzeichnis für den Inhalt des Zips
         val tempZipContentDir = File(context.cacheDir, "backup_content")
@@ -121,7 +122,8 @@ object BackupManager {
                 // ✅ NEU: Trainingstagebuch
                 trainingSessions = trainingSessions,
                 trainingProgress = trainingProgress,
-                trainingMilestones = trainingMilestones
+                trainingMilestones = trainingMilestones,
+                favorites = favorites
             )
 
             // Metadaten erstellen
@@ -139,7 +141,8 @@ object BackupManager {
                     emergencyReports = emergencyReports?.size ?: 0,
                     trainingSessions = trainingSessions?.size ?: 0,
                     trainingProgress = trainingProgress?.size ?: 0,
-                    trainingMilestones = trainingMilestones?.size ?: 0
+                    trainingMilestones = trainingMilestones?.size ?: 0,
+                    favorites = favorites.size
                 )
             )
 
@@ -321,6 +324,20 @@ object BackupManager {
                     saveTrainingMilestones(context, merged)
                 } else {
                     saveTrainingMilestones(context, milestones)
+                }
+            }
+
+            // 9. Favoriten
+            backupData.favorites?.let { favs ->
+                if (mergeMode) {
+                    val existing    = FavoritesManager.getAll(context)
+                    val existingKeys = existing
+                        .map { "%.5f_%.5f".format(it.lat, it.lon) }
+                        .toSet()
+                    favs.filter { "%.5f_%.5f".format(it.lat, it.lon) !in existingKeys }
+                        .forEach { FavoritesManager.add(context, it) }
+                } else {
+                    FavoritesManager.restoreAll(context, favs)
                 }
             }
 

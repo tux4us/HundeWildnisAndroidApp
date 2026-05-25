@@ -133,4 +133,8 @@
     <string name="instructions_important">WICHTIG</string>
 
     <string name="start_header_text">Lernen - Trainieren - Wissen - Verstehen</string>
+
+    <string name="tap_to_select">Datum wählen</string>
+    <string name="tap_to_select_optional">Datum wählen (optional)</string>
+
 </resources>
