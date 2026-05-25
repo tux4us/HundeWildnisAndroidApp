@@ -311,7 +311,20 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val daysToFull = if (moonAge <= halfPeriod) halfPeriod - moonAge else synodicPeriod - moonAge + halfPeriod
         val daysToNew  = synodicPeriod - moonAge
 
-        val phaseIndex = ((moonAge / synodicPeriod) * 8.0).toInt().coerceIn(0, 7)
+        // Verfeinerte Phasen-Logik:
+        // Wir nutzen engere Fenster für die Hauptphasen (Neumond, Halbmond, Vollmond),
+        // damit die Bezeichnung schneller auf das "nächste Viertel" umspringt.
+        val progress = moonAge / synodicPeriod
+        val phaseIndex = when {
+            progress < 0.03 || progress > 0.97 -> 0 // Neumond
+            progress < 0.22 -> 1                   // Zunehmende Sichel
+            progress < 0.28 -> 2                   // Erstes Viertel (Halbmond)
+            progress < 0.47 -> 3                   // Zunehmender Mond
+            progress < 0.53 -> 4                   // Vollmond
+            progress < 0.72 -> 5                   // Abnehmender Mond
+            progress < 0.78 -> 6                   // Letztes Viertel (Halbmond)
+            else            -> 7                   // Abnehmende Sichel
+        }
 
         var zodiacAge = (jd - referenceNewMoon) % siderealPeriod
         if (zodiacAge < 0) zodiacAge += siderealPeriod
@@ -349,14 +362,14 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun getMoonPhaseNameAndEmoji(phaseIndex: Int): Pair<String, String> = when (phaseIndex) {
-        0 -> "Neumond"             to "🌑"
-        1 -> "Zunehmende Sichel"  to "🌒"
-        2 -> "Erstes Viertel"     to "🌓"
-        3 -> "Zunehmender Mond"   to "🌔"
-        4 -> "Vollmond"           to "🌕"
-        5 -> "Abnehmender Mond"   to "🌖"
-        6 -> "Letztes Viertel"    to "🌗"
-        else -> "Abnehmende Sichel" to "🌘"
+        0 -> "Neumond"                           to "🌑"
+        1 -> "Zunehmende Sichel (1. Viertel)"    to "🌒"
+        2 -> "Erstes Viertel (Halbmond)"         to "🌓"
+        3 -> "Zunehmender Mond (2. Viertel)"     to "🌔"
+        4 -> "Vollmond"                          to "🌕"
+        5 -> "Abnehmender Mond (3. Viertel)"     to "🌖"
+        6 -> "Letztes Viertel (Halbmond)"        to "🌗"
+        else -> "Abnehmende Sichel (4. Viertel)" to "🌘"
     }
 
     private fun getMoonAstronomyInfo(phaseIndex: Int, illumination: Double): String {
