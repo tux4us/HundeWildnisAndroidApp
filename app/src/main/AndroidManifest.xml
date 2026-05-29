@@ -21,6 +21,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Storage (für PDF-Export) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
@@ -260,8 +262,48 @@
             android:label="Läufigkeit"
             android:parentActivityName=".DogViewActivity" />
 
-        <!-- WorkManager Worker braucht KEINE separate Manifest-Eintragung -->
 
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- ✅ NASENARBEIT                                  -->
+        <!-- ════════════════════════════════════════════════ -->
+
+        <activity
+            android:name="com.hundewildnis.app.NasenarbeitActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.NasenarbeitHundActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.NasenarbeitActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.NasenarbeitBeratungActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.NasenarbeitHundActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.NasenarbeitErgebnisActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName="com.hundewildnis.app.NasenarbeitBeratungActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.NasenarbeitSessionDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.NasenarbeitHundActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <!-- WorkManager Worker braucht KEINE separate Manifest-Eintragung -->
 
     </application>
 </manifest>

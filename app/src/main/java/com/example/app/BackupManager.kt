@@ -62,6 +62,9 @@ object BackupManager {
             val trainingProgress = loadTrainingProgress(context)
             val trainingMilestones = loadTrainingMilestones(context)
 
+            // ✅ NEU: Nasenarbeit laden
+            val (nasenarbeitSessions, nasenarbeitFortschritt) = NasenarbeitManager.exportForBackup(context)
+
             // Hunde-Fotos kopieren
             dogs.forEachIndexed { index, dog ->
                 if (dog.photoUri.isNotEmpty()) {
@@ -110,7 +113,7 @@ object BackupManager {
             // Backup-Daten erstellen
             val backupData = BackupData(
                 version = getAppVersion(context),
-                backupVersion = 5,
+                backupVersion = 7,
                 timestamp = timestamp,
                 dogs = dogs,
                 settings = settings,
@@ -123,13 +126,16 @@ object BackupManager {
                 trainingSessions = trainingSessions,
                 trainingProgress = trainingProgress,
                 trainingMilestones = trainingMilestones,
-                favorites = favorites
+                favorites = favorites,
+                // ✅ NEU: Nasenarbeit
+                nasenarbeitSessions = nasenarbeitSessions,
+                nasenarbeitFortschritt = nasenarbeitFortschritt
             )
 
             // Metadaten erstellen
             val metadata = BackupMetadata(
                 appVersion = getAppVersion(context),
-                backupVersion = 4,
+                backupVersion = 7,
                 timestamp = timestamp,
                 deviceName = Build.MODEL,
                 itemCount = BackupItemCount(
@@ -142,7 +148,10 @@ object BackupManager {
                     trainingSessions = trainingSessions?.size ?: 0,
                     trainingProgress = trainingProgress?.size ?: 0,
                     trainingMilestones = trainingMilestones?.size ?: 0,
-                    favorites = favorites.size
+                    favorites = favorites.size,
+                    // ✅ NEU: Nasenarbeit
+                    nasenarbeitSessions = nasenarbeitSessions.size,
+                    nasenarbeitFortschritt = nasenarbeitFortschritt.size
                 )
             )
 
@@ -341,6 +350,28 @@ object BackupManager {
                 }
             }
 
+            // 10. Nasenarbeit
+            backupData.nasenarbeitSessions?.let { sessions ->
+                if (mergeMode) {
+                    val existing = NasenarbeitManager.loadSessions(context)
+                    val existingIds = existing.map { it.id }.toSet()
+                    val merged = existing + sessions.filter { it.id !in existingIds }
+                    NasenarbeitManager.saveSessions(context, merged.toMutableList())
+                } else {
+                    NasenarbeitManager.saveSessions(context, sessions.toMutableList())
+                }
+            }
+            backupData.nasenarbeitFortschritt?.let { fortschritt ->
+                if (mergeMode) {
+                    val existing = NasenarbeitManager.loadFortschritt(context)
+                    val existingIds = existing.map { it.dogId }.toSet()
+                    val merged = existing + fortschritt.filter { it.dogId !in existingIds }
+                    NasenarbeitManager.importFromBackup(context, null, merged)
+                } else {
+                    NasenarbeitManager.importFromBackup(context, null, fortschritt)
+                }
+            }
+
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true
         } catch (e: Exception) {
@@ -492,6 +523,7 @@ object BackupManager {
             false
         }
     }
+
 
     // ════════════════════════════════════════════════════════════════
     // SELECTIVE BACKUP - NEU!

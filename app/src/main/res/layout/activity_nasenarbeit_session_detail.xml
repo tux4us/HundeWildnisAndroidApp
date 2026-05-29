@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_nasenarbeit_session_detail.xml -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Session Header -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:id="@+id/tvDatum" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/tvDisziplin" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/tvEmpfohlen" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/tvBewertung" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="16sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Scores -->
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Scoring" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvScores" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:fontFamily="monospace"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ergebnisse -->
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trainingsergebnisse" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvErgebnisse" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Wetter -->
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wetterbedingungen" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvWetter" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Level -->
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trainingslevel" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvLevel" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Notizen -->
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:id="@+id/tvNotizenLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notizen" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvNotizen" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -584,14 +584,15 @@
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
+                        <!-- Beaufort Visuelles Symbol -->
                         <TextView
-                            android:id="@+id/windStrengthText"
+                            android:id="@+id/tvWindSymbol"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="--"
-                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="4dp"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary" />
                     </LinearLayout>
 
                     <!-- Wind -->

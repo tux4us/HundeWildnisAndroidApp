@@ -235,7 +235,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
         val windDirectionText = getWindDirection(windDirection)
         val beaufort = getBeaufortScale(windSpeed)
-        binding.windStrengthText.text = getBeaufortDescription(beaufort)
+        binding.tvWindSymbol.text = getBeaufortSymbol(beaufort)
         binding.windText.text = String.format(Locale.GERMAN, "%.1f km/h %s (Bft %d)\nBöen: %.1f km/h", windSpeed, windDirectionText, beaufort, windGusts)
 
         binding.humidityText.text = "$humidity%"
@@ -467,6 +467,23 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         11 -> "Orkanartiger Sturm"
         12 -> "Orkan"
         else -> "Unbekannt"
+    }
+
+    private fun getBeaufortSymbol(bf: Int): String = when (bf) {
+        0  -> "🌿 Windstille – Rauch steigt senkrecht"
+        1  -> "🍃 Leiser Zug – Rauch zeigt Windrichtung"
+        2  -> "🍃💨 Leichte Brise – Blätter rascheln"
+        3  -> "🌿💨 Schwache Brise – Zweige bewegen sich"
+        4  -> "🌾💨 Mäßige Brise – Kleine Äste bewegen sich"
+        5  -> "🌲💨 Frische Brise – Kleine Bäume schwanken"
+        6  -> "🌳💨 Starker Wind – Große Äste schwingen"
+        7  -> "🌳🌬️ Steifer Wind – Ganze Bäume bewegen sich"
+        8  -> "🌬️🌳 Stürmisch – Zweige brechen"
+        9  -> "🌀🌲 Sturm – Äste brechen, leichte Schäden"
+        10 -> "🌪️🌳 Schwerer Sturm – Bäume entwurzelt"
+        11 -> "🌪️💥 Orkanartiger Sturm – Verbreitet Schäden"
+        12 -> "🌀🌪️ Orkan – Verheerende Zerstörung"
+        else -> ""
     }
 
     private fun getWindDirection(degrees: Double): String = when {

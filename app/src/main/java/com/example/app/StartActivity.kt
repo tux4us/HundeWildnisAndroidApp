@@ -92,7 +92,7 @@ class StartActivity : BaseBottomNavActivity() {
 
         // ✅ Erst-Info Dialog für Benachrichtigungen (Google Play Konform)
         checkNotificationDisclosure()
-        
+
         // ✅ Update-Dialog prüfen
         checkForUpdate()
     }
@@ -277,6 +277,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
         binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
         binding.btnTrainingDiary.setOnClickListener { startActivity(Intent(this, TrainingDiaryActivity::class.java)) }
+        binding.btnNasenarbeit.setOnClickListener { startActivity(Intent(this, NasenarbeitActivity::class.java)) }
         binding.btnDailyNotes.setOnClickListener { startActivity(Intent(this, DailyNotesActivity::class.java)) }
         binding.btnWeather.setOnClickListener { startActivity(Intent(this, WeatherActivity::class.java)) }
         binding.btnLocation.setOnClickListener { startActivity(Intent(this, LocationActivity::class.java)) }
@@ -527,7 +528,7 @@ class StartActivity : BaseBottomNavActivity() {
                     if (cachedPost == null || newestPost.url != cachedPost.url) {
                         android.util.Log.d("StartActivity", "Neuer Post gefunden oder Cache war leer. Aktualisiere Anzeige.")
                         displayBlogPreview(newestPost)
-                        
+
                         // Wenn es wirklich ein neuer Post ist -> Vollständiges Hintergrund-Update triggern
                         if (cachedPost != null && newestPost.url != cachedPost.url) {
                             UpdateHelper.triggerImmediateUpdate(this@StartActivity)

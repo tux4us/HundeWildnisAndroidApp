@@ -1,0 +1,163 @@
+package com.hundewildnis.app
+
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import com.hundewildnis.app.databinding.ActivityNasenarbeitErgebnisBinding
+import java.util.UUID
+
+class NasenarbeitErgebnisActivity : SecureBaseActivity() {
+
+    private lateinit var binding: ActivityNasenarbeitErgebnisBinding
+    private lateinit var profile: DogProfile
+    private lateinit var parameter: NasenarbeitParameter
+    private lateinit var primaerDisziplin: NasenarbeitDisziplin
+    private var scoreV = 0.0; private var scoreP = 0.0; private var scoreF = 0.0
+    private var selectedDisziplin: NasenarbeitDisziplin? = null
+    private var selectedBewertung = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityNasenarbeitErgebnisBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        @Suppress("DEPRECATION")
+        profile   = intent.getParcelableExtra("profile")!!
+        @Suppress("DEPRECATION")
+        parameter = intent.getParcelableExtra("parameter")!!
+        scoreV    = intent.getDoubleExtra("scoring_v", 0.0)
+        scoreP    = intent.getDoubleExtra("scoring_p", 0.0)
+        scoreF    = intent.getDoubleExtra("scoring_f", 0.0)
+        primaerDisziplin = NasenarbeitDisziplin.valueOf(
+            intent.getStringExtra("primaer_disziplin") ?: NasenarbeitDisziplin.VERLORENSUCHE.name
+        )
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "🐾 Training erfassen"
+
+        setupEmpfehlung()
+        setupDisziplinWahl()
+        setupBewertung()
+        setupSaveButton()
+    }
+
+    // ── EMPFEHLUNG ANZEIGEN ───────────────────────────────────
+
+    private fun setupEmpfehlung() {
+        binding.tvEmpfohlen.text =
+            "Empfohlen: ${primaerDisziplin.icon} ${primaerDisziplin.displayName}"
+        binding.tvScores.text =
+            "Score: 🐾 ${fmt(scoreV)}  🧑 ${fmt(scoreP)}  🔍 ${fmt(scoreF)}"
+        selectedDisziplin = primaerDisziplin
+    }
+
+    private fun fmt(d: Double) = if (d > -999) String.format("%.1f", d) else "❌"
+
+    // ── DISZIPLIN WAHL ────────────────────────────────────────
+
+    private fun setupDisziplinWahl() {
+        val btns = listOf(
+            Pair(binding.btnDizV, NasenarbeitDisziplin.VERLORENSUCHE),
+            Pair(binding.btnDizP, NasenarbeitDisziplin.PERSONENSUCHE),
+            Pair(binding.btnDizF, NasenarbeitDisziplin.FREISUCHE)
+        )
+        btns.forEach { (btn, diz) ->
+            btn.text = "${diz.icon} ${diz.displayName}"
+            btn.isSelected = diz == primaerDisziplin
+            btn.setOnClickListener {
+                selectedDisziplin = diz
+                btns.forEach { (b, _) -> b.isSelected = false }
+                btn.isSelected = true
+                updateDisziplinFields(diz)
+            }
+        }
+        updateDisziplinFields(primaerDisziplin)
+    }
+
+    private fun updateDisziplinFields(diz: NasenarbeitDisziplin) {
+        binding.layoutSchritte.visibility =
+            if (diz != NasenarbeitDisziplin.FREISUCHE) View.VISIBLE else View.GONE
+        binding.layoutHa.visibility =
+            if (diz == NasenarbeitDisziplin.FREISUCHE) View.VISIBLE else View.GONE
+        binding.layoutGegenstaende.visibility =
+            if (diz == NasenarbeitDisziplin.VERLORENSUCHE) View.VISIBLE else View.GONE
+        binding.layoutPersonenfund.visibility =
+            if (diz == NasenarbeitDisziplin.PERSONENSUCHE) View.VISIBLE else View.GONE
+    }
+
+    // ── BEWERTUNG ─────────────────────────────────────────────
+
+    private fun setupBewertung() {
+        val stars = listOf(
+            binding.btnStar1, binding.btnStar2,
+            binding.btnStar3, binding.btnStar4
+        )
+        stars.forEachIndexed { idx, btn ->
+            btn.setOnClickListener {
+                selectedBewertung = idx + 1
+                stars.forEachIndexed { i, b ->
+                    if (i <= idx) {
+                        b.setImageResource(R.drawable.ic_star_filled)
+                        b.alpha = 1.0f
+                    } else {
+                        b.setImageResource(R.drawable.ic_star_outline)
+                        b.alpha = 1.0f
+                    }
+                }
+            }
+        }
+    }
+
+    // ── SPEICHERN ─────────────────────────────────────────────
+
+    private fun setupSaveButton() {
+        binding.btnSpeichern.setOnClickListener { saveSession() }
+        binding.btnAbbrechen.setOnClickListener { finish() }
+    }
+
+    private fun saveSession() {
+        val diz = selectedDisziplin ?: run {
+            Toast.makeText(this, "Bitte Disziplin wählen", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val schritte = binding.etSchritte.text.toString().toIntOrNull()
+        val ha = binding.etHa.text.toString().toDoubleOrNull()
+        val dauer = binding.etDauer.text.toString().toIntOrNull()
+        val gegenst = binding.etGegenstaende.text.toString().toIntOrNull()
+        val gegenstGes = binding.etGegenstaendeGesamt.text.toString().toIntOrNull()
+        val personenfund = binding.cbPersonenfund.isChecked
+        val notizen = binding.etNotizen.text.toString()
+
+        val fortschritt = NasenarbeitManager.loadFortschrittForDog(this, profile.id)
+
+        val session = NasenarbeitSession(
+            id = UUID.randomUUID().toString(),
+            dogId = profile.id,
+            empfohleneDisziplin = primaerDisziplin,
+            durchgefuehrteDisziplin = diz,
+            scoreVerlorensuche = scoreV,
+            scorePersonensuche = scoreP,
+            scoreFreisuche = scoreF,
+            parameter = parameter,
+            levelVerlorensuche = fortschritt.levelVerlorensuche.displayName,
+            levelPersonensuche = fortschritt.levelPersonensuche.displayName,
+            levelFreisuche = fortschritt.levelFreisuche.displayName,
+            durchgefuehrteSchritte = schritte,
+            durchgefuehrteHa = ha,
+            suchdauerMinuten = dauer,
+            gefundeneGegenstaende = gegenst,
+            gegenstaendeGesamt = gegenstGes,
+            personenfundErfolgreich = if (diz == NasenarbeitDisziplin.PERSONENSUCHE) personenfund else null,
+            erfolgsbewertung = selectedBewertung.coerceAtLeast(1),
+            notizen = notizen
+        )
+
+        NasenarbeitManager.addSession(this, session)
+        Toast.makeText(this, "✅ Session gespeichert", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+}

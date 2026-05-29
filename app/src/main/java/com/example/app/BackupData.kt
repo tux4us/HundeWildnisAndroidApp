@@ -17,7 +17,10 @@ data class BackupData(
     @SerializedName("trainingProgress")  val trainingProgress: List<TrainingProgress>?,
     @SerializedName("trainingMilestones") val trainingMilestones: List<Milestone>?,
     // ✅ NEU: Favoriten
-    @SerializedName("favorites")     val favorites: List<FavoritePOI>? = null
+    @SerializedName("favorites")     val favorites: List<FavoritePOI>? = null,
+    // ✅ NEU: Nasenarbeit
+    @SerializedName("nasenarbeitSessions")   val nasenarbeitSessions: List<NasenarbeitSession>? = null,
+    @SerializedName("nasenarbeitFortschritt") val nasenarbeitFortschritt: List<NasenarbeitFortschritt>? = null
 )
 
 data class BackupMetadata(
@@ -39,5 +42,8 @@ data class BackupItemCount(
     @SerializedName("trainingProgress")  val trainingProgress: Int = 0,
     @SerializedName("trainingMilestones") val trainingMilestones: Int = 0,
     // ✅ NEU
-    @SerializedName("favorites")         val favorites: Int = 0
+    @SerializedName("favorites")         val favorites: Int = 0,
+    // ✅ NEU: Nasenarbeit
+    @SerializedName("nasenarbeitSessions")    val nasenarbeitSessions: Int = 0,
+    @SerializedName("nasenarbeitFortschritt") val nasenarbeitFortschritt: Int = 0
 )
