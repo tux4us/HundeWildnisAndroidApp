@@ -137,4 +137,9 @@
     <string name="tap_to_select">Datum wählen</string>
     <string name="tap_to_select_optional">Datum wählen (optional)</string>
 
+    <string name="action_share_pdf">Als PDF teilen</string>
+    <string name="star_1">1 Stern</string>
+    <string name="star_2">2 Sterne</string>
+    <string name="star_3">3 Sterne</string>
+    <string name="star_4">4 Sterne</string>
 </resources>

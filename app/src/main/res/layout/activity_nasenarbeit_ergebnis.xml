@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Empfehlung Info -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+                    <TextView
+                        android:id="@+id/tvEmpfohlen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+                    <TextView
+                        android:id="@+id/tvScores"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Disziplin Wahl -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Durchgeführte Disziplin:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:baselineAligned="false">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDizV"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="11sp"
+                    android:layout_marginEnd="4dp"
+                    android:padding="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:textColor="?attr/colorOnSurface"
+                    app:cornerRadius="8dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDizP"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="11sp"
+                    android:layout_marginEnd="4dp"
+                    android:padding="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:textColor="?attr/colorOnSurface"
+                    app:cornerRadius="8dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDizF"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="11sp"
+                    android:padding="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:textColor="?attr/colorOnSurface"
+                    app:cornerRadius="8dp"/>
+            </LinearLayout>
+
+            <!-- Strecke -->
+            <LinearLayout
+                android:id="@+id/layoutSchritte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="12dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Durchgeführte Schritte:" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Schritte angeben"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSchritte"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Fläche -->
+            <LinearLayout
+                android:id="@+id/layoutHa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Durchgeführte Fläche (ha):" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fläche eingeben"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etHa"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Dauer -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suchdauer (Minuten):" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Suchdauer eingeben"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDauer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Gegenstände (nur Verlorensuche) -->
+            <LinearLayout
+                android:id="@+id/layoutGegenstaende"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gefunden:" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGegenstaende" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamt gelegt:" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGegenstaendeGesamt" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Personenfund (nur Personensuche) -->
+            <LinearLayout
+                android:id="@+id/layoutPersonenfund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+                <CheckBox
+                    android:id="@+id/cbPersonenfund"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Zielperson erfolgreich gefunden"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <!-- Bewertung -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Erfolgsbewertung:" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+                <ImageButton android:id="@+id/btnStar1" android:layout_width="64dp" android:layout_height="64dp" android:src="@drawable/ic_star_outline" android:scaleType="fitCenter" android:background="?attr/selectableItemBackgroundBorderless" android:padding="8dp" android:contentDescription="@string/star_1"/>
+                <ImageButton android:id="@+id/btnStar2" android:layout_width="64dp" android:layout_height="64dp" android:src="@drawable/ic_star_outline" android:scaleType="fitCenter" android:background="?attr/selectableItemBackgroundBorderless" android:padding="8dp" android:contentDescription="@string/star_2"/>
+                <ImageButton android:id="@+id/btnStar3" android:layout_width="64dp" android:layout_height="64dp" android:src="@drawable/ic_star_outline" android:scaleType="fitCenter" android:background="?attr/selectableItemBackgroundBorderless" android:padding="8dp" android:contentDescription="@string/star_3"/>
+                <ImageButton android:id="@+id/btnStar4" android:layout_width="64dp" android:layout_height="64dp" android:src="@drawable/ic_star_outline" android:scaleType="fitCenter" android:background="?attr/selectableItemBackgroundBorderless" android:padding="8dp" android:contentDescription="@string/star_4"/>
+            </LinearLayout>
+
+            <!-- Notizen -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notizen:" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Beobachtungen, Besonderheiten …"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNotizen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="3"
+                    android:inputType="textMultiLine"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Speichern -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSpeichern"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="✅ Session speichern"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:minHeight="56dp"
+                app:cornerRadius="10dp"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAbbrechen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Abbrechen"
+                android:textSize="14sp"
+                android:textColor="?attr/colorOnSurface"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:cornerRadius="10dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

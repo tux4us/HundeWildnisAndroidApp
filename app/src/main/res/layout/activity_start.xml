@@ -290,8 +290,24 @@
                             android:textSize="16sp"
                             android:textStyle="bold"
                             app:cornerRadius="12dp"
-                            app:backgroundTint="#4C6238"
+                            app:backgroundTint="#6F8759"
                             android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
+                            app:iconGravity="start" />
+
+                        <!-- ✅ Button 6: Nasenarbeit -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnNasenarbeit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🐾 Nasenarbeit"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#5A7147"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp"
                             app:iconGravity="start" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
