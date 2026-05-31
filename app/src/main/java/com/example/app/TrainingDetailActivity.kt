@@ -93,7 +93,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
     private fun displayProgress(progress: TrainingProgress) {
         binding.progressBar.progress = progress.progressPercentage
         binding.tvProgressPercent.text = "${progress.progressPercentage}%"
-        binding.tvProgressLevel.text = progress.currentLevel.displayName
+        binding.tvProgressLevel.text = progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName
 
         binding.tvTotalSessions.text = "${progress.totalSessions} Einheiten"
         binding.tvTotalMinutes.text = "${progress.totalMinutes} Min"

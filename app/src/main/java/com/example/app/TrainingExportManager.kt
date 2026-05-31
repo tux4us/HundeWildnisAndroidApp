@@ -98,7 +98,7 @@ object TrainingExportManager {
             
             progressList.sortedByDescending { it.progressPercentage }.forEach { progress ->
                 document.add(
-                    Paragraph("${progress.category.displayName}: ${progress.progressPercentage}% (${progress.currentLevel.displayName})")
+                    Paragraph("${progress.category.displayName}: ${progress.progressPercentage}% (${progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName})")
                         .setFontSize(11f)
                         .setMarginBottom(3f)
                 )
@@ -216,7 +216,7 @@ object TrainingExportManager {
             
             // Fortschritt
             document.add(Paragraph("📊 FORTSCHRITT").setBold().setFontSize(14f).setFontColor(colorPrimary))
-            document.add(Paragraph("Trainingsstand: ${progress.progressPercentage}% (${progress.currentLevel.displayName})").setFontSize(11f))
+            document.add(Paragraph("Trainingsstand: ${progress.progressPercentage}% (${progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName})").setFontSize(11f))
             document.add(Paragraph("Gesamt-Sessions: ${progress.totalSessions}").setFontSize(10f))
             document.add(Paragraph("Trainingszeit: ${progress.totalMinutes} Minuten").setFontSize(10f))
             document.add(Paragraph("Durchschnitt: ${String.format("%.1f", progress.averageSuccess)}/4.0").setFontSize(10f))
