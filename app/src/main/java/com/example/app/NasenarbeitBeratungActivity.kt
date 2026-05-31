@@ -340,7 +340,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.YELLOW)
                 getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(colorNormal)
             }
     }
