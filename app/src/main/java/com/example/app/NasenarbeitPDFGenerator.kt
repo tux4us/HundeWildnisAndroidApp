@@ -1,19 +1,36 @@
 package com.hundewildnis.app
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.pdf.PdfDocument
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.kernel.colors.DeviceRgb
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfWriter
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.element.*
+import com.itextpdf.layout.properties.HorizontalAlignment
+import com.itextpdf.layout.properties.TextAlignment
+import com.itextpdf.layout.properties.UnitValue
+import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * NasenarbeitPDFGenerator – iText7
+ * Features: Notizen (Titel + Text) · Fotos (Galerie + Kamera) · GPS-Kartenkachel (OSM Static)
+ */
 object NasenarbeitPDFGenerator {
 
-    private val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+    private val df     = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
     private val dfDate = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
+
+    private val GREEN = DeviceRgb(45, 80, 22)       // #2d5016
+    private val GRAY  = DeviceRgb(100, 100, 100)
+    private val BLUE  = DeviceRgb(0, 80, 180)
 
     // ════════════════════════════════════════════════════════════
     // SESSION PDF
@@ -24,130 +41,142 @@ object NasenarbeitPDFGenerator {
         session: NasenarbeitSession,
         profile: DogProfile
     ): File {
-        val doc = PdfDocument()
-        val info = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-        var page = doc.startPage(info)
-        var canvas = page.canvas
-        var y = 50f
-        val lm = 50f
+        val dir  = File(context.filesDir, "nasenarbeit_pdfs").also { it.mkdirs() }
+        val file = File(dir, "nasenarbeit_session_${session.id.take(8)}.pdf")
 
-        val paint = buildPaints()
+        val writer = PdfWriter(file)
+        val pdf    = PdfDocument(writer)
+        val doc    = Document(pdf)
 
-        fun nl(extra: Float = 0f) { y += 18f + extra }
-        fun ensureSpace(needed: Float) {
-            if (y + needed > 800f) {
-                doc.finishPage(page)
-                page = doc.startPage(info); canvas = page.canvas; y = 50f
-            }
-        }
+        // ── Titel ─────────────────────────────────────────────
+        doc.add(Paragraph("🐾 NASENARBEIT – TRAININGSAUSWERTUNG")
+            .setBold().setFontSize(18f).setFontColor(GREEN))
+        doc.add(Paragraph("${profile.name}  ·  ${profile.breed}  ·  ${profile.gender}")
+            .setFontSize(12f).setFontColor(GRAY))
+        doc.add(Paragraph(" "))
 
-        // Titel
-        canvas.drawText("🐾 NASENARBEIT – TRAININGSAUSWERTUNG", lm, y, paint.title); nl(8f)
-        canvas.drawLine(lm, y, 545f, y, paint.divider); nl(4f)
+        // ── Session Info ──────────────────────────────────────
+        addSectionTitle(doc, "Session")
+        val tbl = twoColTable()
+        tbl.addCell(labelCell("Datum"))
+        tbl.addCell(valueCell(df.format(Date(session.datum))))
+        tbl.addCell(labelCell("Disziplin"))
+        tbl.addCell(valueCell("${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName}"))
+        tbl.addCell(labelCell("Empfohlen"))
+        tbl.addCell(valueCell("${session.empfohleneDisziplin.icon} ${session.empfohleneDisziplin.displayName}"))
+        tbl.addCell(labelCell("Bewertung"))
+        tbl.addCell(valueCell("⭐".repeat(session.erfolgsbewertung)))
+        doc.add(tbl)
+        doc.add(Paragraph(" "))
 
-        // Hund
-        canvas.drawText("Hund: ${profile.name}", lm, y, paint.header); nl()
-        canvas.drawText("Rasse: ${profile.breed}", lm, y, paint.value); nl()
-
-        nl(4f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-
-        // Session Info
-        canvas.drawText("Session", lm, y, paint.header); nl()
-        canvas.drawText("Datum:", lm, y, paint.label)
-        canvas.drawText(df.format(Date(session.datum)), 200f, y, paint.value); nl()
-        canvas.drawText("Disziplin:", lm, y, paint.label)
-        canvas.drawText("${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName}", 200f, y, paint.value); nl()
-        canvas.drawText("Empfohlen:", lm, y, paint.label)
-        canvas.drawText("${session.empfohleneDisziplin.icon} ${session.empfohleneDisziplin.displayName}", 200f, y, paint.value); nl()
-        canvas.drawText("Bewertung:", lm, y, paint.label)
-        canvas.drawText("⭐".repeat(session.erfolgsbewertung), 200f, y, paint.value); nl()
-
-        nl(4f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-
-        // Ergebnisse
-        canvas.drawText("Ergebnisse", lm, y, paint.header); nl()
-        session.durchgefuehrteSchritte?.let {
-            canvas.drawText("Streckenlänge:", lm, y, paint.label)
-            canvas.drawText("$it Schritte", 200f, y, paint.value); nl()
-        }
-        session.durchgefuehrteHa?.let {
-            canvas.drawText("Fläche:", lm, y, paint.label)
-            canvas.drawText("${String.format("%.1f", it)} ha", 200f, y, paint.value); nl()
-        }
-        session.suchdauerMinuten?.let {
-            canvas.drawText("Suchdauer:", lm, y, paint.label)
-            canvas.drawText("$it Minuten", 200f, y, paint.value); nl()
-        }
+        // ── Ergebnisse ────────────────────────────────────────
+        addSectionTitle(doc, "Trainingsergebnisse")
+        val res = twoColTable()
+        session.durchgefuehrteSchritte?.let { res.addCell(labelCell("Strecke")); res.addCell(valueCell("$it Schritte")) }
+        session.durchgefuehrteHa?.let { res.addCell(labelCell("Fläche")); res.addCell(valueCell("${String.format("%.1f", it)} ha")) }
+        session.suchdauerMinuten?.let { res.addCell(labelCell("Suchdauer")); res.addCell(valueCell("$it Min.")) }
         session.gefundeneGegenstaende?.let { g ->
             session.gegenstaendeGesamt?.let { ges ->
-                canvas.drawText("Gegenstände:", lm, y, paint.label)
-                canvas.drawText("$g von $ges gefunden", 200f, y, paint.value); nl()
+                res.addCell(labelCell("Gegenstände")); res.addCell(valueCell("$g von $ges gefunden"))
             }
         }
         session.personenfundErfolgreich?.let {
-            canvas.drawText("Personenfund:", lm, y, paint.label)
-            canvas.drawText(if (it) "Erfolgreich" else "Nicht erfolgreich", 200f, y, paint.value); nl()
+            res.addCell(labelCell("Personenfund"))
+            res.addCell(valueCell(if (it) "✅ Erfolgreich" else "❌ Nicht gefunden"))
         }
+        doc.add(res)
+        doc.add(Paragraph(" "))
 
-        nl(4f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
+        // ── Scoring ───────────────────────────────────────────
+        addSectionTitle(doc, "Scoring")
+        val sc = twoColTable()
+        sc.addCell(labelCell("🐾 Verlorensuche"))
+        sc.addCell(valueCell(fmtScore(session.scoreVerlorensuche)))
+        sc.addCell(labelCell("🧑 Personensuche"))
+        sc.addCell(valueCell(fmtScore(session.scorePersonensuche)))
+        sc.addCell(labelCell("🔍 Freisuche"))
+        sc.addCell(valueCell(fmtScore(session.scoreFreisuche)))
+        doc.add(sc)
+        doc.add(Paragraph(" "))
 
-        // Scoring
-        canvas.drawText("Scoring-Ergebnis", lm, y, paint.header); nl()
-        canvas.drawText("🐾 Verlorensuche:", lm, y, paint.label)
-        canvas.drawText(fmtScore(session.scoreVerlorensuche), 200f, y, paint.value); nl()
-        canvas.drawText("🧑 Personensuche:", lm, y, paint.label)
-        canvas.drawText(fmtScore(session.scorePersonensuche), 200f, y, paint.value); nl()
-        canvas.drawText("🔍 Freisuche:", lm, y, paint.label)
-        canvas.drawText(fmtScore(session.scoreFreisuche), 200f, y, paint.value); nl()
-
-        nl(4f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-
-        // Wetterbedingungen
-        ensureSpace(80f)
-        canvas.drawText("Wetterbedingungen", lm, y, paint.header); nl()
+        // ── Wetter ───────────────────────────────────────────
+        addSectionTitle(doc, "Wetterbedingungen")
         val p = session.parameter
-        canvas.drawText("Temperatur:", lm, y, paint.label)
-        canvas.drawText("${p.temperaturCelsius}°C", 200f, y, paint.value); nl()
-        canvas.drawText("Beaufort:", lm, y, paint.label)
-        canvas.drawText("Bf ${p.beaufort}", 200f, y, paint.value); nl()
-        canvas.drawText("Luftfeuchtigkeit:", lm, y, paint.label)
-        canvas.drawText("${p.luftfeuchtigkeit}%", 200f, y, paint.value); nl()
-        canvas.drawText("Windrichtung:", lm, y, paint.label)
-        canvas.drawText(listOf("Rückenwind","Seitenwind","Gegenwind")[p.windrichtung], 200f, y, paint.value); nl()
+        val wx = twoColTable()
+        wx.addCell(labelCell("Temperatur")); wx.addCell(valueCell("${p.temperaturCelsius}°C"))
+        wx.addCell(labelCell("Beaufort"));   wx.addCell(valueCell("Bf ${p.beaufort}"))
+        wx.addCell(labelCell("Luftfeuchte")); wx.addCell(valueCell("${p.luftfeuchtigkeit}%"))
+        wx.addCell(labelCell("Windrichtung")); wx.addCell(valueCell(listOf("Rückenwind","Seitenwind","Gegenwind")[p.windrichtung]))
+        doc.add(wx)
+        doc.add(Paragraph(" "))
 
-        nl(4f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
+        // ── Trainingslevel ───────────────────────────────────
+        addSectionTitle(doc, "Trainingslevel")
+        val lv = twoColTable()
+        lv.addCell(labelCell("🐾 Verlorensuche")); lv.addCell(valueCell(session.levelVerlorensuche))
+        lv.addCell(labelCell("🧑 Personensuche")); lv.addCell(valueCell(session.levelPersonensuche))
+        lv.addCell(labelCell("🔍 Freisuche"));     lv.addCell(valueCell(session.levelFreisuche))
+        doc.add(lv)
+        doc.add(Paragraph(" "))
 
-        // Level
-        ensureSpace(60f)
-        canvas.drawText("Trainingslevel", lm, y, paint.header); nl()
-        canvas.drawText("🐾 Verlorensuche:", lm, y, paint.label)
-        canvas.drawText(session.levelVerlorensuche, 200f, y, paint.value); nl()
-        canvas.drawText("🧑 Personensuche:", lm, y, paint.label)
-        canvas.drawText(session.levelPersonensuche, 200f, y, paint.value); nl()
-        canvas.drawText("🔍 Freisuche:", lm, y, paint.label)
-        canvas.drawText(session.levelFreisuche, 200f, y, paint.value); nl()
-
-        // Notizen
-        if (session.notizen.isNotEmpty()) {
-            ensureSpace(50f)
-            nl(4f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-            canvas.drawText("Notizen", lm, y, paint.header); nl()
-            canvas.drawText(session.notizen.take(300), lm, y, paint.value)
+        // ── Notizen ───────────────────────────────────────────
+        if (session.notizenTitel.isNotEmpty() || session.notizen.isNotEmpty()) {
+            addSectionTitle(doc, "Notizen")
+            if (session.notizenTitel.isNotEmpty()) {
+                doc.add(Paragraph(session.notizenTitel).setBold().setFontSize(13f))
+            }
+            if (session.notizen.isNotEmpty()) {
+                doc.add(Paragraph(session.notizen).setFontSize(12f))
+            }
+            doc.add(Paragraph(" "))
         }
 
-        // Footer
-        y = 810f
-        canvas.drawText(
-            "HundeWildnis App · Nasenarbeit · ${dfDate.format(Date())}",
-            lm, y, paint.footer
-        )
+        // ── GPS + Karte ───────────────────────────────────────
+        if (session.gpsLat != 0.0 && session.gpsLon != 0.0) {
+            addSectionTitle(doc, "Trainingsstandort")
+            val gps = twoColTable()
+            gps.addCell(labelCell("Koordinaten"))
+            gps.addCell(valueCell("${String.format("%.5f", session.gpsLat)}, ${String.format("%.5f", session.gpsLon)}"))
+            gps.addCell(labelCell("Karte"))
+            val osmUrl = "https://www.openstreetmap.org/?mlat=${session.gpsLat}&mlon=${session.gpsLon}#map=16/${session.gpsLat}/${session.gpsLon}"
+            gps.addCell(valueCell(osmUrl))
+            doc.add(gps)
 
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(session.datum))
-        val safeName = profile.name.replace("\\s+".toRegex(), "_").filter { it.isLetterOrDigit() || it == '_' }
-        val filename = "nasenarbeit_session_${timestamp}_${safeName}.pdf"
+            // Static map tile via OpenStreetMap tile server
+            val mapBitmap = fetchOsmTile(context, session.gpsLat, session.gpsLon, zoom = 15)
+            if (mapBitmap != null) {
+                doc.add(Paragraph(" "))
+                val stream = ByteArrayOutputStream()
+                mapBitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                val mapImg = Image(ImageDataFactory.create(stream.toByteArray()))
+                    .setWidth(UnitValue.createPercentValue(80f))
+                    .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                doc.add(mapImg)
+                doc.add(Paragraph("Kartenkachel: OpenStreetMap Contributors")
+                    .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
+                mapBitmap.recycle()
+            } else {
+                doc.add(Paragraph("Kartenkachel: $osmUrl")
+                    .setFontSize(10f).setFontColor(BLUE))
+            }
+            doc.add(Paragraph(" "))
+        }
 
-        doc.finishPage(page)
-        return saveDoc(context, doc, filename)
+        // ── Fotos ─────────────────────────────────────────────
+        if (session.fotoUris.isNotEmpty()) {
+            doc.add(AreaBreak())
+            addSectionTitle(doc, "Fotos (${session.fotoUris.size})")
+            doc.add(Paragraph(" "))
+            addPhotosGrid(context, doc, session.fotoUris)
+        }
+
+        // ── Footer ───────────────────────────────────────────
+        doc.add(Paragraph(" "))
+        doc.add(Paragraph("HundeWildnis App · Nasenarbeit · ${dfDate.format(Date())}")
+            .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
+
+        doc.close()
+        return file
     }
 
     // ════════════════════════════════════════════════════════════
@@ -160,113 +189,202 @@ object NasenarbeitPDFGenerator {
         fortschritt: NasenarbeitFortschritt,
         profile: DogProfile
     ): File {
-        val doc = PdfDocument()
-        val info = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-        var page = doc.startPage(info)
-        var canvas = page.canvas
-        var y = 50f
-        val lm = 50f
-        var pageNum = 1
+        val dir  = File(context.filesDir, "nasenarbeit_pdfs").also { it.mkdirs() }
+        val file = File(dir, "nasenarbeit_gesamt_${profile.id.take(8)}.pdf")
 
-        val paint = buildPaints()
+        val writer = PdfWriter(file)
+        val pdf    = PdfDocument(writer)
+        val doc    = Document(pdf)
 
-        fun nl(extra: Float = 0f) { y += 18f + extra }
-        fun newPage() {
-            doc.finishPage(page); pageNum++
-            page = doc.startPage(
-                PdfDocument.PageInfo.Builder(595, 842, pageNum).create()
-            )
-            canvas = page.canvas; y = 50f
-        }
-        fun ensureSpace(needed: Float) { if (y + needed > 800f) newPage() }
+        // ── Titel ─────────────────────────────────────────────
+        doc.add(Paragraph("🐾 NASENARBEIT – GESAMTAUSWERTUNG")
+            .setBold().setFontSize(18f).setFontColor(GREEN))
+        doc.add(Paragraph("${profile.name}  ·  ${profile.breed}")
+            .setFontSize(12f).setFontColor(GRAY))
+        doc.add(Paragraph(" "))
 
-        // Titel
-        canvas.drawText("🐾 NASENARBEIT – GESAMTAUSWERTUNG", lm, y, paint.title); nl(8f)
-        canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-
-        // Hund
-        canvas.drawText("${profile.name}  •  ${profile.breed}", lm, y, paint.header); nl(8f)
-
-        // Statistik
-        canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-        canvas.drawText("Übersicht", lm, y, paint.header); nl()
-        canvas.drawText("🐾 Verlorensuche:", lm, y, paint.label)
-        canvas.drawText("${fortschritt.sessionsVerlorensuche} Sessions – ${fortschritt.levelVerlorensuche.displayName}", 220f, y, paint.value); nl()
-        canvas.drawText("🧑 Personensuche:", lm, y, paint.label)
-        canvas.drawText("${fortschritt.sessionsPersonensuche} Sessions – ${fortschritt.levelPersonensuche.displayName}", 220f, y, paint.value); nl()
-        canvas.drawText("🔍 Freisuche:", lm, y, paint.label)
-        canvas.drawText("${fortschritt.sessionsFreisuche} Sessions – ${fortschritt.levelFreisuche.displayName}", 220f, y, paint.value); nl()
-        canvas.drawText("Gesamt:", lm, y, paint.label)
-        canvas.drawText("${fortschritt.gesamtSessions} Sessions", 220f, y, paint.value); nl()
+        // ── Übersicht ─────────────────────────────────────────
+        addSectionTitle(doc, "Übersicht")
+        val ov = twoColTable()
+        ov.addCell(labelCell("🐾 Verlorensuche"))
+        ov.addCell(valueCell("${fortschritt.sessionsVerlorensuche} Sessions – ${fortschritt.levelVerlorensuche.displayName}"))
+        ov.addCell(labelCell("🧑 Personensuche"))
+        ov.addCell(valueCell("${fortschritt.sessionsPersonensuche} Sessions – ${fortschritt.levelPersonensuche.displayName}"))
+        ov.addCell(labelCell("🔍 Freisuche"))
+        ov.addCell(valueCell("${fortschritt.sessionsFreisuche} Sessions – ${fortschritt.levelFreisuche.displayName}"))
+        ov.addCell(labelCell("Gesamt"))
+        ov.addCell(valueCell("${fortschritt.gesamtSessions} Sessions"))
         if (fortschritt.maxSchritte > 0) {
-            canvas.drawText("Max. Strecke:", lm, y, paint.label)
-            canvas.drawText("${fortschritt.maxSchritte} Schritte", 220f, y, paint.value); nl()
+            ov.addCell(labelCell("Max. Strecke")); ov.addCell(valueCell("${fortschritt.maxSchritte} Schritte"))
         }
         if (fortschritt.maxHa > 0.0) {
-            canvas.drawText("Max. Fläche:", lm, y, paint.label)
-            canvas.drawText("${String.format("%.1f", fortschritt.maxHa)} ha", 220f, y, paint.value); nl()
+            ov.addCell(labelCell("Max. Fläche")); ov.addCell(valueCell("${String.format("%.1f", fortschritt.maxHa)} ha"))
         }
         if (fortschritt.letzteSession > 0) {
-            canvas.drawText("Letzte Session:", lm, y, paint.label)
-            canvas.drawText(dfDate.format(Date(fortschritt.letzteSession)), 220f, y, paint.value); nl()
+            ov.addCell(labelCell("Letzte Session")); ov.addCell(valueCell(dfDate.format(Date(fortschritt.letzteSession))))
         }
+        doc.add(ov)
+        doc.add(Paragraph(" "))
 
-        // Sessionliste
-        nl(6f); canvas.drawLine(lm, y, 545f, y, paint.divider); nl(6f)
-        canvas.drawText("Alle Sessions (${sessions.size})", lm, y, paint.header); nl(4f)
+        // ── Sessionliste ──────────────────────────────────────
+        addSectionTitle(doc, "Alle Sessions (${sessions.size})")
+        doc.add(Paragraph(" "))
 
         sessions.forEach { s ->
-            ensureSpace(22f)
-            val line = buildString {
-                append(df.format(Date(s.datum)))
-                append("  ${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName}")
-                s.durchgefuehrteSchritte?.let { append("  ${it} Schr.") }
-                s.durchgefuehrteHa?.let { append("  ${String.format("%.1f",it)} ha") }
-                append("  ⭐".repeat(s.erfolgsbewertung))
+            val line = Paragraph().apply {
+                add(Text(df.format(Date(s.datum))).setFontSize(10f))
+                add(Text("  ${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName}").setFontSize(10f).setBold())
+                s.durchgefuehrteSchritte?.let { add(Text("  $it Schr.").setFontSize(10f)) }
+                s.durchgefuehrteHa?.let { add(Text("  ${String.format("%.1f",it)} ha").setFontSize(10f)) }
+                add(Text("  ${"⭐".repeat(s.erfolgsbewertung)}").setFontSize(10f))
             }
-            canvas.drawText(line, lm, y, paint.small); nl()
+            doc.add(line)
         }
 
-        // Footer
-        y = 810f
-        canvas.drawText(
-            "HundeWildnis App · Nasenarbeit Gesamtauswertung · ${dfDate.format(Date())}",
-            lm, y, paint.footer
-        )
+        // ── Footer ───────────────────────────────────────────
+        doc.add(Paragraph(" "))
+        doc.add(Paragraph("HundeWildnis App · Nasenarbeit Gesamtauswertung · ${dfDate.format(Date())}")
+            .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
 
-        val safeName = profile.name.replace("\\s+".toRegex(), "_").filter { it.isLetterOrDigit() || it == '_' }
-        val filename = "nasenarbeit_gesamt_${safeName}.pdf"
-
-        doc.finishPage(page)
-        return saveDoc(context, doc, filename)
-    }
-
-    // ── HELPERS ────────────────────────────────────────────────
-
-    private fun fmtScore(d: Double) = if (d > -999.0) String.format("%.1f Punkte", d) else "Nicht geeignet"
-
-    private fun saveDoc(context: Context, doc: PdfDocument, filename: String): File {
-        // Speichern in Documents/HundeWildnis als zentrales Zielverzeichnis
-        val docDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOCUMENTS)
-        val dir = File(docDir, "HundeWildnis").also { it.mkdirs() }
-        val file = File(dir, filename)
-        FileOutputStream(file).use { doc.writeTo(it) }
         doc.close()
         return file
     }
 
-    private data class Paints(
-        val title: Paint, val header: Paint, val label: Paint,
-        val value: Paint, val divider: Paint, val footer: Paint, val small: Paint
-    )
+    // ════════════════════════════════════════════════════════════
+    // FOTO GRID
+    // ════════════════════════════════════════════════════════════
 
-    private fun buildPaints() = Paints(
-        title = Paint().apply { color = Color.parseColor("#2d5016"); textSize = 18f; isFakeBoldText = true },
-        header = Paint().apply { color = Color.parseColor("#2d5016"); textSize = 14f; isFakeBoldText = true },
-        label = Paint().apply { color = Color.BLACK; textSize = 11f; isFakeBoldText = true },
-        value = Paint().apply { color = Color.DKGRAY; textSize = 11f },
-        divider = Paint().apply { color = Color.LTGRAY; strokeWidth = 1f },
-        footer = Paint().apply { color = Color.GRAY; textSize = 9f },
-        small = Paint().apply { color = Color.DKGRAY; textSize = 10f }
-    )
+    private fun addPhotosGrid(context: Context, doc: Document, uris: List<String>) {
+        val maxSize = 900
+        var photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f))).useAllAvailableWidth()
+        var count = 0
+
+        for (uriString in uris) {
+            try {
+                val uri = Uri.parse(uriString)
+                val inputStream = context.contentResolver.openInputStream(uri) ?: continue
+                val orig = BitmapFactory.decodeStream(inputStream)
+                inputStream.close()
+                if (orig == null) continue
+
+                val scaled = if (orig.width > maxSize || orig.height > maxSize) {
+                    val scale = minOf(maxSize.toFloat() / orig.width, maxSize.toFloat() / orig.height)
+                    Bitmap.createScaledBitmap(orig, (orig.width * scale).toInt(), (orig.height * scale).toInt(), true)
+                } else orig
+
+                val stream = ByteArrayOutputStream()
+                scaled.compress(Bitmap.CompressFormat.JPEG, 85, stream)
+                val img = Image(ImageDataFactory.create(stream.toByteArray())).setAutoScale(true)
+
+                val cell = Cell().add(img)
+                cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                cell.setPadding(8f)
+                photoTable.addCell(cell)
+                count++
+
+                if (scaled != orig) scaled.recycle()
+                orig.recycle()
+
+                if (count % 2 == 0 && count < uris.size) {
+                    doc.add(photoTable)
+                    doc.add(AreaBreak())
+                    photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f))).useAllAvailableWidth()
+                }
+            } catch (e: Exception) { e.printStackTrace() }
+        }
+
+        // Letztes leeres Feld auffüllen wenn ungerade
+        if (count % 2 != 0) {
+            val empty = Cell().add(Paragraph(""))
+            empty.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+            photoTable.addCell(empty)
+        }
+        if (count > 0) doc.add(photoTable)
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // OSM STATIC MAP TILE
+    // ════════════════════════════════════════════════════════════
+
+    /**
+     * Lädt eine zusammengesetzte OSM-Kartenkachel (3×3 Tiles → 768×768px)
+     * um den Trainingsstandort herum und zeichnet einen roten Marker drauf.
+     */
+    private fun fetchOsmTile(context: Context, lat: Double, lon: Double, zoom: Int): Bitmap? {
+        return try {
+            // Tile-Koordinaten berechnen
+            val n = Math.pow(2.0, zoom.toDouble())
+            val tileX = ((lon + 180.0) / 360.0 * n).toInt()
+            val tileY = ((1.0 - Math.log(
+                Math.tan(Math.toRadians(lat)) + 1.0 / Math.cos(Math.toRadians(lat))
+            ) / Math.PI) / 2.0 * n).toInt()
+
+            val tileSize = 256
+            val grid = 3 // 3×3 tiles
+            val combined = Bitmap.createBitmap(tileSize * grid, tileSize * grid, Bitmap.Config.ARGB_8888)
+            val canvas = android.graphics.Canvas(combined)
+
+            for (dy in 0 until grid) {
+                for (dx in 0 until grid) {
+                    val tx = tileX - grid / 2 + dx
+                    val ty = tileY - grid / 2 + dy
+                    val url = java.net.URL("https://tile.openstreetmap.org/$zoom/$tx/$ty.png")
+                    val conn = url.openConnection().also {
+                        it.setRequestProperty("User-Agent", "HundeWildnis/1.0 Android")
+                        it.connectTimeout = 5000
+                        it.readTimeout = 5000
+                    }
+                    val bmp = BitmapFactory.decodeStream(conn.getInputStream())
+                    if (bmp != null) {
+                        canvas.drawBitmap(bmp, (dx * tileSize).toFloat(), (dy * tileSize).toFloat(), null)
+                        bmp.recycle()
+                    }
+                }
+            }
+
+            // Roter Marker in der Mitte
+            val paint = android.graphics.Paint().apply {
+                color = android.graphics.Color.RED
+                style = android.graphics.Paint.Style.FILL
+                isAntiAlias = true
+            }
+            val cx = (tileSize * grid / 2).toFloat()
+            val cy = (tileSize * grid / 2).toFloat()
+            canvas.drawCircle(cx, cy, 14f, paint)
+            paint.apply { color = android.graphics.Color.WHITE; style = android.graphics.Paint.Style.STROKE; strokeWidth = 3f }
+            canvas.drawCircle(cx, cy, 14f, paint)
+
+            combined
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // HELPERS
+    // ════════════════════════════════════════════════════════════
+
+    private fun fmtScore(d: Double) =
+        if (d > -999.0) String.format("%.1f Punkte", d) else "Nicht geeignet"
+
+    private fun addSectionTitle(doc: Document, title: String) {
+        doc.add(Paragraph(title).setBold().setFontSize(13f).setFontColor(GREEN)
+            .setMarginBottom(4f))
+    }
+
+    private fun twoColTable(): Table =
+        Table(UnitValue.createPercentArray(floatArrayOf(35f, 65f)))
+            .useAllAvailableWidth()
+            .setMarginBottom(4f)
+
+    private fun labelCell(text: String): Cell =
+        Cell().add(Paragraph(text).setFontSize(11f).setBold())
+            .setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+            .setPaddingTop(3f).setPaddingBottom(3f)
+
+    private fun valueCell(text: String): Cell =
+        Cell().add(Paragraph(text).setFontSize(11f).setFontColor(GRAY))
+            .setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+            .setPaddingTop(3f).setPaddingBottom(3f)
 }

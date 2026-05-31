@@ -24,6 +24,16 @@
         name="restored_photos"
         path="restored_photos/" />
 
+    <!-- ✅ NEU: Nasenarbeit Fotos (Kamera + Galerie) -->
+    <files-path
+        name="nasenarbeit_photos"
+        path="nasenarbeit_photos/" />
+
+    <!-- ✅ NEU: Nasenarbeit PDFs -->
+    <files-path
+        name="nasenarbeit_pdfs"
+        path="nasenarbeit_pdfs/" />
+
     <!-- ✅ Cache für PDFs (Communication, WalkingSpeed, DailyNotes) -->
     <cache-path
         name="cache"

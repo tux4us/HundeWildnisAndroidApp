@@ -224,7 +224,24 @@
             </LinearLayout>
 
             <!-- Notizen -->
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notizen:" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Notizen" android:textSize="14sp" android:textStyle="bold"
+                android:layout_marginBottom="6dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Titel (optional)"
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNotizenTitel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -238,6 +255,54 @@
                     android:minLines="3"
                     android:inputType="textMultiLine"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Fotos -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Fotos" android:textSize="14sp" android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFotoGalerie"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📷 Galerie"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginEnd="6dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:cornerRadius="8dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFotoKamera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📸 Kamera"
+                    android:textColor="?attr/colorOnSurface"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:cornerRadius="8dp"/>
+            </LinearLayout>
+
+            <!-- Foto Vorschau Grid -->
+            <LinearLayout
+                android:id="@+id/layoutFotoGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvFotoHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Noch keine Fotos • Lang drücken zum Entfernen"
+                android:textSize="11sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginBottom="16dp"/>
 
             <!-- Speichern -->
             <com.google.android.material.button.MaterialButton
