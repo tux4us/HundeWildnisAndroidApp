@@ -135,6 +135,7 @@ data class NasenarbeitSession(
     @SerializedName("gegenstaendeGesamt") val gegenstaendeGesamt: Int? = null,
     @SerializedName("personenfundErfolgreich") val personenfundErfolgreich: Boolean? = null,
     @SerializedName("erfolgsbewertung") val erfolgsbewertung: Int = 0, // 1-4
+    @SerializedName("notizenTitel") val notizenTitel: String = "",
     @SerializedName("notizen") val notizen: String = "",
     @SerializedName("fotoUris") val fotoUris: List<String> = emptyList(),
     @SerializedName("gpsLat") val gpsLat: Double = 0.0,

@@ -55,13 +55,9 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
             }
         }
         bottomNav.selectedItemId = getCurrentNavigationItemId()
-
-        // Insets für die Bottom Navigation (Navigationsleiste unten)
-        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { _, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            bottomNav.setPadding(0, 0, 0, systemBars.bottom)
-            insets
-        }
+        
+        // Hinweis: Insets werden zentral in SecureBaseActivity gehandelt, 
+        // um Doppelpufferung und Überlagerung durch die Android-Buttons zu vermeiden.
     }
 
     private fun navigateToMainActivity(viewType: Int) {
