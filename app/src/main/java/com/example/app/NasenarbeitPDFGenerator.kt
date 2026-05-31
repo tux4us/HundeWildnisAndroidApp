@@ -152,7 +152,7 @@ object NasenarbeitPDFGenerator {
                     .setWidth(UnitValue.createPercentValue(80f))
                     .setHorizontalAlignment(HorizontalAlignment.CENTER)
                 doc.add(mapImg)
-                doc.add(Paragraph("Kartenkachel: OpenStreetMap Contributors")
+                doc.add(Paragraph("© OpenStreetMap contributors")
                     .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
                 mapBitmap.recycle()
             } else {

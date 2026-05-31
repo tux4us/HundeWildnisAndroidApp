@@ -124,7 +124,7 @@
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
                 android:background="#CC000000"
-                android:text="Map data © OpenStreetMap Contributors"
+                android:text="© OpenStreetMap contributors"
                 android:textColor="#FFFFFF"
                 android:textSize="8dp"
                 android:clickable="true"

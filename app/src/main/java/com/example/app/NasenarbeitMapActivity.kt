@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -100,7 +102,23 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         setupMap()
         setupControls()
         setupButtons()
+        setupOSMCopyright()
         requestLocation()
+    }
+
+    private fun setupOSMCopyright() {
+        binding.tvOsmCopyright.setOnClickListener {
+            val webView = WebView(this).apply {
+                settings.javaScriptEnabled = true
+                webViewClient = WebViewClient()
+                loadUrl("https://www.openstreetmap.org/copyright")
+            }
+            AlertDialog.Builder(this)
+                .setTitle("OpenStreetMap Lizenz")
+                .setView(webView)
+                .setPositiveButton("Schließen", null)
+                .show()
+        }
     }
 
     // ════════════════════════════════════════════════════════════
