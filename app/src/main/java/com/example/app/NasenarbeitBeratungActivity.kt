@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -107,6 +108,48 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         private const val START_SCHRITTE_P  = 20    // Personensuche
         private const val START_HA_FL       = 0.01  // Freisuche (100 m²)
     }
+
+    // ── Karten-Launcher ──────────────────────────────────────
+    private var mapResultPending = false
+
+    private val mapLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        mapResultPending = false
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            result.data?.let { data ->
+                val schritte = data.getIntExtra(NasenarbeitMapActivity.RESULT_SCHRITTE, 0)
+                val ha       = data.getDoubleExtra(NasenarbeitMapActivity.RESULT_HA, 0.0)
+                val dizName  = data.getStringExtra(NasenarbeitMapActivity.EXTRA_DISZIPLIN)
+                    ?: disziplin.name
+
+                // Werte in Beratung übernehmen
+                if (schritte > 0) {
+                    gebietSchritte = schritte
+                }
+                if (ha > 0.0) {
+                    gebietHa = ha
+                }
+                // Empfohlene Disziplin aus Kartenauswahl übernehmen
+                disziplin = NasenarbeitDisziplin.valueOf(dizName)
+
+                showScreen(2)
+                buildGelaendeScreen()
+
+                android.widget.Toast.makeText(
+                    this,
+                    "✅ Kartendaten übernommen",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            // Nutzer hat übersprungen → normale Geländeansicht
+            showScreen(2)
+            buildGelaendeScreen()
+        }
+    }
+
+    private var disziplin = NasenarbeitDisziplin.VERLORENSUCHE
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -234,15 +277,25 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val hardExcl = paramTemp > 30 || paramTemp < -10 || paramWmo in listOf(95,96,99) || paramBf >= 9
         if (hardExcl) {
             binding.cardExclusion.visibility = View.VISIBLE
-            binding.tvExclusionReason.text = when {
+            val reason = when {
                 paramTemp > 30  -> "Temperatur über 30°C"
                 paramTemp < -10 -> "Temperatur unter −10°C"
                 paramBf >= 9    -> "Windstärke Beaufort $paramBf – Sturm"
                 else            -> "Gewitter aktiv"
             }
+            binding.tvExclusionReason.text = reason
             binding.layoutWetterEignung.visibility = View.GONE
             binding.cardWindDir.visibility = View.GONE
-            binding.btnWetterWeiter.isEnabled = false
+
+            // ✅ NEU: Button aktiv lassen für Gewitter, aber mit Warn-Dialog
+            if (paramWmo in listOf(95, 96, 99)) {
+                binding.btnWetterWeiter.isEnabled = true
+                binding.btnWetterWeiter.setOnClickListener {
+                    showThunderstormWarningDialog()
+                }
+            } else {
+                binding.btnWetterWeiter.isEnabled = false
+            }
         } else {
             binding.cardExclusion.visibility = View.GONE
             updateWetterEignung()
@@ -250,21 +303,46 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             binding.layoutWetterEignung.visibility = View.VISIBLE
             binding.cardWindDir.visibility = View.VISIBLE
             binding.btnWetterWeiter.isEnabled = true
-        }
-
-        // Wind direction radio listener
-        binding.rgWindDir.setOnCheckedChangeListener { _, _ ->
-            paramWindDir = when (binding.rgWindDir.checkedRadioButtonId) {
-                R.id.rbWindSeite -> 1
-                R.id.rbWindVorn  -> 2
-                else             -> 0
+            binding.btnWetterWeiter.setOnClickListener {
+                openMapActivity()
             }
-            updateWindDirEignung()
         }
+    }
 
-        binding.btnWetterWeiter.setOnClickListener {
-            showScreen(2); buildGelaendeScreen()
-        }
+    /**
+     * ✅ NEU: Warn-Dialog bei Gewitter
+     */
+    private fun showThunderstormWarningDialog() {
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("⛈️ Lebensgefahr: Gewitter!")
+            .setMessage(
+                """
+                Ein Training bei aktivem Gewitter ist extrem gefährlich:
+
+                • ⚡ Blitzschlag-Risiko – Dein Hund und du sind im freien Gelände oder am Waldrand extrem exponiert.
+                • 🌳 Umstürzende Bäume – Gewitterböen können Äste oder ganze Bäume zu Fall bringen.
+                • 🐾 Stress für den Hund – Der massive Luftdruckwechsel und Donner können das Suchverhalten negativ beeinflussen.
+
+                Wir raten dringend dazu, das Training auf einen sichereren Zeitpunkt zu verschieben.
+                """.trimIndent()
+            )
+            .setPositiveButton("Ich kenne die Risiken, trotzdem trainieren") { _, _ ->
+                openMapActivity()
+            }
+            .setNegativeButton("Einverstanden, kein Training") { _, _ ->
+                finish()
+            }
+            .setCancelable(false)
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(colorNormal)
+            }
     }
 
     private fun updateWetterEignung() {
@@ -320,6 +398,11 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
         // Gebiet sliders
         // Schritte: 0→50 steps of 50 = 50..3000
+        // Slider-Position auf vorhandene Werte setzen (z.B. aus Karte)
+        val initSchrProgress = ((gebietSchritte - 50) / 50).coerceIn(0, 59)
+        binding.sbGebietSchritte.progress = initSchrProgress
+        binding.tvGebietSchritte.text = "$gebietSchritte Schritte"
+
         binding.sbGebietSchritte.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar, p: Int, user: Boolean) {
                 gebietSchritte = 50 + p * 50
@@ -330,6 +413,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             override fun onStopTrackingTouch(sb: SeekBar) {}
         })
         // Ha: 0→99 steps of 0.1 = 0.1..10.0
+        val initHaProgress = ((gebietHa / 0.1).toInt() - 1).coerceIn(0, 99)
+        binding.sbGebietHa.progress = initHaProgress
+        binding.tvGebietHa.text = String.format(Locale.GERMAN, "%.1f ha", gebietHa)
+
         binding.sbGebietHa.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar, p: Int, user: Boolean) {
                 gebietHa = (p + 1) * 0.1
@@ -855,6 +942,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         ).forEach { binding.layoutNachTraining.addView(makeBullet("📊", it)) }
     }
 
+    private fun openMapActivity() {
+        val intent = android.content.Intent(this, NasenarbeitMapActivity::class.java)
+        intent.putExtra(NasenarbeitMapActivity.EXTRA_DISZIPLIN, disziplin.name)
+        mapResultPending = true
+        mapLauncher.launch(intent)
+    }
+
     // ════════════════════════════════════════════════════════════
     // SCREEN NAVIGATION
     // ════════════════════════════════════════════════════════════
@@ -891,6 +985,8 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private fun resetAndRestart() {
         topoSequenz.clear(); umbSequenz.clear(); bodenEntries.clear()
         scoringResult = null; currentB5Tab = "ok"
+        disziplin = NasenarbeitDisziplin.VERLORENSUCHE
+        gebietSchritte = 500; gebietHa = 0.5
         fetchWeather()
     }
 

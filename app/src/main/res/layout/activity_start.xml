@@ -3,175 +3,177 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="false">
 
+    <!-- AppBar mit Theme-Hintergrund für die Statusleiste -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground"
         android:fitsSystemWindows="false">
 
+        <!-- Toolbar mit Marken-Grün -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF" />
+            app:titleTextColor="#FFFFFF"
+            android:elevation="4dp" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content Container -->
-    <LinearLayout
+    <!-- Scrollbarer Inhalt -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollViewContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:background="?android:attr/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Header - FIX oben -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/start_header_text"
-            android:textSize="@dimen/text_headline_medium"
-            android:textStyle="italic"
-            android:textAlignment="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:textColor="?android:attr/textColorPrimary" />
-
-        <!-- NEU: Blog-Preview Card für activity_start.xml -->
-        <com.google.android.material.card.MaterialCardView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cardLatestBlogPost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="?attr/colorSurface"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            android:orientation="vertical"
+            android:paddingBottom="140dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="8dp"
+                android:background="?android:attr/colorBackground">
 
-                <!-- Header: "Neuester Blog-Beitrag" -->
-                <LinearLayout
+                <!-- Header Text -->
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:background="#2d5016"
-                    android:gravity="center_vertical">
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/start_header_text"
+                    android:textSize="@dimen/text_headline_medium"
+                    android:textStyle="italic"
+                    android:textAlignment="center"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="?android:attr/textColorPrimary" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="💬 Neuester Blog-Beitrag"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Alle anzeigen ›"
-                        android:textColor="#A4B395"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <!-- Blog-Bild (optional) -->
-                <ImageView
-                    android:id="@+id/blogPreviewImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    android:contentDescription="Blog-Bild" />
-
-                <!-- Blog-Inhalt -->
-                <LinearLayout
+                <!-- Blog-Preview Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLatestBlogPost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="?attr/colorSurface"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
 
-                    <!-- Titel -->
-                    <TextView
-                        android:id="@+id/blogPreviewTitle"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Lädt..."
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="?android:textColorPrimary"
-                        android:maxLines="2"
-                        android:ellipsize="end" />
+                        android:orientation="vertical">
 
-                    <!-- Datum -->
-                    <TextView
-                        android:id="@+id/blogPreviewDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text=""
-                        android:textSize="12sp"
-                        android:textColor="?android:textColorSecondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:background="#2d5016"
+                            android:gravity="center_vertical">
 
-                    <!-- Excerpt -->
-                    <TextView
-                        android:id="@+id/blogPreviewExcerpt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text=""
-                        android:textSize="14sp"
-                        android:textColor="?android:textColorSecondary"
-                        android:maxLines="2"
-                        android:ellipsize="end" />
-                </LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="💬 Neuester Blog-Beitrag"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
-                <!-- Loading Indicator -->
-                <ProgressBar
-                    android:id="@+id/blogPreviewLoading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="32dp"
-                    android:indeterminateTint="#2d5016"
-                    android:visibility="visible" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Alle anzeigen ›"
+                                android:textColor="#A4B395"
+                                android:textSize="12sp" />
+                        </LinearLayout>
 
+                        <ImageView
+                            android:id="@+id/blogPreviewImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone"
+                            android:contentDescription="Blog-Bild" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/blogPreviewTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Lädt..."
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="?android:textColorPrimary"
+                                android:maxLines="2"
+                                android:ellipsize="end" />
+
+                            <TextView
+                                android:id="@+id/blogPreviewDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textSize="12sp"
+                                android:textColor="?android:textColorSecondary" />
+
+                            <TextView
+                                android:id="@+id/blogPreviewExcerpt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:textSize="14sp"
+                                android:textColor="?android:textColorSecondary"
+                                android:maxLines="2"
+                                android:ellipsize="end" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/blogPreviewLoading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="32dp"
+                            android:indeterminateTint="#2d5016"
+                            android:visibility="visible" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Scrollable Buttons -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollViewContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fillViewport="false"
-            android:clipToPadding="false"
-            android:scrollbars="vertical">
-
+            <!-- Gruppen/Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="140dp">
+                android:paddingTop="12dp">
 
-                <!-- GRUPPE 1: Wochen-Übungen -->
+                <!-- GRUPPE 1 -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -195,7 +197,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="4dp"/>
 
-                        <!-- Button 1: Übung der Woche -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDailyExercise"
                             android:layout_width="match_parent"
@@ -207,10 +208,8 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#2d5016"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
 
-                        <!-- Button 2: Meditation der Woche -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDailyMeditation"
                             android:layout_width="match_parent"
@@ -221,8 +220,7 @@
                             android:textStyle="bold"
                             app:cornerRadius="12dp"
                             app:backgroundTint="#4a6135"
-                            android:textColor="#FFFFFF"
-                            app:iconGravity="start" />
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -250,7 +248,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="4dp"/>
 
-                        <!-- Button 3: Geh-Geschwindigkeit -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnWalkingSpeed"
                             android:layout_width="match_parent"
@@ -262,10 +259,8 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#5a7145"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
 
-                        <!-- Button 4: Kommunikation -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCommunication"
                             android:layout_width="match_parent"
@@ -277,10 +272,8 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#6a8255"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
 
-                        <!-- ✅ Button 5: Trainingstagebuch -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnTrainingDiary"
                             android:layout_width="match_parent"
@@ -292,10 +285,8 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#6F8759"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
 
-                        <!-- ✅ Button 6: Nasenarbeit -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnNasenarbeit"
                             android:layout_width="match_parent"
@@ -307,8 +298,7 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#5A7147"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -336,7 +326,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="4dp"/>
 
-                        <!-- Button 6: Tagesnotizen -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDailyNotes"
                             android:layout_width="match_parent"
@@ -350,7 +339,6 @@
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
 
-                        <!-- Button 7: Wetter -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnWeather"
                             android:layout_width="match_parent"
@@ -364,7 +352,6 @@
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
 
-                        <!-- Button 8: Standort -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnLocation"
                             android:layout_width="match_parent"
@@ -378,7 +365,6 @@
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
 
-                        <!-- Button 9: Kompass -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCompass"
                             android:layout_width="match_parent"
@@ -392,7 +378,6 @@
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
 
-                        <!-- Button 10: Höhenmesser -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAltimeter"
                             android:layout_width="match_parent"
@@ -431,7 +416,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="4dp"/>
 
-                        <!-- Button 11: Stammdaten -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDogProfiles"
                             android:layout_width="match_parent"
@@ -445,7 +429,6 @@
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
 
-                        <!-- Button 12: NOTFALL-BUTTON -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnEmergency"
                             android:layout_width="match_parent"
@@ -455,8 +438,7 @@
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:backgroundTint="#BD0000"
-                            app:cornerRadius="12dp"
-                            app:iconGravity="start" />
+                            app:cornerRadius="12dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -484,7 +466,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="4dp"/>
 
-                        <!-- Button 13: Blog Button -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnNavBlog"
                             android:layout_width="match_parent"
@@ -496,10 +477,8 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#283C16"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
 
-                        <!-- Button 14: Seiten Button -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnNavPages"
                             android:layout_width="match_parent"
@@ -511,10 +490,8 @@
                             app:cornerRadius="12dp"
                             app:backgroundTint="#364E21"
                             android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp"
-                            app:iconGravity="start" />
+                            android:layout_marginBottom="8dp" />
 
-                        <!-- Button 15: Kurse Button -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnNavCourses"
                             android:layout_width="match_parent"
@@ -525,8 +502,7 @@
                             android:textStyle="bold"
                             app:cornerRadius="12dp"
                             app:backgroundTint="#4F6A36"
-                            android:textColor="#FFFFFF"
-                            app:iconGravity="start" />
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -554,7 +530,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="4dp"/>
 
-                        <!-- Button 16: Backup & Restore -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnBackup"
                             android:layout_width="match_parent"
@@ -568,7 +543,6 @@
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
 
-                        <!-- Button 17: Unterstützung -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSupport"
                             android:layout_width="match_parent"
@@ -579,15 +553,13 @@
                             android:textStyle="bold"
                             app:cornerRadius="12dp"
                             app:backgroundTint="#006064"
-                            android:textColor="#FFFFFF"
-                            app:iconGravity="start" />
+                            android:textColor="#FFFFFF" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
 
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

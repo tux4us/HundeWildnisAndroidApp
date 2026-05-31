@@ -149,17 +149,17 @@ data class DogCharacter(
 @Parcelize
 data class TrainingSession(
     val id: String = java.util.UUID.randomUUID().toString(),
-    val dogId: String,
-    val category: TrainingCategory,
+    val dogId: String = "",
+    val category: TrainingCategory = TrainingCategory.LEINENARBEIT,
     val date: Long = System.currentTimeMillis(),
 
     // Core Training Data
     val measurementType: MeasurementType = MeasurementType.TIME,  // ← NEU!
     val durationMinutes: Int? = null,  // ← Nullable gemacht!
     val repetitions: Int? = null,       // ← NEU!
-    val successRating: Int,
-    val distractionLevel: DistractionLevel,
-    val difficulty: DifficultyLevel,
+    val successRating: Int = 0,
+    val distractionLevel: DistractionLevel = DistractionLevel.NONE,
+    val difficulty: DifficultyLevel = DifficultyLevel.NORMAL,
 
     // Optional Details
     val notes: String = "",
@@ -251,8 +251,8 @@ data class TrainingSession(
 
 @Parcelize
 data class TrainingProgress(
-    val dogId: String,
-    val category: TrainingCategory,
+    val dogId: String = "",
+    val category: TrainingCategory = TrainingCategory.LEINENARBEIT,
 
     // Fortschritt
     val progressPercentage: Int = 0,  // 0-100
