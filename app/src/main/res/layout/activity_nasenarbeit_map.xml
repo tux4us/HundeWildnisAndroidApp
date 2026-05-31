@@ -33,23 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <!-- OSM Copyright unten links -->
-        <TextView
-            android:id="@+id/tvOsmCopyright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="132dp"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:background="#CC000000"
-            android:text="© OpenStreetMap Contributors · ODbL"
-            android:textColor="#FFFFFF"
-            android:textSize="9sp"/>
-
         <!-- Disziplin-Auswahl oben – Textbuttons -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -246,6 +229,27 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <!-- OSM Copyright unten links - Ganz nach unten verschoben für Visibility -->
+        <TextView
+            android:id="@+id/tvOsmCopyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="185dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:background="#CC000000"
+            android:text="© OpenStreetMap contributors"
+            android:textColor="#FFFFFF"
+            android:textSize="9sp"
+            android:translationZ="10dp"
+            android:elevation="10dp"
+            android:clickable="true"
+            android:focusable="true"/>
 
     </FrameLayout>
 
