@@ -1,9 +1,13 @@
 package com.hundewildnis.app
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.colors.DeviceRgb
 import com.itextpdf.kernel.pdf.PdfDocument
@@ -15,6 +19,7 @@ import com.itextpdf.layout.properties.TextAlignment
 import com.itextpdf.layout.properties.UnitValue
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,15 +44,42 @@ object NasenarbeitPDFGenerator {
     fun generateSessionPDF(
         context: Context,
         session: NasenarbeitSession,
-        profile: DogProfile
-    ): File {
+        profile: DogProfile,
+        saveToPublic: Boolean = false
+    ): File? {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(Date(session.datum))
+        val fileName = "Nasenarbeit_${profile.name}_$timestamp.pdf"
+
+        if (saveToPublic) {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                exportPdfViaMediaStore(context, fileName) { doc -> writeSessionContent(context, doc, session, profile) }
+            } else {
+                exportPdfOldWay(fileName) { doc -> writeSessionContent(context, doc, session, profile) }
+            }
+        }
+
         val dir  = File(context.filesDir, "nasenarbeit_pdfs").also { it.mkdirs() }
         val file = File(dir, "nasenarbeit_session_${session.id.take(8)}.pdf")
 
-        val writer = PdfWriter(file)
-        val pdf    = PdfDocument(writer)
-        val doc    = Document(pdf)
+        try {
+            val writer = PdfWriter(file)
+            val pdf    = PdfDocument(writer)
+            val doc    = Document(pdf)
+            writeSessionContent(context, doc, session, profile)
+            doc.close()
+            return file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
 
+    private fun writeSessionContent(
+        context: Context,
+        doc: Document,
+        session: NasenarbeitSession,
+        profile: DogProfile
+    ) {
         // ── Titel ─────────────────────────────────────────────
         doc.add(Paragraph("🐾 NASENARBEIT – TRAININGSAUSWERTUNG")
             .setBold().setFontSize(18f).setFontColor(GREEN))
@@ -174,9 +206,6 @@ object NasenarbeitPDFGenerator {
         doc.add(Paragraph(" "))
         doc.add(Paragraph("HundeWildnis App · Nasenarbeit · ${dfDate.format(Date())}")
             .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
-
-        doc.close()
-        return file
     }
 
     // ════════════════════════════════════════════════════════════
@@ -187,15 +216,42 @@ object NasenarbeitPDFGenerator {
         context: Context,
         sessions: List<NasenarbeitSession>,
         fortschritt: NasenarbeitFortschritt,
-        profile: DogProfile
-    ): File {
+        profile: DogProfile,
+        saveToPublic: Boolean = false
+    ): File? {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(Date())
+        val fileName = "Nasenarbeit_Gesamt_${profile.name}_$timestamp.pdf"
+
+        if (saveToPublic) {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                exportPdfViaMediaStore(context, fileName) { doc -> writeGesamtContent(doc, sessions, fortschritt, profile) }
+            } else {
+                exportPdfOldWay(fileName) { doc -> writeGesamtContent(doc, sessions, fortschritt, profile) }
+            }
+        }
+
         val dir  = File(context.filesDir, "nasenarbeit_pdfs").also { it.mkdirs() }
         val file = File(dir, "nasenarbeit_gesamt_${profile.id.take(8)}.pdf")
 
-        val writer = PdfWriter(file)
-        val pdf    = PdfDocument(writer)
-        val doc    = Document(pdf)
+        try {
+            val writer = PdfWriter(file)
+            val pdf    = PdfDocument(writer)
+            val doc    = Document(pdf)
+            writeGesamtContent(doc, sessions, fortschritt, profile)
+            doc.close()
+            return file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
 
+    private fun writeGesamtContent(
+        doc: Document,
+        sessions: List<NasenarbeitSession>,
+        fortschritt: NasenarbeitFortschritt,
+        profile: DogProfile
+    ) {
         // ── Titel ─────────────────────────────────────────────
         doc.add(Paragraph("🐾 NASENARBEIT – GESAMTAUSWERTUNG")
             .setBold().setFontSize(18f).setFontColor(GREEN))
@@ -245,9 +301,61 @@ object NasenarbeitPDFGenerator {
         doc.add(Paragraph(" "))
         doc.add(Paragraph("HundeWildnis App · Nasenarbeit Gesamtauswertung · ${dfDate.format(Date())}")
             .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
+    }
 
-        doc.close()
-        return file
+    // ════════════════════════════════════════════════════════════
+    // PUBLIC EXPORT HELPERS
+    // ────────────────────────────────────────────────────────────
+
+    private fun exportPdfViaMediaStore(context: Context, fileName: String, writerFunc: (Document) -> Unit): File? {
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis")
+        }
+
+        val uri = context.contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+            ?: return null
+
+        try {
+            context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                val writer = PdfWriter(outputStream)
+                val pdf = PdfDocument(writer)
+                val document = Document(pdf)
+                writerFunc(document)
+                document.close()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+
+        var filePath: String? = null
+        val projection = arrayOf(MediaStore.MediaColumns.DATA)
+        context.contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA)
+                if (columnIndex >= 0) filePath = cursor.getString(columnIndex)
+            }
+        }
+        return if (filePath != null) File(filePath) else null
+    }
+
+    private fun exportPdfOldWay(fileName: String, writerFunc: (Document) -> Unit): File? {
+        val docsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
+        if (!docsDir.exists()) docsDir.mkdirs()
+        val file = File(docsDir, fileName)
+        return try {
+            val writer = PdfWriter(FileOutputStream(file))
+            val pdf = PdfDocument(writer)
+            val document = Document(pdf)
+            writerFunc(document)
+            document.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     // ════════════════════════════════════════════════════════════

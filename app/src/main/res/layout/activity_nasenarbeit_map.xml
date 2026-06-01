@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#CCFFFFFF"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:layout_marginBottom="6dp"/>
 
             <!-- Berechnetes Ergebnis -->
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:minHeight="40dp"
-                    android:text="↩ Letzter Punkt"
+                    android:text="↩️ 🗑 Letzter Punkt"
                     app:autoSizeTextType="uniform"
                     app:autoSizeMinTextSize="8sp"
                     app:autoSizeMaxTextSize="10sp"
@@ -175,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:minHeight="40dp"
-                    android:text="✕ Alles löschen"
+                    android:text="❌ 🗑 Alles löschen"
                     app:autoSizeTextType="uniform"
                     app:autoSizeMinTextSize="8sp"
                     app:autoSizeMaxTextSize="10sp"
@@ -237,7 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
             android:layout_marginStart="4dp"
-            android:layout_marginBottom="185dp"
+            android:layout_marginBottom="200dp"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
             android:paddingTop="2dp"

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
@@ -112,6 +113,11 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     // ── Karten-Launcher ──────────────────────────────────────
     private var mapResultPending = false
 
+    // Phase 2+3: Overpass + Topo aus Karte
+    private var mapUmgebung = listOf<String>()
+    private var mapBoden    = listOf<String>()
+    private var mapTopo     = listOf<String>()
+
     private val mapLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -123,27 +129,30 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 val dizName  = data.getStringExtra(NasenarbeitMapActivity.EXTRA_DISZIPLIN)
                     ?: disziplin.name
 
-                // Werte in Beratung übernehmen
-                if (schritte > 0) {
-                    gebietSchritte = schritte
-                }
-                if (ha > 0.0) {
-                    gebietHa = ha
-                }
-                // Empfohlene Disziplin aus Kartenauswahl übernehmen
+                if (schritte > 0) gebietSchritte = schritte
+                if (ha > 0.0)     gebietHa       = ha
                 disziplin = NasenarbeitDisziplin.valueOf(dizName)
+
+                // Phase 2+3: Overpass + Topo speichern
+                mapUmgebung = data.getStringArrayListExtra(
+                    NasenarbeitMapActivity.RESULT_UMGEBUNG) ?: emptyList()
+                mapBoden    = data.getStringArrayListExtra(
+                    NasenarbeitMapActivity.RESULT_BODEN) ?: emptyList()
+                mapTopo     = data.getStringArrayListExtra(
+                    NasenarbeitMapActivity.RESULT_TOPO) ?: emptyList()
 
                 showScreen(2)
                 buildGelaendeScreen()
 
-                android.widget.Toast.makeText(
-                    this,
-                    "✅ Kartendaten übernommen",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
+                val msg = buildString {
+                    append("✅ Kartendaten übernommen")
+                    if (mapUmgebung.isNotEmpty()) append(" · Umgebung")
+                    if (mapTopo.isNotEmpty())     append(" · Topografie")
+                    if (mapBoden.isNotEmpty())    append(" · Boden")
+                }
+                android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show()
             }
         } else {
-            // Nutzer hat übersprungen → normale Geländeansicht
             showScreen(2)
             buildGelaendeScreen()
         }
@@ -307,6 +316,16 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 openMapActivity()
             }
         }
+
+        // ✅ Wind-Richtung Listener (außerhalb des if/else – immer registrieren)
+        binding.rgWindDir.setOnCheckedChangeListener { _, _ ->
+            paramWindDir = when (binding.rgWindDir.checkedRadioButtonId) {
+                R.id.rbWindSeite -> 1
+                R.id.rbWindVorn  -> 2
+                else             -> 0
+            }
+            updateWindDirEignung()
+        }
     }
 
     /**
@@ -377,6 +396,34 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════════
 
     private fun buildGelaendeScreen() {
+        // ── Karten-Daten ZUERST einfüllen, dann erst rendern ──────
+
+        // Phase 3: Topografie aus Karte pre-fill (vor renderTopoSel!)
+        if (mapTopo.isNotEmpty() && topoSequenz.isEmpty()) {
+            mapTopo.forEach { topo ->
+                val normalized = if (TOPO_OPTIONS.contains(topo)) topo else "Eben"
+                topoSequenz.add(normalized)
+            }
+            android.widget.Toast.makeText(
+                this,
+                "⛰️ Topografie: ${topoSequenz.joinToString(" → ")}",
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+        } else if (mapTopo.isEmpty() && mapUmgebung.isNotEmpty()) {
+            repeat(mapUmgebung.size) { topoSequenz.add("Eben") }
+        }
+
+        // Phase 2: Umgebung aus Karte pre-fill (vor renderUmbSel!)
+        if (mapUmgebung.isNotEmpty() && umbSequenz.isEmpty()) {
+            mapUmgebung.forEach { umb ->
+                val normalized = if (UMB_OPTIONS.contains(umb)) umb else "Offenes Gelände"
+                umbSequenz.add(normalized)
+            }
+            bodenEntries.clear()
+        }
+
+        // ── Jetzt Options-Chips aufbauen und mit gefüllten Sequenzen rendern ──
+
         // Topografie
         binding.chipGroupTopoOpts.removeAllViews()
         TOPO_OPTIONS.forEachIndexed { idx, opt ->
@@ -384,7 +431,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 topoSequenz.add(opt); renderTopoSel(); updateGelaendeEignung()
             })
         }
-        renderTopoSel()
+        renderTopoSel()   // ← jetzt NACH pre-fill: zeigt bereits gefüllte Chips
 
         // Umgebung
         binding.chipGroupUmbOpts.removeAllViews()
@@ -395,6 +442,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             })
         }
         renderUmbSel()
+        if (mapUmgebung.isNotEmpty()) {
+            android.widget.Toast.makeText(
+                this,
+                "🗺️ Umgebung: ${mapUmgebung.distinct().joinToString(" → ")}",
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+        }
 
         // Gebiet sliders
         // Schritte: 0→50 steps of 50 = 50..3000
@@ -445,6 +499,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 })
             }
         }
+        updateOptionsHighlighting()
     }
 
     private fun renderUmbSel() {
@@ -459,6 +514,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 })
             }
         }
+        updateOptionsHighlighting()
     }
 
     private fun updateGebietHint() {
@@ -499,6 +555,28 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         // Sync bodenEntries list size
         while (bodenEntries.size < abschnitte.size) bodenEntries.add(BodenEntry())
         while (bodenEntries.size > abschnitte.size) bodenEntries.removeLastOrNull()
+
+        // ── Automatische Aufteilung der Gesamtwerte ─────────────
+        val count = abschnitte.size
+        val avgSchritte = if (count > 0) gebietSchritte / count else 0
+        val avgPct      = if (count > 0) 100.0 / count else 0.0
+
+        // Phase 2: Overpass-Bodendaten für Abschnitte vorausfüllen
+        // mapBoden hat so viele Einträge wie mapUmgebung (1 pro Abschnitt)
+        bodenEntries.forEachIndexed { idx, entry ->
+            val bodenTyp = mapBoden.getOrNull(idx) ?: ""
+            if (bodenTyp.isNotEmpty()) {
+                entry.bodenTyp = bodenTyp
+            }
+            
+            // Werte voreintragen entsprechend Disziplin
+            if (disziplin == NasenarbeitDisziplin.FREISUCHE) {
+                if (entry.flaechenPct == null) entry.flaechenPct = avgPct
+            } else {
+                if (entry.laengeSchritte == null) entry.laengeSchritte = avgSchritte
+            }
+            // Bodenzustand bleibt leer → Nutzer wählt manuell
+        }
 
         binding.layoutBodenEntries.removeAllViews()
         abschnitte.forEachIndexed { idx, name -> binding.layoutBodenEntries.addView(buildBodenEntry(idx, name)) }
@@ -577,6 +655,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
         // Listeners
         val entry = bodenEntries[idx]
+
+        // UI-Felder mit voreingetragenen Werten füllen
+        if (entry.laengeSchritte != null) etSchr.setText(entry.laengeSchritte.toString())
+        if (entry.flaechenPct != null) etPct.setText(String.format(Locale.US, "%.0f", entry.flaechenPct))
 
         cbSchr.setOnCheckedChangeListener { _, checked -> etSchr.isEnabled = !checked; entry.keineAngabeSchr = checked; if(checked) entry.laengeSchritte = null; updateBodenEignung(idx, tvEignung) }
         cbPct.setOnCheckedChangeListener  { _, checked -> etPct.isEnabled  = !checked; entry.keineAngabePct  = checked; if(checked) entry.flaechenPct  = null; updateBodenEignung(idx, tvEignung) }
@@ -982,11 +1064,38 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         finish(); return true
     }
 
+    private fun updateOptionsHighlighting() {
+        val activeColor = Color.parseColor("#004c6f")
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val inactiveColor = if (isDark) Color.parseColor("#333333") else Color.parseColor("#E0E0E0")
+        val activeTextColor = Color.WHITE
+        val inactiveTextColor = if (isDark) Color.WHITE else Color.BLACK
+
+        // Topo
+        for (i in 0 until binding.chipGroupTopoOpts.childCount) {
+            val chip = binding.chipGroupTopoOpts.getChildAt(i) as? Chip ?: continue
+            val opt = TOPO_OPTIONS.getOrNull(i) ?: continue
+            val selected = topoSequenz.contains(opt)
+            chip.setChipBackgroundColor(ColorStateList.valueOf(if (selected) activeColor else inactiveColor))
+            chip.setTextColor(if (selected) activeTextColor else inactiveTextColor)
+        }
+        // Umb
+        for (i in 0 until binding.chipGroupUmbOpts.childCount) {
+            val chip = binding.chipGroupUmbOpts.getChildAt(i) as? Chip ?: continue
+            val opt = UMB_OPTIONS.getOrNull(i) ?: continue
+            val selected = umbSequenz.contains(opt)
+            chip.setChipBackgroundColor(ColorStateList.valueOf(if (selected) activeColor else inactiveColor))
+            chip.setTextColor(if (selected) activeTextColor else inactiveTextColor)
+        }
+    }
+
     private fun resetAndRestart() {
         topoSequenz.clear(); umbSequenz.clear(); bodenEntries.clear()
         scoringResult = null; currentB5Tab = "ok"
         disziplin = NasenarbeitDisziplin.VERLORENSUCHE
         gebietSchritte = 500; gebietHa = 0.5
+        mapUmgebung = emptyList(); mapBoden = emptyList(); mapTopo = emptyList()
         fetchWeather()
     }
 

@@ -11,16 +11,17 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.view.Gravity
-import android.view.MotionEvent
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.hundewildnis.app.databinding.ActivityNasenarbeitMapBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
 import org.osmdroid.config.Configuration as OsmConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -34,15 +35,11 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import kotlin.math.*
 
 /**
- * NasenarbeitMapActivity – Phase 1
+ * NasenarbeitMapActivity – Phase 1 + 2
  *
- * Optionaler Schritt in der Nasenarbeit-Beratung zwischen Wetter und Gelände.
- * Nutzer markiert sein Trainingsgebiet auf der Karte:
- *   Verlorensuche / Personensuche → Linienmodus (Wegpunkte → Schritte)
- *   Freisuche                      → Polygonmodus (Fläche → Hektar)
- *
- * Ergebnis wird als Intent-Extra zurückgegeben und füllt
- * gebietSchritte + gebietHa in NasenarbeitBeratungActivity vor.
+ * Phase 1: Karte zeichnen → gebietSchritte / gebietHa berechnen
+ * Phase 2: Overpass API → Umgebung + Bodentyp automatisch erkennen
+ * Snap-to-way: Abschnitte optional auf ORS foot-hiking einrasten
  */
 class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
@@ -50,29 +47,45 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private var myLocationOverlay: MyLocationNewOverlay? = null
 
-    // Modus
-    private var mode = Mode.LINIE         // gesetzt via Intent
+    // ── MODUS ──────────────────────────────────────────────────
+    private var mode = Mode.LINIE
     private var disziplin = NasenarbeitDisziplin.VERLORENSUCHE
-
-    // Gezeichnete Punkte
-    private val waypoints = mutableListOf<GeoPoint>()
-    private val markers   = mutableListOf<Marker>()
-    private var routePolyline: Polyline?  = null
-    private var areaPolygon: Polygon?     = null
-
-    // Berechnete Werte
-    private var calculatedSchritte = 0
-    private var calculatedHa       = 0.0
+    private var firstLocationReceived = false
 
     enum class Mode { LINIE, POLYGON }
 
+    // ── WEGPUNKTE ──────────────────────────────────────────────
+    // Jeder Abschnitt besteht aus mehreren GeoPoints (direkt ODER geroutet)
+    private val segments   = mutableListOf<List<GeoPoint>>()   // pro Abschnitt
+    private val markers    = mutableListOf<Marker>()            // Tap-Marker
+    private val segmentPolylines = mutableListOf<Polyline>()    // pro Abschnitt
+
+    // Polygon-Punkte (Freisuche)
+    private val polyPoints = mutableListOf<GeoPoint>()
+    private var areaPolygon: Polygon? = null
+
+    // ── ERGEBNISSE ─────────────────────────────────────────────
+    private var calculatedSchritte = 0
+    private var calculatedHa       = 0.0
+
+    // Phase 2: Overpass-Erkennungen
+    private var detectedUmgebung = mutableListOf<String>()
+    private var detectedBodenTyp = mutableListOf<String>()
+    private var detectedTopo     = mutableListOf<String>()     // Phase 3
+    private var overpassQueried  = false
+
+    // ── CONSTANTS ──────────────────────────────────────────────
     companion object {
-        const val EXTRA_DISZIPLIN = "map_disziplin"
-        const val RESULT_SCHRITTE = "result_schritte"
-        const val RESULT_HA       = "result_ha"
-        const val RESULT_USED     = "result_used"
-        const val RC_MAP          = 4200
+        const val EXTRA_DISZIPLIN     = "map_disziplin"
+        const val RESULT_SCHRITTE     = "result_schritte"
+        const val RESULT_HA           = "result_ha"
+        const val RESULT_USED         = "result_used"
+        const val RESULT_UMGEBUNG     = "result_umgebung"    // ArrayList<String>
+        const val RESULT_BODEN        = "result_boden"       // ArrayList<String>
+        const val RESULT_TOPO         = "result_topo"        // ArrayList<String>
+        const val RC_MAP              = 4200
         private const val REQ_LOCATION = 4201
+        private val ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjBkODg2NmJmMGM4NTRlNDlhZWI2MjliMWM5YTJmYzM1IiwiaCI6Im11cm11cjY0In0="
     }
 
     // ════════════════════════════════════════════════════════════
@@ -88,10 +101,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         disziplin = NasenarbeitDisziplin.valueOf(
             intent.getStringExtra(EXTRA_DISZIPLIN) ?: NasenarbeitDisziplin.VERLORENSUCHE.name
         )
-        mode = when (disziplin) {
-            NasenarbeitDisziplin.FREISUCHE -> Mode.POLYGON
-            else                           -> Mode.LINIE
-        }
+        mode = if (disziplin == NasenarbeitDisziplin.FREISUCHE) Mode.POLYGON else Mode.LINIE
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -102,23 +112,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         setupMap()
         setupControls()
         setupButtons()
-        setupOSMCopyright()
         requestLocation()
-    }
-
-    private fun setupOSMCopyright() {
-        binding.tvOsmCopyright.setOnClickListener {
-            val webView = WebView(this).apply {
-                settings.javaScriptEnabled = true
-                webViewClient = WebViewClient()
-                loadUrl("https://www.openstreetmap.org/copyright")
-            }
-            AlertDialog.Builder(this)
-                .setTitle("OpenStreetMap Lizenz")
-                .setView(webView)
-                .setPositiveButton("Schließen", null)
-                .show()
-        }
     }
 
     // ════════════════════════════════════════════════════════════
@@ -130,19 +124,16 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.setMultiTouchControls(true)
         binding.mapView.controller.setZoom(17.0)
 
-        // Skalierungsleiste
         val scaleBar = ScaleBarOverlay(binding.mapView).apply {
             setCentred(false); setAlignBottom(true)
         }
         binding.mapView.overlays.add(scaleBar)
 
-        // Eigener Standort
         myLocationOverlay = MyLocationNewOverlay(
             GpsMyLocationProvider(this), binding.mapView
         ).apply { enableMyLocation() }
         binding.mapView.overlays.add(myLocationOverlay)
 
-        // Tap-Empfänger
         val receiver = object : org.osmdroid.events.MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                 p?.let { onMapTap(it) }
@@ -154,57 +145,45 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     }
 
     // ════════════════════════════════════════════════════════════
-    // CONTROLS (Disziplin-Buttons + Hinweistext)
+    // CONTROLS
     // ════════════════════════════════════════════════════════════
 
     private fun setupControls() {
-        updateButtonStates()
+        val dizButtons = listOf(
+            binding.btnModeLinie  to NasenarbeitDisziplin.VERLORENSUCHE,
+            binding.btnModeTrail  to NasenarbeitDisziplin.PERSONENSUCHE,
+            binding.btnModePoly   to NasenarbeitDisziplin.FREISUCHE
+        )
 
-        listOf(
-            binding.btnModeLinie to NasenarbeitDisziplin.VERLORENSUCHE,
-            binding.btnModeTrail to NasenarbeitDisziplin.PERSONENSUCHE,
-            binding.btnModePoly  to NasenarbeitDisziplin.FREISUCHE
-        ).forEach { (btn, diz) ->
-            btn.setOnClickListener {
-                if (disziplin == diz) return@setOnClickListener
-
-                disziplin = diz
-                mode = if (diz == NasenarbeitDisziplin.FREISUCHE) Mode.POLYGON else Mode.LINIE
-                
-                updateButtonStates()
-                updateHint()
-                clearDrawing()
-                
-                supportActionBar?.title = "Karte · ${disziplin.displayName}"
+        fun highlightActiveButton() {
+            dizButtons.forEach { (btn, diz) ->
+                if (diz == disziplin) {
+                    btn.setBackgroundColor(android.graphics.Color.parseColor("#004c6f")) // Blau = aktiv
+                    btn.strokeWidth = 3
+                } else {
+                    btn.setBackgroundColor(android.graphics.Color.parseColor("#4C6238")) // dunkel = inaktiv
+                    btn.strokeWidth = 0
+                }
             }
         }
+
+        dizButtons.forEach { (btn, diz) ->
+            btn.setOnClickListener {
+                disziplin = diz
+                mode = if (diz == NasenarbeitDisziplin.FREISUCHE) Mode.POLYGON else Mode.LINIE
+                highlightActiveButton()
+                updateHint()
+                clearDrawing()
+            }
+        }
+        highlightActiveButton()
         updateHint()
-    }
-
-    private fun updateButtonStates() {
-        val activeColor = Color.parseColor("#4C6238")
-        val inactiveColor = Color.parseColor("#555555")
-
-        binding.btnModeLinie.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (disziplin == NasenarbeitDisziplin.VERLORENSUCHE) activeColor else inactiveColor
-        )
-        binding.btnModeTrail.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (disziplin == NasenarbeitDisziplin.PERSONENSUCHE) activeColor else inactiveColor
-        )
-        binding.btnModePoly.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (disziplin == NasenarbeitDisziplin.FREISUCHE) activeColor else inactiveColor
-        )
-
-        // Zusätzliches haptisches Feedback oder visuelle Tiefe
-        binding.btnModeLinie.alpha = if (disziplin == NasenarbeitDisziplin.VERLORENSUCHE) 1.0f else 0.7f
-        binding.btnModeTrail.alpha = if (disziplin == NasenarbeitDisziplin.PERSONENSUCHE) 1.0f else 0.7f
-        binding.btnModePoly.alpha = if (disziplin == NasenarbeitDisziplin.FREISUCHE) 1.0f else 0.7f
     }
 
     private fun updateHint() {
         binding.tvMapHint.text = when (mode) {
-            Mode.LINIE   -> "Tippe auf die Karte um Wegpunkte zu setzen.\nDer Pfad wird automatisch berechnet."
-            Mode.POLYGON -> "Tippe mindestens 3 Punkte um die Suchfläche einzugrenzen.\nLetzten Punkt schließt das Polygon."
+            Mode.LINIE   -> "Tippe Wegpunkte · Pro Abschnitt: Weg oder Gelände wählen"
+            Mode.POLYGON -> "Tippe ≥ 3 Punkte für die Suchfläche"
         }
         binding.tvResult.text = ""
         binding.btnConfirm.isEnabled = false
@@ -215,134 +194,592 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════════
 
     private fun onMapTap(point: GeoPoint) {
-        waypoints.add(point)
-
-        // Marker
         val marker = Marker(binding.mapView).apply {
             position = point
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            title = "${waypoints.size}"
-            icon = ContextCompat.getDrawable(
-                this@NasenarbeitMapActivity, R.drawable.ic_my_location
-            )
+            title = "${markers.size + 1}"
+            try {
+                icon = androidx.core.content.ContextCompat.getDrawable(
+                    this@NasenarbeitMapActivity, R.drawable.ic_my_location
+                )
+            } catch (_: Exception) {}
         }
         markers.add(marker)
         binding.mapView.overlays.add(marker)
+        binding.mapView.invalidate()
 
         when (mode) {
-            Mode.LINIE   -> drawPolyline()
-            Mode.POLYGON -> if (waypoints.size >= 3) drawPolygon()
+            Mode.LINIE -> {
+                val allPoints = allWaypoints()
+                if (allPoints.isEmpty()) {
+                    // Erster Punkt – einfach hinzufügen
+                    segments.add(listOf(point))
+                } else {
+                    val prevPoint = allPoints.last()
+                    // Ab dem zweiten Punkt: Fragen ob Weg oder Gelände
+                    askSnapOrDirect(prevPoint, point)
+                    return // Warten auf Dialog-Ergebnis
+                }
+                updateResult()
+            }
+            Mode.POLYGON -> {
+                polyPoints.add(point)
+                if (polyPoints.size >= 3) drawPolygon()
+                updateResult()
+            }
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // SNAP-TO-WAY DIALOG
+    // ════════════════════════════════════════════════════════════
+
+    private fun askSnapOrDirect(from: GeoPoint, to: GeoPoint) {
+        val distM = haversine(from.latitude, from.longitude, to.latitude, to.longitude)
+        val distStr = if (distM >= 1000) String.format("%.1f km", distM / 1000)
+        else "${distM.toInt()} m"
+
+        AlertDialog.Builder(this)
+            .setTitle("Abschnitt ${segments.size + 1} · $distStr")
+            .setMessage(
+                "Wie verläuft dieser Abschnitt?\n\n" +
+                        "🛤️  Auf dem Weg\n" +
+                        "Wird auf den nächstliegenden Fuß-/Wanderweg eingerastet.\n\n" +
+                        "🌿  Quer durch das Gelände\n" +
+                        "Direkte Linie, unabhängig von Wegen."
+            )
+            .setPositiveButton("🛤️ Auf dem Weg") { _, _ ->
+                snapSegmentToRoute(from, to)
+            }
+            .setNegativeButton("🌿 Durch Gelände") { _, _ ->
+                addDirectSegment(from, to)
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun addDirectSegment(from: GeoPoint, to: GeoPoint) {
+        segments.add(listOf(from, to))
+        redrawPolylines()
+        updateResult()
+    }
+
+    private fun snapSegmentToRoute(from: GeoPoint, to: GeoPoint) {
+        binding.tvResult.text = "⏳ Route wird berechnet …"
+        lifecycleScope.launch {
+            try {
+                val routePoints = withContext(Dispatchers.IO) {
+                    fetchOrsRoute(from, to)
+                }
+                if (routePoints.isNotEmpty()) {
+                    segments.add(routePoints)
+                    withContext(Dispatchers.Main) {
+                        redrawPolylines()
+                        updateResult()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@NasenarbeitMapActivity,
+                            "⚠️ Kein Weg gefunden – direkte Linie verwendet",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        addDirectSegment(from, to)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@NasenarbeitMapActivity,
+                        "Routing-Fehler – direkte Linie verwendet",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    addDirectSegment(from, to)
+                }
+            }
+        }
+    }
+
+    /**
+     * Exakt gleicher ORS-Aufruf wie in LocationActivity (getesteter, funktionierender Code).
+     * Accept-Header, User-Agent-Version und Timeouts sind identisch.
+     */
+    private suspend fun fetchOrsRoute(from: GeoPoint, to: GeoPoint): List<GeoPoint> {
+        val url = "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson"
+
+        val body = JSONObject().apply {
+            put("coordinates", JSONArray().apply {
+                put(JSONArray().apply { put(from.longitude); put(from.latitude) })
+                put(JSONArray().apply { put(to.longitude);   put(to.latitude)   })
+            })
+            put("elevation", true)
+            put("language", "de")
         }
 
-        binding.mapView.invalidate()
-        updateResult()
+        val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
+        conn.setRequestProperty("Accept",        "application/json, application/geo+json")
+        conn.setRequestProperty("Authorization", ORS_API_KEY)
+        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.connectTimeout = 15000
+        conn.readTimeout    = 20000
+        conn.doOutput = true
+        conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
+
+        val responseCode = conn.responseCode
+        if (responseCode != 200) {
+            val error = conn.errorStream?.bufferedReader()?.use { it.readText() } ?: "HTTP $responseCode"
+            android.util.Log.e("NasenarbeitMap", "ORS Fehler $responseCode: $error")
+            // Fallback: zweiter Versuch ohne elevation
+            return fetchOrsRouteFallback(from, to)
+        }
+
+        return try {
+            val json   = JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
+            val coords = json.getJSONArray("features")
+                .getJSONObject(0)
+                .getJSONObject("geometry")
+                .getJSONArray("coordinates")
+            (0 until coords.length()).map { i ->
+                val c = coords.getJSONArray(i)
+                GeoPoint(c.getDouble(1), c.getDouble(0))
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("NasenarbeitMap", "ORS Parse-Fehler: ${e.message}")
+            emptyList()
+        }
+    }
+
+    /** Fallback: minimaler Request ohne optionale Felder */
+    private suspend fun fetchOrsRouteFallback(from: GeoPoint, to: GeoPoint): List<GeoPoint> {
+        return try {
+            val url  = "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson"
+            val body = JSONObject().apply {
+                put("coordinates", JSONArray().apply {
+                    put(JSONArray().apply { put(from.longitude); put(from.latitude) })
+                    put(JSONArray().apply { put(to.longitude);   put(to.latitude)   })
+                })
+            }
+            val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
+            conn.setRequestProperty("Accept",        "application/json, application/geo+json")
+            conn.setRequestProperty("Authorization", ORS_API_KEY)
+            conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+            conn.connectTimeout = 15000
+            conn.readTimeout    = 20000
+            conn.doOutput = true
+            conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
+
+            if (conn.responseCode != 200) {
+                android.util.Log.e("NasenarbeitMap", "ORS Fallback auch Fehler: ${conn.responseCode}")
+                return emptyList()
+            }
+            val json   = JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
+            val coords = json.getJSONArray("features")
+                .getJSONObject(0).getJSONObject("geometry")
+                .getJSONArray("coordinates")
+            (0 until coords.length()).map { i ->
+                val c = coords.getJSONArray(i)
+                GeoPoint(c.getDouble(1), c.getDouble(0))
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("NasenarbeitMap", "ORS Fallback Exception: ${e.message}")
+            emptyList()
+        }
     }
 
     // ════════════════════════════════════════════════════════════
     // DRAW
     // ════════════════════════════════════════════════════════════
 
-    private fun drawPolyline() {
-        routePolyline?.let { binding.mapView.overlays.remove(it) }
-        if (waypoints.size < 2) return
-        routePolyline = Polyline(binding.mapView).apply {
-            setPoints(waypoints)
-            outlinePaint.color = Color.parseColor("#2d5016")
-            outlinePaint.strokeWidth = 8f
-            outlinePaint.style = Paint.Style.STROKE
+    private fun redrawPolylines() {
+        segmentPolylines.forEach { binding.mapView.overlays.remove(it) }
+        segmentPolylines.clear()
+        segments.forEachIndexed { idx, pts ->
+            if (pts.size >= 2) {
+                val pl = Polyline(binding.mapView).apply {
+                    setPoints(pts)
+                    outlinePaint.color = Color.parseColor("#2d5016")
+                    outlinePaint.strokeWidth = 8f
+                    outlinePaint.style = Paint.Style.STROKE
+                }
+                segmentPolylines.add(pl)
+                binding.mapView.overlays.add(pl)
+            }
         }
-        binding.mapView.overlays.add(routePolyline)
+        binding.mapView.invalidate()
     }
 
     private fun drawPolygon() {
         areaPolygon?.let { binding.mapView.overlays.remove(it) }
-        val closedPoints = waypoints + waypoints.first()
+        val closed = polyPoints + polyPoints.first()
         areaPolygon = Polygon(binding.mapView).apply {
-            points = closedPoints
+            points = closed
             fillPaint.color = Color.parseColor("#402d5016")
             outlinePaint.color = Color.parseColor("#2d5016")
             outlinePaint.strokeWidth = 6f
         }
         binding.mapView.overlays.add(areaPolygon)
+        binding.mapView.invalidate()
     }
 
     // ════════════════════════════════════════════════════════════
     // BERECHNUNG
     // ════════════════════════════════════════════════════════════
 
+    private fun allWaypoints(): List<GeoPoint> = segments.flatten()
+
     private fun updateResult() {
         when (mode) {
             Mode.LINIE -> {
-                if (waypoints.size >= 2) {
-                    val distanceM = calcPolylineDistanceM(waypoints)
-                    // 1 Schritt ≈ 0.75m
-                    calculatedSchritte = (distanceM / 0.75).toInt()
-                    calculatedHa = 0.0
-                    val distStr = if (distanceM >= 1000) {
-                        String.format("%.1f km", distanceM / 1000)
-                    } else {
-                        "${distanceM.toInt()} m"
-                    }
-                    binding.tvResult.text =
-                        "📏 $distStr  ·  ~$calculatedSchritte Schritte"
+                val allPts = allWaypoints()
+                if (allPts.size >= 2) {
+                    val distM = calcPolylineDistanceM(allPts)
+                    calculatedSchritte = (distM / 0.75).toInt()
+                    val distStr = if (distM >= 1000) String.format("%.1f km", distM / 1000)
+                    else "${distM.toInt()} m"
+                    binding.tvResult.text = "📏 $distStr  ·  ~$calculatedSchritte Schritte"
                     binding.btnConfirm.isEnabled = true
                 }
             }
             Mode.POLYGON -> {
-                if (waypoints.size >= 3) {
-                    val areaM2 = calcPolygonAreaM2(waypoints)
+                if (polyPoints.size >= 3) {
+                    val areaM2 = calcPolygonAreaM2(polyPoints)
                     calculatedHa = areaM2 / 10_000.0
-                    calculatedSchritte = 0
-                    binding.tvResult.text =
-                        "📐 ${String.format("%.2f ha", calculatedHa)}" +
-                                "  (${(areaM2).toInt()} m²)"
+                    binding.tvResult.text = "📐 ${String.format("%.2f ha", calculatedHa)}  " +
+                            "(${areaM2.toInt()} m²)"
                     binding.btnConfirm.isEnabled = true
                 }
             }
         }
     }
 
-    /**
-     * Haversine-Distanz in Metern für eine Polylinie.
-     */
     private fun calcPolylineDistanceM(pts: List<GeoPoint>): Double {
         var total = 0.0
-        for (i in 1 until pts.size) {
-            total += haversine(pts[i - 1].latitude, pts[i - 1].longitude,
-                pts[i].latitude,     pts[i].longitude)
-        }
+        for (i in 1 until pts.size)
+            total += haversine(pts[i-1].latitude, pts[i-1].longitude,
+                pts[i].latitude,   pts[i].longitude)
         return total
     }
 
-    /**
-     * Shoelace-Formel auf sphärischen Koordinaten → Fläche in m².
-     * Ausreichend genau für Trainingsgebiete bis ~10 km².
-     */
     private fun calcPolygonAreaM2(pts: List<GeoPoint>): Double {
         if (pts.size < 3) return 0.0
-        val R = 6_371_000.0    // Erdradius in m
+        val R = 6_371_000.0
         var area = 0.0
         val n = pts.size
         for (i in 0 until n) {
             val j = (i + 1) % n
-            val lat1 = Math.toRadians(pts[i].latitude)
-            val lat2 = Math.toRadians(pts[j].latitude)
-            val lon1 = Math.toRadians(pts[i].longitude)
-            val lon2 = Math.toRadians(pts[j].longitude)
+            val lat1 = Math.toRadians(pts[i].latitude);  val lat2 = Math.toRadians(pts[j].latitude)
+            val lon1 = Math.toRadians(pts[i].longitude); val lon2 = Math.toRadians(pts[j].longitude)
             area += (lon2 - lon1) * (2 + sin(lat1) + sin(lat2))
         }
         return abs(area) * R * R / 2.0
     }
 
-    private fun haversine(lat1: Double, lon1: Double,
-                          lat2: Double, lon2: Double): Double {
+    private fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val R = 6_371_000.0
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
         val a = sin(dLat / 2).pow(2) +
-                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2).pow(2)
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2)
         return R * 2 * atan2(sqrt(a), sqrt(1 - a))
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // PHASE 2 – OVERPASS API
+    // ════════════════════════════════════════════════════════════
+
+    /**
+     * Wertet Gelände + Topografie PRO SEGMENT in Routenreihenfolge aus.
+     * Jedes Segment bekommt eigene Overpass-Abfrage → korrekte Abfolge.
+     * Elevation-API wird mit allen Routenpunkten in Reihenfolge abgefragt.
+     */
+    private fun queryOverpassForArea() {
+        val segList = if (mode == Mode.LINIE) segments else listOf(polyPoints)
+        if (segList.isEmpty()) return
+
+        binding.tvResult.text = "🗺️ Geländedaten werden abgerufen …"
+        binding.btnConfirm.isEnabled = false
+
+        lifecycleScope.launch {
+            try {
+                // ── Topografie: Elevation in Routenreihenfolge ───────
+                val allPts = allWaypoints().ifEmpty { polyPoints }
+                val topoFromSlope = withContext(Dispatchers.IO) {
+                    fetchElevationTopoPerSegment(segList)
+                }
+
+                // ── Umgebung + Boden: pro Segment in Routenreihenfolge
+                val umgebungOrdered = mutableListOf<String>()
+                val bodenOrdered    = mutableListOf<String>()
+                val topoFeatOrdered = mutableListOf<String>()
+
+                withContext(Dispatchers.IO) {
+                    segList.forEachIndexed { segIdx, segPts ->
+                        if (segPts.size < 2) return@forEachIndexed
+                        val bbox = buildBbox(segPts, paddingDeg = 0.0008)
+
+                        // Timeout pro Segment: max 8 Sek, sonst Fallback
+                        try {
+                            val (umb, bod) = kotlinx.coroutines.withTimeoutOrNull(8_000L) {
+                                fetchOverpassTerrain(bbox)
+                            } ?: Pair(emptyList(), emptyList())
+
+                            val umbVal = umb.firstOrNull() ?: ""
+                            val bodVal = bod.firstOrNull() ?: ""
+
+                            // 1 Eintrag PRO Segment – Duplikate erlaubt
+                            // (Route durch 3× Waldgebiet → 3 Waldgebiet-Einträge)
+                            if (umbVal.isNotEmpty()) {
+                                umgebungOrdered.add(umbVal)
+                                bodenOrdered.add(bodVal)
+                            } else {
+                                // Kein OSM-Ergebnis → letzten Wert fortführen
+                                umgebungOrdered.add(umgebungOrdered.lastOrNull() ?: "Offenes Gelände")
+                                bodenOrdered.add(bodenOrdered.lastOrNull() ?: "")
+                            }
+
+                            val topoFeats = kotlinx.coroutines.withTimeoutOrNull(6_000L) {
+                                fetchOverpassTopoFeatures(bbox)
+                            } ?: emptyList()
+                            topoFeats.forEach { f -> if (f !in topoFeatOrdered) topoFeatOrdered.add(f) }
+
+                        } catch (e: Exception) {
+                            android.util.Log.w("NasenarbeitMap", "Seg $segIdx Overpass-Fehler: ${e.message}")
+                            // Segment überspringen – kein Absturz
+                            if (umgebungOrdered.isEmpty()) umgebungOrdered.add("Offenes Gelände")
+                            bodenOrdered.add(bodenOrdered.lastOrNull() ?: "")
+                        }
+                    }
+                }
+
+                // ── Topografie zusammenführen in Routenreihenfolge ────
+                // topoFromSlope ist bereits per Segment geordnet
+                // topoFeatOrdered enthält spezielle Features (Klippe, Gipfel etc.)
+                val topoOrdered = buildTopoSequenzOrdered(topoFromSlope, topoFeatOrdered)
+
+                detectedUmgebung.clear(); detectedUmgebung.addAll(umgebungOrdered)
+                detectedBodenTyp.clear(); detectedBodenTyp.addAll(bodenOrdered)
+                detectedTopo.clear();     detectedTopo.addAll(topoOrdered)
+                overpassQueried = true
+
+                withContext(Dispatchers.Main) {
+                    updateResult()
+                    val info = buildString {
+                        if (detectedUmgebung.isNotEmpty())
+                            append(" · 🗺️ ${detectedUmgebung.take(3).joinToString(" → ")}")
+                        if (detectedTopo.isNotEmpty())
+                            append(" · ⛰️ ${detectedTopo.take(2).joinToString(", ")}")
+                    }
+                    binding.tvResult.text = binding.tvResult.text.toString() + info
+                    binding.btnConfirm.isEnabled = true
+                    val topoStr = if (detectedTopo.isEmpty()) "–"
+                    else detectedTopo.joinToString(" → ")
+                    // Elevation-Differenz aus letztem Segmentprofil für Debug
+                    Toast.makeText(this@NasenarbeitMapActivity,
+                        "✅ Gelände erkannt · Topo: $topoStr",
+                        Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("NasenarbeitMap", "Terrain-Fehler: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    updateResult()
+                    binding.btnConfirm.isEnabled = true
+                    Toast.makeText(this@NasenarbeitMapActivity,
+                        "⚠️ Geländedaten nicht verfügbar", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    data class BoundingBox(val south: Double, val west: Double,
+                           val north: Double, val east: Double)
+
+    private fun buildBbox(pts: List<GeoPoint>, paddingDeg: Double): BoundingBox {
+        val lats = pts.map { it.latitude }
+        val lons = pts.map { it.longitude }
+        return BoundingBox(
+            south = lats.min() - paddingDeg,
+            west  = lons.min() - paddingDeg,
+            north = lats.max() + paddingDeg,
+            east  = lons.max() + paddingDeg
+        )
+    }
+
+    /**
+     * Fragt Overpass nach landuse / natural / surface-Tags im Bounding-Box-Bereich.
+     * Gibt Paar zurück: (List<Umgebungsname>, List<BodenTypKey>)
+     */
+    private suspend fun fetchOverpassTerrain(bb: BoundingBox): Pair<List<String>, List<String>> {
+        val locale = java.util.Locale.US
+        val bbox = String.format(locale, "%.6f,%.6f,%.6f,%.6f", bb.south, bb.west, bb.north, bb.east)
+        val query = """
+            [out:json][timeout:8];
+            (
+              way["landuse"](${bbox});
+              way["natural"](${bbox});
+              way["surface"](${bbox});
+              way["highway"](${bbox});
+              relation["landuse"](${bbox});
+            );
+            out tags;
+        """.trimIndent()
+
+        val json = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return Pair(emptyList(), emptyList())
+        val elements = json.getJSONArray("elements")
+
+        val landuseCounts  = mutableMapOf<String, Int>()
+        val naturalCounts  = mutableMapOf<String, Int>()
+        val surfaceCounts  = mutableMapOf<String, Int>()
+        val highwayCounts  = mutableMapOf<String, Int>()
+
+        for (i in 0 until elements.length()) {
+            val el   = elements.getJSONObject(i)
+            val tags = el.optJSONObject("tags") ?: continue
+            tags.optString("landuse").takeIf { it.isNotEmpty() }?.let {
+                landuseCounts[it] = (landuseCounts[it] ?: 0) + 1
+            }
+            tags.optString("natural").takeIf { it.isNotEmpty() }?.let {
+                naturalCounts[it] = (naturalCounts[it] ?: 0) + 1
+            }
+            tags.optString("surface").takeIf { it.isNotEmpty() }?.let {
+                surfaceCounts[it] = (surfaceCounts[it] ?: 0) + 1
+            }
+            // Highway: surface-Tag des Wegs auch für Boden verwenden
+            val hw = tags.optString("highway").takeIf { it.isNotEmpty() }
+            if (hw != null) {
+                highwayCounts[hw] = (highwayCounts[hw] ?: 0) + 1
+                // surface-Tag von highway-Wegen ebenfalls auswerten
+                tags.optString("surface").takeIf { it.isNotEmpty() }?.let { surf ->
+                    surfaceCounts[surf] = (surfaceCounts[surf] ?: 0) + 1
+                }
+            }
+        }
+
+        val umgebung = mutableListOf<String>()
+        val boden    = mutableListOf<String>()
+
+        // ── Umgebung: ALLE einzigartigen Terrain-Typen in Häufigkeitsreihenfolge ──
+        // Landuse + Natural zusammenführen, nach Häufigkeit sortieren
+        val dominantLanduse = landuseCounts.maxByOrNull { it.value }?.key ?: ""
+        val dominantNatural = naturalCounts.maxByOrNull { it.value }?.key ?: ""
+
+        // Alle Terrain-Typen als (key, isLanduse, count) sortiert nach Häufigkeit
+        data class TerrainEntry(val key: String, val type: String, val count: Int)
+        val allTerrainSorted: List<TerrainEntry> =
+            (landuseCounts.entries.map { TerrainEntry(it.key, "landuse",  it.value) } +
+                    naturalCounts.entries.map  { TerrainEntry(it.key, "natural",  it.value) } +
+                    highwayCounts.entries.map  { TerrainEntry(it.key, "highway",  it.value) })
+                .sortedByDescending { it.count }
+
+        val maxSections = segments.size.coerceIn(1, 6)
+        for (entry in allTerrainSorted) {
+            val mapped = when (entry.type) {
+                "landuse" -> mapToUmgebung(entry.key, "")
+                "natural" -> mapToUmgebung("", entry.key)
+                "highway" -> mapHighwayToUmgebung(entry.key)
+                else      -> ""
+            }
+            if (mapped.isNotEmpty() && !umgebung.contains(mapped)) {
+                umgebung.add(mapped)
+            }
+            if (umgebung.size >= maxSections) break
+        }
+
+        // ── Boden: pro Umgebungstyp einen passenden Bodentyp ──────────────────
+        // Dominant surface für ersten Eintrag
+        val dominantSurface = surfaceCounts.maxByOrNull { it.value }?.key ?: ""
+        val surfacesSorted  = surfaceCounts.entries.sortedByDescending { it.value }
+
+        // Pro Umgebungseintrag einen Boden vorschlagen
+        val dominantHighway = highwayCounts.maxByOrNull { it.value }?.key ?: ""
+        val highwaysSorted  = highwayCounts.entries.sortedByDescending { it.value }
+
+        umgebung.forEachIndexed { idx, umb ->
+            // 1. Priorität: expliziter surface-Tag des Wegs
+            val surface  = surfacesSorted.getOrNull(idx)?.key ?: dominantSurface
+            val fromSurf = mapToBodenTyp(surface, dominantLanduse, dominantNatural)
+            // 2. Priorität: aus highway-Typ ableiten
+            val hw       = highwaysSorted.getOrNull(idx)?.key ?: dominantHighway
+            val fromHw   = mapHighwayToBoden(hw)
+            // 3. Fallback: aus Umgebungsname
+            val fromUmb  = umbToBodenFallback(umb)
+
+            val result = when {
+                fromSurf.isNotEmpty() -> fromSurf
+                fromHw.isNotEmpty()   -> fromHw
+                else                  -> fromUmb
+            }
+            boden.add(result)   // Leerstring = Nutzer wählt manuell
+        }
+
+        return Pair(umgebung, boden)
+    }
+
+    /** Leitet aus dem Umgebungstyp einen plausiblen Boden-Fallback ab */
+    private fun umbToBodenFallback(umgebung: String): String = when (umgebung) {
+        "Waldgebiet"        -> "wb_misch"
+        "Grünland"          -> "gl_kurz"
+        "Offenes Gelände"   -> "mg_erdig"
+        "Urbanes Umfeld"    -> "asphalt"
+        "Industriegelände"  -> "asphalt"
+        "Dörfliche Bebauung"-> "asphalt"
+        "Parkanlage"        -> "gl_kurz"
+        "Mischgebiet"       -> "asphalt"
+        else -> ""
+    }
+
+    /** Leitet aus highway-Tag einen Bodentyp ab (wenn kein surface-Tag vorhanden) */
+    private fun mapHighwayToBoden(highway: String): String = when (highway) {
+        "motorway","trunk","primary","secondary","tertiary",
+        "residential","living_street","service","pedestrian" -> "asphalt"
+        "unclassified"                                        -> "ks_mit"
+        "track"                                               -> "mg_erdig"
+        "path","footway","bridleway"                          -> "mg_erdig"
+        else                                                  -> ""
+    }
+
+    /** Leitet aus einem OSM-highway-Tag die passende Umgebungskategorie ab */
+    private fun mapHighwayToUmgebung(highway: String): String = when (highway) {
+        "motorway","trunk","primary","secondary","tertiary",
+        "residential","living_street","pedestrian","service" -> "Urbanes Umfeld"
+        "unclassified"                                        -> "Mischgebiet"
+        "track","path","bridleway","cycleway","footway"       -> ""   // kein eigener Umgebungstyp
+        "steps"                                               -> "Steiles Gelände" // Topo, nicht Umgebung
+        else                                                  -> ""
+    }
+
+    private fun mapToUmgebung(landuse: String, natural: String): String = when {
+        natural in listOf("wood","scrub")           -> "Waldgebiet"
+        natural in listOf("grassland","heath")      -> "Grünland"
+        natural in listOf("sand","beach","dune")    -> "Offenes Gelände"
+        landuse in listOf("forest")                 -> "Waldgebiet"
+        landuse in listOf("grass","meadow","greenfield") -> "Grünland"
+        landuse in listOf("farmland","farmyard","orchard") -> "Offenes Gelände"
+        landuse in listOf("residential","commercial","retail") -> "Urbanes Umfeld"
+        landuse in listOf("industrial","quarry")    -> "Industriegelände"
+        landuse == "village_green"                  -> "Dörfliche Bebauung"
+        landuse == "recreation_ground"              -> "Parkanlage"
+        natural in listOf("fell","bare_rock","scree") -> "Offenes Gelände"
+        else -> ""
+    }
+
+    private fun mapToBodenTyp(surface: String, landuse: String, natural: String): String = when {
+        // Wenn kein surface-Tag vorhanden, aus landuse/highway ableiten
+        surface.isEmpty() && landuse in listOf("residential","commercial","retail","industrial") -> "asphalt"
+        surface in listOf("grass","grass_paver")    -> "gl_kurz"
+        surface in listOf("dirt","earth","ground")  -> "mg_erdig"
+        surface in listOf("sand")                   -> "sb_ohne"
+        surface in listOf("asphalt","paved","concrete") -> "asphalt"
+        surface in listOf("gravel","fine_gravel","pebblestone") -> "ks_ohne"
+        surface in listOf("compacted","wood","woodchips") -> "mg_mineral"
+        surface in listOf("unpaved","rock","stone") -> "mg_fels"
+        natural == "wood" || landuse == "forest"    -> "wb_misch"
+        natural == "grassland" || landuse == "grass" -> "gl_kurz"
+        natural == "sand"                            -> "sb_ohne"
+        else -> ""
     }
 
     // ════════════════════════════════════════════════════════════
@@ -350,78 +787,85 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════════
 
     private fun setupButtons() {
-        // Letzten Punkt rückgängig
         binding.btnUndo.setOnClickListener {
-            if (waypoints.isEmpty()) return@setOnClickListener
-            waypoints.removeLastOrNull()
-            markers.lastOrNull()?.let { m ->
-                binding.mapView.overlays.remove(m)
-                markers.removeLastOrNull()
-            }
-            routePolyline?.let { binding.mapView.overlays.remove(it); routePolyline = null }
-            areaPolygon?.let  { binding.mapView.overlays.remove(it);  areaPolygon  = null }
-            when (mode) {
-                Mode.LINIE   -> if (waypoints.size >= 2) drawPolyline()
-                Mode.POLYGON -> if (waypoints.size >= 3) drawPolygon()
+            if (mode == Mode.POLYGON) {
+                if (polyPoints.isEmpty()) return@setOnClickListener
+                polyPoints.removeLastOrNull()
+                markers.lastOrNull()?.let { binding.mapView.overlays.remove(it); markers.removeLastOrNull() }
+                areaPolygon?.let { binding.mapView.overlays.remove(it); areaPolygon = null }
+                if (polyPoints.size >= 3) drawPolygon()
+            } else {
+                if (segments.isEmpty() && markers.isEmpty()) return@setOnClickListener
+                // Letzten Abschnitt entfernen
+                if (segments.isNotEmpty()) segments.removeLastOrNull()
+                segmentPolylines.lastOrNull()?.let { binding.mapView.overlays.remove(it); segmentPolylines.removeLastOrNull() }
+                markers.lastOrNull()?.let { binding.mapView.overlays.remove(it); markers.removeLastOrNull() }
+                redrawPolylines()
             }
             binding.mapView.invalidate()
             updateResult()
-            if (waypoints.isEmpty()) { binding.tvResult.text = ""; binding.btnConfirm.isEnabled = false }
+            if (allWaypoints().size < 2 && polyPoints.size < 3) {
+                binding.tvResult.text = ""; binding.btnConfirm.isEnabled = false
+            }
         }
 
-        // Alles löschen
         binding.btnClear.setOnClickListener { clearDrawing() }
 
-        // Bestätigen → Ergebnis zurückgeben
         binding.btnConfirm.setOnClickListener {
-            val data = Intent().apply {
-                putExtra(RESULT_USED,     true)
-                putExtra(RESULT_SCHRITTE, calculatedSchritte)
-                putExtra(RESULT_HA,       calculatedHa)
-                putExtra(EXTRA_DISZIPLIN, disziplin.name)
+            if (!overpassQueried) {
+                // Phase 2: Overpass-Abfrage vor Bestätigung
+                queryOverpassForArea()
+                // Nach Abfrage wird confirm erneut aktiviert → Nutzer klickt nochmal
+                return@setOnClickListener
             }
-            setResult(RESULT_OK, data)
-            finish()
+            returnResult()
         }
 
-        // Überspringen → manuell weiter
         binding.btnSkip.setOnClickListener {
             setResult(RESULT_CANCELED)
             finish()
         }
     }
 
+    private fun returnResult() {
+        val data = Intent().apply {
+            putExtra(RESULT_USED,     true)
+            putExtra(RESULT_SCHRITTE, calculatedSchritte)
+            putExtra(RESULT_HA,       calculatedHa)
+            putExtra(EXTRA_DISZIPLIN, disziplin.name)
+            putStringArrayListExtra(RESULT_UMGEBUNG, ArrayList(detectedUmgebung))
+            putStringArrayListExtra(RESULT_BODEN,    ArrayList(detectedBodenTyp))
+            putStringArrayListExtra(RESULT_TOPO,     ArrayList(detectedTopo))
+        }
+        setResult(RESULT_OK, data)
+        finish()
+    }
+
     private fun clearDrawing() {
-        waypoints.clear()
+        segments.clear()
+        segmentPolylines.forEach { binding.mapView.overlays.remove(it) }
+        segmentPolylines.clear()
         markers.forEach { binding.mapView.overlays.remove(it) }
         markers.clear()
-        routePolyline?.let { binding.mapView.overlays.remove(it) }
-        areaPolygon?.let  { binding.mapView.overlays.remove(it) }
-        routePolyline = null; areaPolygon = null
+        polyPoints.clear()
+        areaPolygon?.let { binding.mapView.overlays.remove(it) }
+        areaPolygon = null
+        detectedUmgebung.clear(); detectedBodenTyp.clear()
+        detectedTopo.clear(); overpassQueried = false
         calculatedSchritte = 0; calculatedHa = 0.0
         binding.mapView.invalidate()
         binding.tvResult.text = ""; binding.btnConfirm.isEnabled = false
     }
 
     // ════════════════════════════════════════════════════════════
-    // GPS
+    // GPS + PERMISSIONS
     // ════════════════════════════════════════════════════════════
 
     private fun requestLocation() {
         when {
-            ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                startLocationUpdates()
-            }
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) -> {
-                showLocationRationaleDialog()
-            }
-            else -> {
-                showLocationRationaleDialog()
-            }
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED -> startLocationUpdates()
+            else -> showLocationRationaleDialog()
         }
     }
 
@@ -429,30 +873,22 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         AlertDialog.Builder(this)
             .setTitle("📍 Standort-Berechtigung")
             .setMessage(
-                """
-                Die HundeWildnis-App verwendet deinen GPS-Standort für:
-
-                • 🏃🏻‍♂️ Tempo-Trainer – GPS Daten werden zur Geschwindigkeitsmessung erfasst
-                • 🗺️ Navigation und Kartenausschnitt für Nasenarbeit – Karte wird auf deinen aktuellen Standort zentriert
-                • 🌡️ Wetterdaten – Automatischer Abruf der lokalen Wetterbedingungen
-                • 📍 Trainingsstandort – Wird als Kartenmarker im PDF gespeichert
-
-                Der Standort wird nicht gespeichert oder übertragen.
-                Alle Daten bleiben auf deinem Gerät.
-                """.trimIndent()
+                "Die HundeWildnis-App verwendet deinen GPS-Standort für:\n\n" +
+                        "• 🗺️ Karte zentrieren – automatisch auf deinen Standort\n" +
+                        "• 🌡️ Wetterdaten – lokale Bedingungen abrufen\n" +
+                        "• 📍 Trainingsort – Marker im PDF speichern\n\n" +
+                        "Der Standort wird nicht übertragen. Alle Daten bleiben auf deinem Gerät."
             )
             .setPositiveButton("Berechtigung erteilen") { _, _ ->
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION),
                     REQ_LOCATION
                 )
             }
-            .setNegativeButton("Ohne Standort fortfahren") { _, _ ->
-                // Karte bleibt auf Standard-Ansicht (Deutschland-Mitte)
+            .setNegativeButton("Ohne Standort") { _, _ ->
+                // Fallback: Deutschland-Mitte
                 binding.mapView.controller.setCenter(GeoPoint(51.163375, 10.447683))
                 binding.mapView.controller.setZoom(6.0)
             }
@@ -460,28 +896,24 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             .show()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQ_LOCATION &&
-            grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED
-        ) {
+            grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
             startLocationUpdates()
         }
     }
 
     private fun startLocationUpdates() {
         try {
-            // Letzten bekannten Standort sofort nutzen für schnelles Zentrieren
             val last = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                 ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
             last?.let {
-                val gp = GeoPoint(it.latitude, it.longitude)
-                binding.mapView.controller.setCenter(gp)
+                binding.mapView.controller.setCenter(GeoPoint(it.latitude, it.longitude))
                 binding.mapView.controller.setZoom(17.0)
             }
-            // Live-Update anfordern
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 3000L, 5f, this
             )
@@ -490,17 +922,12 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
-    private var firstLocationReceived = false
-
     override fun onLocationChanged(location: Location) {
-        val gp = GeoPoint(location.latitude, location.longitude)
         if (!firstLocationReceived) {
-            // Erste Ortung: Zoom + Zentrieren
             firstLocationReceived = true
+            binding.mapView.controller.setCenter(GeoPoint(location.latitude, location.longitude))
             binding.mapView.controller.setZoom(17.0)
-            binding.mapView.controller.animateTo(gp)
         }
-        // Danach: Karte nicht mehr automatisch bewegen (Nutzer zeichnet)
     }
 
     // ════════════════════════════════════════════════════════════
@@ -514,5 +941,255 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         myLocationOverlay?.disableMyLocation()
         try { locationManager.removeUpdates(this) } catch (_: Exception) {}
     }
+
+    // ════════════════════════════════════════════════════════════
+    // PHASE 3 – TOPOGRAFIE via Höhenprofil + Overpass Features
+    // ════════════════════════════════════════════════════════════
+
+    /**
+     * Fragt Open-Meteo Elevation API PER SEGMENT in Routenreihenfolge.
+     * Gibt pro Segment eine Topo-Kategorie zurück → geordnete Sequenz.
+     */
+    private suspend fun fetchElevationTopoPerSegment(
+        segs: List<List<GeoPoint>>
+    ): List<String> {
+        if (segs.isEmpty()) return emptyList()
+
+        // Alle Segmentpunkte sammeln, Index-Grenzen merken
+        val allPts     = mutableListOf<GeoPoint>()
+        val segBounds  = mutableListOf<IntRange>()  // Start- und End-Index pro Segment
+        segs.forEach { seg ->
+            val start = allPts.size
+            allPts.addAll(seg)
+            segBounds.add(start until allPts.size)
+        }
+
+        // Max 100 Punkte gesamt (API-Limit beachten), gleichmäßig verteilt
+        val maxTotal = 100
+        val step     = maxOf(1, allPts.size / maxTotal)
+        val samples  = allPts.filterIndexed { i, _ -> i % step == 0 }
+            .let { if (it.lastOrNull() != allPts.last()) it + allPts.last() else it }
+
+        val latStr = samples.joinToString(",") { String.format(java.util.Locale.US, "%.6f", it.latitude)  }
+        val lonStr = samples.joinToString(",") { String.format(java.util.Locale.US, "%.6f", it.longitude) }
+        val url    = "https://api.open-meteo.com/v1/elevation?latitude=$latStr&longitude=$lonStr"
+
+        return try {
+            val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+            conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+            conn.connectTimeout = 10000
+            conn.readTimeout    = 12000
+
+            if (conn.responseCode != 200) {
+                android.util.Log.e("NasenarbeitMap", "Elevation API ${conn.responseCode}")
+                return segs.map { "Eben" }  // Fallback
+            }
+
+            val json       = org.json.JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
+            val elevArr    = json.getJSONArray("elevation")
+            val elevations = (0 until elevArr.length()).map { elevArr.getDouble(it) }
+
+            // Debug: Höhenwerte loggen
+            val elevMin = elevations.minOrNull() ?: 0.0
+            val elevMax = elevations.maxOrNull() ?: 0.0
+            android.util.Log.d("NasenarbeitTopo",
+                "Elevation: ${elevations.size} Punkte, " +
+                        "Min=${String.format(java.util.Locale.US, "%.1f", elevMin)}m, " +
+                        "Max=${String.format(java.util.Locale.US, "%.1f", elevMax)}m, " +
+                        "Differenz=${String.format(java.util.Locale.US, "%.1f", elevMax - elevMin)}m")
+
+            // Pro Segment Topo klassifizieren
+            // Samplepunkte den Segmenten zuordnen (proportional)
+            val result = mutableListOf<String>()
+            val samplesPerSeg = samples.size.toDouble() / segs.size
+            segs.forEachIndexed { segIdx, _ ->
+                val fromSample = (segIdx * samplesPerSeg).toInt()
+                val toSample   = minOf(((segIdx + 1) * samplesPerSeg).toInt(), samples.size - 1)
+                if (fromSample >= toSample) {
+                    result.add("Eben")
+                    return@forEachIndexed
+                }
+                val segSamples = samples.subList(fromSample, toSample + 1)
+                val segElevs   = elevations.subList(fromSample, minOf(toSample + 1, elevations.size))
+                val topo       = classifyTopoFromSlope(segSamples, segElevs)
+                result.add(topo.firstOrNull() ?: "Eben")
+            }
+            result
+        } catch (e: Exception) {
+            android.util.Log.e("NasenarbeitMap", "Elevation fetch error: ${e.message}")
+            segs.map { "Eben" }  // Fallback
+        }
+    }
+
+    /**
+     * Berechnet Steigung zwischen aufeinanderfolgenden Punkten.
+     * Gibt geordnete Topo-Sequenz zurück (häufigste Kategorie zuerst).
+     */
+    /**
+     * Klassifiziert Topografie aus Höhenprofil.
+     *
+     * Schwellenwerte für SRTM/Aster-Daten optimiert:
+     *   ≥ 1.2°  (~2.1%) → "Leichte Steigung"
+     *   ≥ 5.0°  (~8.7%) → "Steiles Gelände"
+     */
+    private fun classifyTopoFromSlope(
+        pts: List<GeoPoint>,
+        elevations: List<Double>
+    ): List<String> {
+        if (pts.size < 2 || elevations.size < 2) return listOf("Eben")
+
+        // ── Methode A: Punkt-zu-Punkt Steigung ──────────────────
+        val slopeCounts = mutableMapOf<String, Int>()
+        var prevElev    = elevations.first()
+
+        for (i in 1 until minOf(pts.size, elevations.size)) {
+            val distM    = haversine(pts[i-1].latitude, pts[i-1].longitude,
+                pts[i].latitude,   pts[i].longitude)
+            val elevDiff = (elevations[i] - prevElev).absoluteValue
+            val slopeDeg = if (distM > 0.5)
+                Math.toDegrees(atan(elevDiff / distM)) else 0.0
+
+            val cat = when {
+                slopeDeg >= 5.0  -> "Steiles Gelände"
+                slopeDeg >= 1.2  -> "Leichte Steigung"
+                else             -> "Eben"
+            }
+            slopeCounts[cat] = (slopeCounts[cat] ?: 0) + 1
+            prevElev = elevations[i]
+        }
+
+        // ── Methode B: Gesamthöhengewinn ─────────────────────────
+        val totalDistM = calcPolylineDistanceM(pts)
+        val totalGain  = elevations.zipWithNext().sumOf { (a, b) -> maxOf(0.0, b - a) }
+        val totalDrop  = elevations.zipWithNext().sumOf { (a, b) -> maxOf(0.0, a - b) }
+        val maxElevDiff = (elevations.max() - elevations.min())
+
+        val gainPerM = if (totalDistM > 0) (totalGain + totalDrop) / totalDistM else 0.0
+        val gainDeg  = Math.toDegrees(atan(gainPerM))
+
+        if (gainDeg >= 5.0) {
+            slopeCounts["Steiles Gelände"] = (slopeCounts["Steiles Gelände"] ?: 0) + 3
+        } else if (gainDeg >= 1.2 || maxElevDiff >= 6.0) {
+            slopeCounts["Leichte Steigung"] = (slopeCounts["Leichte Steigung"] ?: 0) + 3
+        }
+
+        // ── Spezial-Erkennung ────────────────────────────────────
+        val midElev  = elevations[elevations.size / 2]
+        val startEnd = (elevations.first() + elevations.last()) / 2.0
+        if (midElev < startEnd - 4.5)
+            slopeCounts["Mulde"] = (slopeCounts["Mulde"] ?: 0) + 2
+        if (midElev > startEnd + 4.5)
+            slopeCounts["Kuppe"] = (slopeCounts["Kuppe"] ?: 0) + 2
+
+        val ascents  = elevations.zipWithNext().count { (a,b) -> b > a + 0.5 }
+        val descents = elevations.zipWithNext().count { (a,b) -> b < a - 0.5 }
+        val total    = elevations.size - 1
+        if (total > 0) {
+            if (ascents  > total * 0.70) slopeCounts["Hanglage"] =
+                (slopeCounts["Hanglage"] ?: 0) + 2
+            if (descents > total * 0.70) slopeCounts["Hanglage"] =
+                (slopeCounts["Hanglage"] ?: 0) + 2
+        }
+
+        return slopeCounts.entries
+            .sortedByDescending { it.value }
+            .map { it.key }
+            .filter { it != "Eben" || slopeCounts.size == 1 }
+            .take(3)
+            .ifEmpty { listOf("Eben") }
+    }
+
+    /**
+     * Overpass: natürliche Topo-Features (Klippe, Gipfel, Tal etc.)
+     * im Bounding-Box-Bereich. Ergänzt die Steigungs-Berechnung.
+     */
+    private suspend fun fetchOverpassTopoFeatures(bb: BoundingBox): List<String> {
+        val locale = java.util.Locale.US
+        val bbox = String.format(locale, "%.6f,%.6f,%.6f,%.6f", bb.south, bb.west, bb.north, bb.east)
+        val query = """
+            [out:json][timeout:6];
+            (
+              node["natural"~"^(cliff|peak|ridge|saddle|valley|depression|rock|scree)$"](${bbox});
+              way["natural"~"^(cliff|ridge|valley)$"](${bbox});
+              way["highway"="steps"](${bbox});
+            );
+            out tags;
+        """.trimIndent()
+
+        return try {
+            val json     = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return emptyList()
+            val elements = json.getJSONArray("elements")
+            val features = mutableListOf<String>()
+            for (i in 0 until elements.length()) {
+                val tags = elements.getJSONObject(i).optJSONObject("tags") ?: continue
+                val nat  = tags.optString("natural", "")
+                val hw   = tags.optString("highway", "")
+                val mapped = when {
+                    nat == "cliff" || nat == "rock"   -> "Felsabbrüche / Steilwände"
+                    nat == "peak"  || nat == "ridge"  -> "Kuppe"
+                    nat == "saddle"                   -> "Hanglage"
+                    nat == "valley"|| nat == "depression" -> "Mulde"
+                    nat == "scree"                    -> "Steiles Gelände"
+                    hw == "steps"                     -> "Steiles Gelände"
+                    else -> ""
+                }
+                if (mapped.isNotEmpty() && !features.contains(mapped)) features.add(mapped)
+            }
+            features
+        } catch (e: Exception) {
+            android.util.Log.e("NasenarbeitMap", "Overpass topo error: ${e.message}")
+            emptyList()
+        }
+    }
+
+    /**
+     * Kombiniert Steigungs-Topo (quantitativ) mit Overpass-Features (qualitativ).
+     * Overpass-Features haben Vorrang bei spezifischen Kategorien.
+     * Legacy – wird noch von Polygon-Modus genutzt.
+     */
+    private fun buildTopoSequenz(
+        slopeTopo:    List<String>,
+        overpassTopo: List<String>
+    ): List<String> {
+        val result = mutableListOf<String>()
+        overpassTopo.forEach { if (!result.contains(it)) result.add(it) }
+        slopeTopo.forEach { cat ->
+            if (!result.contains(cat)) {
+                if (cat != "Eben" || result.isEmpty()) result.add(cat)
+            }
+        }
+        return result.take(4).ifEmpty { listOf("Eben") }
+    }
+
+    /**
+     * Routengeordnete Topo-Sequenz:
+     * slopeTopoPerSeg = eine Kategorie pro Segment in Routenreihenfolge
+     * overpassFeatures = spezielle Features (Klippe etc.) – werden eingebettet
+     */
+    /**
+     * Topo-Sequenz in Routenreihenfolge – 1 Eintrag pro Segment.
+     * Overpass-Features (Klippe, Gipfel etc.) ersetzen "Eben" wenn vorhanden.
+     * Duplikate sind explizit erlaubt (3× Eben = 3 Segmente flaches Gelände).
+     */
+    private fun buildTopoSequenzOrdered(
+        slopeTopoPerSeg: List<String>,
+        overpassFeatures: List<String>
+    ): List<String> {
+        if (slopeTopoPerSeg.isEmpty()) {
+            // Keine Höhendaten: Overpass-Features oder Fallback "Eben"
+            return if (overpassFeatures.isNotEmpty()) overpassFeatures
+            else listOf("Eben")
+        }
+
+        val result = slopeTopoPerSeg.toMutableList()
+
+        // Overpass-Features am Ende anhängen wenn noch nicht vorhanden
+        overpassFeatures.forEach { f ->
+            if (!result.contains(f)) result.add(f)
+        }
+
+        return result.take(8)
+    }
+
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 }

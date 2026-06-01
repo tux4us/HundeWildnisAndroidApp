@@ -58,6 +58,9 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
 
         // PDF Gesamtauswertung
         binding.btnPdfGesamt.setOnClickListener { exportGesamtPDF() }
+        
+        // CSV Export
+        binding.btnCsvExport.setOnClickListener { exportCSV() }
     }
 
     private fun setupRecyclerView() {
@@ -116,8 +119,11 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
 
     private fun exportSessionPDF(session: NasenarbeitSession) {
         try {
-            val file = NasenarbeitPDFGenerator.generateSessionPDF(this, session, profile)
-            sharePDF(file)
+            val file = NasenarbeitPDFGenerator.generateSessionPDF(this, session, profile, saveToPublic = true)
+            if (file != null) {
+                Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                sharePDF(file)
+            }
         } catch (e: Exception) {
             Toast.makeText(this, "PDF-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
         }
@@ -126,10 +132,31 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
     private fun exportGesamtPDF() {
         try {
             val fortschritt = NasenarbeitManager.loadFortschrittForDog(this, profile.id)
-            val file = NasenarbeitPDFGenerator.generateGesamtPDF(this, sessions, fortschritt, profile)
-            Toast.makeText(this, "PDF gespeichert: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            val file = NasenarbeitPDFGenerator.generateGesamtPDF(this, sessions, fortschritt, profile, saveToPublic = true)
+            if (file != null) {
+                Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                sharePDF(file)
+            }
         } catch (e: Exception) {
             Toast.makeText(this, "PDF-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun exportCSV() {
+        try {
+            val file = NasenarbeitCSVGenerator.exportSessions(this, profile, sessions)
+            if (file != null) {
+                Toast.makeText(this, "✅ CSV gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/csv"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                startActivity(Intent.createChooser(intent, "CSV teilen"))
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "CSV-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
