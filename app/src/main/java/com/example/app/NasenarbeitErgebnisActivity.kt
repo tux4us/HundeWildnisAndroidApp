@@ -16,7 +16,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import com.hundewildnis.app.databinding.ActivityNasenarbeitErgebnisBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
 
@@ -266,8 +270,19 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         )
 
         NasenarbeitManager.addSession(this, session)
-        Toast.makeText(this, "✅ Session gespeichert", Toast.LENGTH_SHORT).show()
-        finish()
+        
+        // PDF Export in den öffentlichen Dokumenten-Ordner
+        lifecycleScope.launch(Dispatchers.IO) {
+            val file = NasenarbeitPDFGenerator.generateSessionPDF(this@NasenarbeitErgebnisActivity, session, profile, saveToPublic = true)
+            withContext(Dispatchers.Main) {
+                if (file != null) {
+                    Toast.makeText(this@NasenarbeitErgebnisActivity, "✅ Session gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this@NasenarbeitErgebnisActivity, "✅ Session gespeichert", Toast.LENGTH_SHORT).show()
+                }
+                finish()
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }

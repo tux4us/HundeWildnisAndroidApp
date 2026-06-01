@@ -102,14 +102,17 @@ class NasenarbeitSessionDetailActivity : SecureBaseActivity() {
 
     private fun sharePDF() {
         try {
-            val file = NasenarbeitPDFGenerator.generateSessionPDF(this, session, profile)
-            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "application/pdf"
-                putExtra(Intent.EXTRA_STREAM, uri)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val file = NasenarbeitPDFGenerator.generateSessionPDF(this, session, profile, saveToPublic = true)
+            if (file != null) {
+                android.widget.Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", android.widget.Toast.LENGTH_LONG).show()
+                val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "application/pdf"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                startActivity(Intent.createChooser(intent, "Session als PDF teilen"))
             }
-            startActivity(Intent.createChooser(intent, "Session als PDF teilen"))
         } catch (e: Exception) {
             android.widget.Toast.makeText(this, "PDF-Fehler: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
         }
