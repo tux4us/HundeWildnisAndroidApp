@@ -57,9 +57,9 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         var bodenTyp: String = "",
         var bodenZustand: String = "",
         var laengeSchritte: Int? = null,
-        var flaechenPct: Double? = null,
+        var flaechenM2: Double? = null,
         var keineAngabeSchr: Boolean = false,
-        var keineAngabePct: Boolean = false
+        var keineAngabeM2: Boolean = false
     )
     private val bodenEntries = mutableListOf<BodenEntry>()
 
@@ -117,6 +117,8 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private var mapUmgebung = listOf<String>()
     private var mapBoden    = listOf<String>()
     private var mapTopo     = listOf<String>()
+    private var mapSegmentValues = doubleArrayOf()
+    private var mapWeights = doubleArrayOf()
 
     private val mapLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -140,6 +142,11 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                     NasenarbeitMapActivity.RESULT_BODEN) ?: emptyList()
                 mapTopo     = data.getStringArrayListExtra(
                     NasenarbeitMapActivity.RESULT_TOPO) ?: emptyList()
+
+                mapSegmentValues = data.getDoubleArrayExtra(
+                    NasenarbeitMapActivity.RESULT_SEGMENT_VALUES) ?: doubleArrayOf()
+                mapWeights = data.getDoubleArrayExtra(
+                    NasenarbeitMapActivity.RESULT_WEIGHTS) ?: doubleArrayOf()
 
                 showScreen(2)
                 buildGelaendeScreen()
@@ -559,7 +566,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         // ── Automatische Aufteilung der Gesamtwerte ─────────────
         val count = abschnitte.size
         val avgSchritte = if (count > 0) gebietSchritte / count else 0
-        val avgPct      = if (count > 0) 100.0 / count else 0.0
+        val avgM2       = if (count > 0) (gebietHa * 10_000.0) / count else 0.0
 
         // Phase 2: Overpass-Bodendaten für Abschnitte vorausfüllen
         // mapBoden hat so viele Einträge wie mapUmgebung (1 pro Abschnitt)
@@ -569,11 +576,31 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 entry.bodenTyp = bodenTyp
             }
             
-            // Werte voreintragen entsprechend Disziplin
+            // ✅ NEU: Korrekte Verteilung der Fläche bei Freisuche
             if (disziplin == NasenarbeitDisziplin.FREISUCHE) {
-                if (entry.flaechenPct == null) entry.flaechenPct = avgPct
+                if (entry.flaechenM2 == null) {
+                    if (mapSegmentValues.size == 1 && count > 1 && mapWeights.size == count) {
+                        // FALL: Ein Polygon, aber mehrere Bodentypen mit GEWICHTUNG
+                        entry.flaechenM2 = mapSegmentValues[0] * mapWeights[idx]
+                    } else if (mapSegmentValues.size == 1 && count > 1) {
+                        // Fallback: gleichmäßig
+                        entry.flaechenM2 = mapSegmentValues[0] / count
+                    } else {
+                        val mapValue = mapSegmentValues.getOrNull(idx)
+                        entry.flaechenM2 = mapValue ?: avgM2
+                    }
+                }
             } else {
-                if (entry.laengeSchritte == null) entry.laengeSchritte = avgSchritte
+                if (entry.laengeSchritte == null) {
+                    if (mapSegmentValues.size == 1 && count > 1 && mapWeights.size == count) {
+                        entry.laengeSchritte = (mapSegmentValues[0] * mapWeights[idx]).toInt()
+                    } else if (mapSegmentValues.isNotEmpty()) {
+                        val mapValue = mapSegmentValues.getOrNull(idx)
+                        entry.laengeSchritte = mapValue?.toInt() ?: (mapSegmentValues.sum() / count).toInt()
+                    } else {
+                        entry.laengeSchritte = avgSchritte
+                    }
+                }
             }
             // Bodenzustand bleibt leer → Nutzer wählt manuell
         }
@@ -658,10 +685,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
         // UI-Felder mit voreingetragenen Werten füllen
         if (entry.laengeSchritte != null) etSchr.setText(entry.laengeSchritte.toString())
-        if (entry.flaechenPct != null) etPct.setText(String.format(Locale.US, "%.0f", entry.flaechenPct))
+        if (entry.flaechenM2 != null) etPct.setText(String.format(Locale.US, "%.0f", entry.flaechenM2))
 
         cbSchr.setOnCheckedChangeListener { _, checked -> etSchr.isEnabled = !checked; entry.keineAngabeSchr = checked; if(checked) entry.laengeSchritte = null; updateBodenEignung(idx, tvEignung) }
-        cbPct.setOnCheckedChangeListener  { _, checked -> etPct.isEnabled  = !checked; entry.keineAngabePct  = checked; if(checked) entry.flaechenPct  = null; updateBodenEignung(idx, tvEignung) }
+        cbPct.setOnCheckedChangeListener  { _, checked -> etPct.isEnabled  = !checked; entry.keineAngabeM2  = checked; if(checked) entry.flaechenM2  = null; updateBodenEignung(idx, tvEignung) }
 
         etSchr.addTextChangedListener(object : android.text.TextWatcher {
             override fun afterTextChanged(s: android.text.Editable?) { entry.laengeSchritte = s.toString().toIntOrNull(); updateBodenEignung(idx, tvEignung) }
@@ -669,7 +696,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
         })
         etPct.addTextChangedListener(object : android.text.TextWatcher {
-            override fun afterTextChanged(s: android.text.Editable?) { entry.flaechenPct = s.toString().toDoubleOrNull(); updateBodenEignung(idx, tvEignung) }
+            override fun afterTextChanged(s: android.text.Editable?) { entry.flaechenM2 = s.toString().toDoubleOrNull(); updateBodenEignung(idx, tvEignung) }
             override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
             override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
         })
@@ -999,7 +1026,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private fun buildParam(): NasenarbeitParameter {
         val abschnitte = (if (umbSequenz.isNotEmpty()) umbSequenz else listOf("Allgemein")).mapIndexed { idx, name ->
             val e = bodenEntries.getOrNull(idx) ?: BodenEntry()
-            GelaendeAbschnitt(umgebung = name, bodenTyp = e.bodenTyp, bodenZustand = e.bodenZustand, laengeSchritte = e.laengeSchritte, flaechenanteilProzent = e.flaechenPct)
+            GelaendeAbschnitt(
+                umgebung = name,
+                bodenTyp = e.bodenTyp,
+                bodenZustand = e.bodenZustand,
+                laengeSchritte = e.laengeSchritte,
+                flaechenM2 = e.flaechenM2
+            )
         }
         return NasenarbeitParameter(
             temperaturCelsius = paramTemp, beaufort = paramBf, wmoCode = paramWmo,

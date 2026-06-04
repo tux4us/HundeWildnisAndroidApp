@@ -221,7 +221,8 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         }
 
         val schritte     = binding.etSchritte.text.toString().toIntOrNull()
-        val ha           = binding.etHa.text.toString().toDoubleOrNull()
+        val m2           = binding.etHa.text.toString().toDoubleOrNull()
+        val ha           = m2?.let { it / 10_000.0 }
         val dauer        = binding.etDauer.text.toString().toIntOrNull()
         val gegenst      = binding.etGegenstaende.text.toString().toIntOrNull()
         val gegenstGes   = binding.etGegenstaendeGesamt.text.toString().toIntOrNull()
@@ -257,6 +258,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
             levelFreisuche = fortschritt.levelFreisuche.displayName,
             durchgefuehrteSchritte = schritte,
             durchgefuehrteHa = ha,
+            durchgefuehrteM2 = m2,
             suchdauerMinuten = dauer,
             gefundeneGegenstaende = gegenst,
             gegenstaendeGesamt = gegenstGes,

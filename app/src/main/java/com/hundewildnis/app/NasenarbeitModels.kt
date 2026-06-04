@@ -67,7 +67,8 @@ data class GelaendeAbschnitt(
     @SerializedName("bodenTyp") val bodenTyp: String = "",
     @SerializedName("bodenZustand") val bodenZustand: String = "",
     @SerializedName("laengeSchritte") val laengeSchritte: Int? = null,   // null = keine Angabe
-    @SerializedName("flaechenanteilProzent") val flaechenanteilProzent: Double? = null
+    @SerializedName("flaechenanteilProzent") val flaechenanteilProzent: Double? = null,
+    @SerializedName("flaechenM2") val flaechenM2: Double? = null
 ) : Parcelable
 
 // ════════════════════════════════════════════════════════════════
@@ -130,6 +131,7 @@ data class NasenarbeitSession(
     // Ergebnisse
     @SerializedName("durchgefuehrteSchritte") val durchgefuehrteSchritte: Int? = null,
     @SerializedName("durchgefuehrteHa") val durchgefuehrteHa: Double? = null,
+    @SerializedName("durchgefuehrteM2") val durchgefuehrteM2: Double? = null,
     @SerializedName("suchdauerMinuten") val suchdauerMinuten: Int? = null,
     @SerializedName("gefundeneGegenstaende") val gefundeneGegenstaende: Int? = null,
     @SerializedName("gegenstaendeGesamt") val gegenstaendeGesamt: Int? = null,

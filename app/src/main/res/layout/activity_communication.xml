@@ -31,119 +31,6 @@
             android:padding="16dp">
 
             <!-- ═══════════════════════════════════════════════════ -->
-            <!-- CHART CARD -->
-            <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvChartTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🎵 Live Frequenz-Verlauf (5 Zielfrequenzen)"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:layout_marginBottom="12dp" />
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/frequencyChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ═══════════════════════════════════════════════════ -->
-            <!-- AKTUELLE FREQUENZ ANZEIGE -->
-            <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#2d5016"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🎤 AKTUELLE FREQUENZ"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textColor="#CCCCCC"
-                        android:layout_marginBottom="8dp" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:id="@+id/tvCurrentFrequency"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="--- Hz"
-                            android:textSize="@dimen/text_body_medium"
-                            android:textStyle="bold"
-                            android:textColor="#FFFFFF"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tvFrequencyMatch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🎯"
-                            android:textSize="@dimen/text_body_medium"
-                            android:alpha="0"
-                            android:scaleX="0"
-                            android:scaleY="0"
-                            app:layout_constraintTop_toTopOf="@id/tvCurrentFrequency"
-                            app:layout_constraintBottom_toBottomOf="@id/tvCurrentFrequency"
-                            app:layout_constraintStart_toEndOf="@id/tvCurrentFrequency"
-                            android:layout_marginStart="12dp" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <ProgressBar
-                        android:id="@+id/progressFrequency"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:max="100"
-                        android:progress="0"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/tvFrequencyStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Warte auf Stimme..."
-                        android:textSize="@dimen/text_body_medium"
-                        android:textColor="#8fad6f" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ═══════════════════════════════════════════════════ -->
             <!-- MODUS-AUSWAHL -->
             <!-- ═══════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
@@ -255,6 +142,143 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- ═══════════════════════════════════════════════════ -->
+            <!-- CHART CARD -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tvChartTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎵 Live Frequenz-Verlauf (5 Zielfrequenzen)"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/frequencyChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- AKTUELLE FREQUENZ ANZEIGE -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#2d5016"
+                android:id="@+id/cardFrequency"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎤 AKTUELLE FREQUENZ"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textColor="#CCCCCC"
+                        android:layout_marginBottom="8dp" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tvCurrentFrequency"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--- Hz"
+                            android:textSize="@dimen/text_body_medium"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvFrequencyMatch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎯"
+                            android:textSize="@dimen/text_body_medium"
+                            android:alpha="0"
+                            android:scaleX="0"
+                            android:scaleY="0"
+                            app:layout_constraintTop_toTopOf="@id/tvCurrentFrequency"
+                            app:layout_constraintBottom_toBottomOf="@id/tvCurrentFrequency"
+                            app:layout_constraintStart_toEndOf="@id/tvCurrentFrequency"
+                            android:layout_marginStart="12dp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressFrequency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:max="100"
+                        android:progress="0"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvFrequencyStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Warte auf Stimme..."
+                        android:textSize="@dimen/text_body_medium"
+                        android:textColor="#8fad6f" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- STEUERUNG -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/btnStartStop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🎤 Messung starten"
+                    android:textSize="@dimen/text_body_medium"
+                    android:textStyle="bold"
+                    android:backgroundTint="#2d5016"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════════════════════ -->
             <!-- EINSTELLUNGEN -->
             <!-- ═══════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
@@ -332,29 +356,6 @@
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- ═══════════════════════════════════════════════════ -->
-            <!-- STEUERUNG -->
-            <!-- ═══════════════════════════════════════════════════ -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
-
-                <Button
-                    android:id="@+id/btnStartStop"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🎤 Messung starten"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    android:backgroundTint="#2d5016"
-                    android:textColor="#FFFFFF" />
-
-            </LinearLayout>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- EXPORT BUTTONS -->

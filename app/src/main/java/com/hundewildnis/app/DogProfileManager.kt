@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken
 object DogProfileManager {
     private const val PREFS_NAME = "dog_profiles"
     private const val KEY_PROFILES = "profiles"
-    private const val MAX_DOGS = 3
     
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -27,9 +26,6 @@ object DogProfileManager {
         if (existingIndex >= 0) {
             profiles[existingIndex] = profile
         } else {
-            if (profiles.size >= MAX_DOGS) {
-                return false
-            }
             profiles.add(profile)
         }
         
@@ -50,10 +46,10 @@ object DogProfileManager {
     }
     
     fun canAddMore(context: Context): Boolean {
-        return getAllProfiles(context).size < MAX_DOGS
+        return true
     }
     
     fun getRemainingSlots(context: Context): Int {
-        return MAX_DOGS - getAllProfiles(context).size
+        return 999
     }
 }
