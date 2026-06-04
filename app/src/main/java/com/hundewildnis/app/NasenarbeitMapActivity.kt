@@ -71,7 +71,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     // Phase 2: Overpass-Erkennungen
     private var detectedUmgebung = mutableListOf<String>()
     private var detectedBodenTyp = mutableListOf<String>()
-    private var detectedTopo     = mutableListOf<String>()     // Phase 3
+    private var detectedWeights  = mutableListOf<Double>()
+    private var detectedTopo     = mutableListOf<String>()
     private var overpassQueried  = false
 
     // ── CONSTANTS ──────────────────────────────────────────────
@@ -83,6 +84,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         const val RESULT_UMGEBUNG     = "result_umgebung"    // ArrayList<String>
         const val RESULT_BODEN        = "result_boden"       // ArrayList<String>
         const val RESULT_TOPO         = "result_topo"        // ArrayList<String>
+        const val RESULT_SEGMENT_VALUES = "result_segment_values" // DoubleArray
+        const val RESULT_WEIGHTS      = "result_weights"     // DoubleArray
         const val RC_MAP              = 4200
         private const val REQ_LOCATION = 4201
         private val ORS_API_KEY = "***REMOVED***"
@@ -507,13 +510,15 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             try {
                 // ── Topografie: Elevation in Routenreihenfolge ───────
                 val allPts = allWaypoints().ifEmpty { polyPoints }
+                val realSegments = if (mode == Mode.LINIE) segments.filter { it.size >= 2 } else segList
                 val topoFromSlope = withContext(Dispatchers.IO) {
-                    fetchElevationTopoPerSegment(segList)
+                    fetchElevationTopoPerSegment(realSegments)
                 }
 
                 // ── Umgebung + Boden: pro Segment in Routenreihenfolge
                 val umgebungOrdered = mutableListOf<String>()
                 val bodenOrdered    = mutableListOf<String>()
+                val weightsOrdered  = mutableListOf<Double>()
                 val topoFeatOrdered = mutableListOf<String>()
 
                 withContext(Dispatchers.IO) {
@@ -523,22 +528,33 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
                         // Timeout pro Segment: max 8 Sek, sonst Fallback
                         try {
-                            val (umb, bod) = kotlinx.coroutines.withTimeoutOrNull(8_000L) {
-                                fetchOverpassTerrain(bbox)
-                            } ?: Pair(emptyList(), emptyList())
+                            val result = kotlinx.coroutines.withTimeoutOrNull(8_000L) {
+                                fetchOverpassTerrainWithWeights(bbox)
+                            }
 
-                            val umbVal = umb.firstOrNull() ?: ""
-                            val bodVal = bod.firstOrNull() ?: ""
+                            if (mode == Mode.LINIE) {
+                                val (umb, bod, w) = result ?: Triple(emptyList(), emptyList(), emptyList())
+                                // 1:1 Zuordnung pro Segment
+                                val umbVal = umb.firstOrNull() ?: ""
+                                val bodVal = bod.firstOrNull() ?: ""
 
-                            // 1 Eintrag PRO Segment – Duplikate erlaubt
-                            // (Route durch 3× Waldgebiet → 3 Waldgebiet-Einträge)
-                            if (umbVal.isNotEmpty()) {
-                                umgebungOrdered.add(umbVal)
-                                bodenOrdered.add(bodVal)
+                                if (umbVal.isNotEmpty()) {
+                                    umgebungOrdered.add(umbVal)
+                                    bodenOrdered.add(bodVal)
+                                    weightsOrdered.add(1.0)
+                                } else {
+                                    umgebungOrdered.add(umgebungOrdered.lastOrNull() ?: "Offenes Gelände")
+                                    bodenOrdered.add(bodenOrdered.lastOrNull() ?: "")
+                                    weightsOrdered.add(1.0)
+                                }
                             } else {
-                                // Kein OSM-Ergebnis → letzten Wert fortführen
-                                umgebungOrdered.add(umgebungOrdered.lastOrNull() ?: "Offenes Gelände")
-                                bodenOrdered.add(bodenOrdered.lastOrNull() ?: "")
+                                // POLYGON: Alle gefundenen Geländetypen übernehmen
+                                val (umb, bod, w) = result ?: Triple(listOf("Offenes Gelände"), listOf(""), listOf(1.0))
+                                umb.forEachIndexed { i, u ->
+                                    umgebungOrdered.add(u)
+                                    bodenOrdered.add(bod[i])
+                                    weightsOrdered.add(w[i])
+                                }
                             }
 
                             val topoFeats = kotlinx.coroutines.withTimeoutOrNull(6_000L) {
@@ -549,19 +565,21 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                         } catch (e: Exception) {
                             android.util.Log.w("NasenarbeitMap", "Seg $segIdx Overpass-Fehler: ${e.message}")
                             // Segment überspringen – kein Absturz
-                            if (umgebungOrdered.isEmpty()) umgebungOrdered.add("Offenes Gelände")
-                            bodenOrdered.add(bodenOrdered.lastOrNull() ?: "")
+                            if (umgebungOrdered.isEmpty()) {
+                                umgebungOrdered.add("Offenes Gelände")
+                                bodenOrdered.add("")
+                                weightsOrdered.add(1.0)
+                            }
                         }
                     }
                 }
 
                 // ── Topografie zusammenführen in Routenreihenfolge ────
-                // topoFromSlope ist bereits per Segment geordnet
-                // topoFeatOrdered enthält spezielle Features (Klippe, Gipfel etc.)
                 val topoOrdered = buildTopoSequenzOrdered(topoFromSlope, topoFeatOrdered)
 
                 detectedUmgebung.clear(); detectedUmgebung.addAll(umgebungOrdered)
                 detectedBodenTyp.clear(); detectedBodenTyp.addAll(bodenOrdered)
+                detectedWeights.clear();  detectedWeights.addAll(weightsOrdered)
                 detectedTopo.clear();     detectedTopo.addAll(topoOrdered)
                 overpassQueried = true
 
@@ -577,7 +595,6 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                     binding.btnConfirm.isEnabled = true
                     val topoStr = if (detectedTopo.isEmpty()) "–"
                     else detectedTopo.joinToString(" → ")
-                    // Elevation-Differenz aus letztem Segmentprofil für Debug
                     Toast.makeText(this@NasenarbeitMapActivity,
                         "✅ Gelände erkannt · Topo: $topoStr",
                         Toast.LENGTH_LONG).show()
@@ -610,9 +627,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
     /**
      * Fragt Overpass nach landuse / natural / surface-Tags im Bounding-Box-Bereich.
-     * Gibt Paar zurück: (List<Umgebungsname>, List<BodenTypKey>)
+     * Gibt Tripel zurück: (List<Umgebungsname>, List<BodenTypKey>, List<Gewichtung>)
      */
-    private suspend fun fetchOverpassTerrain(bb: BoundingBox): Pair<List<String>, List<String>> {
+    private suspend fun fetchOverpassTerrainWithWeights(bb: BoundingBox): Triple<List<String>, List<String>, List<Double>> {
         val locale = java.util.Locale.US
         val bbox = String.format(locale, "%.6f,%.6f,%.6f,%.6f", bb.south, bb.west, bb.north, bb.east)
         val query = """
@@ -627,7 +644,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             out tags;
         """.trimIndent()
 
-        val json = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return Pair(emptyList(), emptyList())
+        val json = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return Triple(emptyList(), emptyList(), emptyList())
         val elements = json.getJSONArray("elements")
 
         val landuseCounts  = mutableMapOf<String, Int>()
@@ -647,11 +664,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             tags.optString("surface").takeIf { it.isNotEmpty() }?.let {
                 surfaceCounts[it] = (surfaceCounts[it] ?: 0) + 1
             }
-            // Highway: surface-Tag des Wegs auch für Boden verwenden
             val hw = tags.optString("highway").takeIf { it.isNotEmpty() }
             if (hw != null) {
                 highwayCounts[hw] = (highwayCounts[hw] ?: 0) + 1
-                // surface-Tag von highway-Wegen ebenfalls auswerten
                 tags.optString("surface").takeIf { it.isNotEmpty() }?.let { surf ->
                     surfaceCounts[surf] = (surfaceCounts[surf] ?: 0) + 1
                 }
@@ -660,13 +675,11 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
         val umgebung = mutableListOf<String>()
         val boden    = mutableListOf<String>()
+        val weights  = mutableListOf<Double>()
 
-        // ── Umgebung: ALLE einzigartigen Terrain-Typen in Häufigkeitsreihenfolge ──
-        // Landuse + Natural zusammenführen, nach Häufigkeit sortieren
         val dominantLanduse = landuseCounts.maxByOrNull { it.value }?.key ?: ""
         val dominantNatural = naturalCounts.maxByOrNull { it.value }?.key ?: ""
 
-        // Alle Terrain-Typen als (key, isLanduse, count) sortiert nach Häufigkeit
         data class TerrainEntry(val key: String, val type: String, val count: Int)
         val allTerrainSorted: List<TerrainEntry> =
             (landuseCounts.entries.map { TerrainEntry(it.key, "landuse",  it.value) } +
@@ -674,7 +687,10 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                     highwayCounts.entries.map  { TerrainEntry(it.key, "highway",  it.value) })
                 .sortedByDescending { it.count }
 
-        val maxSections = segments.size.coerceIn(1, 6)
+        val maxSections = if (mode == Mode.LINIE) segments.size.coerceIn(1, 6) else 5
+        var totalCount = 0
+        val tempEntries = mutableListOf<Pair<String, Int>>()
+
         for (entry in allTerrainSorted) {
             val mapped = when (entry.type) {
                 "landuse" -> mapToUmgebung(entry.key, "")
@@ -684,38 +700,35 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             }
             if (mapped.isNotEmpty() && !umgebung.contains(mapped)) {
                 umgebung.add(mapped)
+                tempEntries.add(mapped to entry.count)
+                totalCount += entry.count
             }
             if (umgebung.size >= maxSections) break
         }
 
-        // ── Boden: pro Umgebungstyp einen passenden Bodentyp ──────────────────
-        // Dominant surface für ersten Eintrag
-        val dominantSurface = surfaceCounts.maxByOrNull { it.value }?.key ?: ""
         val surfacesSorted  = surfaceCounts.entries.sortedByDescending { it.value }
-
-        // Pro Umgebungseintrag einen Boden vorschlagen
-        val dominantHighway = highwayCounts.maxByOrNull { it.value }?.key ?: ""
         val highwaysSorted  = highwayCounts.entries.sortedByDescending { it.value }
 
         umgebung.forEachIndexed { idx, umb ->
-            // 1. Priorität: expliziter surface-Tag des Wegs
-            val surface  = surfacesSorted.getOrNull(idx)?.key ?: dominantSurface
+            val surface  = surfacesSorted.getOrNull(idx)?.key ?: ""
             val fromSurf = mapToBodenTyp(surface, dominantLanduse, dominantNatural)
-            // 2. Priorität: aus highway-Typ ableiten
-            val hw       = highwaysSorted.getOrNull(idx)?.key ?: dominantHighway
+            val hw       = highwaysSorted.getOrNull(idx)?.key ?: ""
             val fromHw   = mapHighwayToBoden(hw)
-            // 3. Fallback: aus Umgebungsname
             val fromUmb  = umbToBodenFallback(umb)
 
-            val result = when {
+            val bodenResult = when {
                 fromSurf.isNotEmpty() -> fromSurf
                 fromHw.isNotEmpty()   -> fromHw
                 else                  -> fromUmb
             }
-            boden.add(result)   // Leerstring = Nutzer wählt manuell
+            boden.add(bodenResult)
+
+            // Gewichtung berechnen
+            val count = tempEntries.find { it.first == umb }?.second ?: 1
+            weights.add(if (totalCount > 0) count.toDouble() / totalCount else 1.0 / umgebung.size)
         }
 
-        return Pair(umgebung, boden)
+        return Triple(umgebung, boden, weights)
     }
 
     /** Leitet aus dem Umgebungstyp einen plausiblen Boden-Fallback ab */
@@ -828,6 +841,24 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun returnResult() {
+        val segmentValues = mutableListOf<Double>()
+
+        if (mode == Mode.LINIE) {
+            // ✅ Korrektur: Nur Segmente mit mindestens 2 Punkten (echte Strecken) zählen
+            segments.filter { it.size >= 2 }.forEach { pts ->
+                val distM = calcPolylineDistanceM(pts)
+                segmentValues.add(distM / 0.75) // Schritte (0.75m pro Schritt)
+            }
+        } else {
+            // Quadratmeter pro Segment (im Polygon-Modus meist nur 1 Segment)
+            if (polyPoints.size >= 3) {
+                val areaM2 = calcPolygonAreaM2(polyPoints)
+                segmentValues.add(areaM2) // ✅ NEU: m2 statt Hektar übergeben
+            } else {
+                segmentValues.add(0.0)
+            }
+        }
+
         val data = Intent().apply {
             putExtra(RESULT_USED,     true)
             putExtra(RESULT_SCHRITTE, calculatedSchritte)
@@ -836,6 +867,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             putStringArrayListExtra(RESULT_UMGEBUNG, ArrayList(detectedUmgebung))
             putStringArrayListExtra(RESULT_BODEN,    ArrayList(detectedBodenTyp))
             putStringArrayListExtra(RESULT_TOPO,     ArrayList(detectedTopo))
+            putExtra(RESULT_SEGMENT_VALUES, segmentValues.toDoubleArray())
+            putExtra(RESULT_WEIGHTS, detectedWeights.toDoubleArray())
         }
         setResult(RESULT_OK, data)
         finish()
@@ -852,7 +885,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         areaPolygon = null
         detectedUmgebung.clear(); detectedBodenTyp.clear()
         detectedTopo.clear(); overpassQueried = false
-        calculatedSchritte = 0; calculatedHa = 0.0
+        detectedWeights.clear(); calculatedSchritte = 0; calculatedHa = 0.0
         binding.mapView.invalidate()
         binding.tvResult.text = ""; binding.btnConfirm.isEnabled = false
     }
@@ -989,17 +1022,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             val elevArr    = json.getJSONArray("elevation")
             val elevations = (0 until elevArr.length()).map { elevArr.getDouble(it) }
 
-            // Debug: Höhenwerte loggen
-            val elevMin = elevations.minOrNull() ?: 0.0
-            val elevMax = elevations.maxOrNull() ?: 0.0
-            android.util.Log.d("NasenarbeitTopo",
-                "Elevation: ${elevations.size} Punkte, " +
-                        "Min=${String.format(java.util.Locale.US, "%.1f", elevMin)}m, " +
-                        "Max=${String.format(java.util.Locale.US, "%.1f", elevMax)}m, " +
-                        "Differenz=${String.format(java.util.Locale.US, "%.1f", elevMax - elevMin)}m")
-
             // Pro Segment Topo klassifizieren
-            // Samplepunkte den Segmenten zuordnen (proportional)
             val result = mutableListOf<String>()
             val samplesPerSeg = samples.size.toDouble() / segs.size
             segs.forEachIndexed { segIdx, _ ->
@@ -1022,15 +1045,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     }
 
     /**
-     * Berechnet Steigung zwischen aufeinanderfolgenden Punkten.
-     * Gibt geordnete Topo-Sequenz zurück (häufigste Kategorie zuerst).
-     */
-    /**
      * Klassifiziert Topografie aus Höhenprofil.
-     *
-     * Schwellenwerte für SRTM/Aster-Daten optimiert:
-     *   ≥ 1.2°  (~2.1%) → "Leichte Steigung"
-     *   ≥ 5.0°  (~8.7%) → "Steiles Gelände"
      */
     private fun classifyTopoFromSlope(
         pts: List<GeoPoint>,
@@ -1038,7 +1053,6 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     ): List<String> {
         if (pts.size < 2 || elevations.size < 2) return listOf("Eben")
 
-        // ── Methode A: Punkt-zu-Punkt Steigung ──────────────────
         val slopeCounts = mutableMapOf<String, Int>()
         var prevElev    = elevations.first()
 
@@ -1058,7 +1072,6 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             prevElev = elevations[i]
         }
 
-        // ── Methode B: Gesamthöhengewinn ─────────────────────────
         val totalDistM = calcPolylineDistanceM(pts)
         val totalGain  = elevations.zipWithNext().sumOf { (a, b) -> maxOf(0.0, b - a) }
         val totalDrop  = elevations.zipWithNext().sumOf { (a, b) -> maxOf(0.0, a - b) }
@@ -1073,7 +1086,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             slopeCounts["Leichte Steigung"] = (slopeCounts["Leichte Steigung"] ?: 0) + 3
         }
 
-        // ── Spezial-Erkennung ────────────────────────────────────
+        // Spezial-Erkennung
         val midElev  = elevations[elevations.size / 2]
         val startEnd = (elevations.first() + elevations.last()) / 2.0
         if (midElev < startEnd - 4.5)
@@ -1085,10 +1098,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         val descents = elevations.zipWithNext().count { (a,b) -> b < a - 0.5 }
         val total    = elevations.size - 1
         if (total > 0) {
-            if (ascents  > total * 0.70) slopeCounts["Hanglage"] =
-                (slopeCounts["Hanglage"] ?: 0) + 2
-            if (descents > total * 0.70) slopeCounts["Hanglage"] =
-                (slopeCounts["Hanglage"] ?: 0) + 2
+            if (ascents  > total * 0.70) slopeCounts["Hanglage"] = (slopeCounts["Hanglage"] ?: 0) + 2
+            if (descents > total * 0.70) slopeCounts["Hanglage"] = (slopeCounts["Hanglage"] ?: 0) + 2
         }
 
         return slopeCounts.entries
@@ -1099,10 +1110,6 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             .ifEmpty { listOf("Eben") }
     }
 
-    /**
-     * Overpass: natürliche Topo-Features (Klippe, Gipfel, Tal etc.)
-     * im Bounding-Box-Bereich. Ergänzt die Steigungs-Berechnung.
-     */
     private suspend fun fetchOverpassTopoFeatures(bb: BoundingBox): List<String> {
         val locale = java.util.Locale.US
         val bbox = String.format(locale, "%.6f,%.6f,%.6f,%.6f", bb.south, bb.west, bb.north, bb.east)
@@ -1137,57 +1144,17 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             }
             features
         } catch (e: Exception) {
-            android.util.Log.e("NasenarbeitMap", "Overpass topo error: ${e.message}")
             emptyList()
         }
     }
 
-    /**
-     * Kombiniert Steigungs-Topo (quantitativ) mit Overpass-Features (qualitativ).
-     * Overpass-Features haben Vorrang bei spezifischen Kategorien.
-     * Legacy – wird noch von Polygon-Modus genutzt.
-     */
-    private fun buildTopoSequenz(
-        slopeTopo:    List<String>,
-        overpassTopo: List<String>
-    ): List<String> {
-        val result = mutableListOf<String>()
-        overpassTopo.forEach { if (!result.contains(it)) result.add(it) }
-        slopeTopo.forEach { cat ->
-            if (!result.contains(cat)) {
-                if (cat != "Eben" || result.isEmpty()) result.add(cat)
-            }
-        }
-        return result.take(4).ifEmpty { listOf("Eben") }
-    }
-
-    /**
-     * Routengeordnete Topo-Sequenz:
-     * slopeTopoPerSeg = eine Kategorie pro Segment in Routenreihenfolge
-     * overpassFeatures = spezielle Features (Klippe etc.) – werden eingebettet
-     */
-    /**
-     * Topo-Sequenz in Routenreihenfolge – 1 Eintrag pro Segment.
-     * Overpass-Features (Klippe, Gipfel etc.) ersetzen "Eben" wenn vorhanden.
-     * Duplikate sind explizit erlaubt (3× Eben = 3 Segmente flaches Gelände).
-     */
     private fun buildTopoSequenzOrdered(
         slopeTopoPerSeg: List<String>,
         overpassFeatures: List<String>
     ): List<String> {
-        if (slopeTopoPerSeg.isEmpty()) {
-            // Keine Höhendaten: Overpass-Features oder Fallback "Eben"
-            return if (overpassFeatures.isNotEmpty()) overpassFeatures
-            else listOf("Eben")
-        }
-
+        if (slopeTopoPerSeg.isEmpty()) return if (overpassFeatures.isNotEmpty()) overpassFeatures else listOf("Eben")
         val result = slopeTopoPerSeg.toMutableList()
-
-        // Overpass-Features am Ende anhängen wenn noch nicht vorhanden
-        overpassFeatures.forEach { f ->
-            if (!result.contains(f)) result.add(f)
-        }
-
+        overpassFeatures.forEach { f -> if (!result.contains(f)) result.add(f) }
         return result.take(8)
     }
 

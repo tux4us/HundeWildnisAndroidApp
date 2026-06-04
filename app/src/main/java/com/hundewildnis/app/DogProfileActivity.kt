@@ -61,12 +61,8 @@ class DogProfileActivity : SecureBaseActivity() {
 
     private fun setupButtons() {
         binding.btnAddDog.setOnClickListener {
-            if (DogProfileManager.canAddMore(this)) {
-                val intent = Intent(this, DogEditActivity::class.java)
-                editDogLauncher.launch(intent)
-            } else {
-                Toast.makeText(this, "Maximal 3 Hunde möglich", Toast.LENGTH_SHORT).show()
-            }
+            val intent = Intent(this, DogEditActivity::class.java)
+            editDogLauncher.launch(intent)
         }
     }
 
@@ -90,13 +86,8 @@ class DogProfileActivity : SecureBaseActivity() {
     }
 
     private fun updateAddButtonState() {
-        val remaining = DogProfileManager.getRemainingSlots(this)
-        binding.btnAddDog.text = if (remaining > 0) {
-            "➕ Hund hinzufügen ($remaining von 3)"
-        } else {
-            "🚫 Maximum erreicht (3/3)"
-        }
-        binding.btnAddDog.isEnabled = remaining > 0
+        binding.btnAddDog.text = "➕ Hund hinzufügen"
+        binding.btnAddDog.isEnabled = true
     }
 
     private fun viewProfile(profile: DogProfile) {

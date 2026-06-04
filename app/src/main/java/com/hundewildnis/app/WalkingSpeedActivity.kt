@@ -64,7 +64,8 @@ data class SpeedSession(
     val distance: Float,
     val exceedCount: Int,
     val dataPoints: List<SpeedDataPoint>,
-    val limit: Float
+    val limit: Float,
+    val limitChanges: List<LimitChange> = emptyList()
 )
 
 // ──────────────────────────────────────────────────────────────
@@ -269,6 +270,8 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         totalDistance = session.distance
         exceedCount = session.exceedCount
         speedLimit = session.limit
+        limitChanges.clear()
+        limitChanges.addAll(session.limitChanges)
 
         binding.tvChartTitle.text = "📊 Historie: " + SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
 
@@ -291,7 +294,8 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             distance = totalDistance,
             exceedCount = exceedCount,
             dataPoints = speedDataPoints.toList(),
-            limit = speedLimit
+            limit = speedLimit,
+            limitChanges = limitChanges.toList()
         )
 
         historyList.add(0, newSession)

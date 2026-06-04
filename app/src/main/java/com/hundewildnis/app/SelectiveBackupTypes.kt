@@ -39,6 +39,16 @@ enum class BackupDataType(
         "Notfallberichte mit Fotos"
     ),
 
+    NASENARBEIT(
+        "Nasenarbeit",
+        "Alle Nasenarbeit-Sessions und Fortschritte"
+    ),
+
+    FAVORITES(
+        "Favoriten",
+        "Markierte Orte auf der Karte"
+    ),
+
     APP_SETTINGS(
         "App-Einstellungen",
         "Theme, Benachrichtigungen, etc."
@@ -76,7 +86,8 @@ data class SelectiveBackupContainer(
     val version: String,
     val timestamp: Long,
     val includedTypes: List<String>,
-    val data: MutableMap<String, Any?>
+    val data: MutableMap<String, Any?>,
+    val photoMapping: Map<String, String> = emptyMap()
 )
 
 sealed class SelectiveRestoreResult {

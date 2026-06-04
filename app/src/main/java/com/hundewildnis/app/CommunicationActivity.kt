@@ -1,27 +1,26 @@
 package com.hundewildnis.app
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.media.AudioManager
-import android.media.MediaScannerConnection
 import android.media.ToneGenerator
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.view.MenuItem
-import android.view.animation.OvershootInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.LineChart
@@ -46,7 +45,7 @@ class CommunicationActivity : SecureBaseActivity() {
 
     private lateinit var binding: ActivityCommunicationBinding
 
-    // Audio - OHNE TarsosDSP!
+    // Audio
     private var pitchDetector: SimplePitchDetector? = null
     private var isRecording = false
 
@@ -70,9 +69,6 @@ class CommunicationActivity : SecureBaseActivity() {
     private var time648Hz = 0L
     private var lastHitTimestamp = 0L
     private var lastHitFrequency: TargetFrequency? = null
-    
-    // Feedback-Symbol Timer
-    private var lastMatchFeedbackTime = 0L
 
     // Aktuelle Werte
     private var currentFrequency = 0f
@@ -87,6 +83,9 @@ class CommunicationActivity : SecureBaseActivity() {
     private lateinit var vibrator: Vibrator
     private var toneGenerator: ToneGenerator? = null
 
+    // Shimmer-Animator (Glow-Effekt)
+    private var shimmerAnimator: ValueAnimator? = null
+
     // Historie
     private val historyList = mutableListOf<VoiceSession>()
     private lateinit var historyAdapter: VoiceSessionAdapter
@@ -98,10 +97,15 @@ class CommunicationActivity : SecureBaseActivity() {
     private var currentDisplayedSession: VoiceSession? = null
 
     companion object {
-        private const val VOICE_THRESHOLD = 0.001f  // ✅ Stark gesenkt von 0.005f (sehr empfindlich für 1-2m)
+        private const val VOICE_THRESHOLD = 0.001f
         private const val TOLERANCE_HZ = 5f
         private const val HIT_COOLDOWN_MS = 1000L
-        private const val FEEDBACK_SYMBOL_COOLDOWN = 1200L
+
+        // Glow-Farben
+        private const val COLOR_CARD_NORMAL = "#2d5016"
+        private const val COLOR_GLOW_AMBER  = "#FFB300"
+        // Dauer des Shimmer-Sweeps in ms
+        private const val SHIMMER_DURATION_MS = 1000L
     }
 
     private val micPermissionLauncher = registerForActivityResult(
@@ -110,6 +114,10 @@ class CommunicationActivity : SecureBaseActivity() {
         if (granted) startRecording()
         else Toast.makeText(this, "⚠️ Mikrofon erforderlich", Toast.LENGTH_LONG).show()
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // Lifecycle
+    // ─────────────────────────────────────────────────────────────
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,6 +143,14 @@ class CommunicationActivity : SecureBaseActivity() {
         loadHistory()
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // Chart
+    // ─────────────────────────────────────────────────────────────
+
+    /**
+     * Baut den Chart auf. Limit-Linien werden separat via [updateChartLimitLines] gesetzt,
+     * damit sie auch bei Modus-Wechsel aktualisiert werden können.
+     */
     private fun setupChart() {
         frequencyChart = binding.frequencyChart
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -164,48 +180,61 @@ class CommunicationActivity : SecureBaseActivity() {
 
             axisLeft.apply {
                 setDrawGridLines(true)
-                axisMinimum = 100f  // ✅ Gesenkt von 180f auf 100f für 108 Hz
+                axisMinimum = 100f
                 axisMaximum = 700f
                 this.textColor = textColor
-
-                // ✅ 5 ROTE LINIEN für Zielfrequenzen
-                addLimitLine(LimitLine(108f, "108 Hz").apply {
-                    lineColor = Color.RED
-                    lineWidth = 2f
-                    enableDashedLine(10f, 5f, 0f)
-                })
-                addLimitLine(LimitLine(216f, "216 Hz").apply {
-                    lineColor = Color.RED
-                    lineWidth = 2f
-                    enableDashedLine(10f, 5f, 0f)
-                })
-                addLimitLine(LimitLine(324f, "324 Hz").apply {
-                    lineColor = Color.RED
-                    lineWidth = 2f
-                    enableDashedLine(10f, 5f, 0f)
-                })
-                addLimitLine(LimitLine(432f, "432 Hz").apply {
-                    lineColor = Color.RED
-                    lineWidth = 2f
-                    enableDashedLine(10f, 5f, 0f)
-                })
-                addLimitLine(LimitLine(648f, "648 Hz").apply {
-                    lineColor = Color.RED
-                    lineWidth = 2f
-                    enableDashedLine(10f, 5f, 0f)
-                })
             }
 
             axisRight.isEnabled = false
             legend.textColor = textColor
         }
+
+        // Initial alle 5 Linien (Modus = FREE beim Start)
+        updateChartLimitLines()
     }
+
+    /**
+     * Setzt die roten Limit-Linien je nach aktuellem Trainingsmodus.
+     * FREE  → alle 5 Zielfrequenzen
+     * FOCUS → nur die gewählte Frequenz
+     * Kräftiger als bisher: lineWidth 3f, größerer Label-Text.
+     */
+    private fun updateChartLimitLines() {
+        frequencyChart.axisLeft.removeAllLimitLines()
+
+        val freqsToShow: List<TargetFrequency> = when {
+            trainingMode == TrainingMode.FOCUS && focusFrequency != null -> listOf(focusFrequency!!)
+            else -> TargetFrequency.ALL
+        }
+
+        freqsToShow.forEach { target ->
+            frequencyChart.axisLeft.addLimitLine(
+                LimitLine(target.hz, "${target.hz.toInt()} Hz").apply {
+                    lineColor = Color.RED
+                    lineWidth = 3f               // kräftiger (vorher 2f)
+                    textSize = 11f               // besser lesbar
+                    textColor = Color.RED
+                    enableDashedLine(12f, 6f, 0f)
+                }
+            )
+        }
+
+        frequencyChart.invalidate()
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // UI-Setup
+    // ─────────────────────────────────────────────────────────────
 
     private fun setupUI() {
         binding.radioGroupMode.setOnCheckedChangeListener { _, checkedId ->
             trainingMode = if (checkedId == R.id.radioModeFree) TrainingMode.FREE else TrainingMode.FOCUS
-            binding.layoutFocusFrequency.visibility = if (trainingMode == TrainingMode.FOCUS)
-                android.view.View.VISIBLE else android.view.View.GONE
+            binding.layoutFocusFrequency.visibility =
+                if (trainingMode == TrainingMode.FOCUS) android.view.View.VISIBLE
+                else android.view.View.GONE
+            // Limit-Linien sofort aktualisieren (wirkt erst bei nächstem Start,
+            // aber Vorschau im Chart ist trotzdem hilfreich)
+            updateChartLimitLines()
         }
 
         binding.radioGroupFocusFrequency.setOnCheckedChangeListener { _, checkedId ->
@@ -217,6 +246,7 @@ class CommunicationActivity : SecureBaseActivity() {
                 R.id.radioFreq648 -> TargetFrequency.FREQUENCY_648
                 else -> TargetFrequency.FREQUENCY_432
             }
+            updateChartLimitLines()
         }
 
         binding.switchVibration.setOnCheckedChangeListener { _, isChecked -> vibrationEnabled = isChecked }
@@ -241,22 +271,32 @@ class CommunicationActivity : SecureBaseActivity() {
         }
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // Aufnahme-Steuerung
+    // ─────────────────────────────────────────────────────────────
+
     private fun requestMicPermissionAndStart() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
             AlertDialog.Builder(this)
                 .setTitle("🎤 Berechtigungen für Mikrofon-Zugriff erforderlich")
-                .setMessage("Diese Funktion analysiert Deine Stimmfrequenz während des Hundetrainings oder während Du Deine Stimme für die Kommunikation mit Deinem Hund trainierst.\n\n" +
-                        "Warum benötigen wir Berechtigungen für Mikrofon-Zugriff?\n\n" +
-                        "• Echtzeit-Analyse: Um Deine Stimmfrequenz zu messen und Dir Feedback zu geben.\n" +
-                        "• Harmonische Kommunikation: Damit Du lernst, in dem für Hunde optimalen Frequenzbereichen zu sprechen.\n" +
-                        "• Training optimieren: Statistiken helfen Dir, Deine Kommunikation aufgrund der Ergebniss zu verbessern.\n\n" +
-                        "Deine Aufnahmen werden NICHT gespeichert und NUR lokal auf Deinem Gerät verarbeitet. " +
-                        "Es erfolgt KEINE Übertragung an Server.\n\n" +
-                        "Erklärung gemäß Google Play Store Richtlinien für Transparenz bei Anforderungen von Berechtigungen.")
-                .setPositiveButton("AKTIVIEREN") { _, _ -> micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
+                .setMessage(
+                    "Diese Funktion analysiert Deine Stimmfrequenz während des Hundetrainings oder während Du Deine Stimme für die Kommunikation mit Deinem Hund trainierst.\n\n" +
+                            "Warum benötigen wir Berechtigungen für Mikrofon-Zugriff?\n\n" +
+                            "• Echtzeit-Analyse: Um Deine Stimmfrequenz zu messen und Dir Feedback zu geben.\n" +
+                            "• Harmonische Kommunikation: Damit Du lernst, in dem für Hunde optimalen Frequenzbereichen zu sprechen.\n" +
+                            "• Training optimieren: Statistiken helfen Dir, Deine Kommunikation aufgrund der Ergebnisse zu verbessern.\n\n" +
+                            "Deine Aufnahmen werden NICHT gespeichert und NUR lokal auf Deinem Gerät verarbeitet. " +
+                            "Es erfolgt KEINE Übertragung an Server.\n\n" +
+                            "Erklärung gemäß Google Play Store Richtlinien für Transparenz bei Anforderungen von Berechtigungen."
+                )
+                .setPositiveButton("AKTIVIEREN") { _, _ ->
+                    micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                }
                 .setNegativeButton("ABLEHNEN", null)
                 .create().apply {
                     show()
@@ -280,13 +320,18 @@ class CommunicationActivity : SecureBaseActivity() {
         lastHitFrequency = null
         isCurrentlyVoice = false
 
-        // ✅ Reset geladene Session
         currentDisplayedSession = null
-        binding.tvChartTitle.text = "🎵 Live Frequenz-Verlauf (5 Zielfrequenzen)"
+        binding.tvChartTitle.text = "🎵 Live Frequenz-Verlauf"
 
         isRecording = true
         binding.btnStartStop.text = "🛑 Messung stoppen"
         binding.btnStartStop.setBackgroundColor(getColor(android.R.color.holo_red_dark))
+
+        // Steuerelemente während der Messung sperren
+        setControlsEnabled(false)
+
+        // Chart-Linien beim Start auf aktuelle Auswahl setzen
+        updateChartLimitLines()
 
         if (soundEnabled) {
             toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 50)
@@ -294,16 +339,70 @@ class CommunicationActivity : SecureBaseActivity() {
 
         try {
             pitchDetector = SimplePitchDetector()
-            pitchDetector?.startRecording { frequency, amplitude ->
-                runOnUiThread {
-                    processPitchDetection(frequency, amplitude)
+            pitchDetector?.startRecording(
+                onPitchDetected = { frequency, amplitude ->
+                    runOnUiThread { processPitchDetection(frequency, amplitude) }
+                },
+                onError = { e ->
+                    runOnUiThread {
+                        Toast.makeText(
+                            this,
+                            "⚠️ Mikrofon-Fehler: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        stopRecording()
+                    }
                 }
-            }
+            )
         } catch (e: Exception) {
             Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
             stopRecording()
         }
     }
+
+    private fun stopRecording() {
+        isRecording = false
+        pitchDetector?.stopRecording()
+        pitchDetector = null
+        toneGenerator?.release()
+        toneGenerator = null
+
+        // Laufenden Shimmer stoppen und Karte zurücksetzen
+        cancelShimmer()
+
+        binding.btnStartStop.text = "🎤 Messung starten"
+        binding.btnStartStop.setBackgroundColor(Color.parseColor(COLOR_CARD_NORMAL))
+
+        // Steuerelemente wieder freigeben
+        setControlsEnabled(true)
+
+        if (frequencyDataPoints.isNotEmpty()) {
+            saveSession()
+            binding.btnExport.isEnabled = true
+            binding.btnShare.isEnabled = true
+        }
+    }
+
+    /**
+     * Aktiviert/deaktiviert alle Modus- und Frequenz-Auswahlfelder.
+     * Wird beim Start/Stop der Messung aufgerufen.
+     */
+    private fun setControlsEnabled(enabled: Boolean) {
+        binding.radioGroupMode.isEnabled = enabled
+        for (i in 0 until binding.radioGroupMode.childCount) {
+            binding.radioGroupMode.getChildAt(i).isEnabled = enabled
+        }
+        binding.radioGroupFocusFrequency.isEnabled = enabled
+        for (i in 0 until binding.radioGroupFocusFrequency.childCount) {
+            binding.radioGroupFocusFrequency.getChildAt(i).isEnabled = enabled
+        }
+        binding.switchVibration.isEnabled = enabled
+        binding.switchSound.isEnabled = enabled
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Pitch-Verarbeitung
+    // ─────────────────────────────────────────────────────────────
 
     private fun processPitchDetection(frequency: Float, amplitude: Float) {
         val isVoice = amplitude > VOICE_THRESHOLD && frequency > 80f && frequency < 800f
@@ -333,15 +432,15 @@ class CommunicationActivity : SecureBaseActivity() {
                     isAnyMatch = true
                 }
             }
-            
+
             if (isAnyMatch) {
-                triggerMatchFeedback()
+                triggerShimmerFeedback()
             }
 
             binding.tvCurrentFrequency.text = "${frequency.toInt()} Hz"
             binding.tvFrequencyStatus.text = "🎯 ${getNearestFrequency(frequency)?.name ?: "Sprechend..."}"
 
-            val progress = ((frequency - 100f) / (700f - 100f) * 100f).toInt().coerceIn(0, 100)  // ✅ 100-700 Hz
+            val progress = ((frequency - 100f) / (700f - 100f) * 100f).toInt().coerceIn(0, 100)
             binding.progressFrequency.progress = progress
 
             updateChart()
@@ -349,8 +448,7 @@ class CommunicationActivity : SecureBaseActivity() {
         } else {
             if (isCurrentlyVoice) {
                 isCurrentlyVoice = false
-                val voiceDuration = System.currentTimeMillis() - lastVoiceTimestamp
-                totalVoiceDuration += voiceDuration
+                totalVoiceDuration += System.currentTimeMillis() - lastVoiceTimestamp
             }
             binding.tvFrequencyStatus.text = "Warte auf Stimme..."
             binding.tvCurrentFrequency.text = "--- Hz"
@@ -385,38 +483,83 @@ class CommunicationActivity : SecureBaseActivity() {
             provideFeedback()
         }
     }
-    
-    private fun triggerMatchFeedback() {
-        val now = System.currentTimeMillis()
-        if (now - lastMatchFeedbackTime > FEEDBACK_SYMBOL_COOLDOWN) {
-            lastMatchFeedbackTime = now
-            showVisualMatchFeedback()
+
+    // ─────────────────────────────────────────────────────────────
+    // Shimmer-Glow-Feedback
+    // ─────────────────────────────────────────────────────────────
+
+    /**
+     * Startet einen Links-nach-Rechts-Shimmer über die Frequenz-Card.
+     *
+     * Implementierung: translationX-Animation auf einem halbtransparenten
+     * Amber-Overlay (tvFrequencyMatch), das von -cardWidth bis +cardWidth läuft.
+     * Da wir kein zusätzliches View-Overlay haben möchten, animieren wir stattdessen
+     * die Hintergrundfarbe der Card von Normal → Amber → Normal über die Dauer,
+     * kombiniert mit einem translationX auf tvCurrentFrequency als visuellen Sweep-Effekt.
+     *
+     * Konkret: Die Card-Farbe pulst Amber, während tvFrequencyMatch (jetzt als
+     * Shimmer-Streifen genutzt) von links nach rechts über die Card gleitet.
+     */
+    private fun triggerShimmerFeedback() {
+        // Laufenden Shimmer abbrechen und neu starten (überlappende Treffer)
+        cancelShimmer()
+
+        val card = binding.cardFrequency          // ID der grünen Frequenz-Card (s.u.)
+        val cardWidth = card.width.toFloat().takeIf { it > 0f } ?: 800f
+
+        // 1) Hintergrundfarbe: Normal → Amber → Normal
+        val colorNormal = Color.parseColor(COLOR_CARD_NORMAL)
+        val colorAmber  = Color.parseColor(COLOR_GLOW_AMBER)
+
+        val colorAnim = ValueAnimator.ofArgb(colorNormal, colorAmber, colorNormal).apply {
+            duration = SHIMMER_DURATION_MS
+            interpolator = LinearInterpolator()
+            addUpdateListener { anim ->
+                card.setCardBackgroundColor(anim.animatedValue as Int)
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    card.setCardBackgroundColor(colorNormal)
+                }
+            })
         }
+
+        // 2) Shimmer-Streifen (tvFrequencyMatch) von links nach rechts
+        val shimmerView = binding.tvFrequencyMatch
+        shimmerView.alpha = 0.55f
+        shimmerView.translationX = -cardWidth
+
+        val sweepAnim = ObjectAnimator.ofFloat(shimmerView, "translationX", -cardWidth, cardWidth).apply {
+            duration = SHIMMER_DURATION_MS
+            interpolator = LinearInterpolator()
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    shimmerView.alpha = 0f
+                    shimmerView.translationX = 0f
+                }
+            })
+        }
+
+        colorAnim.start()
+        sweepAnim.start()
+
+        shimmerAnimator = colorAnim   // Referenz zum Abbrechen
     }
 
-    private fun showVisualMatchFeedback() {
-        binding.tvFrequencyMatch.animate().cancel()
-        binding.tvFrequencyMatch.alpha = 0f
-        binding.tvFrequencyMatch.scaleX = 0f
-        binding.tvFrequencyMatch.scaleY = 0f
-        
-        binding.tvFrequencyMatch.animate()
-            .alpha(1f)
-            .scaleX(1.3f)
-            .scaleY(1.3f)
-            .setDuration(350)
-            .setInterpolator(OvershootInterpolator())
-            .withEndAction {
-                binding.tvFrequencyMatch.animate()
-                    .alpha(0f)
-                    .scaleX(1.0f)
-                    .scaleY(1.0f)
-                    .setStartDelay(800)
-                    .setDuration(450)
-                    .start()
-            }
-            .start()
+    private fun cancelShimmer() {
+        shimmerAnimator?.cancel()
+        shimmerAnimator = null
+        val colorNormal = Color.parseColor(COLOR_CARD_NORMAL)
+        try {
+            binding.cardFrequency.setCardBackgroundColor(colorNormal)
+            binding.tvFrequencyMatch.alpha = 0f
+            binding.tvFrequencyMatch.translationX = 0f
+        } catch (_: Exception) {}
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // Hilfsfunktionen
+    // ─────────────────────────────────────────────────────────────
 
     private fun getNearestFrequency(freq: Float): TargetFrequency? {
         return TargetFrequency.ALL.minByOrNull { abs(it.hz - freq) }
@@ -431,7 +574,6 @@ class CommunicationActivity : SecureBaseActivity() {
                 @Suppress("DEPRECATION") vibrator.vibrate(100)
             }
         }
-
         if (soundEnabled) {
             toneGenerator?.startTone(ToneGenerator.TONE_PROP_BEEP, 100)
         }
@@ -441,12 +583,12 @@ class CommunicationActivity : SecureBaseActivity() {
         if (frequencyDataPoints.isEmpty()) return
 
         val entries = frequencyDataPoints.map {
-            Entry(((it.timestamp) / 1000f), it.frequency)
+            Entry((it.timestamp) / 1000f, it.frequency)
         }
 
         val dataSet = LineDataSet(entries, "Frequenz").apply {
-            color = Color.parseColor("#2d5016")
-            setCircleColor(Color.parseColor("#2d5016"))
+            color = Color.parseColor(COLOR_CARD_NORMAL)
+            setCircleColor(Color.parseColor(COLOR_CARD_NORMAL))
             lineWidth = 2f
             circleRadius = 0f
             setDrawCircles(false)
@@ -483,22 +625,9 @@ class CommunicationActivity : SecureBaseActivity() {
         """.trimIndent()
     }
 
-    private fun stopRecording() {
-        isRecording = false
-        pitchDetector?.stopRecording()
-        pitchDetector = null
-        toneGenerator?.release()
-        toneGenerator = null
-
-        binding.btnStartStop.text = "🎤 Messung starten"
-        binding.btnStartStop.setBackgroundColor(Color.parseColor("#2d5016"))
-
-        if (frequencyDataPoints.isNotEmpty()) {
-            saveSession()
-            binding.btnExport.isEnabled = true
-            binding.btnShare.isEnabled = true
-        }
-    }
+    // ─────────────────────────────────────────────────────────────
+    // Session-Verwaltung
+    // ─────────────────────────────────────────────────────────────
 
     private fun saveSession() {
         if (frequencyDataPoints.isEmpty()) return
@@ -538,53 +667,43 @@ class CommunicationActivity : SecureBaseActivity() {
 
     private fun saveHistory() {
         val prefs = getSharedPreferences("voice_history", Context.MODE_PRIVATE)
-        val json = Gson().toJson(historyList)
-        prefs.edit().putString("sessions", json).apply()
+        prefs.edit().putString("sessions", Gson().toJson(historyList)).apply()
     }
 
     private fun loadHistory() {
         val prefs = getSharedPreferences("voice_history", Context.MODE_PRIVATE)
-        val json = prefs.getString("sessions", null)
-        if (json != null) {
-            val type = object : TypeToken<List<VoiceSession>>() {}.type
-            val loaded: List<VoiceSession> = Gson().fromJson(json, type)
-            historyList.clear()
-            historyList.addAll(loaded)
-            historyAdapter.notifyDataSetChanged()
-        }
+        val json = prefs.getString("sessions", null) ?: return
+        val type = object : TypeToken<List<VoiceSession>>() {}.type
+        val loaded: List<VoiceSession> = Gson().fromJson(json, type)
+        historyList.clear()
+        historyList.addAll(loaded)
+        historyAdapter.notifyDataSetChanged()
     }
 
     private fun displaySession(session: VoiceSession) {
-        // Session-Daten in UI laden
         try {
-            // Aktuell angezeigte Session speichern (für Export)
             currentDisplayedSession = session
 
-            // Chart leeren und neu aufbauen
             frequencyDataPoints.clear()
             frequencyDataPoints.addAll(session.dataPoints)
 
-            // Chart aktualisieren
             if (frequencyDataPoints.isNotEmpty()) {
                 val entries = frequencyDataPoints.map {
                     Entry((it.timestamp / 1000f), it.frequency)
                 }
-
                 val dataSet = LineDataSet(entries, "Frequenz").apply {
-                    color = Color.parseColor("#2d5016")
-                    setCircleColor(Color.parseColor("#2d5016"))
+                    color = Color.parseColor(COLOR_CARD_NORMAL)
+                    setCircleColor(Color.parseColor(COLOR_CARD_NORMAL))
                     lineWidth = 2f
                     circleRadius = 0f
                     setDrawCircles(false)
                     setDrawValues(false)
                 }
-
                 frequencyChart.data = LineData(dataSet)
                 frequencyChart.notifyDataSetChanged()
                 frequencyChart.invalidate()
             }
 
-            // Statistik anzeigen
             val duration = session.totalDuration / 1000
             val min = duration / 60
             val sec = duration % 60
@@ -608,22 +727,17 @@ class CommunicationActivity : SecureBaseActivity() {
                 ⭐ Beste: ${session.getBestFrequency()?.name ?: "Keine Treffer"}
             """.trimIndent()
 
-            // Chart-Titel aktualisieren
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             binding.tvChartTitle.text = "🎵 Session vom $dateStr"
 
-            // Aktuelle Frequenz-Anzeige auf Session-Daten setzen
             if (session.dataPoints.isNotEmpty()) {
                 val lastPoint = session.dataPoints.last()
                 binding.tvCurrentFrequency.text = "${lastPoint.frequency.toInt()} Hz"
                 binding.tvFrequencyStatus.text = "Session beendet"
             }
 
-            // Export-Buttons aktivieren (für diese Session)
             binding.btnExport.isEnabled = true
             binding.btnShare.isEnabled = true
-
-            // Scroll nach oben, damit User die Daten sieht
             binding.nestedScrollView.smoothScrollTo(0, 0)
 
             Toast.makeText(
@@ -661,10 +775,12 @@ class CommunicationActivity : SecureBaseActivity() {
             }
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // PDF-Export
+    // ─────────────────────────────────────────────────────────────
+
     private fun exportToPdf(share: Boolean) {
-        // Prüfe ob eine Session angezeigt wird (aus Historie) oder aktuelle Messung
         if (currentDisplayedSession != null) {
-            // Export der geladenen Session
             exportSessionToPdf(currentDisplayedSession!!, share)
             return
         }
@@ -676,7 +792,6 @@ class CommunicationActivity : SecureBaseActivity() {
 
         lifecycleScope.launch {
             try {
-                // Session erstellen
                 val avgFreq = frequencyDataPoints.map { it.frequency }.average().toFloat()
                 val minFreq = frequencyDataPoints.minOf { it.frequency }
                 val maxFreq = frequencyDataPoints.maxOf { it.frequency }
@@ -706,7 +821,6 @@ class CommunicationActivity : SecureBaseActivity() {
                 )
 
                 exportSessionToPdf(currentSession, share)
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
@@ -716,28 +830,14 @@ class CommunicationActivity : SecureBaseActivity() {
         }
     }
 
-    /**
-     * Exportiert eine VoiceSession als PDF
-     */
     private fun exportSessionToPdf(session: VoiceSession, share: Boolean) {
         lifecycleScope.launch {
             try {
-                // Chart als Bitmap
-                val chartBitmap = withContext(Dispatchers.Main) {
-                    frequencyChart.chartBitmap
-                }
-
-                // PDF erstellen
+                val chartBitmap = withContext(Dispatchers.Main) { frequencyChart.chartBitmap }
                 val pdfFile = withContext(Dispatchers.IO) {
                     VoicePDFGenerator.generateSessionPDF(this@CommunicationActivity, session, chartBitmap)
                 }
-
-                if (share) {
-                    shareFile(pdfFile)
-                } else {
-                    savePdfToDocuments(pdfFile)
-                }
-
+                if (share) shareFile(pdfFile) else savePdfToDocuments(pdfFile)
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
@@ -747,65 +847,42 @@ class CommunicationActivity : SecureBaseActivity() {
         }
     }
 
-    /**
-     * Speichert PDF in Documents/HundeWildnis (wie DailyNotes & WalkingSpeed)
-     */
     private suspend fun savePdfToDocuments(pdfFile: File) {
         withContext(Dispatchers.IO) {
             try {
-                // Öffentlicher Ordner Documents/HundeWildnis
                 val documentsDir = android.os.Environment.getExternalStoragePublicDirectory(
                     android.os.Environment.DIRECTORY_DOCUMENTS
                 )
                 val appDir = File(documentsDir, "HundeWildnis")
-
-                if (!appDir.exists()) {
-                    appDir.mkdirs()
-                }
+                if (!appDir.exists()) appDir.mkdirs()
 
                 val targetFile = File(appDir, pdfFile.name)
                 pdfFile.copyTo(targetFile, overwrite = true)
 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@CommunicationActivity,
-                        "✅ PDF gespeichert in Documents/HundeWildnis",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@CommunicationActivity, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
                 }
 
-                // MediaScanner benachrichtigen (damit Datei sofort sichtbar)
                 android.media.MediaScannerConnection.scanFile(
                     this@CommunicationActivity,
                     arrayOf(targetFile.absolutePath),
                     arrayOf("application/pdf"),
                     null
                 )
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@CommunicationActivity,
-                        "Fehler beim Speichern: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@CommunicationActivity, "Fehler beim Speichern: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    /**
-     * Teilt PDF mit anderen Apps (WhatsApp, Email, etc.)
-     */
     private fun shareFile(file: File) {
         try {
             val uri = androidx.core.content.FileProvider.getUriForFile(
-                this,
-                "${applicationContext.packageName}.fileprovider",
-                file
+                this, "${applicationContext.packageName}.fileprovider", file
             )
-
             val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
                 type = "application/pdf"
                 putExtra(android.content.Intent.EXTRA_STREAM, uri)
@@ -813,14 +890,16 @@ class CommunicationActivity : SecureBaseActivity() {
                 putExtra(android.content.Intent.EXTRA_TEXT, "Meine Kommunikations-Analyse von HundeWildnis")
                 addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-
             startActivity(android.content.Intent.createChooser(shareIntent, "PDF teilen"))
-
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Fehler beim Teilen: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // Lifecycle / Navigation
+    // ─────────────────────────────────────────────────────────────
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

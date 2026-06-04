@@ -538,61 +538,121 @@ object BackupManager {
     ): File {
         val timestamp = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
-        val fileName = "HundeWildnis_Selective_${dateFormat.format(Date(timestamp))}.json"
+        // ✅ NEU: .hundebackup (ZIP) statt .json, damit Fotos enthalten sein können
+        val fileName = "HundeWildnis_Selective_${dateFormat.format(Date(timestamp))}$BACKUP_EXTENSION"
 
-        val backupData = SelectiveBackupContainer(
-            version = getAppVersion(context),
-            timestamp = timestamp,
-            includedTypes = selectedTypes.map { it.name },
-            data = mutableMapOf()
-        )
+        // 1. Temporäres Verzeichnis für den Inhalt des Zips
+        val tempDir = File(context.cacheDir, "selective_backup_content")
+        if (tempDir.exists()) tempDir.deleteRecursively()
+        tempDir.mkdirs()
 
         try {
+            val photosInZipDir = File(tempDir, PHOTOS_DIR)
+            photosInZipDir.mkdirs()
+
+            val photoMapping = mutableMapOf<String, String>()
+            val data = mutableMapOf<String, Any?>()
+
             // Nur ausgewählte Daten einpacken
             if (BackupDataType.PROFILES in selectedTypes) {
-                backupData.data["profiles"] = DogProfileManager.getAllProfiles(context)
+                val profiles = DogProfileManager.getAllProfiles(context)
+                data["profiles"] = profiles
+                // Fotos sammeln
+                profiles.forEachIndexed { index, dog ->
+                    if (dog.photoUri.isNotEmpty()) {
+                        val photoFile = File(photosInZipDir, "dog_${index}_${timestamp}.jpg")
+                        if (copyUriToFile(context, Uri.parse(dog.photoUri), photoFile)) {
+                            photoMapping[dog.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    }
+                }
             }
 
             if (BackupDataType.DIARY in selectedTypes) {
-                backupData.data["trainingSessions"] = loadTrainingSessions(context)
-                backupData.data["trainingProgress"] = loadTrainingProgress(context)
-                backupData.data["trainingMilestones"] = loadTrainingMilestones(context)
+                data["trainingSessions"] = loadTrainingSessions(context)
+                data["trainingProgress"] = loadTrainingProgress(context)
+                data["trainingMilestones"] = loadTrainingMilestones(context)
             }
 
             if (BackupDataType.WALKING_SPEED in selectedTypes) {
-                backupData.data["speedSessions"] = collectSpeedSessions(context)
+                data["speedSessions"] = collectSpeedSessions(context)
             }
 
             if (BackupDataType.NOTES in selectedTypes) {
-                backupData.data["notes"] = collectNotes(context)
+                val notes = collectNotes(context)
+                data["notes"] = notes
+                // Fotos sammeln
+                notes?.forEachIndexed { noteIndex, note ->
+                    note.photoUris.forEachIndexed { photoIndex, uriString ->
+                        val photoFile = File(photosInZipDir, "note_${noteIndex}_${photoIndex}_${timestamp}.jpg")
+                        if (copyUriToFile(context, Uri.parse(uriString), photoFile)) {
+                            photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    }
+                }
             }
 
             if (BackupDataType.VOICE in selectedTypes) {
-                backupData.data["voiceSessions"] = collectVoiceSessions(context)
+                data["voiceSessions"] = collectVoiceSessions(context)
             }
 
             if (BackupDataType.EMERGENCY in selectedTypes) {
-                backupData.data["emergencyReports"] = collectEmergencyReports(context)
+                val reports = collectEmergencyReports(context)
+                data["emergencyReports"] = reports
+                // Fotos sammeln
+                reports?.forEachIndexed { reportIndex, report ->
+                    report.photoUris.forEachIndexed { photoIndex, uriString ->
+                        val photoFile = File(photosInZipDir, "emergency_${reportIndex}_${photoIndex}_${timestamp}.jpg")
+                        if (copyUriToFile(context, Uri.parse(uriString), photoFile)) {
+                            photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    }
+                }
+            }
+
+            if (BackupDataType.NASENARBEIT in selectedTypes) {
+                val (sessions, progress) = NasenarbeitManager.exportForBackup(context)
+                data["nasenarbeitSessions"] = sessions
+                data["nasenarbeitFortschritt"] = progress
+            }
+
+            if (BackupDataType.FAVORITES in selectedTypes) {
+                data["favorites"] = FavoritesManager.getAll(context)
             }
 
             if (BackupDataType.APP_SETTINGS in selectedTypes) {
-                backupData.data["settings"] = collectSettings(context)
+                data["settings"] = collectSettings(context)
             }
 
-            // Als JSON speichern
+            // Container erstellen
+            val backupContainer = SelectiveBackupContainer(
+                version = getAppVersion(context),
+                timestamp = timestamp,
+                includedTypes = selectedTypes.map { it.name },
+                data = data,
+                photoMapping = photoMapping
+            )
+
+            // JSON-Datei im Zip schreiben
+            File(tempDir, DATA_FILE).writeText(gson.toJson(backupContainer))
+
+            // ZIP-Datei am Zielort erstellen
             val backupFolder = getBackupDirectory(context)
             val outputFile = File(backupFolder, fileName)
-            outputFile.writeText(gson.toJson(backupData))
+
+            zipDirectory(tempDir, outputFile)
 
             // Medienscan anstoßen
             MediaScannerConnection.scanFile(context, arrayOf(outputFile.absolutePath), null, null)
 
-            Log.d(TAG, "Selective backup created: ${outputFile.absolutePath}")
+            Log.d(TAG, "Selective ZIP backup created: ${outputFile.absolutePath}")
             return outputFile
 
         } catch (e: Exception) {
             Log.e(TAG, "Error creating selective backup", e)
             throw e
+        } finally {
+            tempDir.deleteRecursively()
         }
     }
 
@@ -606,16 +666,51 @@ object BackupManager {
         mergeMode: MergeMode = MergeMode.ADD_NEW
     ): SelectiveRestoreResult {
 
-        Log.d(TAG, "Restoring selective backup with mode: ${mergeMode.name}")
+        Log.d(TAG, "Restoring selective backup: ${backupFile.name}, mode: ${mergeMode.name}")
+
+        val tempDir = File(context.cacheDir, "selective_restore_unzip")
+        if (tempDir.exists()) tempDir.deleteRecursively()
+        tempDir.mkdirs()
 
         return try {
-            // Backup laden
-            val json = backupFile.readText()
-            val backup = gson.fromJson(json, SelectiveBackupContainer::class.java)
+            val isZip = backupFile.name.endsWith(BACKUP_EXTENSION)
+            val backup: SelectiveBackupContainer
+            val photoMapping = mutableMapOf<String, String>()
+
+            if (isZip) {
+                unzipFile(backupFile, tempDir)
+                val dataFile = File(tempDir, DATA_FILE)
+                if (!dataFile.exists()) return SelectiveRestoreResult.Error("❌ Ungültige Backup-Datei")
+
+                val json = dataFile.readText()
+                backup = gson.fromJson(json, SelectiveBackupContainer::class.java)
+
+                // Fotos wiederherstellen (analog zum Full Restore)
+                val photosInZipDir = File(tempDir, PHOTOS_DIR)
+                if (photosInZipDir.exists()) {
+                    backup.photoMapping.forEach { (originalUri, backupPath) ->
+                        val sourceFileInZip = File(tempDir, backupPath)
+                        if (sourceFileInZip.exists()) {
+                            val destFile = File(context.filesDir, "restored_photos/${sourceFileInZip.name}")
+                            destFile.parentFile?.mkdirs()
+                            sourceFileInZip.copyTo(destFile, overwrite = true)
+
+                            val newUri = androidx.core.content.FileProvider.getUriForFile(
+                                context, "${context.packageName}.fileprovider", destFile
+                            )
+                            photoMapping[originalUri] = newUri.toString()
+                        }
+                    }
+                }
+            } else {
+                // Altes JSON-Format (keine Fotos möglich)
+                val json = backupFile.readText()
+                backup = gson.fromJson(json, SelectiveBackupContainer::class.java)
+            }
 
             // Nur ausgewählte Daten wiederherstellen
             if (BackupDataType.PROFILES in selectedTypes && backup.data.containsKey("profiles")) {
-                restoreProfilesSelective(context, backup.data["profiles"], mergeMode)
+                restoreProfilesSelective(context, backup.data["profiles"], mergeMode, photoMapping)
             }
 
             if (BackupDataType.DIARY in selectedTypes) {
@@ -635,7 +730,7 @@ object BackupManager {
             }
 
             if (BackupDataType.NOTES in selectedTypes && backup.data.containsKey("notes")) {
-                restoreNotesSelective(context, backup.data["notes"], mergeMode)
+                restoreNotesSelective(context, backup.data["notes"], mergeMode, photoMapping)
             }
 
             if (BackupDataType.VOICE in selectedTypes && backup.data.containsKey("voiceSessions")) {
@@ -643,7 +738,20 @@ object BackupManager {
             }
 
             if (BackupDataType.EMERGENCY in selectedTypes && backup.data.containsKey("emergencyReports")) {
-                restoreEmergencyReportsSelective(context, backup.data["emergencyReports"], mergeMode)
+                restoreEmergencyReportsSelective(context, backup.data["emergencyReports"], mergeMode, photoMapping)
+            }
+
+            if (BackupDataType.NASENARBEIT in selectedTypes) {
+                if (backup.data.containsKey("nasenarbeitSessions")) {
+                    restoreNasenarbeitSessionsSelective(context, backup.data["nasenarbeitSessions"], mergeMode)
+                }
+                if (backup.data.containsKey("nasenarbeitFortschritt")) {
+                    restoreNasenarbeitFortschrittSelective(context, backup.data["nasenarbeitFortschritt"], mergeMode)
+                }
+            }
+
+            if (BackupDataType.FAVORITES in selectedTypes && backup.data.containsKey("favorites")) {
+                restoreFavoritesSelective(context, backup.data["favorites"], mergeMode)
             }
 
             if (BackupDataType.APP_SETTINGS in selectedTypes && backup.data.containsKey("settings")) {
@@ -660,6 +768,8 @@ object BackupManager {
         } catch (e: Exception) {
             Log.e(TAG, "Error restoring selective backup", e)
             SelectiveRestoreResult.Error("❌ Fehler: ${e.message}")
+        } finally {
+            tempDir.deleteRecursively()
         }
     }
 
@@ -699,10 +809,18 @@ object BackupManager {
     private fun restoreProfilesSelective(
         context: Context,
         data: Any?,
-        mode: MergeMode
+        mode: MergeMode,
+        photoMapping: Map<String, String> = emptyMap()
     ) {
         val type = object : TypeToken<List<DogProfile>>() {}.type
-        val profiles: List<DogProfile> = gson.fromJson(gson.toJson(data), type)
+        val rawProfiles: List<DogProfile> = gson.fromJson(gson.toJson(data), type)
+
+        // ✅ Fotos mappen
+        val profiles = rawProfiles.map { profile ->
+            if (profile.photoUri.isNotEmpty() && photoMapping.containsKey(profile.photoUri)) {
+                profile.copy(photoUri = photoMapping[profile.photoUri]!!)
+            } else profile
+        }
 
         when (mode) {
             MergeMode.ADD_NEW -> {
@@ -885,10 +1003,17 @@ object BackupManager {
     private fun restoreNotesSelective(
         context: Context,
         data: Any?,
-        mode: MergeMode
+        mode: MergeMode,
+        photoMapping: Map<String, String> = emptyMap()
     ) {
         val type = object : TypeToken<List<NoteSession>>() {}.type
-        val notes: List<NoteSession> = gson.fromJson(gson.toJson(data), type)
+        val rawNotes: List<NoteSession> = gson.fromJson(gson.toJson(data), type)
+
+        // ✅ Fotos mappen
+        val notes = rawNotes.map { note ->
+            val restoredUris = note.photoUris.map { photoMapping[it] ?: it }
+            note.copy(photoUris = restoredUris)
+        }
 
         val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
 
@@ -957,10 +1082,17 @@ object BackupManager {
     private fun restoreEmergencyReportsSelective(
         context: Context,
         data: Any?,
-        mode: MergeMode
+        mode: MergeMode,
+        photoMapping: Map<String, String> = emptyMap()
     ) {
         val type = object : TypeToken<List<EmergencyReport>>() {}.type
-        val reports: List<EmergencyReport> = gson.fromJson(gson.toJson(data), type)
+        val rawReports: List<EmergencyReport> = gson.fromJson(gson.toJson(data), type)
+
+        // ✅ Fotos mappen
+        val reports = rawReports.map { report ->
+            val restoredUris = report.photoUris.map { photoMapping[it] ?: it }
+            report.copy(photoUris = restoredUris)
+        }
 
         val prefs = context.getSharedPreferences("emergency_history", Context.MODE_PRIVATE)
 
@@ -986,6 +1118,120 @@ object BackupManager {
 
                 Log.d(TAG, "MERGE_BY_TIMESTAMP: ${merged.size} emergency reports")
                 prefs.edit().putString("reports", gson.toJson(merged)).apply()
+            }
+        }
+    }
+
+    private fun restoreNasenarbeitSessionsSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<NasenarbeitSession>>() {}.type
+        val sessions: List<NasenarbeitSession> = gson.fromJson(gson.toJson(data), type)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing = NasenarbeitManager.loadSessions(context)
+                val existingIds = existing.map { it.id }.toSet()
+                val merged = existing + sessions.filter { it.id !in existingIds }
+                NasenarbeitManager.saveSessions(context, merged.toMutableList())
+            }
+            MergeMode.REPLACE_ALL -> {
+                NasenarbeitManager.saveSessions(context, sessions.toMutableList())
+            }
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing = NasenarbeitManager.loadSessions(context)
+                val merged = mergeSessionsByTimestamp_Nasen(existing, sessions)
+                NasenarbeitManager.saveSessions(context, merged.toMutableList())
+            }
+        }
+    }
+
+    private fun restoreNasenarbeitFortschrittSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<NasenarbeitFortschritt>>() {}.type
+        val fortschritt: List<NasenarbeitFortschritt> = gson.fromJson(gson.toJson(data), type)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing = NasenarbeitManager.loadFortschritt(context)
+                val existingIds = existing.map { it.dogId }.toSet()
+                val merged = existing + fortschritt.filter { it.dogId !in existingIds }
+                NasenarbeitManager.importFromBackup(context, null, merged)
+            }
+            MergeMode.REPLACE_ALL -> {
+                NasenarbeitManager.importFromBackup(context, null, fortschritt)
+            }
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                val existing = NasenarbeitManager.loadFortschritt(context)
+                val merged = mergeFortschrittByTimestamp_Nasen(existing, fortschritt)
+                NasenarbeitManager.importFromBackup(context, null, merged)
+            }
+        }
+    }
+
+    private fun restoreFavoritesSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<FavoritePOI>>() {}.type
+        val favs: List<FavoritePOI> = gson.fromJson(gson.toJson(data), type)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing = FavoritesManager.getAll(context)
+                val existingKeys = existing.map { "%.5f_%.5f".format(it.lat, it.lon) }.toSet()
+                favs.filter { "%.5f_%.5f".format(it.lat, it.lon) !in existingKeys }
+                    .forEach { FavoritesManager.add(context, it) }
+            }
+            MergeMode.REPLACE_ALL -> {
+                FavoritesManager.restoreAll(context, favs)
+            }
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                // Favoriten haben keinen Timestamp, daher ADD_NEW als Fallback
+                val existing = FavoritesManager.getAll(context)
+                val existingKeys = existing.map { "%.5f_%.5f".format(it.lat, it.lon) }.toSet()
+                favs.filter { "%.5f_%.5f".format(it.lat, it.lon) !in existingKeys }
+                    .forEach { FavoritesManager.add(context, it) }
+            }
+        }
+    }
+
+    private fun mergeSessionsByTimestamp_Nasen(
+        existing: List<NasenarbeitSession>,
+        backup: List<NasenarbeitSession>
+    ): List<NasenarbeitSession> {
+        val allIds = (existing.map { it.id } + backup.map { it.id }).distinct()
+        return allIds.mapNotNull { id ->
+            val e = existing.find { it.id == id }
+            val b = backup.find { it.id == id }
+            when {
+                e == null -> b
+                b == null -> e
+                b.datum > e.datum -> b
+                else -> e
+            }
+        }
+    }
+
+    private fun mergeFortschrittByTimestamp_Nasen(
+        existing: List<NasenarbeitFortschritt>,
+        backup: List<NasenarbeitFortschritt>
+    ): List<NasenarbeitFortschritt> {
+        val allIds = (existing.map { it.dogId } + backup.map { it.dogId }).distinct()
+        return allIds.mapNotNull { id ->
+            val e = existing.find { it.dogId == id }
+            val b = backup.find { it.dogId == id }
+            when {
+                e == null -> b
+                b == null -> e
+                b.letzteSession > e.letzteSession -> b
+                else -> e
             }
         }
     }
