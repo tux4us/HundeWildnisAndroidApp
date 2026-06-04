@@ -143,11 +143,11 @@
                 android:orientation="vertical"
                 android:layout_marginBottom="12dp"
                 android:visibility="gone">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Durchgeführte Fläche (ha):" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Durchgeführte Fläche (m²):" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Fläche eingeben"
+                    android:hint="m² eingeben"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etHa"

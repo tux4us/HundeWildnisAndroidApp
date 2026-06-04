@@ -130,6 +130,22 @@ object NasenarbeitManager {
         fortschritt?.let { saveFortschritt(context, it) }
     }
 
+    /**
+     * Löscht ALLE Nasenarbeit-Daten für einen bestimmten Hund.
+     * Stammdaten (Profil) bleiben erhalten!
+     */
+    fun deleteAllDataForDog(context: Context, dogId: String) {
+        // 1. Sessions filtern
+        val allSessions = loadSessions(context)
+        val filteredSessions = allSessions.filter { it.dogId != dogId }
+        saveSessions(context, filteredSessions)
+
+        // 2. Fortschritt filtern
+        val allFortschritt = loadFortschritt(context)
+        val filteredFortschritt = allFortschritt.filter { it.dogId != dogId }
+        saveFortschritt(context, filteredFortschritt)
+    }
+
     // ── CLEAR ──────────────────────────────────────────────────
 
     fun clearAllData(context: Context) {
