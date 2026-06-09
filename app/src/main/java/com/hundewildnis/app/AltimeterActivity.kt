@@ -17,10 +17,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityAltimeterBinding
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.Locale
 import kotlin.math.pow
 import androidx.core.view.WindowCompat
-import com.hundewildnis.app.SecureBaseActivity
 
 class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationListener {
 
@@ -32,6 +39,10 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
     private var gpsAltitude: Double? = null
     private var barometerAltitude: Double? = null
     private var currentPressure: Float? = null
+
+    // Dynamischer Referenzdruck (QNH)
+    private var dynamicSeaLevelPressure = 1013.25
+    private var isQnhFetched = false
 
     // Für Barometer-Kalibrierung
     private var referenceAltitude: Double? = null
@@ -158,7 +169,12 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
         }
 
         if (lastLocation != null && lastLocation.hasAltitude()) {
-            updateGpsAltitude(lastLocation)
+            val mslAltitude = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE && lastLocation.hasMslAltitude()) {
+                lastLocation.mslAltitudeMeters
+            } else {
+                lastLocation.altitude
+            }
+            updateGpsAltitude(lastLocation, mslAltitude)
         }
 
         // Fordere neue Updates an
@@ -203,8 +219,61 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
     }
 
     override fun onLocationChanged(location: Location) {
-        if (location.hasAltitude()) {
-            updateGpsAltitude(location)
+        val mslAltitude = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE && location.hasMslAltitude()) {
+            location.mslAltitudeMeters
+        } else {
+            location.altitude
+        }
+        
+        // Fetch QNH if not done yet
+        if (dynamicSeaLevelPressure == 1013.25) {
+            fetchQnh(location.latitude, location.longitude)
+        }
+
+        updateGpsAltitude(location, mslAltitude)
+    }
+
+    private fun fetchQnh(lat: Double, lon: Double) {
+        lifecycleScope.launch {
+            try {
+                val qnh = withContext(Dispatchers.IO) {
+                    val url = URL("https://api.brightsky.dev/current_weather?lat=$lat&lon=$lon")
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.requestMethod = "GET"
+                    connection.connect()
+                    
+                    if (connection.responseCode == 200) {
+                        val response = connection.inputStream.bufferedReader().readText()
+                        val json = JsonParser.parseString(response).asJsonObject
+                        if (json.has("weather")) {
+                            json.getAsJsonObject("weather").get("pressure_msl").asDouble
+                        } else null
+                    } else null
+                }
+
+                qnh?.let {
+                    dynamicSeaLevelPressure = it
+                    isQnhFetched = true
+                    binding.statusText.text = String.format(
+                        Locale.GERMAN,
+                        "🌤️ Referenzdruck (QNH) aktualisiert: %.1f hPa\n🎯 Barometer-Genauigkeit verbessert",
+                        it
+                    )
+                    // Trigger redraw of barometer altitude
+                    currentPressure?.let { p ->
+                        if (referenceAltitude == null) {
+                            barometerAltitude = calculateAltitudeFromPressure(p)
+                            binding.barometerAltitudeText.text = String.format(
+                                Locale.GERMAN,
+                                "%.1f m (QNH-basiert)",
+                                barometerAltitude
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -214,65 +283,60 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
     @Deprecated("Deprecated in Java")
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
-    private fun updateGpsAltitude(location: Location) {
-        if (location.hasAltitude()) {
-            gpsAltitude = location.altitude
+    private fun updateGpsAltitude(location: Location, mslAltitude: Double) {
+        gpsAltitude = mslAltitude
 
-            val accuracyInfo = if (location.hasAccuracy()) {
-                val acc = location.accuracy
-                when {
-                    acc < 10 -> "sehr gut"
-                    acc < 50 -> "gut"
-                    acc < 100 -> "mittel"
-                    acc < 200 -> "schlecht"
-                    else -> "sehr schlecht"
-                }
-            } else {
-                "unbekannt"
+        val accuracyInfo = if (location.hasAccuracy()) {
+            val acc = location.accuracy
+            when {
+                acc < 10 -> "sehr gut"
+                acc < 50 -> "gut"
+                acc < 100 -> "mittel"
+                acc < 200 -> "schlecht"
+                else -> "sehr schlecht"
             }
-
-            binding.gpsAltitudeText.text = String.format(
-                Locale.GERMAN,
-                "%.0f m",
-                gpsAltitude
-            )
-
-            // Genauigkeit mit Warnung
-            if (location.hasAccuracy()) {
-                val acc = location.accuracy
-                binding.accuracyText.text = String.format(
-                    Locale.GERMAN,
-                    "GPS-Genauigkeit: ± %.0f m (%s)\n⚠️ GPS-Höhe ist sehr ungenau!",
-                    acc,
-                    accuracyInfo
-                )
-                binding.accuracyText.setTextColor(
-                    if (acc > 100) android.graphics.Color.parseColor("#ff6b6b")
-                    else android.graphics.Color.parseColor("#999999")
-                )
-            } else {
-                binding.accuracyText.text = "GPS-Genauigkeit: unbekannt\n⚠️ GPS-Höhe ist sehr ungenau!"
-                binding.accuracyText.setTextColor(android.graphics.Color.parseColor("#ff6b6b"))
-            }
-
-            // Wenn Barometer verfügbar und noch nicht kalibriert: Kalibriere jetzt
-            if (pressureSensor != null && referenceAltitude == null && currentPressure != null) {
-                calibrateBarometer(gpsAltitude!!, currentPressure!!)
-            }
-
-            updateMainAltitude()
-            binding.progressBar.visibility = View.GONE
-
-            if (pressureSensor != null) {
-                binding.statusText.text = "✅ Barometer kalibriert\n🎯 Nutze Barometer für genaue Höhe"
-            } else {
-                binding.statusText.text = "⚠️ Nur GPS verfügbar (sehr ungenau)"
-            }
-
         } else {
-            binding.gpsAltitudeText.text = "Nicht verfügbar"
-            binding.statusText.text = "❌ GPS-Höhe nicht verfügbar"
-            binding.progressBar.visibility = View.GONE
+            "unbekannt"
+        }
+
+        binding.gpsAltitudeText.text = String.format(
+            Locale.GERMAN,
+            "%.0f m",
+            gpsAltitude
+        )
+
+        // Genauigkeit mit Warnung
+        if (location.hasAccuracy()) {
+            val acc = location.accuracy
+            binding.accuracyText.text = String.format(
+                Locale.GERMAN,
+                "GPS-Genauigkeit: ± %.0f m (%s)\n⚠️ GPS-Höhe ist oft ungenau!",
+                acc,
+                accuracyInfo
+            )
+            binding.accuracyText.setTextColor(
+                if (acc > 100) android.graphics.Color.parseColor("#ff6b6b")
+                else android.graphics.Color.parseColor("#999999")
+            )
+        } else {
+            binding.accuracyText.text = "GPS-Genauigkeit: unbekannt\n⚠️ GPS-Höhe ist oft ungenau!"
+            binding.accuracyText.setTextColor(android.graphics.Color.parseColor("#ff6b6b"))
+        }
+
+        // Wenn Barometer verfügbar und noch nicht kalibriert: Kalibriere jetzt
+        if (pressureSensor != null && referenceAltitude == null && currentPressure != null) {
+            calibrateBarometer(gpsAltitude!!, currentPressure!!)
+        }
+
+        updateMainAltitude()
+        binding.progressBar.visibility = View.GONE
+
+        if (pressureSensor != null) {
+            if (referenceAltitude != null) {
+                binding.statusText.text = "✅ Barometer kalibriert\n🎯 Nutze Barometer für genaue Höhe"
+            }
+        } else {
+            binding.statusText.text = "⚠️ Nur GPS verfügbar"
         }
     }
 
@@ -299,10 +363,12 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
             } else {
                 barometerAltitude = calculateAltitudeFromPressure(currentPressure!!)
 
+                val label = if (isQnhFetched) "QNH-basiert" else "nicht kalibriert"
                 binding.barometerAltitudeText.text = String.format(
                     Locale.GERMAN,
-                    "%.0f m (nicht kalibriert)",
-                    barometerAltitude
+                    "%.1f m (%s)",
+                    barometerAltitude,
+                    label
                 )
             }
 
@@ -331,7 +397,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
     }
 
     private fun calculateAltitudeFromPressure(pressure: Float): Double {
-        return 44330 * (1.0 - (pressure / SEA_LEVEL_PRESSURE).pow(1.0 / 5.255))
+        return 44330 * (1.0 - (pressure / dynamicSeaLevelPressure).pow(1.0 / 5.255))
     }
 
     private fun updateMainAltitude() {
