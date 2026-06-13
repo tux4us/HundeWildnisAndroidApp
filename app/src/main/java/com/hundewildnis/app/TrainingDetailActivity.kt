@@ -96,7 +96,17 @@ class TrainingDetailActivity : SecureBaseActivity() {
         binding.tvProgressLevel.text = progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName
 
         binding.tvTotalSessions.text = "${progress.totalSessions} Einheiten"
-        binding.tvTotalMinutes.text = "${progress.totalMinutes} Min"
+
+        // ✅ Zeige Min oder Wiederholungen oder beides
+        val effortText = if (progress.totalMinutes > 0 && progress.totalRepetitions > 0) {
+            "${progress.totalMinutes} Min / ${progress.totalRepetitions}x"
+        } else if (progress.totalRepetitions > 0) {
+            "${progress.totalRepetitions} Wiederholungen"
+        } else {
+            "${progress.totalMinutes} Min"
+        }
+        binding.tvTotalMinutes.text = effortText
+
         binding.tvConsecutiveDays.text = "${progress.consecutiveDays} Tage"
 
         val avgSuccess = String.format(Locale.GERMAN, "%.1f", progress.averageSuccess)
@@ -155,7 +165,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
 
         // Daten füllen
         dialogBinding.tvDetailDate.text = dateFormat.format(Date(session.date))
-        dialogBinding.tvDetailDuration.text = "${session.durationMinutes} Minuten"
+        dialogBinding.tvDetailDuration.text = session.getEffortText() // ✅ Nutzt autom. Min oder Wiederholungen
         dialogBinding.tvDetailSuccess.text = session.getSuccessText()
         dialogBinding.tvDetailDistraction.text = session.distractionLevel.displayName
         dialogBinding.tvDetailDifficulty.text = session.difficulty.displayName

@@ -78,10 +78,4 @@
         android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_home"
-        android:title="🏡 Home"
-        android:icon="@android:drawable/ic_menu_compass"
-        app:showAsAction="never" />
-
 </menu>

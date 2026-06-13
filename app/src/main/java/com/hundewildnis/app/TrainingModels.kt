@@ -261,6 +261,7 @@ data class TrainingProgress(
     // Statistiken
     val totalSessions: Int = 0,
     val totalMinutes: Int = 0,
+    val totalRepetitions: Int = 0,  // ← NEU!
     val averageSuccess: Double = 0.0,  // 1.0-4.0
 
     // Streak & Regelmäßigkeit
@@ -278,11 +279,14 @@ data class TrainingProgress(
     fun updateWithSession(session: TrainingSession): TrainingProgress {
         val newTotalSessions = totalSessions + 1
 
-        // ✅ Nur Minuten addieren wenn TIME
-        val newTotalMinutes = if (session.measurementType == MeasurementType.TIME) {
-            totalMinutes + (session.durationMinutes ?: 0)
+        // ✅ Nur Minuten/Wiederholungen addieren basierend auf Typ
+        var newTotalMinutes = totalMinutes
+        var newTotalRepetitions = totalRepetitions
+
+        if (session.measurementType == MeasurementType.TIME) {
+            newTotalMinutes += (session.durationMinutes ?: 0)
         } else {
-            totalMinutes
+            newTotalRepetitions += (session.repetitions ?: 0)
         }
 
         // Neue durchschnittliche Erfolgsrate
@@ -296,7 +300,7 @@ data class TrainingProgress(
         val newProgressPercentage = calculateProgressPercentage(
             sessions = newTotalSessions,
             avgSuccess = newAverageSuccess,
-            effort = newTotalMinutes + effort
+            effort = newTotalMinutes + newTotalRepetitions + effort // ✅ Mix aus beidem für Score
         )
 
         // Level basierend auf Fortschritt
@@ -308,6 +312,7 @@ data class TrainingProgress(
         return copy(
             totalSessions = newTotalSessions,
             totalMinutes = newTotalMinutes,
+            totalRepetitions = newTotalRepetitions,
             averageSuccess = newAverageSuccess,
             progressPercentage = newProgressPercentage,
             currentLevel = newLevel,
