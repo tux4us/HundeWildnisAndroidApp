@@ -95,6 +95,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var waypointReachedDialogShown: Boolean = false
     private var lastPOIFetchLocation: Location? = null
 
+    // ✅ NEU: Routing Profile & Rerouting-Schutz
+    private var routingProfile = "foot-hiking"
+    private var isRerouting = false
+
     private val waypointMarkers: MutableList<Marker> = mutableListOf()
 
     private var sunriseRouteMarker: Marker? = null
@@ -197,6 +201,25 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.shareButton.setOnClickListener { shareLocation() }
         binding.btnBackToCategories.setOnClickListener { showCategoryView() }
         binding.btnManageFavorites.setOnClickListener { showFavoritesManagement() }
+
+        // ✅ NEU: Profil-Toggle (Fuß / Fahrrad)
+        binding.toggleRoutingProfile.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                routingProfile = when (checkedId) {
+                    R.id.btnProfileFoot -> "foot-hiking"
+                    R.id.btnProfileBike -> "cycling-regular"
+                    else -> "foot-hiking"
+                }
+                // Bei Profilwechsel Route sofort neu berechnen wenn Nav aktiv
+                if (isNavigating) {
+                    currentLocation?.let { loc ->
+                        finalDestination?.let { dest ->
+                            drawRouteOSRM(loc.latitude, loc.longitude, dest.latitude, dest.longitude)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // ════════════════════════════════════════════════════════
@@ -221,9 +244,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 }
 
                 // Route nur neu berechnen wenn Abweichung > 30m
-                if (isDeviatingFromRoute(location)) {
+                if (isDeviatingFromRoute(location) && !isRerouting) {
                     val dest = finalDestination
                     if (dest != null) {
+                        isRerouting = true // Schutz vor Mehrfach-Aufrufen
                         if (waypointQueue.isEmpty()) {
                             drawRouteOSRM(location.latitude, location.longitude,
                                 dest.latitude, dest.longitude)
@@ -237,6 +261,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                                     applyNewRoute(routeData, dest)
                                 } catch (e: Exception) {
                                     Log.e("LocationActivity", "Waypoint-Rerouting Fehler: ${e.message}")
+                                } finally {
+                                    isRerouting = false
                                 }
                             }
                         }
@@ -647,11 +673,13 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════
 
     private fun drawRouteOSRM(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
+        isRerouting = true
         lifecycleScope.launch {
             try {
                 val routeData: RouteData = withContext(Dispatchers.IO) {
                     fetchBestRoute(fromLat, fromLon, toLat, toLon)
                 }
+                // ... rest of logic
 
                 currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
 
@@ -675,6 +703,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             } catch (e: Exception) {
                 Log.e("LocationActivity", "Routing Fehler: ${e.message}")
                 drawRouteStraightLine(fromLat, fromLon, toLat, toLon)
+            } finally {
+                isRerouting = false
             }
         }
     }
@@ -696,7 +726,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     ): RouteData {
 
         val apiKey = "***REMOVED***"
-        val url    = "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson"
+        val url    = "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
 
         val bodyObj = JSONObject().apply {
             put("coordinates", JSONArray().apply {
@@ -704,6 +734,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 put(JSONArray().apply { put(toLon);   put(toLat)   })
             })
             put("elevation", true)
+// ... rest of function
             if (withExtras) {
                 put("extra_info", JSONArray().apply {
                     put("surface")
@@ -741,7 +772,15 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         val summary  = properties.getJSONObject("summary")
         val distance = summary.getDouble("distance")
-        val duration = summary.getDouble("duration")
+        var duration = summary.getDouble("duration")
+
+        // ✅ NEU: Geschwindigkeit für Fahrrad begrenzen (max 10 km/h = 2.77 m/s)
+        if (routingProfile == "cycling-regular") {
+            val minDuration = distance / (10.0 / 3.6) // Zeit bei 10 km/h
+            if (duration < minDuration) {
+                duration = minDuration
+            }
+        }
 
         // Auf-/Abstieg
         var totalAscent = 0.0; var totalDescent = 0.0
@@ -853,8 +892,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.invalidate()
 
         if (isNavigating) {
-            currentRouteDistance = calculateDistance(fromLat, fromLon, toLat, toLon)
-            currentRouteDuration = currentRouteDistance / 1.4
+                currentRouteDistance = calculateDistance(fromLat, fromLon, toLat, toLon)
+            val speed = if (routingProfile == "cycling-regular") 2.77 else 1.4
+            currentRouteDuration = currentRouteDistance / speed
             updateNavigationInfo()
         }
     }
@@ -2175,7 +2215,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         toLat: Double, toLon: Double
     ): RouteData {
         val apiKey = "***REMOVED***"
-        val url    = "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson"
+        val url    = "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
 
         val coords = JSONArray().apply {
             put(JSONArray().apply { put(fromLon); put(fromLat) })
@@ -2210,6 +2250,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val properties = feature.getJSONObject("properties")
         val geometry   = feature.getJSONObject("geometry")
         val summary    = properties.getJSONObject("summary")
+        val distance   = summary.getDouble("distance")
+        var duration   = summary.getDouble("duration")
+
+        // ✅ NEU: Geschwindigkeit für Fahrrad begrenzen (max 10 km/h)
+        if (routingProfile == "cycling-regular") {
+            val minDuration = distance / (10.0 / 3.6)
+            if (duration < minDuration) duration = minDuration
+        }
 
         var totalAscent = 0.0; var totalDescent = 0.0
         if (properties.has("segments")) {
@@ -2264,8 +2312,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         return RouteData(
             points          = points,
-            distance        = summary.getDouble("distance"),
-            duration        = summary.getDouble("duration"),
+            distance        = distance,
+            duration        = duration,
             elevationPoints = elevationPoints,
             totalAscent     = totalAscent,
             totalDescent    = totalDescent,

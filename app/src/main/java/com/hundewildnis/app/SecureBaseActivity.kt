@@ -1,10 +1,15 @@
 package com.hundewildnis.app
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,6 +39,34 @@ abstract class SecureBaseActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
+
+        // ✅ NEU: Globaler HOME Button in der Toolbar (über MenuProvider)
+        setupGlobalHomeButton()
+    }
+
+    private fun setupGlobalHomeButton() {
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Home-Icon nur anzeigen, wenn wir NICHT in der StartActivity sind
+                if (this@SecureBaseActivity !is StartActivity) {
+                    val item = menu.add(Menu.NONE, R.id.action_home, Menu.NONE, "Home")
+                    item.setIcon(R.drawable.ic_home)
+                    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                    
+                    // Weißes Icon-Tinting (passend zu anderen Icons)
+                    item.icon?.setTint(android.graphics.Color.WHITE)
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if (menuItem.itemId == R.id.action_home) {
+                    val intent = Intent(this@SecureBaseActivity, StartActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    true
+                } else false
+            }
+        })
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
