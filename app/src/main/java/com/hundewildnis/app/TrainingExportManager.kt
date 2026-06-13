@@ -102,8 +102,16 @@ object TrainingExportManager {
                         .setFontSize(11f)
                         .setMarginBottom(3f)
                 )
+                val effortStr = if (progress.totalMinutes > 0 && progress.totalRepetitions > 0) {
+                    "${progress.totalSessions} Sessions • ${progress.totalMinutes} Min / ${progress.totalRepetitions}x • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0"
+                } else if (progress.totalRepetitions > 0) {
+                    "${progress.totalSessions} Sessions • ${progress.totalRepetitions}x • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0"
+                } else {
+                    "${progress.totalSessions} Sessions • ${progress.totalMinutes} Min • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0"
+                }
+
                 document.add(
-                    Paragraph("${progress.totalSessions} Sessions • ${progress.totalMinutes} Min • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0")
+                    Paragraph(effortStr)
                         .setFontSize(9f)
                         .setMarginBottom(8f)
                         .setFontColor(ColorConstants.DARK_GRAY)
@@ -140,13 +148,13 @@ object TrainingExportManager {
             val csv = StringBuilder()
             
             // Header
-            csv.append("Datum,Kategorie,Dauer (Min),Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen\n")
+            csv.append("Datum,Kategorie,Aufwand,Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen\n")
             
             // Sessions
             sessions.sortedByDescending { it.date }.forEach { session ->
                 csv.append("\"${dateFormat.format(Date(session.date))}\",")
                 csv.append("\"${session.category.displayName}\",")
-                csv.append("${session.durationMinutes},")
+                csv.append("\"${session.getEffortText()}\",")
                 csv.append("\"${session.getSuccessText()}\",")
                 csv.append("\"${session.distractionLevel.displayName}\",")
                 csv.append("\"${session.difficulty.displayName}\",")
@@ -218,7 +226,14 @@ object TrainingExportManager {
             document.add(Paragraph("📊 FORTSCHRITT").setBold().setFontSize(14f).setFontColor(colorPrimary))
             document.add(Paragraph("Trainingsstand: ${progress.progressPercentage}% (${progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName})").setFontSize(11f))
             document.add(Paragraph("Gesamt-Sessions: ${progress.totalSessions}").setFontSize(10f))
-            document.add(Paragraph("Trainingszeit: ${progress.totalMinutes} Minuten").setFontSize(10f))
+
+            if (progress.totalMinutes > 0) {
+                document.add(Paragraph("Trainingszeit: ${progress.totalMinutes} Minuten").setFontSize(10f))
+            }
+            if (progress.totalRepetitions > 0) {
+                document.add(Paragraph("Wiederholungen: ${progress.totalRepetitions}x").setFontSize(10f))
+            }
+
             document.add(Paragraph("Durchschnitt: ${String.format("%.1f", progress.averageSuccess)}/4.0").setFontSize(10f))
             document.add(Paragraph("Aufeinanderfolgende Tage: ${progress.consecutiveDays}").setFontSize(10f).setMarginBottom(15f))
             
@@ -247,11 +262,11 @@ object TrainingExportManager {
             val file = createTempFile(context, "$fileName.csv")
             val csv = StringBuilder()
             
-            csv.append("Datum,Dauer (Min),Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen\n")
+            csv.append("Datum,Aufwand,Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen\n")
             
             sessions.sortedByDescending { it.date }.forEach { session ->
                 csv.append("\"${dateFormat.format(Date(session.date))}\",")
-                csv.append("${session.durationMinutes},")
+                csv.append("\"${session.getEffortText()}\",")
                 csv.append("\"${session.getSuccessText()}\",")
                 csv.append("\"${session.distractionLevel.displayName}\",")
                 csv.append("\"${session.difficulty.displayName}\",")
@@ -329,7 +344,7 @@ object TrainingExportManager {
             csv.append("Feld,Wert\n")
             csv.append("\"Datum\",\"${dateFormat.format(Date(session.date))}\"\n")
             csv.append("\"Kategorie\",\"${session.category.displayName}\"\n")
-            csv.append("\"Dauer\",\"${session.durationMinutes} Min\"\n")
+            csv.append("\"Aufwand\",\"${session.getEffortText()}\"\n")
             csv.append("\"Erfolg\",\"${session.getSuccessText()}\"\n")
             csv.append("\"Ablenkung\",\"${session.distractionLevel.displayName}\"\n")
             csv.append("\"Schwierigkeit\",\"${session.difficulty.displayName}\"\n")
