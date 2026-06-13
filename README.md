@@ -7,7 +7,7 @@
 [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-100%25-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Version](https://img.shields.io/badge/Version-13.2%20Build%2078-C9A84C?style=flat-square)](#)
-[![License]([https://img.shields.io/badge/Lizenz-MIT-5C8A3C?style=flat-square](https://github.com/tux4us/HundeWildnisAndroidApp?tab=License-1-ov-file)](LICENSE)
+[![License](https://img.shields.io/badge/Lizenz-MIT-5C8A3C?style=flat-square](https://github.com/tux4us/HundeWildnisAndroidApp?tab=License-1-ov-file)](LICENSE)
 [![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#datenschutz)
 
 <br>
