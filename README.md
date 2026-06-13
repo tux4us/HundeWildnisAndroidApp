@@ -196,7 +196,7 @@ Direkte Anbindung an das Ökosystem der HundeWildnisSchule.
 
 ## 📄 Lizenz
 
-Dieses Projekt ist unter [diesen Bedingungen(https://github.com/tux4us/HundeWildnisAndroidApp?tab=License-1-ov-file)] lizenziert.
+Dieses Projekt ist unter [diesen Bedingungen](https://github.com/tux4us/HundeWildnisAndroidApp?tab=License-1-ov-file) lizenziert.
 
 ---
 
