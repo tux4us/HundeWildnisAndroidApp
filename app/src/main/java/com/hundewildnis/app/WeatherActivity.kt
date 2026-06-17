@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hundewildnis.app.SecureBaseActivity
 import com.hundewildnis.app.databinding.ActivityWeatherBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -179,8 +180,22 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         binding.locationText.text = String.format(Locale.GERMAN, "📍 %.4f°, %.4f°", location.latitude, location.longitude)
         lifecycleScope.launch {
             try {
-                val weatherData = withContext(Dispatchers.IO) { fetchWeatherData(location.latitude, location.longitude) }
-                displayWeatherData(weatherData)
+                // Beide API-Calls parallel starten
+                val weatherDeferred = async(Dispatchers.IO) {
+                    fetchWeatherData(location.latitude, location.longitude)
+                }
+                val airQualityDeferred = async(Dispatchers.IO) {
+                    try { fetchAirQualityData(location.latitude, location.longitude) }
+                    catch (e: Exception) {
+                        android.util.Log.w("WeatherActivity", "Luftqualitätsdaten nicht verfügbar", e)
+                        null
+                    }
+                }
+                // Warten bis beide fertig sind
+                val weatherData    = weatherDeferred.await()
+                val airQualityData = airQualityDeferred.await()
+
+                displayWeatherData(weatherData, airQualityData)
                 binding.progressBar.visibility = View.GONE
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
@@ -195,12 +210,26 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 "latitude=$latitude&longitude=$longitude" +
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature," +
                 "precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m," +
-                "wind_gusts_10m,uv_index" +
+                "wind_gusts_10m,uv_index,is_day" +
                 "&hourly=temperature_2m,precipitation,precipitation_probability,weather_code," +
-                "apparent_temperature" +
+                "apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m," +
+                "cloud_cover,visibility,uv_index" +
                 "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset," +
-                "weather_code,precipitation_probability_max" +
+                "weather_code,precipitation_probability_max," +
+                "wind_speed_10m_max,wind_gusts_10m_max,uv_index_max,sunshine_duration" +
                 "&past_days=1" +
+                "&forecast_days=7" +
+                "&timezone=auto"
+        val response = URL(url).readText()
+        return JSONObject(response)
+    }
+
+    private fun fetchAirQualityData(latitude: Double, longitude: Double): JSONObject {
+        // Separater Open-Meteo Air-Quality Endpunkt – kostenlos, kein API-Key nötig
+        val url = "https://air-quality-api.open-meteo.com/v1/air-quality?" +
+                "latitude=$latitude&longitude=$longitude" +
+                "&hourly=pm10,pm2_5,nitrogen_dioxide,ozone,carbon_monoxide," +
+                "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen" +
                 "&forecast_days=2" +
                 "&timezone=auto"
         val response = URL(url).readText()
@@ -211,7 +240,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     // displayWeatherData – Haupteinstieg nach API-Antwort
     // ════════════════════════════════════════════════════════════════
 
-    private fun displayWeatherData(data: JSONObject) {
+    private fun displayWeatherData(data: JSONObject, airQualityData: JSONObject?) {
         val current = data.getJSONObject("current")
         val temperature  = current.getDouble("temperature_2m")
         val feelsLike    = current.getDouble("apparent_temperature")
@@ -247,12 +276,19 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         displaySunriseSunset(data)
         display24HourForecast(data)
         displayDailyOverview(data)
+        display7DayForecast(data)           // NEU: 7-Tage-Card
+        displayWindForecast(data)           // NEU: Wind-stündlich-Card
+        displaySunCard(data)                // NEU: Sonne-Card
+        if (airQualityData != null) {
+            displayAirQualityCard(airQualityData)   // NEU: Luftqualität-Card
+            displayPollenCard(airQualityData)       // NEU: Pollen-Card
+        }
         setupRainRadar()
         displayPawWeather(data, windSpeed, windGusts)
         displayTemperatureChart(data)
         displayPrecipitationChart(data)
         displayDaylightInfo(data)
-        displayMoonPhase()          // ← Mondphase-Aufruf (keine Parameter nötig)
+        displayMoonPhase()
     }
 
 
@@ -963,6 +999,1006 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
         binding.goldenHourText.text = "📸 Goldene Stunde (schönes Licht für Fotos):\nMorgens: ${timeFormat.format(sunrise)} - ${timeFormat.format(Date(sunrise.time + goldenHourDuration))}\nAbends: ${timeFormat.format(Date(sunset.time - goldenHourDuration))} - ${timeFormat.format(sunset)}"
         binding.goldenHourText.visibility = View.VISIBLE
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // NEUE DATA CLASSES – 7-Tage, Wind stündlich, Luftqualität, Pollen
+    // ════════════════════════════════════════════════════════════════
+
+    data class DailyForecastItem(
+        val dayLabel: String,          // z.B. "Mo", "Di"
+        val dateLabel: String,         // z.B. "16.06."
+        val weatherCode: Int,
+        val tempMin: Double,
+        val tempMax: Double,
+        val precipProbability: Int,
+        val windSpeedMax: Double,
+        val windGustsMax: Double,
+        val uvIndexMax: Double,
+        val sunshineDurationMin: Double  // in Minuten (API liefert Sekunden → umrechnen)
+    )
+
+    data class WindForecastItem(
+        val time: String,
+        val windSpeed: Double,         // km/h
+        val windGusts: Double,         // km/h
+        val windDegree: Double,        // 0–360°
+        val beaufort: Int
+    )
+
+    data class AirQualityHourItem(
+        val time: String,
+        val pm25: Double,
+        val pm10: Double,
+        val no2: Double,
+        val o3: Double,
+        val aqi: Int,                  // berechneter Gesamt-Index (0–5)
+        val aqiLabel: String,
+        val aqiColor: Int
+    )
+
+    data class PollenItem(
+        val name: String,              // z.B. "Birke"
+        val emoji: String,
+        val value: Double,             // Grains/m³
+        val level: Int,               // 0=keine, 1=niedrig, 2=mittel, 3=hoch, 4=sehr hoch
+        val levelLabel: String,
+        val levelColor: Int
+    )
+
+    // ════════════════════════════════════════════════════════════════
+    // HILFSFUNKTIONEN – AQI-Berechnung (nach EU-Norm)
+    // ════════════════════════════════════════════════════════════════
+
+    /** Berechnet vereinfachten AQI-Level 0–5 aus PM2.5 (µg/m³) nach WHO/EU-Schwellen */
+    private fun calcAqiFromPm25(pm25: Double): Int = when {
+        pm25 < 10  -> 0  // Gut
+        pm25 < 20  -> 1  // Mäßig
+        pm25 < 25  -> 2  // Ungesund für Sensible
+        pm25 < 50  -> 3  // Ungesund
+        pm25 < 75  -> 4  // Sehr ungesund
+        else       -> 5  // Gefährlich
+    }
+
+    private fun aqiLevelLabel(level: Int): String = when (level) {
+        0 -> "Gut"
+        1 -> "Mäßig"
+        2 -> "Sensible gefährdet"
+        3 -> "Ungesund"
+        4 -> "Sehr ungesund"
+        else -> "Gefährlich"
+    }
+
+    private fun aqiLevelColor(level: Int): Int = when (level) {
+        0 -> android.graphics.Color.parseColor("#4CAF50")   // grün
+        1 -> android.graphics.Color.parseColor("#8BC34A")   // hellgrün
+        2 -> android.graphics.Color.parseColor("#FFC107")   // gelb
+        3 -> android.graphics.Color.parseColor("#FF9800")   // orange
+        4 -> android.graphics.Color.parseColor("#F44336")   // rot
+        else -> android.graphics.Color.parseColor("#9C27B0") // lila
+    }
+
+    /** Pollen-Konzentration in Level 0–4 (Grains/m³, nach DWD-Skala) */
+    private fun pollenLevel(value: Double): Int = when {
+        value < 1   -> 0  // keine/vernachlässigbar
+        value < 10  -> 1  // niedrig
+        value < 50  -> 2  // mittel
+        value < 200 -> 3  // hoch
+        else        -> 4  // sehr hoch
+    }
+
+    private fun pollenLevelLabel(level: Int): String = when (level) {
+        0 -> "Keine"
+        1 -> "Niedrig"
+        2 -> "Mittel"
+        3 -> "Hoch"
+        else -> "Sehr hoch"
+    }
+
+    private fun pollenLevelColor(level: Int): Int = when (level) {
+        0 -> android.graphics.Color.parseColor("#4CAF50")
+        1 -> android.graphics.Color.parseColor("#8BC34A")
+        2 -> android.graphics.Color.parseColor("#FFC107")
+        3 -> android.graphics.Color.parseColor("#FF9800")
+        else -> android.graphics.Color.parseColor("#F44336")
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // STUBS – werden in den nächsten Schritten implementiert
+    // ════════════════════════════════════════════════════════════════
+
+    private fun display7DayForecast(data: JSONObject) {
+        try {
+            val daily      = data.getJSONObject("daily")
+            val times      = daily.getJSONArray("time")
+            val minTemps   = daily.getJSONArray("temperature_2m_min")
+            val maxTemps   = daily.getJSONArray("temperature_2m_max")
+            val codes      = daily.getJSONArray("weather_code")
+            val precipProb = daily.getJSONArray("precipitation_probability_max")
+            val windMax    = daily.getJSONArray("wind_speed_10m_max")
+            val gustsMax   = daily.getJSONArray("wind_gusts_10m_max")
+            val uvMax      = daily.getJSONArray("uv_index_max")
+            val sunshine   = daily.getJSONArray("sunshine_duration") // Sekunden
+
+            val dayNames = listOf("So", "Mo", "Di", "Mi", "Do", "Fr", "Sa")
+            val dateFmt  = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
+            val labelFmt = SimpleDateFormat("dd.MM.", Locale.GERMAN)
+
+            val items = mutableListOf<DailyForecastItem>()
+            // Index 0 = gestern (past_days=1) → überspringen; Index 1 = heute
+            val startIndex = 1
+            val endIndex   = times.length().coerceAtMost(startIndex + 7)
+
+            for (i in startIndex until endIndex) {
+                val date = dateFmt.parse(times.getString(i)) ?: continue
+                val cal  = Calendar.getInstance().also { it.time = date }
+                items.add(DailyForecastItem(
+                    dayLabel          = dayNames[cal.get(Calendar.DAY_OF_WEEK) - 1],
+                    dateLabel         = labelFmt.format(date),
+                    weatherCode       = codes.getInt(i),
+                    tempMin           = minTemps.getDouble(i),
+                    tempMax           = maxTemps.getDouble(i),
+                    precipProbability = precipProb.getInt(i),
+                    windSpeedMax      = windMax.getDouble(i),
+                    windGustsMax      = gustsMax.getDouble(i),
+                    uvIndexMax        = uvMax.getDouble(i),
+                    sunshineDurationMin = sunshine.getDouble(i) / 60.0
+                ))
+            }
+
+            binding.dailyForecastRecyclerView.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.dailyForecastRecyclerView.adapter =
+                DailyForecastAdapter(items) { showDailyForecastDetail(it) }
+
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei 7-Tage-Vorhersage", e)
+        }
+    }
+
+    private fun showDailyForecastDetail(item: DailyForecastItem) {
+        val (description, icon) = getWeatherDescription(item.weatherCode)
+        val beaufort = getBeaufortScale(item.windSpeedMax)
+        val uvWarning = when {
+            item.uvIndexMax >= 8 -> "☀️ Sehr hohe UV-Strahlung – Schatten bevorzugen!"
+            item.uvIndexMax >= 6 -> "⚡ Hohe UV-Strahlung – Schutz empfohlen"
+            item.uvIndexMax >= 3 -> "🌤️ Moderate UV-Strahlung"
+            else                 -> "✅ Niedrige UV-Strahlung"
+        }
+        val sunshineh = (item.sunshineDurationMin / 60).toInt()
+        val sunshinem = (item.sunshineDurationMin % 60).toInt()
+
+        val message = buildString {
+            append("${item.dayLabel}, ${item.dateLabel}\n\n")
+            append("$icon $description\n\n")
+            append("🌡️ Max: ${String.format(Locale.GERMAN, "%.1f°C", item.tempMax)}  " +
+                    "Min: ${String.format(Locale.GERMAN, "%.1f°C", item.tempMin)}\n")
+            append("💧 Regenwahrscheinlichkeit: ${item.precipProbability}%\n")
+            append("💨 Wind max: ${String.format(Locale.GERMAN, "%.0f km/h", item.windSpeedMax)} " +
+                    "(Bft $beaufort)  Böen: ${String.format(Locale.GERMAN, "%.0f km/h", item.windGustsMax)}\n")
+            append("☀️ Sonnenschein: ${sunshineh}h ${sunshinem}m\n")
+            append("🔆 UV-Index max: ${String.format(Locale.GERMAN, "%.1f", item.uvIndexMax)}\n")
+            append("$uvWarning")
+        }
+
+        val isDark = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("📅 Tagesvorhersage")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+            }
+    }
+
+    private fun showUvHourlyDetail(item: UvForecastItem) {
+        val isDark = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("🔆 UV-Index ${item.time} Uhr – " +
+                    "${String.format(Locale.GERMAN, "%.1f", item.uvIndex)} (${item.label})")
+            .setMessage(buildUvHourlyTip(item))
+            .setPositiveButton("OK", null)
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
+            }
+    }
+
+    /**
+     * Vollständige stündliche UV-Empfehlung:
+     * Einordnung → Mensch → Hund → Schutzmaßnahmen-Zusammenfassung.
+     * Bezogen ausschließlich auf den UV-Wert dieser Stunde.
+     */
+    private fun buildUvHourlyTip(item: UvForecastItem): String {
+        val uv = item.uvIndex
+
+        return buildString {
+
+            // ── Kein relevanter UV ──────────────────────────────────────────
+            if (uv < 1.0) {
+                append("UV-Index unter 1 – keine relevante UV-Belastung.\n\n")
+                append("👤 Mensch: Kein Sonnenschutz erforderlich.\n\n")
+                append("🐕 Hund: Keine besonderen Maßnahmen nötig.")
+                return@buildString
+            }
+
+            // ── Einordnung ──────────────────────────────────────────────────
+            append(when {
+                uv < 3  -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Gering\n" +
+                        "Kein zwingender Sonnenschutz, bei längeren Aufenthalten empfohlen.\n\n"
+                uv < 6  -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Mittel\n" +
+                        "Sonnenschutz für längere Aufenthalte im Freien empfohlen.\n\n"
+                uv < 8  -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Hoch\n" +
+                        "Sonnenschutz notwendig. Mittagszeit meiden.\n\n"
+                uv < 11 -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Sehr hoch\n" +
+                        "Umfassender Sonnenschutz erforderlich. Schatten bevorzugen.\n\n"
+                else    -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Extrem ⚠️\n" +
+                        "Aufenthalt im Freien so kurz wie möglich halten.\n\n"
+            })
+
+            // ── Mensch ──────────────────────────────────────────────────────
+            append("👤 Mensch:\n")
+            append(when {
+                uv < 3  -> "• Kein zwingender Sonnenschutz; bei heller Haut oder Reflexionsflächen " +
+                        "(Schnee, Wasser) Sonnencreme sinnvoll.\n" +
+                        "• Sonnenbrille empfohlen."
+                uv < 6  -> "• Sonnencreme LSF 15–30 auf unbedeckten Hautstellen.\n" +
+                        "• Kopfbedeckung bei längerem Aufenthalt.\n" +
+                        "• Zwischen 11 und 15 Uhr Aufenthalt in der Sonne begrenzen."
+                uv < 8  -> "• Sonnencreme LSF 30+ zwingend, auch Ohren, Nacken, Lippen.\n" +
+                        "• Sonnenbrille und Kopfbedeckung tragen.\n" +
+                        "• Zwischen 11 und 15 Uhr Schatten bevorzugen."
+                uv < 11 -> "• Sonnencreme LSF 50+, alle 2 Stunden erneuern.\n" +
+                        "• Lange Kleidung, Sonnenbrille, Hut.\n" +
+                        "• Direkte Sonne zwischen 10 und 16 Uhr meiden.\n" +
+                        "• Ausreichend trinken."
+                else    -> "• LSF 50+ zwingend, alle 1–2 Stunden erneuern.\n" +
+                        "• Nur im Schatten aufhalten oder drinnen bleiben.\n" +
+                        "• UV-Schutzkleidung empfohlen.\n" +
+                        "• Kinder und ältere Menschen besonders schützen."
+            })
+
+            append("\n\n")
+
+            // ── Hund ────────────────────────────────────────────────────────
+            append("🐕 Hund:\n")
+            append(when {
+                uv < 3  -> "• Keine besonderen Maßnahmen nötig.\n" +
+                        "• Frisches Trinkwasser bereitstellen."
+                uv < 6  -> "• Hund: Helle oder dünn behaarte Hunde" +
+                        "sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen."
+                uv < 8  -> "• Training vor 10 oder nach 16 Uhr legen.\n" +
+                        "• Tagsüber Schatten bevorzugen.\n" +
+                        "• Asphalt und dunkle Oberflächen meiden – können Pfoten verbrennen.\n" +
+                        "• Ausreichend Wasser mitführen."
+                uv < 11 -> "• Training auf Morgen- oder Abendstunden verschieben.\n" +
+                        "• Hund: Training auf frühe Morgen- oder Abendstunden verschieben. " +
+                        "• Asphalt und Steinboden meiden – kann Pfoten überhitzen.\n" +
+                        "• Anhaltende UV-Exposition erhöht bei anfälligen Rassen langfristig " +
+                        "das Risiko für Erkrankungen.\n" +
+                        "• Viel Trinkwasser, Pausen im Schatten."
+                else    -> "• Training heute möglichst ganz vermeiden.\n" +
+                        "• Notwendige Runden auf schattige Routen beschränken.\n" +
+                        "• Hund regelmäßig auf der Bauchseite anfeuchten.\n" +
+                        "• Überhitzungszeichen beobachten: starkes Hecheln, Speichelfluss, " +
+                        "Koordinationsstörungen → sofort kühlen, Tierarzt aufsuchen.\n" +
+                        "• Trinkwasser in ausreichender Menge mitführen."
+            })
+
+            append("\n\n")
+
+            // ── Schutzmaßnahmen-Zusammenfassung ────────────────────────────
+            append("🛡️ Schutzmaßnahmen ${item.time} Uhr:\n")
+            append(when {
+                uv < 3  -> "LSF: nicht zwingend  •  Schatten: optional  •  " +
+                        "Kopfbedeckung: optional  •  Sonnenbrille: empfohlen"
+                uv < 6  -> "LSF 15–30  •  Schatten: bei längerem Aufenthalt  •  " +
+                        "Kopfbedeckung: empfohlen  •  Sonnenbrille: empfohlen"
+                uv < 8  -> "LSF 30+  •  Schatten: bevorzugen  •  " +
+                        "Kopfbedeckung: notwendig  •  Sonnenbrille: notwendig"
+                uv < 11 -> "LSF 50+  •  Schatten: zwingend  •  " +
+                        "Kopfbedeckung: zwingend  •  Sonnenbrille: zwingend  •  " +
+                        "Lange Kleidung: empfohlen"
+                else    -> "LSF 50+  •  Aufenthalt im Freien minimieren  •  " +
+                        "Vollständiger Schutz: Kleidung, Hut, Brille  •  " +
+                        "Kinder & Hunde: drinnen lassen"
+            })
+
+            append("\n\n⚕️ Kein Ersatz für tierärztliche oder medizinische Beratung.")
+        }
+    }
+
+
+
+    private fun displayWindForecast(data: JSONObject) {
+        try {
+            val hourly    = data.getJSONObject("hourly")
+            val times     = hourly.getJSONArray("time")
+            val speeds    = hourly.getJSONArray("wind_speed_10m")
+            val gusts     = hourly.getJSONArray("wind_gusts_10m")
+            val degrees   = hourly.getJSONArray("wind_direction_10m")
+
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val timeFmt = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val now     = System.currentTimeMillis()
+            val oneHour = 3600000L
+
+            val items = mutableListOf<WindForecastItem>()
+            var count = 0
+            for (i in 0 until times.length()) {
+                if (count >= 24) break
+                val date = dateFmt.parse(times.getString(i)) ?: continue
+                if (date.time < now - oneHour) continue
+                val speed = speeds.getDouble(i)
+                items.add(WindForecastItem(
+                    time       = timeFmt.format(date),
+                    windSpeed  = speed,
+                    windGusts  = gusts.getDouble(i),
+                    windDegree = degrees.getDouble(i),
+                    beaufort   = getBeaufortScale(speed)
+                ))
+                count++
+            }
+
+            binding.windForecastRecyclerView.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.windForecastRecyclerView.adapter = WindForecastAdapter(items)
+
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Wind-Vorhersage", e)
+        }
+    }
+
+    private fun displaySunCard(data: JSONObject) {
+        try {
+            val lat = currentLocation?.latitude  ?: return
+            val lon = currentLocation?.longitude ?: return
+
+            val daily      = data.getJSONObject("daily")
+            val times      = daily.getJSONArray("time")
+            val sunriseArr = daily.getJSONArray("sunrise")
+            val sunsetArr  = daily.getJSONArray("sunset")
+            val sunshine   = daily.getJSONArray("sunshine_duration") // Sekunden
+
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val timeFmt = SimpleDateFormat("HH:mm", Locale.GERMAN)
+
+            // Index 1 = heute (Index 0 = gestern durch past_days=1)
+            val todaySunrise = dateFmt.parse(sunriseArr.getString(1)) ?: return
+            val todaySunset  = dateFmt.parse(sunsetArr.getString(1))  ?: return
+
+            // ── Azimut-Offset bei Auf- und Untergang ──────────────────────────
+            // Berechnung: Azimut des Sonnenaufgangs aus Breitengrad + Deklination
+            val sunriseAzimuth = calcSunriseAzimuth(lat, todaySunrise)
+            val sunsetAzimuth  = 360.0 - sunriseAzimuth  // symmetrisch
+
+            // Offset vom reinen Ost-Punkt (90°) bzw. West-Punkt (270°)
+            val riseOffsetDeg  = Math.abs(sunriseAzimuth - 90.0)
+            val riseDirection  = if (sunriseAzimuth < 90.0) "Nord von Ost" else "Süd von Ost"
+            val setOffsetDeg   = Math.abs(sunsetAzimuth - 270.0)
+            val setDirection   = if (sunsetAzimuth > 270.0) "Nord von West" else "Süd von West"
+
+            binding.sunriseAzimuthText.text =
+                "🌅 Aufgang\n${timeFmt.format(todaySunrise)} Uhr\n" +
+                        "${String.format(Locale.GERMAN, "%.1f", riseOffsetDeg)}° $riseDirection"
+
+            binding.sunsetAzimuthText.text =
+                "🌇 Untergang\n${timeFmt.format(todaySunset)} Uhr\n" +
+                        "${String.format(Locale.GERMAN, "%.1f", setOffsetDeg)}° $setDirection"
+
+            // ── Aktueller Sonnenstand (Elevation + Azimut) ────────────────────
+            val nowCal = Calendar.getInstance()
+            val tzOffsetH = nowCal.timeZone.getOffset(nowCal.timeInMillis) / 3600000.0
+            val solarAngles = calcSolarAngles(
+                lat, lon,
+                nowCal.get(Calendar.YEAR),
+                nowCal.get(Calendar.MONTH) + 1,
+                nowCal.get(Calendar.DAY_OF_MONTH),
+                nowCal.get(Calendar.HOUR_OF_DAY),
+                nowCal.get(Calendar.MINUTE),
+                tzOffsetH
+            )
+            val elevation = solarAngles.first
+            val azimuth   = solarAngles.second
+
+            val azimuthCardinal = azimuthToCardinal(azimuth)
+            val elevDesc = when {
+                elevation < 0  -> "unter dem Horizont"
+                elevation < 10 -> "sehr flach – lange Schatten"
+                elevation < 30 -> "niedrig"
+                elevation < 50 -> "mittel"
+                else           -> "hoch"
+            }
+            binding.sunElevationText.text =
+                "📐 Sonnenstand: ${String.format(Locale.GERMAN, "%.1f", elevation)}° ($elevDesc)\n" +
+                        "🧭 Azimut: ${String.format(Locale.GERMAN, "%.1f", azimuth)}° – $azimuthCardinal"
+
+            // ── Schattenlänge ──────────────────────────────────────────────────
+            val prefs = getSharedPreferences("sun_shadow_prefs", android.content.Context.MODE_PRIVATE)
+            val heightPerson = prefs.getFloat("height_person", 1.75f).toDouble()
+            val heightDog    = prefs.getFloat("height_dog",    0.55f).toDouble()
+            val heightObject = prefs.getFloat("height_object", 1.00f).toDouble()
+
+            val shadowText = if (elevation > 0) {
+                val tanEl = Math.tan(Math.toRadians(elevation))
+                val shadowPerson = heightPerson / tanEl
+                val shadowDog    = heightDog    / tanEl
+                val shadowObject = heightObject / tanEl
+                buildString {
+                    append("👤 Person (${String.format(Locale.GERMAN, "%.2f", heightPerson)}m): " +
+                            "${String.format(Locale.GERMAN, "%.2f", shadowPerson)}m  ")
+                    append("🐕 Hund (${String.format(Locale.GERMAN, "%.2f", heightDog)}m): " +
+                            "${String.format(Locale.GERMAN, "%.2f", shadowDog)}m  ")
+                    append("📦 Objekt (${String.format(Locale.GERMAN, "%.2f", heightObject)}m): " +
+                            "${String.format(Locale.GERMAN, "%.2f", shadowObject)}m")
+                }
+            } else {
+                "Keine Schattenlänge – Sonne unter dem Horizont"
+            }
+            binding.shadowLengthText.text = shadowText
+
+            // Bearbeiten-Button für Höhenwerte
+            binding.shadowEditButton.setOnClickListener {
+                showShadowHeightDialog(prefs) { displaySunCard(data) }
+            }
+
+            // ── Sonnenscheindauer heute ────────────────────────────────────────
+            val todaySunshineSec = sunshine.getDouble(1)
+            val shH = (todaySunshineSec / 3600).toInt()
+            val shM = ((todaySunshineSec % 3600) / 60).toInt()
+            binding.sunshineTodayText.text = "Heute: ${shH}h ${shM}m"
+
+            // ── 7-Tage Sonnenschein-Balken (inline LinearLayout) ──────────────
+            val dayNames = listOf("So", "Mo", "Di", "Mi", "Do", "Fr", "Sa")
+            val dateFmtShort = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
+            val startIdx = 1
+            val endIdx   = times.length().coerceAtMost(startIdx + 7)
+
+            // Max-Wert für Skalierung (max. 16h = 57600 Sekunden)
+            val maxSec = 57600.0
+
+            binding.sunshineBarsContainer.removeAllViews()
+            for (i in startIdx until endIdx) {
+                val date = dateFmtShort.parse(times.getString(i)) ?: continue
+                val cal  = Calendar.getInstance().also { it.time = date }
+                val dayLabel = dayNames[cal.get(Calendar.DAY_OF_WEEK) - 1]
+                val sec  = sunshine.getDouble(i)
+                val frac = (sec / maxSec).coerceIn(0.0, 1.0)
+
+                // Jede Tagesspalte als vertikales LinearLayout
+                val col = android.widget.LinearLayout(this).apply {
+                    orientation = android.widget.LinearLayout.VERTICAL
+                    gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f
+                    )
+                }
+
+                // Balken (max. 48dp hoch)
+                val maxBarDp = 48
+                val barHeightDp = (frac * maxBarDp).toInt().coerceAtLeast(2)
+                val density = resources.displayMetrics.density
+                val bar = View(this).apply {
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        (18 * density).toInt(), (barHeightDp * density).toInt()
+                    ).also { it.bottomMargin = (4 * density).toInt() }
+                    val barH = (sec / 3600).toInt()
+                    setBackgroundColor(when {
+                        barH >= 8 -> android.graphics.Color.parseColor("#FFD54F")
+                        barH >= 4 -> android.graphics.Color.parseColor("#FFA726")
+                        barH >= 1 -> android.graphics.Color.parseColor("#FF7043")
+                        else      -> android.graphics.Color.parseColor("#555555")
+                    })
+                }
+
+                // Stunden-Label über Balken
+                val barH = (sec / 3600).toInt()
+                val hLabel = android.widget.TextView(this).apply {
+                    text = "${barH}h"
+                    textSize = 9f
+                    setTextColor(android.graphics.Color.parseColor("#AAAAAA"))
+                    gravity = android.view.Gravity.CENTER_HORIZONTAL
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.bottomMargin = (2 * density).toInt() }
+                }
+
+                // Tag-Label unter Balken
+                val dLabel = android.widget.TextView(this).apply {
+                    text = dayLabel
+                    textSize = 10f
+                    setTextColor(if (i == 1) android.graphics.Color.parseColor("#8fad6f")
+                    else android.graphics.Color.parseColor("#999999"))
+                    gravity = android.view.Gravity.CENTER_HORIZONTAL
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.topMargin = (2 * density).toInt() }
+                }
+
+                col.addView(hLabel)
+                col.addView(bar)
+                col.addView(dLabel)
+                binding.sunshineBarsContainer.addView(col)
+            }
+
+            // ── UV-Index stündlich ─────────────────────────────────────────────
+            val hourly   = data.getJSONObject("hourly")
+            val hTimes   = hourly.getJSONArray("time")
+            val uvValues = hourly.getJSONArray("uv_index")
+            val now      = System.currentTimeMillis()
+            val oneHour  = 3600000L
+
+            val uvItems = mutableListOf<UvForecastItem>()
+            var count = 0
+            var peakUv = 0.0
+            for (i in 0 until hTimes.length()) {
+                if (count >= 24) break
+                val date = dateFmt.parse(hTimes.getString(i)) ?: continue
+                if (date.time < now - oneHour) continue
+                val uv = if (!uvValues.isNull(i)) uvValues.getDouble(i) else 0.0
+                if (uv > peakUv) peakUv = uv
+                uvItems.add(UvForecastItem(
+                    time    = timeFmt.format(date),
+                    uvIndex = uv,
+                    label   = uvIndexLabel(uv),
+                    color   = uvIndexColor(uv)
+                ))
+                count++
+            }
+
+            binding.uvForecastRecyclerView.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.uvForecastRecyclerView.adapter = UvForecastAdapter(uvItems) { showUvHourlyDetail(it) }
+
+            // ── UV-Schutzempfehlung (Mensch + Hund) ───────────────────────────
+            val protectionText = buildUvProtectionText(peakUv)
+            if (protectionText.isNotEmpty()) {
+                binding.uvProtectionText.text = protectionText
+                binding.uvProtectionText.visibility = View.VISIBLE
+            } else {
+                binding.uvProtectionText.visibility = View.GONE
+            }
+
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Sonne-Card", e)
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // SOLAR-BERECHNUNGEN  (alle offline, keine API nötig)
+    // ════════════════════════════════════════════════════════════════
+
+    /**
+     * Berechnet den Sonnenaufgangs-Azimut in Grad (0° = Nord, 90° = Ost).
+     * Verwendet die astronomische Formel über Sonnendeklination + Breitengrad.
+     */
+    private fun calcSunriseAzimuth(latDeg: Double, sunriseTime: Date): Double {
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC")).also { it.time = sunriseTime }
+        val dayOfYear = cal.get(Calendar.DAY_OF_YEAR)
+
+        // Sonnendeklination δ (in Grad) – vereinfachte Formel (Spencer 1971)
+        val b = Math.toRadians(360.0 / 365.0 * (dayOfYear - 81))
+        val declinationDeg = 23.45 * Math.sin(b)
+        val decRad = Math.toRadians(declinationDeg)
+        val latRad = Math.toRadians(latDeg)
+
+        // cos(Azimut) = sin(δ) / cos(φ)
+        val cosAz = Math.sin(decRad) / Math.cos(latRad)
+        val cosAzClamped = cosAz.coerceIn(-1.0, 1.0)
+        val azimuthFromNorth = Math.toDegrees(Math.acos(cosAzClamped))
+
+        // Im Nordhalbkugel-Sommer (δ > 0): Aufgang nördlich von Ost → Azimut < 90°
+        // Im Winter (δ < 0): Aufgang südlich von Ost → Azimut > 90°
+        return if (declinationDeg >= 0) azimuthFromNorth else 180.0 - azimuthFromNorth
+    }
+
+    /**
+     * Berechnet die aktuelle Sonnenhöhe (Elevation) in Grad über dem Horizont.
+     * Negative Werte bedeuten Sonne unter dem Horizont.
+     * @param tzOffsetH Zeitzonenversatz in Stunden (z.B. 2.0 für CEST)
+     */
+    /**
+     * Berechnet Elevation und Azimut der Sonne für den gegebenen Zeitpunkt.
+     * @return Pair(elevation°, azimuth°) – Azimut: 0°=Nord, 90°=Ost, 180°=Süd, 270°=West
+     */
+    private fun calcSolarAngles(
+        latDeg: Double, lonDeg: Double,
+        year: Int, month: Int, day: Int,
+        hour: Int, minute: Int,
+        tzOffsetH: Double
+    ): Pair<Double, Double> {
+        val dayOfYear = run {
+            val cal = Calendar.getInstance()
+            cal.set(year, month - 1, day)
+            cal.get(Calendar.DAY_OF_YEAR)
+        }
+
+        // Sonnendeklination (Spencer 1971)
+        val b = Math.toRadians(360.0 / 365.0 * (dayOfYear - 81))
+        val decRad = Math.toRadians(23.45 * Math.sin(b))
+
+        // Gleichung der Zeit (Minuten)
+        val eot = 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b)
+
+        // Wahre Sonnenzeit → Stundenwinkel
+        val localTimeMin     = hour * 60.0 + minute.toDouble()
+        val lonCorrectionMin = 4.0 * (lonDeg - tzOffsetH * 15.0)
+        val trueSolarTimeH   = (localTimeMin + lonCorrectionMin + eot) / 60.0
+        val hourAngleDeg     = (trueSolarTimeH - 12.0) * 15.0
+        val haRad  = Math.toRadians(hourAngleDeg)
+        val latRad = Math.toRadians(latDeg)
+
+        // Elevation
+        val sinEl = Math.sin(latRad) * Math.sin(decRad) +
+                Math.cos(latRad) * Math.cos(decRad) * Math.cos(haRad)
+        val elevation = Math.toDegrees(Math.asin(sinEl.coerceIn(-1.0, 1.0)))
+
+        // Azimut (0°=Nord, im Uhrzeigersinn)
+        // cos(Az) = (sin(δ) - sin(φ)·sin(El)) / (cos(φ)·cos(El))
+        val elRad = Math.toRadians(elevation)
+        val cosAz = (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elRad)) /
+                (Math.cos(latRad) * Math.cos(elRad))
+        val azBase = Math.toDegrees(Math.acos(cosAz.coerceIn(-1.0, 1.0)))
+        // Nachmittags (Stundenwinkel positiv) → Azimut > 180°
+        val azimuth = if (hourAngleDeg >= 0) 360.0 - azBase else azBase
+
+        return Pair(elevation, azimuth)
+    }
+
+    /** Azimut in Grad → Himmelsrichtung + Klartext */
+    private fun azimuthToCardinal(az: Double): String {
+        val directions = listOf(
+            0.0   to "N – Sonne im Norden",
+            22.5  to "NNO",
+            45.0  to "NO – Sonne im Nordosten",
+            67.5  to "ONO",
+            90.0  to "O – Sonne im Osten",
+            112.5 to "OSO",
+            135.0 to "SO – Sonne im Südosten",
+            157.5 to "SSO",
+            180.0 to "S – Sonne im Süden",
+            202.5 to "SSW",
+            225.0 to "SW – Sonne im Südwesten",
+            247.5 to "WSW",
+            270.0 to "W – Sonne im Westen",
+            292.5 to "WNW",
+            315.0 to "NW – Sonne im Nordwesten",
+            337.5 to "NNW",
+            360.0 to "N – Sonne im Norden"
+        )
+        return directions.minByOrNull { Math.abs(it.first - az) }?.second ?: "–"
+    }
+
+    /** Dialog zur Eingabe der Höhenwerte für die Schattenlängen-Berechnung */
+    private fun showShadowHeightDialog(
+        prefs: android.content.SharedPreferences,
+        onDone: () -> Unit
+    ) {
+        val isDark = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val density = resources.displayMetrics.density
+
+        // Drei EditText-Felder
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(
+                (24 * density).toInt(), (8 * density).toInt(),
+                (24 * density).toInt(), 0
+            )
+        }
+
+        fun makeField(label: String, defaultVal: Float): android.widget.EditText {
+            val tv = android.widget.TextView(this).apply {
+                text = label
+                setTextColor(Color.parseColor("#CCCCCC"))
+                textSize = 13f
+            }
+            val et = android.widget.EditText(this).apply {
+                inputType = android.text.InputType.TYPE_CLASS_NUMBER or
+                        android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+                setText(String.format(Locale.GERMAN, "%.2f", defaultVal))
+                setTextColor(Color.WHITE)
+                setHintTextColor(Color.parseColor("#888888"))
+                hint = "Meter (z.B. 1.75)"
+            }
+            container.addView(tv)
+            container.addView(et)
+            return et
+        }
+
+        val etPerson = makeField(
+            "👤 Größe Person (m)",
+            prefs.getFloat("height_person", 1.75f)
+        )
+        val etDog = makeField(
+            "🐕 Widerristhöhe Hund (m)",
+            prefs.getFloat("height_dog", 0.55f)
+        )
+        val etObject = makeField(
+            "📦 Höhe Objekt (m)",
+            prefs.getFloat("height_object", 1.00f)
+        )
+
+        AlertDialog.Builder(this)
+            .setTitle("📏 Höhen für Schattenlänge")
+            .setView(container)
+            .setPositiveButton("Speichern") { _, _ ->
+                val person = etPerson.text.toString()
+                    .replace(",", ".").toFloatOrNull() ?: 1.75f
+                val dog = etDog.text.toString()
+                    .replace(",", ".").toFloatOrNull() ?: 0.55f
+                val obj = etObject.text.toString()
+                    .replace(",", ".").toFloatOrNull() ?: 1.00f
+                prefs.edit()
+                    .putFloat("height_person", person.coerceIn(0.1f, 5.0f))
+                    .putFloat("height_dog",    dog.coerceIn(0.05f, 2.0f))
+                    .putFloat("height_object", obj.coerceIn(0.1f, 50.0f))
+                    .apply()
+                onDone()
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(accentColor)
+            }
+    }
+
+    // ── UV-Hilfsfunktionen ────────────────────────────────────────────────────
+
+    private fun uvIndexLabel(uv: Double): String = when {
+        uv < 1  -> "Minimal"
+        uv < 3  -> "Gering"
+        uv < 6  -> "Mittel"
+        uv < 8  -> "Hoch"
+        uv < 11 -> "Sehr hoch"
+        else    -> "Extrem"
+    }
+
+    private fun uvIndexColor(uv: Double): Int = when {
+        uv < 1  -> android.graphics.Color.parseColor("#757575")   // grau
+        uv < 3  -> android.graphics.Color.parseColor("#4CAF50")   // grün
+        uv < 6  -> android.graphics.Color.parseColor("#FFC107")   // gelb
+        uv < 8  -> android.graphics.Color.parseColor("#FF9800")   // orange
+        uv < 11 -> android.graphics.Color.parseColor("#F44336")   // rot
+        else    -> android.graphics.Color.parseColor("#9C27B0")   // lila
+    }
+
+    private fun buildUvProtectionText(peakUv: Double): String {
+        if (peakUv < 3.0) return ""
+        return buildString {
+            append("🔆 UV-Schutzempfehlung (Tages-Maximum: ${String.format(Locale.GERMAN, "%.1f", peakUv)}):\n\n")
+            when {
+                peakUv < 6 -> {
+                    append("👤 Mensch: Sonnencreme empfohlen (LSF 15+) bei längeren Aufenthalten.\n\n")
+                    append("🐕 Hund: Helle oder dünn behaarte Hunde" +
+                            "sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen.")
+                }
+                peakUv < 8 -> {
+                    append("👤 Mensch: Sonnencreme LSF 30+, gegebenenfalls Kopfbedeckung und Sonnenbrille empfohlen. " +
+                            "Mittagssonne meiden.\n\n")
+                    append("🐕 Hund: Trainingseinheiten vor 10 oder nach 16 Uhr legen. " +
+                            "Tagsüber Schatten bevorzugen.")
+                }
+                peakUv < 11 -> {
+                    append("👤 Mensch: LSF 50+, Schatten bevorzugen, zwischen 11 und 16 Uhr dauerhaften Aufenthalt in der Sonne vermeiden.\n\n")
+                    append("🐕 Hund: Training auf frühe Morgen- oder Abendstunden verschieben. " +
+                            "Ausreichend Wasser mitführen." +
+                            "Asphaltstrassen vermeiden" +
+                            "Im schattigen Umfeld bewegen")
+                }
+                else -> {
+                    append("⚠️ Extrem-UV! Mensch: Aufenthalt im Freien so kurz wie möglich.\n\n")
+                    append("🐕 Hund: Training heute meiden. Bei notwendigen Runden: " +
+                            "schattige Routen wählen, sonnige Exposition minimieren. " +
+                            "Trinkwasser mitführen. Hund regelmäßig auf der Bauchseite anfeuchten.")
+                }
+            }
+            append("\n\n⚕️ Kein Ersatz für tierärztliche Beratung.")
+        }
+    }
+
+    private fun displayAirQualityCard(airQualityData: JSONObject) {
+        try {
+            val hourly  = airQualityData.getJSONObject("hourly")
+            val times   = hourly.getJSONArray("time")
+            val pm25arr = hourly.getJSONArray("pm2_5")
+            val pm10arr = hourly.getJSONArray("pm10")
+            val no2arr  = hourly.getJSONArray("nitrogen_dioxide")
+            val o3arr   = hourly.getJSONArray("ozone")
+
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val timeFmt = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val now     = System.currentTimeMillis()
+            val oneHour = 3600000L
+
+            val items = mutableListOf<AirQualityHourItem>()
+            var count = 0
+            for (i in 0 until times.length()) {
+                if (count >= 24) break
+                val date = dateFmt.parse(times.getString(i)) ?: continue
+                if (date.time < now - oneHour) continue
+
+                val pm25 = if (!pm25arr.isNull(i)) pm25arr.getDouble(i) else 0.0
+                val pm10 = if (!pm10arr.isNull(i)) pm10arr.getDouble(i) else 0.0
+                val no2  = if (!no2arr.isNull(i))  no2arr.getDouble(i)  else 0.0
+                val o3   = if (!o3arr.isNull(i))   o3arr.getDouble(i)   else 0.0
+                val level = calcAqiFromPm25(pm25)
+
+                items.add(AirQualityHourItem(
+                    time     = timeFmt.format(date),
+                    pm25     = pm25,
+                    pm10     = pm10,
+                    no2      = no2,
+                    o3       = o3,
+                    aqi      = level,
+                    aqiLabel = aqiLevelLabel(level),
+                    aqiColor = aqiLevelColor(level)
+                ))
+                count++
+            }
+
+            if (items.isEmpty()) return
+
+            // Aktuellen Wert prominent anzeigen
+            val current = items.first()
+            binding.currentAqiText.text = "${current.aqi} – ${current.aqiLabel}"
+            binding.currentAqiText.setTextColor(current.aqiColor)
+            binding.currentPollutantsText.text = buildString {
+                append("PM2.5: ${String.format(Locale.GERMAN, "%.1f", current.pm25)} µg/m³  ")
+                append("PM10: ${String.format(Locale.GERMAN, "%.1f", current.pm10)} µg/m³\n")
+                append("NO₂: ${String.format(Locale.GERMAN, "%.1f", current.no2)} µg/m³  ")
+                append("O₃: ${String.format(Locale.GERMAN, "%.1f", current.o3)} µg/m³")
+            }
+
+            binding.airQualityRecyclerView.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.airQualityRecyclerView.adapter = AirQualityAdapter(items)
+
+            binding.cardAirQuality.visibility = View.VISIBLE
+
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Luftqualität-Card", e)
+        }
+    }
+
+    private fun displayPollenCard(airQualityData: JSONObject) {
+        try {
+            val hourly = airQualityData.getJSONObject("hourly")
+            val times  = hourly.getJSONArray("time")
+
+            // Pollenarten mit deutschen Namen und Emoji
+            data class PollenSource(val key: String, val name: String, val emoji: String)
+            val sources = listOf(
+                PollenSource("birch_pollen",   "Birke",     "🌳"),
+                PollenSource("grass_pollen",   "Gräser",    "🌾"),
+                PollenSource("alder_pollen",   "Erle",      "🌿"),
+                PollenSource("mugwort_pollen", "Beifuß",    "🌿"),
+                PollenSource("olive_pollen",   "Olive",     "🫒"),
+                PollenSource("ragweed_pollen", "Ambrosia",  "🌻")
+            )
+
+            // Erstes gültiges Stunden-Fenster (= aktuell) ermitteln
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val now = System.currentTimeMillis()
+            val oneHour = 3600000L
+            var currentIdx = -1
+            for (i in 0 until times.length()) {
+                val date = dateFmt.parse(times.getString(i)) ?: continue
+                if (date.time >= now - oneHour) { currentIdx = i; break }
+            }
+            if (currentIdx < 0) return
+
+            // Pollenarten mit Wert > 0 oder bekannten Belastern sammeln
+            val activeItems = mutableListOf<PollenItem>()
+            var highestLevel = 0
+
+            for (src in sources) {
+                if (!hourly.has(src.key)) continue
+                val arr = hourly.getJSONArray(src.key)
+                if (arr.isNull(currentIdx)) continue
+                val value = arr.getDouble(currentIdx)
+                val level = pollenLevel(value)
+                if (level > highestLevel) highestLevel = level
+                if (level > 0) {  // Nur anzeigen wenn messbar
+                    activeItems.add(PollenItem(
+                        name       = src.name,
+                        emoji      = src.emoji,
+                        value      = value,
+                        level      = level,
+                        levelLabel = pollenLevelLabel(level),
+                        levelColor = pollenLevelColor(level)
+                    ))
+                }
+            }
+
+            // Anzeigetext aufbauen
+            val displayText = if (activeItems.isEmpty()) {
+                "✅ Derzeit keine nennenswerte Pollenbelastung gemessen."
+            } else {
+                activeItems.sortedByDescending { it.level }.joinToString("\n") { item ->
+                    "${item.emoji} ${item.name}: ${item.levelLabel} " +
+                            "(${String.format(Locale.GERMAN, "%.1f", item.value)} Gr./m³)"
+                }
+            }
+            binding.pollenTodayText.text = displayText
+
+            // Hundemedizinische Tipps basierend auf Belastungsgrad
+            val dogTips = getPollenDogTips(activeItems, highestLevel)
+            if (dogTips.isNotEmpty()) {
+                binding.pollenDogTipsText.text = dogTips
+                binding.pollenDogTipsText.visibility = View.VISIBLE
+            } else {
+                binding.pollenDogTipsText.visibility = View.GONE
+            }
+
+            binding.cardPollen.visibility = View.VISIBLE
+
+        } catch (e: Exception) {
+            android.util.Log.e("WeatherActivity", "Fehler bei Pollen-Card", e)
+        }
+    }
+
+    private fun getPollenDogTips(items: List<PollenItem>, highestLevel: Int): String {
+        if (highestLevel == 0) return ""
+
+        val sb = StringBuilder("🐕 Hund & Pollen:\n\n")
+
+        // Allgemeine Hinweise je Belastungsstufe
+        when (highestLevel) {
+            1 -> sb.append("Die aktuelle Pollenbelastung ist niedrig. Für die meisten Hunde sind " +
+                    "keine besonderen Maßnahmen erforderlich.\n\n")
+            2 -> sb.append("Mittlere Pollenbelastung. Beobachte Deinen Hund nach Aufenthalten im " +
+                    "Freien auf mögliche Reaktionen – besonders empfindliche Hunde können " +
+                    "Beschwerden zeigen.\n\n")
+            3 -> sb.append("Hohe Pollenbelastung. Hunde können ähnlich wie Menschen unter " +
+                    "Pollenallergien leiden – häufig als atopische Dermatitis (Hautjucken, " +
+                    "Schütteln des Kopfes, Pfoten lecken).\n\n")
+            4 -> sb.append("Sehr hohe Pollenbelastung. Bei bekannt allergischen Hunden unbedingt " +
+                    "Rücksprache mit dem Tierarzt halten. Trainingseinheiten ggf. in die frühen " +
+                    "Morgenstunden oder nach Regenfällen verlegen.\n\n")
+        }
+
+        // Pollenspezifische Hinweise
+        val highItems = items.filter { it.level >= 2 }
+        if (highItems.any { it.name == "Birke" || it.name == "Erle" }) {
+            sb.append("🌳 Baumpollen (Birke/Erle): Kreuzreaktionen mit bestimmten Proteinen in " +
+                    "Hundefutter sind möglich. Bei unklaren Verdauungsproblemen ggf. Tierarzt konsultieren.\n\n")
+        }
+        if (highItems.any { it.name == "Gräser" }) {
+            sb.append("🌾 Gräserpollen: Häufigste Pollenallergieauslöser bei Hunden. Symptome: " +
+                    "Juckreiz an Pfoten, Bauch und Ohren. Pfoten nach Spaziergängen im Gras " +
+                    "abspülen kann helfen.\n\n")
+        }
+        if (highItems.any { it.name == "Beifuß" || it.name == "Ambrosia" }) {
+            sb.append("🌿 Beifuß/Ambrosia: Kräuterpollen – Kreuzreaktionen mit Lebensmittelallergenen " +
+                    "möglich. Hunde mit bekannten Futtermittelallergien können empfindlicher reagieren.\n\n")
+        }
+
+        // Allgemeine Pflegetipps bei erhöhter Belastung
+        if (highestLevel >= 2) {
+            sb.append("💡 Tipps bei erhöhter Belastung:\n" +
+                    "• Nach Freilandrunden Fell und Pfoten abwischen\n" +
+                    "• Augen und Nase beobachten (Ausfluss, Rötungen)\n" +
+                    "• Häufiges Lecken der Pfoten kann auf Pollenreiz hinweisen\n" +
+                    "• Schütteln und Kratzen am Kopf beobachten")
+        }
+
+        sb.append("\n\n⚕️ Kein Ersatz für tierärztliche Beratung.")
+        return sb.toString()
     }
 
 }
