@@ -65,6 +65,11 @@ class BackupActivity : SecureBaseActivity() {
         binding.btnRestoreBackup.setOnClickListener {
             selectBackupFile()
         }
+
+        // NEU: WebDAV Synchronisation
+        binding.btnWebdavSync.setOnClickListener {
+            startActivity(Intent(this, WebDavSyncActivity::class.java))
+        }
     }
 
     private fun createBackup() {
