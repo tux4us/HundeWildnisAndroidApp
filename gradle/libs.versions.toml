@@ -20,6 +20,7 @@ recyclerview = "1.4.0"
 swiperefreshlayout = "1.2.0"
 workManager = "2.11.1"
 youtubePlayerCore = "13.0.0"
+securityCrypto = "1.1.0-alpha06"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -41,6 +42,7 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 youtube-player-core = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "youtubePlayerCore" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

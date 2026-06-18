@@ -137,6 +137,19 @@
                         app:icon="@android:drawable/ic_menu_revert"
                         app:iconGravity="start" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWebdavSync"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="🔄 WebDAV-Synchronisation"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconGravity="start" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
