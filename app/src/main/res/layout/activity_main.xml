@@ -23,23 +23,28 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/contentContainer"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Blog RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/blogRecyclerView"
+        <FrameLayout
+            android:id="@+id/contentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="16dp"
-            android:visibility="visible" />
+            android:layout_height="match_parent">
+
+            <!-- Blog RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/blogRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="16dp"
+                android:visibility="visible" />
 
         <!-- Pages Menu (Include) -->
         <include
@@ -93,6 +98,7 @@
             android:textColor="#33691E"
             android:visibility="gone" />
     </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <!-- Bottom Navigation Bar -->
     <!-- Bottom Navigation -->

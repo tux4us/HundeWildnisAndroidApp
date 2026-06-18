@@ -6,28 +6,37 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.view.Surface
+import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.hundewildnis.app.SecureBaseActivity
 
 class CompassActivity : SecureBaseActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private var rotationSensor: Sensor? = null
+    private var accelerometer: Sensor? = null
+    private var magnetometer: Sensor? = null
+
+    // Für Fallback-Berechnung
+    private val gravity = FloatArray(3)
+    private val geomagnetic = FloatArray(3)
+    private var hasGravity = false
+    private var hasGeomagnetic = false
 
     // Views
     private lateinit var compassContainer: FrameLayout
     private lateinit var degreeText: TextView
     private lateinit var directionText: TextView
 
-    // Glättungs-Variablen
+    // Glättungs-Variablen (optimiert für Leichtgängigkeit)
     private var currentAzimuth = 0f
-    private val ALPHA = 0.2f  // Glättungsfaktor (0.1 = sehr glatt, 0.3 = reaktiv)
+    private val ALPHA = 0.35f  // Erhöht von 0.2 für schnellere Reaktion
     private val azimuthHistory = mutableListOf<Float>()
-    private val HISTORY_SIZE = 5
-    private var lastDisplayedAzimuth = 0
-    private val MIN_CHANGE_THRESHOLD = 2  // Grad
+    private val HISTORY_SIZE = 3 // Reduziert von 5 für weniger Verzögerung
+    private var lastDisplayedAzimuth = -1
+    private val MIN_CHANGE_THRESHOLD = 1 // Reduziert von 2 für mehr Präzision
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,22 +57,30 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener {
 
         // Sensor initialisieren
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        
+        // 1. Wahl: Rotation Vector (Präzise & Stabil)
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
-
-        // Fallback falls kein Rotation Vector vorhanden
+        
+        // 2. Wahl: Geomagnetic Rotation Vector (Stromsparend & gut)
         if (rotationSensor == null) {
-            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+            rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
+        }
+        
+        // 3. Wahl: Fallback (Magnetometer + Accelerometer)
+        if (rotationSensor == null) {
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        rotationSensor?.also { sensor ->
-            sensorManager.registerListener(
-                this,
-                sensor,
-                SensorManager.SENSOR_DELAY_UI
-            )
+        // Registriere verfügbare Sensoren mit SENSOR_DELAY_GAME für hohe Reaktivität
+        rotationSensor?.also { 
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) 
+        } ?: run {
+            accelerometer?.also { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) }
+            magnetometer?.also { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) }
         }
     }
 
@@ -73,82 +90,103 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == Sensor.TYPE_ROTATION_VECTOR) {
+        val type = event?.sensor?.type ?: return
+
+        if (type == Sensor.TYPE_ROTATION_VECTOR || type == Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) {
             val rotationMatrix = FloatArray(9)
             SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
-
-            val orientation = FloatArray(3)
-            SensorManager.getOrientation(rotationMatrix, orientation)
-
-            // Roher Azimuth-Wert
-            val rawAzimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
-            val azimuthDegrees = (rawAzimuth + 360) % 360
-
-            // Glättung anwenden
-            currentAzimuth = lowPassFilter(azimuthDegrees, currentAzimuth)
-            val smoothedAzimuth = addToHistoryAndAverage(currentAzimuth)
-
-            // UI nur bei signifikanter Änderung updaten
-            updateCompassIfChanged(smoothedAzimuth)
+            processRotationMatrix(rotationMatrix)
+        } else if (type == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, gravity, 0, event.values.size)
+            hasGravity = true
+            tryComputeAzimuth()
+        } else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, geomagnetic, 0, event.values.size)
+            hasGeomagnetic = true
+            tryComputeAzimuth()
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Optional: Warnung bei niedriger Genauigkeit
-        when (accuracy) {
-            SensorManager.SENSOR_STATUS_UNRELIABLE -> {
-                android.util.Log.w("Compass", "Sensor unzuverlässig - bitte kalibrieren")
+    private fun tryComputeAzimuth() {
+        if (hasGravity && hasGeomagnetic) {
+            val r = FloatArray(9)
+            val i = FloatArray(9)
+            if (SensorManager.getRotationMatrix(r, i, gravity, geomagnetic)) {
+                processRotationMatrix(r)
             }
         }
     }
 
-    // Low-Pass Filter für glatte Übergänge
+    private fun processRotationMatrix(rotationMatrix: FloatArray) {
+        val outR = FloatArray(9)
+        
+        // Berücksichtigung der Display-Rotation (Wichtig für Genauigkeit)
+        val displayRotation = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            display?.rotation ?: Surface.ROTATION_0
+        } else {
+            @Suppress("DEPRECATION")
+            (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.rotation
+        }
+
+        when (displayRotation) {
+            Surface.ROTATION_0 -> System.arraycopy(rotationMatrix, 0, outR, 0, 9)
+            Surface.ROTATION_90 -> SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, outR)
+            Surface.ROTATION_180 -> SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_MINUS_Y, outR)
+            Surface.ROTATION_270 -> SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_Y, SensorManager.AXIS_X, outR)
+        }
+
+        val orientation = FloatArray(3)
+        SensorManager.getOrientation(outR, orientation)
+
+        // Azimuth (Z-Achse) in Grad umrechnen
+        val rawAzimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
+        val azimuthDegrees = (rawAzimuth + 360) % 360
+
+        // Glättung
+        currentAzimuth = lowPassFilter(azimuthDegrees, currentAzimuth)
+        val smoothedAzimuth = addToHistoryAndAverage(currentAzimuth)
+
+        updateCompassIfChanged(smoothedAzimuth)
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        if (accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+            findViewById<TextView>(R.id.infoText)?.text = "⚠️ Kompass ungenau! Bitte bewege dein Gerät in einer 8er-Form, um den Sensor zu kalibrieren."
+        } else {
+            findViewById<TextView>(R.id.infoText)?.text = "Bewege dein Gerät, um den Kompass zu kalibrieren und halte Dein Gerät von magnetischen Quellen fern!"
+        }
+    }
+
     private fun lowPassFilter(newValue: Float, oldValue: Float): Float {
         var delta = newValue - oldValue
-
-        // Handle 0/360 degree wrap-around
         if (delta > 180) delta -= 360
         if (delta < -180) delta += 360
-
         return (oldValue + ALPHA * delta + 360) % 360
     }
 
-    // Averaging über mehrere Werte
     private fun addToHistoryAndAverage(value: Float): Float {
         azimuthHistory.add(value)
-
-        if (azimuthHistory.size > HISTORY_SIZE) {
-            azimuthHistory.removeAt(0)
-        }
-
+        if (azimuthHistory.size > HISTORY_SIZE) azimuthHistory.removeAt(0)
         return azimuthHistory.average().toFloat()
     }
 
-    // Update nur bei signifikanter Änderung
     private fun updateCompassIfChanged(azimuth: Float) {
         val roundedAzimuth = azimuth.toInt()
-
         if (Math.abs(roundedAzimuth - lastDisplayedAzimuth) >= MIN_CHANGE_THRESHOLD) {
             lastDisplayedAzimuth = roundedAzimuth
             updateCompassUI(roundedAzimuth)
         }
     }
 
-    // UI Update
     private fun updateCompassUI(azimuth: Int) {
-        // Rotiere den Kompass-Container (FrameLayout)
-        // Negativ, weil Kompass gegen den Uhrzeigersinn dreht
-        compassContainer.animate()
-            .rotation(-azimuth.toFloat())
-            .setDuration(100)  // 100ms sanfte Animation
-            .start()
+        // Direkte Rotation ohne Animation für maximale Leichtgängigkeit
+        // Negativ, da sich die Rose gegen die Drehrichtung des Geräts bewegen muss
+        compassContainer.rotation = -azimuth.toFloat()
 
-        // Text-Updates (rotieren NICHT mit)
         degreeText.text = "${azimuth}°"
         directionText.text = getDirectionName(azimuth)
     }
 
-    // Himmelsrichtung als Text (Nord, Nordost, etc.)
     private fun getDirectionName(azimuth: Int): String {
         return when {
             azimuth in 0..22 || azimuth in 338..360 -> "Nord"
