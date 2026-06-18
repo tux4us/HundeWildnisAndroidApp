@@ -114,7 +114,8 @@ class StartActivity : BaseBottomNavActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_refresh -> {
-                Toast.makeText(this, "Nur in Blog-Ansicht verfügbar", Toast.LENGTH_SHORT).show()
+                loadLatestBlogPost()
+                Toast.makeText(this, "Blog-Vorschau wird aktualisiert...", Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.action_theme -> { toggleTheme(); true }

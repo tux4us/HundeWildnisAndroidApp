@@ -33,19 +33,26 @@
             <!-- NEU: Wrapper für rotierbaren Kompass -->
             <FrameLayout
                 android:id="@+id/compassContainer"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="320dp"
+                android:layout_height="320dp"
                 android:layout_centerInParent="true">
 
                 <!-- Kompass-Anzeige (wird rotiert) -->
-                <ImageView
-                    android:id="@+id/compassImage"
+                <com.hundewildnis.app.CompassRoseView
+                    android:id="@+id/compassRoseView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="Kompass"
-                    android:src="@drawable/compass_bg" />
+                    android:layout_height="match_parent" />
 
             </FrameLayout>
+
+            <!-- Feststehender Indikator oben -->
+            <View
+                android:layout_width="4dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@id/compassContainer"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-5dp"
+                android:background="#FF0000" />
 
             <!-- Grad-Anzeige (rotiert NICHT mit) -->
             <TextView

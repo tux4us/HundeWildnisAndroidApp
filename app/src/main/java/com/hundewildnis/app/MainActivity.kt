@@ -113,6 +113,12 @@ class MainActivity : BaseBottomNavActivity() {
 
     private fun setupButtons() {
         super.setupBottomNavigation()
+        
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            loadContentFromNetwork(silent = false)
+        }
+        binding.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#1B3A0A"))
+
         binding.btnLoadMore.setOnClickListener { loadMoreBlogPosts() }
         binding.blogRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -250,12 +256,24 @@ class MainActivity : BaseBottomNavActivity() {
                 allBlogPosts = result
                 contentCache.saveBlogPosts(result)
                 blogAdapter.submitList(result.take(20))
+                
+                // Scroll to top if this is a refresh
                 if (!silent) {
+                    binding.blogRecyclerView.post {
+                        binding.blogRecyclerView.scrollToPosition(0)
+                    }
+                }
+
+                if (!silent) {
+                    binding.swipeRefreshLayout.isRefreshing = false
                     binding.progressBar.visibility = View.GONE; binding.errorText.visibility = View.GONE
                     when (currentView) { VIEW_BLOG -> showBlogView(); VIEW_PAGES -> showPagesView(); VIEW_COURSES -> showCoursesView() }
                 }
             } catch (e: Exception) {
-                if (!silent) { binding.progressBar.visibility = View.GONE; binding.errorText.text = "Fehler: ${e.message}"; binding.errorText.visibility = View.VISIBLE }
+                if (!silent) { 
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    binding.progressBar.visibility = View.GONE; binding.errorText.text = "Fehler: ${e.message}"; binding.errorText.visibility = View.VISIBLE 
+                }
             }
         }
     }
@@ -274,7 +292,11 @@ class MainActivity : BaseBottomNavActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_refresh -> { contentCache.clearCache(); loadContent(); true }
+            R.id.action_refresh -> {
+                binding.swipeRefreshLayout.isRefreshing = true
+                loadContentFromNetwork(silent = false)
+                true
+            }
             R.id.action_theme -> { toggleTheme(); true }
             R.id.action_settings -> { showSettingsDialog(); true }
             R.id.action_instructions -> { showInstructionsDialog(); true }
