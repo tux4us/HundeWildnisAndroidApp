@@ -14,8 +14,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 80
-        versionName = "13.4"
+        versionCode = 81
+        versionName = "14.0"
 
         // API Key aus local.properties laden
         val localProperties = Properties()
@@ -72,7 +72,10 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.coil)
     implementation(libs.androidx.work.runtime.ktx)
-    
+    implementation(libs.androidx.security.crypto)
+
+// NEU: für verschlüsselte WebDAV-Credentials
+
     // Google Play Services & YouTube Player entfernt für F-Droid Kompatibilität
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")

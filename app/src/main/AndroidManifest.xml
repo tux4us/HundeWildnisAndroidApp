@@ -313,5 +313,14 @@
             android:theme="@style/Theme.HundeWildnis"
             android:parentActivityName="com.hundewildnis.app.NasenarbeitBeratungActivity"/>
 
+
+        <!-- ✅ NEU: WebDAV Synchronistation -->
+        <activity
+            android:name="com.hundewildnis.app.WebDavSyncActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.BackupActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
     </application>
 </manifest>
