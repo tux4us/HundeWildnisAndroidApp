@@ -35,16 +35,56 @@
             android:layout_height="match_parent">
 
             <!-- Blog RecyclerView -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/blogRecyclerView"
+            <LinearLayout
+                android:id="@+id/blogContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="16dp"
-                android:visibility="visible" />
+                android:orientation="vertical">
+
+                <HorizontalScrollView
+                    android:id="@+id/filterScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnFilterAll"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alle Beiträge"
+                            android:textColor="#1B3A0A"
+                            app:rippleColor="#331B3A0A" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnFilterCategories"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="📂 Kategorien filtern"
+                            android:textColor="#1B3A0A"
+                            app:strokeColor="#1B3A0A" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/blogRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="16dp" />
+            </LinearLayout>
 
         <!-- Pages Menu (Include) -->
         <include

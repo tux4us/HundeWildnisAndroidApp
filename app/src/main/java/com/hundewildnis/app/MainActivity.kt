@@ -42,6 +42,8 @@ class MainActivity : BaseBottomNavActivity() {
     private var currentBlogPage = 1
     private var canLoadMoreFromNetwork = true
     private var isLoadingMore = false
+    private var selectedCategoryId: Int? = null
+    private var categories = listOf<BlogCategory>()
 
     private var currentView = VIEW_BLOG
 
@@ -116,6 +118,24 @@ class MainActivity : BaseBottomNavActivity() {
 
     private fun setupButtons() {
         super.setupBottomNavigation()
+
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#1B3A0A")
+        
+        binding.filterScrollView.setBackgroundColor(if (isDark) Color.parseColor("#121212") else Color.parseColor("#F5F5F5"))
+        binding.btnFilterAll.setTextColor(accentColor)
+        binding.btnFilterCategories.setTextColor(accentColor)
+        binding.btnFilterCategories.setStrokeColor(android.content.res.ColorStateList.valueOf(accentColor))
+
+        binding.btnFilterAll.setOnClickListener {
+            selectedCategoryId = null
+            binding.btnFilterCategories.text = "📂 Kategorien filtern"
+            loadContentFromNetwork(silent = false)
+        }
+
+        binding.btnFilterCategories.setOnClickListener {
+            showCategoryFilterDialog()
+        }
         
         binding.swipeRefreshLayout.setOnRefreshListener {
             loadContentFromNetwork(silent = false)
@@ -141,9 +161,16 @@ class MainActivity : BaseBottomNavActivity() {
     private fun showBlogView() {
         currentView = VIEW_BLOG
         binding.blogRecyclerView.visibility = View.VISIBLE
+        binding.filterScrollView.visibility = View.VISIBLE
         findViewById<View>(R.id.pagesMenu).visibility = View.GONE
         findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size || canLoadMoreFromNetwork) View.VISIBLE else View.GONE
+
+        if (categories.isEmpty()) {
+            lifecycleScope.launch {
+                categories = wordPressApi.loadCategories()
+            }
+        }
     }
 
     private fun loadMoreBlogPosts() {
@@ -169,7 +196,7 @@ class MainActivity : BaseBottomNavActivity() {
             try {
                 val nextPage = (allBlogPosts.size / 100) + 1
                 val result = withContext(Dispatchers.IO) {
-                    wordPressApi.loadBlogPosts(page = nextPage, perPage = 100)
+                    wordPressApi.loadBlogPosts(page = nextPage, perPage = 100, categoryId = selectedCategoryId)
                 }
 
                 if (result.isEmpty()) {
@@ -195,6 +222,7 @@ class MainActivity : BaseBottomNavActivity() {
     private fun showPagesView() {
         currentView = VIEW_PAGES
         binding.blogRecyclerView.visibility = View.GONE
+        binding.filterScrollView.visibility = View.GONE
         findViewById<View>(R.id.pagesMenu).visibility = View.VISIBLE
         findViewById<View>(R.id.coursesMenu).visibility = View.GONE
         binding.btnLoadMore.visibility = View.GONE
@@ -203,6 +231,7 @@ class MainActivity : BaseBottomNavActivity() {
     private fun showCoursesView() {
         currentView = VIEW_COURSES
         binding.blogRecyclerView.visibility = View.GONE
+        binding.filterScrollView.visibility = View.GONE
         findViewById<View>(R.id.pagesMenu).visibility = View.GONE
         findViewById<View>(R.id.coursesMenu).visibility = View.VISIBLE
         binding.btnLoadMore.visibility = View.GONE
@@ -299,12 +328,14 @@ class MainActivity : BaseBottomNavActivity() {
         lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    val posts = try { wordPressApi.loadBlogPosts(page = 1, perPage = 100) } catch (e: Exception) { emptyList() }
+                    val posts = try { wordPressApi.loadBlogPosts(page = 1, perPage = 100, categoryId = selectedCategoryId) } catch (e: Exception) { emptyList() }
                     posts
                 }
                 allBlogPosts = result
                 canLoadMoreFromNetwork = result.size >= 100
-                contentCache.saveBlogPosts(result)
+                if (selectedCategoryId == null) {
+                    contentCache.saveBlogPosts(result)
+                }
                 blogAdapter.submitList(result.take(20))
                 
                 // Scroll to top if this is a refresh
@@ -357,6 +388,52 @@ class MainActivity : BaseBottomNavActivity() {
             R.id.action_home -> { startActivity(Intent(this, StartActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP }); true }
             R.id.action_backup_create -> { lifecycleScope.launch { val file = withContext(Dispatchers.IO) { BackupManager.createBackup(this@MainActivity) }; Toast.makeText(this@MainActivity, "Backup erstellt: ${file.name}", Toast.LENGTH_LONG).show() }; true }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showCategoryFilterDialog() {
+        Log.d("MainActivity", "showCategoryFilterDialog called, categories size: ${categories.size}")
+        if (categories.isEmpty()) {
+            Toast.makeText(this, "Kategorien werden geladen...", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                try {
+                    val result = wordPressApi.loadCategories()
+                    Log.d("MainActivity", "Categories loaded: ${result.size}")
+                    if (result.isNotEmpty()) {
+                        categories = result
+                        showCategoryFilterDialog()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Keine Kategorien gefunden.", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error loading categories", e)
+                    Toast.makeText(this@MainActivity, "Fehler beim Laden der Kategorien.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            return
+        }
+
+        val categoryNames = categories.map { "${it.name} (${it.count})" }.toTypedArray()
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        try {
+            AlertDialog.Builder(this)
+                .setTitle("📁 Kategorie wählen")
+                .setItems(categoryNames) { _, which ->
+                    val selected = categories[which]
+                    selectedCategoryId = selected.id
+                    binding.btnFilterCategories.text = "📂 ${selected.name}"
+                    loadContentFromNetwork(silent = false)
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+                .apply {
+                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
+                }
+            Log.d("MainActivity", "AlertDialog shown")
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Error showing AlertDialog", e)
         }
     }
 
