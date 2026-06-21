@@ -39,6 +39,9 @@ class MainActivity : BaseBottomNavActivity() {
     private lateinit var contentCache: ContentCache
 
     private var allBlogPosts = listOf<ContentItem>()
+    private var currentBlogPage = 1
+    private var canLoadMoreFromNetwork = true
+    private var isLoadingMore = false
 
     private var currentView = VIEW_BLOG
 
@@ -124,9 +127,13 @@ class MainActivity : BaseBottomNavActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (currentView != VIEW_BLOG) { binding.btnLoadMore.visibility = View.GONE; return }
-                if (blogAdapter.itemCount >= allBlogPosts.size) { binding.btnLoadMore.visibility = View.GONE; return }
+                if (blogAdapter.itemCount >= allBlogPosts.size && !canLoadMoreFromNetwork) { binding.btnLoadMore.visibility = View.GONE; return }
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                if (layoutManager.findLastVisibleItemPosition() >= layoutManager.itemCount - 5) binding.btnLoadMore.visibility = View.VISIBLE
+                if (layoutManager.findLastVisibleItemPosition() >= layoutManager.itemCount - 5) {
+                    if (currentView == VIEW_BLOG && (blogAdapter.itemCount < allBlogPosts.size || canLoadMoreFromNetwork)) {
+                        binding.btnLoadMore.visibility = View.VISIBLE
+                    }
+                }
             }
         })
     }
@@ -136,14 +143,53 @@ class MainActivity : BaseBottomNavActivity() {
         binding.blogRecyclerView.visibility = View.VISIBLE
         findViewById<View>(R.id.pagesMenu).visibility = View.GONE
         findViewById<View>(R.id.coursesMenu).visibility = View.GONE
-        binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size) View.VISIBLE else View.GONE
+        binding.btnLoadMore.visibility = if (blogAdapter.itemCount < allBlogPosts.size || canLoadMoreFromNetwork) View.VISIBLE else View.GONE
     }
 
     private fun loadMoreBlogPosts() {
+        if (isLoadingMore) return
         val currentSize = blogAdapter.itemCount
-        val newList = allBlogPosts.take(currentSize + 20)
-        blogAdapter.submitList(newList)
-        if (newList.size >= allBlogPosts.size) binding.btnLoadMore.visibility = View.GONE
+
+        if (currentSize < allBlogPosts.size) {
+            val nextSize = (currentSize + 20).coerceAtMost(allBlogPosts.size)
+            val newList = allBlogPosts.take(nextSize)
+            blogAdapter.submitList(newList)
+            if (nextSize >= allBlogPosts.size && !canLoadMoreFromNetwork) binding.btnLoadMore.visibility = View.GONE
+        } else if (canLoadMoreFromNetwork) {
+            loadNextPageFromNetwork()
+        }
+    }
+
+    private fun loadNextPageFromNetwork() {
+        if (isLoadingMore || !canLoadMoreFromNetwork) return
+        isLoadingMore = true
+        binding.btnLoadMore.text = "Lade weitere Beiträge..."
+
+        lifecycleScope.launch {
+            try {
+                val nextPage = (allBlogPosts.size / 100) + 1
+                val result = withContext(Dispatchers.IO) {
+                    wordPressApi.loadBlogPosts(page = nextPage, perPage = 100)
+                }
+
+                if (result.isEmpty()) {
+                    canLoadMoreFromNetwork = false
+                } else {
+                    currentBlogPage = nextPage
+                    allBlogPosts = allBlogPosts + result
+                    val newList = allBlogPosts.take(blogAdapter.itemCount + 20)
+                    blogAdapter.submitList(newList)
+                }
+            } catch (e: Exception) {
+                canLoadMoreFromNetwork = false
+            } finally {
+                isLoadingMore = false
+                binding.btnLoadMore.text = "Weitere Blogbeiträge laden"
+                if (!canLoadMoreFromNetwork && blogAdapter.itemCount >= allBlogPosts.size) {
+                    binding.btnLoadMore.visibility = View.GONE
+                }
+            }
+        }
     }
 
     private fun showPagesView() {
@@ -235,6 +281,7 @@ class MainActivity : BaseBottomNavActivity() {
         val cachedPosts = contentCache.getBlogPosts()
         if (cachedPosts != null) {
             allBlogPosts = cachedPosts
+            canLoadMoreFromNetwork = cachedPosts.size >= 100
             blogAdapter.submitList(cachedPosts.take(20))
             binding.progressBar.visibility = View.GONE; binding.errorText.visibility = View.GONE
             when (currentView) { VIEW_BLOG -> showBlogView(); VIEW_PAGES -> showPagesView(); VIEW_COURSES -> showCoursesView() }
@@ -247,13 +294,16 @@ class MainActivity : BaseBottomNavActivity() {
     }
 
     private fun loadContentFromNetwork(silent: Boolean) {
+        currentBlogPage = 1
+        canLoadMoreFromNetwork = true
         lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    val posts = try { wordPressApi.loadBlogPosts(perPage = 100) } catch (e: Exception) { emptyList() }
+                    val posts = try { wordPressApi.loadBlogPosts(page = 1, perPage = 100) } catch (e: Exception) { emptyList() }
                     posts
                 }
                 allBlogPosts = result
+                canLoadMoreFromNetwork = result.size >= 100
                 contentCache.saveBlogPosts(result)
                 blogAdapter.submitList(result.take(20))
                 
