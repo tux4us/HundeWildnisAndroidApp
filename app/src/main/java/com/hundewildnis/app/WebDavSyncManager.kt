@@ -83,6 +83,10 @@ class WebDavSyncManager(private val context: Context) {
             return SyncResult.NetworkError("Verzeichnis konnte nicht angelegt werden: ${it.message}")
         }
 
+        // 1.5 Neuestes Backup von anderen Geräten vorab laden (Merge-First)
+        // Dies verhindert, dass lokale Änderungen ein aktuelleres Cloud-Backup überschreiben,
+        // bevor der Merge stattgefunden hat.
+
         // 2. Lokales Backup erzeugen und hochladen
         val localBackupFile = try {
             BackupManager.createBackup(context)

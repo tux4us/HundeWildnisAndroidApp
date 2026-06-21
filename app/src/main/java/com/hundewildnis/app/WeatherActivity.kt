@@ -28,9 +28,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import org.json.JSONArray
 import java.net.URL
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.UUID
 import kotlin.math.pow
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -44,7 +47,11 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private lateinit var binding: ActivityWeatherBinding
     private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
+    private var currentCityName: String? = null
     private var isRequestingUpdates = false
+
+    private var currentLat: Double = 0.0
+    private var currentLon: Double = 0.0
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1003
@@ -66,9 +73,31 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         checkLocationPermission()
     }
 
-    override fun onPause() {
-        super.onPause()
-        stopLocationUpdates()
+    override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_weather, menu)
+        updateFavoriteIcon(menu)
+        return true
+    }
+
+    private fun updateFavoriteIcon(menu: android.view.Menu? = null) {
+        val targetMenu = menu ?: binding.toolbar.menu
+        val favItem = targetMenu.findItem(R.id.action_favorite_toggle)
+        if (WeatherFavoritesManager.isFavorite(this, currentLat, currentLon)) {
+            favItem?.setIcon(R.drawable.ic_star_filled)
+        } else {
+            favItem?.setIcon(R.drawable.ic_star_outline)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> { finish(); true }
+            R.id.action_search -> { showSearchDialog(); true }
+            R.id.action_favorite_toggle -> { toggleFavorite(); true }
+            R.id.action_favorites -> { showFavoritesDialog(); true }
+            R.id.action_current_location -> { getLocation(); true }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun checkLocationPermission() {
@@ -135,7 +164,9 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             bestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         }
         if (bestLocation != null && isLocationRecent(bestLocation)) {
-            loadWeather(bestLocation)
+            currentLat = bestLocation.latitude
+            currentLon = bestLocation.longitude
+            loadWeather(bestLocation.latitude, bestLocation.longitude)
         } else {
             requestLocationUpdates()
         }
@@ -165,7 +196,10 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        loadWeather(location)
+        currentLat = location.latitude
+        currentLon = location.longitude
+        currentCityName = null
+        loadWeather(location.latitude, location.longitude)
         stopLocationUpdates()
     }
 
@@ -175,17 +209,55 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     @Deprecated("Deprecated in Java")
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
-    private fun loadWeather(location: Location) {
-        currentLocation = location
-        binding.locationText.text = String.format(Locale.GERMAN, "📍 %.4f°, %.4f°", location.latitude, location.longitude)
+    private fun showSearchDialog() {
+        val input = android.widget.EditText(this).apply {
+            hint = "Stadt oder Ort eingeben..."
+            setSingleLine()
+            setPadding(48, 32, 48, 32)
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle("🌍 Ort suchen")
+            .setView(input)
+            .setPositiveButton("Suchen") { _, _ ->
+                val query = input.text.toString()
+                if (query.isNotEmpty()) {
+                    performSearch(query)
+                }
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private fun loadWeather(latitude: Double, longitude: Double, cityName: String? = null) {
+        currentLat = latitude
+        currentLon = longitude
+        currentCityName = cityName
+        
+        binding.progressBar.visibility = View.VISIBLE
+        updateFavoriteIcon()
+        
+        val displayLoc = cityName ?: String.format(Locale.GERMAN, "%.4f°, %.4f°", latitude, longitude)
+        binding.locationText.text = "📍 $displayLoc"
+        
         lifecycleScope.launch {
             try {
+                // Falls cityName null ist, versuchen wir ihn via Reverse-Geocoding zu finden
+                val nameToUse = cityName ?: withContext(Dispatchers.IO) {
+                    reverseGeocode(latitude, longitude)
+                }
+                
+                if (nameToUse != null) {
+                    currentCityName = nameToUse
+                    binding.locationText.text = "📍 $nameToUse"
+                }
+
                 // Beide API-Calls parallel starten
                 val weatherDeferred = async(Dispatchers.IO) {
-                    fetchWeatherData(location.latitude, location.longitude)
+                    fetchWeatherData(latitude, longitude)
                 }
                 val airQualityDeferred = async(Dispatchers.IO) {
-                    try { fetchAirQualityData(location.latitude, location.longitude) }
+                    try { fetchAirQualityData(latitude, longitude) }
                     catch (e: Exception) {
                         android.util.Log.w("WeatherActivity", "Luftqualitätsdaten nicht verfügbar", e)
                         null
@@ -195,13 +267,124 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 val weatherData    = weatherDeferred.await()
                 val airQualityData = airQualityDeferred.await()
 
-                displayWeatherData(weatherData, airQualityData)
+                displayWeatherData(weatherData, airQualityData, latitude, longitude)
                 binding.progressBar.visibility = View.GONE
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
                 binding.descriptionText.text = "Fehler beim Laden der Wetterdaten"
                 Toast.makeText(this@WeatherActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun performSearch(query: String) {
+        binding.progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+                val results = withContext(Dispatchers.IO) {
+                    val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
+                    val url = "https://nominatim.openstreetmap.org/search?q=$encodedQuery&format=json&limit=5&accept-language=de"
+                    val connection = URL(url).openConnection() as java.net.HttpURLConnection
+                    connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
+                    val response = connection.inputStream.bufferedReader().use { it.readText() }
+                    val jsonArray = org.json.JSONArray(response)
+                    val list = mutableListOf<WeatherFavorite>()
+                    for (i in 0 until jsonArray.length()) {
+                        val obj = jsonArray.getJSONObject(i)
+                        list.add(WeatherFavorite(
+                            name = obj.optString("display_name").split(",").first(),
+                            lat = obj.optString("lat").toDouble(),
+                            lon = obj.optString("lon").toDouble()
+                        ))
+                    }
+                    list
+                }
+
+                binding.progressBar.visibility = View.GONE
+                if (results.isEmpty()) {
+                    Toast.makeText(this@WeatherActivity, "Keine Ergebnisse gefunden", Toast.LENGTH_SHORT).show()
+                } else {
+                    showSearchResultsDialog(results)
+                }
+            } catch (e: Exception) {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@WeatherActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showSearchResultsDialog(results: List<WeatherFavorite>) {
+        val names = results.map { it.name }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("Ergebnisse")
+            .setItems(names) { _, which ->
+                val selected = results[which]
+                loadWeather(selected.lat, selected.lon, selected.name)
+            }
+            .show()
+    }
+
+    private fun toggleFavorite() {
+        if (WeatherFavoritesManager.isFavorite(this, currentLat, currentLon)) {
+            WeatherFavoritesManager.remove(this, currentLat, currentLon)
+            Toast.makeText(this, "Aus Favoriten entfernt", Toast.LENGTH_SHORT).show()
+        } else {
+            val name = currentCityName ?: String.format(Locale.GERMAN, "%.2f, %.2f", currentLat, currentLon)
+            WeatherFavoritesManager.add(this, WeatherFavorite(name = name, lat = currentLat, lon = currentLon))
+            Toast.makeText(this, "Zu Favoriten hinzugefügt", Toast.LENGTH_SHORT).show()
+        }
+        updateFavoriteIcon()
+    }
+
+    private fun showFavoritesDialog() {
+        val favorites = WeatherFavoritesManager.getAll(this)
+        if (favorites.isEmpty()) {
+            Toast.makeText(this, "Noch keine Favoriten gespeichert", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val names = favorites.map { it.name }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("⭐ Wetter Favoriten")
+            .setItems(names) { _, which ->
+                val selected = favorites[which]
+                loadWeather(selected.lat, selected.lon, selected.name)
+            }
+            .setNeutralButton("Verwalten") { _, _ -> manageFavorites() }
+            .setPositiveButton("Schließen", null)
+            .show()
+    }
+
+    private fun manageFavorites() {
+        val favorites = WeatherFavoritesManager.getAll(this)
+        val names = favorites.map { it.name }.toTypedArray()
+        val checked = BooleanArray(favorites.size) { false }
+
+        AlertDialog.Builder(this)
+            .setTitle("Favoriten löschen")
+            .setMultiChoiceItems(names, checked) { _, which, isChecked ->
+                checked[which] = isChecked
+            }
+            .setPositiveButton("Ausgewählte löschen") { _, _ ->
+                val newList = favorites.filterIndexed { index, _ -> !checked[index] }
+                WeatherFavoritesManager.saveAll(this, newList)
+                updateFavoriteIcon()
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private suspend fun reverseGeocode(lat: Double, lon: Double): String? {
+        return try {
+            val url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json&accept-language=de"
+            val connection = URL(url).openConnection() as java.net.HttpURLConnection
+            connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
+            val response = connection.inputStream.bufferedReader().use { it.readText() }
+            val json = JSONObject(response)
+            val address = json.optJSONObject("address")
+            address?.optString("city") ?: address?.optString("town") ?: address?.optString("village")
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -240,7 +423,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     // displayWeatherData – Haupteinstieg nach API-Antwort
     // ════════════════════════════════════════════════════════════════
 
-    private fun displayWeatherData(data: JSONObject, airQualityData: JSONObject?) {
+    private fun displayWeatherData(data: JSONObject, airQualityData: JSONObject?, latitude: Double, longitude: Double) {
         val current = data.getJSONObject("current")
         val temperature  = current.getDouble("temperature_2m")
         val feelsLike    = current.getDouble("apparent_temperature")
@@ -278,12 +461,12 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         displayDailyOverview(data)
         display7DayForecast(data)           // NEU: 7-Tage-Card
         displayWindForecast(data)           // NEU: Wind-stündlich-Card
-        displaySunCard(data)                // NEU: Sonne-Card
+        displaySunCard(data, latitude, longitude)                // NEU: Sonne-Card
         if (airQualityData != null) {
             displayAirQualityCard(airQualityData)   // NEU: Luftqualität-Card
             displayPollenCard(airQualityData)       // NEU: Pollen-Card
         }
-        setupRainRadar()
+        setupRainRadar(latitude, longitude)
         displayPawWeather(data, windSpeed, windGusts)
         displayTemperatureChart(data)
         displayPrecipitationChart(data)
@@ -710,11 +893,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     // REGENRADAR
     // ════════════════════════════════════════════════════════════════
 
-    private fun setupRainRadar() {
-        currentLocation?.let { location ->
-            val lat = location.latitude
-            val lon = location.longitude
-            binding.radarWebView.settings.apply {
+    private fun setupRainRadar(lat: Double, lon: Double) {
+        binding.radarWebView.settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
                 databaseEnabled = true
@@ -759,7 +939,6 @@ function stopAnimation(){ pauseAnimation(); if(radarLayers.length>0){ radarLayer
 function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(timestamps[currentFrame].time*1000); document.getElementById('timestamp').textContent='📡 Radar: '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr'; } }
 </script></body></html>"""
             binding.radarWebView.loadDataWithBaseURL("https://hundewildnis.com", html, "text/html", "UTF-8", null)
-        }
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -1358,11 +1537,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         }
     }
 
-    private fun displaySunCard(data: JSONObject) {
+    private fun displaySunCard(data: JSONObject, lat: Double, lon: Double) {
         try {
-            val lat = currentLocation?.latitude  ?: return
-            val lon = currentLocation?.longitude ?: return
-
             val daily      = data.getJSONObject("daily")
             val times      = daily.getJSONArray("time")
             val sunriseArr = daily.getJSONArray("sunrise")
@@ -1448,7 +1624,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
             // Bearbeiten-Button für Höhenwerte
             binding.shadowEditButton.setOnClickListener {
-                showShadowHeightDialog(prefs) { displaySunCard(data) }
+                showShadowHeightDialog(prefs) { displaySunCard(data, lat, lon) }
             }
 
             // ── Sonnenscheindauer heute ────────────────────────────────────────

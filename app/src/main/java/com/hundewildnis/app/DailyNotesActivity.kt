@@ -485,7 +485,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         if (json != null) {
             val type = object : TypeToken<List<NoteSession>>() {}.type
             val loaded: List<NoteSession> = Gson().fromJson(json, type)
-            historyList.clear(); historyList.addAll(loaded)
+            historyList.clear()
+            historyList.addAll(loaded.sortedByDescending { it.date })
             historyAdapter.notifyDataSetChanged()
         }
     }
@@ -537,9 +538,12 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val title = binding.etTitle.text.toString()
         val notes = binding.etNotes.text.toString()
         if (title.isEmpty() && notes.isEmpty() && photos.isEmpty()) return
+
+        // Datum beibehalten bei Updates, sonst neu
+        val existingDate = historyList.find { it.id == currentSessionId }?.date
         val session = NoteSession(
             id = currentSessionId ?: UUID.randomUUID().toString(),
-            date = System.currentTimeMillis(),
+            date = existingDate ?: System.currentTimeMillis(),
             title = title,
             notes = notes,
             photoUris = photos.map { it.toString() },
@@ -549,6 +553,10 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         )
         val index = historyList.indexOfFirst { it.id == session.id }
         if (index != -1) historyList[index] = session else historyList.add(0, session)
+        
+        // Immer chronologisch sortieren (neueste oben)
+        historyList.sortByDescending { it.date }
+
         saveHistoryToPrefs()
         historyAdapter.notifyDataSetChanged()
         if (isManualNew) {

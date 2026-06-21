@@ -65,6 +65,9 @@ object BackupManager {
             // ✅ NEU: Nasenarbeit laden
             val (nasenarbeitSessions, nasenarbeitFortschritt) = NasenarbeitManager.exportForBackup(context)
 
+            // ✅ NEU: Wetter-Favoriten
+            val weatherFavorites = WeatherFavoritesManager.getAll(context)
+
             // Hunde-Fotos kopieren
             dogs.forEachIndexed { index, dog ->
                 if (dog.photoUri.isNotEmpty()) {
@@ -113,7 +116,7 @@ object BackupManager {
             // Backup-Daten erstellen
             val backupData = BackupData(
                 version = getAppVersion(context),
-                backupVersion = 7,
+                backupVersion = 8, // Erhöht auf 8 wegen Note-Fix und HeatCycle
                 timestamp = timestamp,
                 dogs = dogs,
                 settings = settings,
@@ -129,13 +132,15 @@ object BackupManager {
                 favorites = favorites,
                 // ✅ NEU: Nasenarbeit
                 nasenarbeitSessions = nasenarbeitSessions,
-                nasenarbeitFortschritt = nasenarbeitFortschritt
+                nasenarbeitFortschritt = nasenarbeitFortschritt,
+                // ✅ NEU: Wetter-Favoriten
+                weatherFavorites = weatherFavorites
             )
 
             // Metadaten erstellen
             val metadata = BackupMetadata(
                 appVersion = getAppVersion(context),
-                backupVersion = 7,
+                backupVersion = 8,
                 timestamp = timestamp,
                 deviceName = Build.MODEL,
                 itemCount = BackupItemCount(
@@ -151,7 +156,9 @@ object BackupManager {
                     favorites = favorites.size,
                     // ✅ NEU: Nasenarbeit
                     nasenarbeitSessions = nasenarbeitSessions.size,
-                    nasenarbeitFortschritt = nasenarbeitFortschritt.size
+                    nasenarbeitFortschritt = nasenarbeitFortschritt.size,
+                    // ✅ NEU: Wetter-Favoriten
+                    weatherFavorites = weatherFavorites.size
                 )
             )
 
@@ -257,10 +264,11 @@ object BackupManager {
                     // ✅ Merge: nur neue Notizen hinzufügen (Deduplizierung per ID)
                     val existing = collectNotes(context) ?: emptyList()
                     val existingIds = existing.map { it.id }.toSet()
-                    val merged = existing + restoredNotes.filter { it.id !in existingIds }
+                    val merged = (existing + restoredNotes.filter { it.id !in existingIds })
+                        .sortedByDescending { it.date }
                     saveNotesHistory(context, merged)
                 } else {
-                    saveNotesHistory(context, restoredNotes)
+                    saveNotesHistory(context, restoredNotes.sortedByDescending { it.date })
                 }
             }
 
@@ -269,10 +277,11 @@ object BackupManager {
                 if (mergeMode) {
                     val existing = collectSpeedSessions(context) ?: emptyList()
                     val existingTimes = existing.map { it.startTime }.toSet()
-                    val merged = existing + sessions.filter { it.startTime !in existingTimes }
+                    val merged = (existing + sessions.filter { it.startTime !in existingTimes })
+                        .sortedByDescending { it.startTime }
                     saveSpeedHistory(context, merged)
                 } else {
-                    saveSpeedHistory(context, sessions)
+                    saveSpeedHistory(context, sessions.sortedByDescending { it.startTime })
                 }
             }
 
@@ -281,10 +290,11 @@ object BackupManager {
                 if (mergeMode) {
                     val existing = collectVoiceSessions(context) ?: emptyList()
                     val existingTimes = existing.map { it.startTime }.toSet()
-                    val merged = existing + sessions.filter { it.startTime !in existingTimes }
+                    val merged = (existing + sessions.filter { it.startTime !in existingTimes })
+                        .sortedByDescending { it.startTime }
                     saveVoiceHistory(context, merged)
                 } else {
-                    saveVoiceHistory(context, sessions)
+                    saveVoiceHistory(context, sessions.sortedByDescending { it.startTime })
                 }
             }
 
@@ -297,10 +307,11 @@ object BackupManager {
                 if (mergeMode) {
                     val existing = collectEmergencyReports(context) ?: emptyList()
                     val existingIds = existing.map { it.id }.toSet()
-                    val merged = existing + restoredReports.filter { it.id !in existingIds }
+                    val merged = (existing + restoredReports.filter { it.id !in existingIds })
+                        .sortedByDescending { it.timestamp }
                     saveEmergencyHistory(context, merged)
                 } else {
-                    saveEmergencyHistory(context, restoredReports)
+                    saveEmergencyHistory(context, restoredReports.sortedByDescending { it.timestamp })
                 }
             }
 
@@ -309,10 +320,11 @@ object BackupManager {
                 if (mergeMode) {
                     val existing = loadTrainingSessions(context)
                     val existingIds = existing.map { it.id }.toSet()
-                    val merged = existing + sessions.filter { it.id !in existingIds }
+                    val merged = (existing + sessions.filter { it.id !in existingIds })
+                        .sortedByDescending { it.date }
                     saveTrainingSessions(context, merged)
                 } else {
-                    saveTrainingSessions(context, sessions)
+                    saveTrainingSessions(context, sessions.sortedByDescending { it.date })
                 }
             }
             backupData.trainingProgress?.let { progressList ->
@@ -355,10 +367,11 @@ object BackupManager {
                 if (mergeMode) {
                     val existing = NasenarbeitManager.loadSessions(context)
                     val existingIds = existing.map { it.id }.toSet()
-                    val merged = existing + sessions.filter { it.id !in existingIds }
+                    val merged = (existing + sessions.filter { it.id !in existingIds })
+                        .sortedByDescending { it.datum }
                     NasenarbeitManager.saveSessions(context, merged.toMutableList())
                 } else {
-                    NasenarbeitManager.saveSessions(context, sessions.toMutableList())
+                    NasenarbeitManager.saveSessions(context, sessions.sortedByDescending { it.datum }.toMutableList())
                 }
             }
             backupData.nasenarbeitFortschritt?.let { fortschritt ->
@@ -369,6 +382,19 @@ object BackupManager {
                     NasenarbeitManager.importFromBackup(context, null, merged)
                 } else {
                     NasenarbeitManager.importFromBackup(context, null, fortschritt)
+                }
+            }
+
+            // 11. Wetter-Favoriten
+            backupData.weatherFavorites?.let { favs ->
+                if (mergeMode) {
+                    val existing = WeatherFavoritesManager.getAll(context)
+                    val existingKeys = existing.map { "${it.lat}_${it.lon}" }.toSet()
+                    favs.filter { "${it.lat}_${it.lon}" !in existingKeys }.forEach {
+                        WeatherFavoritesManager.add(context, it)
+                    }
+                } else {
+                    WeatherFavoritesManager.saveAll(context, favs)
                 }
             }
 
@@ -402,11 +428,28 @@ object BackupManager {
 
     private fun collectNotes(context: Context): List<NoteSession>? {
         val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
-        val json = prefs.getString("sessions", null) ?: return null
-        return try {
-            val type = object : TypeToken<List<NoteSession>>() {}.type
-            gson.fromJson(json, type)
-        } catch (e: Exception) { null }
+        
+        // Versuche zuerst die Liste "sessions" (einzelne Notizen)
+        val sessionsJson = prefs.getString("sessions", null)
+        val sessions: List<NoteSession>? = if (sessionsJson != null) {
+            try {
+                val type = object : TypeToken<List<NoteSession>>() {}.type
+                gson.fromJson(sessionsJson, type)
+            } catch (e: Exception) { null }
+        } else null
+
+        // Versuche zusätzlich die Liste "notes_history" (falls vorhanden, evtl. Alias oder älteres Format)
+        val historyJson = prefs.getString("notes_history", null)
+        val history: List<NoteSession>? = if (historyJson != null) {
+            try {
+                val type = object : TypeToken<List<NoteSession>>() {}.type
+                gson.fromJson(historyJson, type)
+            } catch (e: Exception) { null }
+        } else null
+
+        // Kombiniere beide Listen (Deduplizierung per ID)
+        val combined = (sessions ?: emptyList()) + (history ?: emptyList())
+        return combined.distinctBy { it.id }.ifEmpty { null }
     }
 
     private fun loadTrainingSessions(context: Context): List<TrainingSession> {
@@ -450,7 +493,11 @@ object BackupManager {
 
     private fun saveNotesHistory(context: Context, notes: List<NoteSession>) {
         val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
-        prefs.edit().putString("sessions", gson.toJson(notes)).apply()
+        val json = gson.toJson(notes)
+        prefs.edit()
+            .putString("sessions", json)
+            .putString("notes_history", json) // Als Fallback/Alias mitspeichern
+            .apply()
     }
 
     private fun collectSpeedSessions(context: Context): List<SpeedSession>? {
@@ -624,6 +671,10 @@ object BackupManager {
                 data["settings"] = collectSettings(context)
             }
 
+            if (BackupDataType.WEATHER_FAVORITES in selectedTypes) {
+                data["weatherFavorites"] = WeatherFavoritesManager.getAll(context)
+            }
+
             // Container erstellen
             val backupContainer = SelectiveBackupContainer(
                 version = getAppVersion(context),
@@ -760,6 +811,10 @@ object BackupManager {
                     @Suppress("UNCHECKED_CAST")
                     restoreSettings(context, settingsData as Map<String, String>)
                 }
+            }
+
+            if (BackupDataType.WEATHER_FAVORITES in selectedTypes && backup.data.containsKey("weatherFavorites")) {
+                restoreWeatherFavoritesSelective(context, backup.data["weatherFavorites"], mergeMode)
             }
 
             Log.d(TAG, "Selective backup restored successfully")
@@ -1240,6 +1295,36 @@ object BackupManager {
     // MERGE HELPERS
     // ════════════════════════════════════════════════════════════════
 
+    private fun restoreWeatherFavoritesSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {
+        val type = object : TypeToken<List<WeatherFavorite>>() {}.type
+        val favorites: List<WeatherFavorite> = gson.fromJson(gson.toJson(data), type)
+
+        when (mode) {
+            MergeMode.ADD_NEW -> {
+                val existing = WeatherFavoritesManager.getAll(context)
+                val existingKeys = existing.map { "${it.lat}_${it.lon}" }.toSet()
+                favorites.filter { "${it.lat}_${it.lon}" !in existingKeys }.forEach {
+                    WeatherFavoritesManager.add(context, it)
+                }
+            }
+            MergeMode.REPLACE_ALL -> {
+                WeatherFavoritesManager.saveAll(context, favorites)
+            }
+            MergeMode.MERGE_BY_TIMESTAMP -> {
+                // Wetter-Favoriten haben keinen Timestamp, daher ADD_NEW als Fallback
+                val existing = WeatherFavoritesManager.getAll(context)
+                val existingKeys = existing.map { "${it.lat}_${it.lon}" }.toSet()
+                favorites.filter { "${it.lat}_${it.lon}" !in existingKeys }.forEach {
+                    WeatherFavoritesManager.add(context, it)
+                }
+            }
+        }
+    }
+
     private fun mergeSessionsByTimestamp(
         existing: List<TrainingSession>,
         backup: List<TrainingSession>
@@ -1256,7 +1341,7 @@ object BackupManager {
                 backupSession.date > existingSession.date -> backupSession
                 else -> existingSession
             }
-        }
+        }.sortedByDescending { it.date }
     }
 
     private fun mergeProgressByTimestamp(
@@ -1276,7 +1361,7 @@ object BackupManager {
                 backupProgress.lastTrainingDate > existingProgress.lastTrainingDate -> backupProgress
                 else -> existingProgress
             }
-        }
+        }.sortedByDescending { it.lastTrainingDate }
     }
 
     private fun mergeMilestonesByTimestamp(
@@ -1295,7 +1380,7 @@ object BackupManager {
                 backupMilestone.achievedDate > existingMilestone.achievedDate -> backupMilestone
                 else -> existingMilestone
             }
-        }
+        }.sortedByDescending { it.achievedDate }
     }
 
     private fun mergeSpeedSessionsByTimestamp(
@@ -1314,7 +1399,7 @@ object BackupManager {
                 backupSession.startTime > existingSession.startTime -> backupSession
                 else -> existingSession
             }
-        }
+        }.sortedByDescending { it.startTime }
     }
 
     private fun mergeNotesByTimestamp(
@@ -1333,7 +1418,7 @@ object BackupManager {
                 backupNote.date > existingNote.date -> backupNote
                 else -> existingNote
             }
-        }
+        }.sortedByDescending { it.date }
     }
 
     private fun mergeVoiceSessionsByTimestamp(
@@ -1352,7 +1437,7 @@ object BackupManager {
                 backupSession.startTime > existingSession.startTime -> backupSession
                 else -> existingSession
             }
-        }
+        }.sortedByDescending { it.startTime }
     }
 
     private fun mergeEmergencyReportsByTimestamp(
@@ -1371,7 +1456,7 @@ object BackupManager {
                 backupReport.timestamp > existingReport.timestamp -> backupReport
                 else -> existingReport
             }
-        }
+        }.sortedByDescending { it.timestamp }
     }
 
     private fun mergeProfiles(
