@@ -4,6 +4,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 
 class WordPressApiParser {
     companion object {
@@ -11,9 +13,12 @@ class WordPressApiParser {
         private const val TIMEOUT = 60000
     }
 
-    suspend fun loadBlogPosts(page: Int = 1, perPage: Int = 20): List<ContentItem> {
-        return try {
-            val url = "$BASE_URL/posts?page=$page&per_page=$perPage&_embed"
+    suspend fun loadBlogPosts(page: Int = 1, perPage: Int = 20, categoryId: Int? = null): List<ContentItem> = withContext(Dispatchers.IO) {
+        try {
+            var url = "$BASE_URL/posts?page=$page&per_page=$perPage&_embed"
+            if (categoryId != null && categoryId != 0) {
+                url += "&categories=$categoryId"
+            }
             android.util.Log.d("WordPressAPI", "Lade Blog-Posts von: $url")
             val json = fetchJson(url)
             android.util.Log.d("WordPressAPI", "Blog-Posts geladen: ${json.length()}")
@@ -25,8 +30,8 @@ class WordPressApiParser {
     }
 
     // ⚡ VERBESSERT: Hierarchische Sortierung für Seiten
-    suspend fun loadPages(): List<ContentItem> {
-        return try {
+    suspend fun loadPages(): List<ContentItem> = withContext(Dispatchers.IO) {
+        try {
             val url = "$BASE_URL/pages?per_page=100&_embed&orderby=menu_order&order=asc"
             android.util.Log.d("WordPressAPI", "Lade Seiten von: $url")
             val json = fetchJson(url)
@@ -50,8 +55,8 @@ class WordPressApiParser {
     }
 
     // ⚡ VERBESSERT: Hierarchische Sortierung für Kurse
-    suspend fun loadCourses(): List<ContentItem> {
-        return try {
+    suspend fun loadCourses(): List<ContentItem> = withContext(Dispatchers.IO) {
+        try {
             val url = "$BASE_URL/pages?per_page=100&_embed"
             android.util.Log.d("WordPressAPI", "Lade Kurse via API...")
 
@@ -162,8 +167,8 @@ class WordPressApiParser {
         }
     }
 
-    suspend fun searchContent(query: String): List<ContentItem> {
-        return try {
+    suspend fun searchContent(query: String): List<ContentItem> = withContext(Dispatchers.IO) {
+        try {
             val encodedQuery = URLEncoder.encode(query, "UTF-8")
             val url = "$BASE_URL/search?search=$encodedQuery&per_page=50&_embed"
             android.util.Log.d("WordPressAPI", "Suche nach: $query")
@@ -175,6 +180,27 @@ class WordPressApiParser {
         }
     }
 
+    suspend fun loadCategories(): List<BlogCategory> = withContext(Dispatchers.IO) {
+        try {
+            val url = "$BASE_URL/categories?per_page=100&hide_empty=true"
+            android.util.Log.d("WordPressAPI", "Lade Kategorien von: $url")
+            val json = fetchJson(url)
+            val categories = mutableListOf<BlogCategory>()
+            for (i in 0 until json.length()) {
+                val obj = json.getJSONObject(i)
+                categories.add(BlogCategory(
+                    id = obj.getInt("id"),
+                    name = cleanHtml(obj.getString("name")),
+                    count = obj.getInt("count")
+                ))
+            }
+            categories.sortedBy { it.name }
+        } catch (e: Exception) {
+            android.util.Log.e("WordPressAPI", "Error loading categories", e)
+            emptyList()
+        }
+    }
+
     private fun fetchJson(urlString: String): JSONArray {
         val connection = URL(urlString).openConnection()
         connection.connectTimeout = TIMEOUT
@@ -182,6 +208,7 @@ class WordPressApiParser {
         connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
 
         val response = connection.getInputStream().bufferedReader().use { it.readText() }
+        android.util.Log.d("WordPressAPI", "Response from $urlString: ${response.take(100)}...")
         return JSONArray(response)
     }
 

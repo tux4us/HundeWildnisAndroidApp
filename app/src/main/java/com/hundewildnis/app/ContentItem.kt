@@ -12,3 +12,9 @@ data class ContentItem(
     val parentId: Int = 0,  // NEU
     val menuOrder: Int = 0  // NEU: Für WordPress Menu-Reihenfolge
 )
+
+data class BlogCategory(
+    val id: Int,
+    val name: String,
+    val count: Int
+)
