@@ -52,6 +52,11 @@ enum class BackupDataType(
     APP_SETTINGS(
         "App-Einstellungen",
         "Theme, Benachrichtigungen, etc."
+    ),
+
+    WEATHER_FAVORITES(
+        "Wetter-Favoriten",
+        "Gespeicherte Orte für die Wettervorhersage"
     )
 }
 

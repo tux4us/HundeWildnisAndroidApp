@@ -9,6 +9,7 @@ object UpdateHelper {
 
     fun scheduleContentUpdates(context: Context) {
         val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val webDavPrefs = WebDavPreferences(context)
         
         // Falls deaktiviert -> Alle Jobs abbrechen
         if (!prefs.getBoolean("background_updates_enabled", true)) {
@@ -26,8 +27,7 @@ object UpdateHelper {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        // Periodisches Update (alle 12 Stunden)
-        // Wir setzen das erste Update auf 8:00 Uhr morgens
+        // 1. Periodisches Inhalts-Update (Blog) alle 12 Stunden
         val morningRequest = PeriodicWorkRequestBuilder<ContentUpdateWorker>(12, TimeUnit.HOURS, 1, TimeUnit.HOURS)
             .setConstraints(constraints)
             .setInitialDelay(calculateDelayUntil(8), TimeUnit.MILLISECONDS)
@@ -35,9 +35,16 @@ object UpdateHelper {
 
         WorkManager.getInstance(context.applicationContext).enqueueUniquePeriodicWork(
             "content_updates_morning",
-            ExistingPeriodicWorkPolicy.KEEP, // Behalte bestehenden Job, falls vorhanden
+            ExistingPeriodicWorkPolicy.KEEP,
             morningRequest
         )
+
+        // 2. WebDAV Synchronisation (falls aktiviert)
+        if (webDavPrefs.syncEnabled && webDavPrefs.autoSyncEnabled && webDavPrefs.hasCredentials()) {
+            WebDavSyncWorker.schedulePeriodicSync(context, webDavPrefs.syncIntervalHours)
+        } else {
+            WebDavSyncWorker.cancelPeriodicSync(context)
+        }
     }
 
     /**
