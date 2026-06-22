@@ -23,6 +23,7 @@ class WebDavPreferences(private val context: Context) {
         private const val KEY_SYNC_INTERVAL_HOURS = "webdav_sync_interval_hours"
         private const val KEY_LAST_SYNC_TIMESTAMP = "webdav_last_sync_timestamp"
         private const val KEY_LAST_SYNC_RESULT = "webdav_last_sync_result"
+        private const val KEY_LOCATION_SHARE_ENABLED = "location_share_enabled"
 
         const val DEFAULT_INTERVAL_HOURS = 6
     }
@@ -97,4 +98,8 @@ class WebDavPreferences(private val context: Context) {
     var lastSyncResult: String
         get() = settings().getString(KEY_LAST_SYNC_RESULT, "") ?: ""
         set(value) = settings().edit().putString(KEY_LAST_SYNC_RESULT, value).apply()
+
+    var locationShareEnabled: Boolean
+        get() = settings().getBoolean(KEY_LOCATION_SHARE_ENABLED, false)
+        set(value) = settings().edit().putBoolean(KEY_LOCATION_SHARE_ENABLED, value).apply()
 }

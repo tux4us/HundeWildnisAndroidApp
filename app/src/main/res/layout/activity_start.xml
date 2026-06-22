@@ -409,7 +409,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Hund und Notfall"
+                            android:text="Hund, Sicherheit und Notfall"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:textColor="?android:attr/textColorSecondary"
@@ -428,6 +428,20 @@
                             app:backgroundTint="#01579B"
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLocationShare"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="📍 Standortfreigabe"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"
+                            app:backgroundTint="#390027"
+                            app:cornerRadius="12dp"
+                            android:layout_marginBottom="8dp" />
+
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnEmergency"
