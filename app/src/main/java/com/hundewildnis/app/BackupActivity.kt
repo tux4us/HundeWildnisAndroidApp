@@ -70,6 +70,10 @@ class BackupActivity : SecureBaseActivity() {
         binding.btnWebdavSync.setOnClickListener {
             startActivity(Intent(this, WebDavSyncActivity::class.java))
         }
+
+        binding.btnLocationShare.setOnClickListener {
+            startActivity(Intent(this, LocationShareActivity::class.java))
+        }
     }
 
     private fun createBackup() {
