@@ -385,7 +385,7 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
     // ── Backend (ORS) ──────────────────────────────────────────────────────
 
     private fun fetchORS(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): RouteData {
-        val apiKey = "***REMOVED***"
+        val apiKey = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjBkODg2NmJmMGM4NTRlNDlhZWI2MjliMWM5YTJmYzM1IiwiaCI6Im11cm11cjY0In0="
         val url = "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
         
         val body = JSONObject().apply {
@@ -666,10 +666,17 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
         }
 
         private fun shareDeviceLocation(payload: LocationPayload) {
-            val text = "Standort von ${payload.label}:\nhttps://www.google.com/maps/search/?api=1&query=${payload.lat},${payload.lon}\n\n(Lat: ${payload.lat}, Lon: ${payload.lon})"
+            val osmPreview = "https://www.openstreetmap.org/?mlat=${payload.lat}&mlon=${payload.lon}#map=17/${payload.lat}/${payload.lon}"
+            val geoUri = "geo:${payload.lat},${payload.lon}?q=${payload.lat},${payload.lon}(${payload.label})"
+            
+            val text = "📍 Standort von ${payload.label}:\n\n" +
+                    "Karte (OSM): $osmPreview\n\n" +
+                    "Direkt-Link für Navigations-Apps:\n$geoUri\n\n" +
+                    "Koordinaten:\nLat: ${payload.lat}\nLon: ${payload.lon}"
+
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, "Standort teilen")
+                putExtra(Intent.EXTRA_SUBJECT, "HundeWildnis Standort")
                 putExtra(Intent.EXTRA_TEXT, text)
             }
             startActivity(Intent.createChooser(intent, "Standort teilen via"))
