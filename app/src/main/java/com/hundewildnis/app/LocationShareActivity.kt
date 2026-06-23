@@ -385,7 +385,7 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
     // ── Backend (ORS) ──────────────────────────────────────────────────────
 
     private fun fetchORS(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double): RouteData {
-        val apiKey = BuildConfig.ORS_API_KEY
+        val apiKey = AppSettings(this).getOrsApiKey()
         val url = "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
         
         val body = JSONObject().apply {

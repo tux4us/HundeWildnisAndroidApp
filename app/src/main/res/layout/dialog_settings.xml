@@ -51,4 +51,41 @@
         android:layout_marginTop="16dp"
         android:textColor="?android:attr/textColorSecondary" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OpenRouteService (Navigation)"
+        android:textSize="@dimen/text_body_medium"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Für die Routenberechnung wird ein API-Key benötigt. Diesen erhältst du kostenlos auf openrouteservice.org."
+        android:textSize="@dimen/text_body_medium"
+        android:paddingBottom="12dp"
+        android:textColor="?android:attr/textColorSecondary" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ORS API Key"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editOrsApiKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 </LinearLayout>

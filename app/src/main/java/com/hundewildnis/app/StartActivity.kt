@@ -227,6 +227,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun showSettingsDialog() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val appSettings = AppSettings(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_settings, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
@@ -235,6 +236,7 @@ class StartActivity : BaseBottomNavActivity() {
         val s1 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
         val s2 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
         val s3 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
+        val orsEdit = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOrsApiKey)
 
         listOf(s1, s2, s3).forEach {
             it.thumbTintList = colorStateList
@@ -244,6 +246,10 @@ class StartActivity : BaseBottomNavActivity() {
         s1.isChecked = prefs.getBoolean("background_updates_enabled", true)
         s2.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
         s3.isChecked = prefs.getBoolean("notifications_enabled", true)
+        
+        if (appSettings.hasCustomOrsKey()) {
+            orsEdit.setText("********")
+        }
 
         s1.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("background_updates_enabled", isChecked).apply()
@@ -254,7 +260,16 @@ class StartActivity : BaseBottomNavActivity() {
 
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
 
-        val dialog = AlertDialog.Builder(this).setTitle("⚙️ Einstellungen").setView(dialogView).setPositiveButton("Fertig", null).create()
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("⚙️ Einstellungen")
+            .setView(dialogView)
+            .setPositiveButton("Fertig") { _, _ ->
+                val newKey = orsEdit.text?.toString() ?: ""
+                if (newKey.isNotBlank() && newKey != "********") {
+                    appSettings.saveOrsApiKey(newKey)
+                }
+            }
+            .create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
     }

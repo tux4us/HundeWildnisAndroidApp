@@ -88,7 +88,6 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         const val RESULT_WEIGHTS      = "result_weights"     // DoubleArray
         const val RC_MAP              = 4200
         private const val REQ_LOCATION = 4201
-        private val ORS_API_KEY = BuildConfig.ORS_API_KEY
     }
 
     // ════════════════════════════════════════════════════════════
@@ -323,7 +322,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         conn.requestMethod = "POST"
         conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
         conn.setRequestProperty("Accept",        "application/json, application/geo+json")
-        conn.setRequestProperty("Authorization", ORS_API_KEY)
+        conn.setRequestProperty("Authorization", AppSettings(this).getOrsApiKey())
         conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
         conn.connectTimeout = 15000
         conn.readTimeout    = 20000
@@ -368,7 +367,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
             conn.setRequestProperty("Accept",        "application/json, application/geo+json")
-            conn.setRequestProperty("Authorization", ORS_API_KEY)
+            conn.setRequestProperty("Authorization", AppSettings(this).getOrsApiKey())
             conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
             conn.connectTimeout = 15000
             conn.readTimeout    = 20000

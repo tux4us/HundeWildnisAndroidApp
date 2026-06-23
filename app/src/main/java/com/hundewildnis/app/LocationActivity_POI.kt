@@ -725,7 +725,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         withExtras: Boolean = true           // false = nur Route + Höhe, kein extra_info
     ): RouteData {
 
-        val apiKey = BuildConfig.ORS_API_KEY
+        val apiKey = AppSettings(this).getOrsApiKey()
         val url    = "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
 
         val bodyObj = JSONObject().apply {
@@ -2214,7 +2214,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         waypoints: List<POI>,
         toLat: Double, toLon: Double
     ): RouteData {
-        val apiKey = BuildConfig.ORS_API_KEY
+        val apiKey = AppSettings(this).getOrsApiKey()
         val url    = "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
 
         val coords = JSONArray().apply {

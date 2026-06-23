@@ -479,22 +479,43 @@ class MainActivity : BaseBottomNavActivity() {
 
     private fun showSettingsDialog() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val appSettings = AppSettings(this)
         val view = layoutInflater.inflate(R.layout.dialog_settings, null)
+        
         val s1 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
         val s2 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
         val s3 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
+        val orsEdit = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOrsApiKey)
+
         s1.isChecked = prefs.getBoolean("background_updates_enabled", true)
         s2.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
         s3.isChecked = prefs.getBoolean("notifications_enabled", true)
+        
+        // Aktuellen Key (falls vorhanden) im Feld anzeigen (verschleiert)
+        if (appSettings.hasCustomOrsKey()) {
+            orsEdit.setText("********")
+        }
+
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val csl = android.content.res.ColorStateList.valueOf(color)
         listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
+        
         s1.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_enabled", isChecked).apply(); if (isChecked) UpdateHelper.scheduleContentUpdates(this) else WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_morning"); s2.isEnabled = isChecked; s3.isEnabled = isChecked }
         s2.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_wifi_only", isChecked).apply(); UpdateHelper.scheduleContentUpdates(this) }
         s3.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("notifications_enabled", isChecked).apply() }
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
-        val dialog = AlertDialog.Builder(this).setTitle("⚙️ Einstellungen").setView(view).setPositiveButton("Fertig", null).create()
+        
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("⚙️ Einstellungen")
+            .setView(view)
+            .setPositiveButton("Fertig") { _, _ ->
+                val newKey = orsEdit.text?.toString() ?: ""
+                if (newKey.isNotBlank() && newKey != "********") {
+                    appSettings.saveOrsApiKey(newKey)
+                }
+            }
+            .create()
         dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
     }
 
