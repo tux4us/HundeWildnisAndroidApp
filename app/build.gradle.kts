@@ -14,8 +14,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 89
-        versionName = "15.4"
+        versionCode = 90
+        versionName = "15.5"
 
         // API Key aus local.properties laden
         val localProperties = Properties()
@@ -23,9 +23,6 @@ android {
         if (localPropertiesFile.exists()) {
             localProperties.load(localPropertiesFile.inputStream())
         }
-
-        val youtubeApiKey = localProperties.getProperty("YOUTUBE_API_KEY", "")
-        buildConfigField("String", "YOUTUBE_API_KEY", "\"$youtubeApiKey\"")
 
         val orsApiKey = localProperties.getProperty("ORS_API_KEY", "")
         buildConfigField("String", "ORS_API_KEY", "\"$orsApiKey\"")

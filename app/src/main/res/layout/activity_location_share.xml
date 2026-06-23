@@ -282,13 +282,29 @@
                         app:cardBackgroundColor="#3d3d3d"
                         android:visibility="gone">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="12dp"
-                            android:text="⚠️ WebDAV nicht eingerichtet. Bitte Zugangsdaten hinterlegen."
-                            android:textColor="#FF8A65"
-                            android:textSize="12sp" />
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="⚠️ WebDAV nicht eingerichtet. Bitte Zugangsdaten hinterlegen."
+                                android:textColor="#FF8A65"
+                                android:textSize="12sp"
+                                android:layout_marginBottom="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnOpenWebDavSettings"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:text="WebDAV Einstellungen"
+                                app:icon="@drawable/ic_settings_gear" />
+                        </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>

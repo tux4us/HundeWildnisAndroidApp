@@ -19,4 +19,6 @@
     <color name="search_field_text">#000000</color>
     <color name="search_field_hint">#999999</color>
 
+    <color name="text_input_stroke_color">#2d5016</color>
+    <color name="text_input_hint_color">#2d5016</color>
 </resources>

@@ -110,6 +110,10 @@ class WebDavSyncActivity : SecureBaseActivity() {
             testConnection()
         }
 
+        binding.btnClearWebdavCredentials.setOnClickListener {
+            confirmAndClearCredentials()
+        }
+
         binding.switchAutoSync.setOnCheckedChangeListener { _, isChecked ->
             prefs.autoSyncEnabled = isChecked
             binding.layoutAutoSyncOptions.isVisible = isChecked
@@ -201,6 +205,23 @@ class WebDavSyncActivity : SecureBaseActivity() {
 
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor())
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor())
+    }
+
+    private fun confirmAndClearCredentials() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("🗑️ Zugangsdaten löschen?")
+            .setMessage("Möchtest du die gespeicherten WebDAV-Zugangsdaten (URL, Benutzername, Passwort) wirklich löschen?")
+            .setPositiveButton("Löschen") { _, _ ->
+                prefs.clearCredentials()
+                loadCurrentSettings()
+                Toast.makeText(this, "Zugangsdaten gelöscht", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Abbrechen", null)
+            .create()
+
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor())
     }
 

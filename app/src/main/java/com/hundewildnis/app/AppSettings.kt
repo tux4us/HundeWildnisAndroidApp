@@ -46,6 +46,10 @@ class AppSettings(private val context: Context) {
         securePrefs().edit().putString(KEY_ORS_API_KEY, key.trim()).apply()
     }
 
+    fun clearOrsApiKey() {
+        securePrefs().edit().remove(KEY_ORS_API_KEY).apply()
+    }
+
     fun hasCustomOrsKey(): Boolean {
         return !securePrefs().getString(KEY_ORS_API_KEY, null).isNullOrBlank()
     }

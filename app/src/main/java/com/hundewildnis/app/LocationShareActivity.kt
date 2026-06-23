@@ -12,6 +12,9 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Menu
+import android.view.MenuItem
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -136,6 +139,99 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
         return true
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_location_share, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_webdav -> {
+                startActivity(Intent(this, WebDavSyncActivity::class.java))
+                true
+            }
+            R.id.action_settings -> {
+                showSettingsDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showSettingsDialog() {
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val appSettings = AppSettings(this)
+        val view = layoutInflater.inflate(R.layout.dialog_settings, null)
+
+        val s1 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
+        val s2 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
+        val s3 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
+        val orsEdit = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOrsApiKey)
+        val orsLayout = view.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.layoutOrsApiKey)
+        val btnClearOrs = view.findViewById<View>(R.id.btnClearOrsKey)
+
+        orsLayout.setEndIconOnClickListener {
+            showOrsInfoDialog()
+        }
+
+        btnClearOrs.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("🗑️ Key löschen?")
+                .setMessage("Möchtest Du den gespeicherten API-Key wirklich entfernen?")
+                .setPositiveButton("Löschen") { _, _ ->
+                    appSettings.clearOrsApiKey()
+                    orsEdit.setText("")
+                    Toast.makeText(this, "Key gelöscht", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+        }
+
+        s1.isChecked = prefs.getBoolean("background_updates_enabled", true)
+        s2.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
+        s3.isChecked = prefs.getBoolean("notifications_enabled", true)
+
+        if (appSettings.hasCustomOrsKey()) {
+            orsEdit.setText("********")
+        }
+
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val csl = android.content.res.ColorStateList.valueOf(color)
+        listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
+
+        s1.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_enabled", isChecked).apply(); s2.isEnabled = isChecked; s3.isEnabled = isChecked }
+        s2.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_wifi_only", isChecked).apply() }
+        s3.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("notifications_enabled", isChecked).apply() }
+        s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("⚙️ Einstellungen")
+            .setView(view)
+            .setPositiveButton("Fertig") { _, _ ->
+                val newKey = orsEdit.text?.toString() ?: ""
+                if (newKey.isNotBlank() && newKey != "********") {
+                    appSettings.saveOrsApiKey(newKey)
+                }
+            }
+            .create()
+        dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+    }
+
+    private fun showOrsInfoDialog() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        AlertDialog.Builder(this)
+            .setTitle("ORS API Key")
+            .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
+                    "Anleitung:\n" +
+                    "1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n" +
+                    "2. Erstelle unter 'Tokens' einen neuen API-Key.\n" +
+                    "3. Kopiere diesen Key und füge ihn hier ein.\n\n" +
+                    "Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie angezeigt werden.")
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
     // ── Setup ──────────────────────────────────────────────────────────────
 
     private fun setupMap() {
@@ -208,6 +304,10 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
         }
 
         binding.btnRefreshMap.setOnClickListener { refreshMap() }
+
+        binding.btnOpenWebDavSettings?.setOnClickListener {
+            startActivity(Intent(this, WebDavSyncActivity::class.java))
+        }
 
         binding.osmCopyrightText.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://www.openstreetmap.org/copyright"))
@@ -330,6 +430,10 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun drawRouteORS(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
+        val appSettings = AppSettings(this)
+        if (!appSettings.hasCustomOrsKey()) {
+            Toast.makeText(this, "ℹ️ Für präzises Routing bitte ORS-Key in den Einstellungen (Zahnrad oben) hinterlegen.", Toast.LENGTH_LONG).show()
+        }
         isRerouting = true
         lifecycleScope.launch {
             try {

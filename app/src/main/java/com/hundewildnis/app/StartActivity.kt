@@ -237,6 +237,25 @@ class StartActivity : BaseBottomNavActivity() {
         val s2 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
         val s3 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
         val orsEdit = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOrsApiKey)
+        val orsLayout = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.layoutOrsApiKey)
+        val btnClearOrs = dialogView.findViewById<View>(R.id.btnClearOrsKey)
+
+        orsLayout.setEndIconOnClickListener {
+            showOrsInfoDialog()
+        }
+
+        btnClearOrs.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("🗑️ Key löschen?")
+                .setMessage("Möchtest Du den gespeicherten API-Key wirklich entfernen?")
+                .setPositiveButton("Löschen") { _, _ ->
+                    appSettings.clearOrsApiKey()
+                    orsEdit.setText("")
+                    Toast.makeText(this, "Key gelöscht", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+        }
 
         listOf(s1, s2, s3).forEach {
             it.thumbTintList = colorStateList
@@ -272,6 +291,25 @@ class StartActivity : BaseBottomNavActivity() {
             .create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
+    }
+
+    private fun showOrsInfoDialog() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        AlertDialog.Builder(this)
+            .setTitle("ORS API Key")
+            .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
+                    "Anleitung:\n" +
+                    "1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n" +
+                    "2. Erstelle unter 'Tokens' einen neuen API-Key.\n" +
+                    "3. Kopiere diesen Key und füge ihn hier ein.\n\n" +
+                    "Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie zwischen zwei Punkten angezeigt werden.")
+            .setPositiveButton("OK", null)
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
+            }
     }
 
     private fun openPrivacyPolicy() {
