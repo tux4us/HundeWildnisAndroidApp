@@ -88,7 +88,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         const val RESULT_WEIGHTS      = "result_weights"     // DoubleArray
         const val RC_MAP              = 4200
         private const val REQ_LOCATION = 4201
-        private val ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjBkODg2NmJmMGM4NTRlNDlhZWI2MjliMWM5YTJmYzM1IiwiaCI6Im11cm11cjY0In0="
+        private val ORS_API_KEY = BuildConfig.ORS_API_KEY
     }
 
     // ════════════════════════════════════════════════════════════

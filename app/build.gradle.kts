@@ -26,6 +26,9 @@ android {
 
         val youtubeApiKey = localProperties.getProperty("YOUTUBE_API_KEY", "")
         buildConfigField("String", "YOUTUBE_API_KEY", "\"$youtubeApiKey\"")
+
+        val orsApiKey = localProperties.getProperty("ORS_API_KEY", "")
+        buildConfigField("String", "ORS_API_KEY", "\"$orsApiKey\"")
     }
 
     buildTypes {

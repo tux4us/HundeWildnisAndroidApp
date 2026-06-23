@@ -8,5 +8,6 @@
 
 sdk.dir=/home/tuxus/Android/Sdk
 
-# Add your YouTube API key here
+# Add your API keys here
 YOUTUBE_API_KEY=YOUR_API_KEY_HERE
+ORS_API_KEY=YOUR_ORS_API_KEY_HERE
