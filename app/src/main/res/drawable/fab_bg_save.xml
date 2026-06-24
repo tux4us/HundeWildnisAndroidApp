@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/fab_bg_save.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#CCC9A84C" />
+    <stroke android:width="1dp" android:color="#FFD700" />
+</shape>

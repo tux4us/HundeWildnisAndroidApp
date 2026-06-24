@@ -202,6 +202,12 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <activity
+            android:name="com.hundewildnis.app.TickLoupeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.HundeWildnis" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

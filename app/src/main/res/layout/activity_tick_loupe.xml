@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0d0d0d">
+
+    <!-- Toolbar im App-Stil -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2d5016"
+            app:titleTextColor="#FFFFFF"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Scrollbarer Inhalt unterhalb der Toolbar -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="12dp">
+
+            <!-- Filter-Label -->
+            <TextView
+                android:id="@+id/tvFilterLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="#CC2d5016"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="🌡️ Wärmebild" />
+
+            <!--
+                Kamera-View Box: festes 4:3-Seitenverhältnis.
+                aspect_ratio="0.75" = Höhe = 75% der Breite → 4:3 Portrait
+                Der SurfaceView füllt diese Box vollständig ohne Verzerrung,
+                da das Bild bereits in drawToSurface() korrekt skaliert wird.
+            -->
+            <FrameLayout
+                android:id="@+id/cameraContainer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="12dp"
+                android:background="#000000">
+
+                <!-- Höhe wird per Code auf 4:3 gesetzt (siehe TickLoupeActivity) -->
+                <SurfaceView
+                    android:id="@+id/surfaceView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!-- Freeze-Overlay-Label -->
+                <TextView
+                    android:id="@+id/tvFreezeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="8dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:background="#CCBD0000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:text="⏸ EINGEFROREN"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Button-Leiste -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="4dp">
+
+                <!-- Filter umschalten -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="🔍 Filter"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="#2d5016"
+                    app:cornerRadius="12dp" />
+
+                <!-- Freeze / Unfreeze -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFreeze"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:text="⏸ Einfrieren"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="#01579B"
+                    app:cornerRadius="12dp" />
+
+                <!-- Speichern (nur sichtbar wenn eingefroren) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="💾 Speichern"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="#C9A84C"
+                    app:cornerRadius="12dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Hinweistext -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Kamera langsam über das Fell führen. Zecken erscheinen im Wärmebild als dunkle Punkte."
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:paddingHorizontal="8dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
