@@ -177,6 +177,24 @@
                     android:minWidth="100dp"
                     android:minHeight="0dp"
                     app:autoSizeTextType="none" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleMapRotation"
+                    style="@style/Widget.App.Button.Fixed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/map_orientation_north"
+                    android:textSize="@dimen/text_body_small"
+                    android:padding="8dp"
+                    android:backgroundTint="#263316"
+                    app:strokeColor="#2d5016"
+                    app:strokeWidth="2dp"
+                    app:cornerRadius="8dp"
+                    android:textColor="#FFFFFF"
+                    android:minWidth="100dp"
+                    android:minHeight="0dp"
+                    app:autoSizeTextType="none" />
             </LinearLayout>
 
             <!-- Koordinaten -->

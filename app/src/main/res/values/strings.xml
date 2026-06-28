@@ -142,4 +142,6 @@
     <string name="star_2">2 Sterne</string>
     <string name="star_3">3 Sterne</string>
     <string name="star_4">4 Sterne</string>
+    <string name="map_orientation_north">🧭 Nord</string>
+    <string name="map_orientation_course">🧭 Kurs</string>
 </resources>

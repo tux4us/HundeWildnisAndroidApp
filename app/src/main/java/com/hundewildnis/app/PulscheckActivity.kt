@@ -1,0 +1,418 @@
+package com.hundewildnis.app
+
+import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.button.MaterialButton
+import com.hundewildnis.app.databinding.ActivityPulscheckBinding
+
+class PulscheckActivity : SecureBaseActivity() {
+
+    private lateinit var binding: ActivityPulscheckBinding
+    private var profile: DogProfile? = null
+
+    // Zustand KFZ
+    private var selectedCrt: Int? = null
+
+    // Zustand Timer
+    private var pulseTimer: CountDownTimer? = null
+    private var respTimer: CountDownTimer? = null
+    private var pulseTimerRunning = false
+    private var respTimerRunning = false
+
+    // Gespeicherter Record (nach Speichern für Notfall verfügbar)
+    private var savedRecord: VitalRecord? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityPulscheckBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        profile = intent.getParcelableExtra<DogProfile>("profile")
+            ?.id?.let { DogProfileManager.getProfile(this, it) }
+            ?: intent.getParcelableExtra("profile")
+
+        if (profile == null) {
+            Toast.makeText(this, "Fehler: Kein Profil gefunden", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "❤️ Pulscheck – ${profile!!.name}"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
+        setupPulseReference()
+        setupSpinners()
+        setupTimers()
+        setupPulseAutoCalc()
+        setupRespAutoCalc()
+        setupCrtButtons()
+        setupActionButtons()
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // SETUP
+    // ════════════════════════════════════════════════════════════════
+
+    private fun setupPulseReference() {
+        val heightCm = profile?.shoulderHeight?.trim()?.toIntOrNull()
+        binding.tvPulseReference.text = VitalRecord.pulseReferenceText(heightCm)
+    }
+
+    private fun setupSpinners() {
+        // Belastungsszenario
+        val scenarioItems = listOf("– Bitte wählen –") + VitalRecord.LOAD_SCENARIOS
+        binding.spinnerLoadScenario.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, scenarioItems
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        binding.spinnerLoadScenario.setSelection(1) // "Ruhe" als Default
+
+        // Schleimhautfarbe
+        val colorItems = listOf("– nicht gemessen –") + VitalRecord.MUCOUS_MEMBRANE_COLORS
+        binding.spinnerMucousColor.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, colorItems
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
+        // Bewusstsein
+        val consciousnessItems = listOf("– nicht beurteilt –") + VitalRecord.CONSCIOUSNESS_LEVELS
+        binding.spinnerConsciousness.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, consciousnessItems
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // TIMER
+    // ════════════════════════════════════════════════════════════════
+
+    private fun setupTimers() {
+        binding.btnStartPulseTimer.setOnClickListener { togglePulseTimer() }
+        binding.btnStartRespTimer.setOnClickListener { toggleRespTimer() }
+    }
+
+    private fun togglePulseTimer() {
+        if (pulseTimerRunning) {
+            pulseTimer?.cancel()
+            pulseTimerRunning = false
+            binding.tvPulseTimer.text = "15"
+            binding.btnStartPulseTimer.text = "▶ Timer starten"
+        } else {
+            startPulseTimer()
+        }
+    }
+
+    private fun startPulseTimer() {
+        pulseTimerRunning = true
+        binding.btnStartPulseTimer.text = "⏹ Abbrechen"
+        binding.tvPulseTimerHint.text = "Jetzt Schläge zählen …"
+
+        pulseTimer = object : CountDownTimer(15_000, 1_000) {
+            override fun onTick(ms: Long) {
+                binding.tvPulseTimer.text = (ms / 1000 + 1).toString()
+            }
+            override fun onFinish() {
+                pulseTimerRunning = false
+                binding.tvPulseTimer.text = "✓"
+                binding.tvPulseTimerHint.text = "Gezählte Schläge eingeben → × 4 = Herzfrequenz/min"
+                binding.btnStartPulseTimer.text = "▶ Timer erneut starten"
+                binding.etPulseBeats.requestFocus()
+            }
+        }.start()
+    }
+
+    private fun toggleRespTimer() {
+        if (respTimerRunning) {
+            respTimer?.cancel()
+            respTimerRunning = false
+            binding.tvRespTimer.text = "15"
+            binding.btnStartRespTimer.text = "▶ Timer starten"
+        } else {
+            startRespTimer()
+        }
+    }
+
+    private fun startRespTimer() {
+        respTimerRunning = true
+        binding.btnStartRespTimer.text = "⏹ Abbrechen"
+
+        respTimer = object : CountDownTimer(15_000, 1_000) {
+            override fun onTick(ms: Long) {
+                binding.tvRespTimer.text = (ms / 1000 + 1).toString()
+            }
+            override fun onFinish() {
+                respTimerRunning = false
+                binding.tvRespTimer.text = "✓"
+                binding.btnStartRespTimer.text = "▶ Timer erneut starten"
+                binding.etRespBeats.requestFocus()
+            }
+        }.start()
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // AUTO-BERECHNUNG
+    // ════════════════════════════════════════════════════════════════
+
+    private fun setupPulseAutoCalc() {
+        binding.etPulseBeats.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val beats = s?.toString()?.toIntOrNull()
+                if (beats != null) {
+                    val result = beats * 4
+                    binding.etPulseResult.setText(result.toString())
+                    updatePulseBadge(result)
+                } else {
+                    binding.etPulseResult.text?.clear()
+                    binding.tvPulseBadge.visibility = View.GONE
+                }
+            }
+        })
+
+        // Auch bei direkter Eingabe des Ergebnisses Badge aktualisieren
+        binding.etPulseResult.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val result = s?.toString()?.toIntOrNull()
+                if (result != null && binding.etPulseBeats.text.isNullOrEmpty()) {
+                    updatePulseBadge(result)
+                }
+            }
+        })
+    }
+
+    private fun updatePulseBadge(pulse: Int) {
+        val heightCm = profile?.shoulderHeight?.trim()?.toIntOrNull()
+        val record = VitalRecord(pulse = pulse)
+        val status = record.pulseStatus(heightCm)
+
+        binding.tvPulseBadge.visibility = View.VISIBLE
+        when (status) {
+            PulseStatus.NORMAL -> {
+                binding.tvPulseBadge.text = "✅ Im Normalbereich"
+                binding.tvPulseBadge.setTextColor(Color.parseColor("#2d5016"))
+            }
+            PulseStatus.LOW -> {
+                binding.tvPulseBadge.text = "⚠️ Unterhalb des Normalbereichs – Tierarzt konsultieren"
+                binding.tvPulseBadge.setTextColor(Color.parseColor("#E65100"))
+            }
+            PulseStatus.HIGH -> {
+                binding.tvPulseBadge.text = "⚠️ Oberhalb des Normalbereichs – Tierarzt konsultieren"
+                binding.tvPulseBadge.setTextColor(Color.parseColor("#B00020"))
+            }
+            PulseStatus.UNKNOWN -> {
+                binding.tvPulseBadge.text = "ℹ️ Schulterhöhe in Stammdaten eintragen für Beurteilung"
+                binding.tvPulseBadge.setTextColor(Color.parseColor("#555555"))
+            }
+        }
+    }
+
+    private fun setupRespAutoCalc() {
+        binding.etRespBeats.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val beats = s?.toString()?.toIntOrNull()
+                if (beats != null) {
+                    binding.etRespResult.setText((beats * 4).toString())
+                } else {
+                    binding.etRespResult.text?.clear()
+                }
+            }
+        })
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // KFZ-BUTTONS
+    // ════════════════════════════════════════════════════════════════
+
+    private fun setupCrtButtons() {
+        val buttons = listOf(
+            binding.btnCrt1 to 1,
+            binding.btnCrt2 to 2,
+            binding.btnCrt3 to 3,
+            binding.btnCrt4 to 4
+        )
+        val colors = listOf("#4a6135", "#2d5016", "#E65100", "#B00020")
+        val labels = listOf("1s", "2s ✓", "3s", ">3s")
+
+        buttons.forEachIndexed { index, (btn, value) ->
+            btn.setOnClickListener {
+                selectedCrt = value
+                // Alle zurücksetzen
+                buttons.forEachIndexed { i, (b, _) ->
+                    b.strokeWidth = 0
+                    b.setBackgroundColor(Color.parseColor(colors[i]))
+                    b.text = labels[i]
+                    b.alpha = 0.7f
+                }
+                // Ausgewählten hervorheben
+                btn.alpha = 1.0f
+                btn.strokeWidth = dpToPx(3)
+                btn.strokeColor = android.content.res.ColorStateList.valueOf(Color.WHITE)
+
+                val hint = when (value) {
+                    1 -> "Ausgewählt: 1s — Normal"
+                    2 -> "Ausgewählt: 2s — Normal (Grenzwert)"
+                    3 -> "Ausgewählt: 3s — Verlängert, beobachten"
+                    else -> "Ausgewählt: >3s — Deutlich verlängert → Tierarzt"
+                }
+                binding.tvCrtSelected.text = hint
+            }
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // SPEICHERN & AKTIONEN
+    // ════════════════════════════════════════════════════════════════
+
+    private fun setupActionButtons() {
+        binding.btnSave.setOnClickListener { saveRecord() }
+        binding.btnTransferToEmergency.setOnClickListener { transferToEmergency() }
+        binding.btnViewHistory.setOnClickListener {
+            val intent = Intent(this, VitalListActivity::class.java)
+            intent.putExtra("dogId", profile!!.id)
+            intent.putExtra("dogName", profile!!.name)
+            startActivity(intent)
+        }
+    }
+
+    private fun collectRecord(): VitalRecord? {
+        val pulse = binding.etPulseResult.text?.toString()?.toIntOrNull()
+            ?: binding.etPulseBeats.text?.toString()?.toIntOrNull()?.let { it * 4 }
+
+        if (pulse == null || pulse <= 0) {
+            Toast.makeText(this, "Bitte mindestens die Herzfrequenz eingeben.", Toast.LENGTH_SHORT).show()
+            return null
+        }
+
+        val respiration = binding.etRespResult.text?.toString()?.toIntOrNull()
+            ?: binding.etRespBeats.text?.toString()?.toIntOrNull()?.let { it * 4 }
+
+        val temperature = binding.etTemperature.text?.toString()
+            ?.replace(",", ".")?.toDoubleOrNull()
+
+        val loadScenarioIndex = binding.spinnerLoadScenario.selectedItemPosition
+        val loadScenario = if (loadScenarioIndex > 0)
+            VitalRecord.LOAD_SCENARIOS[loadScenarioIndex - 1] else "Ruhe"
+
+        val mucousColorIndex = binding.spinnerMucousColor.selectedItemPosition
+        val mucousColor = if (mucousColorIndex > 0)
+            VitalRecord.MUCOUS_MEMBRANE_COLORS[mucousColorIndex - 1] else null
+
+        val consciousnessIndex = binding.spinnerConsciousness.selectedItemPosition
+        val consciousness = if (consciousnessIndex > 0)
+            VitalRecord.CONSCIOUSNESS_LEVELS[consciousnessIndex - 1] else null
+
+        return VitalRecord(
+            dogId = profile!!.id,
+            dogName = profile!!.name,
+            pulse = pulse,
+            respiration = respiration,
+            temperature = temperature,
+            capillaryRefillTime = selectedCrt,
+            mucousMembraneColor = mucousColor,
+            consciousnessLevel = consciousness,
+            loadScenario = loadScenario,
+            notes = binding.etNotes.text?.toString()?.trim() ?: ""
+        )
+    }
+
+    private fun saveRecord() {
+        val record = collectRecord() ?: return
+
+        VitalManager.save(this, record)
+        savedRecord = record
+
+        Toast.makeText(this, "✅ Messung gespeichert", Toast.LENGTH_SHORT).show()
+
+        // Notfall-Button einblenden
+        binding.btnTransferToEmergency.visibility = View.VISIBLE
+
+        // Erfolgsmeldung mit Bewertung
+        val heightCm = profile?.shoulderHeight?.trim()?.toIntOrNull()
+        val status = record.pulseStatus(heightCm)
+        if (status == PulseStatus.HIGH || status == PulseStatus.LOW) {
+            showAbnormalWarning(record, status)
+        }
+    }
+
+    private fun showAbnormalWarning(record: VitalRecord, status: PulseStatus) {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#B00020")
+
+        val msg = when (status) {
+            PulseStatus.HIGH ->
+                "Der gemessene Puls von ${record.pulse} /min liegt oberhalb des Normalbereichs.\n\nBei anhaltend erhöhter Herzfrequenz, Atemnot oder Erschöpfung bitte einen Tierarzt aufsuchen."
+            PulseStatus.LOW ->
+                "Der gemessene Puls von ${record.pulse} /min liegt unterhalb des Normalbereichs.\n\nBei Schwäche, Bewusstseinstrübung oder anderen Auffälligkeiten bitte einen Tierarzt aufsuchen."
+            else -> return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("⚠️ Auffälliger Puls")
+            .setMessage(msg)
+            .setPositiveButton("Verstanden", null)
+            .setNeutralButton("🚨 Notfallmeldung") { _, _ -> transferToEmergency() }
+            .create()
+            .apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(Color.parseColor("#B00020"))
+            }
+    }
+
+    private fun transferToEmergency() {
+        val record = savedRecord ?: collectRecord()
+
+        if (record == null) {
+            Toast.makeText(this, "Bitte zuerst eine Messung speichern.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Notiz mit Vitalwerten vorbauen
+        val vitalText = buildString {
+            appendLine("=== Vitalwerte ===")
+            appendLine("Puls: ${record.pulse} /min")
+            record.respiration?.let { appendLine("Atemfrequenz: $it /min") }
+            record.temperature?.let { appendLine("Temperatur: ${"%.1f".format(it)} °C") }
+            record.capillaryRefillTime?.let { appendLine("Kapillarfüllzeit: ${it}s") }
+            record.mucousMembraneColor?.let { appendLine("Schleimhautfarbe: $it") }
+            record.consciousnessLevel?.let { appendLine("Bewusstsein: $it") }
+            appendLine("Belastung: ${record.loadScenario}")
+            if (record.notes.isNotBlank()) {
+                appendLine()
+                appendLine("Notizen: ${record.notes}")
+            }
+        }
+
+        val intent = Intent(this, EmergencyActivity::class.java)
+        intent.putExtra("profile", profile)
+        intent.putExtra("prefill_notes", vitalText.trim())
+        startActivity(intent)
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // UTILS
+    // ════════════════════════════════════════════════════════════════
+
+    private fun dpToPx(dp: Int): Int =
+        (dp * resources.displayMetrics.density).toInt()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        pulseTimer?.cancel()
+        respTimer?.cancel()
+    }
+}

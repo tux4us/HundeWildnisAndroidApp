@@ -57,6 +57,11 @@ enum class BackupDataType(
     WEATHER_FAVORITES(
         "Wetter-Favoriten",
         "Gespeicherte Orte für die Wettervorhersage"
+    ),
+
+    VITAL_RECORDS(
+        "Vitalwerte",
+        "Alle Puls- und Vitalwert-Messungen"
     )
 }
 

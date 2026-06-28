@@ -77,6 +77,13 @@ data class DogProfile(
     // ═══════════════════════════════════════════════════════════
     var heatCycles: List<HeatCycleEntry> = emptyList(),
 
+    // ═══════════════════════════════════════════════════════════
+    // VITALWERTE
+    // Alle Vitalwert-Messungen dieses Hundes.
+    // Werden von VitalManager synchron gehalten.
+    // ═══════════════════════════════════════════════════════════
+    var vitalRecords: List<VitalRecord> = emptyList(),
+
     // lastModified bleibt das letzte Feld (bereits vorhanden):
     var lastModified: Long = 0L
 

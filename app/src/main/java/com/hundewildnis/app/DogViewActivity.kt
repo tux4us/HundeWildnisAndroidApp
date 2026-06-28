@@ -1,5 +1,6 @@
 package com.hundewildnis.app
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
@@ -55,10 +56,11 @@ class DogViewActivity : SecureBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Profil neu laden damit Läufigkeitsdaten nach Rückkehr
-        // aus HeatCycleActivity sofort aktuell sind
+        // Profil neu laden damit Läufigkeits- und Vitalwerte-Daten
+        // nach Rückkehr aus anderen Activities aktuell sind
         if (profileId.isNotEmpty()) {
             DogProfileManager.getProfile(this, profileId)?.let { fresh ->
+                displayVitalSection(fresh)
                 displayHeatCycleSection(fresh)
             }
         }
@@ -120,9 +122,136 @@ class DogViewActivity : SecureBaseActivity() {
         binding.tvFood.text = "Futter: ${p.food.ifEmpty { "-" }}"
         binding.tvBehavior.text = "Verhalten: ${p.behavior.ifEmpty { "-" }}"
 
+        // Vitalwerte
+        displayVitalSection(p)
+
         // Läufigkeit
         displayHeatCycleSection(p)
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // VITALWERTE — ABSCHNITT
+    // ════════════════════════════════════════════════════════════════
+
+    private fun displayVitalSection(p: DogProfile) {
+        val records = VitalManager.getForDog(this, p.id)
+        val shoulderCm = p.shoulderHeight.trim().toIntOrNull()
+
+        // Tabellen-Container leeren
+        binding.llVitalTable.removeAllViews()
+
+        if (records.isEmpty()) {
+            binding.tvVitalEmpty.visibility = View.VISIBLE
+            binding.llVitalTable.visibility = View.GONE
+        } else {
+            binding.tvVitalEmpty.visibility = View.GONE
+            binding.llVitalTable.visibility = View.VISIBLE
+
+            // Tabellen-Header
+            addVitalTableRow(
+                binding.llVitalTable,
+                listOf("Datum", "Puls", "Atem", "Temp.", "Status"),
+                isHeader = true
+            )
+
+            // Max. 10 Einträge anzeigen
+            records.take(10).forEach { r ->
+                val status = when (r.pulseStatus(shoulderCm)) {
+                    PulseStatus.NORMAL  -> "✓"
+                    PulseStatus.HIGH    -> "↑"
+                    PulseStatus.LOW     -> "↓"
+                    PulseStatus.UNKNOWN -> "–"
+                }
+                val statusColor = when (r.pulseStatus(shoulderCm)) {
+                    PulseStatus.NORMAL  -> Color.parseColor("#2d5016")
+                    PulseStatus.HIGH    -> Color.parseColor("#B00020")
+                    PulseStatus.LOW     -> Color.parseColor("#E65100")
+                    PulseStatus.UNKNOWN -> Color.GRAY
+                }
+                addVitalTableRow(
+                    binding.llVitalTable,
+                    listOf(
+                        r.formattedDateShort(),
+                        "${r.pulse}/min",
+                        r.respiration?.let { "$it/min" } ?: "–",
+                        r.temperature?.let { "${"%.1f".format(it)}°C" } ?: "–",
+                        status
+                    ),
+                    isHeader = false,
+                    lastColColor = statusColor
+                )
+            }
+
+            if (records.size > 10) {
+                val hint = buildVitalInfoText("… und ${records.size - 10} weitere Messungen")
+                binding.llVitalTable.addView(hint)
+            }
+        }
+
+        // Button: Alle Messungen öffnen
+        binding.btnOpenVitalList.setOnClickListener {
+            val intent = Intent(this, VitalListActivity::class.java)
+            intent.putExtra("dogId", p.id)
+            intent.putExtra("dogName", p.name)
+            startActivity(intent)
+        }
+
+        // Button: Neue Messung
+        binding.btnStartPulscheck.setOnClickListener {
+            val intent = Intent(this, PulscheckActivity::class.java)
+            intent.putExtra("profile", p)
+            startActivity(intent)
+        }
+    }
+
+    private fun addVitalTableRow(
+        container: LinearLayout,
+        cells: List<String>,
+        isHeader: Boolean,
+        lastColColor: Int? = null
+    ) {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        val weights = listOf(2f, 1.5f, 1.5f, 1.5f, 0.8f)
+
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = dpToPx(2) }
+            if (isHeader) {
+                setBackgroundColor(if (isDark) Color.parseColor("#1B3A0A") else Color.parseColor("#e8f5e9"))
+            }
+        }
+
+        cells.forEachIndexed { index, text ->
+            val tv = TextView(this).apply {
+                this.text = text
+                textSize = if (isHeader) 11f else 12f
+                if (isHeader) setTypeface(null, Typeface.BOLD)
+                setPadding(dpToPx(6), dpToPx(4), dpToPx(4), dpToPx(4))
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, weights[index])
+                if (index == cells.lastIndex && lastColColor != null) {
+                    setTextColor(lastColColor)
+                    setTypeface(null, Typeface.BOLD)
+                } else {
+                    setTextColor(if (isDark) Color.WHITE else Color.parseColor("#212121"))
+                }
+            }
+            row.addView(tv)
+        }
+        container.addView(row)
+    }
+
+    private fun buildVitalInfoText(text: String): TextView = TextView(this).apply {
+        this.text = text
+        textSize = 12f
+        setTextColor(Color.GRAY)
+        setPadding(dpToPx(6), dpToPx(4), dpToPx(4), dpToPx(4))
+    }
+
+    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
     // ════════════════════════════════════════════════════════════════
     // LÄUFIGKEIT — ABSCHNITT
@@ -155,7 +284,7 @@ class DogViewActivity : SecureBaseActivity() {
         binding.llCycleList.removeAllViews()
 
         if (cycles.isEmpty()) {
-            val hint = buildInfoText("Noch keine Läufigkeit eingetragen.")
+            val hint = buildCycleInfoText("Noch keine Läufigkeit eingetragen.")
             binding.llCycleList.addView(hint)
         } else {
             cycles.sortedByDescending { it.startDate }.forEach { entry ->
@@ -279,7 +408,7 @@ class DogViewActivity : SecureBaseActivity() {
         ).apply { setMargins(0, 2, 0, 2) }
     }
 
-    private fun buildInfoText(text: String): TextView = TextView(this).apply {
+    private fun buildCycleInfoText(text: String): TextView = TextView(this).apply {
         this.text = text
         textSize = 13f
         alpha = 0.6f

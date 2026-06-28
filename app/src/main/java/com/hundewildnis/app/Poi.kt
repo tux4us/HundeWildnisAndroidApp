@@ -152,14 +152,18 @@ object POICategories {
     )
 
     val ALL_CATEGORIES = listOf(
-        Category(name = "Hundeauslauf",      icon = "🐕", queries = listOf("leisure=dog_park")),
+        Category(name = "Hundeauslauf",      icon = "🐕", queries = listOf("leisure=dog_park", "amenity=animal_training", "animal_training=dog")),
+        Category(name = "Hundebadestelle",   icon = "🐾", queries = listOf("dog=designated", "dog=yes")),
+        Category(name = "Hundebeutel",       icon = "💩", queries = listOf("amenity=waste_basket", "waste=dog_excrement", "vending=excrement_bags")),
         Category(name = "Tierarzt",          icon = "🏥", queries = listOf("amenity=veterinary"), color = "#aa0000"),
         Category(name = "Tierbedarf",        icon = "🛒", queries = listOf("shop=pet")),
         Category(name = "Tierheim",          icon = "🏠", queries = listOf("amenity=animal_shelter", "amenity=animal_boarding")),
         Category(name = "Wanderweg",         icon = "🥾", queries = listOf("highway=footway", "highway=path", "highway=track"), color = "#ff9800"),
-        Category(name = "Aussichtspunkt",    icon = "🏔️", queries = listOf("tourism=viewpoint", "natural=peak")),
+        Category(name = "Gipfel/Kreuz",      icon = "🏔️", queries = listOf("natural=peak", "man_made=cross", "summit:cross=yes")),
+        Category(name = "Aussichtspunkt",    icon = "🔭", queries = listOf("tourism=viewpoint")),
         Category(name = "Wegweiser",         icon = "🪧", queries = listOf("tourism=information", "information=guidepost", "information=board")),
-        Category(name = "Schutzhütte",       icon = "⛺", queries = listOf("amenity=shelter")),
+        Category(name = "Schutzhütte",       icon = "⛺", queries = listOf("amenity=shelter", "tourism=alpine_hut", "tourism=wilderness_hut")),
+        Category(name = "Zeltplatz",         icon = "⛺", queries = listOf("tourism=camp_site", "tourism=caravan_site")),
         Category(name = "Picknickplatz",     icon = "🧺", queries = listOf("leisure=picnic_site")),
         Category(name = "Sitzbank",          icon = "🪑", queries = listOf("amenity=bench")),
         Category(name = "Feuerstelle",       icon = "🔥", queries = listOf("leisure=firepit", "amenity=bbq")),

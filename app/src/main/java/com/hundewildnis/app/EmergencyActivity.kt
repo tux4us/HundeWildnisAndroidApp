@@ -159,6 +159,12 @@ class EmergencyActivity : SecureBaseActivity() {
         val symptoms = resources.getStringArray(R.array.emergency_symptoms)
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, symptoms)
         binding.spinnerSymptoms.setAdapter(adapter)
+
+        // ✅ Vitalwerte aus PulscheckActivity vorausfüllen
+        val prefillNotes = intent.getStringExtra("prefill_notes")
+        if (!prefillNotes.isNullOrBlank()) {
+            binding.etNotes.setText(prefillNotes)
+        }
     }
 
     private fun setupListeners() {
@@ -223,7 +229,9 @@ class EmergencyActivity : SecureBaseActivity() {
         val photos = prefs.getStringSet("photos_${profile?.id}", emptySet())
 
         if (!symptom.isNullOrEmpty()) binding.spinnerSymptoms.setText(symptom, false)
-        if (!notes.isNullOrEmpty()) binding.etNotes.setText(notes)
+        // Nur aus Cache laden wenn kein prefill_notes aus PulscheckActivity gesetzt wurde
+        val hasPrefill = !intent.getStringExtra("prefill_notes").isNullOrBlank()
+        if (!hasPrefill && !notes.isNullOrEmpty()) binding.etNotes.setText(notes)
         photos?.forEach { uriString ->
             try { addPhoto(Uri.parse(uriString)) } catch (e: Exception) {}
         }

@@ -22,7 +22,9 @@ data class BackupData(
     @SerializedName("nasenarbeitSessions")   val nasenarbeitSessions: List<NasenarbeitSession>? = null,
     @SerializedName("nasenarbeitFortschritt") val nasenarbeitFortschritt: List<NasenarbeitFortschritt>? = null,
     // ✅ NEU: Wetter-Favoriten
-    @SerializedName("weatherFavorites") val weatherFavorites: List<WeatherFavorite>? = null
+    @SerializedName("weatherFavorites") val weatherFavorites: List<WeatherFavorite>? = null,
+    // ✅ NEU: Vitalwerte
+    @SerializedName("vitalRecords") val vitalRecords: List<VitalRecord>? = null
 )
 
 data class BackupMetadata(
@@ -49,5 +51,7 @@ data class BackupItemCount(
     @SerializedName("nasenarbeitSessions")    val nasenarbeitSessions: Int = 0,
     @SerializedName("nasenarbeitFortschritt") val nasenarbeitFortschritt: Int = 0,
     // ✅ NEU: Wetter-Favoriten
-    @SerializedName("weatherFavorites")       val weatherFavorites: Int = 0
+    @SerializedName("weatherFavorites")       val weatherFavorites: Int = 0,
+    // ✅ NEU: Vitalwerte
+    @SerializedName("vitalRecords")           val vitalRecords: Int = 0
 )

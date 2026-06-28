@@ -208,6 +208,30 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <activity
+            android:name="com.hundewildnis.app.PulscheckDogSelectActivity"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.PulscheckActivity"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.PulscheckDogSelectActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.VitalListActivity"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.PulscheckActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.VitalDetailActivity"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.VitalListActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

@@ -68,6 +68,9 @@ object BackupManager {
             // ✅ NEU: Wetter-Favoriten
             val weatherFavorites = WeatherFavoritesManager.getAll(context)
 
+            // ✅ NEU: Vitalwerte
+            val vitalRecords = VitalManager.exportForBackup(context)
+
             // Hunde-Fotos kopieren
             dogs.forEachIndexed { index, dog ->
                 if (dog.photoUri.isNotEmpty()) {
@@ -116,7 +119,7 @@ object BackupManager {
             // Backup-Daten erstellen
             val backupData = BackupData(
                 version = getAppVersion(context),
-                backupVersion = 8, // Erhöht auf 8 wegen Note-Fix und HeatCycle
+                backupVersion = 9, // Erhöht auf 9: Vitalwerte
                 timestamp = timestamp,
                 dogs = dogs,
                 settings = settings,
@@ -134,13 +137,15 @@ object BackupManager {
                 nasenarbeitSessions = nasenarbeitSessions,
                 nasenarbeitFortschritt = nasenarbeitFortschritt,
                 // ✅ NEU: Wetter-Favoriten
-                weatherFavorites = weatherFavorites
+                weatherFavorites = weatherFavorites,
+                // ✅ NEU: Vitalwerte
+                vitalRecords = vitalRecords
             )
 
             // Metadaten erstellen
             val metadata = BackupMetadata(
                 appVersion = getAppVersion(context),
-                backupVersion = 8,
+                backupVersion = 9,
                 timestamp = timestamp,
                 deviceName = Build.MODEL,
                 itemCount = BackupItemCount(
@@ -158,7 +163,9 @@ object BackupManager {
                     nasenarbeitSessions = nasenarbeitSessions.size,
                     nasenarbeitFortschritt = nasenarbeitFortschritt.size,
                     // ✅ NEU: Wetter-Favoriten
-                    weatherFavorites = weatherFavorites.size
+                    weatherFavorites = weatherFavorites.size,
+                    // ✅ NEU: Vitalwerte
+                    vitalRecords = vitalRecords.size
                 )
             )
 
@@ -396,6 +403,11 @@ object BackupManager {
                 } else {
                     WeatherFavoritesManager.saveAll(context, favs)
                 }
+            }
+
+            // 12. Vitalwerte
+            backupData.vitalRecords?.let { records ->
+                VitalManager.importFromBackup(context, records, mergeMode)
             }
 
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
@@ -675,6 +687,10 @@ object BackupManager {
                 data["weatherFavorites"] = WeatherFavoritesManager.getAll(context)
             }
 
+            if (BackupDataType.VITAL_RECORDS in selectedTypes) {
+                data["vitalRecords"] = VitalManager.exportForBackup(context)
+            }
+
             // Container erstellen
             val backupContainer = SelectiveBackupContainer(
                 version = getAppVersion(context),
@@ -815,6 +831,10 @@ object BackupManager {
 
             if (BackupDataType.WEATHER_FAVORITES in selectedTypes && backup.data.containsKey("weatherFavorites")) {
                 restoreWeatherFavoritesSelective(context, backup.data["weatherFavorites"], mergeMode)
+            }
+
+            if (BackupDataType.VITAL_RECORDS in selectedTypes && backup.data.containsKey("vitalRecords")) {
+                restoreVitalRecordsSelective(context, backup.data["vitalRecords"], mergeMode)
             }
 
             Log.d(TAG, "Selective backup restored successfully")
@@ -1295,12 +1315,21 @@ object BackupManager {
     // MERGE HELPERS
     // ════════════════════════════════════════════════════════════════
 
-    private fun restoreWeatherFavoritesSelective(
+    private fun restoreVitalRecordsSelective(
         context: Context,
         data: Any?,
         mode: MergeMode
     ) {
-        val type = object : TypeToken<List<WeatherFavorite>>() {}.type
+        val type = object : TypeToken<List<VitalRecord>>() {}.type
+        val records: List<VitalRecord> = gson.fromJson(gson.toJson(data), type)
+        VitalManager.importFromBackup(context, records, mergeMode = (mode == MergeMode.ADD_NEW || mode == MergeMode.MERGE_BY_TIMESTAMP))
+    }
+
+    private fun restoreWeatherFavoritesSelective(
+        context: Context,
+        data: Any?,
+        mode: MergeMode
+    ) {        val type = object : TypeToken<List<WeatherFavorite>>() {}.type
         val favorites: List<WeatherFavorite> = gson.fromJson(gson.toJson(data), type)
 
         when (mode) {

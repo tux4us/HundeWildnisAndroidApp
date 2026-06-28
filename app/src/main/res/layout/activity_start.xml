@@ -430,6 +430,19 @@
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPulscheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="❤️ Pulscheck &amp; Vitalwerte"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#880E4F"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnTickLoupe"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

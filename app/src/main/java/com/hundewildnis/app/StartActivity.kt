@@ -338,6 +338,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnCompass.setOnClickListener { startActivity(Intent(this, CompassActivity::class.java)) }
         binding.btnAltimeter.setOnClickListener { startActivity(Intent(this, AltimeterActivity::class.java)) }
         binding.btnDogProfiles.setOnClickListener { startActivity(Intent(this, DogProfileActivity::class.java)) }
+        binding.btnPulscheck.setOnClickListener { startActivity(Intent(this, PulscheckDogSelectActivity::class.java)) }
         binding.btnTickLoupe.setOnClickListener { startActivity(Intent(this, TickLoupeActivity::class.java)) }
         binding.btnLocationShare.setOnClickListener { startActivity(Intent(this, LocationShareActivity::class.java)) }
         binding.btnEmergency.setOnClickListener { openEmergencyWizard() }

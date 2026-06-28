@@ -67,6 +67,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var currentLocation: Location? = null
     private var isRequestingUpdates = false
     private var isNavigating = false
+    private var isMapRotationEnabled = false
     private var isFirstLocation = true
 
     private val poiList = mutableListOf<POI>()
@@ -204,6 +205,19 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.btnBackToCategories.setOnClickListener { showCategoryView() }
         binding.btnManageFavorites.setOnClickListener { showFavoritesManagement() }
 
+        binding.btnToggleMapRotation.setOnClickListener {
+            isMapRotationEnabled = !isMapRotationEnabled
+            if (isMapRotationEnabled) {
+                binding.btnToggleMapRotation.text = getString(R.string.map_orientation_course)
+                currentLocation?.let {
+                    if (it.hasBearing()) binding.mapView.setMapOrientation(-it.bearing)
+                }
+            } else {
+                binding.btnToggleMapRotation.text = getString(R.string.map_orientation_north)
+                binding.mapView.setMapOrientation(0f)
+            }
+        }
+
         // ✅ NEU: Profil-Toggle (Fuß / Fahrrad)
         binding.toggleRoutingProfile.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
@@ -283,6 +297,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             if (isAtWaypoint) return
 
             centerMapOnLocation(location)
+
+            if (isMapRotationEnabled && location.hasBearing() && location.speed > 0.5f) {
+                binding.mapView.setMapOrientation(-location.bearing)
+            }
+
             updateElevationMarker(location)
         }
     }
@@ -401,6 +420,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.navigationInfoText.visibility = View.GONE
 
         // Karte wieder nach Norden ausrichten
+        isMapRotationEnabled = false
+        binding.btnToggleMapRotation.text = getString(R.string.map_orientation_north)
         binding.mapView.setMapOrientation(0f)
 
         currentPOIMarker?.let { binding.mapView.overlays.remove(it) }
