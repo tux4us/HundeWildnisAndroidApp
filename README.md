@@ -60,8 +60,6 @@ Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – 
 **Kernprinzipien:**
 - Alle Nutzerdaten bleiben lokal auf dem Gerät – keine Cloud-Pflicht
 - Keine proprietären Google-Bibliotheken, keine Google Services
-- Vollständig quelloffen unter MIT-Lizenz
-- F-Droid-kompatibel (Veröffentlichung in Vorbereitung)
 - WebDAV-Synchronisation für geräteübergreifende Datensicherung
 
 ---
