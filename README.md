@@ -77,7 +77,7 @@ Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – 
 | API-Verbindungen | Ausschließlich HTTPS/TLS |
 | Zugangsdaten | AES256-GCM-verschlüsselt via `EncryptedSharedPreferences` |
 | Datenweitergabe | Nur auf aktive Nutzer-Aktion (PDF, GPX, Share) |
-| Compliance | DSGVO-konform, F-Droid-kompatibel, MIT-Lizenz |
+| Compliance | DSGVO-konform |
 
 ---
 
