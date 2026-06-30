@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -20,6 +19,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.hundewildnis.app.databinding.ActivityPlantDetailBinding
 import java.io.File
@@ -115,19 +115,20 @@ class PlantDetailActivity : SecureBaseActivity() {
         slotViews.forEachIndexed { idx, imageView ->
             val path = photos.getOrNull(idx)
             if (path != null && File(path).exists()) {
-                try {
-                    val bmp = BitmapFactory.decodeFile(path)
-                    imageView.setImageBitmap(bmp)
-                    imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                    imageView.clearColorFilter()
-                    slotOverlays[idx].visibility = View.GONE
-                    slotDeleteBtns[idx].visibility = View.VISIBLE
-                } catch (_: Exception) { renderEmptySlot(idx) }
+                imageView.load(File(path)) {
+                    crossfade(true)
+                    placeholder(android.R.drawable.ic_menu_camera)
+                    error(android.R.drawable.ic_menu_report_image)
+                }
+                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                imageView.clearColorFilter()
+                slotOverlays[idx].visibility = View.GONE
+                slotDeleteBtns[idx].visibility = View.VISIBLE
             } else {
                 renderEmptySlot(idx)
             }
         }
-        val count = photos.size
+        val count = photos.count { it != null }
         binding.tvPhotoCount.text = "$count / ${PlantPhotoManager.MAX_PHOTOS} eigene Fotos"
     }
 
@@ -187,23 +188,22 @@ class PlantDetailActivity : SecureBaseActivity() {
     }
 
     private fun savePhotoToSlot(sourceUri: Uri) {
-        val photos = PlantPhotoManager.getPhotos(this, plant.id).toMutableList()
-        // Slot bereits belegt → altes Foto zuerst entfernen
-        val existingPath = photos.getOrNull(activeSlot)
-        if (existingPath != null) PlantPhotoManager.removePhoto(this, plant.id, existingPath)
-
-        val success = PlantPhotoManager.addPhoto(this, plant.id, sourceUri)
+        if (activeSlot == -1) return
+        
+        val success = PlantPhotoManager.savePhotoAtSlot(this, plant.id, activeSlot, sourceUri)
         if (success) renderPhotoSlots()
         else Toast.makeText(this, "Foto konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show()
     }
 
     private fun deletePhotoAtSlot(slotIndex: Int) {
-        val path = PlantPhotoManager.getPhotos(this, plant.id).getOrNull(slotIndex) ?: return
+        val photos = PlantPhotoManager.getPhotos(this, plant.id)
+        val path = photos.getOrNull(slotIndex) ?: return
+        
         AlertDialog.Builder(this)
             .setTitle("Foto löschen?")
             .setMessage("Das Foto wird dauerhaft gelöscht.")
             .setPositiveButton("Löschen") { _, _ ->
-                PlantPhotoManager.removePhoto(this, plant.id, path)
+                PlantPhotoManager.removePhotoAtSlot(this, plant.id, slotIndex)
                 renderPhotoSlots()
             }
             .setNegativeButton("Abbrechen", null)

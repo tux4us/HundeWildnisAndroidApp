@@ -31,37 +31,67 @@ object PlantPhotoManager {
         File(context.filesDir, PHOTOS_SUBDIR).also { it.mkdirs() }
 
     // ── Alle Foto-URIs für eine Pflanze laden ────────────────────
-    fun getPhotos(context: Context, plantId: String): List<String> {
+    fun getPhotos(context: Context, plantId: String): List<String?> {
         val map = loadMap(context)
-        return map[plantId] ?: emptyList()
+        val list = map[plantId] ?: emptyList()
+        // Wir geben immer eine Liste der Größe MAX_PHOTOS zurück, damit die Slots stabil bleiben
+        val result = MutableList<String?>(MAX_PHOTOS) { null }
+        list.forEachIndexed { index, path ->
+            if (index < MAX_PHOTOS) result[index] = path
+        }
+        return result
     }
 
-    // ── Foto hinzufügen (URI → interner Speicher kopieren) ───────
-    fun addPhoto(context: Context, plantId: String, sourceUri: Uri): Boolean {
+    // ── Foto hinzufügen / ersetzen an festem Slot ────────────────
+    fun savePhotoAtSlot(context: Context, plantId: String, slotIndex: Int, sourceUri: Uri): Boolean {
+        if (slotIndex < 0 || slotIndex >= MAX_PHOTOS) return false
         val current = getPhotos(context, plantId).toMutableList()
-        if (current.size >= MAX_PHOTOS) return false
 
         return try {
+            // Altes Foto am Slot ggf. löschen
+            current[slotIndex]?.let { oldPath ->
+                try { File(oldPath).delete() } catch (_: Exception) {}
+            }
+
             val timestamp  = System.currentTimeMillis()
-            val destFile   = File(photoDir(context), "plant_${plantId}_${timestamp}.jpg")
+            val destFile   = File(photoDir(context), "plant_${plantId}_slot${slotIndex}_${timestamp}.jpg")
             val copied     = copyUriToFile(context, sourceUri, destFile)
             if (copied) {
-                current.add(destFile.absolutePath)
-                saveForPlant(context, plantId, current)
+                current[slotIndex] = destFile.absolutePath
+                saveForPlant(context, plantId, current.filterNotNull())
             }
             copied
         } catch (e: Exception) {
-            Log.e(TAG, "addPhoto Fehler: ${e.message}")
+            Log.e(TAG, "savePhotoAtSlot Fehler: ${e.message}")
             false
         }
     }
 
-    // ── Foto löschen ─────────────────────────────────────────────
-    fun removePhoto(context: Context, plantId: String, path: String) {
+    // ── Foto an Slot löschen ─────────────────────────────────────
+    fun removePhotoAtSlot(context: Context, plantId: String, slotIndex: Int) {
         val current = getPhotos(context, plantId).toMutableList()
-        current.remove(path)
-        saveForPlant(context, plantId, current)
-        try { File(path).delete() } catch (_: Exception) {}
+        if (slotIndex in 0 until MAX_PHOTOS) {
+            current[slotIndex]?.let { path ->
+                try { File(path).delete() } catch (_: Exception) {}
+            }
+            current[slotIndex] = null
+            saveForPlant(context, plantId, current.filterNotNull())
+        }
+    }
+
+    // ── Foto hinzufügen (Legacy / Fallback) ───────
+    fun addPhoto(context: Context, plantId: String, sourceUri: Uri): Boolean {
+        val current = getPhotos(context, plantId)
+        val firstFree = current.indexOfFirst { it == null }
+        if (firstFree == -1) return false
+        return savePhotoAtSlot(context, plantId, firstFree, sourceUri)
+    }
+
+    // ── Foto löschen (Legacy / Fallback) ─────────────────────────────────────────────
+    fun removePhoto(context: Context, plantId: String, path: String) {
+        val current = getPhotos(context, plantId)
+        val idx = current.indexOf(path)
+        if (idx != -1) removePhotoAtSlot(context, plantId, idx)
     }
 
     // ── Alle Fotos einer Pflanze löschen ─────────────────────────
@@ -87,27 +117,30 @@ object PlantPhotoManager {
         mergeMode: Boolean
     ) {
         val existing = if (mergeMode) getPhotos(context, plantId).toMutableList()
-                       else mutableListOf()
+                       else MutableList<String?>(MAX_PHOTOS) { null }
+
         sourcePaths.forEach { srcPath ->
-            if (existing.size >= MAX_PHOTOS) return@forEach
+            val firstFree = existing.indexOfFirst { it == null }
+            if (firstFree == -1) return@forEach
+            
             val src = File(srcPath)
             if (!src.exists()) return@forEach
             // Bereits im plant_photos-Verzeichnis? Direkt übernehmen.
             if (src.parent == photoDir(context).absolutePath) {
-                if (srcPath !in existing) existing.add(srcPath)
+                if (srcPath !in existing) existing[firstFree] = srcPath
             } else {
                 // Aus einem anderen Verzeichnis kopieren (z. B. restored_photos)
                 val destFile = File(photoDir(context), src.name)
                 try {
                     src.copyTo(destFile, overwrite = true)
                     if (destFile.absolutePath !in existing)
-                        existing.add(destFile.absolutePath)
+                        existing[firstFree] = destFile.absolutePath
                 } catch (e: Exception) {
                     Log.e(TAG, "restorePhotos Fehler: ${e.message}")
                 }
             }
         }
-        saveForPlant(context, plantId, existing)
+        saveForPlant(context, plantId, existing.filterNotNull())
     }
 
     // ── Interne Helfer ────────────────────────────────────────────
