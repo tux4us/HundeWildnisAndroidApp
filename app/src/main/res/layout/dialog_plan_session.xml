@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/dialog_plan_session.xml -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxHeight="520dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Datum -->
+        <TextView
+            android:id="@+id/tvPlanDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_body_medium"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Kategorie -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trainingskategorie"
+            android:textSize="@dimen/text_body_small"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/spinnerPlanCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Empfehlung -->
+        <TextView
+            android:id="@+id/tvPlanSuggestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_body_very_small"
+            android:textColor="@color/green_secondary"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Dauer -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Geplante Dauer (Minuten)"
+            android:textSize="@dimen/text_body_small"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etPlanDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="3"
+            android:background="@drawable/spinner_background"
+            android:padding="10dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Notiz -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notiz (optional)"
+            android:textSize="@dimen/text_body_small"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etPlanNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:maxLines="4"
+            android:background="@drawable/spinner_background"
+            android:padding="10dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Erinnerung -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchPlanReminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔔 Erinnerung am Morgen (8:30 Uhr)"
+            android:checked="true" />
+
+    </LinearLayout>
+</ScrollView>

@@ -332,6 +332,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
         binding.btnIntervalTimer.setOnClickListener { startActivity(Intent(this, IntervalTimerSetupActivity::class.java)) }
         binding.btnTrainingDiary.setOnClickListener { startActivity(Intent(this, TrainingDiaryActivity::class.java)) }
+        binding.btnActivityCalendar.setOnClickListener { startActivity(Intent(this, ActivityCalendarActivity::class.java)) }
         binding.btnNasenarbeit.setOnClickListener { startActivity(Intent(this, NasenarbeitActivity::class.java)) }
         binding.btnDailyNotes.setOnClickListener { startActivity(Intent(this, DailyNotesActivity::class.java)) }
         binding.btnWeather.setOnClickListener { startActivity(Intent(this, WeatherActivity::class.java)) }

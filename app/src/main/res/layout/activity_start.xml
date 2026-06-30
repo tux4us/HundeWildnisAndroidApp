@@ -302,6 +302,19 @@
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnActivityCalendar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🌙📅 Aktivitätskalender"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#5A7147"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnNasenarbeit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -310,7 +323,7 @@
                             android:textSize="16sp"
                             android:textStyle="bold"
                             app:cornerRadius="12dp"
-                            app:backgroundTint="#5A7147"
+                            app:backgroundTint="#4A6B3D"
                             android:textColor="#FFFFFF"
                             android:layout_marginBottom="8dp" />
                     </LinearLayout>

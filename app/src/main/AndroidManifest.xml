@@ -398,5 +398,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <activity
+            android:name="com.hundewildnis.app.ActivityCalendarActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.HundeWildnis" />
+
     </application>
 </manifest>

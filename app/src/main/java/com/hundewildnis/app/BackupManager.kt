@@ -36,6 +36,7 @@ object BackupManager {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
         val fileName = "HundeWildnis_Backup_${dateFormat.format(Date(timestamp))}$BACKUP_EXTENSION"
         val favorites = FavoritesManager.getAll(context)
+        val plannedSessions = ActivityCalendarManager.getAllPlanned(context)
 
         // 1. Temporäres Verzeichnis für den Inhalt des Zips
         val tempZipContentDir = File(context.cacheDir, "backup_content")
@@ -443,26 +444,28 @@ object BackupManager {
             }
 
             // ✅ NEU: Gefahrenpflanzen-Fotos wiederherstellen
-         backupData.plantPhotoMap?.forEach { (plantId, backupPaths) ->
-             val restoredPaths = backupPaths.mapNotNull { backupPath ->
-                 val sourceFile = File(tempUnzipDir, backupPath)
-                 if (!sourceFile.exists()) return@mapNotNull null
-                 val destFile = File(context.filesDir, "plant_photos/${sourceFile.name}")
-                 destFile.parentFile?.mkdirs()
-                 try {
+            backupData.plantPhotoMap?.forEach { (plantId, backupPaths) ->
+                val restoredPaths = backupPaths.mapNotNull { backupPath ->
+                    val sourceFile = File(tempUnzipDir, backupPath)
+                    if (!sourceFile.exists()) return@mapNotNull null
+                    val destFile = File(context.filesDir, "plant_photos/${sourceFile.name}")
+                    destFile.parentFile?.mkdirs()
+                    try {
                      sourceFile.copyTo(destFile, overwrite = true)
                      destFile.absolutePath
-                 } catch (e: Exception) {
+                    } catch (e: Exception) {
                      Log.e(TAG, "Plant photo restore error: ${e.message}")
                      null
-                 }
-             }
-             if (restoredPaths.isNotEmpty()) {
-                 PlantPhotoManager.restorePhotos(context, plantId, restoredPaths, mergeMode)
-             }
-         }
+                    }
+                }
+                if (restoredPaths.isNotEmpty()) {
+                    PlantPhotoManager.restorePhotos(context, plantId, restoredPaths, mergeMode)
+                }
+            }
 
-
+            backupData.plannedSessions?.forEach { planned ->
+                ActivityCalendarManager.save(context, planned)
+            }
 
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true

@@ -74,6 +74,11 @@ enum class BackupDataType(
     PLANT_PHOTOS(
         "Pflanzen-Fotos",
         "Eigene Fotos zu Gefahrenpflanzen"
+    ),
+
+    PLANNED_SESSIONS(
+    "Trainingsplanung",
+    "Geplante Trainingseinheiten im Aktivitätskalender"
     )
 
 

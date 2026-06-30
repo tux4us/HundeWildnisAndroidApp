@@ -28,7 +28,9 @@ data class BackupData(
     // ✅ NEU: Intervall-Timer
     @SerializedName("intervalTimerSessions") val intervalTimerSessions: List<IntervalTimerSession>? = null,
     // ✅ NEU: Gefahrenpflanzen-Fotos (plantId → Liste absoluter Pfade)
-    @SerializedName("plantPhotoMap") val plantPhotoMap: Map<String, List<String>>? = null
+    @SerializedName("plantPhotoMap") val plantPhotoMap: Map<String, List<String>>? = null,
+    // ✅ NEU: Aktivitätskalender
+    @SerializedName("plannedSessions") val plannedSessions: List<PlannedSession>? = null
 
 
 )
