@@ -37,10 +37,10 @@
       </SelectionState>
       <SelectionState runConfigName="androidTest">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-23T22:58:39.229244235Z">
+        <DropdownSelection timestamp="2026-06-28T13:18:18.041186338Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=T1220241100264" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/tuxus/.android/avd/Pixel_Tablet.avd" />
             </handle>
           </Target>
         </DropdownSelection>

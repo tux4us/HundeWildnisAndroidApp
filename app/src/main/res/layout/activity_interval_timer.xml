@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ════════════════════════════════════════════════════════════════
+     activity_interval_timer.xml
+     Laufender Intervall-Timer
+     ════════════════════════════════════════════════════════════════ -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/super_dark_green">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="120dp"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="16dp">
+
+            <!-- Konfigurations-Zusammenfassung -->
+            <TextView
+                android:id="@+id/tvConfigSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#AAAAAA"
+                android:textSize="@dimen/text_body_small"
+                android:gravity="center"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvDogName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#CCCCCC"
+                android:textSize="@dimen/text_body_medium"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp" />
+
+            <!-- ────────── TIMER DISPLAY CARD ────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTimerDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/green_dark"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="24dp">
+
+                    <!-- Phase-Label -->
+                    <TextView
+                        android:id="@+id/tvPhaseLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aktiv-Phase"
+                        android:textColor="#AAAAAA"
+                        android:textSize="@dimen/text_body_small"
+                        android:letterSpacing="0.1"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Haupt-Countdown -->
+                    <TextView
+                        android:id="@+id/tvMainTimer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0:45"
+                        android:textColor="#FFFFFF"
+                        android:textSize="72sp"
+                        android:textStyle="bold"
+                        android:fontFamily="monospace"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Status -->
+                    <TextView
+                        android:id="@+id/tvStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bereit"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_body_large"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Phasen-Fortschrittsbalken -->
+                    <ProgressBar
+                        android:id="@+id/progressPhase"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="#4CAF50"
+                        android:progressBackgroundTint="#333333"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Rundenanzeige -->
+                    <TextView
+                        android:id="@+id/tvRoundInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Runde 1 von 6"
+                        android:textColor="#CCCCCC"
+                        android:textSize="@dimen/text_body_medium"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Runden-Fortschrittsbalken -->
+                    <ProgressBar
+                        android:id="@+id/progressRounds"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:max="6"
+                        android:progress="0"
+                        android:progressTint="#FFD54F"
+                        android:progressBackgroundTint="#333333" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Gesamt-Zeit -->
+            <TextView
+                android:id="@+id/tvElapsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gesamt: 0:00"
+                android:textColor="#888888"
+                android:textSize="@dimen/text_body_small"
+                android:layout_marginBottom="24dp" />
+
+            <!-- ────────── FERTIG-BEREICH ────────── -->
+            <LinearLayout
+                android:id="@+id/groupFinished"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardBackgroundColor="@color/green_dark"
+                    app:cardCornerRadius="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="24dp">
+
+                        <TextView
+                            android:id="@+id/tvFinishedIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🏆"
+                            android:textSize="48sp"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvFinishedTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fertig!"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/text_display_medium"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvFinishedRounds"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#CCCCCC"
+                            android:textSize="@dimen/text_body_medium"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvFinishedActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#81C784"
+                            android:textSize="@dimen/text_body_medium"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Tagebuch-Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOpenDiary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="📋  Im Trainingstagebuch eintragen"
+                    android:textSize="@dimen/text_button_small"
+                    app:backgroundTint="@color/green_primary"
+                    android:visibility="gone" />
+
+                <!-- Teilen -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShare"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="📤  Ergebnis teilen"
+                    android:textColor="#FFFFFF"
+                    app:strokeColor="#555555" />
+
+                <!-- Verlauf -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHistory"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="📋  Alle Sessions ansehen"
+                    android:textColor="#AAAAAA"
+                    app:strokeColor="#444444" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_dark">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@android:color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ────────── STEUER-BUTTONS ────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@color/dark_green">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStop"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height_medium"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="⏹️  Stopp"
+            android:textSize="@dimen/text_button_small"
+            android:textColor="#FFFFFF"
+            android:enabled="false"
+            app:strokeColor="#555555" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartPause"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height_medium"
+            android:layout_weight="2"
+            android:text="▶️  STARTEN"
+            android:textSize="@dimen/text_button_medium"
+            app:backgroundTint="@color/green_primary" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

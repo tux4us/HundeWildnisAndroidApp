@@ -659,6 +659,146 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- ─── CARD: Geländeanalyse ──────────── -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardTerrainAnalysis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#3a3a3a"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <!-- Titel-Zeile + Steigungsklasse-Badge -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="10dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="🧭  Geländeanalyse"
+                                android:textColor="#8FC357"
+                                android:textStyle="bold"
+                                android:textSize="13sp" />
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/cardSlopeClassBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="0dp">
+                                <TextView
+                                    android:id="@+id/tvSlopeClassBadge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingHorizontal="12dp"
+                                    android:paddingVertical="5dp"
+                                    android:text="🟢 Flach"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold"
+                                    android:textSize="11sp" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                        </LinearLayout>
+
+                        <!-- Hundeauswahl (nur sichtbar bei mehreren Hunden) -->
+                        <LinearLayout
+                            android:id="@+id/rowDogSelector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🐕 Für:"
+                                android:textColor="#AAAAAA"
+                                android:textSize="11sp"
+                                android:layout_marginEnd="8dp" />
+
+                            <Spinner
+                                android:id="@+id/spinnerTerrainDog"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/spinner_background" />
+
+                        </LinearLayout>
+
+                        <!-- Empfohlene Maximaldistanz -->
+                        <LinearLayout
+                            android:id="@+id/rowRecommendedDistance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="#2d2d2d"
+                            android:padding="10dp"
+                            android:layout_marginBottom="10dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Empfohlene Maximaldistanz zum Ziel (bei Annahme des ähnlichen Rückwegs) für diesen Hund"
+                                android:textColor="#AAAAAA"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvRecommendedDistance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="—"
+                                android:textColor="#8FC357"
+                                android:textStyle="bold"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <!-- Distanzvergleich-Hinweis (z.B. "Route ist 30% länger als empfohlen") -->
+                        <TextView
+                            android:id="@+id/tvDistanceComparison"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="11sp"
+                            android:textColor="#999999"
+                            android:layout_marginBottom="10dp"
+                            android:visibility="gone" />
+
+                        <!-- Warnungs-Container (dynamisch befüllt) -->
+                        <LinearLayout
+                            android:id="@+id/terrainWarningsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                        <!-- Hinweis wenn keine Warnungen -->
+                        <TextView
+                            android:id="@+id/tvNoWarnings"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="✅ Keine besonderen Risiken für diese Strecke erkannt."
+                            android:textColor="#8FC357"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
                 <!-- ─── CARD 4: Wetter am Ziel ──────── -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"

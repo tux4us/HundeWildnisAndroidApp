@@ -71,6 +71,25 @@ object BackupManager {
             // ✅ NEU: Vitalwerte
             val vitalRecords = VitalManager.exportForBackup(context)
 
+            // ✅ NEU: IntervalTimer
+            val intervalTimerSessions = IntervalTimerManager.getAllSessions(context)
+
+            // ✅ NEU: Gefahrenpflanzen-Fotos
+         val plantPhotoMap = PlantPhotoManager.getAllPhotos(context)
+         val plantPhotoMapping = mutableMapOf<String, String>()
+         plantPhotoMap.forEach { (plantId, paths) ->
+             paths.forEachIndexed { idx, path ->
+                 val sourceFile = File(path)
+                 if (sourceFile.exists()) {
+                     val destFile = File(photosInZipDir, "plant_${plantId}_${idx}_${timestamp}.jpg")
+                     if (sourceFile.copyTo(destFile, overwrite = true).exists()) {
+                         plantPhotoMapping["${plantId}::${path}"] = "${PHOTOS_DIR}/${destFile.name}"
+                     }
+                 }
+             }
+         }
+
+
             // Hunde-Fotos kopieren
             dogs.forEachIndexed { index, dog ->
                 if (dog.photoUri.isNotEmpty()) {
@@ -139,7 +158,11 @@ object BackupManager {
                 // ✅ NEU: Wetter-Favoriten
                 weatherFavorites = weatherFavorites,
                 // ✅ NEU: Vitalwerte
-                vitalRecords = vitalRecords
+                vitalRecords = vitalRecords,
+                // ✅ NEU: IntervalTimer
+                intervalTimerSessions = intervalTimerSessions,
+                // ✅ NEU: Pflanzen Foto Map
+                plantPhotoMap = plantPhotoMap
             )
 
             // Metadaten erstellen
@@ -165,7 +188,11 @@ object BackupManager {
                     // ✅ NEU: Wetter-Favoriten
                     weatherFavorites = weatherFavorites.size,
                     // ✅ NEU: Vitalwerte
-                    vitalRecords = vitalRecords.size
+                    vitalRecords = vitalRecords.size,
+                    // ✅ NEU: IntervalTimer
+                    intervalTimerSessions = intervalTimerSessions.size,
+                    // ✅ NEU: Pflanzen Photo Map
+                    plantPhotos = plantPhotoMap.values.sumOf { it.size }
                 )
             )
 
@@ -407,8 +434,35 @@ object BackupManager {
 
             // 12. Vitalwerte
             backupData.vitalRecords?.let { records ->
-                VitalManager.importFromBackup(context, records, mergeMode)
+                 VitalManager.importFromBackup(context, records, mergeMode)
             }
+
+            // 13. ✅ NEU: Intervall-Timer
+            backupData.intervalTimerSessions?.forEach { session ->
+                 IntervalTimerManager.saveSession(context, session)
+            }
+
+            // ✅ NEU: Gefahrenpflanzen-Fotos wiederherstellen
+         backupData.plantPhotoMap?.forEach { (plantId, backupPaths) ->
+             val restoredPaths = backupPaths.mapNotNull { backupPath ->
+                 val sourceFile = File(tempUnzipDir, backupPath)
+                 if (!sourceFile.exists()) return@mapNotNull null
+                 val destFile = File(context.filesDir, "plant_photos/${sourceFile.name}")
+                 destFile.parentFile?.mkdirs()
+                 try {
+                     sourceFile.copyTo(destFile, overwrite = true)
+                     destFile.absolutePath
+                 } catch (e: Exception) {
+                     Log.e(TAG, "Plant photo restore error: ${e.message}")
+                     null
+                 }
+             }
+             if (restoredPaths.isNotEmpty()) {
+                 PlantPhotoManager.restorePhotos(context, plantId, restoredPaths, mergeMode)
+             }
+         }
+
+
 
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true
@@ -691,7 +745,32 @@ object BackupManager {
                 data["vitalRecords"] = VitalManager.exportForBackup(context)
             }
 
-            // Container erstellen
+            // ✅ NEU
+            if (BackupDataType.INTERVAL_TIMER in selectedTypes) {
+                data["intervalTimerSessions"] = IntervalTimerManager.getAllSessions(context)
+            }
+
+            // ✅ NEU: Pflanzen Photos
+            if (BackupDataType.PLANT_PHOTOS in selectedTypes) {
+             val photoMap = PlantPhotoManager.getAllPhotos(context)
+             val photoMapping = mutableMapOf<String, List<String>>()
+             photoMap.forEach { (plantId, paths) ->
+                 val copiedPaths = mutableListOf<String>()
+                 paths.forEachIndexed { idx, path ->
+                     val src = File(path)
+                     if (src.exists()) {
+                         val dest = File(tempDir, "${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg")
+                         dest.parentFile?.mkdirs()
+                         try { src.copyTo(dest, overwrite = true); copiedPaths.add("${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg") }
+                         catch (_: Exception) {}
+                     }
+                 }
+                 if (copiedPaths.isNotEmpty()) photoMapping[plantId] = copiedPaths
+             }
+             data["plantPhotoMap"] = photoMapping
+         }
+
+                // Container erstellen
             val backupContainer = SelectiveBackupContainer(
                 version = getAppVersion(context),
                 timestamp = timestamp,
@@ -835,6 +914,16 @@ object BackupManager {
 
             if (BackupDataType.VITAL_RECORDS in selectedTypes && backup.data.containsKey("vitalRecords")) {
                 restoreVitalRecordsSelective(context, backup.data["vitalRecords"], mergeMode)
+            }
+
+            // ✅ NEU
+            if (BackupDataType.INTERVAL_TIMER in selectedTypes && backup.data.containsKey("intervalTimerSessions")) {
+               restoreIntervalTimerSessionsSelective(context, backup.data["intervalTimerSessions"], mergeMode)
+            }
+
+            if (BackupDataType.PLANT_PHOTOS in selectedTypes &&                    // ✅ NEU
+             backup.data.containsKey("plantPhotoMap")) {
+               restorePlantPhotosSelective(context, backup.data["plantPhotoMap"], mergeMode, tempDir)
             }
 
             Log.d(TAG, "Selective backup restored successfully")
@@ -1324,6 +1413,78 @@ object BackupManager {
         val records: List<VitalRecord> = gson.fromJson(gson.toJson(data), type)
         VitalManager.importFromBackup(context, records, mergeMode = (mode == MergeMode.ADD_NEW || mode == MergeMode.MERGE_BY_TIMESTAMP))
     }
+
+    private fun restoreIntervalTimerSessionsSelective(
+        context: Context,
+        data: Any?,
+        mergeMode: MergeMode
+    ) {
+        try {
+            val type = object : com.google.gson.reflect.TypeToken<List<IntervalTimerSession>>() {}.type
+            val json = gson.toJson(data)
+            val sessions: List<IntervalTimerSession> = gson.fromJson(json, type) ?: return
+
+            when (mergeMode) {
+                MergeMode.REPLACE_ALL -> {
+                    // Alle löschen, dann neu einfügen
+                    val existing = IntervalTimerManager.getAllSessions(context)
+                    existing.forEach { IntervalTimerManager.deleteSession(context, it.id) }
+                    sessions.forEach { IntervalTimerManager.saveSession(context, it) }
+                }
+                MergeMode.ADD_NEW -> {
+                    // Nur Sessions hinzufügen, die noch nicht vorhanden sind (UUID-Vergleich)
+                    val existingIds = IntervalTimerManager.getAllSessions(context).map { it.id }.toSet()
+                    sessions.filterNot { it.id in existingIds }
+                        .forEach { IntervalTimerManager.saveSession(context, it) }
+                }
+                MergeMode.MERGE_BY_TIMESTAMP -> {
+                    // Neueste Version je UUID behalten
+                    val existing = IntervalTimerManager.getAllSessions(context).associateBy { it.id }
+                    sessions.forEach { incoming ->
+                        val current = existing[incoming.id]
+                        if (current == null || incoming.timestamp > current.timestamp) {
+                            IntervalTimerManager.saveSession(context, incoming)
+                        }
+                    }
+                }
+            }
+            Log.d(TAG, "Intervall-Timer Sessions wiederhergestellt: ${sessions.size}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Fehler bei Intervall-Timer Restore", e)
+        }
+    }
+
+    private fun restorePlantPhotosSelective(
+        context: Context,
+        data: Any?,
+        mergeMode: MergeMode,
+        tempDir: File
+    ) {
+        try {
+            val type = object : com.google.gson.reflect.TypeToken<Map<String, List<String>>>() {}.type
+            val map: Map<String, List<String>> = Gson().fromJson(Gson().toJson(data), type)
+                ?: return
+            map.forEach { (plantId, relativePaths) ->
+                val restoredPaths = relativePaths.mapNotNull { rel ->
+                    val src = File(tempDir, rel)
+                    if (!src.exists()) return@mapNotNull null
+                    val dest = File(context.filesDir, "plant_photos/${src.name}")
+                    dest.parentFile?.mkdirs()
+                    try { src.copyTo(dest, overwrite = true); dest.absolutePath }
+                    catch (e: Exception) { Log.e(TAG, "Plant photo selective restore: ${e.message}"); null }
+                }
+                if (restoredPaths.isNotEmpty()) {
+                    PlantPhotoManager.restorePhotos(
+                        context, plantId, restoredPaths,
+                        mergeMode = (mergeMode == MergeMode.ADD_NEW || mergeMode == MergeMode.MERGE_BY_TIMESTAMP)
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "restorePlantPhotosSelective Fehler: ${e.message}")
+        }
+    }
+
 
     private fun restoreWeatherFavoritesSelective(
         context: Context,

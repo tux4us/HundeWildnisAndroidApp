@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ════════════════════════════════════════════════════════════════
+     activity_plant_detail.xml – Detailansicht einer Giftpflanze
+     inkl. 3 Foto-Slots
+     ════════════════════════════════════════════════════════════════ -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@android:color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="96dp"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ─── HEADER: Name + Giftigkeitsstufe ──────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="4dp">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="20dp">
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView android:id="@+id/tvPlantName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_display_small"
+                                android:textStyle="bold" />
+                            <TextView android:id="@+id/tvLatinName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_small"
+                                android:textStyle="italic"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardToxicity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="8dp">
+                            <LinearLayout android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center" android:padding="10dp">
+                                <TextView android:id="@+id/tvToxicityIcon"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="26sp" android:gravity="center" />
+                                <TextView android:id="@+id/tvToxicityLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/text_body_very_small"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" android:gravity="center" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvAltNames"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:layout_marginBottom="8dp" />
+                    <TextView android:id="@+id/tvToxicParts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:layout_marginBottom="4dp" />
+                    <TextView android:id="@+id/tvBodySystems"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── SAISONALER HINWEIS ────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSeasonHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#7B0000"
+                app:cardCornerRadius="@dimen/card_corner_radius">
+                <TextView android:id="@+id/tvSeasonHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_body_medium" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── EIGENE FOTOS (3 Slots) ────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="2dp">
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="16dp">
+
+                    <!-- Titel + Zähler -->
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+                        <TextView android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📷 Eigene Fotos"
+                            android:textSize="@dimen/text_body_medium"
+                            android:textStyle="bold" />
+                        <TextView android:id="@+id/tvPhotoCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 / 3 eigene Fotos"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <!-- 3 Slots nebeneinander -->
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <!-- Slot 0 -->
+                        <FrameLayout android:layout_width="0dp"
+                            android:layout_height="110dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp">
+                            <ImageView android:id="@+id/imgSlot0"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#1A1A1A"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="Foto Slot 1" />
+                            <!-- Leerer Zustand -->
+                            <TextView android:id="@+id/overlaySlot0"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="＋"
+                                android:textSize="32sp"
+                                android:textColor="#444444"
+                                android:gravity="center"
+                                android:background="#1A1A1A" />
+                            <!-- Löschen-Button -->
+                            <TextView android:id="@+id/btnDeleteSlot0"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:text="✕"
+                                android:textSize="12sp"
+                                android:textColor="#FFFFFF"
+                                android:gravity="center"
+                                android:background="#CC000000"
+                                android:visibility="gone" />
+                        </FrameLayout>
+
+                        <!-- Slot 1 -->
+                        <FrameLayout android:layout_width="0dp"
+                            android:layout_height="110dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp">
+                            <ImageView android:id="@+id/imgSlot1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#1A1A1A"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="Foto Slot 2" />
+                            <TextView android:id="@+id/overlaySlot1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="＋"
+                                android:textSize="32sp"
+                                android:textColor="#444444"
+                                android:gravity="center"
+                                android:background="#1A1A1A" />
+                            <TextView android:id="@+id/btnDeleteSlot1"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:text="✕"
+                                android:textSize="12sp"
+                                android:textColor="#FFFFFF"
+                                android:gravity="center"
+                                android:background="#CC000000"
+                                android:visibility="gone" />
+                        </FrameLayout>
+
+                        <!-- Slot 2 -->
+                        <FrameLayout android:layout_width="0dp"
+                            android:layout_height="110dp"
+                            android:layout_weight="1">
+                            <ImageView android:id="@+id/imgSlot2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#1A1A1A"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="Foto Slot 3" />
+                            <TextView android:id="@+id/overlaySlot2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="＋"
+                                android:textSize="32sp"
+                                android:textColor="#444444"
+                                android:gravity="center"
+                                android:background="#1A1A1A" />
+                            <TextView android:id="@+id/btnDeleteSlot2"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:text="✕"
+                                android:textSize="12sp"
+                                android:textColor="#FFFFFF"
+                                android:gravity="center"
+                                android:background="#CC000000"
+                                android:visibility="gone" />
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                    <TextView android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Tippe auf einen Slot um ein Foto hinzuzufügen."
+                        android:textSize="@dimen/text_body_very_small"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── ERKENNUNGSMERKMALE ─────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="@dimen/card_corner_radius">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔍 Erkennungsmerkmale"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+                    <LinearLayout android:id="@+id/layoutIdentification"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                    <TextView android:id="@+id/tvHabitat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── SYMPTOME ───────────────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardBackgroundColor="#1C0000">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🤢 Symptome nach Aufnahme"
+                        android:textColor="#FFCDD2"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+                    <LinearLayout android:id="@+id/layoutSymptoms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── ERSTE HILFE ────────────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardBackgroundColor="#001C00">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🩺 Sofortmaßnahmen"
+                        android:textColor="#C8E6C9"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+                    <LinearLayout android:id="@+id/layoutFirstAid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── TIERARZT-PFLICHT ───────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardVetRequired"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#B71C1C"
+                app:cardCornerRadius="@dimen/card_corner_radius">
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:text="🏥 SOFORT TIERARZT – auch bei kleinen Mengen"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_body_medium" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── VERWECHSLUNGSGEFAHR ────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardConfusion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#1A1200"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:strokeColor="#F57C00"
+                app:strokeWidth="1dp">
+                <TextView android:id="@+id/tvConfusionRisk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:textColor="#FFE0B2"
+                    android:textSize="@dimen/text_small" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── HINWEIS ────────────────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardBackgroundColor="@color/green_dark">
+                <TextView android:id="@+id/tvNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:textColor="#CCCCCC"
+                    android:textSize="@dimen/text_small" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Notfall-Button (fixiert) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOpenEmergency"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_large"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:text="🚨  Notfall-Assistent öffnen"
+        android:textSize="@dimen/text_button_small"
+        app:backgroundTint="#C62828" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

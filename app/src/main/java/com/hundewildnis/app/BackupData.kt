@@ -24,7 +24,13 @@ data class BackupData(
     // ✅ NEU: Wetter-Favoriten
     @SerializedName("weatherFavorites") val weatherFavorites: List<WeatherFavorite>? = null,
     // ✅ NEU: Vitalwerte
-    @SerializedName("vitalRecords") val vitalRecords: List<VitalRecord>? = null
+    @SerializedName("vitalRecords") val vitalRecords: List<VitalRecord>? = null,
+    // ✅ NEU: Intervall-Timer
+    @SerializedName("intervalTimerSessions") val intervalTimerSessions: List<IntervalTimerSession>? = null,
+    // ✅ NEU: Gefahrenpflanzen-Fotos (plantId → Liste absoluter Pfade)
+    @SerializedName("plantPhotoMap") val plantPhotoMap: Map<String, List<String>>? = null
+
+
 )
 
 data class BackupMetadata(
@@ -53,5 +59,11 @@ data class BackupItemCount(
     // ✅ NEU: Wetter-Favoriten
     @SerializedName("weatherFavorites")       val weatherFavorites: Int = 0,
     // ✅ NEU: Vitalwerte
-    @SerializedName("vitalRecords")           val vitalRecords: Int = 0
+    @SerializedName("vitalRecords")           val vitalRecords: Int = 0,
+    // ✅ NEU: Intervall-Timer
+    @SerializedName("intervalTimerSessions") val intervalTimerSessions: Int = 0,
+    // ✅ NEU: Gefahrenpflanzen-Fotos (plantId → Liste absoluter Pfade)
+    @SerializedName("plantPhotos") val plantPhotos: Int = 0
+
+
 )

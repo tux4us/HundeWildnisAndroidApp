@@ -330,6 +330,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", "Meditation der Woche") }
         binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
         binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
+        binding.btnIntervalTimer.setOnClickListener { startActivity(Intent(this, IntervalTimerSetupActivity::class.java)) }
         binding.btnTrainingDiary.setOnClickListener { startActivity(Intent(this, TrainingDiaryActivity::class.java)) }
         binding.btnNasenarbeit.setOnClickListener { startActivity(Intent(this, NasenarbeitActivity::class.java)) }
         binding.btnDailyNotes.setOnClickListener { startActivity(Intent(this, DailyNotesActivity::class.java)) }
@@ -340,6 +341,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.btnDogProfiles.setOnClickListener { startActivity(Intent(this, DogProfileActivity::class.java)) }
         binding.btnPulscheck.setOnClickListener { startActivity(Intent(this, PulscheckDogSelectActivity::class.java)) }
         binding.btnTickLoupe.setOnClickListener { startActivity(Intent(this, TickLoupeActivity::class.java)) }
+        binding.btnPlantScout.setOnClickListener { startActivity(Intent(this, PlantScoutActivity::class.java)) }
         binding.btnLocationShare.setOnClickListener { startActivity(Intent(this, LocationShareActivity::class.java)) }
         binding.btnEmergency.setOnClickListener { openEmergencyWizard() }
         binding.btnBackup.setOnClickListener { startActivity(Intent(this, BackupActivity::class.java)) }

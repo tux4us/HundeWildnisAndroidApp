@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ════════════════════════════════════════════════════════════════
+     activity_interval_timer_setup.xml
+     Konfigurationsscreen für den Intervall-Timer
+     ════════════════════════════════════════════════════════════════ -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
+
+    <!-- Scrollbarer Inhalt -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="96dp"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_large">
+
+            <!-- Hund-Label -->
+            <TextView
+                android:id="@+id/tvDogLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_body_large"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
+
+            <!-- Wesensmerkmale-Hinweis -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCharacterHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/green_dark"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:strokeColor="@color/green_secondary"
+                app:strokeWidth="1dp">
+
+                <TextView
+                    android:id="@+id/tvCharacterHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_large"
+                    android:textSize="@dimen/text_small"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Schnell-Profile -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_large">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🚀 Schnell-Profile"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerQuickProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_background" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Konfiguration -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_large">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="⚙️ Konfiguration"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Aktiv-Dauer -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="🟢 Aktiv-Phase"
+                            android:textSize="@dimen/text_small" />
+                        <TextView android:id="@+id/tvActiveValue" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="45s"
+                            android:textSize="@dimen/text_small" android:textStyle="bold"
+                            android:textColor="@color/green_primary" />
+                    </LinearLayout>
+                    <SeekBar android:id="@+id/seekBarActive" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+                        android:progressTint="@color/green_primary" android:thumbTint="@color/green_primary" />
+
+                    <!-- Pause-Dauer -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="🔵 Pause"
+                            android:textSize="@dimen/text_small" />
+                        <TextView android:id="@+id/tvRestValue" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="30s"
+                            android:textSize="@dimen/text_small" android:textStyle="bold"
+                            android:textColor="@color/green_primary" />
+                    </LinearLayout>
+                    <SeekBar android:id="@+id/seekBarRest" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+                        android:progressTint="@color/medium_green" android:thumbTint="@color/medium_green" />
+
+                    <!-- Runden -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="🔄 Runden"
+                            android:textSize="@dimen/text_small" />
+                        <TextView android:id="@+id/tvRoundsValue" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="6"
+                            android:textSize="@dimen/text_small" android:textStyle="bold"
+                            android:textColor="@color/green_primary" />
+                    </LinearLayout>
+                    <SeekBar android:id="@+id/seekBarRounds" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+                        android:progressTint="@color/green_primary" android:thumbTint="@color/green_primary" />
+
+                    <!-- Abkühlphase -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="❄️ Abkühlphase"
+                            android:textSize="@dimen/text_small" />
+                        <TextView android:id="@+id/tvCooldownValue" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="60s"
+                            android:textSize="@dimen/text_small" android:textStyle="bold"
+                            android:textColor="@color/green_primary" />
+                    </LinearLayout>
+                    <SeekBar android:id="@+id/seekBarCooldown" android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progressTint="@color/accent_green" android:thumbTint="@color/accent_green" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ton & Vibration -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="@dimen/padding_large">
+
+                    <!-- Sound -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="🔔 Ton-Feedback"
+                            android:textSize="@dimen/text_small" />
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchSound" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:checked="true" />
+                    </LinearLayout>
+
+                    <!-- Vibration -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="📳 Vibration"
+                            android:textSize="@dimen/text_small" />
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchVibration" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:checked="true" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Gesamtdauer -->
+            <TextView
+                android:id="@+id/tvTotalDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gesamtdauer: –"
+                android:textSize="@dimen/text_body_large"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <!-- ════════════════════════════════════════════════════
+                 ERKLÄRUNGSBOX – So funktioniert der Intervall-Timer
+                 ════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardBackgroundColor="@color/green_dark"
+                app:strokeColor="@color/green_secondary"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_large">
+
+                    <!-- Titel -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ℹ️  So funktioniert der Intervall-Timer"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Ablauf -->
+                    <TextView
+                        android:id="@+id/tvAblaufTitel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ablauf einer Session:"
+                        android:textSize="@dimen/text_small"
+                        android:textStyle="bold"
+                        android:textColor="#CCCCCC"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvAblaufInhalt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:textColor="#AAAAAA"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="① 3 Sekunden Vorbereitung – mach Dich bereit\n② 🟢 Aktiv-Phase – trainiere konzentriert mit Deinem Hund\n③ 🔵 Pause – Hund entspannen, kurze Auszeit\n④ Schritte ② und ③ wiederholen sich für jede Runde\n⑤ ❄️ Abkühlphase – ruhiges Ausklingen der Session (optional)" />
+
+                    <!-- Warum Intervalle -->
+                    <TextView
+                        android:id="@+id/tvWarumTitel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Warum kurze Intervalle?"
+                        android:textSize="@dimen/text_small"
+                        android:textStyle="bold"
+                        android:textColor="#CCCCCC"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvWarumInhalt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:textColor="#AAAAAA"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="Kurze, strukturierte Übungsphasen mit definierten Pausen sind effektiver als lange, unstrukturierte Sessions. Der Hund bleibt fokussiert, die Frustrationsschwelle wird nicht überschritten, und Lerninhalte setzen sich nachhaltiger fest." />
+
+                    <!-- Ton & Vibration Erklärung -->
+                    <TextView
+                        android:id="@+id/tvSignaleTitel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Signale:"
+                        android:textSize="@dimen/text_small"
+                        android:textStyle="bold"
+                        android:textColor="#CCCCCC"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvSignaleInhalt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_small"
+                        android:textColor="#AAAAAA"
+                        android:lineSpacingExtra="4dp"
+                        android:text="🔔 Kurzer Ton + Vibration = Aktiv-Phase startet\n🔔🔔 Doppelton + Vibration = Pause beginnt\n🔔🔔🔔 Dreifachton = Session abgeschlossen\n\nDie Signale funktionieren auch wenn der Bildschirm dunkel ist." />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_primary">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@android:color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Start-Button (fixiert am unteren Rand) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_large"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:text="▶️  Timer starten"
+        android:textSize="@dimen/text_button_medium"
+        app:backgroundTint="@color/green_primary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

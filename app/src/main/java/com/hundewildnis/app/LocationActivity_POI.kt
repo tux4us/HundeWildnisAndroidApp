@@ -102,6 +102,17 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private var routingProfile = "foot-hiking"
     private var isRerouting = false
 
+    // ✅ NEU: Geländeanalyse – letzter Wetter-Snapshot für die aktive Route
+    private data class WeatherSnapshot(
+        val tempC: Double,
+        val precipProbabilityPercent: Int,
+        val windKmh: Double
+    )
+    private var lastWeatherSnapshot: WeatherSnapshot? = null
+
+    // ✅ NEU: Aktuell für die Geländeanalyse ausgewählter Hund (bei mehreren Profilen)
+    private var terrainSelectedDogId: String? = null
+
     private val waypointMarkers: MutableList<Marker> = mutableListOf()
 
     private var sunriseRouteMarker: Marker? = null
@@ -447,6 +458,17 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         sunsetRouteMarker?.let { binding.mapView.overlays.remove(it) }
         sunsetRouteMarker = null
 
+        // ── NEU: Geländeanalyse zurücksetzen ─────────────────
+        lastWeatherSnapshot = null
+        binding.terrainWarningsContainer.removeAllViews()
+        binding.tvNoWarnings.visibility = View.GONE
+        binding.tvDistanceComparison.visibility = View.GONE
+        binding.tvRecommendedDistance.text = "—"
+        binding.tvSlopeClassBadge.text = "—"
+        binding.rowDogSelector.visibility = View.GONE
+        // Hinweis: terrainSelectedDogId bewusst NICHT zurücksetzen –
+        // die Hundeauswahl bleibt über mehrere Navigationen hinweg erhalten.
+
         binding.mapView.invalidate()
         currentLocation?.let { centerMapOnLocation(it) }
 
@@ -597,6 +619,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.tvNavHeaderInfo.text =
             if (km < 1.0) "${routeData.distance.toInt()} m  •  $timeText"
             else          "${"%.1f".format(km)} km  •  $timeText"
+
+        // ── NEU: Geländeanalyse aktualisieren ────────────────
+        updateTerrainAnalysisCard(routeData)
     }
 
     private fun updateSurfaceCard(
@@ -919,7 +944,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.invalidate()
 
         if (isNavigating) {
-                currentRouteDistance = calculateDistance(fromLat, fromLon, toLat, toLon)
+            currentRouteDistance = calculateDistance(fromLat, fromLon, toLat, toLon)
             val speed = if (routingProfile == "cycling-regular") 2.77 else 1.4
             currentRouteDuration = currentRouteDistance / speed
             updateNavigationInfo()
@@ -1789,6 +1814,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             binding.tvWeatherPrecip.text       = "$precip%"
             binding.tvWeatherWind.text         = "${"%.0f".format(windKmh)} km/h\nBft $beaufort"
             binding.tvWeatherHumidity.text     = "$hum%"
+
+            // ── NEU: Wetter-Snapshot für Geländeanalyse merken + Card aktualisieren ──
+            lastWeatherSnapshot = WeatherSnapshot(temp, precip, windKmh)
+            currentRouteData?.let { updateTerrainAnalysisCard(it) }
 
             // Sonnenauf-/untergang
             // NEU — alle verfügbaren Tage auslesen:
@@ -2772,5 +2801,163 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build()
         )
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // GELÄNDEANALYSE
+    //
+    // Reine Auswertungsschicht über bereits vorhandene RouteData-
+    // und Wetterwerte. Löst KEINEN eigenen API-Call aus.
+    // ════════════════════════════════════════════════════════════
+
+    private fun updateTerrainAnalysisCard(routeData: RouteData) {
+        // Steigungsklasse aus Distanz + Höhenmetern ableiten
+        val slopeClass = SlopeClass.fromRoute(
+            routeData.distance, routeData.totalAscent, routeData.totalDescent
+        )
+
+        // Badge aktualisieren
+        binding.tvSlopeClassBadge.text = "${slopeClass.icon} ${slopeClass.displayName}"
+        binding.cardSlopeClassBadge.setCardBackgroundColor(
+            Color.parseColor(slopeClass.color)
+        )
+
+        // Asphaltanteil aus surfaceSummary ermitteln (Name-basiert,
+        // robust gegen Code-Änderungen im RouteInfoHelper)
+        val asphaltPercent = routeData.surfaceSummary
+            .filter { it.name.contains("Asphalt", ignoreCase = true) ||
+                    it.name.contains("Beton", ignoreCase = true) }
+            .sumOf { it.percentage }
+
+        // ✅ Hundeauswahl: Dropdown bei mehreren Profilen, sonst automatisch
+        val selectedDog = setupTerrainDogSelector()
+        val character   = selectedDog?.toCharacter()
+        // Gewicht ist als freier String gespeichert (z.B. "12,5 kg" oder "12.5")
+        // → robust per Regex extrahieren statt direktem toDoubleOrNull()
+        val weightKg = selectedDog?.weight
+            ?.let { Regex("""[\d.,]+""").find(it)?.value }
+            ?.replace(",", ".")
+            ?.toDoubleOrNull()
+
+        // Empfohlene Maximaldistanz
+        val recommendedM = TerrainRecommendationEngine.recommendMaxDistance(
+            character, weightKg, slopeClass
+        )
+        binding.tvRecommendedDistance.text = if (recommendedM >= 1000)
+            "${"%.1f".format(recommendedM / 1000.0)} km"
+        else
+            "$recommendedM m"
+
+        // Vergleich Routendistanz vs. Empfehlung
+        if (routeData.distance > recommendedM * 1.15) {
+            val overPercent = ((routeData.distance / recommendedM - 1.0) * 100).toInt()
+            binding.tvDistanceComparison.visibility = View.VISIBLE
+            binding.tvDistanceComparison.text =
+                "⚠️ Diese Route ist ca. $overPercent % länger als die Empfehlung" +
+                        (selectedDog?.let { " für ${it.name}" } ?: "")
+        } else {
+            binding.tvDistanceComparison.visibility = View.GONE
+        }
+
+        // Warnungen aus Steigung + Asphalt + Wetter-Snapshot
+        val snapshot = lastWeatherSnapshot
+        val warnings = TerrainRecommendationEngine.buildWarnings(
+            slopeClass                = slopeClass,
+            asphaltPercent            = asphaltPercent,
+            tempC                     = snapshot?.tempC,
+            precipProbabilityPercent  = snapshot?.precipProbabilityPercent,
+            windKmh                   = snapshot?.windKmh
+        )
+
+        renderTerrainWarnings(warnings)
+    }
+
+    /**
+     * Befüllt/aktualisiert den Hunde-Auswahl-Spinner der Geländeanalyse-Card.
+     * - 0 Hunde: Spinner ausgeblendet, keine Empfehlungsanpassung
+     * - 1 Hund: Spinner ausgeblendet, dieser Hund wird automatisch verwendet
+     * - 2+ Hunde: Spinner eingeblendet, Auswahl wird in terrainSelectedDogId gemerkt
+     *
+     * @return Das aktuell für die Empfehlung zu verwendende DogProfile (oder null)
+     */
+    private fun setupTerrainDogSelector(): DogProfile? {
+        val profiles = DogProfileManager.getAllProfiles(this)
+
+        if (profiles.isEmpty()) {
+            binding.rowDogSelector.visibility = View.GONE
+            return null
+        }
+
+        if (profiles.size == 1) {
+            binding.rowDogSelector.visibility = View.GONE
+            terrainSelectedDogId = profiles.first().id
+            return profiles.first()
+        }
+
+        // Mehrere Hunde → Spinner einblenden und befüllen
+        binding.rowDogSelector.visibility = View.VISIBLE
+
+        // Falls noch keine Auswahl getroffen wurde oder der gewählte Hund
+        // nicht mehr existiert: ersten Hund vorauswählen
+        if (terrainSelectedDogId == null || profiles.none { it.id == terrainSelectedDogId }) {
+            terrainSelectedDogId = profiles.first().id
+        }
+
+        val names = profiles.map { it.name }
+        val currentAdapter = binding.spinnerTerrainDog.adapter
+        val needsRebuild = currentAdapter == null ||
+                currentAdapter.count != names.size ||
+                (0 until names.size).any { currentAdapter.getItem(it) != names[it] }
+
+        if (needsRebuild) {
+            val adapter = android.widget.ArrayAdapter(
+                this, android.R.layout.simple_spinner_item, names
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerTerrainDog.adapter = adapter
+
+            val selectedIndex = profiles.indexOfFirst { it.id == terrainSelectedDogId }.coerceAtLeast(0)
+            binding.spinnerTerrainDog.setSelection(selectedIndex, false)
+
+            binding.spinnerTerrainDog.onItemSelectedListener =
+                object : android.widget.AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: android.widget.AdapterView<*>?, view: View?, pos: Int, id: Long
+                    ) {
+                        val newSelection = profiles.getOrNull(pos) ?: return
+                        if (terrainSelectedDogId != newSelection.id) {
+                            terrainSelectedDogId = newSelection.id
+                            // Card mit neuer Auswahl sofort neu berechnen
+                            currentRouteData?.let { updateTerrainAnalysisCard(it) }
+                        }
+                    }
+                    override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+                }
+        }
+
+        return profiles.firstOrNull { it.id == terrainSelectedDogId }
+    }
+
+    private fun renderTerrainWarnings(warnings: List<TerrainWarning>) {
+        binding.terrainWarningsContainer.removeAllViews()
+
+        if (warnings.isEmpty()) {
+            binding.tvNoWarnings.visibility = View.VISIBLE
+            return
+        }
+        binding.tvNoWarnings.visibility = View.GONE
+
+        warnings.forEach { warning ->
+            val view = layoutInflater.inflate(
+                R.layout.item_terrain_warning, binding.terrainWarningsContainer, false
+            )
+            view.findViewById<TextView>(R.id.tvWarningIcon).text = warning.level.icon
+            view.findViewById<TextView>(R.id.tvWarningTitle).apply {
+                text = warning.title
+                setTextColor(Color.parseColor(warning.level.color))
+            }
+            view.findViewById<TextView>(R.id.tvWarningMessage).text = warning.message
+            binding.terrainWarningsContainer.addView(view)
+        }
     }
 }

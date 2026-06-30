@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/item_plant.xml -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardPlantItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Farbstreifen links nach Giftigkeitsstufe -->
+        <View
+            android:id="@+id/viewToxicityStripe"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="#C62828" />
+
+        <!-- Inhalt -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <!-- Name + Saisonbadge -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/tvPlantName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_body_medium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvPlantSeasonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_body_very_small"
+                    android:textColor="#FF5252"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Lateinischer Name -->
+            <TextView
+                android:id="@+id/tvPlantLatin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                android:textStyle="italic"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Giftigkeitsstufe -->
+            <TextView
+                android:id="@+id/tvPlantToxicity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                android:textStyle="bold"
+                android:layout_marginBottom="3dp" />
+
+            <!-- Betroffene Systeme -->
+            <TextView
+                android:id="@+id/tvPlantSystems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_body_very_small"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+        </LinearLayout>
+
+        <!-- Pfeil -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="›"
+            android:textSize="24sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:gravity="center"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

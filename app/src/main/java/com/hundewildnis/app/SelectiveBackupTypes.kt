@@ -62,7 +62,21 @@ enum class BackupDataType(
     VITAL_RECORDS(
         "Vitalwerte",
         "Alle Puls- und Vitalwert-Messungen"
+    ),
+
+    // ✅ NEU
+    INTERVAL_TIMER(
+        "Intervall-Timer",
+        "Alle Timer-Sessions"
+    ),
+
+    // ✅ NEU
+    PLANT_PHOTOS(
+        "Pflanzen-Fotos",
+        "Eigene Fotos zu Gefahrenpflanzen"
     )
+
+
 }
 
 enum class MergeMode(
