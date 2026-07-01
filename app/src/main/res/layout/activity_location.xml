@@ -495,6 +495,16 @@
                     android:text="🚲"
                     app:cornerRadius="4dp"
                     app:strokeColor="#8FC357" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnProfileCar"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="36dp"
+                    android:padding="0dp"
+                    android:text="🚗"
+                    app:cornerRadius="4dp"
+                    app:strokeColor="#8FC357" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <TextView

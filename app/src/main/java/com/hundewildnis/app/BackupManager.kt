@@ -75,20 +75,33 @@ object BackupManager {
             // ✅ NEU: IntervalTimer
             val intervalTimerSessions = IntervalTimerManager.getAllSessions(context)
 
-            // ✅ NEU: Gefahrenpflanzen-Fotos
-         val plantPhotoMap = PlantPhotoManager.getAllPhotos(context)
-         val plantPhotoMapping = mutableMapOf<String, String>()
-         plantPhotoMap.forEach { (plantId, paths) ->
-             paths.forEachIndexed { idx, path ->
-                 val sourceFile = File(path)
-                 if (sourceFile.exists()) {
-                     val destFile = File(photosInZipDir, "plant_${plantId}_${idx}_${timestamp}.jpg")
-                     if (sourceFile.copyTo(destFile, overwrite = true).exists()) {
-                         plantPhotoMapping["${plantId}::${path}"] = "${PHOTOS_DIR}/${destFile.name}"
-                     }
-                 }
-             }
-         }
+            // ✅ NEU: Aktivitätskalender
+            val plannedSessions = ActivityCalendarManager.getAllPlanned(context)
+
+            // ✅ NEU: Gefahrenpflanzen-Fotos sammeln (relativ für Backup)
+            val originalPlantPhotoMap = PlantPhotoManager.getAllPhotos(context)
+            val plantPhotoMapForBackup = mutableMapOf<String, List<String>>()
+            
+            originalPlantPhotoMap.forEach { (plantId, paths) ->
+                val backupPaths = mutableListOf<String>()
+                paths.forEachIndexed { idx, path ->
+                    val sourceFile = File(path)
+                    if (sourceFile.exists()) {
+                        val fileNameInZip = "plant_${plantId}_${idx}_${timestamp}.jpg"
+                        val destFile = File(photosInZipDir, fileNameInZip)
+                        try {
+                            if (sourceFile.copyTo(destFile, overwrite = true).exists()) {
+                                backupPaths.add("${PHOTOS_DIR}/$fileNameInZip")
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Fehler beim Kopieren von Pflanzenfoto: ${e.message}")
+                        }
+                    }
+                }
+                if (backupPaths.isNotEmpty()) {
+                    plantPhotoMapForBackup[plantId] = backupPaths
+                }
+            }
 
 
             // Hunde-Fotos kopieren
@@ -162,8 +175,10 @@ object BackupManager {
                 vitalRecords = vitalRecords,
                 // ✅ NEU: IntervalTimer
                 intervalTimerSessions = intervalTimerSessions,
+                // ✅ NEU: Aktivitätskalender
+                plannedSessions = plannedSessions,
                 // ✅ NEU: Pflanzen Foto Map
-                plantPhotoMap = plantPhotoMap
+                plantPhotoMap = plantPhotoMapForBackup
             )
 
             // Metadaten erstellen
@@ -192,8 +207,10 @@ object BackupManager {
                     vitalRecords = vitalRecords.size,
                     // ✅ NEU: IntervalTimer
                     intervalTimerSessions = intervalTimerSessions.size,
+                    // ✅ NEU: Aktivitätskalender
+                    plannedSessions = plannedSessions.size,
                     // ✅ NEU: Pflanzen Photo Map
-                    plantPhotos = plantPhotoMap.values.sumOf { it.size }
+                    plantPhotos = plantPhotoMapForBackup.values.sumOf { it.size }
                 )
             )
 
@@ -753,6 +770,11 @@ object BackupManager {
                 data["intervalTimerSessions"] = IntervalTimerManager.getAllSessions(context)
             }
 
+            // ✅ NEU
+            if (BackupDataType.PLANNED_SESSIONS in selectedTypes) {
+                data["plannedSessions"] = ActivityCalendarManager.getAllPlanned(context)
+            }
+
             // ✅ NEU: Pflanzen Photos
             if (BackupDataType.PLANT_PHOTOS in selectedTypes) {
              val photoMap = PlantPhotoManager.getAllPhotos(context)
@@ -922,6 +944,11 @@ object BackupManager {
             // ✅ NEU
             if (BackupDataType.INTERVAL_TIMER in selectedTypes && backup.data.containsKey("intervalTimerSessions")) {
                restoreIntervalTimerSessionsSelective(context, backup.data["intervalTimerSessions"], mergeMode)
+            }
+
+            // ✅ NEU
+            if (BackupDataType.PLANNED_SESSIONS in selectedTypes && backup.data.containsKey("plannedSessions")) {
+                restorePlannedSessionsSelective(context, backup.data["plannedSessions"], mergeMode)
             }
 
             if (BackupDataType.PLANT_PHOTOS in selectedTypes &&                    // ✅ NEU
@@ -1454,6 +1481,40 @@ object BackupManager {
             Log.d(TAG, "Intervall-Timer Sessions wiederhergestellt: ${sessions.size}")
         } catch (e: Exception) {
             Log.e(TAG, "Fehler bei Intervall-Timer Restore", e)
+        }
+    }
+
+    private fun restorePlannedSessionsSelective(
+        context: Context,
+        data: Any?,
+        mergeMode: MergeMode
+    ) {
+        try {
+            val type = object : com.google.gson.reflect.TypeToken<List<PlannedSession>>() {}.type
+            val json = gson.toJson(data)
+            val sessions: List<PlannedSession> = gson.fromJson(json, type) ?: return
+
+            when (mergeMode) {
+                MergeMode.REPLACE_ALL -> {
+                    val existing = ActivityCalendarManager.getAllPlanned(context)
+                    existing.forEach { ActivityCalendarManager.delete(context, it.id) }
+                    sessions.forEach { ActivityCalendarManager.save(context, it) }
+                }
+                MergeMode.ADD_NEW -> {
+                    val existingIds = ActivityCalendarManager.getAllPlanned(context).map { it.id }.toSet()
+                    sessions.filterNot { it.id in existingIds }
+                        .forEach { ActivityCalendarManager.save(context, it) }
+                }
+                MergeMode.MERGE_BY_TIMESTAMP -> {
+                    // Planned Sessions haben keinen Timestamp, daher ADD_NEW
+                    val existingIds = ActivityCalendarManager.getAllPlanned(context).map { it.id }.toSet()
+                    sessions.filterNot { it.id in existingIds }
+                        .forEach { ActivityCalendarManager.save(context, it) }
+                }
+            }
+            Log.d(TAG, "Geplante Sessions wiederhergestellt: ${sessions.size}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Fehler bei Planned Sessions Restore", e)
         }
     }
 

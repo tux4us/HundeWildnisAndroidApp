@@ -15,6 +15,7 @@ import android.view.View
 import android.view.Menu
 import android.view.MenuItem
 import android.content.res.Configuration
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -70,6 +71,9 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
     private var isRerouting = false
     private var isFirstLocation = true
 
+    private var lastUserInteractionTime = 0L
+    private var autoReCenterJob: Job? = null
+
     private lateinit var deviceAdapter: DeviceAdapter
     private val deviceList = mutableListOf<LocationPayload>()
 
@@ -119,6 +123,7 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
         updateShareStatus()
         startMapRefreshLoop()
         startLocationUpdates()
+        startAutoReCenterTimer()
     }
 
     override fun onPause() {
@@ -126,6 +131,7 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.onPause()
         myLocationOverlay.disableMyLocation()
         refreshJob?.cancel()
+        autoReCenterJob?.cancel()
         stopLocationUpdates()
     }
 
@@ -239,6 +245,14 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(15.0)
+            
+            // Nutzerinteraktion erkennen
+            setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_MOVE || event.action == MotionEvent.ACTION_DOWN) {
+                    lastUserInteractionTime = System.currentTimeMillis()
+                }
+                false
+            }
         }
 
         // Maßstab
@@ -318,11 +332,9 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
             if (isNavigating) {
                 stopNavigation()
             } else {
-                if (binding.btnCenterLocation.isChecked) {
-                    myLocationOverlay.enableFollowLocation()
-                } else {
-                    myLocationOverlay.disableFollowLocation()
-                }
+                // Sofort zurück zur Automatik-Ansicht (Zentrieren & Zoom)
+                lastUserInteractionTime = 0L
+                autoCenterAndZoom()
             }
         }
 
@@ -363,6 +375,10 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
             binding.mapView.controller.animateTo(GeoPoint(location.latitude, location.longitude))
             isFirstLocation = false
         }
+        
+        // Automatisches Zentrieren/Zoomen triggern
+        autoCenterAndZoom()
+        
         if (isNavigating && !isRerouting) {
             checkRerouting(location)
             updateNavigationInfo()
@@ -560,6 +576,10 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
 
         val toRemove = locationMarkers.keys.filter { it !in seenIds }
         toRemove.forEach { id -> binding.mapView.overlays.remove(locationMarkers[id]); locationMarkers.remove(id) }
+        
+        // Automatisches Zoomen triggern nach Marker-Update
+        autoCenterAndZoom()
+        
         binding.mapView.invalidate()
     }
 
@@ -581,6 +601,84 @@ class LocationShareActivity : SecureBaseActivity(), LocationListener {
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(btnColor)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(btnColor)
+    }
+
+    // ── Auto-Zentrierung & Zoom ──────────────────────────────────────────
+
+    private fun startAutoReCenterTimer() {
+        autoReCenterJob?.cancel()
+        autoReCenterJob = lifecycleScope.launch {
+            while (isActive) {
+                delay(1000)
+                if (System.currentTimeMillis() - lastUserInteractionTime >= 5000L) {
+                    withContext(Dispatchers.Main) {
+                        autoCenterAndZoom()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun autoCenterAndZoom() {
+        // Wenn Nutzer gerade interagiert hat, 5 Sek warten
+        if (System.currentTimeMillis() - lastUserInteractionTime < 5000L) return
+
+        val userLocation = currentLocation ?: myLocationOverlay.myLocation?.let {
+            Location("osm").apply { latitude = it.latitude; longitude = it.longitude }
+        } ?: return
+
+        val userGeoPoint = GeoPoint(userLocation.latitude, userLocation.longitude)
+
+        // Punkte sammeln, die sichtbar sein müssen
+        val pointsToInclude = mutableListOf<GeoPoint>()
+        pointsToInclude.add(userGeoPoint)
+
+        if (isNavigating) {
+            // Bei Navigation: Route und Ziel einschließen
+            currentRouteData?.points?.let { pointsToInclude.addAll(it) }
+            finalDestination?.let { pointsToInclude.add(it) }
+        } else {
+            // Sonst: Alle anderen Geräte einschließen
+            locationMarkers.values.forEach { pointsToInclude.add(it.position) }
+        }
+
+        if (pointsToInclude.size > 1) {
+            // Symmetrische BoundingBox um den User berechnen, damit er im Zentrum bleibt
+            var maxLatDiff = 0.0
+            var maxLonDiff = 0.0
+
+            for (p in pointsToInclude) {
+                maxLatDiff = max(maxLatDiff, abs(p.latitude - userGeoPoint.latitude))
+                maxLonDiff = max(maxLonDiff, abs(p.longitude - userGeoPoint.longitude))
+            }
+
+            // Puffer hinzufügen (20%)
+            maxLatDiff *= 1.2
+            maxLonDiff *= 1.2
+            
+            // Minimale Ausdehnung sicherstellen (ca. 500m), damit nicht zu nah gezoomt wird
+            maxLatDiff = max(maxLatDiff, 0.005)
+            maxLonDiff = max(maxLonDiff, 0.005)
+
+            val boundingBox = org.osmdroid.util.BoundingBox(
+                userGeoPoint.latitude + maxLatDiff,
+                userGeoPoint.longitude + maxLonDiff,
+                userGeoPoint.latitude - maxLatDiff,
+                userGeoPoint.longitude - maxLonDiff
+            )
+
+            // animateTo zentriert, zoomToBoundingBox setzt den Zoom
+            // Wir nutzen zoomToBoundingBox mit animate=true
+            binding.mapView.zoomToBoundingBox(boundingBox, true, 100)
+            // Sicherheitshalber nochmal das Zentrum forcieren (OSM BoundingBox zentriert sonst auf BB-Mitte)
+            binding.mapView.controller.animateTo(userGeoPoint)
+        } else {
+            // Nur der User allein: Standard-Zoom und Zentrierung
+            binding.mapView.controller.animateTo(userGeoPoint)
+            if (binding.mapView.zoomLevelDouble < 15.0) {
+                binding.mapView.controller.setZoom(17.0)
+            }
+        }
     }
 
     // ── Hilfsmethoden (Analog LocationActivity) ────────────────────────────

@@ -65,7 +65,9 @@ data class BackupItemCount(
     // ✅ NEU: Intervall-Timer
     @SerializedName("intervalTimerSessions") val intervalTimerSessions: Int = 0,
     // ✅ NEU: Gefahrenpflanzen-Fotos (plantId → Liste absoluter Pfade)
-    @SerializedName("plantPhotos") val plantPhotos: Int = 0
+    @SerializedName("plantPhotos") val plantPhotos: Int = 0,
+    // ✅ NEU
+    @SerializedName("plannedSessions") val plannedSessions: Int = 0
 
 
 )

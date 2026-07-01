@@ -175,7 +175,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val mapEventsReceiver = object : org.osmdroid.events.MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
                 poiMarkers.forEach { it.closeInfoWindow() }
-                if (!isNavigating && p != null) {
+                if (p != null) {
                     placeTapMarkerAndShowInfo(p.latitude, p.longitude)
                 }
                 return false
@@ -201,7 +201,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupPOIList() {
         binding.poiRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPOIOnMap(poi) }
+        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> 
+            showPointInfoDialog(poi.lat, poi.lon, poi) 
+        }
     }
 
     private fun setupButtons() {
@@ -229,12 +231,13 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             }
         }
 
-        // ✅ NEU: Profil-Toggle (Fuß / Fahrrad)
+        // ✅ NEU: Profil-Toggle (Fuß / Fahrrad / Auto)
         binding.toggleRoutingProfile.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 routingProfile = when (checkedId) {
                     R.id.btnProfileFoot -> "foot-hiking"
                     R.id.btnProfileBike -> "cycling-regular"
+                    R.id.btnProfileCar  -> "driving-car"
                     else -> "foot-hiking"
                 }
                 // Bei Profilwechsel Route sofort neu berechnen wenn Nav aktiv
@@ -945,7 +948,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         if (isNavigating) {
             currentRouteDistance = calculateDistance(fromLat, fromLon, toLat, toLon)
-            val speed = if (routingProfile == "cycling-regular") 2.77 else 1.4
+            val speed = when (routingProfile) {
+                "cycling-regular" -> 2.77
+                "driving-car"     -> 10.0
+                else              -> 1.4
+            }
             currentRouteDuration = currentRouteDistance / speed
             updateNavigationInfo()
         }
@@ -1267,24 +1274,31 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun searchPOI(query: String) {
-        val loc = myLocationOverlay.myLocation ?: run {
-            val last = try {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                else null
-            } catch (e: Exception) { null }
-            last?.let { GeoPoint(it.latitude, it.longitude) }
-        }
+        val searchLoc = currentLocation?.let { GeoPoint(it.latitude, it.longitude) }
+            ?: myLocationOverlay.myLocation
+            ?: run {
+                val last = try {
+                    if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                            ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                    else null
+                } catch (e: Exception) { null }
+                last?.let { GeoPoint(it.latitude, it.longitude) }
+            }
 
-        if (loc == null) { Toast.makeText(this, "Standort wird noch ermittelt...", Toast.LENGTH_SHORT).show(); return }
+        if (searchLoc == null) {
+            Toast.makeText(this, "Standort wird noch ermittelt...", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         clearSearchResults()
         binding.progressSearch.visibility = View.VISIBLE
 
         lifecycleScope.launch {
             try {
-                val results = withContext(Dispatchers.IO) { searchNearbyPOIs(query, loc.latitude, loc.longitude, 20000) }
+                val results = withContext(Dispatchers.IO) {
+                    searchNearbyPOIs(query, searchLoc.latitude, searchLoc.longitude, 20000)
+                }
                 binding.progressSearch.visibility = View.GONE
                 if (results.isEmpty()) {
                     Toast.makeText(this@LocationActivity, "Keine Ergebnisse für '$query' in der Nähe gefunden", Toast.LENGTH_SHORT).show()
@@ -1300,23 +1314,34 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun searchNearbyPOIs(query: String, lat: Double, lon: Double, radius: Int): List<POI> {
-        return try {
-            val r = searchViaOverpass(query, lat, lon, radius)
-            if (r.isNotEmpty()) r else searchViaNominatim(query, lat, lon, radius)
-        } catch (e: java.net.SocketTimeoutException) {
-            searchViaNominatim(query, lat, lon, radius)
+        // Strategie-Wechsel: Nominatim zuerst (schneller für Namen/Adressen/Orte)
+        // und mit zwei Stufen (nah & global).
+        try {
+            // Stufe 1: Nominatim nah am User
+            val nearbyResults = searchViaNominatim(query, lat, lon, radius, isBounded = true)
+            if (nearbyResults.isNotEmpty()) return nearbyResults
+
+            // Stufe 2: Nominatim global (falls nah nichts gefunden wurde)
+            val globalResults = searchViaNominatim(query, lat, lon, radius, isBounded = false)
+            if (globalResults.isNotEmpty()) return globalResults
+
+            // Stufe 3: Overpass (für spezifische OSM-Tags, falls Nominatim nichts liefert)
+            return searchViaOverpass(query, lat, lon, radius / 2) // Kleinerer Radius für Overpass-Regex (Speed!)
         } catch (e: Exception) {
-            searchViaNominatim(query, lat, lon, radius)
+            Log.e("LocationActivity", "Suche fehlgeschlagen", e)
+            return emptyList()
         }
     }
 
     private fun searchViaOverpass(query: String, lat: Double, lon: Double, radius: Int): List<POI> {
+        // Regex-Suche (~".*",i) in Overpass ist bei großem Radius EXTREM langsam.
+        // Wir begrenzen den Radius hier auf max 10km für Overpass.
+        val safeRadius = radius.coerceAtMost(10000)
         val overpassQuery = """
-            [out:json][timeout:15];
+            [out:json][timeout:10];
             (
-              node["name"~"$query",i](around:$radius,$lat,$lon);
-              node["brand"~"$query",i](around:$radius,$lat,$lon);
-              node["operator"~"$query",i](around:$radius,$lat,$lon);
+              node["name"~"$query",i](around:$safeRadius,$lat,$lon);
+              node["brand"~"$query",i](around:$safeRadius,$lat,$lon);
             );
             out center;
         """.trimIndent()
@@ -1326,21 +1351,36 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
         conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
         conn.doOutput = true
-        conn.connectTimeout = 10000; conn.readTimeout = 15000
+        conn.connectTimeout = 8000; conn.readTimeout = 10000
         conn.outputStream.use { it.write("data=${URLEncoder.encode(overpassQuery, "UTF-8")}".toByteArray()) }
         if (conn.responseCode != 200) return emptyList()
         return parseOverpassResponse(conn.inputStream.bufferedReader().use { it.readText() }, lat, lon)
     }
 
-    private fun searchViaNominatim(query: String, lat: Double, lon: Double, radius: Int): List<POI> {
-        val delta = 0.18
-        val viewbox = "${lon - delta},${lat + delta},${lon + delta},${lat - delta}"
-        val url = "https://nominatim.openstreetmap.org/search?q=${URLEncoder.encode(query, "UTF-8")}&format=json&viewbox=$viewbox&bounded=1&addressdetails=1&limit=30"
+    private fun searchViaNominatim(query: String, lat: Double, lon: Double, radius: Int, isBounded: Boolean): List<POI> {
+        val baseUrl = "https://nominatim.openstreetmap.org/search?q=${URLEncoder.encode(query, "UTF-8")}&format=json&addressdetails=1&limit=30"
+        
+        val url = if (isBounded) {
+            // Fokus auf Umkreis (ca. 40km Box)
+            val delta = 0.35 
+            val viewbox = "${lon - delta},${lat + delta},${lon + delta},${lat - delta}"
+            "$baseUrl&viewbox=$viewbox&bounded=1"
+        } else {
+            // Global, aber lat/lon als Präferenz mitschicken
+            "$baseUrl&lat=$lat&lon=$lon"
+        }
+
         val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
         conn.requestMethod = "GET"
         conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
         conn.connectTimeout = 8000; conn.readTimeout = 8000
-        return parseNominatimResponse(conn.inputStream.bufferedReader().use { it.readText() }, lat, lon, radius)
+        
+        if (conn.responseCode != 200) return emptyList()
+        val response = conn.inputStream.bufferedReader().use { it.readText() }
+        
+        // Bei globaler Suche filtern wir nicht nach Radius
+        val filterRadius = if (isBounded) radius else Int.MAX_VALUE
+        return parseNominatimResponse(response, lat, lon, filterRadius)
     }
 
     private fun parseOverpassResponse(response: String, userLat: Double, userLon: Double): List<POI> {
@@ -1397,7 +1437,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 title   = "${poi.categoryIcon} ${poi.name}"
                 snippet = "📍 ${"%.0f".format(poi.distance)}m entfernt\n${poi.address ?: ""}"
                 icon    = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
-                setOnMarkerClickListener { _, _ -> showNavigationDialog(poi); true }
+                setOnMarkerClickListener { _, _ -> showPointInfoDialog(poi.lat, poi.lon, poi); true }
             }
             binding.mapView.overlays.add(marker)
             searchResultMarkers.add(marker)
@@ -2018,37 +2058,45 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         val alreadyFav = FavoritesManager.isFavorite(this, tapLat, tapLon)
 
-        val dialog = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(msg.toString())
-            .setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(navTarget) }
-            .setNeutralButton(if (alreadyFav) "✓ In Favoriten" else "⭐ Favorit") { _, _ -> }
-            .setNegativeButton("Abbrechen", null)
-            .create()
 
+        if (isNavigating) {
+            // Drei-Button-Lösung für Navigation:
+            builder.setPositiveButton("🏁 Neues Ziel") { _, _ ->
+                stopNavigation()
+                startNavigationToPOI(navTarget)
+            }
+            builder.setNeutralButton("🧭 Zwischenziel") { _, _ ->
+                addWaypointToNavigation(navTarget)
+            }
+            builder.setNegativeButton("Abbrechen", null)
+        } else {
+            builder.setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(navTarget) }
+            builder.setNeutralButton(if (alreadyFav) "✓ In Favoriten" else "⭐ Favorit") { _, _ ->
+                if (!alreadyFav) {
+                    FavoritesManager.add(this, buildFavoritePOI(tapLat, tapLon, navTarget.name, navTarget.categoryIcon, poi?.address))
+                    Toast.makeText(this, "⭐ Als Favorit gespeichert", Toast.LENGTH_SHORT).show()
+                }
+            }
+            builder.setNegativeButton("Abbrechen", null)
+        }
+
+        val dialog = builder.create()
         dialog.show()
+
+        // Farben nach dem Anzeigen setzen
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
-
-        // ⭐ Neutral-Button: kein Auto-Dismiss, Text nach Klick aktualisieren
-        val neutralBtn = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
-        if (alreadyFav) {
-            neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
-            neutralBtn.isEnabled = false
+        
+        if (isNavigating) {
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#9C27B0")) // Lila für Zwischenziel
         } else {
-            neutralBtn.setTextColor(android.graphics.Color.parseColor("#FFA000"))
-            neutralBtn.setOnClickListener {
-                FavoritesManager.add(
-                    this,
-                    buildFavoritePOI(tapLat, tapLon,
-                        poi?.name ?: "Gewählter Punkt",
-                        poi?.categoryIcon ?: "📍",
-                        poi?.address)
-                )
-                neutralBtn.text = "✓ In Favoriten"
-                neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
-                neutralBtn.isEnabled = false
-                Toast.makeText(this, "⭐ Als Favorit gespeichert", Toast.LENGTH_SHORT).show()
+            if (!alreadyFav) {
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#FFA000"))
+            } else {
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#8FC357"))
             }
         }
     }
@@ -2849,14 +2897,24 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             "$recommendedM m"
 
         // Vergleich Routendistanz vs. Empfehlung
-        if (routeData.distance > recommendedM * 1.15) {
+        val isCar = (routingProfile == "driving-car")
+        val dogName = selectedDog?.name ?: "Deinen Hund"
+
+        if (routeData.distance > recommendedM * 1.10) {
             val overPercent = ((routeData.distance / recommendedM - 1.0) * 100).toInt()
+            val baseText = "⚠️ Diese Route ist ca. $overPercent% länger als die Empfehlung für $dogName."
+            val suitabilityText = "Diese Strecke ist für $dogName am Stück nicht geeignet."
+            val carText = if (isCar) "\n\nℹ️ Diese Analyse ist rein theoretisch, da die Anreise per Auto geplant wird." else ""
+            
             binding.tvDistanceComparison.visibility = View.VISIBLE
-            binding.tvDistanceComparison.text =
-                "⚠️ Diese Route ist ca. $overPercent % länger als die Empfehlung" +
-                        (selectedDog?.let { " für ${it.name}" } ?: "")
+            binding.tvDistanceComparison.text = "$baseText\n$suitabilityText$carText"
         } else {
-            binding.tvDistanceComparison.visibility = View.GONE
+            if (isCar) {
+                binding.tvDistanceComparison.visibility = View.VISIBLE
+                binding.tvDistanceComparison.text = "ℹ️ Diese Analyse ist rein theoretisch, da die Anreise per Auto geplant wird."
+            } else {
+                binding.tvDistanceComparison.visibility = View.GONE
+            }
         }
 
         // Warnungen aus Steigung + Asphalt + Wetter-Snapshot
