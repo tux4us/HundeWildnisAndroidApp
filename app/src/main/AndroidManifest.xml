@@ -404,5 +404,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <activity
+            android:name="com.hundewildnis.app.EntspannungstrainingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.HundeWildnis"
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
     </application>
 </manifest>

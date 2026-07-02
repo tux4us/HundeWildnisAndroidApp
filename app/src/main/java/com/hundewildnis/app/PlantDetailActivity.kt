@@ -249,7 +249,7 @@ class PlantDetailActivity : SecureBaseActivity() {
 
     private fun renderIdentification(plant: ToxicPlant) {
         addBulletList(binding.layoutIdentification, plant.identificationFeatures, "#4CAF50", "#CCCCCC")
-        binding.tvHabitat.text = "📍 Vorkommt in: ${plant.habitat.joinToString(", ")}"
+        binding.tvHabitat.text = "📍 Vorkommen: ${plant.habitat.joinToString(", ")}"
     }
 
     private fun renderSymptoms(plant: ToxicPlant) {

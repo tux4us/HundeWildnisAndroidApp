@@ -328,6 +328,7 @@ class StartActivity : BaseBottomNavActivity() {
 
         binding.btnDailyExercise.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", "Übung der Woche") }
         binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", "Meditation der Woche") }
+        binding.btnEntspannungstraining.setOnClickListener { startActivity(Intent(this, EntspannungstrainingActivity::class.java)) }
         binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
         binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
         binding.btnIntervalTimer.setOnClickListener { startActivity(Intent(this, IntervalTimerSetupActivity::class.java)) }

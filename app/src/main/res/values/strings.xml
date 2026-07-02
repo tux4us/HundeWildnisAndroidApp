@@ -144,4 +144,14 @@
     <string name="star_4">4 Sterne</string>
     <string name="map_orientation_north">🧭 Nord</string>
     <string name="map_orientation_course">🧭 Kurs</string>
+
+    <!-- Entspannungstraining -->
+    <string name="entspannungstraining_title">Entspannungstraining</string>
+    <string name="entspannungstraining_start">START</string>
+    <string name="entspannungstraining_stop">STOPP</string>
+    <string name="entspannungstraining_inhale">Einatmen...</string>
+    <string name="entspannungstraining_hold">Halten...</string>
+    <string name="entspannungstraining_exhale">Ausatmen...</string>
+    <string name="entspannungstraining_info">Nehme eine bequeme Position ein. \nLockere Dich und folge dem Rhythmus.</string>
+    <string name="entspannungstraining_music">Begleitung mit DREAM OF A NEW AGE © by Jörg Ulbricht</string>
 </resources>

@@ -55,7 +55,7 @@ class PlantScoutActivity : SecureBaseActivity() {
             R.id.action_seasonal -> {
                 showOnlySeasonal = !showOnlySeasonal
                 item.isChecked = showOnlySeasonal
-                item.title = if (showOnlySeasonal) "Alle zeigen" else "Nur aktuell"
+                item.title = if (showOnlySeasonal) "Alle zeigen" else "Saisonal bemerkenswert"
                 applyFilter()
                 true
             }
@@ -73,6 +73,8 @@ class PlantScoutActivity : SecureBaseActivity() {
             title = "🌿 Gefahrenpflanzen-Scout"
             setDisplayHomeAsUpEnabled(true)
         }
+        // Hamburger-Icon durch Filter-Icon ersetzen (weist besser auf Optionen hin)
+        binding.toolbar.overflowIcon = androidx.core.content.ContextCompat.getDrawable(this, R.drawable.ic_filter)
     }
 
     private fun setupSeasonBanner() {

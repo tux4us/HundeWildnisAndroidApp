@@ -1027,15 +1027,34 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
     private fun recommendWalkingTimes(currentTemp: Double, hourlyTemps: List<Double>, hourlyTimes: List<String>): List<String> {
         val recommendations = mutableListOf<String>()
+
+        // Nur Zeiten zwischen 06:00 und 22:00 Uhr berücksichtigen (Nachtstunden ausschließen)
+        val reasonableIndices = hourlyTimes.indices.filter { i ->
+            val hour = hourlyTimes[i].substringBefore(":").toIntOrNull() ?: -1
+            hour in 6..21
+        }
+
         if (currentTemp >= 25) {
-            val coolestHours = hourlyTemps.mapIndexed { i, t -> i to t }.sortedBy { it.second }.take(3).map { hourlyTimes[it.first] }
-            recommendations.add("🌅 Beste Zeiten bei Hitze:")
-            coolestHours.forEach { recommendations.add("  • $it Uhr (kühlste Phase)") }
+            val coolestHours = reasonableIndices.map { it to hourlyTemps[it] }
+                .sortedBy { it.second }
+                .take(3)
+                .map { hourlyTimes[it.first] }
+
+            if (coolestHours.isNotEmpty()) {
+                recommendations.add("🌅 Beste Zeiten bei Hitze (06-22 Uhr):")
+                coolestHours.forEach { recommendations.add("  • $it Uhr (kühlste Phase)") }
+            }
         }
         if (currentTemp <= 5) {
-            val warmestHours = hourlyTemps.mapIndexed { i, t -> i to t }.sortedByDescending { it.second }.take(3).map { hourlyTimes[it.first] }
-            recommendations.add("☀️ Beste Zeiten bei Kälte:")
-            warmestHours.forEach { recommendations.add("  • $it Uhr (wärmste Phase)") }
+            val warmestHours = reasonableIndices.map { it to hourlyTemps[it] }
+                .sortedByDescending { it.second }
+                .take(3)
+                .map { hourlyTimes[it.first] }
+
+            if (warmestHours.isNotEmpty()) {
+                recommendations.add("☀️ Beste Zeiten bei Kälte (06-22 Uhr):")
+                warmestHours.forEach { recommendations.add("  • $it Uhr (wärmste Phase)") }
+            }
         }
         return recommendations
     }
@@ -1046,7 +1065,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             weatherCode in 61..67 || weatherCode in 80..82 -> { tips.add("🛁 Nach der Runde: Pfoten und Fell trocknen und dabei auf Zecken achten."); tips.add("🐶 Ohren auf Nässe und Verschmutzungen prüfen") }
             weatherCode in 71..77 || weatherCode in 85..86 -> { tips.add("❄️ Eisklumpen zwischen Zehen entfernen"); tips.add("🧴 Pfotenbalsam verwenden gegen Risse") }
             precipitation >= 5.0 -> tips.add("🚿 Matschige Pfoten vor dem Reingehen säubern")
-            precipitation == 0.0 && weatherCode <= 3 -> tips.add("🦮 Hundefreundliches Wetter - bei intensivem Training an 💧 Trinkwasser denken.")
+            precipitation == 0.0 && weatherCode <= 3 -> tips.add("🦮 Hundefreundliches Wetter - bei höheren Temperaturen immer an 💧 Trinkwasser denken und den Hund nicht belasten.")
         }
         return tips
     }
@@ -1429,20 +1448,20 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             append(when {
                 uv < 3  -> "• Kein zwingender Sonnenschutz; bei heller Haut oder Reflexionsflächen " +
                         "(Schnee, Wasser) Sonnencreme sinnvoll.\n" +
-                        "• Sonnenbrille empfohlen."
-                uv < 6  -> "• Sonnencreme LSF 15–30 auf unbedeckten Hautstellen.\n" +
-                        "• Kopfbedeckung bei längerem Aufenthalt.\n" +
+                        "• Sonnenbrille bei Bedarf empfohlen."
+                uv < 6  -> "• Sonnenschutz auf unbedeckten Hautstellen empfohlen.\n" +
+                        "• Kopfbedeckung bei längerem Aufenthalt empfohlen.\n" +
                         "• Zwischen 11 und 15 Uhr Aufenthalt in der Sonne begrenzen."
-                uv < 8  -> "• Sonnencreme LSF 30+ zwingend, auch Ohren, Nacken, Lippen.\n" +
-                        "• Sonnenbrille und Kopfbedeckung tragen.\n" +
+                uv < 8  -> "• Sonnenschutz empfohlen.\n" +
+                        "• Sonnenbrille und Kopfbedeckung empfohlen.\n" +
                         "• Zwischen 11 und 15 Uhr Schatten bevorzugen."
-                uv < 11 -> "• Sonnencreme LSF 50+, alle 2 Stunden erneuern.\n" +
+                uv < 11 -> "• Sonnenschutz dringend empfohlen.\n" +
                         "• Lange Kleidung, Sonnenbrille, Hut.\n" +
                         "• Direkte Sonne zwischen 10 und 16 Uhr meiden.\n" +
                         "• Ausreichend trinken."
-                else    -> "• LSF 50+ zwingend, alle 1–2 Stunden erneuern.\n" +
+                else    -> "• Sonnenschutz dringend empfohlen.\n" +
                         "• Nur im Schatten aufhalten oder drinnen bleiben.\n" +
-                        "• UV-Schutzkleidung empfohlen.\n" +
+                        "• Schützende Kleidung empfohlen.\n" +
                         "• Kinder und ältere Menschen besonders schützen."
             })
 
@@ -1478,16 +1497,16 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             // ── Schutzmaßnahmen-Zusammenfassung ────────────────────────────
             append("🛡️ Schutzmaßnahmen ${item.time} Uhr:\n")
             append(when {
-                uv < 3  -> "LSF: nicht zwingend  •  Schatten: optional  •  " +
+                uv < 3  -> "Sonnenschutz nach Bedarf  •  Schatten: optional  •  " +
                         "Kopfbedeckung: optional  •  Sonnenbrille: empfohlen"
-                uv < 6  -> "LSF 15–30  •  Schatten: bei längerem Aufenthalt  •  " +
+                uv < 6  -> "Sonnenschutz empfohlen  •  Schatten: bei längerem Aufenthalt  •  " +
                         "Kopfbedeckung: empfohlen  •  Sonnenbrille: empfohlen"
-                uv < 8  -> "LSF 30+  •  Schatten: bevorzugen  •  " +
+                uv < 8  -> "Sonnenschutz empfohlen  •  Schatten: bevorzugen  •  " +
                         "Kopfbedeckung: notwendig  •  Sonnenbrille: notwendig"
-                uv < 11 -> "LSF 50+  •  Schatten: zwingend  •  " +
+                uv < 11 -> "Sonnenschutz empfohlen  •  Schatten: zwingend  •  " +
                         "Kopfbedeckung: zwingend  •  Sonnenbrille: zwingend  •  " +
                         "Lange Kleidung: empfohlen"
-                else    -> "LSF 50+  •  Aufenthalt im Freien minimieren  •  " +
+                else    -> "Sonnenschutz empfohlen  •  Aufenthalt im Freien minimieren  •  " +
                         "Vollständiger Schutz: Kleidung, Hut, Brille  •  " +
                         "Kinder & Hunde: drinnen lassen"
             })
@@ -1959,18 +1978,18 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             append("🔆 UV-Schutzempfehlung (Tages-Maximum: ${String.format(Locale.GERMAN, "%.1f", peakUv)}):\n\n")
             when {
                 peakUv < 6 -> {
-                    append("👤 Mensch: Sonnencreme empfohlen (LSF 15+) bei längeren Aufenthalten.\n\n")
+                    append("👤 Mensch: Sonnenschutz empfohlen bei längeren Aufenthalten draussen.\n\n")
                     append("🐕 Hund: Helle oder dünn behaarte Hunde" +
                             "sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen.")
                 }
                 peakUv < 8 -> {
-                    append("👤 Mensch: Sonnencreme LSF 30+, gegebenenfalls Kopfbedeckung und Sonnenbrille empfohlen. " +
+                    append("👤 Mensch: Sonnenschutz, gegebenenfalls Kopfbedeckung und Sonnenbrille empfohlen. " +
                             "Mittagssonne meiden.\n\n")
                     append("🐕 Hund: Trainingseinheiten vor 10 oder nach 16 Uhr legen. " +
                             "Tagsüber Schatten bevorzugen.")
                 }
                 peakUv < 11 -> {
-                    append("👤 Mensch: LSF 50+, Schatten bevorzugen, zwischen 11 und 16 Uhr dauerhaften Aufenthalt in der Sonne vermeiden.\n\n")
+                    append("👤 Mensch: Sonnenschutz beachten, Schatten bevorzugen, zwischen 11 und 16 Uhr dauerhaften Aufenthalt in der Sonne vermeiden.\n\n")
                     append("🐕 Hund: Training auf frühe Morgen- oder Abendstunden verschieben. " +
                             "Ausreichend Wasser mitführen." +
                             "Asphaltstrassen vermeiden" +

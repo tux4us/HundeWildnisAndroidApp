@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_seasonal"
-        android:title="Nur aktuell"
+        android:title="Saisonal bemerkenswert"
         android:checkable="true"
         android:checked="false"
         app:showAsAction="never" />

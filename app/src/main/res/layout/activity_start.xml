@@ -220,6 +220,19 @@
                             android:textStyle="bold"
                             app:cornerRadius="12dp"
                             app:backgroundTint="#4a6135"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnEntspannungstraining"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="64dp"
+                            android:text="🌬️🧘 Entspannungstraining"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="#5a7145"
                             android:textColor="#FFFFFF" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
