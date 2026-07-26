@@ -44,7 +44,7 @@ class WebDavSyncManager(private val context: Context) {
             ) ?: "unknown"
             val model = Build.MODEL
                 .replace(" ", "_")
-                .replace(Regex("[^a-zA-Z0-9_\\-]"), "")
+                .replace(Regex("[^a-zA-Z0-9_]"), "")
                 .take(20)
             return "${model}_${androidId.take(8)}"
         }
@@ -66,11 +66,15 @@ class WebDavSyncManager(private val context: Context) {
 
     /**
      * Führt einen vollständigen Sync-Zyklus aus:
-     * 1. Lokales Backup erzeugen (BackupManager.createBackup)
-     * 2. Lokales Backup hochladen (eigene Geräte-Datei)
-     * 3. Alle anderen Geräte-Dateien auflisten und herunterladen
-     * 4. Jede heruntergeladene Datei per restoreBackup(mergeMode=true) einspielen
-     * 5. Nach dem Merge: aktualisiertes lokales Backup erneut hochladen
+     * 1. Remote-Dateiliste inkl. Metadaten EINMAL laden (Basis für Skip-Upload und
+     *    bedingte Downloads - vermeidet einen zweiten PROPFIND-Request)
+     * 2. Lokalen Fingerabdruck berechnen; Upload nur bei tatsächlicher Änderung
+     *    seit dem letzten Sync (siehe BackupManager.computeBackupFingerprint)
+     * 3. Alle anderen Geräte-Dateien auflisten; Download nur, wenn sich ETag/Größe/
+     *    Änderungsdatum seit dem letzten Sync geändert haben
+     * 4. Jede tatsächlich heruntergeladene Datei per restoreBackup(mergeMode=true) einspielen
+     * 5. Nach einem Merge: aktualisiertes lokales Backup erneut hochladen (Daten haben
+     *    sich durch den Merge lokal geändert, unabhängig vom ursprünglichen Fingerabdruck)
      *
      * Läuft blockierend - immer von Dispatchers.IO aus aufrufen.
      */
@@ -83,31 +87,51 @@ class WebDavSyncManager(private val context: Context) {
             return SyncResult.NetworkError("Verzeichnis konnte nicht angelegt werden: ${it.message}")
         }
 
-        // 1.5 Neuestes Backup von anderen Geräten vorab laden (Merge-First)
-        // Dies verhindert, dass lokale Änderungen ein aktuelleres Cloud-Backup überschreiben,
-        // bevor der Merge stattgefunden hat.
-
-        // 2. Lokales Backup erzeugen und hochladen
-        val localBackupFile = try {
-            BackupManager.createBackup(context)
-        } catch (e: Exception) {
-            Log.e(TAG, "Lokales Backup konnte nicht erstellt werden", e)
-            return SyncResult.Error("Backup-Erstellung fehlgeschlagen: ${e.message}")
-        }
-
-        val ownRemoteName = remoteFileName(context)
-        client.uploadFile("$REMOTE_DIR/$ownRemoteName", localBackupFile).onFailure {
-            return SyncResult.NetworkError("Upload fehlgeschlagen: ${it.message}")
-        }
-        Log.d(TAG, "Eigenes Backup hochgeladen: $ownRemoteName")
-
-        // 3. Andere Geräte-Dateien auflisten
-        val remoteFiles = client.listFiles(REMOTE_DIR).getOrElse {
+        // 1.5 Remote-Dateiliste inkl. Metadaten EINMAL laden - wird sowohl für die
+        // Skip-Upload-Entscheidung (existiert die eigene Datei bereits?) als auch für
+        // bedingte Downloads (haben sich fremde Dateien geändert?) wiederverwendet.
+        val remoteFiles = client.listFilesDetailed(REMOTE_DIR).getOrElse {
             return SyncResult.NetworkError("Dateiliste konnte nicht abgerufen werden: ${it.message}")
         }
 
+        val ownRemoteName = remoteFileName(context)
+        val ownFileExistsRemotely = remoteFiles.any { it.name == ownRemoteName }
+
+        // 2. Lokalen Fingerabdruck prüfen - Upload nur bei tatsächlicher Änderung.
+        // Bei Fehlern beim Berechnen (sollte praktisch nie vorkommen) wird sicherheitshalber
+        // trotzdem hochgeladen, statt einen möglichen Datenverlust zu riskieren.
+        val currentFingerprint = try {
+            BackupManager.computeBackupFingerprint(context)
+        } catch (e: Exception) {
+            Log.w(TAG, "Fingerabdruck konnte nicht berechnet werden - lade sicherheitshalber hoch", e)
+            null
+        }
+        val skipUpload = ownFileExistsRemotely &&
+                currentFingerprint != null &&
+                currentFingerprint == prefs.lastSyncedFingerprint
+
+        if (skipUpload) {
+            Log.d(TAG, "Keine Datenänderung seit letztem Sync - Upload übersprungen")
+        } else {
+            val localBackupFile = try {
+                BackupManager.createBackup(context)
+            } catch (e: Exception) {
+                Log.e(TAG, "Lokales Backup konnte nicht erstellt werden", e)
+                return SyncResult.Error("Backup-Erstellung fehlgeschlagen: ${e.message}")
+            }
+
+            client.uploadFile("$REMOTE_DIR/$ownRemoteName", localBackupFile).onFailure {
+                localBackupFile.delete()
+                return SyncResult.NetworkError("Upload fehlgeschlagen: ${it.message}")
+            }
+            localBackupFile.delete()
+            if (currentFingerprint != null) prefs.lastSyncedFingerprint = currentFingerprint
+            Log.d(TAG, "Eigenes Backup hochgeladen: $ownRemoteName")
+        }
+
+        // 3. Andere Geräte-Dateien ermitteln
         val otherDeviceFiles = remoteFiles.filter {
-            it.startsWith(FILE_PREFIX) && it.endsWith(FILE_SUFFIX) && it != ownRemoteName
+            it.name.startsWith(FILE_PREFIX) && it.name.endsWith(FILE_SUFFIX) && it.name != ownRemoteName
         }
 
         if (otherDeviceFiles.isEmpty()) {
@@ -115,33 +139,44 @@ class WebDavSyncManager(private val context: Context) {
             return SyncResult.Success(mergedDeviceCount = 0)
         }
 
-        // 4. Jede fremde Datei herunterladen und per bestehender Merge-Logik einspielen
+        // 4. Jede fremde Datei prüfen: nur bei Änderung herunterladen und mergen
         var mergedCount = 0
         val tempDir = File(context.cacheDir, "webdav_sync_downloads")
         tempDir.mkdirs()
 
         try {
-            for (fileName in otherDeviceFiles) {
-                val tempFile = File(tempDir, fileName)
-                val downloadResult = client.downloadFile("$REMOTE_DIR/$fileName", tempFile)
+            for (info in otherDeviceFiles) {
+                // ETag ist der zuverlässigste Indikator; falls der Server keinen liefert,
+                // dient Größe+Änderungsdatum als Fallback zur Änderungserkennung.
+                val remoteState = info.etag ?: "${info.size ?: -1}_${info.lastModified ?: ""}"
+                val knownState = prefs.getRemoteFileState(info.name)
+
+                if (knownState != null && knownState == remoteState) {
+                    Log.d(TAG, "Unverändert seit letztem Sync - Download übersprungen: ${info.name}")
+                    continue
+                }
+
+                val tempFile = File(tempDir, info.name)
+                val downloadResult = client.downloadFile("$REMOTE_DIR/${info.name}", tempFile)
 
                 if (downloadResult.isFailure) {
-                    Log.w(TAG, "Download fehlgeschlagen für $fileName: ${downloadResult.exceptionOrNull()?.message}")
+                    Log.w(TAG, "Download fehlgeschlagen für ${info.name}: ${downloadResult.exceptionOrNull()?.message}")
                     continue
                 }
 
                 val restoreSuccess = try {
                     BackupManager.restoreBackup(context, tempFile, mergeMode = true)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Merge fehlgeschlagen für $fileName", e)
+                    Log.e(TAG, "Merge fehlgeschlagen für ${info.name}", e)
                     false
                 }
 
                 if (restoreSuccess) {
                     mergedCount++
-                    Log.d(TAG, "Erfolgreich gemerged: $fileName")
+                    prefs.setRemoteFileState(info.name, remoteState)
+                    Log.d(TAG, "Erfolgreich gemerged: ${info.name}")
                 } else {
-                    Log.w(TAG, "Merge nicht erfolgreich für $fileName")
+                    Log.w(TAG, "Merge nicht erfolgreich für ${info.name}")
                 }
 
                 tempFile.delete()
@@ -151,7 +186,8 @@ class WebDavSyncManager(private val context: Context) {
         }
 
         // 5. Nach dem Merge: aktualisierten Stand erneut hochladen,
-        //    damit andere Geräte beim nächsten Sync den vollständigen Stand sehen
+        //    damit andere Geräte beim nächsten Sync den vollständigen Stand sehen.
+        //    (Der Merge hat die lokalen Daten verändert, unabhängig vom Fingerabdruck von oben.)
         if (mergedCount > 0) {
             val updatedBackupFile = try {
                 BackupManager.createBackup(context)
@@ -160,10 +196,14 @@ class WebDavSyncManager(private val context: Context) {
                 return SyncResult.Success(mergedCount) // Merge war trotzdem erfolgreich
             }
             client.uploadFile("$REMOTE_DIR/$ownRemoteName", updatedBackupFile)
+            val fingerprintAfterMerge = try {
+                BackupManager.computeBackupFingerprint(context)
+            } catch (e: Exception) {
+                null
+            }
+            if (fingerprintAfterMerge != null) prefs.lastSyncedFingerprint = fingerprintAfterMerge
             updatedBackupFile.delete()
         }
-
-        localBackupFile.delete()
 
         return SyncResult.Success(mergedCount)
     }

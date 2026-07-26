@@ -150,13 +150,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         setupHistoryRecyclerView()
         setupUI()
         loadHistory()
-        
+
         startNewNote()
     }
 
     private fun setupUI() {
         binding.btnCamera.setOnClickListener { showCameraDisclosure() }
-        binding.btnGallery.setOnClickListener { openPhotoPicker() }
+        binding.btnGallery.setOnClickListener { openMultiplePhotoPicker() }
         binding.btnSaveNew.setOnClickListener { saveToHistory(true) }
         binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf(false) }
         binding.btnExportGpx.setOnClickListener { saveToHistory(false); exportAsGpx() }
@@ -436,7 +436,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun setupHistoryRecyclerView() {
-        historyAdapter = HistoryAdapter(historyList, 
+        historyAdapter = HistoryAdapter(historyList,
             onItemClick = { session -> displaySession(session) },
             onDeleteClick = { session -> confirmDelete(session) }
         )
@@ -553,7 +553,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         )
         val index = historyList.indexOfFirst { it.id == session.id }
         if (index != -1) historyList[index] = session else historyList.add(0, session)
-        
+
         // Immer chronologisch sortieren (neueste oben)
         historyList.sortByDescending { it.date }
 
@@ -742,7 +742,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
         sdf.timeZone = TimeZone.getTimeZone("UTC")
         val timeStr = sdf.format(Date(timestamp))
-        
+
         val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(timestamp))}.gpx"
 
         val gpx = """
@@ -764,7 +764,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 val appDir = getAppDocumentsFolder()
                 val file = File(appDir, fileName)
                 file.writeText(gpx)
-                
+
                 withContext(Dispatchers.Main) {
                     MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/gpx+xml"), null)
                     Toast.makeText(this@DailyNotesActivity, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
@@ -932,7 +932,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             val session = sessions[position]
             holder.binding.tvNoteDate.text = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Date(session.date))
             holder.binding.tvNoteSnippet.text = if (session.title.isNotEmpty()) session.title else "Kein Titel"
-            
+
             if (session.latitude != null && session.longitude != null) {
                 holder.binding.tvNoteLocation.text = String.format(Locale.US, "📍 %.4f, %.4f", session.latitude, session.longitude)
                 holder.binding.tvNoteLocation.visibility = View.VISIBLE

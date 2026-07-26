@@ -192,23 +192,27 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
 
         isRequestingUpdates = true
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                MIN_TIME_BETWEEN_UPDATES,
-                MIN_DISTANCE_CHANGE,
-                this
-            )
-        }
+        try {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    MIN_TIME_BETWEEN_UPDATES,
+                    MIN_DISTANCE_CHANGE,
+                    this
+                )
+            }
+        } catch (e: Exception) {}
 
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                MIN_TIME_BETWEEN_UPDATES,
-                MIN_DISTANCE_CHANGE,
-                this
-            )
-        }
+        try {
+            if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MIN_TIME_BETWEEN_UPDATES,
+                    MIN_DISTANCE_CHANGE,
+                    this
+                )
+            }
+        } catch (e: Exception) {}
     }
 
     private fun stopLocationUpdates() {

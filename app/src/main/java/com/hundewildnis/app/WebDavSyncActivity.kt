@@ -92,6 +92,8 @@ class WebDavSyncActivity : SecureBaseActivity() {
         val selectedIndex = INTERVAL_OPTIONS.indexOfFirst { it.second == savedInterval }.takeIf { it >= 0 } ?: 2
         binding.spinnerSyncInterval.setSelection(selectedIndex)
 
+        binding.switchWifiOnly.isChecked = prefs.wifiOnlySync
+
         updateLastSyncLabel()
         binding.tvDeviceId.text = "Geräte-ID: ${WebDavSyncManager.getDeviceId(this)}"
     }
@@ -122,6 +124,14 @@ class WebDavSyncActivity : SecureBaseActivity() {
                 WebDavSyncWorker.schedulePeriodicSync(this, hours)
             } else {
                 WebDavSyncWorker.cancelPeriodicSync(this)
+            }
+        }
+
+        binding.switchWifiOnly.setOnCheckedChangeListener { _, isChecked ->
+            prefs.wifiOnlySync = isChecked
+            if (prefs.autoSyncEnabled) {
+                // Neu planen, damit der geänderte Netzwerk-Constraint sofort greift
+                WebDavSyncWorker.schedulePeriodicSync(this, prefs.syncIntervalHours)
             }
         }
 

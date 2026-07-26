@@ -32,8 +32,9 @@ class WebDavSyncWorker(
 
         /** Plant periodischen Hintergrund-Sync. Ersetzt eine bestehende Planung bei Intervalländerung. */
         fun schedulePeriodicSync(context: Context, intervalHours: Int) {
+            val wifiOnly = WebDavPreferences(context).wifiOnlySync
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiredNetworkType(if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
                 .build()
 
             val request = PeriodicWorkRequestBuilder<WebDavSyncWorker>(
@@ -56,8 +57,9 @@ class WebDavSyncWorker(
 
         /** Stößt einen sofortigen, einmaligen Sync an (z.B. Button "Jetzt synchronisieren"). */
         fun triggerManualSync(context: Context) {
+            val wifiOnly = WebDavPreferences(context).wifiOnlySync
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiredNetworkType(if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
                 .build()
 
             val request = OneTimeWorkRequestBuilder<WebDavSyncWorker>()

@@ -1,49 +1,22 @@
 package com.hundewildnis.app
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
+import android.app.*
+import android.content.*
 import android.content.pm.ServiceInfo
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
+import android.location.*
+import android.os.*
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
+import java.util.*
 
 /**
- * LocationShareService – Foreground Service für die gegenseitige Standortfreigabe.
- *
- * Läuft als Foreground Service mit foregroundServiceType="location" (analog zu
- * WalkingSpeedService und NavigationForegroundService).
- *
- * Ablauf:
- * 1. GPS-Updates via LocationManager empfangen (minTime 30s, minDistance 0m)
- * 2. Alle 60 Sekunden den letzten bekannten Standort als JSON auf WebDAV hochladen
- *    Dateiname: location_[DeviceId].json im Verzeichnis /HundeWildnis/
- * 3. Beim Stopp: eigene JSON-Datei vom Server löschen (optionales DELETE –
- *    da HttpURLConnection DELETE unterstützt, kein Reflection nötig)
- *
- * Das JSON-Format ist bewusst minimal gehalten, damit es auch von
- * zukünftigen Erweiterungen (z.B. Hund-Tracker) lesbar bleibt.
+ * Hintergrunddienst für die Standortfreigabe.
+ * Erfasst GPS-Daten und lädt diese regelmäßig auf den WebDAV-Server hoch.
  */
 class LocationShareService : Service(), LocationListener {
 
@@ -57,10 +30,10 @@ class LocationShareService : Service(), LocationListener {
         const val LOCATION_FILE_SUFFIX = ".json"
 
         /** Upload-Intervall in Millisekunden. */
-        private const val UPLOAD_INTERVAL_MS = 60_000L
+        private const val UPLOAD_INTERVAL_MS = 30_000L
 
-        /** GPS-Update-Intervall: alle 30s (zwischen zwei Uploads je ein frischer Fix). */
-        private const val GPS_MIN_TIME_MS = 30_000L
+        /** GPS-Update-Intervall: alle 10s für bessere Reaktivität. */
+        private const val GPS_MIN_TIME_MS = 10_000L
 
         /** Kein Mindest-Abstand – wir wollen auch Standort-Updates ohne Bewegung. */
         private const val GPS_MIN_DISTANCE_M = 0f
@@ -78,6 +51,7 @@ class LocationShareService : Service(), LocationListener {
     private lateinit var locationManager: LocationManager
     private lateinit var notificationManager: NotificationManager
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
+    private var wakeLock: android.os.PowerManager.WakeLock? = null
 
     /** Letzter bekannter GPS-Standort – wird von onLocationChanged() aktualisiert. */
     @Volatile
@@ -93,11 +67,25 @@ class LocationShareService : Service(), LocationListener {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
+
+        // WakeLock anfordern, um CPU-Schlaf im Hintergrund zu verhindern
+        val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+        wakeLock = powerManager.newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "HundeWildnis:LocationShareWakeLock")
+        wakeLock?.acquire(10 * 60 * 1000L /*10 minutes fallback*/)
+
+        // Versuche den letzten bekannten Standort als Startwert zu laden
+        try {
+            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (lastLocation == null) {
+                lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Konnte letzten Standort nicht laden: ${e.message}")
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Foreground IMMER sofort starten, um Crash (ForegroundServiceDidNotStartInTimeException) zu vermeiden,
-        // falls startForegroundService() aufgerufen wurde.
+        // Foreground IMMER sofort starten
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ServiceCompat.startForeground(
                 this,
@@ -109,30 +97,37 @@ class LocationShareService : Service(), LocationListener {
             startForeground(NOTIFICATION_ID, buildNotification("Standortfreigabe aktiv"))
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+            != android.content.pm.PackageManager.PERMISSION_GRANTED
         ) {
-            Log.e(TAG, "Standortberechtigung fehlt – Service wird nicht gestartet")
+            Log.e(TAG, "Standortberechtigung fehlt")
             stopSelf()
             return START_NOT_STICKY
         }
 
-        if (isServiceRunning) {
-            Log.d(TAG, "Service läuft bereits – Loops werden nicht erneut gestartet")
-            return START_STICKY
+        // Starte die Loops immer, wenn sie noch nicht laufen
+        if (!isServiceRunning) {
+            isServiceRunning = true
+            startGpsUpdates()
+            startUploadLoop()
+            Log.d(TAG, "LocationShareService gestartet (Loops initiiert)")
+        } else {
+            // Sicherstellen, dass die Updates laufen, falls der Service reaktiviert wurde
+            startGpsUpdates() 
+            Log.d(TAG, "LocationShareService bereits aktiv (GPS-Updates aufgefrischt)")
         }
 
-        isServiceRunning = true
-        startGpsUpdates()
-        startUploadLoop()
-
-        Log.d(TAG, "LocationShareService gestartet")
         return START_STICKY
     }
 
     override fun onDestroy() {
         isServiceRunning = false
         locationManager.removeUpdates(this)
+        
+        if (wakeLock?.isHeld == true) {
+            wakeLock?.release()
+        }
+
         serviceScope.launch {
             deleteOwnLocationFile()
         }
@@ -149,21 +144,46 @@ class LocationShareService : Service(), LocationListener {
 
     private fun startGpsUpdates() {
         try {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                GPS_MIN_TIME_MS,
-                GPS_MIN_DISTANCE_M,
-                this
-            )
+            // GPS Provider für hohe Genauigkeit
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    GPS_MIN_TIME_MS,
+                    GPS_MIN_DISTANCE_M,
+                    this
+                )
+            }
+            
+            // Network Provider für schnellen Fix (WLAN/Funkzellen)
+            // Nur versuchen, wenn der Provider auf diesem Gerät existiert
+            if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    GPS_MIN_TIME_MS,
+                    GPS_MIN_DISTANCE_M,
+                    this
+                )
+            }
         } catch (e: SecurityException) {
-            Log.e(TAG, "GPS-Berechtigung entzogen", e)
+            Log.e(TAG, "Standortberechtigung entzogen", e)
             stopSelf()
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Provider nicht verfügbar: ${e.message}")
         }
     }
+
+    private var hasUploadedOnce = false
 
     override fun onLocationChanged(location: Location) {
         lastLocation = location
         Log.d(TAG, "GPS-Update: ${location.latitude}, ${location.longitude}")
+        
+        if (!hasUploadedOnce) {
+            hasUploadedOnce = true
+            serviceScope.launch {
+                uploadLocation(location)
+            }
+        }
     }
 
     @Deprecated("Deprecated in API 29")
@@ -174,19 +194,20 @@ class LocationShareService : Service(), LocationListener {
     // ── Upload-Loop ───────────────────────────────────────────────────────
 
     /**
-     * Coroutine-Loop auf Dispatchers.IO: alle 60s den aktuellen Standort hochladen.
-     * Wenn noch kein GPS-Fix vorliegt, wird der Upload übersprungen (kein Dummy-Wert).
+     * Coroutine-Loop auf Dispatchers.IO: alle 30s den aktuellen Standort hochladen.
      */
     private fun startUploadLoop() {
         serviceScope.launch {
+            // Warte kurz, um dem GPS Zeit für einen ersten Fix zu geben
+            delay(2000)
             while (isActive) {
-                delay(UPLOAD_INTERVAL_MS)
                 val location = lastLocation
                 if (location != null) {
                     uploadLocation(location)
                 } else {
-                    Log.d(TAG, "Noch kein GPS-Fix – Upload übersprungen")
+                    Log.d(TAG, "Warten auf GPS-Fix für Upload...")
                 }
+                delay(UPLOAD_INTERVAL_MS)
             }
         }
     }
@@ -216,45 +237,39 @@ class LocationShareService : Service(), LocationListener {
         tempFile.writeText(json)
 
         val client = WebDavClient(config.serverUrl, config.username, config.password)
+        
+        // Sicherstellen, dass das Verzeichnis existiert
+        client.createDirectory(WebDavSyncManager.REMOTE_DIR)
+
         val remotePath = "${WebDavSyncManager.REMOTE_DIR}/${remoteFileName(this)}"
-
-        val result = client.uploadFile(remotePath, tempFile)
-        tempFile.delete()
-
-        if (result.isSuccess) {
-            Log.d(TAG, "Standort hochgeladen: ${location.latitude}, ${location.longitude}")
-            updateNotification("Zuletzt gesendet: ${formatTime(payload.timestamp)}")
-        } else {
-            Log.w(TAG, "Upload fehlgeschlagen: ${result.exceptionOrNull()?.message}")
+        
+        serviceScope.launch(Dispatchers.IO) {
+            val result = client.uploadFile(remotePath, tempFile)
+            if (result.isSuccess) {
+                Log.d(TAG, "Standort erfolgreich hochgeladen: $remotePath")
+                updateNotification("Standort aktualisiert: ${formatTime(payload.timestamp)}")
+            } else {
+                Log.e(TAG, "Upload fehlgeschlagen: ${result.exceptionOrNull()?.message}")
+            }
+            tempFile.delete()
         }
     }
 
     /**
      * Löscht die eigene Standort-Datei vom Server (HTTP DELETE).
-     * Damit erscheint das Gerät nach dem Stopp nicht mehr auf anderen Geräten.
-     * Fehler werden nur geloggt – der Service stoppt so oder so.
      */
     private fun deleteOwnLocationFile() {
         val config = prefs.loadConfig() ?: return
         val remotePath = "${WebDavSyncManager.REMOTE_DIR}/${remoteFileName(this)}"
+        val client = WebDavClient(config.serverUrl, config.username, config.password)
 
         try {
-            val url = java.net.URL(
-                config.serverUrl.trimEnd('/') + "/$remotePath"
-            )
-            val conn = url.openConnection() as java.net.HttpURLConnection
-            conn.requestMethod = "DELETE"
-            val raw = "${config.username}:${config.password}"
-            val auth = "Basic " + android.util.Base64.encodeToString(
-                raw.toByteArray(Charsets.UTF_8), android.util.Base64.NO_WRAP
-            )
-            conn.setRequestProperty("Authorization", auth)
-            conn.setRequestProperty("User-Agent", "HundeWildnisApp/14.0")
-            conn.connectTimeout = 8000
-            conn.readTimeout = 8000
-            val code = conn.responseCode
-            conn.disconnect()
-            Log.d(TAG, "DELETE eigene Standortdatei: HTTP $code")
+            val result = client.deleteFile(remotePath)
+            if (result.isSuccess) {
+                Log.d(TAG, "Eigene Standortdatei erfolgreich gelöscht")
+            } else {
+                Log.w(TAG, "DELETE eigene Standortdatei fehlgeschlagen: ${result.exceptionOrNull()?.message}")
+            }
         } catch (e: Exception) {
             Log.w(TAG, "DELETE fehlgeschlagen (ignoriert): ${e.message}")
         }
@@ -264,68 +279,56 @@ class LocationShareService : Service(), LocationListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(
-                CHANNEL_ID,
-                "Standortfreigabe",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "Aktive Standortfreigabe im Hintergrund"
-                setShowBadge(false)
-                setSound(null, null)
-                enableVibration(false)
-            }.also { notificationManager.createNotificationChannel(it) }
+            val name = "Standortfreigabe"
+            val descriptionText = "Zeigt an, dass dein Standort für andere Teilnehmer sichtbar ist."
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
-    private fun buildNotification(text: String) =
-        NotificationCompat.Builder(this, CHANNEL_ID)
+    private fun buildNotification(text: String): Notification {
+        val intent = Intent(this, LocationShareActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent, PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("📍 Standortfreigabe")
             .setContentText(text)
             .setSmallIcon(R.drawable.ic_my_location)
-            .setOngoing(true)
-            .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    this, 0,
-                    Intent(this, LocationShareActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or
-                                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    },
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            )
+            .setContentIntent(pendingIntent)
+            .setOngoing(true)
             .build()
+    }
 
     private fun updateNotification(text: String) {
         notificationManager.notify(NOTIFICATION_ID, buildNotification(text))
     }
 
-    // ── Hilfsfunktionen ───────────────────────────────────────────────────
-
     private fun formatTime(timestamp: Long): String {
-        val sdf = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
-        return sdf.format(java.util.Date(timestamp))
+        val sdf = java.text.SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        return sdf.format(Date(timestamp))
     }
 
     private fun getBatteryLevel(): Int {
-        val intent = registerReceiver(null, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED))
-        val level = intent?.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        val scale = intent?.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1) ?: -1
+        val intent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
         return if (level >= 0 && scale > 0) (level * 100 / scale) else -1
     }
 }
 
-/**
- * Datenklasse für das JSON, das auf dem WebDAV-Server abgelegt wird.
- * Bewusst flach und ohne verschachtelte Objekte gehalten.
- */
+/** Datenklasse für die Übertragung via WebDAV JSON. */
 data class LocationPayload(
     val deviceId: String,
     val label: String,
     val lat: Double,
     val lon: Double,
-    val accuracy: Float?,
+    val accuracy: Float? = null,
     val timestamp: Long,
     val batteryLevel: Int? = null
 )

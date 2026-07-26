@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.zip.ZipEntry
@@ -232,6 +233,96 @@ object BackupManager {
 
         } finally {
             tempZipContentDir.deleteRecursively()
+        }
+    }
+
+    /**
+     * Erzeugt einen stabilen Fingerabdruck (SHA-256) der Backup-relevanten Daten,
+     * OHNE ein ZIP zu erstellen und OHNE Fotos zu kopieren.
+     *
+     * Verwendungszweck: WebDAV-Sync-Optimierung (WebDavSyncManager) - ein Upload
+     * lohnt sich nur, wenn sich dieser Fingerabdruck seit dem letzten erfolgreichen
+     * Sync geändert hat.
+     *
+     * Wichtig: Enthält bewusst KEINEN Zeitstempel (im Gegensatz zu createBackup()),
+     * da sonst zwei inhaltlich identische Zustände unterschiedliche Fingerabdrücke
+     * ergeben würden und die Optimierung wirkungslos wäre. Fotos werden über
+     * (URI + Dateigröße) statt über ihren vollen Inhalt erfasst - das genügt, um
+     * "geändert" von "unverändert" zu unterscheiden, ohne alle Fotos byteweise
+     * einlesen zu müssen (was bei vielen/großen Fotos selbst spürbar Akku/Zeit kosten würde).
+     */
+    fun computeBackupFingerprint(context: Context): String {
+        val dogs = DogProfileManager.getAllProfiles(context)
+        val settings = collectSettings(context)
+        val notes = collectNotes(context)
+        val speedSessions = collectSpeedSessions(context)
+        val voiceSessions = collectVoiceSessions(context)
+        val emergencyReports = collectEmergencyReports(context)
+        val trainingSessions = loadTrainingSessions(context)
+        val trainingProgress = loadTrainingProgress(context)
+        val trainingMilestones = loadTrainingMilestones(context)
+        val favorites = FavoritesManager.getAll(context)
+        val (nasenarbeitSessions, nasenarbeitFortschritt) = NasenarbeitManager.exportForBackup(context)
+        val weatherFavorites = WeatherFavoritesManager.getAll(context)
+        val vitalRecords = VitalManager.exportForBackup(context)
+        val intervalTimerSessions = IntervalTimerManager.getAllSessions(context)
+        val plannedSessions = ActivityCalendarManager.getAllPlanned(context)
+        val plantPhotoMap = PlantPhotoManager.getAllPhotos(context)
+
+        val photoFingerprints = mutableListOf<String>()
+        fun addPhotoFingerprint(uriString: String) {
+            if (uriString.isBlank()) return
+            photoFingerprints.add("$uriString:${photoStat(context, uriString)}")
+        }
+        dogs.forEach { if (it.photoUri.isNotEmpty()) addPhotoFingerprint(it.photoUri) }
+        notes?.forEach { note -> note.photoUris.forEach { addPhotoFingerprint(it) } }
+        emergencyReports?.forEach { report -> report.photoUris.forEach { addPhotoFingerprint(it) } }
+        plantPhotoMap.forEach { (_, paths) -> paths.forEach { addPhotoFingerprint(it) } }
+
+        val fingerprintData = linkedMapOf(
+            "dogs" to dogs,
+            "settings" to settings,
+            "notes" to notes,
+            "speedSessions" to speedSessions,
+            "voiceSessions" to voiceSessions,
+            "emergencyReports" to emergencyReports,
+            "trainingSessions" to trainingSessions,
+            "trainingProgress" to trainingProgress,
+            "trainingMilestones" to trainingMilestones,
+            "favorites" to favorites,
+            "nasenarbeitSessions" to nasenarbeitSessions,
+            "nasenarbeitFortschritt" to nasenarbeitFortschritt,
+            "weatherFavorites" to weatherFavorites,
+            "vitalRecords" to vitalRecords,
+            "intervalTimerSessions" to intervalTimerSessions,
+            "plannedSessions" to plannedSessions,
+            "photos" to photoFingerprints.sorted()
+        )
+
+        val json = gson.toJson(fingerprintData)
+        val digest = MessageDigest.getInstance("SHA-256").digest(json.toByteArray(Charsets.UTF_8))
+        return digest.joinToString("") { "%02x".format(it) }
+    }
+
+    /**
+     * Liefert einen leichten Änderungsindikator ("Größe") für eine Foto-URI,
+     * soweit auflösbar - ohne die Datei komplett einzulesen. Bei nicht auflösbaren
+     * URIs wird "na" zurückgegeben (führt im Zweifel zu einem zusätzlichen, aber
+     * unschädlichen Sync statt zu einem übersehenen Foto-Update).
+     */
+    private fun photoStat(context: Context, uriString: String): String {
+        return try {
+            val uri = Uri.parse(uriString)
+            if (uri.scheme == "file") {
+                val f = File(uri.path ?: return "na")
+                "${f.length()}_${f.lastModified()}"
+            } else {
+                context.contentResolver.openAssetFileDescriptor(uri, "r")?.use { afd ->
+                    "${afd.length}"
+                } ?: "na"
+            }
+        } catch (e: Exception) {
+            "na"
         }
     }
 

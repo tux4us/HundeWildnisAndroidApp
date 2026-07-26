@@ -1620,10 +1620,15 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private fun requestLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
         isRequestingUpdates = true
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
+        try {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
+        } catch (e: Exception) {}
+        
+        try {
+            if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
+        } catch (e: Exception) {}
     }
 
     // ════════════════════════════════════════════════════════
@@ -2135,7 +2140,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val query = """
         [out:json][timeout:25];
         (
-          node(around:500,$coordStr)[amenity~"bench|drinking_water|toilets|bbq"];
+          node(around:500,$coordStr)[amenity~"bench|drinking_water|toilets|bbq|dog_toilet|dog_waste_bin|waste_basket"];
+          node(around:500,$coordStr)[waste=dog_excrement];
           node(around:500,$coordStr)[leisure=firepit];
           node(around:500,$coordStr)[natural=spring];
           node(around:1000,$coordStr)[tourism=viewpoint];
@@ -2203,6 +2209,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         tags["amenity"] == "drinking_water"  -> "💧" to "Trinkwasser"
         tags["natural"] == "spring"          -> "💧" to "Quelle"
         tags["amenity"] == "toilets"         -> "🚻" to "Toilette"
+        tags["amenity"] == "dog_toilet"      -> "🚽" to "Hundetoilette"
+        tags["amenity"] == "dog_waste_bin"   -> "🚽" to "Hundetoilette"
+        tags["waste"] == "dog_excrement"     -> "🚽" to "Hundetoilette"
+        tags["amenity"] == "waste_basket"    -> "🗑️" to "Mülleimer"
         tags["leisure"] == "firepit"         -> "🔥" to "Feuerstelle"
         tags["amenity"] == "bbq"             -> "🔥" to "Grillplatz"
         tags["tourism"] == "viewpoint"       -> "🏔️" to "Aussichtspunkt"

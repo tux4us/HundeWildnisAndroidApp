@@ -3,6 +3,8 @@ package com.hundewildnis.app
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 /**
  * Speichert WebDAV-Zugangsdaten verschlüsselt (EncryptedSharedPreferences)
@@ -24,9 +26,14 @@ class WebDavPreferences(private val context: Context) {
         private const val KEY_LAST_SYNC_TIMESTAMP = "webdav_last_sync_timestamp"
         private const val KEY_LAST_SYNC_RESULT = "webdav_last_sync_result"
         private const val KEY_LOCATION_SHARE_ENABLED = "location_share_enabled"
+        private const val KEY_WIFI_ONLY_SYNC = "webdav_wifi_only_sync"
+        private const val KEY_LAST_SYNCED_FINGERPRINT = "webdav_last_synced_fingerprint"
+        private const val KEY_REMOTE_FILE_STATES = "webdav_remote_file_states"
 
         const val DEFAULT_INTERVAL_HOURS = 6
     }
+
+    private val gson = Gson()
 
     data class WebDavConfig(
         val serverUrl: String,
@@ -102,4 +109,47 @@ class WebDavPreferences(private val context: Context) {
     var locationShareEnabled: Boolean
         get() = settings().getBoolean(KEY_LOCATION_SHARE_ENABLED, false)
         set(value) = settings().edit().putBoolean(KEY_LOCATION_SHARE_ENABLED, value).apply()
+
+    /**
+     * Wenn true (Standard), läuft der automatische Hintergrund-Sync nur über WLAN
+     * (NetworkType.UNMETERED). Verhindert unkontrollierten Mobilfunk-Datenverbrauch.
+     * Der manuelle "Jetzt synchronisieren"-Button ist davon bewusst ausgenommen,
+     * da er ein expliziter Einzel-Nutzeraktion ist.
+     */
+    var wifiOnlySync: Boolean
+        get() = settings().getBoolean(KEY_WIFI_ONLY_SYNC, true)
+        set(value) = settings().edit().putBoolean(KEY_WIFI_ONLY_SYNC, value).apply()
+
+    /**
+     * Fingerabdruck (SHA-256) der Backup-relevanten Daten zum Zeitpunkt des
+     * letzten erfolgreichen Uploads. Dient dazu, unveränderte Backups nicht
+     * erneut hochzuladen (siehe BackupManager.computeBackupFingerprint).
+     */
+    var lastSyncedFingerprint: String?
+        get() = settings().getString(KEY_LAST_SYNCED_FINGERPRINT, null)
+        set(value) = settings().edit().putString(KEY_LAST_SYNCED_FINGERPRINT, value).apply()
+
+    /**
+     * Merkt sich pro Geräte-Dateiname (z.B. "backup_Pixel8_abcd1234.hundebackup")
+     * den zuletzt gesehenen Remote-Zustand (ETag, oder ersatzweise Größe+Änderungsdatum).
+     * Ermöglicht bedingte Downloads: Unveränderte fremde Backups werden nicht
+     * erneut heruntergeladen und gemerged.
+     */
+    fun getRemoteFileState(fileName: String): String? = loadRemoteFileStates()[fileName]
+
+    fun setRemoteFileState(fileName: String, state: String) {
+        val updated = loadRemoteFileStates().toMutableMap()
+        updated[fileName] = state
+        settings().edit().putString(KEY_REMOTE_FILE_STATES, gson.toJson(updated)).apply()
+    }
+
+    private fun loadRemoteFileStates(): Map<String, String> {
+        val json = settings().getString(KEY_REMOTE_FILE_STATES, null) ?: return emptyMap()
+        return try {
+            val type = object : TypeToken<Map<String, String>>() {}.type
+            gson.fromJson<Map<String, String>>(json, type) ?: emptyMap()
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
 }

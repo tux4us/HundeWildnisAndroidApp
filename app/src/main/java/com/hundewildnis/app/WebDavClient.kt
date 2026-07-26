@@ -41,14 +41,18 @@ class WebDavClient(
 
     /** Baut die volle URL für einen relativen Pfad, mit URL-Encoding pro Segment. */
     private fun buildUrl(path: String): String {
-        val encodedSegments = path.trim('/').split('/').joinToString("/") {
+        if (path.isEmpty()) return baseUrl
+        val endsWithSlash = path.endsWith("/")
+        val encodedSegments = path.trim('/').split('/').filter { it.isNotEmpty() }.joinToString("/") {
             URLEncoder.encode(it, "UTF-8").replace("+", "%20")
         }
-        return "$baseUrl/$encodedSegments"
+        val result = if (encodedSegments.isEmpty()) baseUrl else "$baseUrl/$encodedSegments"
+        return if (endsWithSlash && !result.endsWith("/")) "$result/" else result
     }
 
     private fun openConnection(path: String, method: String): HttpURLConnection {
-        val conn = URL(buildUrl(path)).openConnection() as HttpURLConnection
+        val urlStr = buildUrl(path)
+        val conn = URL(urlStr).openConnection() as HttpURLConnection
         setRequestMethod(conn, method)
         conn.setRequestProperty("Authorization", authHeader)
         conn.setRequestProperty("User-Agent", USER_AGENT)
@@ -131,16 +135,29 @@ class WebDavClient(
     /**
      * Listet Dateinamen in einem Verzeichnis via PROPFIND (Depth: 1).
      * Gibt nur die Dateinamen zurück (nicht die vollen Pfade), ohne das Verzeichnis selbst.
+     *
+     * Für Änderungserkennung (bedingte Downloads) siehe [listFilesDetailed].
      */
-    fun listFiles(path: String): Result<List<String>> {
+    fun listFiles(path: String): Result<List<String>> =
+        listFilesDetailed(path).map { list -> list.map { it.name } }
+
+    /**
+     * Listet Dateien in einem Verzeichnis via PROPFIND (Depth: 1) inklusive
+     * ETag/Größe/letzter Änderung. Wird für die Sync-Optimierung genutzt:
+     * Ein Download lohnt sich nur, wenn sich diese Metadaten seit dem
+     * letzten Sync geändert haben (siehe WebDavSyncManager).
+     */
+    fun listFilesDetailed(path: String): Result<List<WebDavFileInfo>> {
         return try {
-            val conn = openConnection(path, "PROPFIND")
+            // Wichtig: Verzeichnisse für PROPFIND sollten auf / enden
+            val normalizedPath = if (path.isEmpty() || path.endsWith("/")) path else "$path/"
+            val conn = openConnection(normalizedPath, "PROPFIND")
             conn.setRequestProperty("Depth", "1")
             conn.setRequestProperty("Content-Type", "text/xml; charset=utf-8")
             conn.doOutput = true
 
             val body = """<?xml version="1.0" encoding="utf-8"?>
-                |<propfind xmlns="DAV:"><prop><displayname/></prop></propfind>
+                |<propfind xmlns="DAV:"><prop><displayname/><getetag/><getcontentlength/><getlastmodified/></prop></propfind>
             """.trimMargin()
             conn.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
 
@@ -153,17 +170,37 @@ class WebDavClient(
             val response = conn.inputStream.bufferedReader().use { it.readText() }
             conn.disconnect()
 
-            val hrefs = Regex("<[a-zA-Z]*:?href>([^<]+)</[a-zA-Z]*:?href>", RegexOption.IGNORE_CASE)
+            val dirName = path.trim('/').substringAfterLast('/')
+
+            // Extrem flexibler Regex für verschiedene WebDAV-Dialekte
+            val result = Regex("<[^>]*?response\\b[^>]*?>(.*?)</[^>]*?response>", 
+                setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
                 .findAll(response)
-                .map { it.groupValues[1].trimEnd('/').substringAfterLast('/') }
-                .map { java.net.URLDecoder.decode(it, "UTF-8") }
-                .filter { it.isNotBlank() }
+                .mapNotNull { block ->
+                    val content = block.groupValues[1]
+                    val href = Regex("<[^>]*?href\\b[^>]*?>(.*?)</[^>]*?href>", 
+                        setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
+                        .find(content)?.groupValues?.get(1)?.trim() ?: return@mapNotNull null
+                    
+                    val decodedHref = java.net.URLDecoder.decode(href.trimEnd('/'), "UTF-8")
+                    val name = decodedHref.substringAfterLast('/')
+                    
+                    if (name.isBlank() || name.equals(dirName, ignoreCase = true)) return@mapNotNull null
+
+                    val etag = Regex("<[^>]*?getetag\\b[^>]*?>(.*?)</[^>]*?getetag>", RegexOption.IGNORE_CASE)
+                        .find(content)?.groupValues?.get(1)?.trim()?.trim('"')?.takeIf { it.isNotBlank() }
+                    val size = Regex("<[^>]*?getcontentlength\\b[^>]*?>(.*?)</[^>]*?getcontentlength>", RegexOption.IGNORE_CASE)
+                        .find(content)?.groupValues?.get(1)?.trim()?.toLongOrNull()
+                    val lastModified = Regex("<[^>]*?getlastmodified\\b[^>]*?>(.*?)</[^>]*?getlastmodified>", RegexOption.IGNORE_CASE)
+                        .find(content)?.groupValues?.get(1)?.trim()?.takeIf { it.isNotBlank() }
+
+                    WebDavFileInfo(name = name, etag = etag, size = size, lastModified = lastModified)
+                }
                 .toList()
 
-            val dirName = path.trim('/').substringAfterLast('/')
-            Result.success(hrefs.filter { it != dirName })
+            Result.success(result)
         } catch (e: Exception) {
-            Log.e(TAG, "listFiles($path) fehlgeschlagen", e)
+            Log.e(TAG, "listFilesDetailed($path) fehlgeschlagen", e)
             Result.failure(e)
         }
     }
@@ -226,6 +263,25 @@ class WebDavClient(
     }
 
     /**
+     * Löscht eine Datei auf dem Server (DELETE).
+     */
+    fun deleteFile(remotePath: String): Result<Unit> {
+        return try {
+            val conn = openConnection(remotePath, "DELETE")
+            val code = conn.responseCode
+            conn.disconnect()
+            if (code in 200..299 || code == 404) {
+                Result.success(Unit)
+            } else {
+                Result.failure(java.io.IOException("DELETE fehlgeschlagen: HTTP $code"))
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "deleteFile($remotePath) fehlgeschlagen", e)
+            Result.failure(e)
+        }
+    }
+
+    /**
      * Prüft die Verbindung mit einem PROPFIND auf das Basis-Verzeichnis.
      * Gibt den HTTP-Statuscode zurück (Erfolg = Verbindung steht, unabhängig vom Code-Wert).
      */
@@ -250,3 +306,16 @@ class WebDavClient(
 
 /** Markiert einen 404-Fall getrennt von allgemeinen Netzwerkfehlern. */
 class WebDavNotFoundException(message: String) : java.io.IOException(message)
+
+/**
+ * Metadaten einer Remote-Datei aus einer PROPFIND-Antwort.
+ * [etag] ist der zuverlässigste Änderungsindikator, falls vom Server geliefert
+ * (nicht alle WebDAV-Server, z.B. manche Storage-Boxen, liefern ihn zuverlässig).
+ * [size]/[lastModified] dienen als Fallback zur Änderungserkennung.
+ */
+data class WebDavFileInfo(
+    val name: String,
+    val etag: String?,
+    val size: Long?,
+    val lastModified: String?
+)
