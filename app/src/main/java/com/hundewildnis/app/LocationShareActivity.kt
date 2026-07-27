@@ -261,6 +261,47 @@ class LocationShareActivity : SecureBaseActivity() {
         binding.switchLocationShare.isEnabled = hasConfig
     }
 
+    /**
+     * Prüft ob die App von der Batterieoptimierung ausgenommen ist.
+     * Nur relevant ab Android 6 (Doze Mode). Wird beim Aktivieren der
+     * Standortfreigabe einmalig angefragt.
+     */
+    private fun requestBatteryOptimizationExemption() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) return
+        val pm = getSystemService(android.content.Context.POWER_SERVICE)
+                as android.os.PowerManager
+        if (pm.isIgnoringBatteryOptimizations(packageName)) return  // bereits ausgenommen
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("⚡ Akkuoptimierung deaktivieren?")
+            .setMessage(
+                "Damit die Standortfreigabe auch bei gesperrtem Bildschirm " +
+                        "zuverlässig funktioniert, empfehlen wir, die Akkuoptimierung " +
+                        "für HundeWildnis zu deaktivieren." +
+                "Android schränkt Hintergrundprozesse sonst nach einiger Zeit ein." +
+                "Du oder Dein Gerät könnten somit im Notfall nicht gefunden werden."
+            )
+            .setPositiveButton("Einstellungen öffnen") { _, _ ->
+                try {
+                    startActivity(
+                        android.content.Intent(
+                            android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                            android.net.Uri.parse("package:$packageName")
+                        )
+                    )
+                } catch (e: Exception) {
+                    // Fallback: allgemeine Akku-Einstellungen öffnen
+                    startActivity(
+                        android.content.Intent(
+                            android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+                        )
+                    )
+                }
+            }
+            .setNegativeButton("Überspringen", null)
+            .show()
+    }
+
     // ── Freigabe ───────────────────────────────────────────────────────────
 
     private fun onShareEnabled() {
@@ -272,6 +313,8 @@ class LocationShareActivity : SecureBaseActivity() {
             ))
             return
         }
+        // Akkuoptimierung prüfen bevor der Service startet
+        requestBatteryOptimizationExemption()
         startShareService()
     }
 
@@ -386,13 +429,10 @@ class LocationShareActivity : SecureBaseActivity() {
                 if (dl.isSuccess) {
                     try {
                         val payload = gson.fromJson(tempFile.readText(), LocationPayload::class.java)
-                        if (payload != null) {
-                            // Zweite Sicherheitsschicht: deviceId-Vergleich im JSON
-                            val myId = ownFileName.removePrefix("location_").removeSuffix(".json")
-                                .replace("_", "").lowercase()
-                            if (payload.deviceId.replace("_", "").lowercase() != myId)
-                                payloads.add(payload)
-                        }
+                        // Dateinamen-Filter (Fix 4) schließt eigene Datei bereits aus.
+                        // Kein zusätzlicher deviceId-Vergleich – dieser filterte fälschlich
+                        // fremde Geräte mit ähnlicher Geräte-ID heraus (Bug 2).
+                        if (payload != null) payloads.add(payload)
                     } catch (e: Exception) { errors.add("Fehler in $fileName") }
                     tempFile.delete()
                 } else {

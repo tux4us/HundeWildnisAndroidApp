@@ -59,6 +59,10 @@ class LocationShareService : Service(), LocationListener {
 
     private val gson = Gson()
     private val prefs by lazy { WebDavPreferences(this) }
+    /** Wird nach erfolgreichem MKCOL auf true gesetzt – vermeidet wiederholte Requests. */
+    @Volatile private var remoteDirEnsured = false
+    /** Verhindert doppelte GPS-Listener-Registrierung bei wiederholtem onStartCommand(). */
+    @Volatile private var gpsUpdatesActive = false
 
     // ── Service-Lifecycle ──────────────────────────────────────────────────
 
@@ -68,10 +72,14 @@ class LocationShareService : Service(), LocationListener {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
 
-        // WakeLock anfordern, um CPU-Schlaf im Hintergrund zu verhindern
+        // WakeLock ohne Timeout – Foreground Service mit GPS braucht dauerhaften CPU-Wakeup.
+        // Ein zeitlich begrenzter WakeLock würde nach 10 Min. ablaufen und Uploads blockieren.
         val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-        wakeLock = powerManager.newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "HundeWildnis:LocationShareWakeLock")
-        wakeLock?.acquire(10 * 60 * 1000L /*10 minutes fallback*/)
+        @Suppress("WakelockTimeout")
+        wakeLock = powerManager.newWakeLock(
+            android.os.PowerManager.PARTIAL_WAKE_LOCK,
+            "HundeWildnis:LocationShareWakeLock"
+        ).also { it.acquire() }
 
         // Versuche den letzten bekannten Standort als Startwert zu laden
         try {
@@ -108,12 +116,12 @@ class LocationShareService : Service(), LocationListener {
         // Starte die Loops immer, wenn sie noch nicht laufen
         if (!isServiceRunning) {
             isServiceRunning = true
+            BootReceiver.setServiceActive(this, true)   // Fix 5: persistent für Reboot
             startGpsUpdates()
             startUploadLoop()
             Log.d(TAG, "LocationShareService gestartet (Loops initiiert)")
         } else {
-            // Sicherstellen, dass die Updates laufen, falls der Service reaktiviert wurde
-            startGpsUpdates() 
+            startGpsUpdates()
             Log.d(TAG, "LocationShareService bereits aktiv (GPS-Updates aufgefrischt)")
         }
 
@@ -122,8 +130,10 @@ class LocationShareService : Service(), LocationListener {
 
     override fun onDestroy() {
         isServiceRunning = false
+        gpsUpdatesActive = false
+        BootReceiver.setServiceActive(this, false)   // Fix 5: persistent für Reboot
         locationManager.removeUpdates(this)
-        
+
         if (wakeLock?.isHeld == true) {
             wakeLock?.release()
         }
@@ -143,6 +153,13 @@ class LocationShareService : Service(), LocationListener {
     // ── GPS ───────────────────────────────────────────────────────────────
 
     private fun startGpsUpdates() {
+        // Guard: bereits registrierte Listener nicht doppelt anmelden.
+        // onStartCommand() kann bei START_STICKY mehrfach aufgerufen werden,
+        // ohne dass onCreate() erneut durchläuft.
+        if (gpsUpdatesActive) {
+            Log.d(TAG, "GPS-Listener bereits aktiv – keine Neuregistrierung")
+            return
+        }
         try {
             // GPS Provider für hohe Genauigkeit
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -153,9 +170,8 @@ class LocationShareService : Service(), LocationListener {
                     this
                 )
             }
-            
+
             // Network Provider für schnellen Fix (WLAN/Funkzellen)
-            // Nur versuchen, wenn der Provider auf diesem Gerät existiert
             if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
@@ -164,6 +180,8 @@ class LocationShareService : Service(), LocationListener {
                     this
                 )
             }
+            gpsUpdatesActive = true
+            Log.d(TAG, "GPS-Listener registriert")
         } catch (e: SecurityException) {
             Log.e(TAG, "Standortberechtigung entzogen", e)
             stopSelf()
@@ -176,12 +194,19 @@ class LocationShareService : Service(), LocationListener {
 
     override fun onLocationChanged(location: Location) {
         lastLocation = location
-        Log.d(TAG, "GPS-Update: ${location.latitude}, ${location.longitude}")
-        
+        Log.d(TAG, "GPS-Update: ${location.latitude}, ${location.longitude}" +
+                if (location.hasAccuracy()) " (±${location.accuracy.toInt()}m)" else "")
+
+        // Sofort-Upload beim ersten Fix – aber nur wenn Genauigkeit ausreichend (< 50m).
+        // Indoor liefert NETWORK_PROVIDER oft als erstes einen ungenauen Fix (50–200m).
+        // In diesem Fall wartet der Upload-Loop auf einen präziseren GPS-Fix.
         if (!hasUploadedOnce) {
-            hasUploadedOnce = true
-            serviceScope.launch {
-                uploadLocation(location)
+            val accuracyOk = !location.hasAccuracy() || location.accuracy < 50f
+            if (accuracyOk) {
+                hasUploadedOnce = true
+                serviceScope.launch { uploadLocation(location) }
+            } else {
+                Log.d(TAG, "Erster Fix zu ungenau (${location.accuracy.toInt()}m) – warte auf besseren Fix")
             }
         }
     }
@@ -237,12 +262,15 @@ class LocationShareService : Service(), LocationListener {
         tempFile.writeText(json)
 
         val client = WebDavClient(config.serverUrl, config.username, config.password)
-        
-        // Sicherstellen, dass das Verzeichnis existiert
-        client.createDirectory(WebDavSyncManager.REMOTE_DIR)
+
+        // Verzeichnis nur beim ersten Upload anlegen, danach Flag setzen
+        if (!remoteDirEnsured) {
+            val mkcolResult = client.createDirectory(WebDavSyncManager.REMOTE_DIR)
+            if (mkcolResult.isSuccess) remoteDirEnsured = true
+        }
 
         val remotePath = "${WebDavSyncManager.REMOTE_DIR}/${remoteFileName(this)}"
-        
+
         serviceScope.launch(Dispatchers.IO) {
             val result = client.uploadFile(remotePath, tempFile)
             if (result.isSuccess) {
