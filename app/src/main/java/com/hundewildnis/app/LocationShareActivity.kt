@@ -26,6 +26,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.osmdroid.views.overlay.Polyline
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -162,6 +164,21 @@ class LocationShareActivity : SecureBaseActivity() {
             }
         }
         binding.mapView.overlays.add(myLocationOverlay)
+
+        // Sofort-Zentrierung auf letzten bekannten Standort (zuverlässiger im Gebäude)
+        if (hasLocationPermission()) {
+            val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val lastGps = try { lm.getLastKnownLocation(LocationManager.GPS_PROVIDER) } catch (e: SecurityException) { null }
+            val lastNet = try { lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) } catch (e: SecurityException) { null }
+            val best = when {
+                lastGps != null && lastNet != null -> if (lastGps.time > lastNet.time) lastGps else lastNet
+                else -> lastGps ?: lastNet
+            }
+            best?.let {
+                binding.mapView.controller.setCenter(GeoPoint(it.latitude, it.longitude))
+                binding.mapView.controller.setZoom(15.0)
+            }
+        }
 
         // Fix 3: dp-basierte Offsets und textSize statt hardcodierter px-Werte
         val dp = resources.displayMetrics.density
@@ -407,53 +424,49 @@ class LocationShareActivity : SecureBaseActivity() {
 
             if (locationFiles.isEmpty()) {
                 withContext(Dispatchers.Main) {
-                    clearAllMarkers()
-                    devicePayloads = emptyList()
-                    deviceAdapter.submitList(emptyList())
                     val all = filesResult.getOrDefault(emptyList())
                     val firstRaw = all.firstOrNull()
                         ?: "Der Ordner '${WebDavSyncManager.REMOTE_DIR}' ist absolut leer."
-                    binding.tvMapStatus.text =
-                        "Eigene ID: $ownFileName\nDateien im Ordner: ${all.size}\nBeispiel-Name: $firstRaw"
+                    val debugInfo = "Eigene ID: $ownFileName\nDateien im Ordner: ${all.size}\nBeispiel-Name: $firstRaw"
+                    updateMarkersOnMap(emptyList(), debugInfo)
                 }
                 return@withContext
             }
 
-            val payloads = mutableListOf<LocationPayload>()
             val tempDir = File(cacheDir, "location_share_dl").apply { mkdirs() }
-            val errors  = mutableListOf<String>()
-
-            for (fileName in locationFiles) {
-                val tempFile = File(tempDir, fileName)
-                val dl = client.downloadFile("${WebDavSyncManager.REMOTE_DIR}/$fileName", tempFile)
-                if (dl.isSuccess) {
-                    try {
-                        val payload = gson.fromJson(tempFile.readText(), LocationPayload::class.java)
-                        // Dateinamen-Filter (Fix 4) schließt eigene Datei bereits aus.
-                        // Kein zusätzlicher deviceId-Vergleich – dieser filterte fälschlich
-                        // fremde Geräte mit ähnlicher Geräte-ID heraus (Bug 2).
-                        if (payload != null) payloads.add(payload)
-                    } catch (e: Exception) { errors.add("Fehler in $fileName") }
-                    tempFile.delete()
-                } else {
-                    errors.add("Download fehlgeschlagen: $fileName")
+            
+            // Parallelisierung der Downloads
+            val deferredPayloads = locationFiles.map { fileName ->
+                async {
+                    val tempFile = File(tempDir, fileName)
+                    val dl = client.downloadFile("${WebDavSyncManager.REMOTE_DIR}/$fileName", tempFile)
+                    if (dl.isSuccess) {
+                        try {
+                            val payload = gson.fromJson(tempFile.readText(), LocationPayload::class.java)
+                            tempFile.delete()
+                            payload
+                        } catch (e: Exception) {
+                            tempFile.delete()
+                            null
+                        }
+                    } else {
+                        null
+                    }
                 }
             }
+            
+            val payloads = deferredPayloads.awaitAll().filterNotNull()
             tempDir.deleteRecursively()
 
             withContext(Dispatchers.Main) {
                 updateMarkersOnMap(payloads)
-                binding.tvMapStatus.text = if (errors.isNotEmpty())
-                    "Gefunden: ${locationFiles.size} andere, Fehler: ${errors.size}\n${errors.take(1).joinToString()}"
-                else
-                    "Gefunden: ${locationFiles.size} andere Geräte."
             }
         }
     }
 
     // ── Marker ─────────────────────────────────────────────────────────────
 
-    private fun updateMarkersOnMap(payloads: List<LocationPayload>) {
+    private fun updateMarkersOnMap(payloads: List<LocationPayload>, debugInfo: String? = null) {
         val now = System.currentTimeMillis()
         val seenIds = mutableSetOf<String>()
         devicePayloads = payloads
@@ -495,7 +508,7 @@ class LocationShareActivity : SecureBaseActivity() {
         }
 
         val stale = payloads.count { (now - it.timestamp) > STALE_THRESHOLD_MS }
-        binding.tvMapStatus.text = buildStatusText(payloads.size - stale, stale)
+        binding.tvMapStatus.text = debugInfo ?: buildStatusText(payloads.size - stale, stale)
     }
 
     private fun clearAllMarkers() {
