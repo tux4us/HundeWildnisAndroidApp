@@ -217,6 +217,56 @@
                                 app:iconTint="#8fad6f" />
                         </LinearLayout>
 
+                        <!-- Routing-Profil Auswahl -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Routen-Profil:"
+                            android:textSize="12sp"
+                            android:textColor="#666666"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="4dp"/>
+
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/toggleRoutingProfile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:selectionRequired="true"
+                            app:checkedButton="@+id/btnProfileFoot"
+                            android:layout_marginBottom="8dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnProfileFoot"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="🥾 Fuß"
+                                android:textSize="12sp"
+                                android:paddingHorizontal="12dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnProfileBike"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="🚲 Rad"
+                                android:textSize="12sp"
+                                android:paddingHorizontal="12dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnProfileCar"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="🚗 Auto"
+                                android:textSize="12sp"
+                                android:paddingHorizontal="12dp"
+                                app:cornerRadius="8dp" />
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
+
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchZoomActiveOnly"
                             android:layout_width="match_parent"

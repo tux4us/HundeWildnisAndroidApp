@@ -262,6 +262,25 @@ class LocationShareActivity : SecureBaseActivity() {
         binding.btnOpenWebDavSettings.setOnClickListener {
             startActivity(Intent(this, WebDavSyncActivity::class.java))
         }
+
+        // Routing-Profil Toggle Group
+        binding.toggleRoutingProfile.apply {
+            val current = routingProfile
+            check(when(current) {
+                "cycling-regular" -> R.id.btnProfileBike
+                "driving-car"     -> R.id.btnProfileCar
+                else              -> R.id.btnProfileFoot
+            })
+            addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (isChecked) {
+                    routingProfile = when (checkedId) {
+                        R.id.btnProfileBike -> "cycling-regular"
+                        R.id.btnProfileCar  -> "driving-car"
+                        else                -> "foot-hiking"
+                    }
+                }
+            }
+        }
     }
 
     private fun loadSavedState() {
@@ -624,26 +643,26 @@ class LocationShareActivity : SecureBaseActivity() {
 
     private fun fetchOpenRouteServiceRoute(fLat: Double, fLon: Double, tLat: Double, tLon: Double): RouteData {
         val apiKey = AppSettings(this).getOrsApiKey()
+        val profile = routingProfile
 
-        // Fix 1a: Koordinaten-Reihenfolge korrekt (Start → Ziel)
         val body = JSONObject().apply {
             put("coordinates", JSONArray().apply {
                 put(JSONArray().apply { put(fLon); put(fLat) })
                 put(JSONArray().apply { put(tLon); put(tLat) })
             })
             put("elevation", true)
+            put("language", "de")
         }
 
         val conn = java.net.URL(
-            "https://api.openrouteservice.org/v2/directions/$routingProfile/geojson"
+            "https://api.openrouteservice.org/v2/directions/$profile/geojson"
         ).openConnection() as java.net.HttpURLConnection
 
-        // Fix 1c: korrekte Header + Timeouts
         conn.requestMethod = "POST"
         conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
         conn.setRequestProperty("Accept",        "application/json, application/geo+json")
         conn.setRequestProperty("Authorization", apiKey)
-        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/13.4")
         conn.connectTimeout = 15_000
         conn.readTimeout    = 20_000
         conn.doOutput = true
@@ -655,9 +674,13 @@ class LocationShareActivity : SecureBaseActivity() {
             return RouteData(emptyList(), 0.0, 0.0)
         }
 
-        val json   = JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
-        val coords = json.getJSONArray("features")
-            .getJSONObject(0).getJSONObject("geometry").getJSONArray("coordinates")
+        val responseStr = conn.inputStream.bufferedReader().use { it.readText() }
+        val json = JSONObject(responseStr)
+        val features = json.optJSONArray("features") ?: return RouteData(emptyList(), 0.0, 0.0)
+        if (features.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
+        
+        val geometry = features.getJSONObject(0).optJSONObject("geometry") ?: return RouteData(emptyList(), 0.0, 0.0)
+        val coords = geometry.optJSONArray("coordinates") ?: return RouteData(emptyList(), 0.0, 0.0)
 
         val points = mutableListOf<GeoPoint>()
         for (i in 0 until coords.length()) {
