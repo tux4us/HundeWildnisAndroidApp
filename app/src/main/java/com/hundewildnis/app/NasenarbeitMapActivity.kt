@@ -28,6 +28,7 @@ import org.json.JSONObject
 import org.osmdroid.config.Configuration as OsmConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
+import androidx.core.content.ContextCompat
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polygon
@@ -77,6 +78,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     private var detectedWeights  = mutableListOf<Double>()
     private var detectedTopo     = mutableListOf<String>()
     private var overpassQueried  = false
+    private var isRequestingUpdates = false
 
     // ── CONSTANTS ──────────────────────────────────────────────
     companion object {
@@ -135,7 +137,11 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.overlays.add(scaleBar)
 
         myLocationOverlay = MyLocationNewOverlay(
-            GpsMyLocationProvider(this), binding.mapView
+            GpsMyLocationProvider(this).apply {
+                setLocationUpdateMinTime(3000L)
+                setLocationUpdateMinDistance(5f)
+            },
+            binding.mapView
         ).apply { enableMyLocation() }
         binding.mapView.overlays.add(myLocationOverlay)
 
@@ -956,6 +962,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 3000L, 5f, this
             )
+            isRequestingUpdates = true
         } catch (e: SecurityException) {
             Toast.makeText(this, "GPS-Berechtigung fehlt", Toast.LENGTH_SHORT).show()
         }
@@ -973,8 +980,21 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     // LIFECYCLE
     // ════════════════════════════════════════════════════════════
 
-    override fun onResume()  { super.onResume();  binding.mapView.onResume() }
-    override fun onPause()   { super.onPause();   binding.mapView.onPause() }
+    override fun onResume()  {
+        super.onResume()
+        binding.mapView.onResume()
+        if (!isRequestingUpdates && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            startLocationUpdates()
+        }
+    }
+    override fun onPause()   {
+        super.onPause()
+        binding.mapView.onPause()
+        if (isRequestingUpdates) {
+            locationManager.removeUpdates(this)
+            isRequestingUpdates = false
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         myLocationOverlay?.disableMyLocation()

@@ -194,7 +194,13 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
         binding.mapView.overlays.add(scaleBarOverlay)
 
-        myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), binding.mapView)
+        myLocationOverlay = MyLocationNewOverlay(
+            GpsMyLocationProvider(this).apply {
+                setLocationUpdateMinTime(MIN_TIME_BETWEEN_UPDATES)
+                setLocationUpdateMinDistance(MIN_DISTANCE_CHANGE)
+            },
+            binding.mapView
+        )
         myLocationOverlay.enableMyLocation()
         binding.mapView.overlays.add(myLocationOverlay)
     }
@@ -1660,6 +1666,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         super.onPause()
         binding.mapView.onPause()
         if (::myLocationOverlay.isInitialized) myLocationOverlay.disableMyLocation()
+        if (isRequestingUpdates) {
+            locationManager.removeUpdates(this)
+            isRequestingUpdates = false
+        }
     }
 
     override fun onResume() {

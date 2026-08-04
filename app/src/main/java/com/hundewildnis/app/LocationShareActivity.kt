@@ -133,6 +133,8 @@ class LocationShareActivity : SecureBaseActivity() {
             val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (lm.allProviders.contains(LocationManager.NETWORK_PROVIDER))
                 addLocationSource(LocationManager.NETWORK_PROVIDER)
+            setLocationUpdateMinTime(10000L)
+            setLocationUpdateMinDistance(5f)
         }
 
         myLocationOverlay = MyLocationNewOverlay(provider, binding.mapView).apply {

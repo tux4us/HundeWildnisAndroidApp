@@ -200,6 +200,11 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
     override fun onLocationChanged(location: Location) {
         currentLat = location.latitude
         currentLon = location.longitude
