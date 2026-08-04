@@ -630,7 +630,16 @@ class LocationShareActivity : SecureBaseActivity() {
                     binding.mapView.overlays.add(currentRoutePolyline)
                     binding.btnStopRouting.isVisible = true
                     binding.mapView.invalidate()
-                } else drawRouteStraightLine(fLat, fLon, tLat, tLon)
+                } else {
+                    Log.w(TAG, "Keine Route von ORS erhalten, zeichne Luftlinie")
+                    val apiKey = AppSettings(this@LocationShareActivity).getOrsApiKey()
+                    if (apiKey.isBlank()) {
+                        Toast.makeText(this@LocationShareActivity, "Routing fehlgeschlagen: Kein API-Key hinterlegt", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this@LocationShareActivity, "Routing fehlgeschlagen, zeichne Luftlinie", Toast.LENGTH_SHORT).show()
+                    }
+                    drawRouteStraightLine(fLat, fLon, tLat, tLon)
+                }
             } catch (e: Exception) {
                 Log.w(TAG, "Routing fehlgeschlagen, Luftlinie: ${e.message}")
                 drawRouteStraightLine(fLat, fLon, tLat, tLon)
@@ -639,11 +648,32 @@ class LocationShareActivity : SecureBaseActivity() {
     }
 
     private fun fetchBestRoute(fLat: Double, fLon: Double, tLat: Double, tLon: Double): RouteData {
-        return try { fetchOpenRouteServiceRoute(fLat, fLon, tLat, tLon) }
-        catch (e: Exception) { Log.w(TAG, "ORS: ${e.message}"); RouteData(emptyList(), 0.0, 0.0) }
+        val apiKey = AppSettings(this).getOrsApiKey()
+        if (apiKey.isBlank()) {
+            Log.w(TAG, "ORS API Key fehlt!")
+            return RouteData(emptyList(), 0.0, 0.0)
+        }
+
+        // 1. Versuch: Mit Elevation
+        try {
+            val route = fetchOpenRouteServiceRoute(fLat, fLon, tLat, tLon, withElevation = true)
+            if (route.points.isNotEmpty()) return route
+        } catch (e: Exception) {
+            Log.w(TAG, "ORS mit Elevation fehlgeschlagen: ${e.message}")
+        }
+
+        // 2. Versuch: Ohne Elevation (Fallback)
+        try {
+            val route = fetchOpenRouteServiceRoute(fLat, fLon, tLat, tLon, withElevation = false)
+            if (route.points.isNotEmpty()) return route
+        } catch (e: Exception) {
+            Log.w(TAG, "ORS ohne Elevation fehlgeschlagen: ${e.message}")
+        }
+
+        return RouteData(emptyList(), 0.0, 0.0)
     }
 
-    private fun fetchOpenRouteServiceRoute(fLat: Double, fLon: Double, tLat: Double, tLon: Double): RouteData {
+    private fun fetchOpenRouteServiceRoute(fLat: Double, fLon: Double, tLat: Double, tLon: Double, withElevation: Boolean): RouteData {
         val apiKey = AppSettings(this).getOrsApiKey()
         val profile = routingProfile
 
@@ -652,7 +682,7 @@ class LocationShareActivity : SecureBaseActivity() {
                 put(JSONArray().apply { put(fLon); put(fLat) })
                 put(JSONArray().apply { put(tLon); put(tLat) })
             })
-            put("elevation", true)
+            put("elevation", withElevation)
             put("language", "de")
         }
 
@@ -672,7 +702,7 @@ class LocationShareActivity : SecureBaseActivity() {
 
         if (conn.responseCode != 200) {
             val err = conn.errorStream?.bufferedReader()?.use { it.readText() } ?: "HTTP ${conn.responseCode}"
-            Log.e(TAG, "ORS Fehler ${conn.responseCode}: $err")
+            Log.e(TAG, "ORS Fehler ${conn.responseCode} (elevation=$withElevation): $err")
             return RouteData(emptyList(), 0.0, 0.0)
         }
 
@@ -681,15 +711,21 @@ class LocationShareActivity : SecureBaseActivity() {
         val features = json.optJSONArray("features") ?: return RouteData(emptyList(), 0.0, 0.0)
         if (features.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
         
-        val geometry = features.getJSONObject(0).optJSONObject("geometry") ?: return RouteData(emptyList(), 0.0, 0.0)
+        val feature = features.getJSONObject(0)
+        val geometry = feature.optJSONObject("geometry") ?: return RouteData(emptyList(), 0.0, 0.0)
         val coords = geometry.optJSONArray("coordinates") ?: return RouteData(emptyList(), 0.0, 0.0)
+
+        val properties = feature.optJSONObject("properties")
+        val summary = properties?.optJSONObject("summary")
+        val distance = summary?.optDouble("distance", 0.0) ?: 0.0
+        val duration = summary?.optDouble("duration", 0.0) ?: 0.0
 
         val points = mutableListOf<GeoPoint>()
         for (i in 0 until coords.length()) {
             val c = coords.getJSONArray(i)
             points.add(GeoPoint(c.getDouble(1), c.getDouble(0)))
         }
-        return RouteData(points, 0.0, 0.0)
+        return RouteData(points, distance, duration)
     }
 
     private fun drawRouteStraightLine(fLat: Double, fLon: Double, tLat: Double, tLon: Double) {
