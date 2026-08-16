@@ -75,7 +75,7 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
 
         view.findViewById<android.view.View>(R.id.btnSheetYouTube).setOnClickListener { dialog.dismiss(); openYouTube() }
         view.findViewById<android.view.View>(R.id.btnSheetPodcast).setOnClickListener { dialog.dismiss(); openPodcast() }
-        view.findViewById<android.view.View>(R.id.btnSheetTwitter).setOnClickListener { dialog.dismiss(); openTwitter() }
+        view.findViewById<android.view.View>(R.id.btnSheetSpotify).setOnClickListener { dialog.dismiss(); openSpotify() }
         view.findViewById<android.view.View>(R.id.btnSheetSignalManuela).setOnClickListener { dialog.dismiss(); openSignalManuela() }
         view.findViewById<android.view.View>(R.id.btnSheetSignalJoerg).setOnClickListener { dialog.dismiss(); openSignalJoerg() }
 
@@ -105,8 +105,8 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
         })
     }
 
-    private fun openTwitter() {
-        val url = "https://twitter.com/@teamnaturedogs"
+    private fun openSpotify() {
+        val url = "https://open.spotify.com/show/0W9JJZhtc0TPzYMyRNxaiD?si=6b3c2d41681b45c3"
         try {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             intent.setPackage("com.twitter.android")

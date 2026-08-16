@@ -88,7 +88,8 @@ object BackupManager {
                 paths.forEachIndexed { idx, path ->
                     val sourceFile = File(path)
                     if (sourceFile.exists()) {
-                        val fileNameInZip = "plant_${plantId}_${idx}_${timestamp}.jpg"
+                        // Stabilen Dateinamen ohne Zeitstempel verwenden
+                        val fileNameInZip = "plant_${plantId}_${idx}.jpg"
                         val destFile = File(photosInZipDir, fileNameInZip)
                         try {
                             if (sourceFile.copyTo(destFile, overwrite = true).exists()) {
@@ -110,7 +111,8 @@ object BackupManager {
                 if (dog.photoUri.isNotEmpty()) {
                     try {
                         val sourceUri = Uri.parse(dog.photoUri)
-                        val photoFile = File(photosInZipDir, "dog_${index}_${timestamp}.jpg")
+                        // Stabile ID statt Index/Zeitstempel
+                        val photoFile = File(photosInZipDir, "dog_${dog.id}.jpg")
                         if (copyUriToFile(context, sourceUri, photoFile)) {
                             photoMapping[dog.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
                         }
@@ -121,11 +123,12 @@ object BackupManager {
             }
 
             // Notizen-Fotos kopieren
-            notes?.forEachIndexed { noteIndex, note ->
+            notes?.forEachIndexed { _, note ->
                 note.photoUris.forEachIndexed { photoIndex, uriString ->
                     try {
                         val sourceUri = Uri.parse(uriString)
-                        val photoFile = File(photosInZipDir, "note_${noteIndex}_${photoIndex}_${timestamp}.jpg")
+                        // Stabile ID
+                        val photoFile = File(photosInZipDir, "note_${note.id}_${photoIndex}.jpg")
                         if (copyUriToFile(context, sourceUri, photoFile)) {
                             photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
                         }
@@ -136,16 +139,32 @@ object BackupManager {
             }
 
             // Notfallmeldung-Fotos kopieren
-            emergencyReports?.forEachIndexed { reportIndex, report ->
+            emergencyReports?.forEachIndexed { _, report ->
                 report.photoUris.forEachIndexed { photoIndex, uriString ->
                     try {
                         val sourceUri = Uri.parse(uriString)
-                        val photoFile = File(photosInZipDir, "emergency_${reportIndex}_${photoIndex}_${timestamp}.jpg")
+                        // Stabile ID
+                        val photoFile = File(photosInZipDir, "emergency_${report.id}_${photoIndex}.jpg")
                         if (copyUriToFile(context, sourceUri, photoFile)) {
                             photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Fehler beim Kopieren von Notfallfoto: ${e.message}")
+                    }
+                }
+            }
+
+            // Nasenarbeit-Fotos kopieren
+            nasenarbeitSessions.forEach { session ->
+                session.fotoUris.forEachIndexed { photoIndex, uriString ->
+                    try {
+                        val sourceUri = Uri.parse(uriString)
+                        val photoFile = File(photosInZipDir, "nasen_${session.id}_${photoIndex}.jpg")
+                        if (copyUriToFile(context, sourceUri, photoFile)) {
+                            photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Fehler beim Kopieren von Nasenarbeitfoto: ${e.message}")
                     }
                 }
             }
@@ -315,7 +334,9 @@ object BackupManager {
             val uri = Uri.parse(uriString)
             if (uri.scheme == "file") {
                 val f = File(uri.path ?: return "na")
-                "${f.length()}_${f.lastModified()}"
+                // Stabilität: Nur Größe verwenden. lastModified ändert sich bei jedem Sync-Restore,
+                // was zu unnötigen Upload-Schleifen führen würde.
+                "${f.length()}"
             } else {
                 context.contentResolver.openAssetFileDescriptor(uri, "r")?.use { afd ->
                     "${afd.length}"
@@ -507,14 +528,18 @@ object BackupManager {
 
             // 10. Nasenarbeit
             backupData.nasenarbeitSessions?.let { sessions ->
+                val restoredSessions = sessions.map { session ->
+                    val restoredUris = session.fotoUris.map { restoredPhotoMapping[it] ?: it }
+                    session.copy(fotoUris = restoredUris)
+                }
                 if (mergeMode) {
                     val existing = NasenarbeitManager.loadSessions(context)
                     val existingIds = existing.map { it.id }.toSet()
-                    val merged = (existing + sessions.filter { it.id !in existingIds })
+                    val merged = (existing + restoredSessions.filter { it.id !in existingIds })
                         .sortedByDescending { it.datum }
                     NasenarbeitManager.saveSessions(context, merged.toMutableList())
                 } else {
-                    NasenarbeitManager.saveSessions(context, sessions.sortedByDescending { it.datum }.toMutableList())
+                    NasenarbeitManager.saveSessions(context, restoredSessions.sortedByDescending { it.datum }.toMutableList())
                 }
             }
             backupData.nasenarbeitFortschritt?.let { fortschritt ->
@@ -575,6 +600,9 @@ object BackupManager {
                 ActivityCalendarManager.save(context, planned)
             }
 
+            // ✅ NEU: Verwaiste Fotos bereinigen, um Datenwachstum zu verhindern
+            purgeOrphanFiles(context)
+
             Log.d(TAG, "Wiederherstellung erfolgreich abgeschlossen")
             true
         } catch (e: Exception) {
@@ -582,6 +610,49 @@ object BackupManager {
             false
         } finally {
             tempUnzipDir.deleteRecursively()
+        }
+    }
+
+    /**
+     * Löscht Fotos in restored_photos, plant_photos und nasenarbeit_photos,
+     * die von keinem Objekt mehr referenziert werden.
+     */
+    fun purgeOrphanFiles(context: Context) {
+        val activeUris = mutableSetOf<String>()
+        // 1. Alle aktuell referenzierten URIs sammeln
+        DogProfileManager.getAllProfiles(context).forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
+        collectNotes(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
+        collectEmergencyReports(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
+        PlantPhotoManager.getAllPhotos(context).values.forEach { it.forEach { uri -> activeUris.add(uri) } }
+        NasenarbeitManager.loadSessions(context).forEach { it.fotoUris.forEach { uri -> activeUris.add(uri) } }
+
+        // 2. Dateinamen extrahieren, die wir behalten wollen
+        val activeFilenames = activeUris.mapNotNull { uriString ->
+            try {
+                if (uriString.contains("restored_photos") || 
+                    uriString.contains("plant_photos") || 
+                    uriString.contains("nasenarbeit_photos")) {
+                    uriString.substringAfterLast('/')
+                } else null
+            } catch (e: Exception) { null }
+        }.toSet()
+
+        // 3. Verzeichnisse prüfen und Unbekanntes löschen
+        val dirs = listOf(
+            File(context.filesDir, "restored_photos"),
+            File(context.filesDir, "plant_photos"),
+            File(context.filesDir, "nasenarbeit_photos")
+        )
+
+        dirs.forEach { dir ->
+            if (dir.exists() && dir.isDirectory) {
+                dir.listFiles()?.forEach { file ->
+                    if (file.isFile && file.name !in activeFilenames) {
+                        Log.d(TAG, "Lösche verwaistes Foto: ${file.name}")
+                        file.delete()
+                    }
+                }
+            }
         }
     }
 
