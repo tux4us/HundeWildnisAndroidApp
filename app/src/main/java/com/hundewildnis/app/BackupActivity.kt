@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
@@ -73,6 +74,39 @@ class BackupActivity : SecureBaseActivity() {
 
         binding.btnLocationShare.setOnClickListener {
             startActivity(Intent(this, LocationShareActivity::class.java))
+        }
+
+        // Medienspeicher bereinigen
+        binding.btnPurgeMediaBackup.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("🧹 Medienspeicher bereinigen")
+                .setMessage("Dies löscht verwaiste Bilddateien aus alten Synchronisationen.\n\nDeine Profile, Einstellungen und aktuell verwendeten Fotos bleiben erhalten.\n\nDieser Vorgang kann je nach Datenmenge einen Moment dauern. Fortfahren?")
+                .setPositiveButton("Bereinigen") { _, _ ->
+                    scope.launch {
+                        try {
+                            // UI-Feedback: Progressbar einblenden
+                            binding.progressBar.visibility = android.view.View.VISIBLE
+                            binding.tvStatus.visibility = android.view.View.VISIBLE
+                            binding.tvStatus.text = "🔄 Bereinige Medienspeicher..."
+                            binding.btnPurgeMediaBackup.isEnabled = false
+
+                            withContext(Dispatchers.IO) {
+                                BackupManager.purgeOrphanFiles(this@BackupActivity)
+                            }
+                            
+                            Toast.makeText(this@BackupActivity, "Bereinigung abgeschlossen", Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            Log.e("BackupActivity", "Fehler bei Bereinigung", e)
+                            Toast.makeText(this@BackupActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                        } finally {
+                            binding.progressBar.visibility = android.view.View.GONE
+                            binding.tvStatus.text = "Bereinigung abgeschlossen"
+                            binding.btnPurgeMediaBackup.isEnabled = true
+                        }
+                    }
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
         }
     }
 

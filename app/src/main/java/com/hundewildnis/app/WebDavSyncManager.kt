@@ -42,15 +42,22 @@ class WebDavSyncManager(private val context: Context) {
                 context.contentResolver,
                 Settings.Secure.ANDROID_ID
             ) ?: "unknown"
+            // Stabile Normalisierung: Alle Sonderzeichen und Leerzeichen entfernen
             val model = Build.MODEL
-                .replace(" ", "_")
-                .replace(Regex("[^a-zA-Z0-9_]"), "")
+                .replace(Regex("[^a-zA-Z0-9]"), "")
                 .take(20)
             return "${model}_${androidId.take(8)}"
         }
 
         fun remoteFileName(context: Context): String =
             "$FILE_PREFIX${getDeviceId(context)}$FILE_SUFFIX"
+
+        /** Extrahiert die 8-stellige Android-ID aus einem Dateinamen (Suffix vor der Endung). */
+        fun getAndroidIdFromFileName(fileName: String): String? {
+            // backup_VollaPhone22_2bdc58a0.hundebackup -> 2bdc58a0
+            val nameWithoutExt = fileName.substringBeforeLast('.')
+            return nameWithoutExt.substringAfterLast('_').takeIf { it.length == 8 }
+        }
     }
 
     sealed class SyncResult {
@@ -95,6 +102,19 @@ class WebDavSyncManager(private val context: Context) {
         }
 
         val ownRemoteName = remoteFileName(context)
+        val ownAndroidId = getAndroidIdFromFileName(ownRemoteName) ?: "unknown"
+
+        // 1.6 Server-Cleanup: Veraltete Namensvarianten des EIGENEN Geräts finden und löschen
+        // (z.B. Wechsel von Volla_Phone_22_... zu VollaPhone22_...)
+        remoteFiles.forEach { file ->
+            val fileAndroidId = getAndroidIdFromFileName(file.name)
+            if (fileAndroidId == ownAndroidId && file.name != ownRemoteName) {
+                Log.i(TAG, "Lösche redundante Server-Datei des eigenen Geräts: ${file.name}")
+                client.deleteFile("$REMOTE_DIR/${file.name}")
+            }
+        }
+
+        // Aktuellen Stand der eigenen Datei prüfen
         val ownFileExistsRemotely = remoteFiles.any { it.name == ownRemoteName }
 
         // 2. Lokalen Fingerabdruck prüfen - Upload nur bei tatsächlicher Änderung.
@@ -130,12 +150,17 @@ class WebDavSyncManager(private val context: Context) {
         }
 
         // 3. Andere Geräte-Dateien ermitteln
+        // Kriterium: Andere Android-ID als das aktuelle Gerät
         val otherDeviceFiles = remoteFiles.filter {
-            it.name.startsWith(FILE_PREFIX) && it.name.endsWith(FILE_SUFFIX) && it.name != ownRemoteName
+            val fileAndroidId = getAndroidIdFromFileName(it.name)
+            it.name.startsWith(FILE_PREFIX) && 
+            it.name.endsWith(FILE_SUFFIX) && 
+            fileAndroidId != null && 
+            fileAndroidId != ownAndroidId
         }
 
         if (otherDeviceFiles.isEmpty()) {
-            Log.d(TAG, "Keine anderen Geräte gefunden - Sync abgeschlossen")
+            Log.d(TAG, "Keine anderen Geräte gefunden (eigene ID: $ownAndroidId) - Sync abgeschlossen")
             return SyncResult.Success(mergedDeviceCount = 0)
         }
 

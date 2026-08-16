@@ -618,24 +618,29 @@ object BackupManager {
      * die von keinem Objekt mehr referenziert werden.
      */
     fun purgeOrphanFiles(context: Context) {
+        Log.d(TAG, "Starte Medienspeicher-Bereinigung (Purge)...")
         val activeUris = mutableSetOf<String>()
-        // 1. Alle aktuell referenzierten URIs sammeln
-        DogProfileManager.getAllProfiles(context).forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
-        collectNotes(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
-        collectEmergencyReports(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
-        PlantPhotoManager.getAllPhotos(context).values.forEach { it.forEach { uri -> activeUris.add(uri) } }
-        NasenarbeitManager.loadSessions(context).forEach { it.fotoUris.forEach { uri -> activeUris.add(uri) } }
+        
+        // 1. Alle aktuell referenzierten URIs aus allen Modulen sammeln
+        try {
+            DogProfileManager.getAllProfiles(context).forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
+            collectNotes(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
+            collectEmergencyReports(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
+            PlantPhotoManager.getAllPhotos(context).values.forEach { it.forEach { uri -> activeUris.add(uri) } }
+            NasenarbeitManager.loadSessions(context).forEach { it.fotoUris.forEach { uri -> activeUris.add(uri) } }
+        } catch (e: Exception) {
+            Log.e(TAG, "Fehler beim Sammeln aktiver URIs", e)
+        }
 
         // 2. Dateinamen extrahieren, die wir behalten wollen
         val activeFilenames = activeUris.mapNotNull { uriString ->
             try {
-                if (uriString.contains("restored_photos") || 
-                    uriString.contains("plant_photos") || 
-                    uriString.contains("nasenarbeit_photos")) {
-                    uriString.substringAfterLast('/')
-                } else null
+                // Extrahiert den Teil nach dem letzten Slash, ignoriert Query-Parameter
+                uriString.substringAfterLast('/').substringBefore('?')
             } catch (e: Exception) { null }
         }.toSet()
+
+        Log.d(TAG, "DB-Check abgeschlossen: ${activeFilenames.size} aktive Dateien referenziert.")
 
         // 3. Verzeichnisse prüfen und Unbekanntes löschen
         val dirs = listOf(
@@ -644,16 +649,27 @@ object BackupManager {
             File(context.filesDir, "nasenarbeit_photos")
         )
 
+        var deletedCount = 0
+        var freedBytes = 0L
+
         dirs.forEach { dir ->
             if (dir.exists() && dir.isDirectory) {
-                dir.listFiles()?.forEach { file ->
+                val files = dir.listFiles()
+                Log.d(TAG, "Scanne Ordner: ${dir.name} (${files?.size ?: 0} Dateien)")
+                files?.forEach { file ->
                     if (file.isFile && file.name !in activeFilenames) {
-                        Log.d(TAG, "Lösche verwaistes Foto: ${file.name}")
-                        file.delete()
+                        val size = file.length()
+                        if (file.delete()) {
+                            deletedCount++
+                            freedBytes += size
+                        } else {
+                            Log.w(TAG, "Konnte Datei nicht löschen: ${file.name}")
+                        }
                     }
                 }
             }
         }
+        Log.i(TAG, "Bereinigung abgeschlossen: $deletedCount Dateien gelöscht, ${freedBytes / 1024 / 1024} MB freigegeben.")
     }
 
     private fun collectSettings(context: Context): Map<String, String> {
