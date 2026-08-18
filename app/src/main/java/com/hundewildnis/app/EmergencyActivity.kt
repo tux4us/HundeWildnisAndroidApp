@@ -30,6 +30,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hundewildnis.app.databinding.ActivityEmergencyReportBinding
@@ -168,10 +169,7 @@ class EmergencyActivity : SecureBaseActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnCamera.setOnClickListener { showCameraDisclosure() }
-        binding.btnGallery.setOnClickListener { openPhotoPicker() }
-        binding.btnReset.setOnClickListener { resetForm() }
-        binding.btnSend.setOnClickListener { generateAndSendReport() }
+        setupGrids()
 
         binding.switchGps.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -193,6 +191,30 @@ class EmergencyActivity : SecureBaseActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) { saveCache() }
         })
+    }
+
+    private fun setupGrids() {
+        // Fotos
+        val photoTiles = listOf(
+            StartTile("emergency_camera", R.drawable.ic_microphone, "Kamera"), // Placeholder
+            StartTile("emergency_gallery", R.drawable.ic_pages, "Galerie")
+        )
+        val colorsPhotos = StartGroupColors.forGroup(this, 4) // Blau
+        binding.gridEmergencyPhotos.layoutManager = GridLayoutManager(this, 2)
+        binding.gridEmergencyPhotos.adapter = StartTileAdapter(photoTiles, colorsPhotos.chipColorRes, colorsPhotos.accentColorRes) { id ->
+            if (id == "emergency_camera") showCameraDisclosure() else openPhotoPicker()
+        }
+
+        // Aktionen
+        val actionTiles = listOf(
+            StartTile("emergency_send", R.drawable.ic_emergency, "🚀 NOTFALLMELDUNG SENDEN", isDanger = true),
+            StartTile("emergency_reset", R.drawable.ic_remove, "🔄 Eingaben zurücksetzen")
+        )
+        val colorsActions = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridEmergencyActions.layoutManager = GridLayoutManager(this, 1)
+        binding.gridEmergencyActions.adapter = StartTileAdapter(actionTiles, colorsActions.chipColorRes, colorsActions.accentColorRes) { id ->
+            if (id == "emergency_send") generateAndSendReport() else resetForm()
+        }
     }
 
     private fun openPhotoPicker() {

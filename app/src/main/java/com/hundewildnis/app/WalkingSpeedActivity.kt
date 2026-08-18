@@ -19,7 +19,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.IBinder
 import android.provider.MediaStore
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -33,6 +32,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -68,9 +68,6 @@ data class SpeedSession(
     val limitChanges: List<LimitChange> = emptyList()
 )
 
-// ──────────────────────────────────────────────────────────────
-// NEUE DATA CLASS: Limit-Wechsel speichern
-// ──────────────────────────────────────────────────────────────
 data class LimitChange(
     val timestamp: Long,
     val oldLimit: Float,
@@ -99,7 +96,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     private val historyList = mutableListOf<SpeedSession>()
     private lateinit var historyAdapter: HistoryAdapter
 
-    // ✅ NEU: Liste der Limit-Änderungen während Messung
+    // ✅ Liste der Limit-Änderungen während Messung
     private val limitChanges = mutableListOf<LimitChange>()
 
     // UI Update Handler
@@ -168,7 +165,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        binding.toolbar.navigationIcon?.setTint(Color.WHITE)
+        binding.toolbar.navigationIcon?.setTint(ContextCompat.getColor(this, R.color.rd_text_primary_dark))
 
         setupChart()
         setupHistory()
@@ -189,7 +186,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
     private fun confirmDelete(session: SpeedSession) {
         val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+        val color = if (isDarkTheme) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("Messung löschen?")
@@ -214,27 +211,27 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     private fun showInstructionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("Verstanden", null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
     }
 
     private fun showPermissionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("OK", null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
     }
 
     private fun showAboutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_about, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-        val linkColor = if (isDark) Color.parseColor("#8fad6f") else Color.parseColor("#2d5016")
+        val titleColor = if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+        val linkColor = if (isDark) Color.parseColor("#B0A25A") else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
 
@@ -257,7 +254,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
         val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton("Schließen", null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
     }
 
     private fun displaySession(session: SpeedSession) {
@@ -273,14 +270,10 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         limitChanges.clear()
         limitChanges.addAll(session.limitChanges)
 
-        binding.tvChartTitle.text = "📊 Historie: " + SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
-
         updateChartData()
         updateStatistics()
 
-        binding.btnExport.isEnabled = true
-        binding.btnExportGpx.isEnabled = true
-        binding.btnShare.isEnabled = true
+        updateActionGrid()
 
         binding.speedChart.parent.requestChildFocus(binding.speedChart, binding.speedChart)
     }
@@ -328,7 +321,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 sessionStartTime = service.getSessionStartTime()
                 exceedCount = service.getExceedCount()
                 totalDistance = service.getTotalDistance()
-                binding.tvChartTitle.text = "📊 Aktueller Geschwindigkeitsverlauf"
                 updateChartData()
                 updateStatistics()
             }
@@ -377,6 +369,8 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun setupUI() {
+        setupGrids()
+
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             val oldLimit = speedLimit
 
@@ -386,32 +380,19 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 R.id.radioSpeed40 -> 4.0f
                 else -> 3.0f
             }
-            // ✅ NEU: Wechsel protokollieren (nur während Messung)
             if (walkingSpeedService?.isTracking() == true && oldLimit != speedLimit) {
                 limitChanges.add(LimitChange(
                     timestamp = System.currentTimeMillis(),
                     oldLimit = oldLimit,
                     newLimit = speedLimit
                 ))
-
-                // Service aktualisieren
                 walkingSpeedService?.setSpeedLimit(speedLimit)
-
-                // Chart aktualisieren
                 updateChartData()
-
-                // User-Feedback
-                Toast.makeText(
-                    this,
-                    "Limit geändert: ${String.format("%.1f", oldLimit)} → ${String.format("%.1f", speedLimit)} km/h",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Limit geändert: ${String.format("%.1f", oldLimit)} → ${String.format("%.1f", speedLimit)} km/h", Toast.LENGTH_SHORT).show()
             } else {
-                // Nicht während Messung → nur Service updaten
                 walkingSpeedService?.setSpeedLimit(speedLimit)
             }
         }
-
 
         binding.radioGroupInterval.setOnCheckedChangeListener { _, checkedId ->
             val interval = when (checkedId) {
@@ -420,17 +401,10 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 else -> 30000L
             }
             walkingSpeedService?.setCheckInterval(interval)
-
-            // ✅ Feedback nur während Messung
             if (walkingSpeedService?.isTracking() == true) {
-                Toast.makeText(
-                    this,
-                    "Intervall geändert: ${interval / 1000}s",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Intervall geändert: ${interval / 1000}s", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         binding.switchVibration.setOnCheckedChangeListener { _, isChecked ->
             walkingSpeedService?.setVibrationEnabled(isChecked)
@@ -439,26 +413,56 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         binding.switchSound.setOnCheckedChangeListener { _, isChecked ->
             walkingSpeedService?.setSoundEnabled(isChecked)
         }
+    }
 
-        binding.btnStartStop.setOnClickListener {
-            if (walkingSpeedService?.isTracking() == true) {
-                stopTracking()
-            } else {
-                requestPermissionsAndStart()
+    private fun setupGrids() {
+        updateStartStopGrid()
+        updateActionGrid()
+    }
+
+    private fun updateStartStopGrid() {
+        val isTracking = walkingSpeedService?.isTracking() == true
+        val label = if (isTracking) "🛑 Messung stoppen" else "🏁 Messung starten"
+        val icon = if (isTracking) R.drawable.ic_remove else R.drawable.ic_stopwatch
+        val isDanger = isTracking
+
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridSpeedStartStop.layoutManager = GridLayoutManager(this, 1)
+        binding.gridSpeedStartStop.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("speed_start_stop", icon, label, isDanger = isDanger)),
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = {
+                if (walkingSpeedService?.isTracking() == true) {
+                    stopTracking()
+                } else {
+                    requestPermissionsAndStart()
+                }
             }
-        }
+        )
+    }
 
-        binding.btnExport.setOnClickListener {
-            exportSessionToPdf(false)
-        }
+    private fun updateActionGrid() {
+        val actions = listOf(
+            StartTile("speed_pdf", R.drawable.ic_notes, "PDF"),
+            StartTile("speed_gpx", R.drawable.ic_navigation, "GPX"),
+            StartTile("speed_share", R.drawable.ic_map_pin_share, "Teilen")
+        )
 
-        binding.btnExportGpx.setOnClickListener {
-            exportSessionToGpx()
-        }
-
-        binding.btnShare.setOnClickListener {
-            exportSessionToPdf(true)
-        }
+        val colors = StartGroupColors.forGroup(this, 1) // Ocker/Gelb
+        binding.gridSpeedActions.layoutManager = GridLayoutManager(this, 3)
+        binding.gridSpeedActions.adapter = StartTileAdapter(
+            tiles = actions,
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "speed_pdf" -> exportSessionToPdf(false)
+                    "speed_gpx" -> exportSessionToGpx()
+                    "speed_share" -> exportSessionToPdf(true)
+                }
+            }
+        )
     }
 
     override fun onSpeedUpdate(speed: Float, location: Location) {
@@ -480,30 +484,24 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 Configuration.UI_MODE_NIGHT_YES
         val textColor = if (isDarkTheme) Color.WHITE else Color.BLACK
 
-        // ═══════════════════════════════════════════════════════════
-        // GESCHWINDIGKEITS-LINIE (wie bisher)
-        // ═══════════════════════════════════════════════════════════
         val entries = speedDataPoints.map { point ->
             val seconds = ((point.timestamp - sessionStartTime) / 1000f)
             Entry(seconds, point.speed)
         }
 
         val dataSet = LineDataSet(entries, "Geschwindigkeit").apply {
-            color = Color.parseColor("#2d5016")
-            setCircleColor(Color.parseColor("#2d5016"))
+            val chartColor = ContextCompat.getColor(this@WalkingSpeedActivity, R.color.rd_group2_accent_light)
+            color = chartColor
+            setCircleColor(chartColor)
             lineWidth = 2f
             circleRadius = 3f
             setDrawCircleHole(false)
             setDrawValues(false)
         }
 
-        // ═══════════════════════════════════════════════════════════
-        // LIMIT-LINIEN (MEHRERE bei Wechsel!)
-        // ═══════════════════════════════════════════════════════════
         val allDataSets = mutableListOf<com.github.mikephil.charting.interfaces.datasets.ILineDataSet>(dataSet)
 
         if (limitChanges.isEmpty()) {
-            // ✅ FALL 1: Kein Wechsel → eine durchgehende Limit-Linie
             val limitEntries = entries.map { Entry(it.x, speedLimit) }
             val limitSet = LineDataSet(limitEntries, "Limit ${String.format("%.1f", speedLimit)} km/h").apply {
                 color = Color.RED
@@ -513,36 +511,23 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 enableDashedLine(10f, 5f, 0f)
             }
             allDataSets.add(limitSet)
-
         } else {
-            // ✅ FALL 2: Wechsel vorhanden → mehrere Limit-Segmente
-
-            // Sortierte Wechsel mit Start-Limit
             val changes = mutableListOf(
                 LimitChange(sessionStartTime, 0f, limitChanges.firstOrNull()?.oldLimit ?: speedLimit)
             )
             changes.addAll(limitChanges)
 
-            // Für jeden Abschnitt eine Limit-Linie
             for (i in 0 until changes.size) {
                 val change = changes[i]
                 val nextChange = changes.getOrNull(i + 1)
-
-                val limitValue = if (i == 0) change.newLimit else change.newLimit
-
+                val limitValue = change.newLimit
                 val startTime = ((change.timestamp - sessionStartTime) / 1000f)
                 val endTime = if (nextChange != null) {
                     ((nextChange.timestamp - sessionStartTime) / 1000f)
                 } else {
                     entries.lastOrNull()?.x ?: startTime
                 }
-
-                // Limit-Linie für diesen Zeitraum
-                val segmentEntries = listOf(
-                    Entry(startTime, limitValue),
-                    Entry(endTime, limitValue)
-                )
-
+                val segmentEntries = listOf(Entry(startTime, limitValue), Entry(endTime, limitValue))
                 val limitSet = LineDataSet(segmentEntries, "Limit ${String.format("%.1f", limitValue)} km/h").apply {
                     color = when (i % 3) {
                         0 -> Color.RED
@@ -558,7 +543,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             }
         }
 
-        // Chart aktualisieren
         speedChart.data = LineData(allDataSets)
         speedChart.xAxis.textColor = textColor
         speedChart.axisLeft.textColor = textColor
@@ -611,12 +595,11 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
 
             speedDataPoints.clear()
-            limitChanges.clear()  // ✅ NEU
+            limitChanges.clear()
             sessionStartTime = System.currentTimeMillis()
             totalDistance = 0f
             exceedCount = 0
             speedChart.clear()
-            binding.tvChartTitle.text = "📊 Aktueller Geschwindigkeitsverlauf"
 
             updateUI()
             startUIUpdates()
@@ -637,17 +620,22 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun updateUI() {
-        val isTracking = walkingSpeedService?.isTracking() == true
-        binding.btnStartStop.text = if (isTracking) "🛑 Messung stoppen" else "🏁 Messung starten"
-        binding.btnStartStop.setBackgroundColor(if (isTracking) getColor(android.R.color.holo_red_dark) else getColor(R.color.green_primary))
+        updateStartStopGrid()
 
         val currentSpeed = walkingSpeedService?.getCurrentSpeed() ?: 0f
         binding.tvCurrentSpeed.text = String.format("Geschwindigkeit: %.1f km/h", currentSpeed)
+        
+        val isTracking = walkingSpeedService?.isTracking() == true
         binding.tvStatus.text = if (isTracking) "🔔 Messung aktiv" else "🛑 Messung gestoppt"
+        
+        // Design-Anpassung Status-Bar (Gruppe 2 = Index 1)
+        val colors = StartGroupColors.forGroup(this, 1)
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        
+        binding.cardStatus.setCardBackgroundColor(ContextCompat.getColor(this, colors.chipColorRes))
+        binding.tvStatus.setTextColor(ContextCompat.getColor(this, if (isDark) R.color.rd_text_primary_dark else R.color.rd_text_primary_light))
 
-        binding.btnExport.isEnabled = speedDataPoints.isNotEmpty()
-        binding.btnExportGpx.isEnabled = speedDataPoints.isNotEmpty()
-        binding.btnShare.isEnabled = speedDataPoints.isNotEmpty()
+        updateActionGrid()
     }
 
     private fun startUIUpdates() {
@@ -671,24 +659,12 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
     private fun requestPermissionsAndStart() {
         val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDarkThemeMode) Color.WHITE else Color.parseColor("#2d5016")
+        val buttonColor = if (isDarkThemeMode) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
-        // 1. Standort-Erklärungs-Dialog (Angepasst auf Vordergrund-Nutzung)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this)
                 .setTitle("📍 Standortdienste aktivieren")
-                .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
-                        "• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
-                        "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n" +
-                        "• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n" +
-                        "• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n" +
-                        "• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n" +
-                        "• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n" +
-                        "• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n" +
-                        "• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n" +
-                        "• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\n" +
-                        "WICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
-                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden")
+                .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort...")
                 .setPositiveButton("AKTIVIEREN") { _, _ ->
                     locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
                 }
@@ -701,23 +677,19 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 }
             return
         }
-
         checkNotificationPermissionAndStart()
     }
 
     private fun checkNotificationPermissionAndStart() {
         val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDarkThemeMode) Color.WHITE else Color.parseColor("#2d5016")
+        val buttonColor = if (isDarkThemeMode) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val hasPermission = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-
+            val hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
             if (!hasPermission) {
                 AlertDialog.Builder(this)
                     .setTitle("🔔 Benachrichtigungen aktivieren")
-                    .setMessage("Damit der Tempo-Trainer auch bei ausgeschaltetem Display zuverlässig funktioniert, benötigt die App die Berechtigung für Benachrichtigungen.\nBei deaktivierten Benachrichtigungen funktioniert der Tempo-Trainer nur, wenn die App im Vordergrund ist und der Bildschirm aktiv ist.")
+                    .setMessage("Damit der Tempo-Trainer auch bei ausgeschaltetem Display zuverlässig funktioniert...")
                     .setPositiveButton("Aktivieren") { _, _ ->
                         notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }
@@ -738,56 +710,34 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
     private fun exportSessionToPdf(shareAfterExport: Boolean) {
         if (speedDataPoints.isEmpty()) return
-
-        // ✅ SCHRITT 1: Chart für PDF vorbereiten (SCHWARZE Texte!)
         prepareChartForPdf()
-
-        // ✅ SCHRITT 2: 200ms warten damit Labels gerendert werden
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
             try {
                 generatePdfWithStats(shareAfterExport)
-
-                // ✅ SCHRITT 3: Chart zurück auf Theme-Farben
                 restoreChartThemeColors()
-
             } catch (e: Exception) {
-                restoreChartThemeColors()  // Auch bei Fehler zurücksetzen!
+                restoreChartThemeColors()
                 Toast.makeText(this, "Fehler beim Export: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }, 200)
     }
 
-
-    // ──────────────────────────────────────────────────────────────
-// ✅ NEU: Chart für PDF vorbereiten (SCHWARZ statt Theme)
-// ──────────────────────────────────────────────────────────────
     private fun prepareChartForPdf() {
-        // Temporär ALLE Texte auf SCHWARZ setzen (für PDF)
         speedChart.xAxis.textColor = Color.BLACK
         speedChart.axisLeft.textColor = Color.BLACK
         speedChart.legend.textColor = Color.BLACK
         speedChart.invalidate()
     }
 
-    // ──────────────────────────────────────────────────────────────
-// ✅ NEU: Chart zurück auf Theme-Farben
-// ──────────────────────────────────────────────────────────────
     private fun restoreChartThemeColors() {
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val textColor = if (isDarkTheme) Color.WHITE else Color.BLACK
-
         speedChart.xAxis.textColor = textColor
         speedChart.axisLeft.textColor = textColor
         speedChart.legend.textColor = textColor
         speedChart.invalidate()
     }
 
-
-
-    // ──────────────────────────────────────────────────────────────
-    // PDF GENERIERUNG MIT STATISTIKEN
-    // ──────────────────────────────────────────────────────────────
     private fun generatePdfWithStats(shareAfterExport: Boolean) {
         val pdfDocument = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -795,339 +745,153 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         val canvas = page.canvas
         val paint = android.graphics.Paint()
 
-        // ════════════════════════════════════════════════════════════
-        // TITEL
-        // ════════════════════════════════════════════════════════════
         paint.textSize = 20f
         paint.isFakeBoldText = true
-        paint.color = Color.parseColor("#2d5016")
+        paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
         canvas.drawText("🏃 Trainingstempo - Protokoll", 50f, 50f, paint)
 
-        // ════════════════════════════════════════════════════════════
-        // DATUM & ZEIT
-        // ════════════════════════════════════════════════════════════
         paint.textSize = 12f
         paint.isFakeBoldText = false
         paint.color = Color.BLACK
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
         canvas.drawText("Start: " + dateFormat.format(Date(sessionStartTime)), 50f, 80f, paint)
 
-        // ════════════════════════════════════════════════════════════
-        // STATISTIKEN - FESTE FARBEN
-        // ════════════════════════════════════════════════════════════
         var y = 120f
-
         if (speedDataPoints.isNotEmpty()) {
             val avgSpeed = speedDataPoints.map { it.speed }.average().toFloat()
             val maxSpeed = speedDataPoints.maxOf { it.speed }
             val totalMeasurements = speedDataPoints.size
             val exceedCountForPdf = speedDataPoints.count { it.speed > speedLimit }
-            val exceedPercentage = if (totalMeasurements > 0) {
-                (exceedCountForPdf.toFloat() / totalMeasurements * 100)
-            } else 0f
-
+            val exceedPercentage = if (totalMeasurements > 0) (exceedCountForPdf.toFloat() / totalMeasurements * 100) else 0f
             val elapsedMillis = (speedDataPoints.lastOrNull()?.timestamp ?: sessionStartTime) - sessionStartTime
             val elapsedTime = elapsedMillis / 1000
             val hours = elapsedTime / 3600
             val minutes = (elapsedTime % 3600) / 60
             val seconds = elapsedTime % 60
 
-            // Überschrift - GRÜN
             paint.textSize = 14f
             paint.isFakeBoldText = true
-            paint.color = Color.parseColor("#2d5016")  // ✅ FESTE Farbe
+            paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
             canvas.drawText("📊 Statistiken:", 50f, y, paint)
             y += 25f
-
-            // Werte - SCHWARZ
             paint.textSize = 12f
             paint.isFakeBoldText = false
-            paint.color = Color.BLACK  // ✅ FESTE Farbe
-
-            canvas.drawText("Dauer: ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}", 50f, y, paint)
-            y += 20f
-
-            canvas.drawText("Strecke: ${String.format("%.2f km", totalDistance)}", 50f, y, paint)
-            y += 20f
-
-            canvas.drawText("Durchschnitt: ${String.format("%.1f km/h", avgSpeed)}", 50f, y, paint)
-            y += 20f
-
-            canvas.drawText("Maximum: ${String.format("%.1f km/h", maxSpeed)}", 50f, y, paint)
-            y += 20f
-
-            canvas.drawText("Limit: ${String.format("%.1f km/h", speedLimit)}", 50f, y, paint)
-            y += 20f
-
-            canvas.drawText("Gesamtzahl Messungen: $totalMeasurements", 50f, y, paint)
-            y += 20f
-
-            canvas.drawText("Überschreitungen: $exceedCountForPdf", 50f, y, paint)
-            y += 20f
-
-            // ✅ PROZENT - IMMER ROT wenn > 20% (nicht grün!)
-            paint.color = if (exceedPercentage > 20f) {
-                Color.RED  // ✅ IMMER ROT (nicht Theme-abhängig)
-            } else {
-                Color.parseColor("#2d5016")  // ✅ Grün wenn OK
-            }
+            paint.color = Color.BLACK
+            canvas.drawText("Dauer: ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}", 50f, y, paint); y += 20f
+            canvas.drawText("Strecke: ${String.format("%.2f km", totalDistance)}", 50f, y, paint); y += 20f
+            canvas.drawText("Durchschnitt: ${String.format("%.1f km/h", avgSpeed)}", 50f, y, paint); y += 20f
+            canvas.drawText("Maximum: ${String.format("%.1f km/h", maxSpeed)}", 50f, y, paint); y += 20f
+            canvas.drawText("Limit: ${String.format("%.1f km/h", speedLimit)}", 50f, y, paint); y += 20f
+            canvas.drawText("Gesamtzahl Messungen: $totalMeasurements", 50f, y, paint); y += 20f
+            canvas.drawText("Überschreitungen: $exceedCountForPdf", 50f, y, paint); y += 20f
+            paint.color = if (exceedPercentage > 20f) Color.RED else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
             canvas.drawText("Anteil Überschreitungen: ${String.format("%.1f%%", exceedPercentage)}", 50f, y, paint)
-            paint.color = Color.BLACK  // ✅ Zurück auf SCHWARZ
-            y += 30f
+            paint.color = Color.BLACK; y += 30f
         }
 
-        // ════════════════════════════════════════════════════════════
-        // LIMIT-ÄNDERUNGEN - FESTE FARBEN
-        // ════════════════════════════════════════════════════════════
         if (limitChanges.isNotEmpty()) {
-            paint.textSize = 14f
-            paint.isFakeBoldText = true
-            paint.color = Color.parseColor("#2d5016")  // ✅ FESTE Farbe
-            canvas.drawText("🔄 Limit-Änderungen während Messung:", 50f, y, paint)
-            y += 25f
-
-            paint.textSize = 11f
-            paint.isFakeBoldText = false
-            paint.color = Color.DKGRAY  // ✅ FESTE Farbe
-
+            paint.textSize = 14f; paint.isFakeBoldText = true; paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+            canvas.drawText("🔄 Limit-Änderungen während Messung:", 50f, y, paint); y += 25f
+            paint.textSize = 11f; paint.isFakeBoldText = false; paint.color = Color.DKGRAY
             limitChanges.forEachIndexed { index, change ->
                 val timeFromStart = (change.timestamp - sessionStartTime) / 1000
-                val minutes = timeFromStart / 60
-                val seconds = timeFromStart % 60
-
-                canvas.drawText(
-                    "${index + 1}. Nach ${minutes}:${String.format("%02d", seconds)} min: " +
-                            "${String.format("%.1f", change.oldLimit)} → ${String.format("%.1f", change.newLimit)} km/h",
-                    50f,
-                    y,
-                    paint
-                )
+                canvas.drawText("${index + 1}. Nach ${timeFromStart/60}:${String.format("%02d", timeFromStart%60)} min: ${String.format("%.1f", change.oldLimit)} → ${String.format("%.1f", change.newLimit)} km/h", 50f, y, paint)
                 y += 18f
             }
             y += 15f
         }
 
-        // ════════════════════════════════════════════════════════════
-        // CHART - MIT SCHWARZEN LABELS (bereits vorbereitet)
-        // ════════════════════════════════════════════════════════════
-        paint.textSize = 14f
-        paint.isFakeBoldText = true
-        paint.color = Color.parseColor("#2d5016")  // ✅ FESTE Farbe
-        canvas.drawText("📈 Geschwindigkeitsverlauf:", 50f, y, paint)
-        y += 20f
-
-        speedChart.invalidate()
-
-        val chartBitmap = Bitmap.createBitmap(
-            speedChart.width,
-            speedChart.height,
-            Bitmap.Config.ARGB_8888
-        )
+        paint.textSize = 14f; paint.isFakeBoldText = true; paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+        canvas.drawText("📈 Geschwindigkeitsverlauf:", 50f, y, paint); y += 20f
+        val chartBitmap = Bitmap.createBitmap(speedChart.width, speedChart.height, Bitmap.Config.ARGB_8888)
         val chartCanvas = android.graphics.Canvas(chartBitmap)
-        chartCanvas.drawColor(Color.WHITE)
-
-        // ✅ Chart zeichnen (Labels jetzt SCHWARZ!)
-        speedChart.draw(chartCanvas)
-
+        chartCanvas.drawColor(Color.WHITE); speedChart.draw(chartCanvas)
         val scaledChart = Bitmap.createScaledBitmap(chartBitmap, 495, 300, true)
-        canvas.drawBitmap(scaledChart, 50f, y, null)
-        y += 320f
+        canvas.drawBitmap(scaledChart, 50f, y, null); y += 320f
 
-        // ════════════════════════════════════════════════════════════
-        // FOOTER - IMMER GRAU (nicht Theme-abhängig)
-        // ════════════════════════════════════════════════════════════
-        val footerPaint = Paint().apply {
-            color = Color.LTGRAY  // ✅ FESTE Farbe (nicht Theme)
-            textSize = 9f
-            textAlign = Paint.Align.CENTER
-        }
-        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())
-        canvas.drawText(
-            "Erstellt am $dateStr mit HundeWildnis App - www.wildnislehrer.de",
-            297f,
-            820f,
-            footerPaint
-        )
+        val footerPaint = Paint().apply { color = Color.LTGRAY; textSize = 9f; textAlign = Paint.Align.CENTER }
+        canvas.drawText("Erstellt am ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())} mit HundeWildnis App", 297f, 820f, footerPaint)
 
         pdfDocument.finishPage(page)
-
-        // ════════════════════════════════════════════════════════════
-        // SPEICHERN
-        // ════════════════════════════════════════════════════════════
         val fileName = "Trainingstempo_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(sessionStartTime))}.pdf"
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             savePdfToMediaStore(pdfDocument, fileName, shareAfterExport)
         } else {
-            val documentsDir = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                "HundeWildnis"
-            )
+            val documentsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
             if (!documentsDir.exists()) documentsDir.mkdirs()
             val file = File(documentsDir, fileName)
-            pdfDocument.writeTo(FileOutputStream(file))
-            pdfDocument.close()
-
-            if (shareAfterExport) {
-                sharePdfFile(file)
-            }
-            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+            pdfDocument.writeTo(FileOutputStream(file)); pdfDocument.close()
+            if (shareAfterExport) sharePdfFile(file)
+            Toast.makeText(this, "✅ PDF gespeichert", Toast.LENGTH_LONG).show()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun savePdfToMediaStore(pdfDocument: PdfDocument, fileName: String, shareAfterExport: Boolean) {
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis")
-        }
-        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+        val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, fileName); put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf"); put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis") }
+        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
         uri?.let {
             contentResolver.openOutputStream(it)?.use { pdfDocument.writeTo(it) }
             pdfDocument.close()
-
-            if (shareAfterExport) {
-                sharePdfUri(it)
-            }
-            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+            if (shareAfterExport) sharePdfUri(it)
+            Toast.makeText(this, "✅ PDF gespeichert", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun exportSessionToGpx() {
         if (speedDataPoints.isEmpty()) return
-
         try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-            sdf.timeZone = TimeZone.getTimeZone("UTC")
-
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US); sdf.timeZone = TimeZone.getTimeZone("UTC")
             val gpxBuilder = StringBuilder()
-            gpxBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-            gpxBuilder.append("<gpx version=\"1.1\" creator=\"HundeWildnis\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
-            gpxBuilder.append("  <metadata>\n")
-            gpxBuilder.append("    <time>${sdf.format(Date(sessionStartTime))}</time>\n")
-            gpxBuilder.append("  </metadata>\n")
-            gpxBuilder.append("  <trk>\n")
-            gpxBuilder.append("    <name>Trainingstempo ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(sessionStartTime))}</name>\n")
-            gpxBuilder.append("    <trkseg>\n")
-
+            gpxBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.1\" creator=\"HundeWildnis\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
+            gpxBuilder.append("  <metadata><time>${sdf.format(Date(sessionStartTime))}</time></metadata>\n  <trk>\n    <name>Trainingstempo</name>\n    <trkseg>\n")
             for (point in speedDataPoints) {
-                // ✅ Aktuelles Limit zum Zeitpunkt des Trackpoints ermitteln
                 val currentLimit = getCurrentLimitAtTimestamp(point.timestamp)
-
-                gpxBuilder.append("      <trkpt lat=\"${point.latitude}\" lon=\"${point.longitude}\">\n")
-                gpxBuilder.append("        <time>${sdf.format(Date(point.timestamp))}</time>\n")
-                gpxBuilder.append("        <extensions>\n")
-                gpxBuilder.append("          <speed>${point.speed / 3.6f}</speed>\n") // m/s
-                gpxBuilder.append("          <limit>${currentLimit / 3.6f}</limit>\n") // ✅ NEU: Limit
-                gpxBuilder.append("        </extensions>\n")
-                gpxBuilder.append("      </trkpt>\n")
+                gpxBuilder.append("      <trkpt lat=\"${point.latitude}\" lon=\"${point.longitude}\"><time>${sdf.format(Date(point.timestamp))}</time><extensions><speed>${point.speed / 3.6f}</speed><limit>${currentLimit / 3.6f}</limit></extensions></trkpt>\n")
             }
-
-            gpxBuilder.append("    </trkseg>\n")
-            gpxBuilder.append("  </trk>\n")
-            gpxBuilder.append("</gpx>")
-
-
+            gpxBuilder.append("    </trkseg>\n  </trk>\n</gpx>")
             val fileName = "Trainingstempo_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(sessionStartTime))}.gpx"
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                saveGpxToMediaStore(gpxBuilder.toString(), fileName)
-            } else {
-                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
-                if (!dir.exists()) dir.mkdirs()
-                val file = File(dir, fileName)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) saveGpxToMediaStore(gpxBuilder.toString(), fileName)
+            else {
+                val file = File(File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis"), fileName)
                 FileOutputStream(file).use { it.write(gpxBuilder.toString().toByteArray()) }
-                Toast.makeText(this, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "✅ GPX gespeichert", Toast.LENGTH_LONG).show()
             }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Fehler beim GPX-Export: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-
+        } catch (e: Exception) { Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show() }
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // HILFSFUNKTION: Limit zum Zeitpunkt ermitteln
-    // ──────────────────────────────────────────────────────────────
     private fun getCurrentLimitAtTimestamp(timestamp: Long): Float {
         if (limitChanges.isEmpty()) return speedLimit
-
-        // Letzten Wechsel vor diesem Zeitpunkt finden
-        val relevantChange = limitChanges
-            .filter { it.timestamp <= timestamp }
-            .maxByOrNull { it.timestamp }
-
-        return relevantChange?.newLimit ?: speedLimit
+        return limitChanges.filter { it.timestamp <= timestamp }.maxByOrNull { it.timestamp }?.newLimit ?: speedLimit
     }
-
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun saveGpxToMediaStore(gpxContent: String, fileName: String) {
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, "application/gpx+xml")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis")
-        }
-        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-        uri?.let {
-            contentResolver.openOutputStream(it)?.use { it.write(gpxContent.toByteArray()) }
-            Toast.makeText(this, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
-        }
+        val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, fileName); put(MediaStore.MediaColumns.MIME_TYPE, "application/gpx+xml"); put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/HundeWildnis") }
+        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+        uri?.let { contentResolver.openOutputStream(it)?.use { it.write(gpxContent.toByteArray()) }; Toast.makeText(this, "✅ GPX gespeichert", Toast.LENGTH_LONG).show() }
     }
 
-    private fun sharePdfFile(file: File) {
-        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-        sharePdfUri(uri)
-    }
-
+    private fun sharePdfFile(file: File) { sharePdfUri(FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)) }
     private fun sharePdfUri(uri: Uri) {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "application/pdf"
-            putExtra(Intent.EXTRA_STREAM, uri)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
+        val intent = Intent(Intent.ACTION_SEND).apply { type = "application/pdf"; putExtra(Intent.EXTRA_STREAM, uri); addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) }
         startActivity(Intent.createChooser(intent, "Protokoll teilen"))
     }
 
-    // ADAPTER
-    inner class HistoryAdapter(
-        private val sessions: List<SpeedSession>,
-        private val onItemClick: (SpeedSession) -> Unit,
-        private val onDeleteClick: (SpeedSession) -> Unit
-    ) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-
+    inner class HistoryAdapter(private val sessions: List<SpeedSession>, private val onItemClick: (SpeedSession) -> Unit, private val onDeleteClick: (SpeedSession) -> Unit) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
         inner class ViewHolder(val binding: ItemSpeedSessionBinding) : RecyclerView.ViewHolder(binding.root)
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            return ViewHolder(ItemSpeedSessionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        }
-
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(ItemSpeedSessionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val session = sessions[position]
-            val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
-            holder.binding.tvSessionDate.text = date
+            holder.binding.tvSessionDate.text = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             holder.binding.tvSessionSummary.text = String.format("%.2f km - Limit: %.1f km/h", session.distance, session.limit)
             holder.binding.sessionClickArea.setOnClickListener { onItemClick(session) }
             holder.binding.btnDeleteSession.setOnClickListener { onDeleteClick(session) }
         }
-
         override fun getItemCount() = sessions.size
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (WalkingSpeedService.isServiceRunning) {
-            bindService(Intent(this, WalkingSpeedService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (serviceBound) {
-            unbindService(serviceConnection)
-            serviceBound = false
-        }
-    }
-
+    override fun onStart() { super.onStart(); if (WalkingSpeedService.isServiceRunning) bindService(Intent(this, WalkingSpeedService::class.java), serviceConnection, Context.BIND_AUTO_CREATE) }
+    override fun onStop() { super.onStop(); if (serviceBound) { unbindService(serviceConnection); serviceBound = false } }
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 }

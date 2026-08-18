@@ -1,373 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:clipToPadding="false"
+    android:paddingBottom="120dp"
     android:background="?android:attr/windowBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:paddingBottom="180dp">
+        android:padding="12dp">
 
-        <!-- Hunde Wildnis Schule -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnHundeWildnisSchule"
+        <!-- GRUPPE 1: Hunde Wildnis Schule -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridPagesGroup1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🐶🦉 Hunde Wildnis Schule"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:paddingVertical="16dp"
-            android:gravity="start|center_vertical" />
+            android:layout_marginBottom="24dp"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="1" />
 
-        <!-- HUNDESCHULE -->
-        <TextView
+        <!-- GRUPPE 2: HUNDESCHULE -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📁 HUNDESCHULE"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            android:textColor="#2d5016"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="2dp">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_dog"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@null" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hundeschule"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorSecondary" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAntiJagdTraining"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridPagesGroup2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   📄 Anti-Jagd-Training"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
+            android:layout_marginBottom="24dp"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAusbildungAssistenzhunde"
+        <!-- GRUPPE 3: WILDNISSCHULE -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   📄 Ausbildung von Assistenzhunden für den Einsatz im pädagogischen Arbeitsumfeld"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="2dp">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_info"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@null" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wildnisschule"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorSecondary" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBeratung"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridPagesGroup3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   📄 Beratung"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
+            android:layout_marginBottom="24dp"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFahrradtraining"
+        <!-- GRUPPE 4: WEITERE INFORMATIONEN -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   📄 Fahrradtraining"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="2dp">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_pages"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@null" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weitere Informationen"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorSecondary" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFaehrteUndSuche"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridPagesGroup4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   📄 Fährte und Suche"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGedankenUndGrundlagen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Gedanken und Grundlagen"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGrundausbildung"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Grundausbildung"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnHundeleinen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Hundeleinen"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLernfoerderungSchulen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Lernförderung an Schulen"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnProblemberatung"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Problemberatung – Problemkorrektur – Intensivtraining"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSeminare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Seminare"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTeamsport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Teamsport"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTierschutzHunde"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Tierschutz – Hunde mit Lebensgeschichte"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTiertherapeutischerSozialbesuchshundeservice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Tiertherapeutischer Sozialbesuchshundeservice"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWandernZumGutenZweck"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Wandern zum guten Zweck"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWelpenschule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Welpenschule"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <!-- WILDNISSCHULE -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 WILDNISSCHULE"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            android:textColor="#2d5016"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWildnisInUns"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Die Wildnis in uns – individuelle Ausbildung"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSpurenUndZeichen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Spuren und Zeichen – individuelle Ausbildung"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWildnishandwerkSchulen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Wildnishandwerk für Schulen"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWildnispaedagogikSchulen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="   📄 Wildnispädagogik für Schulen"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <!-- WEITERE BEREICHE -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 WEITERE INFORMATIONEN"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            android:textColor="#2d5016"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDownloads"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 DOWNLOADS"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnHonorare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 HONORARE"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnImpressum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 IMPRESSUM"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAGBs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 ALLG. GESCHÄFTSBEDINGUNGEN"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDatenschutz"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 DATENSCHUTZERKLÄRUNG"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnInformationen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 INFORMATIONEN"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnKontakt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 KONTAKT"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnUeberUns"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📁 ÜBER UNS"
-            app:backgroundTint="#1B3A0A"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:gravity="start|center_vertical"
-            android:paddingVertical="12dp" />
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3" />
 
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

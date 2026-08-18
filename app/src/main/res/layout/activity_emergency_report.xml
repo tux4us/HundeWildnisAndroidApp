@@ -22,13 +22,16 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <!-- Hund-Info Header -->
             <com.google.android.material.card.MaterialCardView
@@ -58,7 +61,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Name des Hundes"
-                            android:textSize="@dimen/text_body_medium"
+                            android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="?android:attr/textColorPrimary" />
                         <TextView
@@ -66,54 +69,43 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rasse, Alter, Gewicht"
-                            android:textSize="@dimen/text_body_medium"
+                            android:textSize="13sp"
                             android:textColor="?android:attr/textColorSecondary" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Symptom Auswahl -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Was ist passiert? (Symptome)"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
-                android:layout_marginBottom="8dp" />
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_marginBottom="16dp"
-                app:hintTextColor="?android:attr/textColorPrimary"
-                app:boxStrokeColor="#B00020">
+                app:hintTextColor="#B00020"
+                app:boxStrokeColor="#B00020"
+                android:hint="Was ist passiert? (Symptom)">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerSymptoms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:hint="Symptom auswählen"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textColorHint="?android:attr/textColorSecondary" />
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Freitext Feld -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Zusätzliche Informationen / Bemerkungen"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:hint="Zusätzliche Infos / Bemerkungen"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="16dp"
-                app:hintTextColor="?android:attr/textColorPrimary"
+                app:hintTextColor="#B00020"
                 app:boxStrokeColor="#B00020">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
-                    android:minLines="3"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textColorHint="?android:attr/textColorSecondary" />
+                    android:minLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- GPS Standort -->
@@ -121,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp">
+                app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -131,49 +123,37 @@
                         android:id="@+id/switchGps"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Aktuellen GPS-Standort beifügen"
-                        android:textColor="?android:attr/textColorPrimary" />
+                        android:text="GPS-Standort beifügen" />
                     <TextView
                         android:id="@+id/tvGpsStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textSize="@dimen/text_body_medium"
+                        android:textSize="12sp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Fotos Anhängen -->
+            <!-- Fotos Grid -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fotos anhängen"
                 android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
-                android:layout_marginBottom="8dp" />
-            <LinearLayout
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridEmergencyPhotos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCamera"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="📷 Kamera"
-                    android:layout_marginEnd="4dp" />
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGallery"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🖼 Galerie"
-                    android:layout_marginStart="4dp" />
-            </LinearLayout>
+                android:layout_marginBottom="16dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -186,36 +166,21 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- Buttons -->
-            <LinearLayout
+            <!-- Actions Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridEmergencyActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSend"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="🚀 NOTFALLMELDUNG SENDEN"
-                    android:textStyle="bold"
-                    app:backgroundTint="#B00020"
-                    android:layout_marginBottom="12dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnReset"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="🔄 Eingaben zurücksetzen"
-                    android:textColor="?android:attr/textColorSecondary" />
-            </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1" />
 
             <!-- Historie Sektion -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#444444"
+                android:background="#33000000"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp" />
 
@@ -224,9 +189,10 @@
                 android:layout_height="wrap_content"
                 android:text="📜 Gesendete Notfallmeldungen"
                 android:textStyle="bold"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="15sp"
                 android:textColor="?android:attr/textColorPrimary"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:paddingStart="4dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvEmergencyHistory"

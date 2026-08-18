@@ -19,8 +19,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#2d5016"
-            app:titleTextColor="#FFFFFF"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -76,7 +76,7 @@
             android:padding="0dp"
             android:text="🔍"
             android:textSize="@dimen/text_body_medium"
-            app:backgroundTint="#2d5016"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="24dp" />
 
         <ProgressBar
@@ -150,11 +150,11 @@
                     android:text="📍 Standort"
                     android:textSize="@dimen/text_body_small"
                     android:padding="8dp"
-                    android:backgroundTint="#263316"
-                    app:strokeColor="#2d5016"
+                    android:backgroundTint="?attr/colorSurface"
+                    app:strokeColor="?attr/colorSecondary"
                     app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/colorOnSurface"
                     android:layout_marginEnd="8dp"
                     android:minWidth="100dp"
                     android:minHeight="0dp"
@@ -168,11 +168,11 @@
                     android:text="📤 Teilen"
                     android:textSize="@dimen/text_body_small"
                     android:padding="8dp"
-                    android:backgroundTint="#263316"
-                    app:strokeColor="#2d5016"
+                    android:backgroundTint="?attr/colorSurface"
+                    app:strokeColor="?attr/colorSecondary"
                     app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/colorOnSurface"
                     android:enabled="false"
                     android:minWidth="100dp"
                     android:minHeight="0dp"
@@ -187,11 +187,11 @@
                     android:text="@string/map_orientation_north"
                     android:textSize="@dimen/text_body_small"
                     android:padding="8dp"
-                    android:backgroundTint="#263316"
-                    app:strokeColor="#2d5016"
+                    android:backgroundTint="?attr/colorSurface"
+                    app:strokeColor="?attr/colorSecondary"
                     app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/colorOnSurface"
                     android:minWidth="100dp"
                     android:minHeight="0dp"
                     app:autoSizeTextType="none" />
@@ -268,31 +268,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📍 POI Kategorien wählen"
-                        android:textColor="#8fad6f"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:padding="16dp"
                         android:textAlignment="center"
-                        android:background="#3d3d3d" />
+                        android:background="?attr/colorSurface" />
 
-                    <androidx.core.widget.NestedScrollView
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/gridPOICategories"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fillViewport="true">
-
-                        <GridLayout
-                            android:id="@+id/categoryGrid"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:columnCount="3"
-                            android:rowCount="6"
-                            android:padding="12dp"
-                            android:alignmentMode="alignBounds"
-                            android:columnOrderPreserved="false"
-                            android:useDefaultMargins="true" />
-
-                    </androidx.core.widget.NestedScrollView>
+                        android:padding="8dp"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="3" />
                 </LinearLayout>
 
                 <!-- ═══════════════════════════════════════ -->

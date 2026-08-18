@@ -15,13 +15,12 @@
         android:background="?android:attr/colorBackground"
         android:fitsSystemWindows="false">
 
-        <!-- Toolbar mit Marken-Grün -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF"
+            android:background="@android:color/transparent"
+            app:titleTextColor="?attr/colorOnPrimary"
             android:elevation="4dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -31,7 +30,9 @@
         android:id="@+id/scrollViewContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:clipToPadding="false"
+        android:paddingBottom="120dp"
         android:scrollbars="vertical"
         android:background="?android:attr/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -39,8 +40,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="140dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                     android:paddingBottom="16dp"
                     android:textColor="?android:attr/textColorPrimary" />
 
-                <!-- Blog-Preview Card -->
+                <!-- Blog-Preview Card (unverändert) -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardLatestBlogPost"
                     android:layout_width="match_parent"
@@ -84,27 +84,31 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/blogHeaderLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:padding="12dp"
-                            android:background="#2d5016"
+                            android:background="?attr/colorSecondary"
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/blogHeaderTitle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="💬 Neuester Blogbeitrag"
-                                android:textColor="#FFFFFF"
+                                android:textColor="?attr/colorOnSecondary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/blogHeaderAction"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Alle anzeigen ›"
-                                android:textColor="#A4B395"
+                                android:textColor="?attr/colorOnSecondary"
+                                android:alpha="0.7"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -158,510 +162,246 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_margin="32dp"
-                            android:indeterminateTint="#2d5016"
+                            android:indeterminateTint="?attr/colorSecondary"
                             android:visibility="visible" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Gruppen/Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 android:paddingTop="12dp">
 
-                <!-- GRUPPE 1 -->
-                <com.google.android.material.card.MaterialCardView
+                <!-- GRUPPE 1: Übungen der Woche -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_exercise"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:text="Übungen der Woche"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Übungen der Woche"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="4dp"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnDailyExercise"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🦮📖 Übung der Woche"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#2d5016"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnDailyMeditation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🧘🐕 Meditationsübung"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#4a6135"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnEntspannungstraining"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🌬️🧘 Entspannungstraining"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#5a7145"
-                            android:textColor="#FFFFFF" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridGroup1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3" />
 
                 <!-- GRUPPE 2: Trainingswerkzeuge -->
-                <com.google.android.material.card.MaterialCardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_stopwatch"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:text="Trainingswerkzeuge"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Trainingswerkzeuge"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="4dp"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnWalkingSpeed"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="⏱️🔔 Tempo - Trainer"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#5a7145"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCommunication"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🗣️🎤 Sprach - Trainer"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#6a8255"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnIntervalTimer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="⏱️🔄 Intervall-Timer"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#5C7A40"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnTrainingDiary"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🦮📖 Trainingstagebuch"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#6F8759"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnActivityCalendar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🌙📅 Aktivitätskalender"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#5A7147"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnNasenarbeit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🚶‍♂️🐾 Nasenarbeit"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#4A6B3D"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridGroup2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3" />
 
                 <!-- GRUPPE 3: Outdoorwerkzeuge -->
-                <com.google.android.material.card.MaterialCardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_navigation"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:text="Outdoorwerkzeuge"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Outdoorwerkzeuge"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="4dp"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnDailyNotes"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="📝📸 Tagesnotizen"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#43592F"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnWeather"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🌦💦 Revier - Wetter"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#354923"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnLocation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🗺🛰 Revier - Navigation"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#234210"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCompass"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🧭🌐 Kompass"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#213A10"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnAltimeter"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="⛰️〽️ Höhenmesser"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#1e340e"
-                            android:textColor="#FFFFFF" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- GRUPPE 4: Hunde & Notfall -->
-                <com.google.android.material.card.MaterialCardView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridGroup3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:layout_marginBottom="20dp"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                <!-- GRUPPE 4: Hund, Sicherheit und Notfall -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="2dp">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_dog"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:text="Hund, Sicherheit und Notfall"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hund, Sicherheit und Notfall"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="4dp"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnDogProfiles"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🦮 Hunde Stammdaten"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#01579B"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnPulscheck"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="❤️ Pulscheck &amp; Vitalwerte"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#880E4F"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnTickLoupe"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🔍🕷️ Zeckenlupe"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#4A2800"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnPlantScout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🌿☠️ Gefahrenpflanzen-Scout"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#3E5723"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnLocationShare"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="📍 Standortfreigabe"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#FFFFFF"
-                            app:backgroundTint="#390027"
-                            app:cornerRadius="12dp"
-                            android:layout_marginBottom="8dp" />
-
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnEmergency"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🚨 NOTFALL 🚨"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:backgroundTint="#BD0000"
-                            app:cornerRadius="12dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridGroup4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3" />
 
                 <!-- GRUPPE 5: Informationen und Lernen -->
-                <com.google.android.material.card.MaterialCardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_info"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:text="Informationen und Lernen"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Informationen und Lernen"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="4dp"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnNavBlog"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="💬 HundeWildnis Blog"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#283C16"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnNavPages"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="ℹ️ HundeWildnis Seiten"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#364E21"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnNavCourses"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="🎓 Online-Kurse"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#4F6A36"
-                            android:textColor="#FFFFFF" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridGroup5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3" />
 
                 <!-- GRUPPE 6: App-Service -->
-                <com.google.android.material.card.MaterialCardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_settings_gear"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:text="App-Service"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="App-Service"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="4dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridGroup6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnBackup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="📦💾 Backup App Daten"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#003A3C"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginBottom="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnSupport"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="64dp"
-                            android:text="💖🤝 Deine Unterstützung"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="#006064"
-                            android:textColor="#FFFFFF" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="#1B3A0A"
+        app:backgroundTint="?attr/colorPrimary"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:itemRippleColor="#338fad6f"

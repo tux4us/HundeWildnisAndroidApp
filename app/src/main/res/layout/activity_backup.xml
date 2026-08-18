@@ -15,156 +15,107 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="12dp">
 
             <!-- Titel -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📦 Datensicherung"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sichere Stammdaten und Appeinstellungen, um sie auf einem anderen Gerät oder nach einer Neuinstallation wieder zu importieren. \nACHTUNG Der Import des Backups benötigt die gleiche oder höhere Versionsstufe der HundeWildnisApp."
-                android:textSize="@dimen/text_body_medium"
+                android:text="Sichere Stammdaten und Appeinstellungen, um sie auf einem anderen Gerät oder nach einer Neuinstallation wieder zu importieren. 🐾"
+                android:textSize="13sp"
                 android:textAlignment="center"
-                android:textColor="#666666"
-                android:layout_marginBottom="32dp" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="32dp"
+                android:paddingHorizontal="16dp" />
 
-            <!-- Backup erstellen Karte -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- GRUPPE: BACKUP ERSTELLEN -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="24dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="2dp">
+                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_backup" android:layout_marginEnd="6dp" android:contentDescription="@null" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sicherung" android:textSize="12sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary" />
+            </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💾 BACKUP ERSTELLEN"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Erstellt eine vollständige Sicherung der:\n\n• Hunde-Stammdaten\n• Alle Fotos (Hunde &amp; Notizen)\n• App-Einstellungen &amp; Theme\n• Historie der Tagesnotizen\n• Historie der Geschwindigkeitsmessungen"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textColor="#666666"
-                        android:layout_marginBottom="16dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCreateBackup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="📦 Backup erstellen"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        app:backgroundTint="#2d5016"
-                        android:textColor="#FFFFFF"
-                        app:cornerRadius="12dp"
-                        app:icon="@android:drawable/ic_menu_save"
-                        app:iconGravity="start" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Backup wiederherstellen Karte -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridBackupCreate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+            <!-- GRUPPE: VERWALTUNG & SYNC -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="2dp">
+                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_refresh" android:layout_marginEnd="6dp" android:contentDescription="@null" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Verwaltung &amp; Sync" android:textSize="12sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="📥 BACKUP WIEDERHERSTELLEN"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="12dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridBackupManage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Lädt eine Sicherungsdatei und stellt alle Daten wieder her.\n\n⚠️ ACHTUNG: Überschreibt alle aktuellen Daten!"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textColor="#666666"
-                        android:layout_marginBottom="16dp" />
+            <!-- GRUPPE: SERVICE & OPTIMIERUNG -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="2dp">
+                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_settings_gear" android:layout_marginEnd="6dp" android:contentDescription="@null" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Service &amp; Optimierung" android:textSize="12sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary" />
+            </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnRestoreBackup"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="📥 Backup wiederherstellen"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp"
-                        app:icon="@android:drawable/ic_menu_revert"
-                        app:iconGravity="start" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnWebdavSync"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="🔄 WebDAV-Synchronisation"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp"
-                        app:icon="@drawable/ic_refresh"
-                        app:iconGravity="start" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnLocationShare"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="📍 Standortfreigabe"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp"
-                        app:icon="@drawable/ic_my_location"
-                        app:iconGravity="start" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridBackupService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
             <!-- Info Karte -->
             <com.google.android.material.card.MaterialCardView
@@ -174,70 +125,9 @@
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="#E3F2FD"
                 android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💡 TIPP"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        android:textColor="#1976D2"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="• Backup-Dateien: Der Name der Datei endet auf .hundebackup\n• Gespeichert in: Download/HundeWildnis_Backups/"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textColor="#1565C0" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Speicheroptimierung Karte -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                android:layout_marginBottom="24dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Speicheroptimierung"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Bereinigt verwaiste Bilddateien aus alten Synchronisationen. Aktuelle Profile und Einstellungen bleiben erhalten."
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:layout_marginBottom="16dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPurgeMediaBackup"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="🧹 Medienspeicher bereinigen"
-                        android:textSize="14sp" />
-
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💡 TIPP" android:textSize="13sp" android:textStyle="bold" android:textColor="#1976D2" android:layout_marginBottom="8dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="• Backup-Dateien enden auf .hundebackup\n• Speicherort: Download/HundeWildnis_Backups/" android:textSize="12sp" android:textColor="#1565C0" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -248,25 +138,8 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_marginTop="16dp">
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:indeterminateTint="#2d5016" />
-
-                <TextView
-                    android:id="@+id/tvStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
-                    android:layout_marginTop="12dp"
-                    android:visibility="gone" />
-
+                <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" android:indeterminateTint="?attr/colorSecondary" />
+                <TextView android:id="@+id/tvStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textSize="14sp" android:textStyle="bold" android:textAlignment="center" android:layout_marginTop="12dp" android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

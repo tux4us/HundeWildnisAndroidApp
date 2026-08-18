@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityNasenarbeitHundBinding
 import java.io.File
 import java.text.SimpleDateFormat
@@ -49,18 +50,41 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
         binding.tvDogName.text = profile.name
         binding.tvDogBreed.text = "${profile.breed}, ${profile.gender}"
 
-        // Neues Training starten
-        binding.btnNeuesTraining.setOnClickListener {
-            val intent = Intent(this, NasenarbeitBeratungActivity::class.java)
-            intent.putExtra("profile", profile)
-            startActivity(intent)
-        }
+        setupGrids()
+    }
 
-        // PDF Gesamtauswertung
-        binding.btnPdfGesamt.setOnClickListener { exportGesamtPDF() }
-        
-        // CSV Export
-        binding.btnCsvExport.setOnClickListener { exportCSV() }
+    private fun setupGrids() {
+        // Neues Training
+        val colorsNew = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridNasenarbeitNew.layoutManager = GridLayoutManager(this, 1)
+        binding.gridNasenarbeitNew.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("nasenarbeit_new", R.drawable.ic_nose_work, "🐾 Neues Training starten")),
+            chipColorRes = colorsNew.chipColorRes,
+            accentColorRes = colorsNew.accentColorRes,
+            onTileClick = {
+                val intent = Intent(this, NasenarbeitBeratungActivity::class.java)
+                intent.putExtra("profile", profile)
+                startActivity(intent)
+            }
+        )
+
+        // Export
+        val colorsExport = StartGroupColors.forGroup(this, 1) // Ocker/Gelb
+        binding.gridNasenarbeitExport.layoutManager = GridLayoutManager(this, 2)
+        binding.gridNasenarbeitExport.adapter = StartTileAdapter(
+            tiles = listOf(
+                StartTile("export_pdf", R.drawable.ic_notes, "📄 PDF"),
+                StartTile("export_csv", R.drawable.ic_notes, "📊 CSV")
+            ),
+            chipColorRes = colorsExport.chipColorRes,
+            accentColorRes = colorsExport.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "export_pdf" -> exportGesamtPDF()
+                    "export_csv" -> exportCSV()
+                }
+            }
+        )
     }
 
     private fun setupRecyclerView() {
@@ -93,7 +117,6 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
 
         binding.tvNoSessions.visibility = if (sessions.isEmpty()) View.VISIBLE else View.GONE
         binding.rvSessions.visibility = if (sessions.isEmpty()) View.GONE else View.VISIBLE
-        binding.btnPdfGesamt.isEnabled = sessions.isNotEmpty()
     }
 
     private fun openSessionDetail(session: NasenarbeitSession) {

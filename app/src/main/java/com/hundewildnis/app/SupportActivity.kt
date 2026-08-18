@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivitySupportBinding
 import com.google.android.material.button.MaterialButton
 
@@ -43,34 +44,51 @@ class SupportActivity : SecureBaseActivity() {
     }
 
     private fun setupButtons() {
-        // ✅ WERO (an erster Stelle!)
-        binding.btnWero.setOnClickListener {
-            showWeroPayment()
-        }
+        setupGrids()
+    }
 
-        // PayPal
-        binding.btnPaypal.setOnClickListener {
-            openUrl("https://www.paypal.com/paypalme/wildnishunde")
-        }
+    private fun setupGrids() {
+        // Geld
+        val moneyTiles = listOf(
+            StartTile("support_wero", R.drawable.ic_signal, "Wero (direkt)"),
+            StartTile("support_paypal", R.drawable.ic_signal, "PayPal"),
+            StartTile("support_bank", R.drawable.ic_signal, "Banküberweisung"),
+            StartTile("support_sumup", R.drawable.ic_signal, "Zahlungslink")
+        )
 
-        // Banküberweisung
-        binding.btnBankTransfer.setOnClickListener {
-            showBankDetails()
-        }
+        val colorsMoney = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridSupportMoney.layoutManager = GridLayoutManager(this, 2)
+        binding.gridSupportMoney.adapter = StartTileAdapter(
+            tiles = moneyTiles,
+            chipColorRes = colorsMoney.chipColorRes,
+            accentColorRes = colorsMoney.accentColorRes,
+            onTileClick = ::handleTileClick
+        )
 
-        // SumUp
-        binding.btnPatreon.setOnClickListener {
-            showSumUpInfo()
-        }
+        // Kostenlos
+        val freeTiles = listOf(
+            StartTile("support_rate", R.drawable.ic_star_filled, "App bewerten"),
+            StartTile("support_share", R.drawable.ic_map_pin_share, "App teilen")
+        )
 
-        // App bewerten
-        binding.btnRateApp.setOnClickListener {
-            rateApp()
-        }
+        val colorsFree = StartGroupColors.forGroup(this, 0) // Gelb
+        binding.gridSupportFree.layoutManager = GridLayoutManager(this, 2)
+        binding.gridSupportFree.adapter = StartTileAdapter(
+            tiles = freeTiles,
+            chipColorRes = colorsFree.chipColorRes,
+            accentColorRes = colorsFree.accentColorRes,
+            onTileClick = ::handleTileClick
+        )
+    }
 
-        // Teilen
-        binding.btnShareApp.setOnClickListener {
-            shareApp()
+    private fun handleTileClick(tileId: String) {
+        when (tileId) {
+            "support_wero" -> showWeroPayment()
+            "support_paypal" -> openUrl("https://www.paypal.com/paypalme/wildnishunde")
+            "support_bank" -> showBankDetails()
+            "support_sumup" -> showSumUpInfo()
+            "support_rate" -> rateApp()
+            "support_share" -> shareApp()
         }
     }
 
@@ -210,7 +228,7 @@ class SupportActivity : SecureBaseActivity() {
         val buttonColor = if (isDarkTheme) {
             android.graphics.Color.WHITE
         } else {
-            android.graphics.Color.parseColor("#2d5016")
+            android.graphics.Color.parseColor("#8A7A1F")
         }
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)

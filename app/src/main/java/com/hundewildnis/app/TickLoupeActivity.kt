@@ -23,7 +23,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.hundewildnis.app.databinding.ActivityTickLoupeBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -70,9 +72,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
 
     // ─── UI ────────────────────────────────────────────────────────────────────
     private lateinit var cameraContainer: FrameLayout
-    private lateinit var btnFilter: MaterialButton
-    private lateinit var btnFreeze: MaterialButton
-    private lateinit var btnSave: MaterialButton
+    private lateinit var gridActions: RecyclerView
     private lateinit var tvFilterLabel: TextView
     private lateinit var tvFreezeLabel: TextView
 
@@ -106,9 +106,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
 
         cameraContainer = findViewById(R.id.cameraContainer)
         surfaceView     = findViewById(R.id.surfaceView)
-        btnFilter       = findViewById(R.id.btnFilter)
-        btnFreeze       = findViewById(R.id.btnFreeze)
-        btnSave         = findViewById(R.id.btnSave)
+        gridActions     = findViewById<RecyclerView>(R.id.gridTickLoupeActions)
         tvFilterLabel   = findViewById(R.id.tvFilterLabel)
         tvFreezeLabel   = findViewById(R.id.tvFreezeLabel)
 
@@ -131,10 +129,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
         )
 
         updateFilterLabel()
-
-        btnFilter.setOnClickListener { if (!isFrozen) cycleFilter() }
-        btnFreeze.setOnClickListener { toggleFreeze() }
-        btnSave.setOnClickListener   { saveImage() }
+        updateActionGrid()
 
         // Tap-to-Focus: Touch auf SurfaceView
         surfaceView.setOnTouchListener { _, event ->
@@ -539,6 +534,30 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
         tvFilterLabel.text = currentFilter.label
     }
 
+    private fun updateActionGrid() {
+        val actions = mutableListOf<StartTile>()
+        
+        actions.add(StartTile("tick_filter", R.drawable.ic_magnifier, "Filter"))
+        
+        val freezeLabel = if (isFrozen) "▶ Weiter" else "⏸ Einfrieren"
+        val freezeIcon = if (isFrozen) R.drawable.ic_stopwatch else R.drawable.ic_remove
+        actions.add(StartTile("tick_freeze", freezeIcon, freezeLabel))
+        
+        if (isFrozen) {
+            actions.add(StartTile("tick_save", R.drawable.ic_notes, "Speichern"))
+        }
+
+        val colors = StartGroupColors.forGroup(this, 1) // Ocker/Gelb
+        gridActions.layoutManager = GridLayoutManager(this, if (isFrozen) 3 else 2)
+        gridActions.adapter = StartTileAdapter(actions, colors.chipColorRes, colors.accentColorRes) { id ->
+            when(id) {
+                "tick_filter" -> if (!isFrozen) cycleFilter()
+                "tick_freeze" -> toggleFreeze()
+                "tick_save" -> saveImage()
+            }
+        }
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Freeze / Unfreeze
     // ──────────────────────────────────────────────────────────────────────────
@@ -549,10 +568,8 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
             frozenBitmap?.recycle()
             frozenBitmap = null
             runOnUiThread {
-                btnFreeze.text           = "⏸ Einfrieren"
-                btnSave.visibility       = View.GONE
+                updateActionGrid()
                 tvFreezeLabel.visibility = View.GONE
-                btnFilter.isEnabled      = true
             }
         } else {
             imageReader?.setOnImageAvailableListener({ reader ->
@@ -566,10 +583,8 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
                     frozenBitmap = filtered
                     isFrozen = true
                     runOnUiThread {
-                        btnFreeze.text           = "▶ Weiter"
-                        btnSave.visibility       = View.VISIBLE
+                        updateActionGrid()
                         tvFreezeLabel.visibility = View.VISIBLE
-                        btnFilter.isEnabled      = false
                         drawToSurface(filtered)
                     }
                 }

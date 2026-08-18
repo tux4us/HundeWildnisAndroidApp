@@ -11,6 +11,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityQrcodeBinding
 import java.io.File
 import java.io.FileOutputStream
@@ -51,7 +52,7 @@ class QRCodeActivity : SecureBaseActivity() {
         // ✅ ProgressBar anzeigen
         binding.progressBar.visibility = View.VISIBLE
         binding.ivQrCode.visibility = View.GONE
-        binding.btnShare.isEnabled = false
+        binding.gridQrActions.visibility = View.GONE
 
         // QR-Code generieren (asynchron wäre besser, aber für kleine Codes OK)
         val qrText = profile.toFilteredString(selectedFields)
@@ -63,21 +64,25 @@ class QRCodeActivity : SecureBaseActivity() {
             binding.ivQrCode.visibility = View.VISIBLE
             binding.ivQrCode.setImageBitmap(qrBitmap)
 
-            // ✅ Share-Button aktivieren
-            binding.btnShare.isEnabled = true
-            binding.btnShare.setOnClickListener {
-                shareQRCode(qrBitmap, profile.name)
-            }
-            // In displayQRCode() nach btnShare.setOnClickListener:
-            binding.btnSave.isEnabled = true
-            binding.btnSave.setOnClickListener {
-                saveQRCodeToGallery(qrBitmap, profile.name)
-            }
+            setupGrids(qrBitmap, profile.name)
         } else {
             // ✅ Fehler
             binding.progressBar.visibility = View.GONE
             Toast.makeText(this, "❌ QR-Code konnte nicht erstellt werden", Toast.LENGTH_SHORT).show()
             finish()
+        }
+    }
+
+    private fun setupGrids(qrBitmap: Bitmap, dogName: String) {
+        binding.gridQrActions.visibility = View.VISIBLE
+        val tiles = listOf(
+            StartTile("qr_share", R.drawable.ic_map_pin_share, "Teilen"),
+            StartTile("qr_save", R.drawable.ic_notes, "Speichern")
+        )
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridQrActions.layoutManager = GridLayoutManager(this, 2)
+        binding.gridQrActions.adapter = StartTileAdapter(tiles, colors.chipColorRes, colors.accentColorRes) { id ->
+            if (id == "qr_share") shareQRCode(qrBitmap, dogName) else saveQRCodeToGallery(qrBitmap, dogName)
         }
     }
 

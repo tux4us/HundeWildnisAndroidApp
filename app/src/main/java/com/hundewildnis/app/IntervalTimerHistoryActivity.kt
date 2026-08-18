@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.hundewildnis.app.databinding.ActivityIntervalTimerHistoryBinding
 import java.io.File
@@ -77,8 +78,22 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
     }
 
     private fun setupButtons() {
-        binding.btnExportCsv.setOnClickListener { exportCsv() }
-        binding.btnDeleteAll.setOnClickListener { confirmDeleteAll() }
+        val colors = StartGroupColors.forGroup(this, 5) // Violett
+        binding.gridHistoryActions.layoutManager = GridLayoutManager(this, 2)
+        binding.gridHistoryActions.adapter = StartTileAdapter(
+            tiles = listOf(
+                StartTile("history_csv", R.drawable.ic_notes, "CSV"),
+                StartTile("history_delete", R.drawable.ic_remove, "Löschen", isDanger = true)
+            ),
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "history_csv" -> exportCsv()
+                    "history_delete" -> confirmDeleteAll()
+                }
+            }
+        )
     }
 
     // ════════════════════════════════════════════════════════════

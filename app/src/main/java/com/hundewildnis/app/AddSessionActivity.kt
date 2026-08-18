@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.lifecycleScope
 import com.hundewildnis.app.databinding.ActivityAddSessionBinding
 import android.content.res.Configuration
 import kotlinx.coroutines.CoroutineScope
@@ -79,20 +81,12 @@ class AddSessionActivity : SecureBaseActivity() {
         setupSuccessButtons()
         setupWeatherButton()
         setupGpsButton()
-        setupMeasurementTypeToggle()  // ← NEU!
 
         applyButtonColors()
     }
 
     private fun applyButtonColors() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-
-        if (isDark) {
-            binding.btnFetchWeather.setTextColor(android.graphics.Color.WHITE)
-            binding.btnFetchGps.setTextColor(android.graphics.Color.WHITE)
-            binding.btnCancel.setTextColor(android.graphics.Color.WHITE)
-        }
+        // Veraltet, da Buttons durch Grid-Tiles ersetzt wurden
     }
 
     private fun setupUI() {
@@ -103,61 +97,73 @@ class AddSessionActivity : SecureBaseActivity() {
         binding.tvCategoryName.text = category.displayName
         binding.tvDogName.text = profile.name
 
-        // ✅ Dauer-Slider (initial)
+        setupGrids()
         updateSliderForMeasurementType()
-
         setupDropdowns()
     }
 
-    // ✅ NEU: Toggle zwischen Zeit und Wiederholungen
-    private fun setupMeasurementTypeToggle() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
+    private fun setupGrids() {
+        // Messungstyp
+        updateMeasurementTypeGrid()
 
-        val colorActive = Color.parseColor("#4a6135")  // Dunkelgrün
-        val colorInactive = if (isDark) {
-            Color.parseColor("#424242")  // Dunkelgrau
-        } else {
-            Color.parseColor("#E0E0E0")  // Hellgrau
+        // Erfolg
+        updateSuccessRatingGrid()
+
+        // Fetch (Wetter/GPS)
+        val fetchTiles = listOf(
+            StartTile("fetch_weather", R.drawable.ic_weather, "Wetter"),
+            StartTile("fetch_gps", R.drawable.ic_navigation, "Standort")
+        )
+        val colorsFetch = StartGroupColors.forGroup(this, 4) // Blau
+        binding.gridAddSessionFetch.layoutManager = GridLayoutManager(this, 2)
+        binding.gridAddSessionFetch.adapter = StartTileAdapter(fetchTiles, colorsFetch.chipColorRes, colorsFetch.accentColorRes) { id ->
+            if (id == "fetch_weather") showWeatherPermissionDialog() else showGpsPermissionDialog()
         }
 
-        val textColorActive = Color.WHITE
-        val textColorInactive = if (isDark) {
-            Color.WHITE
-        } else {
-            Color.parseColor("#4a6135")
+        // Aktionen (Speichern/Abbrechen)
+        val actionTiles = listOf(
+            StartTile("action_cancel", R.drawable.ic_remove, "Abbrechen"),
+            StartTile("action_save", R.drawable.ic_notes, "Speichern")
+        )
+        val colorsActions = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridAddSessionActions.layoutManager = GridLayoutManager(this, 2)
+        binding.gridAddSessionActions.adapter = StartTileAdapter(actionTiles, colorsActions.chipColorRes, colorsActions.accentColorRes) { id ->
+            if (id == "action_save") saveSession() else finish()
         }
+    }
 
-        // ✅ Zeit-Button
-        binding.btnMeasurementTime.setOnClickListener {
-            selectedMeasurementType = MeasurementType.TIME
-
-            // Update Button-Farben
-            binding.btnMeasurementTime.setBackgroundColor(colorActive)
-            binding.btnMeasurementTime.setTextColor(textColorActive)
-            binding.btnMeasurementReps.setBackgroundColor(colorInactive)
-            binding.btnMeasurementReps.setTextColor(textColorInactive)
-
-            // Update Slider
+    private fun updateMeasurementTypeGrid() {
+        val tiles = listOf(
+            StartTile("type_time", R.drawable.ic_stopwatch, "⏱️ Minuten"),
+            StartTile("type_reps", R.drawable.ic_notes, "🔢 Wiederholungen")
+        )
+        // Das gewählte Tile soll eine andere Farbe haben. 
+        // Hier nutzen wir unterschiedliche Gruppen für "aktiv" / "inaktiv" wenn möglich.
+        // Einfacher: Wir nutzen Group 2 (Grün) für aktiv und 5 (Violett/Grau) für inaktiv? 
+        // StartTileAdapter unterstützt das nicht direkt ohne Neuzuweisung des Adapters.
+        
+        val colors = StartGroupColors.forGroup(this, 3) // Ocker
+        binding.gridMeasurementType.layoutManager = GridLayoutManager(this, 2)
+        binding.gridMeasurementType.adapter = StartTileAdapter(tiles, colors.chipColorRes, colors.accentColorRes) { id ->
+            selectedMeasurementType = if (id == "type_time") MeasurementType.TIME else MeasurementType.REPETITIONS
             updateSliderForMeasurementType()
+            // Optional: Grid neu laden um Selektion zu zeigen (falls wir Design dafür hätten)
         }
+    }
 
-        // ✅ Wiederholungen-Button
-        binding.btnMeasurementReps.setOnClickListener {
-            selectedMeasurementType = MeasurementType.REPETITIONS
-
-            // Update Button-Farben
-            binding.btnMeasurementReps.setBackgroundColor(colorActive)
-            binding.btnMeasurementReps.setTextColor(textColorActive)
-            binding.btnMeasurementTime.setBackgroundColor(colorInactive)
-            binding.btnMeasurementTime.setTextColor(textColorInactive)
-
-            // Update Slider
-            updateSliderForMeasurementType()
+    private fun updateSuccessRatingGrid() {
+        val tiles = listOf(
+            StartTile("success_1", label = "🔴", emoji = "🔴"),
+            StartTile("success_2", label = "🟡", emoji = "🟡"),
+            StartTile("success_3", label = "🟢", emoji = "🟢"),
+            StartTile("success_4", label = "🟢🟢", emoji = "🟢🟢")
+        )
+        val colors = StartGroupColors.forGroup(this, 1) // Gelb/Ocker
+        binding.gridSuccessRating.layoutManager = GridLayoutManager(this, 4)
+        binding.gridSuccessRating.adapter = StartTileAdapter(tiles, colors.chipColorRes, colors.accentColorRes) { id ->
+            selectedSuccessRating = id.substringAfter("_").toInt()
+            Toast.makeText(this, "Bewertung: $selectedSuccessRating", Toast.LENGTH_SHORT).show()
         }
-
-        // ✅ Standard: Zeit vorauswählen
-        binding.btnMeasurementTime.performClick()
     }
 
     // ✅ NEU: Slider anpassen je nach Messungstyp
@@ -207,7 +213,7 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun setupListeners() {
-        // ✅ Slider - aktualisiert je nach Messungstyp
+        // Slider - aktualisiert je nach Messungstyp
         binding.sliderDuration.addOnChangeListener { _, value, _ ->
             when (selectedMeasurementType) {
                 MeasurementType.TIME -> {
@@ -220,58 +226,15 @@ class AddSessionActivity : SecureBaseActivity() {
                 }
             }
         }
-
-        binding.btnSave.setOnClickListener { saveSession() }
-        binding.btnCancel.setOnClickListener { finish() }
     }
 
     private fun setupSuccessButtons() {
-        val buttons = listOf(
-            binding.btnSuccess1,
-            binding.btnSuccess2,
-            binding.btnSuccess3,
-            binding.btnSuccess4
-        )
-
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-
-        val colorActive = Color.parseColor("#4a6135")
-        val colorInactive = if (isDark) {
-            Color.parseColor("#424242")
-        } else {
-            Color.parseColor("#E0E0E0")
-        }
-
-        val textColorActive = Color.WHITE
-        val textColorInactive = if (isDark) {
-            Color.WHITE
-        } else {
-            Color.parseColor("#4a6135")
-        }
-
-        buttons.forEachIndexed { index, button ->
-            button.setOnClickListener {
-                selectedSuccessRating = index + 1
-
-                buttons.forEach { btn ->
-                    btn.setBackgroundColor(colorInactive)
-                    btn.setTextColor(textColorInactive)
-                }
-
-                button.setBackgroundColor(colorActive)
-                button.setTextColor(textColorActive)
-            }
-        }
-
-        buttons[2].performClick()
+        // Veraltet, wird durch updateSuccessRatingGrid() ersetzt
     }
 
     // ✅ Wetter & GPS Funktionen bleiben gleich
     private fun setupWeatherButton() {
-        binding.btnFetchWeather.setOnClickListener {
-            showWeatherPermissionDialog()
-        }
+        // Veraltet, wird durch setupGrids() ersetzt
     }
 
     private fun showWeatherPermissionDialog() {
@@ -283,7 +246,8 @@ class AddSessionActivity : SecureBaseActivity() {
 
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val colors = StartGroupColors.forGroup(this, 1) // Gruppe 2 für Training
+        val color = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("📍 Wetter abrufen")
@@ -304,7 +268,8 @@ class AddSessionActivity : SecureBaseActivity() {
     private fun showProminentDisclosure(action: PendingAction) {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val colors = StartGroupColors.forGroup(this, 1)
+        val buttonColor = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("📍 Standortzugriff für Trainingstagebuch")
@@ -384,10 +349,7 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun fetchWeatherFromAPI(lat: Double, lon: Double) {
-        binding.btnFetchWeather.isEnabled = false
-        binding.btnFetchWeather.text = "⏳ Lädt..."
-
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             try {
                 val weather = withContext(Dispatchers.IO) {
                     val url = "https://api.open-meteo.com/v1/forecast?" +
@@ -418,15 +380,9 @@ class AddSessionActivity : SecureBaseActivity() {
                 binding.tvWeatherDisplay.text = "☀️ $weatherData"
                 binding.tvWeatherDisplay.visibility = View.VISIBLE
 
-                binding.btnFetchWeather.isEnabled = true
-                binding.btnFetchWeather.text = "☀️ Wetter abrufen"
-
                 Toast.makeText(this@AddSessionActivity, "✅ Wetter hinzugefügt", Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
-                binding.btnFetchWeather.isEnabled = true
-                binding.btnFetchWeather.text = "☀️ Wetter abrufen"
-
                 Toast.makeText(
                     this@AddSessionActivity,
                     "❌ Fehler beim Wetter-Abruf: ${e.message}",
@@ -456,9 +412,7 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun setupGpsButton() {
-        binding.btnFetchGps.setOnClickListener {
-            showGpsPermissionDialog()
-        }
+        // Veraltet, wird durch setupGrids() ersetzt
     }
 
     private fun showGpsPermissionDialog() {
@@ -470,7 +424,8 @@ class AddSessionActivity : SecureBaseActivity() {
 
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val colors = StartGroupColors.forGroup(this, 1) // Gruppe 2 für Training
+        val color = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("📍 GPS-Standort abrufen")
@@ -571,7 +526,8 @@ class AddSessionActivity : SecureBaseActivity() {
     private fun showSuccessDialog() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val colors = StartGroupColors.forGroup(this, 1) // Gruppe 2 für Training
+        val color = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("✅ Trainingseinheit gespeichert")

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ════════════════════════════════════════════════════════════════
-     ERWEITERT: Mit Messungstyp-Toggle (Zeit / Wiederholungen)
-     ════════════════════════════════════════════════════════════════ -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,14 +23,14 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingBottom="80dp"
+        android:paddingBottom="40dp"
         android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <!-- Header -->
             <TextView
@@ -41,74 +38,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hundename"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="4dp"
+                android:paddingStart="4dp" />
 
             <TextView
                 android:id="@+id/tvCategoryName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kategorie"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="24dp" />
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="24dp"
+                android:paddingStart="4dp" />
 
-            <!-- ═══════════════════════════════════════════════════ -->
-            <!-- NEU: MESSUNGSTYP TOGGLE -->
-            <!-- ═══════════════════════════════════════════════════ -->
-
+            <!-- MESSUNGSTYP -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📊 Trainingserfassung"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridMeasurementType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="16dp"
-                android:weightSum="2">
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMeasurementTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="⏱️\nMinuten"
-                    android:textSize="@dimen/text_body_medium"
-                    app:cornerRadius="8dp"
-                    style="@style/Widget.Material3.Button" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMeasurementReps"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:text="🔢\nWiederholungen"
-                    android:textSize="@dimen/text_body_medium"
-                    app:cornerRadius="8dp"
-                    style="@style/Widget.Material3.Button" />
-
-            </LinearLayout>
-
-            <!-- ═══════════════════════════════════════════════════ -->
             <!-- DAUER / WIEDERHOLUNGEN SLIDER -->
-            <!-- ═══════════════════════════════════════════════════ -->
-
             <TextView
                 android:id="@+id/tvDurationLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="⏱️ Dauer"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/sliderDuration"
@@ -125,8 +99,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="15 Min"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:textAlignment="center"
+                android:textColor="?attr/colorPrimary"
                 android:layout_marginBottom="24dp" />
 
             <!-- Erfolgs-Rating -->
@@ -134,98 +110,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="⭐ Erfolg"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridSuccessRating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="24dp"
-                android:weightSum="4">
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSuccess1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="🔴"
-                    app:cornerRadius="8dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSuccess2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="🟡"
-                    app:cornerRadius="8dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSuccess3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="🟢"
-                    app:cornerRadius="8dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSuccess4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🟢🟢"
-                    app:cornerRadius="8dp" />
-
-            </LinearLayout>
-
-            <!-- Ablenkung -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🎯 Ablenkungslevel"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
+            <!-- Dropdowns (Ablenkung / Schwierigkeit) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
+                android:hint="🎯 Ablenkungslevel"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerDistraction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
-
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Schwierigkeit -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📊 Schwierigkeitsgrad"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
+                android:hint="📊 Schwierigkeitsgrad"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerDifficulty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Optional: Wetter & GPS -->
@@ -233,46 +157,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🌤️ Optional: Bedingungen"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridAddSessionFetch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFetchWeather"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="☀️ Wetterdaten"
-                    android:textSize="@dimen/text_body_medium" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFetchGps"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:text="📍 Standort"
-                    android:textSize="@dimen/text_body_medium" />
-
-            </LinearLayout>
+                android:layout_marginBottom="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
             <TextView
                 android:id="@+id/tvWeatherDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="12sp"
                 android:padding="8dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="#1A000000"
                 android:layout_marginBottom="4dp" />
 
             <TextView
@@ -280,59 +187,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="12sp"
                 android:padding="8dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="#1A000000"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Wetter Dropdown -->
+            <!-- Wetter/Ort Dropdowns -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="☀️ Wetter (optional)"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
+                android:layout_marginBottom="12dp"
+                android:hint="☀️ Wetter"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerWeather"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ort Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:hint="📍 Ort (optional)"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
+                android:hint="📍 Ort"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Notizen -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📝 Notizen"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:hint="Optional: Besonderheiten, Beobachtungen..."
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
+                android:hint="📝 Notizen"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotes"
                     android:layout_width="match_parent"
@@ -340,35 +233,17 @@
                     android:minLines="3"
                     android:gravity="top|start"
                     android:inputType="textMultiLine|textCapSentences" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Buttons -->
-            <LinearLayout
+            <!-- Speichern/Abbrechen Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridAddSessionActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCancel"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Abbrechen" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Speichern"
-                    app:cornerRadius="8dp" />
-
-            </LinearLayout>
+                android:layout_marginBottom="24dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -14,8 +14,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#2d5016"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -183,7 +183,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#2d5016"
+                app:cardBackgroundColor="?attr/colorSecondary"
                 android:id="@+id/cardFrequency"
                 android:layout_marginBottom="16dp">
 
@@ -199,7 +199,8 @@
                         android:layout_height="wrap_content"
                         android:text="🎤 AKTUELLE FREQUENZ"
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="#CCCCCC"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:alpha="0.7"
                         android:layout_marginBottom="8dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -214,7 +215,7 @@
                             android:text="--- Hz"
                             android:textSize="@dimen/text_body_medium"
                             android:textStyle="bold"
-                            android:textColor="#FFFFFF"
+                            android:textColor="?attr/colorOnSecondary"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -250,7 +251,7 @@
                         android:layout_height="wrap_content"
                         android:text="Warte auf Stimme..."
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="#8fad6f" />
+                        android:textColor="?attr/colorOnSecondary" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -273,8 +274,8 @@
                     android:text="🎤 Messung starten"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
-                    android:backgroundTint="#2d5016"
-                    android:textColor="#FFFFFF" />
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:textColor="?attr/colorOnSecondary" />
 
             </LinearLayout>
 
@@ -372,8 +373,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="📄 PDF"
-                    android:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:textColor="?attr/colorOnSecondary"
                     android:enabled="false"
                     android:layout_marginEnd="8dp" />
 
@@ -383,8 +384,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="📤 Teilen"
-                    android:backgroundTint="#5a7145"
-                    android:textColor="#FFFFFF"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:textColor="?attr/colorOnSecondary"
                     android:enabled="false" />
 
             </LinearLayout>

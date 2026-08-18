@@ -11,6 +11,7 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
 import android.view.animation.LinearInterpolator
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityEntspannungstrainingBinding
 import java.util.Locale
 
@@ -38,10 +39,24 @@ class EntspannungstrainingActivity : SecureBaseActivity() {
 
         setupToolbar()
         initVibrator()
+        updateStartStopGrid()
+    }
 
-        binding.btnStartStop.setOnClickListener {
-            if (isRunning) stopTraining() else startTraining()
-        }
+    private fun updateStartStopGrid() {
+        val label = if (isRunning) getString(R.string.entspannungstraining_stop) else getString(R.string.entspannungstraining_start)
+        val icon = if (isRunning) R.drawable.ic_remove else R.drawable.ic_stopwatch
+        val isDanger = isRunning
+
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridStartStop.layoutManager = GridLayoutManager(this, 1)
+        binding.gridStartStop.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("relax_start_stop", icon, label, isDanger = isDanger)),
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = {
+                if (isRunning) stopTraining() else startTraining()
+            }
+        )
     }
 
     private fun initVibrator() {
@@ -77,7 +92,7 @@ class EntspannungstrainingActivity : SecureBaseActivity() {
         Log.d(TAG, "Training gestartet")
         isRunning = true
         currentPhase = BreathPhase.INHALE
-        binding.btnStartStop.text = getString(R.string.entspannungstraining_stop)
+        updateStartStopGrid()
         secondsElapsed = 0
         updateTimerText()
         
@@ -95,7 +110,7 @@ class EntspannungstrainingActivity : SecureBaseActivity() {
     private fun stopTraining() {
         Log.d(TAG, "Training gestoppt")
         isRunning = false
-        binding.btnStartStop.text = getString(R.string.entspannungstraining_start)
+        updateStartStopGrid()
         binding.switchMusic.isEnabled = true
         
         mainHandler.removeCallbacksAndMessages(null)

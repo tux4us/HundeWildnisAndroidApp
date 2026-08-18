@@ -6,31 +6,31 @@
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
+    app:cardElevation="4dp"
     android:id="@+id/dogCard">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="12dp">
 
         <!-- Header mit Foto, Name, Rasse -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp"
+            android:padding="4dp">
 
             <!-- Foto -->
             <ImageView
                 android:id="@+id/ivPhoto"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:scaleType="centerCrop"
                 android:contentDescription="Hundefoto"
-                android:background="@drawable/ic_dog_placeholder"
-                app:cornerRadius="12dp" />
+                android:background="@drawable/ic_dog_placeholder" />
 
             <!-- Name & Info -->
             <LinearLayout
@@ -55,136 +55,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rasse"
-                    android:textSize="@dimen/text_body_medium"
+                    android:textSize="13sp"
                     android:textColor="?android:attr/textColorSecondary"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="2dp" />
 
                 <TextView
                     android:id="@+id/tvInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Info"
-                    android:textSize="@dimen/text_body_medium"
+                    android:textSize="12sp"
                     android:textColor="?android:attr/textColorSecondary"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="2dp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ✅ FIX: Bessere Button-Skalierung -->
-        <GridLayout
+        <!-- Grids für Aktionen -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridDogActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="4"
-            android:alignmentMode="alignBounds"
-            android:columnOrderPreserved="false">
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3" />
 
-            <!-- Row 1 -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:text="👁 Anzeigen"
-                android:textSize="@dimen/text_body_medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEdit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:text="✏️ Bearbeiten"
-                android:textSize="@dimen/text_body_medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            <!-- Row 2 -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnQR"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:text="📱 QR-Code"
-                android:textSize="@dimen/text_body_medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPDF"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:text="📄 PDF"
-                android:textSize="@dimen/text_body_medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            <!-- Row 3 -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnShare"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:text="📤 Teilen"
-                android:textSize="@dimen/text_body_medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDelete"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:text="🗑️ Löschen"
-                android:textSize="@dimen/text_body_medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:backgroundTint="#1A237E"
-                android:textColor="#FFFFFF"
-                style="@style/Widget.MaterialComponents.Button" />
-
-            <!-- Row 4: NOTFALL BUTTON (Über gesamte Breite) -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEmergency"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
-                android:layout_margin="4dp"
-                android:text="🚨 NOTFALL"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:maxLines="1"
-                app:backgroundTint="#B00020"
-                app:icon="@android:drawable/ic_dialog_alert"
-                app:iconTint="#FFFFFF"
-                style="@style/Widget.MaterialComponents.Button" />
-        </GridLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridDogEmergency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="1" />
 
     </LinearLayout>
 

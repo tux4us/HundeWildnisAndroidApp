@@ -29,6 +29,7 @@ import coil.request.CachePolicy
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.recyclerview.widget.GridLayoutManager
 
 
 /**
@@ -143,7 +144,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun showNotificationDisclosure() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         AlertDialog.Builder(this)
             .setTitle("🔔 Wichtige Informationen zu:\nBenachrichtigungen aktivieren")
@@ -171,27 +172,27 @@ class StartActivity : BaseBottomNavActivity() {
     private fun showInstructionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("Verstanden", null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
     }
 
     private fun showPermissionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("OK", null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
     }
 
     private fun showAboutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_about, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-        val linkColor = if (isDark) Color.parseColor("#8fad6f") else Color.parseColor("#2d5016")
+        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
+        val linkColor = if (isDark) Color.parseColor("#B0A25A") else Color.parseColor("#8A7A1F")
 
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
 
@@ -230,7 +231,7 @@ class StartActivity : BaseBottomNavActivity() {
         val appSettings = AppSettings(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_settings, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         val colorStateList = android.content.res.ColorStateList.valueOf(accentColor)
 
         val s1 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
@@ -295,7 +296,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun showOrsInfoDialog() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         AlertDialog.Builder(this)
             .setTitle("ORS API Key")
             .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
@@ -321,33 +322,195 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun openImprint() { startActivity(Intent(this, ImprintActivity::class.java)) }
 
-    private fun setupButtons() {
-        binding.btnNavBlog.setOnClickListener { openMainActivity(MainActivity.VIEW_BLOG) }
-        binding.btnNavPages.setOnClickListener { openMainActivity(MainActivity.VIEW_PAGES) }
-        binding.btnNavCourses.setOnClickListener { openMainActivity(MainActivity.VIEW_COURSES) }
+    // ════════════════════════════════════════════════════════════════
+// ERSATZ für die alte setupButtons()-Funktion in StartActivity.kt
+// ════════════════════════════════════════════════════════════════
+//
+// Einbau-Hinweise:
+// 1. Diese Funktion ersetzt die alte "private fun setupButtons()" komplett.
+// 2. Zusätzliche Imports oben in StartActivity.kt ergänzen:
+//      import androidx.recyclerview.widget.GridLayoutManager
+// 3. Die Kachel-IDs (z.B. "daily_exercise") werden im onTileClick-Callback
+//    ausgewertet und lösen exakt dieselben Intents wie vorher aus.
+// 4. StartGroupColors.forGroup() liest bei jedem Aufruf das aktuelle Theme
+//    (Hell/Dunkel) aus — bei Theme-Wechsel per toggleTheme() wird die
+//    Activity ohnehin per recreate() neu aufgebaut, die Farben passen sich
+//    also automatisch an, ohne zusätzlichen Code.
 
-        binding.btnDailyExercise.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", "Übung der Woche") }
-        binding.btnDailyMeditation.setOnClickListener { openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", "Meditation der Woche") }
-        binding.btnEntspannungstraining.setOnClickListener { startActivity(Intent(this, EntspannungstrainingActivity::class.java)) }
-        binding.btnWalkingSpeed.setOnClickListener { startActivity(Intent(this, WalkingSpeedActivity::class.java)) }
-        binding.btnCommunication.setOnClickListener { startActivity(Intent(this, CommunicationActivity::class.java)) }
-        binding.btnIntervalTimer.setOnClickListener { startActivity(Intent(this, IntervalTimerSetupActivity::class.java)) }
-        binding.btnTrainingDiary.setOnClickListener { startActivity(Intent(this, TrainingDiaryActivity::class.java)) }
-        binding.btnActivityCalendar.setOnClickListener { startActivity(Intent(this, ActivityCalendarActivity::class.java)) }
-        binding.btnNasenarbeit.setOnClickListener { startActivity(Intent(this, NasenarbeitActivity::class.java)) }
-        binding.btnDailyNotes.setOnClickListener { startActivity(Intent(this, DailyNotesActivity::class.java)) }
-        binding.btnWeather.setOnClickListener { startActivity(Intent(this, WeatherActivity::class.java)) }
-        binding.btnLocation.setOnClickListener { startActivity(Intent(this, LocationActivity::class.java)) }
-        binding.btnCompass.setOnClickListener { startActivity(Intent(this, CompassActivity::class.java)) }
-        binding.btnAltimeter.setOnClickListener { startActivity(Intent(this, AltimeterActivity::class.java)) }
-        binding.btnDogProfiles.setOnClickListener { startActivity(Intent(this, DogProfileActivity::class.java)) }
-        binding.btnPulscheck.setOnClickListener { startActivity(Intent(this, PulscheckDogSelectActivity::class.java)) }
-        binding.btnTickLoupe.setOnClickListener { startActivity(Intent(this, TickLoupeActivity::class.java)) }
-        binding.btnPlantScout.setOnClickListener { startActivity(Intent(this, PlantScoutActivity::class.java)) }
-        binding.btnLocationShare.setOnClickListener { startActivity(Intent(this, LocationShareActivity::class.java)) }
-        binding.btnEmergency.setOnClickListener { openEmergencyWizard() }
-        binding.btnBackup.setOnClickListener { startActivity(Intent(this, BackupActivity::class.java)) }
-        binding.btnSupport.setOnClickListener { startActivity(Intent(this, SupportActivity::class.java)) }
+    private fun setupButtons() {
+        setupStartGrids()
+    }
+
+
+    /**
+     * Baut die 6 Icon-Grid-Gruppen der Startseite auf.
+     * spanCount wird dynamisch aus der aktuellen Bildschirmbreite berechnet,
+     * damit Tablets automatisch mehr Spalten bekommen und große Systemschrift
+     * automatisch weniger Spalten (siehe calculateSpanCount()).
+     */
+    private fun setupStartGrids() {
+        val spanCount = calculateSpanCount(referenceItemWidthDp = 100)
+
+        // GRUPPE 1 (Index 0): Übungen der Woche
+        bindGrid(
+            recyclerView = binding.gridGroup1,
+            spanCount = spanCount,
+            groupIndex = 0,
+            tiles = listOf(
+                StartTile("daily_exercise", R.drawable.ic_exercise, "Übung der Woche"),
+                StartTile("daily_meditation", R.drawable.ic_meditation, "Meditation"),
+                StartTile("entspannung", R.drawable.ic_breathing, "Entspannung")
+            )
+        )
+
+        // GRUPPE 2 (Index 1): Trainingswerkzeuge
+        bindGrid(
+            recyclerView = binding.gridGroup2,
+            spanCount = spanCount,
+            groupIndex = 1,
+            tiles = listOf(
+                StartTile("walking_speed", R.drawable.ic_stopwatch, "Tempo-Trainer"),
+                StartTile("communication", R.drawable.ic_microphone, "Sprach-Trainer"),
+                StartTile("interval_timer", R.drawable.ic_interval, "Intervall-Timer"),
+                StartTile("training_diary", R.drawable.ic_diary, "Trainingstagebuch"),
+                StartTile("activity_calendar", R.drawable.ic_calendar_moon, "Aktivitätskalender"),
+                StartTile("nasenarbeit", R.drawable.ic_nose_work, "Nasenarbeit")
+            )
+        )
+
+        // GRUPPE 3 (Index 2): Outdoorwerkzeuge
+        bindGrid(
+            recyclerView = binding.gridGroup3,
+            spanCount = spanCount,
+            groupIndex = 2,
+            tiles = listOf(
+                StartTile("daily_notes", R.drawable.ic_notes, "Tagesnotizen"),
+                StartTile("weather", R.drawable.ic_weather, "Revier-Wetter"),
+                StartTile("location", R.drawable.ic_navigation, "Revier-Navigation"),
+                StartTile("compass", R.drawable.ic_compass, "Kompass"),
+                StartTile("altimeter", R.drawable.ic_altimeter, "Höhenmesser")
+            )
+        )
+
+        // GRUPPE 4 (Index 3): Hund, Sicherheit und Notfall
+        bindGrid(
+            recyclerView = binding.gridGroup4,
+            spanCount = spanCount,
+            groupIndex = 3,
+            tiles = listOf(
+                StartTile("dog_profiles", R.drawable.ic_dog, "Stammdaten"),
+                StartTile("pulscheck", R.drawable.ic_heartbeat, "Pulscheck"),
+                StartTile("tick_loupe", R.drawable.ic_magnifier, "Zeckenlupe"),
+                StartTile("plant_scout", R.drawable.ic_plant_warning, "Gefahrenpflanzen"),
+                StartTile("location_share", R.drawable.ic_map_pin_share, "Standortfreigabe"),
+                StartTile("emergency", R.drawable.ic_emergency, "NOTFALL", isDanger = true)
+            )
+        )
+
+        // GRUPPE 5 (Index 4): Informationen und Lernen
+        bindGrid(
+            recyclerView = binding.gridGroup5,
+            spanCount = spanCount,
+            groupIndex = 4,
+            tiles = listOf(
+                StartTile("nav_blog", R.drawable.ic_blog, "Blog"),
+                StartTile("nav_pages", R.drawable.ic_pages, "Seiten"),
+                StartTile("nav_courses", R.drawable.ic_courses, "Online-Kurse")
+            )
+        )
+
+        // GRUPPE 6 (Index 5): App-Service
+        bindGrid(
+            recyclerView = binding.gridGroup6,
+            spanCount = spanCount,
+            groupIndex = 5,
+            tiles = listOf(
+                StartTile("backup", R.drawable.ic_backup, "Backup"),
+                StartTile("support", R.drawable.ic_heart_support, "Unterstützung")
+            )
+        )
+    }
+
+    /**
+     * Baut eine einzelne Gruppen-RecyclerView auf: GridLayoutManager + Adapter + Klick-Routing.
+     * Die Gruppenfarben werden zentral über StartGroupColors aufgelöst (siehe StartGroupColors.kt),
+     * damit Dark/Light-Entscheidung an genau einer Stelle im Code getroffen wird.
+     */
+    private fun bindGrid(
+        recyclerView: androidx.recyclerview.widget.RecyclerView,
+        spanCount: Int,
+        groupIndex: Int,
+        tiles: List<StartTile>
+    ) {
+        val colors = StartGroupColors.forGroup(this, groupIndex)
+        recyclerView.layoutManager = GridLayoutManager(this, spanCount)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = StartTileAdapter(
+            tiles = tiles,
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = ::handleTileClick
+        )
+    }
+
+    /**
+     * Zentrales Klick-Routing für alle Kacheln — ersetzt die alten binding.btnXyz.setOnClickListener-Aufrufe 1:1.
+     */
+    private fun handleTileClick(tileId: String) {
+        when (tileId) {
+            "daily_exercise" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", "Übung der Woche")
+            "daily_meditation" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", "Meditation der Woche")
+            "entspannung" -> startActivity(Intent(this, EntspannungstrainingActivity::class.java))
+            "walking_speed" -> startActivity(Intent(this, WalkingSpeedActivity::class.java))
+            "communication" -> startActivity(Intent(this, CommunicationActivity::class.java))
+            "interval_timer" -> startActivity(Intent(this, IntervalTimerSetupActivity::class.java))
+            "training_diary" -> startActivity(Intent(this, TrainingDiaryActivity::class.java))
+            "activity_calendar" -> startActivity(Intent(this, ActivityCalendarActivity::class.java))
+            "nasenarbeit" -> startActivity(Intent(this, NasenarbeitActivity::class.java))
+            "daily_notes" -> startActivity(Intent(this, DailyNotesActivity::class.java))
+            "weather" -> startActivity(Intent(this, WeatherActivity::class.java))
+            "location" -> startActivity(Intent(this, LocationActivity::class.java))
+            "compass" -> startActivity(Intent(this, CompassActivity::class.java))
+            "altimeter" -> startActivity(Intent(this, AltimeterActivity::class.java))
+            "dog_profiles" -> startActivity(Intent(this, DogProfileActivity::class.java))
+            "pulscheck" -> startActivity(Intent(this, PulscheckDogSelectActivity::class.java))
+            "tick_loupe" -> startActivity(Intent(this, TickLoupeActivity::class.java))
+            "plant_scout" -> startActivity(Intent(this, PlantScoutActivity::class.java))
+            "location_share" -> startActivity(Intent(this, LocationShareActivity::class.java))
+            "emergency" -> openEmergencyWizard()
+            "nav_blog" -> openMainActivity(MainActivity.VIEW_BLOG)
+            "nav_pages" -> openMainActivity(MainActivity.VIEW_PAGES)
+            "nav_courses" -> openMainActivity(MainActivity.VIEW_COURSES)
+            "backup" -> startActivity(Intent(this, BackupActivity::class.java))
+            "support" -> startActivity(Intent(this, SupportActivity::class.java))
+        }
+    }
+
+    /**
+     * Berechnet die Spaltenzahl für die Icon-Grids dynamisch aus der aktuellen
+     * Bildschirmbreite UND der Systemschrift-Skalierung (Bedienungshilfen).
+     *
+     * - referenceItemWidthDp: Zielbreite EINER Kachel in dp bei Schriftskalierung 100%.
+     * - Bei größerer Systemschrift wächst die effektive Zielbreite mit, wodurch
+     *   automatisch weniger Spalten berechnet werden (verhindert abgeschnittenen Text).
+     * - min 2, max 5 Spalten (Absprache: Phone Hochformat 3, Tablet 4-5).
+     */
+    private fun calculateSpanCount(referenceItemWidthDp: Int): Int {
+        val screenWidthDp = resources.configuration.screenWidthDp
+        val fontScale = resources.configuration.fontScale
+        val effectiveItemWidthDp = referenceItemWidthDp * fontScale
+        
+        // Dynamische Berechnung
+        val rawSpan = (screenWidthDp / effectiveItemWidthDp).toInt()
+        
+        // Korrektur für Phones vs Tablets:
+        // Phones haben meist screenWidthDp < 600.
+        // Wir erzwingen auf Phones 2 Spalten, auf Tablets erlauben wir mehr.
+        return if (screenWidthDp < 600) {
+            rawSpan.coerceIn(2, 2) 
+        } else {
+            rawSpan.coerceIn(3, 5)
+        }
     }
 
     private fun openEmergencyWizard() {
@@ -428,7 +591,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun confirmRestore(file: File) {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         val dialog = AlertDialog.Builder(this).setTitle("⚠️ Backup wiederherstellen?").setMessage("Alle Daten werden überschrieben!").setPositiveButton("Ja") { _, _ -> restoreBackup(file) }.setNegativeButton("Abbrechen") { _, _ -> file.delete() }.create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -451,7 +614,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun offerShare(file: File) {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         AlertDialog.Builder(this)
             .setTitle("Backup teilen?")
@@ -508,8 +671,8 @@ class StartActivity : BaseBottomNavActivity() {
 
         val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val textColor = if (isDark) Color.parseColor("#E0E0E0") else Color.parseColor("#424242")
-        val buttonBgColor = Color.parseColor("#2d5016")
-        val buttonOutlineColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val buttonBgColor = Color.parseColor("#8A7A1F")
+        val buttonOutlineColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         dialogView.findViewById<TextView>(R.id.tvUpdateTitle).setTextColor(titleColor)
         dialogView.findViewById<TextView>(R.id.tvUpdateVersion).apply {
@@ -616,6 +779,12 @@ class StartActivity : BaseBottomNavActivity() {
      */
     private fun displayBlogPreview(post: ContentItem) {
         binding.blogPreviewLoading.visibility = View.GONE
+
+        // Design-Farben für Blog-Kachel (Gruppe 5 = Index 4)
+        val colors = StartGroupColors.forGroup(this, 4)
+        binding.blogHeaderLayout.setBackgroundColor(ContextCompat.getColor(this, colors.accentColorRes))
+        binding.blogHeaderTitle.setTextColor(Color.WHITE)
+        binding.blogHeaderAction.setTextColor(Color.WHITE)
 
         // Titel
         binding.blogPreviewTitle.text = post.title

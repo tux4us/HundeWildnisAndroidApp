@@ -100,7 +100,7 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
 
     private fun openPodcast() {
         startActivity(Intent(this, ContentActivity::class.java).apply {
-            putExtra("url", "https://wildnislehrer.com/podcasts-audiobeitraege/")
+            putExtra("url", "https://wildnislehrer.com/podcasts-audio-video/")
             putExtra("title", "HundeWildnis Podcast")
         })
     }
@@ -121,7 +121,7 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
 
     private fun openSignal(name: String, link: String) {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         
         AlertDialog.Builder(this)
             .setTitle("Signal Kontakt: $name")

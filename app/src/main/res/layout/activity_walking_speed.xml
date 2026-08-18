@@ -15,34 +15,45 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <!-- Status -->
-            <TextView
-                android:id="@+id/tvStatus"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🛑 Messung gestoppt"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:textAlignment="center"
-                android:padding="16dp"
-                android:background="#003b00"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#33000000">
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🛑 Messung gestoppt"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:padding="16dp" />
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Aktuelle Geschwindigkeit -->
             <TextView
@@ -50,40 +61,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Aktuell: 0.0 km/h"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:padding="12dp"
-                android:textColor="#aa0000"
+                android:textColor="?attr/colorSecondary"
                 android:layout_marginBottom="24dp" />
 
-            <!-- Start/Stop Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnStartStop"
+            <!-- Start/Stop Button Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridSpeedStartStop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🏁 Messung starten"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#2d5016"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="24dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1" />
 
             <!-- Geschwindigkeitslimit -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Geschwindigkeitswächter:"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hier kannst Du Dein Trainingsszenario wählen. Ein Wechsel des Modus während des Trainings ist möglich (z.B. bei Wechsel von Geländetraining zu Strassentraining)."
-                android:textSize="@dimen/text_body_medium"
+                android:text="Hier kannst Du Dein Trainingsszenario wählen."
+                android:textSize="12sp"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -91,31 +99,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp">
-
-                <RadioButton
-                    android:id="@+id/radioSpeed25"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Wege- und Geländetraining"
-                    android:textSize="@dimen/text_body_medium"
-                    android:padding="8dp" />
-
-                <RadioButton
-                    android:id="@+id/radioSpeed30"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Alltags- und Strassentraining"
-                    android:textSize="@dimen/text_body_medium"
-                    android:padding="8dp"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:id="@+id/radioSpeed40"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Wandertraining"
-                    android:textSize="@dimen/text_body_medium"
-                    android:padding="8dp" />
+                <RadioButton android:id="@+id/radioSpeed25" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wege- und Geländetraining" android:textSize="13sp" app:buttonTint="?attr/colorSecondary" />
+                <RadioButton android:id="@+id/radioSpeed30" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alltags- und Strassentraining" android:textSize="13sp" android:checked="true" app:buttonTint="?attr/colorSecondary" />
+                <RadioButton android:id="@+id/radioSpeed40" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wandertraining" android:textSize="13sp" app:buttonTint="?attr/colorSecondary" />
             </RadioGroup>
 
             <!-- Messintervall -->
@@ -123,15 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Messintervall:"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Hier kannst Du Dein Messintervall wählen. Ein Wechsel des Intervalls während des Trainings ist möglich. Bei längeren Trainingssessions empfiehlt sich ein 60 Sekunden Intervall."
-                android:textSize="@dimen/text_body_medium"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -139,82 +118,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp">
-
-                <RadioButton
-                    android:id="@+id/radioInterval30"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Alle 30 Sekunden"
-                    android:textSize="@dimen/text_body_medium"
-                    android:padding="8dp"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:id="@+id/radioInterval60"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Alle 60 Sekunden"
-                    android:textSize="@dimen/text_body_medium"
-                    android:padding="8dp" />
+                <RadioButton android:id="@+id/radioInterval30" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle 30 Sekunden" android:textSize="13sp" android:checked="true" app:buttonTint="?attr/colorSecondary" />
+                <RadioButton android:id="@+id/radioInterval60" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle 60 Sekunden" android:textSize="13sp" app:buttonTint="?attr/colorSecondary" />
             </RadioGroup>
 
             <!-- Benachrichtigungsoptionen -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Benachrichtigungen bei Überschreitung:"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchVibration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Vibration"
-                android:textSize="@dimen/text_body_medium"
-                android:padding="8dp"
-                android:checked="true" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchSound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ton"
-                android:textSize="@dimen/text_body_medium"
-                android:padding="8dp"
-                android:checked="true"
-                android:layout_marginBottom="24dp" />
+            <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchVibration" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Vibration" android:textSize="13sp" android:checked="true" />
+            <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchSound" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ton" android:textSize="13sp" android:checked="true" android:layout_marginBottom="24dp" />
 
             <!-- Live-Diagramm -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:id="@+id/tvChartTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="📊 Geschwindigkeitsverlauf"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:layout_marginBottom="8dp" />
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/speedChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp" />
-
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="📊 Geschwindigkeitsverlauf" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp" />
+                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/speedChart" android:layout_width="match_parent" android:layout_height="250dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -223,99 +144,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="📈 Statistiken"
-                        android:textSize="@dimen/text_body_medium"
-                        android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/tvStats"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Starte Tracking um Statistiken zu sehen"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="@dimen/text_body_medium" />
-
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="📈 Statistiken" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp" />
+                    <TextView android:id="@+id/tvStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Starte Tracking um Statistiken zu sehen" android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Export & Share Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExport"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="🖨📄\nPDF"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
-                    android:enabled="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExportGpx"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="🧭🗺️\nGPX"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
-                    android:enabled="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShare"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="📤\nTeilen"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#2d5016"
-                    android:textColor="#FFFFFF"
-                    android:enabled="false" />
-            </LinearLayout>
-
-            <!-- Historie Überschrift -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🕒 Historie (Bisherige Messungen)"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
-
-            <!-- Liste der Sitzungen -->
+            <!-- Export Grid -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvHistory"
+                android:id="@+id/gridSpeedActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
+                android:layout_marginBottom="32dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3" />
+
+            <!-- Historie -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="🕒 Historie (Bisherige Messungen)" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="12dp" />
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

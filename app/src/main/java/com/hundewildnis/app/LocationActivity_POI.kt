@@ -30,6 +30,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityLocationBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
@@ -998,47 +999,35 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════
 
     private fun setupCategoryButtons() {
-        binding.categoryGrid.removeAllViews()
+        val tiles = mutableListOf<StartTile>()
 
-        // ── Favoriten-Button (immer erste Position) ───────────────
-        binding.categoryGrid.addView(
-            buildCategoryButton("⭐", "Favoriten", "#7A5C00") { loadFavorites() }
-        )
+        // Favoriten
+        tiles.add(StartTile("poi_fav", label = "Favoriten", emoji = "⭐"))
 
-        // ── Reguläre Kategorien ───────────────────────────────────
+        // Kategorien
         POICategories.ALL_CATEGORIES.forEach { category ->
-            binding.categoryGrid.addView(
-                buildCategoryButton(category.icon, category.name, category.color) {
-                    selectedCategory = category
-                    loadPOIsForCategory(category)
-                }
-            )
+            tiles.add(StartTile(category.name, label = category.name, emoji = category.icon))
         }
-    }
 
-    /** Extrahiert die Button-Erstellung um Doppelung zu vermeiden */
-    private fun buildCategoryButton(
-        icon: String, name: String, color: String,
-        onClick: () -> Unit
-    ): com.google.android.material.button.MaterialButton =
-        com.google.android.material.button.MaterialButton(this).apply {
-            text = "$icon\n$name"
-            textSize = 12f
-            gravity = android.view.Gravity.CENTER
-            setPadding(8, 16, 8, 16)
-            cornerRadius = 12
-            backgroundTintList = android.content.res.ColorStateList.valueOf(
-                android.graphics.Color.parseColor(color))
-            setTextColor(android.graphics.Color.WHITE)
-            layoutParams = android.widget.GridLayout.LayoutParams().apply {
-                width  = 0
-                height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
-                columnSpec = android.widget.GridLayout.spec(
-                    android.widget.GridLayout.UNDEFINED, 1f)
-                setMargins(8, 8, 8, 8)
+        val colors = StartGroupColors.forGroup(this, 3) // Ocker/Braun
+        binding.gridPOICategories.layoutManager = GridLayoutManager(this, 3)
+        binding.gridPOICategories.adapter = StartTileAdapter(
+            tiles = tiles,
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { id ->
+                if (id == "poi_fav") {
+                    loadFavorites()
+                } else {
+                    val cat = POICategories.ALL_CATEGORIES.find { it.name == id }
+                    cat?.let {
+                        selectedCategory = it
+                        loadPOIsForCategory(it)
+                    }
+                }
             }
-            setOnClickListener { onClick() }
-        }
+        )
+    }
 
     private fun loadPOIsForCategory(category: POICategories.Category) {
         currentLocation?.let { location ->

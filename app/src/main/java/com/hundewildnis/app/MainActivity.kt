@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -106,6 +107,10 @@ class MainActivity : BaseBottomNavActivity() {
         loadContent()
         UpdateHelper.scheduleContentUpdates(this)
         requestNotificationPermission()
+
+        // Redesign Grids
+        setupPagesGrid()
+        setupCoursesGrid()
     }
 
     private fun Int.dpToPx(): Int { return (this * resources.displayMetrics.density).toInt() }
@@ -120,7 +125,7 @@ class MainActivity : BaseBottomNavActivity() {
         super.setupBottomNavigation()
 
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#1B3A0A")
+        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         
         binding.filterScrollView.setBackgroundColor(if (isDark) Color.parseColor("#121212") else Color.parseColor("#F5F5F5"))
         binding.btnFilterAll.setTextColor(accentColor)
@@ -140,7 +145,7 @@ class MainActivity : BaseBottomNavActivity() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             loadContentFromNetwork(silent = false)
         }
-        binding.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#1B3A0A"))
+        binding.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#8A7A1F"))
 
         binding.btnLoadMore.setOnClickListener { loadMoreBlogPosts() }
         binding.blogRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -237,52 +242,174 @@ class MainActivity : BaseBottomNavActivity() {
         binding.btnLoadMore.visibility = View.GONE
     }
 
+    private fun setupPagesGrid() {
+        val spanCount = calculateSpanCount(100)
+
+        // Gruppe 1: Hauptseite
+        bindGrid(
+            recyclerView = findViewById<RecyclerView>(R.id.gridPagesGroup1),
+            spanCount = 1,
+            groupIndex = 4, // Blau
+            tiles = listOf(StartTile("page_main", R.drawable.ic_home, "Hunde Wildnis Schule"))
+        )
+
+        // Gruppe 2: Hundeschule
+        bindGrid(
+            recyclerView = findViewById<RecyclerView>(R.id.gridPagesGroup2),
+            spanCount = spanCount,
+            groupIndex = 2, // Grün
+            tiles = listOf(
+                StartTile("page_anti_jagd", R.drawable.ic_dog, "Anti-Jagd"),
+                StartTile("page_assistenzhunde", R.drawable.ic_dog, "Assistenzhunde"),
+                StartTile("page_beratung", R.drawable.ic_info, "Beratung"),
+                StartTile("page_fahrrad", R.drawable.ic_stopwatch, "Fahrradtraining"),
+                StartTile("page_faehrte", R.drawable.ic_nose_work, "Fährte & Suche"),
+                StartTile("page_gedanken", R.drawable.ic_notes, "Gedanken"),
+                StartTile("page_grundausbildung", R.drawable.ic_exercise, "Grundausbildung"),
+                StartTile("page_hundeleinen", R.drawable.ic_dog, "Hundeleinen"),
+                StartTile("page_lernfoerderung", R.drawable.ic_info, "Lernförderung"),
+                StartTile("page_problemberatung", R.drawable.ic_info, "Problemberatung"),
+                StartTile("page_seminare", R.drawable.ic_calendar_moon, "Seminare"),
+                StartTile("page_teamsport", R.drawable.ic_exercise, "Teamsport"),
+                StartTile("page_tierschutz", R.drawable.ic_dog, "Tierschutz"),
+                StartTile("page_sozialbesuch", R.drawable.ic_heart_support, "Sozialbesuch"),
+                StartTile("page_wandern", R.drawable.ic_navigation, "Wandern"),
+                StartTile("page_welpen", R.drawable.ic_dog, "Welpenschule")
+            )
+        )
+
+        // Gruppe 3: Wildnisschule
+        bindGrid(
+            recyclerView = findViewById<RecyclerView>(R.id.gridPagesGroup3),
+            spanCount = spanCount,
+            groupIndex = 3, // Ocker/Braun
+            tiles = listOf(
+                StartTile("page_wildnis_in_uns", R.drawable.ic_info, "Die Wildnis in uns"),
+                StartTile("page_spuren", R.drawable.ic_nose_work, "Spuren & Zeichen"),
+                StartTile("page_handwerk", R.drawable.ic_exercise, "Handwerk"),
+                StartTile("page_paedagogik", R.drawable.ic_info, "Pädagogik")
+            )
+        )
+
+        // Gruppe 4: Weitere Informationen
+        bindGrid(
+            recyclerView = findViewById<RecyclerView>(R.id.gridPagesGroup4),
+            spanCount = spanCount,
+            groupIndex = 5, // Violett
+            tiles = listOf(
+                StartTile("page_downloads", R.drawable.ic_info, "Downloads"),
+                StartTile("page_honorare", R.drawable.ic_info, "Honorare"),
+                StartTile("page_impressum", R.drawable.ic_info, "Impressum"),
+                StartTile("page_agb", R.drawable.ic_info, "AGB"),
+                StartTile("page_datenschutz", R.drawable.ic_info, "Datenschutz"),
+                StartTile("page_info", R.drawable.ic_info, "Informationen"),
+                StartTile("page_kontakt", R.drawable.ic_info, "Kontakt"),
+                StartTile("page_ueber_uns", R.drawable.ic_dog, "Über Uns")
+            )
+        )
+    }
+
+    private fun setupCoursesGrid() {
+        val spanCount = calculateSpanCount(100)
+
+        // Gruppe 1: Info
+        bindGrid(
+            recyclerView = findViewById<RecyclerView>(R.id.gridCoursesGroup1),
+            spanCount = 1,
+            groupIndex = 4, // Blau
+            tiles = listOf(StartTile("course_main", R.drawable.ic_courses, "Onlinetrainer Info"))
+        )
+
+        // Gruppe 2: Kurse 1-41
+        val courseTiles = (1..41).map { i ->
+            StartTile("course_${String.format("%02d", i)}", R.drawable.ic_courses, "${String.format("%02d", i)} ${getCourseName(i)}")
+        }
+
+        bindGrid(
+            recyclerView = findViewById<RecyclerView>(R.id.gridCoursesGroup2),
+            spanCount = spanCount,
+            groupIndex = 0, // Gelb/Ocker
+            tiles = courseTiles
+        )
+    }
+
+    private fun bindGrid(
+        recyclerView: RecyclerView?,
+        spanCount: Int,
+        groupIndex: Int,
+        tiles: List<StartTile>
+    ) {
+        recyclerView?.let { rv ->
+            val colors = StartGroupColors.forGroup(this, groupIndex)
+            rv.layoutManager = GridLayoutManager(this, spanCount)
+            rv.setHasFixedSize(true)
+            rv.adapter = StartTileAdapter(
+                tiles = tiles,
+                chipColorRes = colors.chipColorRes,
+                accentColorRes = colors.accentColorRes,
+                onTileClick = ::handleGridTileClick
+            )
+        }
+    }
+
+    private fun handleGridTileClick(tileId: String) {
+        when {
+            tileId == "page_main" -> openUrl("https://wildnislehrer.com/", "HundeWildnis Schule")
+            tileId == "page_anti_jagd" -> openUrl("https://wildnislehrer.com/hundeschule/anti-jagd-training/", "Anti-Jagd-Training")
+            tileId == "page_assistenzhunde" -> openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-paedagogischen-assistenzbegleithunden/", "Ausbildung Assistenzhunde")
+            tileId == "page_beratung" -> openUrl("https://wildnislehrer.com/hundeschule/beratung/", "Beratung")
+            tileId == "page_fahrrad" -> openUrl("https://wildnislehrer.com/hundeschule/fahrradtraining/", "Fahrradtraining")
+            tileId == "page_faehrte" -> openUrl("https://wildnislehrer.com/hundeschule/faehrte-und-suche/", "Fährte und Suche")
+            tileId == "page_gedanken" -> openUrl("https://wildnislehrer.com/hundeschule/gedanken-und-grundlagen/", "Gedanken und Grundlagen")
+            tileId == "page_grundausbildung" -> openUrl("https://wildnislehrer.com/hundeschule/grundausbildung/", "Grundausbildung")
+            tileId == "page_hundeleinen" -> openUrl("https://wildnislehrer.com/hundeschule/hundeleinen/", "Hundeleinen")
+            tileId == "page_lernfoerderung" -> openUrl("https://wildnislehrer.com/hundeschule/lernfoerderunganschulen/", "Lernförderung an Schulen")
+            tileId == "page_problemberatung" -> openUrl("https://wildnislehrer.com/hundeschule/problemtherapie/", "Problemberatung")
+            tileId == "page_seminare" -> openUrl("https://wildnislehrer.com/hundeschule/seminare/", "Seminare")
+            tileId == "page_teamsport" -> openUrl("https://wildnislehrer.com/hundeschule/teamsport/", "Teamsport")
+            tileId == "page_tierschutz" -> openUrl("https://wildnislehrer.com/hundeschule/hunde-mit-lebensgeschichte/", "Tierschutz Hunde")
+            tileId == "page_sozialbesuch" -> openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischersozialbesuchshundeservice/", "Tiertherapeutischer Service")
+            tileId == "page_wandern" -> openUrl("https://wildnislehrer.com/hundeschule/trainingswanderungen/", "Wandern zum guten Zweck")
+            tileId == "page_welpen" -> openUrl("https://wildnislehrer.com/hundeschule/welpenschule/", "Welpenschule")
+            tileId == "page_wildnis_in_uns" -> openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns/", "Die Wildnis in uns")
+            tileId == "page_spuren" -> openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen/", "Spuren und Zeichen")
+            tileId == "page_handwerk" -> openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerksschule/", "Wildnishandwerk für Schulen")
+            tileId == "page_paedagogik" -> openUrl("https://wildnislehrer.com/wildnisschule/schulwildnis/", "Wildnispädagogik für Schulen")
+            tileId == "page_downloads" -> openUrl("https://wildnislehrer.com/downloads/", "Downloads")
+            tileId == "page_honorare" -> openUrl("https://wildnislehrer.com/honorare/", "Honorare")
+            tileId == "page_impressum" -> openUrl("https://wildnislehrer.com/impressum/", "Impressum")
+            tileId == "page_agb" -> openUrl("https://wildnislehrer.com/impressum/agb/", "AGB")
+            tileId == "page_datenschutz" -> openUrl("https://wildnislehrer.com/datenschutzerklaerung/", "Datenschutzerklärung")
+            tileId == "page_info" -> openUrl("https://wildnislehrer.com/informationen/", "Informationen")
+            tileId == "page_kontakt" -> openUrl("https://wildnislehrer.com/kontakt/", "Kontakt")
+            tileId == "page_ueber_uns" -> openUrl("https://wildnislehrer.com/ueber-uns/", "Über Uns")
+            
+            tileId == "course_main" -> openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", "Onlinekurse Hundeschule")
+            tileId.startsWith("course_") -> {
+                val i = tileId.substringAfter("course_").toInt()
+                val url = when(i) {
+                    12 -> "https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/onlinekurs-12-junghundepraegung/"
+                    else -> "https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-${String.format("%02d", i)}-${getCourseSlug(i)}/"
+                }
+                openUrl(url, "$i ${getCourseName(i)}")
+            }
+        }
+    }
+
+    private fun calculateSpanCount(referenceItemWidthDp: Int): Int {
+        val screenWidthDp = resources.configuration.screenWidthDp
+        val fontScale = resources.configuration.fontScale
+        val effectiveItemWidthDp = referenceItemWidthDp * fontScale
+        val rawSpan = (screenWidthDp / effectiveItemWidthDp).toInt()
+        return if (screenWidthDp < 600) rawSpan.coerceIn(2, 2) else rawSpan.coerceIn(3, 5)
+    }
+
     private fun setupPagesMenu() {
-        binding.root.findViewById<View>(R.id.btnHundeWildnisSchule)?.setOnClickListener { openUrl("https://wildnislehrer.com/", "HundeWildnis Schule") }
-        binding.root.findViewById<View>(R.id.btnAntiJagdTraining)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/anti-jagd-training/", "Anti-Jagd-Training") }
-        binding.root.findViewById<View>(R.id.btnAusbildungAssistenzhunde)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-paedagogischen-assistenzbegleithunden/", "Ausbildung Assistenzhunde") }
-        binding.root.findViewById<View>(R.id.btnBeratung)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/beratung/", "Beratung") }
-        binding.root.findViewById<View>(R.id.btnFahrradtraining)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/fahrradtraining/", "Fahrradtraining") }
-        binding.root.findViewById<View>(R.id.btnFaehrteUndSuche)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/faehrte-und-suche/", "Fährte und Suche") }
-        binding.root.findViewById<View>(R.id.btnGedankenUndGrundlagen)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/gedanken-und-grundlagen/", "Gedanken und Grundlagen") }
-        binding.root.findViewById<View>(R.id.btnGrundausbildung)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/grundausbildung/", "Grundausbildung") }
-        binding.root.findViewById<View>(R.id.btnHundeleinen)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/hundeleinen/", "Hundeleinen") }
-        binding.root.findViewById<View>(R.id.btnLernfoerderungSchulen)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/lernfoerderunganschulen/", "Lernförderung an Schulen") }
-        binding.root.findViewById<View>(R.id.btnProblemberatung)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/problemtherapie/", "Problemberatung") }
-        binding.root.findViewById<View>(R.id.btnSeminare)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/seminare/", "Seminare") }
-        binding.root.findViewById<View>(R.id.btnTeamsport)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/teamsport/", "Teamsport") }
-        binding.root.findViewById<View>(R.id.btnTierschutzHunde)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/hunde-mit-lebensgeschichte/", "Tierschutz Hunde") }
-        binding.root.findViewById<View>(R.id.btnTiertherapeutischerSozialbesuchshundeservice)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischersozialbesuchshundeservice/", "Tiertherapeutischer Service") }
-        binding.root.findViewById<View>(R.id.btnWandernZumGutenZweck)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/trainingswanderungen/", "Wandern zum guten Zweck") }
-        binding.root.findViewById<View>(R.id.btnWelpenschule)?.setOnClickListener { openUrl("https://wildnislehrer.com/hundeschule/welpenschule/", "Welpenschule") }
-        binding.root.findViewById<View>(R.id.btnWildnisInUns)?.setOnClickListener { openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns/", "Die Wildnis in uns") }
-        binding.root.findViewById<View>(R.id.btnSpurenUndZeichen)?.setOnClickListener { openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen/", "Spuren und Zeichen") }
-        binding.root.findViewById<View>(R.id.btnWildnishandwerkSchulen)?.setOnClickListener { openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerksschule/", "Wildnishandwerk für Schulen") }
-        binding.root.findViewById<View>(R.id.btnWildnispaedagogikSchulen)?.setOnClickListener { openUrl("https://wildnislehrer.com/wildnisschule/schulwildnis/", "Wildnispädagogik für Schulen") }
-        binding.root.findViewById<View>(R.id.btnDownloads)?.setOnClickListener { openUrl("https://wildnislehrer.com/downloads/", "Downloads") }
-        binding.root.findViewById<View>(R.id.btnHonorare)?.setOnClickListener { openUrl("https://wildnislehrer.com/honorare/", "Honorare") }
-        binding.root.findViewById<View>(R.id.btnImpressum)?.setOnClickListener { openUrl("https://wildnislehrer.com/impressum/", "Impressum") }
-        binding.root.findViewById<View>(R.id.btnAGBs)?.setOnClickListener { openUrl("https://wildnislehrer.com/impressum/agb/", "AGB") }
-        binding.root.findViewById<View>(R.id.btnDatenschutz)?.setOnClickListener { openUrl("https://wildnislehrer.com/datenschutzerklaerung/", "Datenschutzerklärung") }
-        binding.root.findViewById<View>(R.id.btnInformationen)?.setOnClickListener { openUrl("https://wildnislehrer.com/informationen/", "Informationen") }
-        binding.root.findViewById<View>(R.id.btnKontakt)?.setOnClickListener { openUrl("https://wildnislehrer.com/kontakt/", "Kontakt") }
-        binding.root.findViewById<View>(R.id.btnUeberUns)?.setOnClickListener { openUrl("https://wildnislehrer.com/ueber-uns/", "Über Uns") }
+        // Veraltet, wird durch setupPagesGrid ersetzt
     }
 
     private fun setupCoursesMenu() {
-        binding.root.findViewById<View>(R.id.btnCoursesMain)?.setOnClickListener { openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", "Onlinekurse Hundeschule") }
-        for (i in 1..41) {
-            val id = resources.getIdentifier("btnCourse${String.format("%02d", i)}", "id", packageName)
-            if (id != 0) {
-                binding.root.findViewById<View>(id)?.setOnClickListener {
-                    val url = when(i) {
-                        12 -> "https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/onlinekurs-12-junghundepraegung/"
-                        else -> "https://wildnislehrer.com/onlinekurse-hundeschule/onlinekurs-${String.format("%02d", i)}-${getCourseSlug(i)}/"
-                    }
-                    openUrl(url, "$i ${getCourseName(i)}")
-                }
-            }
-        }
+        // Veraltet, wird durch setupCoursesGrid ersetzt
     }
 
     private fun getCourseSlug(i: Int) = when(i) { 1 -> "grundlagen"; 2 -> "motivation"; 3 -> "korrektur"; 4 -> "harmonie"; 5 -> "mentaltraining"; 6 -> "koerpersprache"; 7 -> "sprachkommunikation"; 8 -> "sinneswahrnehmung"; 9 -> "teamarbeit"; 10 -> "routinen"; 11 -> "unfallschutz"; 13 -> "leinenarbeit"; 14 -> "unterbrechungen"; 15 -> "fuss"; 16 -> "sitz"; 17 -> "platz"; 18 -> "steh"; 19 -> "sozialisierungstechniken"; 20 -> "langleinentraining"; 21 -> "distanzunterbrechungen"; 22 -> "freilauf"; 23 -> "freifolge"; 24 -> "teamwalk"; 25 -> "scouttechniken"; 26 -> "jagdvermeidung"; 27 -> "nasenarbeit"; 28 -> "leinenfuehrigkeit"; 29 -> "begegnungssituationen"; 30 -> "stresstoleranztraining"; 31 -> "strassenroutinen"; 32 -> "hundekonflikte"; 33 -> "menschenkonflikte"; 34 -> "umweltkonflikte"; 35 -> "besitzerkonflikte"; 36 -> "tierschutzhunde"; 37 -> "hunde-mit-vorbesitzern"; 38 -> "kranke-hunde"; 39 -> "traumahunde"; 40 -> "erste-hilfe-set"; 41 -> "erste-hilfe-am-hund"; else -> "" }

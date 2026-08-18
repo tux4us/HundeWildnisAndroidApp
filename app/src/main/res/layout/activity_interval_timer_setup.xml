@@ -40,10 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/green_dark"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:strokeColor="@color/green_secondary"
-                app:strokeWidth="1dp">
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
 
                 <TextView
                     android:id="@+id/tvCharacterHint"
@@ -51,7 +50,6 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_large"
                     android:textSize="@dimen/text_small"
-                    android:textColor="@android:color/white"
                     android:visibility="gone" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -120,11 +118,11 @@
                         <TextView android:id="@+id/tvActiveValue" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:text="45s"
                             android:textSize="@dimen/text_small" android:textStyle="bold"
-                            android:textColor="@color/green_primary" />
+                            android:textColor="?attr/colorSecondary" />
                     </LinearLayout>
                     <SeekBar android:id="@+id/seekBarActive" android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:layout_marginBottom="16dp"
-                        android:progressTint="@color/green_primary" android:thumbTint="@color/green_primary" />
+                        android:progressTint="?attr/colorSecondary" android:thumbTint="?attr/colorSecondary" />
 
                     <!-- Pause-Dauer -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -136,11 +134,11 @@
                         <TextView android:id="@+id/tvRestValue" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:text="30s"
                             android:textSize="@dimen/text_small" android:textStyle="bold"
-                            android:textColor="@color/green_primary" />
+                            android:textColor="?attr/colorSecondary" />
                     </LinearLayout>
                     <SeekBar android:id="@+id/seekBarRest" android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:layout_marginBottom="16dp"
-                        android:progressTint="@color/medium_green" android:thumbTint="@color/medium_green" />
+                        android:progressTint="?attr/colorSecondary" android:thumbTint="?attr/colorSecondary" />
 
                     <!-- Runden -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -152,11 +150,11 @@
                         <TextView android:id="@+id/tvRoundsValue" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:text="6"
                             android:textSize="@dimen/text_small" android:textStyle="bold"
-                            android:textColor="@color/green_primary" />
+                            android:textColor="?attr/colorSecondary" />
                     </LinearLayout>
                     <SeekBar android:id="@+id/seekBarRounds" android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:layout_marginBottom="16dp"
-                        android:progressTint="@color/green_primary" android:thumbTint="@color/green_primary" />
+                        android:progressTint="?attr/colorSecondary" android:thumbTint="?attr/colorSecondary" />
 
                     <!-- Abkühlphase -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -168,11 +166,11 @@
                         <TextView android:id="@+id/tvCooldownValue" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:text="60s"
                             android:textSize="@dimen/text_small" android:textStyle="bold"
-                            android:textColor="@color/green_primary" />
+                            android:textColor="?attr/colorSecondary" />
                     </LinearLayout>
                     <SeekBar android:id="@+id/seekBarCooldown" android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:progressTint="@color/accent_green" android:thumbTint="@color/accent_green" />
+                        android:progressTint="?attr/colorSecondary" android:thumbTint="?attr/colorSecondary" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -229,12 +227,11 @@
                  ERKLÄRUNGSBOX – So funktioniert der Intervall-Timer
                  ════════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExplanation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardBackgroundColor="@color/green_dark"
-                app:strokeColor="@color/green_secondary"
                 app:strokeWidth="1dp"
                 app:cardElevation="0dp">
 
@@ -246,12 +243,12 @@
 
                     <!-- Titel -->
                     <TextView
+                        android:id="@+id/tvExplanationTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="ℹ️  So funktioniert der Intervall-Timer"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
-                        android:textColor="@android:color/white"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Ablauf -->
@@ -262,7 +259,6 @@
                         android:text="Ablauf einer Session:"
                         android:textSize="@dimen/text_small"
                         android:textStyle="bold"
-                        android:textColor="#CCCCCC"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
@@ -270,7 +266,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_small"
-                        android:textColor="#AAAAAA"
                         android:lineSpacingExtra="4dp"
                         android:layout_marginBottom="12dp"
                         android:text="① 3 Sekunden Vorbereitung – mach Dich bereit\n② 🟢 Aktiv-Phase – trainiere konzentriert mit Deinem Hund\n③ 🔵 Pause – Hund entspannen, kurze Auszeit\n④ Schritte ② und ③ wiederholen sich für jede Runde\n⑤ ❄️ Abkühlphase – ruhiges Ausklingen der Session (optional)" />
@@ -283,7 +278,6 @@
                         android:text="Warum kurze Intervalle?"
                         android:textSize="@dimen/text_small"
                         android:textStyle="bold"
-                        android:textColor="#CCCCCC"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
@@ -291,7 +285,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_small"
-                        android:textColor="#AAAAAA"
                         android:lineSpacingExtra="4dp"
                         android:layout_marginBottom="12dp"
                         android:text="Kurze, strukturierte Übungsphasen mit definierten Pausen sind effektiver als lange, unstrukturierte Sessions. Der Hund bleibt fokussiert, die Frustrationsschwelle wird nicht überschritten, und Lerninhalte setzen sich nachhaltiger fest." />
@@ -304,7 +297,6 @@
                         android:text="Signale:"
                         android:textSize="@dimen/text_small"
                         android:textStyle="bold"
-                        android:textColor="#CCCCCC"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
@@ -312,7 +304,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_small"
-                        android:textColor="#AAAAAA"
                         android:lineSpacingExtra="4dp"
                         android:text="🔔 Kurzer Ton + Vibration = Aktiv-Phase startet\n🔔🔔 Doppelton + Vibration = Pause beginnt\n🔔🔔🔔 Dreifachton = Session abgeschlossen\n\nDie Signale funktionieren auch wenn der Bildschirm dunkel ist." />
 
@@ -328,25 +319,24 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green_primary">
+        android:background="?android:attr/colorBackground">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Start-Button (fixiert am unteren Rand) -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnStart"
+    <!-- Start-Button (fixiert am unteren Rand) im neuen Grid-Stil -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridStartTimer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height_large"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        android:text="▶️  Timer starten"
-        android:textSize="@dimen/text_button_medium"
-        app:backgroundTint="@color/green_primary" />
+        android:layout_margin="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="1" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

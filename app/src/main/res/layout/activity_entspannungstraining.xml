@@ -59,7 +59,7 @@
             android:id="@+id/breathingContainer"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnStartStop"
+            app:layout_constraintBottom_toTopOf="@+id/gridStartStop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/switchMusic">
@@ -90,23 +90,21 @@
             android:text="00:00"
             android:textSize="32sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/btnStartStop"
+            app:layout_constraintBottom_toTopOf="@+id/gridStartStop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStartStop"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridStartStop"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
-            android:minWidth="200dp"
-            android:minHeight="64dp"
-            android:text="@string/entspannungstraining_start"
-            android:textSize="18sp"
-            app:cornerRadius="32dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginHorizontal="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="1" />
 
         <TextView
             android:id="@+id/tvMusicCredit"

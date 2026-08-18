@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityDogProfileBinding
 
 class DogProfileActivity : SecureBaseActivity() {
@@ -60,10 +61,17 @@ class DogProfileActivity : SecureBaseActivity() {
     }
 
     private fun setupButtons() {
-        binding.btnAddDog.setOnClickListener {
-            val intent = Intent(this, DogEditActivity::class.java)
-            editDogLauncher.launch(intent)
-        }
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridAddDog.layoutManager = GridLayoutManager(this, 1)
+        binding.gridAddDog.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("add_dog", R.drawable.ic_add, "➕ Hund hinzufügen")),
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = {
+                val intent = Intent(this, DogEditActivity::class.java)
+                editDogLauncher.launch(intent)
+            }
+        )
     }
 
     private fun loadProfiles() {
@@ -86,8 +94,7 @@ class DogProfileActivity : SecureBaseActivity() {
     }
 
     private fun updateAddButtonState() {
-        binding.btnAddDog.text = "➕ Hund hinzufügen"
-        binding.btnAddDog.isEnabled = true
+        // Zustand wird jetzt über Grid gehandhabt, falls nötig hier Logik für Limit
     }
 
     private fun viewProfile(profile: DogProfile) {

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <!-- Konfigurations-Zusammenfassung -->
             <TextView
@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#AAAAAA"
-                android:textSize="@dimen/text_body_small"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:layout_marginBottom="4dp" />
 
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#CCCCCC"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="15sp"
                 android:visibility="gone"
                 android:layout_marginBottom="16dp" />
 
@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:text="Aktiv-Phase"
                         android:textColor="#AAAAAA"
-                        android:textSize="@dimen/text_body_small"
+                        android:textSize="13sp"
                         android:letterSpacing="0.1"
                         android:layout_marginBottom="4dp" />
 
@@ -90,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:text="Bereit"
                         android:textColor="#FFFFFF"
-                        android:textSize="@dimen/text_body_large"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
 
@@ -113,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:text="Runde 1 von 6"
                         android:textColor="#CCCCCC"
-                        android:textSize="@dimen/text_body_medium"
+                        android:textSize="15sp"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Runden-Fortschrittsbalken -->
@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:text="Gesamt: 0:00"
                 android:textColor="#888888"
-                android:textSize="@dimen/text_body_small"
+                android:textSize="12sp"
                 android:layout_marginBottom="24dp" />
 
             <!-- ────────── FERTIG-BEREICH ────────── -->
@@ -152,7 +152,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     app:cardBackgroundColor="@color/green_dark"
                     app:cardCornerRadius="16dp">
 
@@ -177,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:text="Fertig!"
                             android:textColor="#FFFFFF"
-                            android:textSize="@dimen/text_display_medium"
+                            android:textSize="32sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp" />
 
@@ -186,7 +186,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#CCCCCC"
-                            android:textSize="@dimen/text_body_medium"
+                            android:textSize="15sp"
                             android:layout_marginBottom="4dp" />
 
                         <TextView
@@ -194,44 +194,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#81C784"
-                            android:textSize="@dimen/text_body_medium"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Tagebuch-Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnOpenDiary"
+                <!-- Grid für Aktionen nach Abschluss -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridTimerFinished"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="📋  Im Trainingstagebuch eintragen"
-                    android:textSize="@dimen/text_button_small"
-                    app:backgroundTint="@color/green_primary"
-                    android:visibility="gone" />
-
-                <!-- Teilen -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShare"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="📤  Ergebnis teilen"
-                    android:textColor="#FFFFFF"
-                    app:strokeColor="#555555" />
-
-                <!-- Verlauf -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnHistory"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="📋  Alle Sessions ansehen"
-                    android:textColor="#AAAAAA"
-                    app:strokeColor="#444444" />
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2" />
 
             </LinearLayout>
 
@@ -253,36 +229,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- ────────── STEUER-BUTTONS ────────── -->
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridTimerControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/dark_green">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStop"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height_medium"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="⏹️  Stopp"
-            android:textSize="@dimen/text_button_small"
-            android:textColor="#FFFFFF"
-            android:enabled="false"
-            app:strokeColor="#555555" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStartPause"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height_medium"
-            android:layout_weight="2"
-            android:text="▶️  STARTEN"
-            android:textSize="@dimen/text_button_medium"
-            app:backgroundTint="@color/green_primary" />
-
-    </LinearLayout>
+        android:background="@color/dark_green"
+        android:padding="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

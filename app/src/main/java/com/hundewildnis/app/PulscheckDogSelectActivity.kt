@@ -1,14 +1,9 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityPulscheckDogSelectBinding
 
 class PulscheckDogSelectActivity : SecureBaseActivity() {
@@ -32,48 +27,40 @@ class PulscheckDogSelectActivity : SecureBaseActivity() {
 
         if (profiles.isEmpty()) {
             binding.tvNoDogs.visibility = View.VISIBLE
-            binding.llDogButtons.visibility = View.GONE
+            binding.gridDogSelection.visibility = View.GONE
             return
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
+        binding.tvNoDogs.visibility = View.GONE
+        binding.gridDogSelection.visibility = View.VISIBLE
 
-        profiles.forEach { profile ->
-            val btn = MaterialButton(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).also { it.bottomMargin = dpToPx(10) }
+        val tiles = profiles.map { profile ->
+            StartTile(
+                id = profile.id,
+                iconRes = R.drawable.ic_dog,
+                label = if (profile.breed.isNotEmpty()) "${profile.name}\n${profile.breed}" else profile.name
+            )
+        }
 
-                text = "🐕 ${profile.name}"
-                if (profile.breed.isNotEmpty()) {
-                    text = "🐕 ${profile.name}  ·  ${profile.breed}"
-                }
-                textSize = 16f
-                setTextColor(Color.WHITE)
-                isAllCaps = false
-                minHeight = dpToPx(64)
-                cornerRadius = dpToPx(12)
-                setBackgroundColor(Color.parseColor("#2d5016"))
-
-                setOnClickListener {
-                    val intent = Intent(this@PulscheckDogSelectActivity, PulscheckActivity::class.java)
-                    intent.putExtra("profile", profile)
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridDogSelection.layoutManager = GridLayoutManager(this, 2)
+        binding.gridDogSelection.adapter = StartTileAdapter(
+            tiles = tiles,
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { dogId ->
+                val profile = profiles.find { it.id == dogId }
+                profile?.let {
+                    val intent = Intent(this, PulscheckActivity::class.java)
+                    intent.putExtra("profile", it)
                     startActivity(intent)
                 }
             }
-            binding.llDogButtons.addView(btn)
-        }
+        )
     }
-
-    private fun dpToPx(dp: Int): Int =
-        (dp * resources.displayMetrics.density).toInt()
 
     override fun onResume() {
         super.onResume()
-        // Buttons neu aufbauen falls ein Hund hinzugekommen ist
-        binding.llDogButtons.removeAllViews()
         loadDogButtons()
     }
 }

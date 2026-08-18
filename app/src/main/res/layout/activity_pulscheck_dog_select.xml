@@ -15,36 +15,43 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#2d5016"
-            app:titleTextColor="#FFFFFF"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:title="❤️ Pulscheck – Hund wählen" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Für welchen Hund möchtest Du Vitalwerte messen?"
-                android:textSize="16sp"
+                android:textSize="15sp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
+                android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary" />
 
-            <!-- Hunde-Buttons werden hier dynamisch eingefügt -->
-            <LinearLayout
-                android:id="@+id/llDogButtons"
+            <!-- Hunde-Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridDogSelection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
             <!-- Hinweis falls kein Hund -->
             <TextView

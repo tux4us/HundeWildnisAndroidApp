@@ -5,14 +5,12 @@
         <!-- Globale Widget Styles -->
         <item name="materialButtonStyle">@style/Widget.App.Button</item>
 
-        <item name="colorPrimary">#2d5016</item>
-        <item name="colorPrimaryVariant">#1a3009</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorSecondary">#6b8e4e</item>
-        <item name="colorSecondaryVariant">#4a6135</item>
+        <item name="colorPrimary">@color/rd_bg_dark</item>
+        <item name="colorOnPrimary">@color/rd_text_primary_dark</item>
+        <item name="colorSecondary">@color/rd_group2_accent_dark</item>
         <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/rd_bg_dark</item>
+        <item name="android:navigationBarColor">@color/rd_bg_dark</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
@@ -20,12 +18,12 @@
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
 
         <!-- Menü-Farben -->
-        <item name="actionMenuTextColor">#FFFFFF</item>
+        <item name="actionMenuTextColor">@color/rd_text_primary_dark</item>
         <item name="actionOverflowButtonStyle">@style/Widget.App.Overflow</item>
 
         <!-- Hintergrundfarben für Dark Mode -->
-        <item name="android:windowBackground">#1a1a1a</item>
-        <item name="android:colorBackground">#1a1a1a</item>
+        <item name="android:windowBackground">@color/rd_bg_dark</item>
+        <item name="android:colorBackground">@color/rd_bg_dark</item>
 
         <!-- Material Button für AlertDialog -->
         <item name="materialAlertDialogTheme">@style/AlertDialogTheme.Dark</item>

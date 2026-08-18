@@ -16,8 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#2d5016"
-            app:titleTextColor="#FFFFFF"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -51,12 +51,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="🌡️ Wärmebild" />
 
-            <!--
-                Kamera-View Box: festes 4:3-Seitenverhältnis.
-                aspect_ratio="0.75" = Höhe = 75% der Breite → 4:3 Portrait
-                Der SurfaceView füllt diese Box vollständig ohne Verzerrung,
-                da das Bild bereits in drawToSurface() korrekt skaliert wird.
-            -->
             <FrameLayout
                 android:id="@+id/cameraContainer"
                 android:layout_width="match_parent"
@@ -86,56 +80,15 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- Button-Leiste -->
-            <LinearLayout
+            <!-- Button Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridTickLoupeActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="4dp">
-
-                <!-- Filter umschalten -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFilter"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    android:text="🔍 Filter"
-                    android:textSize="14sp"
-                    android:textColor="#FFFFFF"
-                    app:backgroundTint="#2d5016"
-                    app:cornerRadius="12dp" />
-
-                <!-- Freeze / Unfreeze -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFreeze"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginEnd="6dp"
-                    android:text="⏸ Einfrieren"
-                    android:textSize="14sp"
-                    android:textColor="#FFFFFF"
-                    app:backgroundTint="#01579B"
-                    app:cornerRadius="12dp" />
-
-                <!-- Speichern (nur sichtbar wenn eingefroren) -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:text="💾 Speichern"
-                    android:textSize="14sp"
-                    android:textColor="#FFFFFF"
-                    app:backgroundTint="#C9A84C"
-                    app:cornerRadius="12dp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+                android:layout_marginTop="4dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3" />
 
             <!-- Hinweistext -->
             <TextView

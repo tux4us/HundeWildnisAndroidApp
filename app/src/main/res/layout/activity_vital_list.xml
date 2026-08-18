@@ -15,8 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#2d5016"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -62,40 +62,16 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Export-Buttons -->
-        <LinearLayout
+        <!-- Export-Buttons Grid -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridVitalActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="8dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnExportCsv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="📊 CSV exportieren"
-                android:textSize="13sp"
-                android:textColor="#2d5016"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="#2d5016"
-                app:cornerRadius="8dp"
-                android:layout_marginEnd="6dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnShareAll"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="📤 Liste teilen"
-                android:textSize="13sp"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#2d5016"
-                app:cornerRadius="8dp" />
-
-        </LinearLayout>
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
 
         <!-- Leer-Hinweis -->
         <TextView

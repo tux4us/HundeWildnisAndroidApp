@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.load
 import com.google.android.material.card.MaterialCardView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityPlantDetailBinding
 import java.io.File
 
@@ -280,13 +281,20 @@ class PlantDetailActivity : SecureBaseActivity() {
     }
 
     private fun setupEmergencyButton(plant: ToxicPlant) {
-        binding.btnOpenEmergency.setOnClickListener {
-            startActivity(Intent(this, FirstAidWizardActivity::class.java).apply {
-                putExtra("preselect_main", "ACCIDENT")
-                putExtra("preselect_sub", "POISONING_KNOWN")
-                putExtra("poison_name", plant.name)
-            })
-        }
+        val colors = StartGroupColors.forGroup(this, 3) // Braun/Ocker (ignoriert bei isDanger)
+        binding.gridOpenEmergency.layoutManager = GridLayoutManager(this, 1)
+        binding.gridOpenEmergency.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("open_emergency", R.drawable.ic_emergency, "🚨 Notfall-Assistent öffnen", isDanger = true)),
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = {
+                startActivity(Intent(this, FirstAidWizardActivity::class.java).apply {
+                    putExtra("preselect_main", "ACCIDENT")
+                    putExtra("preselect_sub", "POISONING_KNOWN")
+                    putExtra("poison_name", plant.name)
+                })
+            }
+        )
     }
 
     private fun addBulletList(

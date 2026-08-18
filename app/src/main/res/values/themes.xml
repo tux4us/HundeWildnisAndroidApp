@@ -5,14 +5,12 @@
         <!-- Globale Widget Styles -->
         <item name="materialButtonStyle">@style/Widget.App.Button</item>
 
-        <item name="colorPrimary">#2d5016</item>
-        <item name="colorPrimaryVariant">#1a3009</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorSecondary">#6b8e4e</item>
-        <item name="colorSecondaryVariant">#4a6135</item>
-        <item name="colorOnSecondary">#000000</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="colorPrimary">@color/rd_bg_light</item>
+        <item name="colorOnPrimary">@color/rd_text_primary_light</item>
+        <item name="colorSecondary">@color/rd_group2_accent_light</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="android:statusBarColor">@color/rd_bg_light</item>
+        <item name="android:navigationBarColor">@color/rd_bg_light</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
@@ -20,7 +18,7 @@
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
 
         <!-- AlertDialog Button Farben (WICHTIG!) -->
-        <item name="colorAccent">#2d5016</item>
+        <item name="colorAccent">@color/rd_group2_accent_light</item>
         <item name="android:textColorPrimary">#000000</item>
 
         <!-- Material Button für AlertDialog -->
@@ -28,12 +26,12 @@
         <item name="alertDialogTheme">@style/AlertDialogTheme</item>
 
         <!-- Menü-Farben -->
-        <item name="actionMenuTextColor">#FFFFFF</item>
+        <item name="actionMenuTextColor">@color/rd_text_primary_light</item>
         <item name="actionOverflowButtonStyle">@style/Widget.App.Overflow</item>
 
         <!-- Hintergrundfarben für Light Mode -->
-        <item name="android:windowBackground">#FFFFFF</item>
-        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:windowBackground">@color/rd_bg_light</item>
+        <item name="android:colorBackground">@color/rd_bg_light</item>
     </style>
 
     <style name="Theme.HundeWildnis" parent="Base.Theme.HundeWildnis" />
@@ -69,8 +67,8 @@
 
     <!-- Einheitlicher Button Style für Light Mode Dialoge -->
     <style name="DialogButtonStyle.Light" parent="Widget.Material3.Button.TextButton.Dialog">
-        <!-- Text Farbe: GRÜN -->
-        <item name="android:textColor">#2d5016</item>
+        <!-- Text Farbe: SEKUNDÄRAKZENT -->
+        <item name="android:textColor">?attr/colorSecondary</item>
 
         <!-- KORREKTUR: Platzprobleme bei großen Schriften -->
         <item name="android:textSize">13sp</item>

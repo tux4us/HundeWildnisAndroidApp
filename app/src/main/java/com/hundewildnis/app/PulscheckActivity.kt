@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityPulscheckBinding
 
 class PulscheckActivity : SecureBaseActivity() {
@@ -277,14 +278,47 @@ class PulscheckActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════════
 
     private fun setupActionButtons() {
-        binding.btnSave.setOnClickListener { saveRecord() }
-        binding.btnTransferToEmergency.setOnClickListener { transferToEmergency() }
-        binding.btnViewHistory.setOnClickListener {
-            val intent = Intent(this, VitalListActivity::class.java)
-            intent.putExtra("dogId", profile!!.id)
-            intent.putExtra("dogName", profile!!.name)
-            startActivity(intent)
+        updateActionGrids()
+        
+        // History Grid
+        val colorsHistory = StartGroupColors.forGroup(this, 5) // Violett
+        binding.gridPulsHistory.layoutManager = GridLayoutManager(this, 1)
+        binding.gridPulsHistory.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("puls_history", R.drawable.ic_notes, "📋 Alle Messungen anzeigen")),
+            chipColorRes = colorsHistory.chipColorRes,
+            accentColorRes = colorsHistory.accentColorRes,
+            onTileClick = { viewHistory() }
+        )
+    }
+
+    private fun updateActionGrids() {
+        val actions = mutableListOf<StartTile>()
+        actions.add(StartTile("puls_save", R.drawable.ic_notes, "💾 Messung speichern"))
+        
+        if (savedRecord != null) {
+            actions.add(StartTile("puls_emergency", R.drawable.ic_emergency, "🚨 Notfallmeldung", isDanger = true))
         }
+
+        val colorsActions = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridPulsActions.layoutManager = GridLayoutManager(this, actions.size)
+        binding.gridPulsActions.adapter = StartTileAdapter(
+            tiles = actions,
+            chipColorRes = colorsActions.chipColorRes,
+            accentColorRes = colorsActions.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "puls_save" -> saveRecord()
+                    "puls_emergency" -> transferToEmergency()
+                }
+            }
+        )
+    }
+
+    private fun viewHistory() {
+        val intent = Intent(this, VitalListActivity::class.java)
+        intent.putExtra("dogId", profile!!.id)
+        intent.putExtra("dogName", profile!!.name)
+        startActivity(intent)
     }
 
     private fun collectRecord(): VitalRecord? {
@@ -336,8 +370,8 @@ class PulscheckActivity : SecureBaseActivity() {
 
         Toast.makeText(this, "✅ Messung gespeichert", Toast.LENGTH_SHORT).show()
 
-        // Notfall-Button einblenden
-        binding.btnTransferToEmergency.visibility = View.VISIBLE
+        // Grids aktualisieren (um Notfall-Button zu zeigen)
+        updateActionGrids()
 
         // Erfolgsmeldung mit Bewertung
         val heightCm = profile?.shoulderHeight?.trim()?.toIntOrNull()

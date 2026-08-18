@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityIntervalTimerSetupBinding
 
 // ════════════════════════════════════════════════════════════════
@@ -93,9 +94,35 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
             title = "⏱️ Intervall-Timer"
             setDisplayHomeAsUpEnabled(true)
         }
+        
+        // Design-Anpassung (Gruppe 2 = Index 1)
+        val colors = StartGroupColors.forGroup(this, 1)
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val accentColor = ContextCompat.getColor(this, colors.accentColorRes)
+        val chipColor = ContextCompat.getColor(this, colors.chipColorRes)
+        val textColor = ContextCompat.getColor(this, if (isDark) R.color.rd_text_primary_dark else R.color.rd_text_primary_light)
+
+        binding.toolbar.navigationIcon?.setTint(textColor)
+        
+        // Hinweis-Karten einfärben
+        binding.cardCharacterHint.setCardBackgroundColor(chipColor)
+        binding.tvCharacterHint.setTextColor(textColor)
+        binding.cardCharacterHint.setStrokeColor(ColorStateList.valueOf(accentColor))
+        
+        binding.cardExplanation.setCardBackgroundColor(chipColor)
+        binding.cardExplanation.setStrokeColor(ColorStateList.valueOf(accentColor))
+        binding.tvExplanationTitle.setTextColor(accentColor)
+        binding.tvAblaufTitel.setTextColor(textColor)
+        binding.tvAblaufInhalt.setTextColor(textColor)
+        binding.tvWarumTitel.setTextColor(textColor)
+        binding.tvWarumInhalt.setTextColor(textColor)
+        binding.tvSignaleTitel.setTextColor(textColor)
+        binding.tvSignaleInhalt.setTextColor(textColor)
+
         dogProfile?.let {
             binding.tvDogLabel.text       = "🐕 ${it.name}"
             binding.tvDogLabel.visibility = View.VISIBLE
+            binding.tvDogLabel.setTextColor(accentColor)
         }
     }
 
@@ -184,17 +211,26 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
     }
 
     private fun setupStartButton() {
-        binding.btnStart.setOnClickListener {
-            if (selectedConfig.rounds < 1) {
-                Toast.makeText(this, "Bitte mindestens 1 Runde wählen.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val intent = Intent(this, IntervalTimerActivity::class.java).apply {
-                putExtra(IntervalTimerActivity.EXTRA_CONFIG, selectedConfig)
-                dogProfile?.let { putExtra(IntervalTimerActivity.EXTRA_DOG_PROFILE, it) }
-            }
-            startActivity(intent)
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridStartTimer.layoutManager = GridLayoutManager(this, 1)
+        binding.gridStartTimer.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("timer_start", R.drawable.ic_stopwatch, "▶️ Timer starten")),
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { startTimer() }
+        )
+    }
+
+    private fun startTimer() {
+        if (selectedConfig.rounds < 1) {
+            Toast.makeText(this, "Bitte mindestens 1 Runde wählen.", Toast.LENGTH_SHORT).show()
+            return
         }
+        val intent = Intent(this, IntervalTimerActivity::class.java).apply {
+            putExtra(IntervalTimerActivity.EXTRA_CONFIG, selectedConfig)
+            dogProfile?.let { putExtra(IntervalTimerActivity.EXTRA_DOG_PROFILE, it) }
+        }
+        startActivity(intent)
     }
 
     // ════════════════════════════════════════════════════════════

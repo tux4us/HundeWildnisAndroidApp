@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityIntervalTimerBinding
 
 // ════════════════════════════════════════════════════════════════
@@ -119,28 +120,68 @@ class IntervalTimerActivity : SecureBaseActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnStartPause.setOnClickListener {
-            when {
-                !isRunning && !isPaused -> startTimer()
-                isRunning               -> pauseTimer()
-                isPaused                -> resumeTimer()
+        updateControlGrid()
+    }
+
+    private fun updateControlGrid() {
+        val controls = mutableListOf<StartTile>()
+        
+        // Stop
+        controls.add(StartTile("timer_stop", R.drawable.ic_remove, "⏹️ Stopp", isDanger = true))
+        
+        // Start/Pause
+        val startPauseLabel = when {
+            !isRunning && !isPaused -> "▶️ STARTEN"
+            isRunning               -> "⏸ PAUSE"
+            isPaused                -> "▶️ WEITER"
+            else                    -> "▶️ STARTEN"
+        }
+        controls.add(StartTile("timer_start_pause", R.drawable.ic_stopwatch, startPauseLabel))
+
+        val colors = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridTimerControls.layoutManager = GridLayoutManager(this, 2)
+        binding.gridTimerControls.adapter = StartTileAdapter(
+            tiles = controls,
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "timer_stop" -> if (isRunning || isPaused) confirmStop()
+                    "timer_start_pause" -> {
+                        when {
+                            !isRunning && !isPaused -> startTimer()
+                            isRunning               -> pauseTimer()
+                            isPaused                -> resumeTimer()
+                        }
+                    }
+                }
             }
-        }
+        )
+    }
 
-        binding.btnStop.setOnClickListener {
-            if (isRunning || isPaused) confirmStop()
+    private fun updateFinishedGrid() {
+        val actions = mutableListOf<StartTile>()
+        
+        if (dogProfile != null) {
+            actions.add(StartTile("timer_diary", R.drawable.ic_diary, "📋 Tagebuch"))
         }
+        actions.add(StartTile("timer_share", R.drawable.ic_map_pin_share, "📤 Teilen"))
+        actions.add(StartTile("timer_history", R.drawable.ic_notes, "🕒 Verlauf"))
 
-        // Verknüpfung mit Trainingstagebuch nach Abschluss
-        binding.btnOpenDiary.setOnClickListener {
-            openTrainingDiary()
-        }
-        binding.btnShare.setOnClickListener {
-            shareResult()
-        }
-        binding.btnHistory.setOnClickListener {
-            openHistory()
-        }
+        val colors = StartGroupColors.forGroup(this, 3) // Ocker
+        binding.gridTimerFinished.layoutManager = GridLayoutManager(this, actions.size)
+        binding.gridTimerFinished.adapter = StartTileAdapter(
+            tiles = actions,
+            chipColorRes = colors.chipColorRes,
+            accentColorRes = colors.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "timer_diary" -> openTrainingDiary()
+                    "timer_share" -> shareResult()
+                    "timer_history" -> openHistory()
+                }
+            }
+        )
     }
 
     // ════════════════════════════════════════════════════════════
@@ -153,8 +194,7 @@ class IntervalTimerActivity : SecureBaseActivity() {
         currentRound = 0
         totalElapsedMs = 0L
 
-        updateStartPauseButton()
-        binding.btnStop.isEnabled = true
+        updateControlGrid()
 
         startPreparePhase()
         startClock()
@@ -167,7 +207,7 @@ class IntervalTimerActivity : SecureBaseActivity() {
         phaseTimer = null
         clockTimer?.cancel()
         clockTimer = null
-        updateStartPauseButton()
+        updateControlGrid()
         showPhaseCard(IntervalTimerPhase.PREPARE) // zeigt "Pausiert"-Status
         binding.tvMainTimer.text    = formatMs(remainingMs)
         binding.tvStatus.text       = "⏸ Pausiert"
@@ -177,7 +217,7 @@ class IntervalTimerActivity : SecureBaseActivity() {
     private fun resumeTimer() {
         isRunning = true
         isPaused  = false
-        updateStartPauseButton()
+        updateControlGrid()
         startClock()
         // Aktuelle Phase fortsetzen
         when (currentPhase) {
@@ -336,9 +376,8 @@ class IntervalTimerActivity : SecureBaseActivity() {
         binding.progressRounds.max  = config.rounds
         binding.progressRounds.progress = 0
         binding.progressPhase.progress  = 0
-        binding.btnStop.isEnabled   = false
         binding.groupFinished.visibility = View.GONE
-        updateStartPauseButton()
+        updateControlGrid()
     }
 
     private fun showPhaseCard(phase: IntervalTimerPhase) {
@@ -368,8 +407,7 @@ class IntervalTimerActivity : SecureBaseActivity() {
 
     private fun showFinishedState(abortedEarly: Boolean) {
         binding.groupFinished.visibility = View.VISIBLE
-        binding.btnStartPause.isEnabled  = false
-        binding.btnStop.isEnabled        = false
+        binding.gridTimerControls.visibility = View.GONE
 
         val icon   = if (abortedEarly) "⏹️" else "🏆"
         val title  = if (abortedEarly) "Timer gestoppt" else "Fertig!"
@@ -380,19 +418,9 @@ class IntervalTimerActivity : SecureBaseActivity() {
         binding.tvFinishedRounds.text  = rounds
         binding.tvFinishedActive.text  = "Aktive Übungszeit: ${finishedSession?.effectiveActiveMinutes ?: 0} Min"
 
-        // Trainingstagebuch-Button nur anzeigen wenn Hund und Kategorie verknüpfbar
-        binding.btnOpenDiary.visibility = if (dogProfile != null) View.VISIBLE else View.GONE
-        binding.btnHistory.visibility = View.VISIBLE
+        updateFinishedGrid()
     }
 
-    private fun updateStartPauseButton() {
-        binding.btnStartPause.text = when {
-            !isRunning && !isPaused -> "▶️  STARTEN"
-            isRunning               -> "⏸  PAUSE"
-            isPaused                -> "▶️  WEITER"
-            else                    -> "▶️  STARTEN"
-        }
-    }
 
     private fun updateProgressBar(remaining: Long, total: Long) {
         if (total <= 0) return

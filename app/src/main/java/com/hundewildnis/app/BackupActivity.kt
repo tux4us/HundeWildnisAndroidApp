@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityBackupBinding
 import kotlinx.coroutines.*
 import java.io.File
@@ -57,63 +58,83 @@ class BackupActivity : SecureBaseActivity() {
     }
 
     private fun setupButtons() {
+        setupGrids()
+    }
+
+    private fun setupGrids() {
         // Backup erstellen
-        binding.btnCreateBackup.setOnClickListener {
-            createBackup()
-        }
+        val colorsCreate = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridBackupCreate.layoutManager = GridLayoutManager(this, 1)
+        binding.gridBackupCreate.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("backup_create", R.drawable.ic_backup, "📦 Backup erstellen")),
+            chipColorRes = colorsCreate.chipColorRes,
+            accentColorRes = colorsCreate.accentColorRes,
+            onTileClick = { createBackup() }
+        )
 
-        // Backup wiederherstellen
-        binding.btnRestoreBackup.setOnClickListener {
-            selectBackupFile()
-        }
+        // Verwalten & Sync
+        val manageTiles = listOf(
+            StartTile("backup_restore", R.drawable.ic_remove, "📥 Wiederherstellen"),
+            StartTile("backup_webdav", R.drawable.ic_refresh, "🔄 WebDAV-Sync"),
+            StartTile("backup_location", R.drawable.ic_my_location, "📍 Standortfreigabe")
+        )
+        val colorsManage = StartGroupColors.forGroup(this, 3) // Ocker/Braun
+        binding.gridBackupManage.layoutManager = GridLayoutManager(this, 2) // 2 columns looks better for 3 items (1 full row, 1 shared) or we use spanCount=3
+        binding.gridBackupManage.adapter = StartTileAdapter(
+            tiles = manageTiles,
+            chipColorRes = colorsManage.chipColorRes,
+            accentColorRes = colorsManage.accentColorRes,
+            onTileClick = { id ->
+                when(id) {
+                    "backup_restore" -> selectBackupFile()
+                    "backup_webdav" -> startActivity(Intent(this, WebDavSyncActivity::class.java))
+                    "backup_location" -> startActivity(Intent(this, LocationShareActivity::class.java))
+                }
+            }
+        )
 
-        // NEU: WebDAV Synchronisation
-        binding.btnWebdavSync.setOnClickListener {
-            startActivity(Intent(this, WebDavSyncActivity::class.java))
-        }
+        // Service
+        val colorsService = StartGroupColors.forGroup(this, 4) // Blau
+        binding.gridBackupService.layoutManager = GridLayoutManager(this, 1)
+        binding.gridBackupService.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("backup_purge", R.drawable.ic_remove, "🧹 Speicher bereinigen")),
+            chipColorRes = colorsService.chipColorRes,
+            accentColorRes = colorsService.accentColorRes,
+            onTileClick = { confirmPurge() }
+        )
+    }
 
-        binding.btnLocationShare.setOnClickListener {
-            startActivity(Intent(this, LocationShareActivity::class.java))
-        }
-
-        // Medienspeicher bereinigen
-        binding.btnPurgeMediaBackup.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("🧹 Medienspeicher bereinigen")
-                .setMessage("Dies löscht verwaiste Bilddateien aus alten Synchronisationen.\n\nDeine Profile, Einstellungen und aktuell verwendeten Fotos bleiben erhalten.\n\nDieser Vorgang kann je nach Datenmenge einen Moment dauern. Fortfahren?")
-                .setPositiveButton("Bereinigen") { _, _ ->
-                    scope.launch {
-                        try {
-                            // UI-Feedback: Progressbar einblenden
-                            binding.progressBar.visibility = android.view.View.VISIBLE
-                            binding.tvStatus.visibility = android.view.View.VISIBLE
-                            binding.tvStatus.text = "🔄 Bereinige Medienspeicher..."
-                            binding.btnPurgeMediaBackup.isEnabled = false
-
-                            withContext(Dispatchers.IO) {
-                                BackupManager.purgeOrphanFiles(this@BackupActivity)
-                            }
-                            
-                            Toast.makeText(this@BackupActivity, "Bereinigung abgeschlossen", Toast.LENGTH_SHORT).show()
-                        } catch (e: Exception) {
-                            Log.e("BackupActivity", "Fehler bei Bereinigung", e)
-                            Toast.makeText(this@BackupActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
-                        } finally {
-                            binding.progressBar.visibility = android.view.View.GONE
-                            binding.tvStatus.text = "Bereinigung abgeschlossen"
-                            binding.btnPurgeMediaBackup.isEnabled = true
+    private fun confirmPurge() {
+        AlertDialog.Builder(this)
+            .setTitle("🧹 Medienspeicher bereinigen")
+            .setMessage("Dies löscht verwaiste Bilddateien aus alten Synchronisationen.\n\nDeine Profile, Einstellungen und aktuell verwendeten Fotos bleiben erhalten.\n\nDieser Vorgang kann je nach Datenmenge einen Moment dauern. Fortfahren?")
+            .setPositiveButton("Bereinigen") { _, _ ->
+                scope.launch {
+                    try {
+                        binding.progressBar.visibility = android.view.View.VISIBLE
+                        binding.tvStatus.visibility = android.view.View.VISIBLE
+                        binding.tvStatus.text = "🔄 Bereinige Medienspeicher..."
+                        
+                        withContext(Dispatchers.IO) {
+                            BackupManager.purgeOrphanFiles(this@BackupActivity)
                         }
+                        
+                        Toast.makeText(this@BackupActivity, "Bereinigung abgeschlossen", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        Log.e("BackupActivity", "Fehler bei Bereinigung", e)
+                        Toast.makeText(this@BackupActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                    } finally {
+                        binding.progressBar.visibility = android.view.View.GONE
+                        binding.tvStatus.text = "Bereinigung abgeschlossen"
                     }
                 }
-                .setNegativeButton("Abbrechen", null)
-                .show()
-        }
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
     }
 
     private fun createBackup() {
         binding.progressBar.visibility = View.VISIBLE
-        binding.btnCreateBackup.isEnabled = false
-        binding.btnRestoreBackup.isEnabled = false
         binding.tvStatus.text = "Erstelle Backup..."
         binding.tvStatus.visibility = View.VISIBLE
 
@@ -124,8 +145,6 @@ class BackupActivity : SecureBaseActivity() {
                 }
 
                 binding.progressBar.visibility = View.GONE
-                binding.btnCreateBackup.isEnabled = true
-                binding.btnRestoreBackup.isEnabled = true
                 binding.tvStatus.text = "✅ Backup erfolgreich erstellt!"
 
                 Toast.makeText(
@@ -140,8 +159,6 @@ class BackupActivity : SecureBaseActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 binding.progressBar.visibility = View.GONE
-                binding.btnCreateBackup.isEnabled = true
-                binding.btnRestoreBackup.isEnabled = true
                 binding.tvStatus.text = "❌ Fehler beim Erstellen des Backups"
 
                 Toast.makeText(
@@ -256,8 +273,6 @@ class BackupActivity : SecureBaseActivity() {
 
     private fun restoreBackup(backupFile: File, mergeMode: Boolean = false) {
         binding.progressBar.visibility = View.VISIBLE
-        binding.btnCreateBackup.isEnabled = false
-        binding.btnRestoreBackup.isEnabled = false
         binding.tvStatus.text = "Stelle Backup wieder her..."
         binding.tvStatus.visibility = View.VISIBLE
 
@@ -293,8 +308,6 @@ class BackupActivity : SecureBaseActivity() {
                     successDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
                 } else {
                     binding.progressBar.visibility = View.GONE
-                    binding.btnCreateBackup.isEnabled = true
-                    binding.btnRestoreBackup.isEnabled = true
                     binding.tvStatus.text = "❌ Fehler beim Wiederherstellen"
 
                     Toast.makeText(
@@ -309,8 +322,6 @@ class BackupActivity : SecureBaseActivity() {
                 backupFile.delete()
 
                 binding.progressBar.visibility = View.GONE
-                binding.btnCreateBackup.isEnabled = true
-                binding.btnRestoreBackup.isEnabled = true
                 binding.tvStatus.text = "❌ Fehler beim Wiederherstellen"
 
                 Toast.makeText(

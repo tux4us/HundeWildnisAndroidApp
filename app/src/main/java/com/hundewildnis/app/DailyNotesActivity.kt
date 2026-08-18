@@ -155,34 +155,75 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun setupUI() {
-        binding.btnCamera.setOnClickListener { showCameraDisclosure() }
-        binding.btnGallery.setOnClickListener { openMultiplePhotoPicker() }
-        binding.btnSaveNew.setOnClickListener { saveToHistory(true) }
-        binding.btnExportPdf.setOnClickListener { saveToHistory(false); exportAsPdf(false) }
-        binding.btnExportGpx.setOnClickListener { saveToHistory(false); exportAsGpx() }
-        binding.btnShare.setOnClickListener { saveToHistory(false); shareNotes() }
-        binding.btnAddWeather.setOnClickListener { addWeatherToNote() }
+        setupGrids()
+    }
 
-        // NEU: GPS-Button Setup
-        binding.btnAddLocation.setOnClickListener { addLocationToNote() }
-
-        binding.btnClear.setOnClickListener {
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-
-            AlertDialog.Builder(this)
-                .setTitle("Entwurf löschen?")
-                .setMessage("Möchtest du den aktuellen Entwurf wirklich löschen?")
-                .setPositiveButton("Löschen") { _, _ ->
-                    photos.forEach { deletePhotoFile(it) }
-                    startNewNote()
-                }
-                .setNegativeButton("Abbrechen", null)
-                .show().apply {
-                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
-                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
-                }
+    private fun setupGrids() {
+        // Bedingungen (Wetter/GPS)
+        val conditionTiles = listOf(
+            StartTile("note_weather", R.drawable.ic_weather, "Wetter"),
+            StartTile("note_gps", R.drawable.ic_navigation, "GPS-Ort")
+        )
+        val colorsConditions = StartGroupColors.forGroup(this, 3) // Ocker
+        binding.gridNoteConditions.layoutManager = GridLayoutManager(this, 2)
+        binding.gridNoteConditions.adapter = StartTileAdapter(conditionTiles, colorsConditions.chipColorRes, colorsConditions.accentColorRes) { id ->
+            if (id == "note_weather") addWeatherToNote() else addLocationToNote()
         }
+
+        // Fotos
+        val photoTiles = listOf(
+            StartTile("note_camera", R.drawable.ic_microphone, "Kamera"), // microphone icon used as placeholder for camera if ic_camera is missing
+            StartTile("note_gallery", R.drawable.ic_pages, "Galerie")
+        )
+        val colorsPhotos = StartGroupColors.forGroup(this, 4) // Blau
+        binding.gridNotePhotos.layoutManager = GridLayoutManager(this, 2)
+        binding.gridNotePhotos.adapter = StartTileAdapter(photoTiles, colorsPhotos.chipColorRes, colorsPhotos.accentColorRes) { id ->
+            if (id == "note_camera") showCameraDisclosure() else openMultiplePhotoPicker()
+        }
+
+        // Speichern
+        val saveTiles = listOf(
+            StartTile("note_save", R.drawable.ic_notes, "💾 Notiz sichern & Neu 📝")
+        )
+        val colorsSave = StartGroupColors.forGroup(this, 2) // Grün
+        binding.gridNoteSave.layoutManager = GridLayoutManager(this, 1)
+        binding.gridNoteSave.adapter = StartTileAdapter(saveTiles, colorsSave.chipColorRes, colorsSave.accentColorRes) { saveToHistory(true) }
+
+        // Aktionen
+        val actionTiles = listOf(
+            StartTile("note_pdf", R.drawable.ic_notes, "PDF"),
+            StartTile("note_gpx", R.drawable.ic_navigation, "GPX"),
+            StartTile("note_share", R.drawable.ic_map_pin_share, "Teilen"),
+            StartTile("note_clear", R.drawable.ic_remove, "Löschen", isDanger = true)
+        )
+        val colorsActions = StartGroupColors.forGroup(this, 1) // Gelb
+        binding.gridNoteActions.layoutManager = GridLayoutManager(this, 4)
+        binding.gridNoteActions.adapter = StartTileAdapter(actionTiles, colorsActions.chipColorRes, colorsActions.accentColorRes) { id ->
+            when(id) {
+                "note_pdf" -> { saveToHistory(false); exportAsPdf(false) }
+                "note_gpx" -> { saveToHistory(false); exportAsGpx() }
+                "note_share" -> { saveToHistory(false); shareNotes() }
+                "note_clear" -> confirmDeleteDraft()
+            }
+        }
+    }
+
+    private fun confirmDeleteDraft() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+
+        AlertDialog.Builder(this)
+            .setTitle("Entwurf löschen?")
+            .setMessage("Möchtest du den aktuellen Entwurf wirklich löschen?")
+            .setPositiveButton("Löschen") { _, _ ->
+                photos.forEach { deletePhotoFile(it) }
+                startNewNote()
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show().apply {
+                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
+                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
+            }
     }
 
     private fun openPhotoPicker() {
@@ -340,9 +381,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private suspend fun fetchWeatherDataWithCoords(lat: Double, lon: Double) {
         pendingWeatherRequest = false
-        withContext(Dispatchers.Main) {
-            binding.btnAddWeather.isEnabled = false
-        }
 
         try {
             val weather = withContext(Dispatchers.IO) {
@@ -380,10 +418,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@DailyNotesActivity, "⚠️ Fehler beim Wetter-Abruf", Toast.LENGTH_SHORT).show()
-            }
-        } finally {
-            withContext(Dispatchers.Main) {
-                binding.btnAddWeather.isEnabled = true
             }
         }
     }

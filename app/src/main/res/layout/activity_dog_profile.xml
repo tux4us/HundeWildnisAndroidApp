@@ -50,16 +50,13 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAddDog"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridAddDog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="➕ Hund hinzufügen (3 von 3)"
-            android:textSize="@dimen/text_body_medium"
-            app:backgroundTint="#2d5016"
-            android:textColor="#FFFFFF"
-            android:layout_margin="16dp"
-            app:cornerRadius="12dp" />
+            android:layout_margin="8dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="1" />
 
     </LinearLayout>
 

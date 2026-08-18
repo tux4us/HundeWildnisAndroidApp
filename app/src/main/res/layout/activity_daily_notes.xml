@@ -22,13 +22,16 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <!-- Datum & Ort -->
             <TextView
@@ -36,10 +39,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Datum"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
 
             <!-- Wetter Info (optional) -->
             <TextView
@@ -47,106 +51,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="@dimen/text_body_medium"
-                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="16dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:paddingStart="4dp" />
 
             <!-- Titel Eingabe -->
-            <EditText
-                android:id="@+id/etTitle"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:hint="Titel der Notiz"
-                android:inputType="textCapSentences"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:textColorHint="@color/dark_green"
-                android:textColor="#000000"
-                android:padding="12dp"
-                android:background="@android:drawable/edit_text"
-                android:layout_marginBottom="12dp" />
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Notizen EditText -->
-            <EditText
-                android:id="@+id/etNotes"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Deine Notizen hier eingeben. Das Textfeld passt sich dem Inhalt automatisch an."
-                android:textColorHint="@color/dark_green"
-                android:textSize="13sp"
-                android:textColor="#000000"
-                android:gravity="top|start"
-                android:padding="12dp"
-                android:background="@android:drawable/edit_text"
-                android:inputType="textMultiLine|textCapSentences"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Wetter hinzufügen Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAddWeather"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🌡️ Wetterdaten hinzufügen"
-                android:textSize="@dimen/text_body_medium"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#25E2C2"
-                android:layout_marginBottom="8dp" />
-
-            <!-- GPS Standort hinzufügen Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAddLocation"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📍 GPS-Standort hinzufügen"
-                android:textSize="@dimen/text_body_medium"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#64B5F6"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Foto-Bereich Header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📸 Fotos anhängen"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                android:textColor="#33691E"
-                android:layout_marginBottom="8dp" />
-
-            <!-- Foto-Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCamera"
-                    android:layout_width="0dp"
+                android:layout_marginBottom="16dp"
+                android:hint="Deine Notizen hier eingeben..."
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNotes"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="📷 Kamera"
-                    android:textSize="@dimen/text_body_medium"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#01579B"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginEnd="8dp" />
+                    android:gravity="top|start"
+                    android:minLines="5"
+                    android:inputType="textMultiLine|textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGallery"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🖼️ Galerie"
-                    android:textSize="@dimen/text_body_medium"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#01579B"
-                    android:textColor="#FFFFFF" />
+            <!-- Grids für Bedingungen (Wetter/GPS) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridNoteConditions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
-            </LinearLayout>
+            <!-- Grids für Foto -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridNotePhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
 
             <!-- Foto-Vorschau RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
@@ -156,18 +116,25 @@
                 android:layout_marginBottom="16dp"
                 android:visibility="gone" />
 
-            <!-- Speichern & Neu Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveNew"
+            <!-- Speichern Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridNoteSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="💾 Notiz sichern &amp; Neue Notiz 📝"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#2d5016"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1" />
+
+            <!-- Export / Löschen Grid -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridNoteActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4" />
 
             <View
                 android:layout_width="match_parent"
@@ -175,72 +142,15 @@
                 android:background="#33000000"
                 android:layout_marginBottom="12dp" />
 
-            <!-- Action Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExportPdf"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🖨📄\nPDF"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginEnd="4dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExportGpx"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🧭🗺️\nGPX"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginEnd="4dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShare"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🕊📤\nTeilen"
-                    android:textSize="@dimen/text_body_medium"
-                    android:textStyle="bold"
-                    app:cornerRadius="8dp"
-                    app:backgroundTint="#4a6135"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnClear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🗑️❌\nEntwurf löschen"
-                android:textSize="@dimen/text_body_medium"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#B71C1C"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="24dp" />
-
             <!-- Historie Überschrift -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="🕒 Historie (Bisherige Notizen)"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:paddingStart="4dp" />
 
             <!-- Liste der Sitzungen -->
             <androidx.recyclerview.widget.RecyclerView

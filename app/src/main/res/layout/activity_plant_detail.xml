@@ -410,15 +410,14 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Notfall-Button (fixiert) -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnOpenEmergency"
+    <!-- Notfall-Button (fixiert) im neuen Grid-Stil -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridOpenEmergency"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height_large"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        android:text="🚨  Notfall-Assistent öffnen"
-        android:textSize="@dimen/text_button_small"
-        app:backgroundTint="#C62828" />
+        android:layout_margin="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="1" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

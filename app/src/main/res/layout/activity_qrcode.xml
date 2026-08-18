@@ -15,8 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -33,7 +33,7 @@
             android:text="📱 QR-CODE"
             android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
-            android:textColor="#1B3A0A"
+            android:textColor="?attr/colorSecondary"
             android:layout_marginBottom="16dp" />
 
         <TextView
@@ -69,35 +69,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:indeterminateTint="#2d5016" />
+                    android:indeterminateTint="?attr/colorSecondary" />
 
             </FrameLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnShare"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gridQrActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📤 QR-Code teilen"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            app:backgroundTint="#2d5016"
-            android:textColor="#FFFFFF"
-            app:cornerRadius="12dp"
-            android:enabled="false" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="💾 In Galerie speichern"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            app:cornerRadius="12dp"
-            android:layout_marginTop="12dp"
-            android:enabled="false" />
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityVitalListBinding
 import java.io.File
 import java.text.SimpleDateFormat
@@ -63,8 +64,15 @@ class VitalListActivity : SecureBaseActivity() {
     }
 
     private fun setupButtons() {
-        binding.btnExportCsv.setOnClickListener { exportCsv() }
-        binding.btnShareAll.setOnClickListener { shareAll() }
+        val actions = listOf(
+            StartTile("vital_csv", R.drawable.ic_notes, "CSV Export"),
+            StartTile("vital_share", R.drawable.ic_map_pin_share, "Liste teilen")
+        )
+        val colors = StartGroupColors.forGroup(this, 3) // Ocker/Braun
+        binding.gridVitalActions.layoutManager = GridLayoutManager(this, 2)
+        binding.gridVitalActions.adapter = StartTileAdapter(actions, colors.chipColorRes, colors.accentColorRes) { id ->
+            if (id == "vital_csv") exportCsv() else shareAll()
+        }
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -81,14 +89,12 @@ class VitalListActivity : SecureBaseActivity() {
             binding.tvEmpty.visibility = View.VISIBLE
             binding.rvVitalRecords.visibility = View.GONE
             binding.cardStats.visibility = View.GONE
-            binding.btnExportCsv.isEnabled = false
-            binding.btnShareAll.isEnabled = false
+            binding.gridVitalActions.visibility = View.GONE
         } else {
             binding.tvEmpty.visibility = View.GONE
             binding.rvVitalRecords.visibility = View.VISIBLE
             binding.cardStats.visibility = View.VISIBLE
-            binding.btnExportCsv.isEnabled = true
-            binding.btnShareAll.isEnabled = true
+            binding.gridVitalActions.visibility = View.VISIBLE
             updateStats()
         }
     }

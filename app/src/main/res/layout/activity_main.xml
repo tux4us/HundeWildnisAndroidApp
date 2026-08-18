@@ -18,8 +18,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -60,8 +60,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Alle Beiträge"
-                            android:textColor="#1B3A0A"
-                            app:rippleColor="#331B3A0A" />
+                            android:textColor="?attr/colorSecondary"
+                            app:rippleColor="#338fad6f" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnFilterCategories"
@@ -70,8 +70,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="📂 Kategorien filtern"
-                            android:textColor="#1B3A0A"
-                            app:strokeColor="#1B3A0A" />
+                            android:textColor="?attr/colorSecondary"
+                            app:strokeColor="?attr/colorSecondary" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -112,9 +112,9 @@
             android:layout_marginBottom="80dp"
             android:paddingStart="32dp"
             android:paddingEnd="32dp"
-            android:backgroundTint="#1B3A0A"
+            android:backgroundTint="?attr/colorSecondary"
             android:text="Weitere Blogbeiträge laden"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/colorOnSecondary"
             android:elevation="4dp"
             android:visibility="gone" />
 
@@ -123,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:indeterminateTint="#33691E"
+            android:indeterminateTint="?attr/colorSecondary"
             android:visibility="visible" />
 
         <TextView
@@ -135,19 +135,17 @@
             android:padding="16dp"
             android:textAlignment="center"
             android:textSize="@dimen/text_body_large"
-            android:textColor="#33691E"
+            android:textColor="?attr/colorSecondary"
             android:visibility="gone" />
     </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Bottom Navigation Bar -->
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="#1B3A0A"
+        app:backgroundTint="?attr/colorPrimary"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:itemRippleColor="#338fad6f"

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ═══════════════════════════════════════════════════════════
+         REDESIGN 2026 — Startseite / Kursliste / Seitenliste
+         Light-Theme Basis: warmes Weiß + erdige/ockerfarbene Akzente
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- Grundflächen Light -->
+    <color name="rd_bg_light">#FAF7F0</color>
+    <color name="rd_card_light">#FFFFFF</color>
+    <color name="rd_border_light">#E6DDC9</color>
+    <color name="rd_text_primary_light">#2B2620</color>
+    <color name="rd_text_secondary_light">#7A6F5C</color>
+
+    <!-- Gruppenfarben Light (Chip-Hintergrund / Akzent) -->
+    <color name="rd_group1_chip_light">#F3EAD8</color>
+    <color name="rd_group1_accent_light">#A3762F</color>
+
+    <color name="rd_group2_chip_light">#F0ECD8</color>
+    <color name="rd_group2_accent_light">#8A7A1F</color>
+
+    <color name="rd_group3_chip_light">#E9F0E6</color>
+    <color name="rd_group3_accent_light">#4A7A42</color>
+
+    <color name="rd_group4_chip_light">#F3E6DA</color>
+    <color name="rd_group4_accent_light">#A35A2F</color>
+
+    <color name="rd_group5_chip_light">#E6ECF3</color>
+    <color name="rd_group5_accent_light">#3F5F8A</color>
+
+    <color name="rd_group6_chip_light">#ECE6F3</color>
+    <color name="rd_group6_accent_light">#6A4F8A</color>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         Dark-Theme Basis: Anthrazit bis Schwarz + gedeckte Akzente
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- Grundflächen Dark -->
+    <color name="rd_bg_dark">#141414</color>
+    <color name="rd_card_dark">#1E1E1E</color>
+    <color name="rd_border_dark">#333333</color>
+    <color name="rd_text_primary_dark">#F0F0EE</color>
+    <color name="rd_text_secondary_dark">#9A9A96</color>
+
+    <!-- Gruppenfarben Dark (Chip-Hintergrund / Akzent) -->
+    <color name="rd_group1_chip_dark">#26241F</color>
+    <color name="rd_group1_accent_dark">#C9A26A</color>
+
+    <color name="rd_group2_chip_dark">#22221F</color>
+    <color name="rd_group2_accent_dark">#B0A25A</color>
+
+    <color name="rd_group3_chip_dark">#1F2420</color>
+    <color name="rd_group3_accent_dark">#7FA07A</color>
+
+    <color name="rd_group4_chip_dark">#241F1F</color>
+    <color name="rd_group4_accent_dark">#C08A6A</color>
+
+    <color name="rd_group5_chip_dark">#1F2124</color>
+    <color name="rd_group5_accent_dark">#7A92B0</color>
+
+    <color name="rd_group6_chip_dark">#201F24</color>
+    <color name="rd_group6_accent_dark">#9A8AB0</color>
+
+    <!-- Notfall — bleibt in beiden Modi kräftig rot -->
+    <color name="rd_danger_chip_dark">#8A2E22</color>
+    <color name="rd_danger_chip_light">#C0392B</color>
+    <color name="rd_danger_text">#FFE0D8</color>
+</resources>

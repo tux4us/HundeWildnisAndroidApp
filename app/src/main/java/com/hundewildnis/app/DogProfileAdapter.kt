@@ -6,6 +6,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.card.MaterialCardView
 import com.hundewildnis.app.databinding.ItemDogProfileBinding
 
@@ -24,7 +25,8 @@ class DogProfileAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(profile: DogProfile) {
-            val isDarkTheme = (binding.root.context.resources.configuration.uiMode and
+            val context = binding.root.context
+            val isDarkTheme = (context.resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
             val card = binding.root as MaterialCardView
@@ -51,55 +53,53 @@ class DogProfileAdapter(
                 binding.ivPhoto.setImageResource(R.drawable.ic_dog_placeholder)
             }
 
-            val buttonTextColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
-            val buttonStrokeColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+            setupActionGrids(profile)
+        }
 
-            listOf(
-                binding.btnView,
-                binding.btnEdit,
-                binding.btnQR,
-                binding.btnPDF,
-                binding.btnShare
-            ).forEach { button ->
-                button.setTextColor(buttonTextColor)
-                button.strokeColor = android.content.res.ColorStateList.valueOf(buttonStrokeColor)
-            }
-
-            binding.btnDelete.setTextColor(Color.WHITE)
+        private fun setupActionGrids(profile: DogProfile) {
+            val context = binding.root.context
             
-            // Notfall Button Styling
-            binding.btnEmergency.setOnClickListener { onEmergency(profile) }
+            // Standard Aktionen
+            val actionTiles = listOf(
+                StartTile("dog_view", R.drawable.ic_info, "Anzeigen"),
+                StartTile("dog_edit", R.drawable.ic_notes, "Bearbeiten"),
+                StartTile("dog_qr", R.drawable.ic_signal, "QR-Code"),
+                StartTile("dog_pdf", R.drawable.ic_notes, "PDF"),
+                StartTile("dog_share", R.drawable.ic_map_pin_share, "Teilen"),
+                StartTile("dog_delete", R.drawable.ic_remove, "Löschen")
+            )
 
-            binding.btnView.setOnClickListener { onView(profile) }
-            binding.btnEdit.setOnClickListener { onEdit(profile) }
-            binding.btnDelete.setOnClickListener { onDelete(profile) }
-            binding.btnShare.setOnClickListener {
-                PrivacyDialogHelper.showFieldSelectionDialog(
-                    context = binding.root.context,
-                    profile = profile,
-                    title = "📤 Teilen Datenauswahl"
-                ) { selectedFields ->
-                    onShare(profile, selectedFields)
+            val colorsActions = StartGroupColors.forGroup(context, 1) // Ocker/Gelb
+            binding.gridDogActions.layoutManager = GridLayoutManager(context, 3)
+            binding.gridDogActions.adapter = StartTileAdapter(
+                tiles = actionTiles,
+                chipColorRes = colorsActions.chipColorRes,
+                accentColorRes = colorsActions.accentColorRes,
+                onTileClick = { id ->
+                    when(id) {
+                        "dog_view" -> onView(profile)
+                        "dog_edit" -> onEdit(profile)
+                        "dog_qr" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, "📱 QR-Code Datenauswahl") { onQR(profile, it) }
+                        "dog_pdf" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, "📄 PDF Datenauswahl") { onPDF(profile, it) }
+                        "dog_share" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, "📤 Teilen Datenauswahl") { onShare(profile, it) }
+                        "dog_delete" -> onDelete(profile)
+                    }
                 }
-            }
-            binding.btnQR.setOnClickListener {
-                PrivacyDialogHelper.showFieldSelectionDialog(
-                    context = binding.root.context,
-                    profile = profile,
-                    title = "📱 QR-Code Datenauswahl"
-                ) { selectedFields ->
-                    onQR(profile, selectedFields)
-                }
-            }
-            binding.btnPDF.setOnClickListener {
-                PrivacyDialogHelper.showFieldSelectionDialog(
-                    context = binding.root.context,
-                    profile = profile,
-                    title = "📄 PDF Datenauswahl"
-                ) { selectedFields ->
-                    onPDF(profile, selectedFields)
-                }
-            }
+            )
+
+            // Notfall
+            val emergencyTiles = listOf(
+                StartTile("dog_emergency", R.drawable.ic_emergency, "🚨 NOTFALL", isDanger = true)
+            )
+
+            val colorsEmergency = StartGroupColors.forGroup(context, 4) // Blau (wird vom Adapter bei isDanger ignoriert)
+            binding.gridDogEmergency.layoutManager = GridLayoutManager(context, 1)
+            binding.gridDogEmergency.adapter = StartTileAdapter(
+                tiles = emergencyTiles,
+                chipColorRes = colorsEmergency.chipColorRes,
+                accentColorRes = colorsEmergency.accentColorRes,
+                onTileClick = { onEmergency(profile) }
+            )
         }
     }
 
