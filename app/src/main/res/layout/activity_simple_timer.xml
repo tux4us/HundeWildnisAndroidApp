@@ -113,7 +113,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnReset"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.App.Button.Outlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

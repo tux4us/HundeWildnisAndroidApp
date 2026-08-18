@@ -192,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:text="QR-Code anzeigen 📸"
                     app:cornerRadius="8dp"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
+                    style="@style/Widget.App.Button.Outlined" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

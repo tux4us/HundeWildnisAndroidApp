@@ -16,6 +16,33 @@
         <item name="android:minHeight">60dp</item>
     </style>
 
+    <!-- Outlined-Button-Variante: eigene Textfarbe nötig, da colorPrimary
+         app-weit auf die Hintergrundfarbe (rd_bg_light/rd_bg_dark) gemappt ist,
+         nicht auf eine Akzentfarbe. Material3s OutlinedButton-Default würde sonst
+         den Text in colorPrimary einfärben - im Dark-Modus praktisch unsichtbar
+         (fast schwarzer Text auf dunklem Grund). -->
+    <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="strokeColor">?attr/colorOnBackground</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- TextInputLayout (OutlinedBox): eigener boxStrokeColor nötig, da Material3s
+         Default den Rahmen über colorPrimary einfärbt - bei uns die Hintergrundfarbe,
+         nicht ein Akzent. Ohne diesen Fix "verschwindet" der Rahmen beim Fokussieren/
+         Tippen, weil er in der Hintergrundfarbe gezeichnet wird (fast unsichtbar). -->
+    <style name="Widget.App.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="hintTextColor">@color/rd_overlay_accent</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
+        <!-- Cursor-Farbe: app:cursorColor ist das korrekte Material-Components-
+             Attribut (API 28+), NICHT android:cursorColor (existiert nicht im
+             öffentlichen SDK). Auf niedrigeren API-Leveln greift automatisch
+             ?attr/colorControlActivated als Fallback. -->
+        <item name="cursorColor">@color/rd_overlay_accent</item>
+    </style>
+
     <!-- ════════════════════════════════════════════════════════════════ -->
     <!-- TEXT APPEARANCE STYLES (Punkt-Notation für Vererbung) -->
     <!-- ════════════════════════════════════════════════════════════════ -->
@@ -63,7 +90,7 @@
 
     <!-- Bottom Navigation Styling -->
     <style name="Widget.App.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">#4D8fad6f</item> <!-- 30% transparentes Grün -->
+        <item name="android:color">#4DA3762F</item> <!-- 30% transparenter Ocker-Akzent -->
         <item name="marginHorizontal">12dp</item>
     </style>
 

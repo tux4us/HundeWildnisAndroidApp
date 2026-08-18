@@ -41,10 +41,10 @@ abstract class SecureBaseActivity : AppCompatActivity() {
         )
 
         // ✅ NEU: Globaler HOME Button in der Toolbar (über MenuProvider)
-        setupGlobalHomeButton()
+        setupGlobalHomeButton(isDark)
     }
 
-    private fun setupGlobalHomeButton() {
+    private fun setupGlobalHomeButton(isDark: Boolean) {
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 // Home-Icon nur anzeigen, wenn wir NICHT in der StartActivity sind
@@ -52,9 +52,16 @@ abstract class SecureBaseActivity : AppCompatActivity() {
                     val item = menu.add(Menu.NONE, R.id.action_home, Menu.NONE, "Home")
                     item.setIcon(R.drawable.ic_home)
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                    
-                    // Weißes Icon-Tinting (passend zu anderen Icons)
-                    item.icon?.setTint(android.graphics.Color.WHITE)
+
+                    // Themenkonformes Icon-Tinting: Weiß im Dark-Theme, Dunkel im Light-Theme.
+                    // Vorher war das Icon hartcodiert weiß und dadurch im hellen Modus
+                    // auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
+                    val iconColor = if (isDark) {
+                        android.graphics.Color.WHITE
+                    } else {
+                        androidx.core.content.ContextCompat.getColor(this@SecureBaseActivity, R.color.rd_text_primary_light)
+                    }
+                    item.icon?.setTint(iconColor)
                 }
             }
 

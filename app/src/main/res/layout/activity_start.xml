@@ -404,7 +404,7 @@
         app:backgroundTint="?attr/colorPrimary"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
-        app:itemRippleColor="#338fad6f"
+        app:itemRippleColor="@color/rd_ripple_accent"
         app:itemActiveIndicatorStyle="@style/Widget.App.BottomNav.Indicator"
         app:itemTextAppearanceActive="@style/TextAppearance.App.BottomNav.Active"
         app:itemTextAppearanceInactive="@style/TextAppearance.App.BottomNav.Inactive"

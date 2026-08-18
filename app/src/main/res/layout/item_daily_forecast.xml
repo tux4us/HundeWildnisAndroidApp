@@ -5,7 +5,7 @@
     android:layout_width="110dp"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    app:cardBackgroundColor="#2d2d2d"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mo"
-            android:textColor="#8fad6f"
+            android:textColor="@color/rd_overlay_accent"
             android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:layout_marginBottom="2dp" />

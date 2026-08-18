@@ -15,8 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -184,7 +184,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnTestConnection"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/Widget.App.Button.Outlined"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Verbindung testen" />
@@ -323,7 +323,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:visibility="gone"
-                            android:indeterminateTint="#2d5016"
+                            android:indeterminateTint="@color/rd_overlay_accent"
                             android:layout_marginBottom="8dp" />
 
                         <TextView

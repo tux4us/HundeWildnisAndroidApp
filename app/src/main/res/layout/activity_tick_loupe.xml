@@ -45,7 +45,7 @@
                 android:paddingRight="16dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:background="#CC2d5016"
+                android:background="@color/rd_label_overlay"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"

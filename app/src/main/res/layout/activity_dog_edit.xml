@@ -14,11 +14,12 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1B3A0A"
-            app:titleTextColor="#FFFFFF" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollViewDogEdit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -78,7 +79,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnRemovePhoto"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/Widget.App.Button.Outlined"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -560,7 +561,7 @@
                 android:layout_height="wrap_content"
                 android:text="📋 Schnellauswahl: Profil wählen"
                 android:textSize="@dimen/text_body_medium"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.App.Button.Outlined"
                 android:layout_marginBottom="24dp" />
 
             <!-- Slider 1: Grundtemperament -->
@@ -844,7 +845,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Besonderheiten im Wesen (optional)"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.App.TextInputLayout"
                 android:layout_marginBottom="24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -857,11 +858,6 @@
                     android:inputType="textMultiLine|textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- EXTRA SPACE FOR KEYBOARD -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="100dp" />
-
             <!-- BUTTONS -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -872,7 +868,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCancel"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.App.Button.Outlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -885,9 +881,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="💾 Speichern"
-                    app:backgroundTint="#2d5016"
+                    app:backgroundTint="?attr/colorSecondary"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
+
+            <!-- EXTRA SPACE FOR KEYBOARD: liegt bewusst NACH den Buttons,
+                 damit beim Fokussieren des Notizfeldes weit genug nach unten
+                 gescrollt werden kann, um es komplett über der Tastatur zu
+                 zeigen. 400dp deckt auch große Tastaturen (z.B. mit
+                 Emoji-Leiste oder Vorschlagszeile) sicher ab. -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="400dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

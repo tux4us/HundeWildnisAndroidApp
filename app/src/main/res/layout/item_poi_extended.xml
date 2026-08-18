@@ -6,7 +6,7 @@
     android:layout_margin="6dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="3dp"
-    app:cardBackgroundColor="#3d3d3d">
+    app:cardBackgroundColor="@color/rd_surface_alt">
 
     <LinearLayout
         android:id="@+id/poiContainer"
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:text="450 m"
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="#8fad6f"
+                        android:textColor="@color/rd_overlay_accent"
                         android:textStyle="bold" />
 
                     <TextView
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="Start ▶"
                 android:textSize="@dimen/text_body_medium"
-                android:textColor="#8fad6f"
+                android:textColor="@color/rd_overlay_accent"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
@@ -207,7 +207,7 @@
                     android:layout_weight="1"
                     android:text="www.example.com"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#8fad6f"
+                    android:textColor="@color/rd_overlay_accent"
                     android:autoLink="web" />
             </LinearLayout>
 

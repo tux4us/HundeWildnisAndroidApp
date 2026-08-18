@@ -2,7 +2,6 @@
 <resources>
     <color name="super_dark_green">#000f00</color>
     <color name="dark_green">#003b00</color>
-    <color name="medium_green">#4a6135</color>
     <color name="light_green">#5a7145</color>
     <color name="accent_green">#6d8a51</color>
 
@@ -20,6 +19,5 @@
     <color name="search_field_text">#000000</color>
     <color name="search_field_hint">#999999</color>
 
-    <color name="text_input_stroke_color">@color/rd_group3_accent_light</color>
     <color name="text_input_hint_color">@color/rd_group3_accent_light</color>
 </resources>

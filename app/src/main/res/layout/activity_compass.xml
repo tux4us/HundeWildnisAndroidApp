@@ -63,7 +63,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="32dp"
                 android:text="0°"
-                android:textColor="#8fad6f"
+                android:textColor="@color/rd_overlay_accent"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:fontFamily="@font/stencil" />

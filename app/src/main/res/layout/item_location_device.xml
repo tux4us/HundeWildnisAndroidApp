@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="#3d3d3d"
+    app:cardBackgroundColor="@color/rd_surface_alt"
     app:cardCornerRadius="12dp"
     app:strokeWidth="0dp"
     android:clickable="true"
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-- km"
-                    android:textColor="#8fad6f"
+                    android:textColor="@color/rd_overlay_accent"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -114,11 +114,11 @@
                 app:icon="@drawable/ic_my_location"
                 app:iconSize="16dp"
                 android:textColor="#FFFFFF"
-                app:backgroundTint="#2d5016" />
+                app:backgroundTint="?attr/colorSecondary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnItemShare"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.App.Button.Outlined"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -126,12 +126,11 @@
                 android:layout_marginEnd="4dp"
                 android:text="🔗 Teilen"
                 android:textSize="12sp"
-                android:textColor="#FFFFFF"
-                app:strokeColor="#8fad6f" />
+                app:strokeColor="@color/rd_overlay_accent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnItemDelete"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.App.Button.Outlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🗑️"

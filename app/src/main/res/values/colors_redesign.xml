@@ -8,7 +8,7 @@
     <!-- Grundflächen Light -->
     <color name="rd_bg_light">#FAF7F0</color>
     <color name="rd_card_light">#FFFFFF</color>
-    <color name="rd_border_light">#E6DDC9</color>
+    <color name="rd_border_light">#9C8E6E</color>
     <color name="rd_text_primary_light">#2B2620</color>
     <color name="rd_text_secondary_light">#7A6F5C</color>
 
@@ -38,7 +38,7 @@
     <!-- Grundflächen Dark -->
     <color name="rd_bg_dark">#141414</color>
     <color name="rd_card_dark">#1E1E1E</color>
-    <color name="rd_border_dark">#333333</color>
+    <color name="rd_border_dark">#6B6B6B</color>
     <color name="rd_text_primary_dark">#F0F0EE</color>
     <color name="rd_text_secondary_dark">#9A9A96</color>
 
@@ -65,4 +65,23 @@
     <color name="rd_danger_chip_dark">#8A2E22</color>
     <color name="rd_danger_chip_light">#C0392B</color>
     <color name="rd_danger_text">#FFE0D8</color>
+
+    <!-- Modus-automatischer Alias für direkte XML-Verwendung (z.B. Toolbar-Hintergrund).
+         Wert hier = Light-Variante; values-night/colors_redesign.xml überschreibt mit Dark-Variante. -->
+    <color name="rd_danger_toolbar">#C0392B</color>
+
+    <!-- Weitere modus-automatische Aliase für direkte XML-Verwendung
+         (OutlinedButton-Text/-Rand, ProgressBar-Tint, Kartenlabel-Overlays).
+         Wert hier = Light-Variante; values-night/colors_redesign.xml überschreibt mit Dark-Variante. -->
+    <color name="rd_overlay_accent">#A3762F</color>
+    <color name="rd_label_overlay">#CCA3762F</color>
+    <color name="rd_label_overlay_strong">#DDA3762F</color>
+    <color name="rd_ripple_accent">#33A3762F</color>
+
+    <!-- Leicht abgesetzte innere Fläche innerhalb einer Karte (Header-Leisten, Divider-Container).
+         Ersetzt vormals hartcodiertes #3d3d3d, das im Light-Modus zu dunkel wirkte. -->
+    <color name="rd_surface_alt">#F0EADC</color>
+
+    <!-- Neutrales, halbtransparentes Overlay für auf Kartenansichten schwebende Buttons/Controls -->
+    <color name="rd_map_overlay">#DDFFFFFF</color>
 </resources>

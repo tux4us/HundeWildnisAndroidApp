@@ -1,6 +1,8 @@
 package com.hundewildnis.app
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hundewildnis.app.databinding.ActivityIntervalTimerSetupBinding
 
@@ -94,7 +97,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
             title = "⏱️ Intervall-Timer"
             setDisplayHomeAsUpEnabled(true)
         }
-        
+
         // Design-Anpassung (Gruppe 2 = Index 1)
         val colors = StartGroupColors.forGroup(this, 1)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -103,12 +106,12 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
         val textColor = ContextCompat.getColor(this, if (isDark) R.color.rd_text_primary_dark else R.color.rd_text_primary_light)
 
         binding.toolbar.navigationIcon?.setTint(textColor)
-        
+
         // Hinweis-Karten einfärben
         binding.cardCharacterHint.setCardBackgroundColor(chipColor)
         binding.tvCharacterHint.setTextColor(textColor)
         binding.cardCharacterHint.setStrokeColor(ColorStateList.valueOf(accentColor))
-        
+
         binding.cardExplanation.setCardBackgroundColor(chipColor)
         binding.cardExplanation.setStrokeColor(ColorStateList.valueOf(accentColor))
         binding.tvExplanationTitle.setTextColor(accentColor)

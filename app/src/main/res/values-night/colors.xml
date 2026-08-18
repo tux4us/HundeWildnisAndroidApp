@@ -6,6 +6,5 @@
     <color name="search_field_text">#FFFFFF</color>
     <color name="search_field_hint">#999999</color>
 
-    <color name="text_input_stroke_color">#FFFFFF</color>
     <color name="text_input_hint_color">#FFFFFF</color>
 </resources>

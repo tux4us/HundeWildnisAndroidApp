@@ -110,6 +110,20 @@ class DogEditActivity : SecureBaseActivity() {
             binding.sliderFrustration.value = profile!!.characterFrustration.toFloat()
             binding.etCharacterNotes.setText(profile!!.characterNotes)
         }
+
+        // Feld liegt weit unten im Formular und wird beim Fokussieren von der
+        // Tastatur verdeckt. Statt die Tastaturhöhe zu berechnen (fragil,
+        // von Gerät/Timing abhängig), gibt es am Ende des Layouts einen
+        // großzügigen Spacer (400dp, siehe activity_dog_edit.xml). Dadurch
+        // reicht simples Scrollen ans Seitenende, um das Feld sicher über
+        // jeder Tastatur zu platzieren.
+        binding.etCharacterNotes.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.scrollViewDogEdit.post {
+                    binding.scrollViewDogEdit.fullScroll(View.FOCUS_DOWN)
+                }
+            }
+        }
     }
 
     private fun showQuickProfileDialog() {

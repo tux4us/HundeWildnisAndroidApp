@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Läufigkeit #1"
-                android:textColor="#8fad6f"
+                android:textColor="@color/rd_overlay_accent"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp" />
@@ -236,7 +236,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#3d3d3d"
+                android:background="@color/rd_surface_alt"
                 android:layout_marginBottom="12dp" />
 
             <Switch

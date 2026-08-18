@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:text="Jetzt nicht"
             android:textSize="@dimen/text_body_medium"
-            style="@style/Widget.Material3.Button.OutlinedButton" />
+            style="@style/Widget.App.Button.Outlined" />
 
     </LinearLayout>
 

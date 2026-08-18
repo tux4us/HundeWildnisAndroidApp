@@ -83,7 +83,13 @@ class MainActivity : BaseBottomNavActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "HundeWildnis"
-        binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)
+        binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)?.apply {
+            // Themenkonformes Tinting: das Icon war fest auf Weiß kodiert und dadurch
+            // im hellen Modus auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
+            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+            setTint(if (isDark) Color.WHITE else Color.parseColor("#2B2620"))
+        }
         contentCache = ContentCache(this)
         setupRecyclerViews()
         setupButtons()
