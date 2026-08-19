@@ -36,8 +36,8 @@ abstract class SecureBaseActivity : AppCompatActivity() {
 
         // FLAG_SECURE: Blockiert Screenshots & Screen Recording
         window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
+           WindowManager.LayoutParams.FLAG_SECURE,
+           WindowManager.LayoutParams.FLAG_SECURE
         )
 
         // ✅ NEU: Globaler HOME Button in der Toolbar (über MenuProvider)

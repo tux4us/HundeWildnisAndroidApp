@@ -301,6 +301,21 @@ class PlantDetailActivity : SecureBaseActivity() {
         container: LinearLayout, items: List<String>,
         bulletColor: String, textColor: String
     ) {
+        val resolvedTextColor = if (textColor.startsWith("?")) {
+            // Attribut auflösen (z.B. ?android:attr/textColorPrimary)
+            val attr = if (textColor.contains("textColorSecondary")) {
+                android.R.attr.textColorSecondary
+            } else {
+                android.R.attr.textColorPrimary
+            }
+            val typedArray = theme.obtainStyledAttributes(intArrayOf(attr))
+            val color = typedArray.getColor(0, Color.BLACK)
+            typedArray.recycle()
+            color
+        } else {
+            Color.parseColor(textColor)
+        }
+
         container.removeAllViews()
         items.forEach { item ->
             val row = LinearLayout(this).apply {
@@ -312,14 +327,7 @@ class PlantDetailActivity : SecureBaseActivity() {
             })
             row.addView(TextView(this).apply {
                 this.text = item; textSize = 14f
-                if (textColor.startsWith("?")) {
-                    // Attribut auflösen
-                    val typedValue = android.util.TypedValue()
-                    theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
-                    setTextColor(typedValue.data)
-                } else {
-                    setTextColor(Color.parseColor(textColor))
-                }
+                setTextColor(resolvedTextColor)
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             })
