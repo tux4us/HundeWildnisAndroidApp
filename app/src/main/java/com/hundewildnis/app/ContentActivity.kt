@@ -211,6 +211,15 @@ class ContentActivity : SecureBaseActivity() {
 
     // ✅ NEU: Zurück zur MainActivity mit richtiger View
     private fun returnToMainActivity() {
+        if (sourceView == MainActivity.VIEW_START) {
+            val intent = Intent(this, StartActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            startActivity(intent)
+            finish()
+            return
+        }
+
         val intent = Intent(this, MainActivity::class.java).apply {
             // Zur richtigen Ansicht zurück (Blog/Pages/Courses)
             putExtra("INITIAL_VIEW", sourceView)

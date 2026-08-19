@@ -62,9 +62,11 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
 
         // Symptome
         binding.tvSymptoms.text = instruction.symptoms.joinToString("\n") { "• $it" }
+        binding.tvSymptoms.setTextColor(android.graphics.Color.parseColor("#B71C1C"))
 
         // Sofortmaßnahmen
         binding.tvImmediateActions.text = instruction.immediateActions.joinToString("\n")
+        binding.tvImmediateActions.setTextColor(android.graphics.Color.parseColor("#1B5E20"))
 
         // Was TUN
         binding.tvDoList.text = instruction.doList.joinToString("\n")

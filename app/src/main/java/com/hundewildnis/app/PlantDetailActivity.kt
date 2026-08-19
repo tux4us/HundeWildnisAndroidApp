@@ -249,13 +249,13 @@ class PlantDetailActivity : SecureBaseActivity() {
     }
 
     private fun renderIdentification(plant: ToxicPlant) {
-        addBulletList(binding.layoutIdentification, plant.identificationFeatures, "#4CAF50", "#CCCCCC")
+        addBulletList(binding.layoutIdentification, plant.identificationFeatures, "#4CAF50", "?android:attr/textColorPrimary")
         binding.tvHabitat.text = "📍 Vorkommen: ${plant.habitat.joinToString(", ")}"
     }
 
     private fun renderSymptoms(plant: ToxicPlant) {
         addBulletList(binding.layoutSymptoms, plant.symptoms,
-            String.format("#%06X", 0xFFFFFF and Color.parseColor(plant.toxicityLevel.color)), "#DDDDDD")
+            String.format("#%06X", 0xFFFFFF and Color.parseColor(plant.toxicityLevel.color)), "#FFCDD2")
     }
 
     private fun renderFirstAid(plant: ToxicPlant) {
@@ -263,7 +263,7 @@ class PlantDetailActivity : SecureBaseActivity() {
         plant.firstAidSteps.forEachIndexed { idx, step ->
             binding.layoutFirstAid.addView(TextView(this).apply {
                 text = "${idx + 1}. $step"; textSize = 14f
-                setTextColor(Color.parseColor("#DDDDDD")); setPadding(0, 8, 0, 8)
+                setTextColor(Color.parseColor("#C8E6C9")); setPadding(0, 8, 0, 8)
             })
         }
         binding.cardVetRequired.visibility = if (plant.mustCallVet) View.VISIBLE else View.GONE
@@ -312,7 +312,14 @@ class PlantDetailActivity : SecureBaseActivity() {
             })
             row.addView(TextView(this).apply {
                 this.text = item; textSize = 14f
-                setTextColor(Color.parseColor(textColor))
+                if (textColor.startsWith("?")) {
+                    // Attribut auflösen
+                    val typedValue = android.util.TypedValue()
+                    theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
+                    setTextColor(typedValue.data)
+                } else {
+                    setTextColor(Color.parseColor(textColor))
+                }
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             })

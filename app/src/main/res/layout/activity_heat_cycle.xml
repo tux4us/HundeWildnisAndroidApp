@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:background="#1a1a1a">
+    android:background="?android:attr/colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="Zeitraum"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
 
@@ -84,12 +84,12 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:padding="10dp"
                         android:text="@string/tap_to_select"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="14sp"
                         android:clickable="true"
                         android:focusable="true"
                         android:drawableEnd="@android:drawable/ic_menu_my_calendar"
-                        app:drawableTint="#FFFFFF" />
+                        app:drawableTint="?android:attr/textColorPrimary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -112,12 +112,12 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:padding="10dp"
                         android:text="@string/tap_to_select_optional"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="14sp"
                         android:clickable="true"
                         android:focusable="true"
                         android:drawableEnd="@android:drawable/ic_menu_my_calendar"
-                        app:drawableTint="#FFFFFF" />
+                        app:drawableTint="?android:attr/textColorPrimary" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:text="Intensität"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
 
@@ -145,7 +145,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:text="Leicht" />
 
                 <RadioButton
@@ -153,7 +153,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:text="Mittel"
                     android:checked="true" />
 
@@ -162,7 +162,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:text="Stark" />
             </RadioGroup>
 
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:text="Körperliche Symptome"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
 
@@ -183,8 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="z.B. Schwellung, Blutung, Verhalten …"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#666666"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textMultiLine"
                 android:minLines="3"
                 android:gravity="top"
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:text="Verhaltensmerkmale"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="15sp"
                 android:layout_marginBottom="4dp" />
 
@@ -223,8 +223,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Weitere Verhaltensnotizen …"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#666666"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textMultiLine"
                 android:minLines="2"
                 android:gravity="top"
@@ -244,7 +244,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Scheinträchtigkeit beobachtet"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="15sp"
                 android:layout_marginBottom="8dp" />
 
@@ -277,8 +277,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Weitere Notizen zur Scheinträchtigkeit …"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#666666"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColorHint="?android:attr/textColorSecondary"
                     android:inputType="textMultiLine"
                     android:minLines="2"
                     android:gravity="top"

@@ -99,9 +99,17 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
     }
 
     private fun openPodcast() {
+        val sourceView = when (getCurrentNavigationItemId()) {
+            R.id.nav_blog -> MainActivity.VIEW_BLOG
+            R.id.nav_pages -> MainActivity.VIEW_PAGES
+            R.id.nav_courses -> MainActivity.VIEW_COURSES
+            R.id.nav_home -> MainActivity.VIEW_START
+            else -> MainActivity.VIEW_BLOG
+        }
         startActivity(Intent(this, ContentActivity::class.java).apply {
             putExtra("url", "https://wildnislehrer.com/podcasts-audio-video/")
             putExtra("title", "HundeWildnis Podcast")
+            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, sourceView)
         })
     }
 

@@ -52,6 +52,7 @@ class MainActivity : BaseBottomNavActivity() {
         const val VIEW_BLOG = 0
         const val VIEW_PAGES = 1
         const val VIEW_COURSES = 2
+        const val VIEW_START = 3
         const val VIEW_PODCASTS = 4
     }
 

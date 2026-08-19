@@ -323,6 +323,7 @@ class StartActivity : BaseBottomNavActivity() {
         startActivity(Intent(this, ContentActivity::class.java).apply {
             putExtra("url", "https://wildnislehrer.com/datenschutzerklaerung/")
             putExtra("title", "Datenschutzerklärung")
+            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, MainActivity.VIEW_START)
         })
     }
 
@@ -653,7 +654,11 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun openWebView(url: String, title: String) {
-        startActivity(Intent(this, ContentActivity::class.java).apply { putExtra("url", url); putExtra("title", title) })
+        startActivity(Intent(this, ContentActivity::class.java).apply {
+            putExtra("url", url)
+            putExtra("title", title)
+            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, MainActivity.VIEW_START)
+        })
     }
 
     // ════════════════════════════════════════════════════════════════

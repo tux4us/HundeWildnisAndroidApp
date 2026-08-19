@@ -57,6 +57,8 @@ class PlantListAdapter(
             Color.parseColor(plant.toxicityLevel.color)
         )
 
+        holder.tvToxicity.setTextColor(Color.parseColor(plant.toxicityLevel.color))
+
         holder.card.setOnClickListener { onClick(plant) }
     }
 

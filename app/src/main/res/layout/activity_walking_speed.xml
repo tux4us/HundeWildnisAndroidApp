@@ -99,9 +99,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp">
-                <RadioButton android:id="@+id/radioSpeed25" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wege- und Geländetraining" android:textSize="13sp" app:buttonTint="?attr/colorSecondary" />
-                <RadioButton android:id="@+id/radioSpeed30" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alltags- und Strassentraining" android:textSize="13sp" android:checked="true" app:buttonTint="?attr/colorSecondary" />
-                <RadioButton android:id="@+id/radioSpeed40" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wandertraining" android:textSize="13sp" app:buttonTint="?attr/colorSecondary" />
+                <RadioButton android:id="@+id/radioSpeed25" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wege- und Geländetraining" android:textSize="13sp" />
+                <RadioButton android:id="@+id/radioSpeed30" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alltags- und Strassentraining" android:textSize="13sp" android:checked="true" />
+                <RadioButton android:id="@+id/radioSpeed40" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wandertraining" android:textSize="13sp" />
             </RadioGroup>
 
             <!-- Messintervall -->
@@ -118,8 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp">
-                <RadioButton android:id="@+id/radioInterval30" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle 30 Sekunden" android:textSize="13sp" android:checked="true" app:buttonTint="?attr/colorSecondary" />
-                <RadioButton android:id="@+id/radioInterval60" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle 60 Sekunden" android:textSize="13sp" app:buttonTint="?attr/colorSecondary" />
+                <RadioButton android:id="@+id/radioInterval30" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle 30 Sekunden" android:textSize="13sp" android:checked="true" />
+                <RadioButton android:id="@+id/radioInterval60" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle 60 Sekunden" android:textSize="13sp" />
             </RadioGroup>
 
             <!-- Benachrichtigungsoptionen -->
