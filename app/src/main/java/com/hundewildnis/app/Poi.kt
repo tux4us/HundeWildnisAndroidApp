@@ -152,10 +152,13 @@ object POICategories {
     )
 
     val ALL_CATEGORIES = listOf(
-        Category(name = "Hundeauslauf",      icon = "🐕", queries = listOf("leisure=dog_park", "amenity=animal_training", "animal_training=dog")),
+        Category(name = "Hundepark/-sport",      icon = "🐕", queries = listOf("leisure=dog_park")),
+        Category(name = "Hundetraining",     icon = "🐩", queries = listOf("amenity=animal_training", "animal_training=dog")),
+        Category(name = "Leinenzwang",       icon = "🦮", queries = listOf("dog=leashed", "dog=leash")),
+        Category(name = "Hundeverbot",       icon = "🚫", queries = listOf("dog=no")),
         Category(name = "Hundebadestelle",   icon = "🐾", queries = listOf("dog=designated", "dog=yes")),
-        Category(name = "Hundetoiletten",    icon = "🚽", queries = listOf("amenity=dog_toilet", "amenity=dog_waste_bin", "waste=dog_excrement", "amenity=waste_basket")),
-        Category(name = "Hundebeutel",       icon = "💩", queries = listOf("amenity=waste_basket", "waste=dog_excrement", "vending=excrement_bags")),
+        Category(name = "Abfalleimer",       icon = "🗑️", queries = listOf("amenity=waste_basket", "amenity=dog_waste_bin", "waste=dog_excrement")),
+        Category(name = "Hundekotbeutel",    icon = "💩", queries = listOf("vending=excrement_bags")),
         Category(name = "Tierarzt",          icon = "🏥", queries = listOf("amenity=veterinary"), color = "#aa0000"),
         Category(name = "Tierbedarf",        icon = "🛒", queries = listOf("shop=pet")),
         Category(name = "Tierheim",          icon = "🏠", queries = listOf("amenity=animal_shelter", "amenity=animal_boarding")),

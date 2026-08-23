@@ -142,7 +142,21 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 setLocationUpdateMinDistance(5f)
             },
             binding.mapView
-        ).apply { enableMyLocation() }
+        ).apply {
+            enableMyLocation()
+            // Blauer Pfeil für aktuellen Standort
+            val arrowIcon = ContextCompat.getDrawable(this@NasenarbeitMapActivity, R.drawable.ic_location_arrow_blue)
+            if (arrowIcon != null) {
+                val bmp = android.graphics.Bitmap.createBitmap(
+                    arrowIcon.intrinsicWidth, arrowIcon.intrinsicHeight, android.graphics.Bitmap.Config.ARGB_8888
+                )
+                val canvas = android.graphics.Canvas(bmp)
+                arrowIcon.setBounds(0, 0, canvas.width, canvas.height)
+                arrowIcon.draw(canvas)
+                setPersonIcon(bmp)
+                setDirectionIcon(bmp)
+            }
+        }
         binding.mapView.overlays.add(myLocationOverlay)
 
         val receiver = object : org.osmdroid.events.MapEventsReceiver {

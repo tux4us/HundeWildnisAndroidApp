@@ -140,17 +140,17 @@ class LocationShareActivity : SecureBaseActivity() {
         myLocationOverlay = MyLocationNewOverlay(provider, binding.mapView).apply {
             enableMyLocation()
             setDrawAccuracyEnabled(true)
-            // Eigenes Icon statt Standard-Pfeil
-            val personIcon = ContextCompat.getDrawable(this@LocationShareActivity, R.drawable.ic_my_location)
-            if (personIcon != null) {
+            // Blauer Pfeil statt weißem Icon/Standard-Pfeil
+            val arrowIcon = ContextCompat.getDrawable(this@LocationShareActivity, R.drawable.ic_location_arrow_blue)
+            if (arrowIcon != null) {
                 val bmp = android.graphics.Bitmap.createBitmap(
-                    personIcon.intrinsicWidth.takeIf { it > 0 } ?: 96,
-                    personIcon.intrinsicHeight.takeIf { it > 0 } ?: 96,
+                    arrowIcon.intrinsicWidth.takeIf { it > 0 } ?: 96,
+                    arrowIcon.intrinsicHeight.takeIf { it > 0 } ?: 96,
                     android.graphics.Bitmap.Config.ARGB_8888
                 )
                 val canvas = android.graphics.Canvas(bmp)
-                personIcon.setBounds(0, 0, canvas.width, canvas.height)
-                personIcon.draw(canvas)
+                arrowIcon.setBounds(0, 0, canvas.width, canvas.height)
+                arrowIcon.draw(canvas)
                 setPersonIcon(bmp)
                 setDirectionIcon(bmp)
             }

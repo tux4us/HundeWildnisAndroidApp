@@ -76,7 +76,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private var currentPOIMarker: Marker? = null
     private var currentRoutePolyline: Polyline? = null
-    private var userLocationMarker: Marker? = null
     private var currentRouteDistance: Double = 0.0
     private var currentRouteDuration: Double = 0.0
 
@@ -201,8 +200,21 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 setLocationUpdateMinDistance(MIN_DISTANCE_CHANGE)
             },
             binding.mapView
-        )
-        myLocationOverlay.enableMyLocation()
+        ).apply {
+            enableMyLocation()
+            // Blauer Richtungspfeil für das Overlay
+            val arrowIcon = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_location_arrow_blue)
+            if (arrowIcon != null) {
+                val bmp = android.graphics.Bitmap.createBitmap(
+                    arrowIcon.intrinsicWidth, arrowIcon.intrinsicHeight, android.graphics.Bitmap.Config.ARGB_8888
+                )
+                val canvas = android.graphics.Canvas(bmp)
+                arrowIcon.setBounds(0, 0, canvas.width, canvas.height)
+                arrowIcon.draw(canvas)
+                setPersonIcon(bmp)
+                setDirectionIcon(bmp)
+            }
+        }
         binding.mapView.overlays.add(myLocationOverlay)
     }
 
@@ -352,27 +364,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun updateLocation(location: Location) {
         currentLocation = location
-        updateUserLocationMarker(location)
         if (isFirstLocation) { centerMapOnLocation(location); isFirstLocation = false }
         binding.progressBar.visibility = View.GONE
         binding.coordinatesText.text = String.format("📍 %.4f°, %.4f°", location.latitude, location.longitude)
         binding.shareButton.isEnabled = true
-    }
-
-    private fun updateUserLocationMarker(location: Location) {
-        val position = GeoPoint(location.latitude, location.longitude)
-        if (userLocationMarker == null) {
-            userLocationMarker = Marker(binding.mapView).apply {
-                this.position = position
-                title = "Dein Standort"
-                icon = resources.getDrawable(R.drawable.ic_my_location, null)
-                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            }
-            binding.mapView.overlays.add(userLocationMarker)
-        } else {
-            userLocationMarker?.position = position
-        }
-        binding.mapView.invalidate()
     }
 
     private fun centerMapOnLocation(location: Location) {
@@ -2139,10 +2134,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val query = """
         [out:json][timeout:25];
         (
-          node(around:500,$coordStr)[amenity~"bench|drinking_water|toilets|bbq|dog_toilet|dog_waste_bin|waste_basket"];
+          node(around:500,$coordStr)[amenity~"bench|drinking_water|toilets|bbq|dog_toilet|dog_waste_bin|waste_basket|animal_training"];
           node(around:500,$coordStr)[waste=dog_excrement];
           node(around:500,$coordStr)[leisure=firepit];
           node(around:500,$coordStr)[natural=spring];
+          node(around:500,$coordStr)[dog=no];
+          way(around:500,$coordStr)[dog=no];
+          node(around:500,$coordStr)[dog=leashed];
+          way(around:500,$coordStr)[dog=leashed];
           node(around:1000,$coordStr)[tourism=viewpoint];
           node(around:1000,$coordStr)[natural=peak];
           node(around:1000,$coordStr)[amenity=shelter];
@@ -2208,9 +2207,12 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         tags["amenity"] == "drinking_water"  -> "💧" to "Trinkwasser"
         tags["natural"] == "spring"          -> "💧" to "Quelle"
         tags["amenity"] == "toilets"         -> "🚻" to "Toilette"
-        tags["amenity"] == "dog_toilet"      -> "🚽" to "Hundetoilette"
-        tags["amenity"] == "dog_waste_bin"   -> "🚽" to "Hundetoilette"
-        tags["waste"] == "dog_excrement"     -> "🚽" to "Hundetoilette"
+        tags["amenity"] == "dog_toilet"      -> "🗑️" to "Hundetoilette"
+        tags["amenity"] == "dog_waste_bin"   -> "🗑️" to "Hundetoilette"
+        tags["waste"] == "dog_excrement"     -> "🗑️" to "Hundetoilette"
+        tags["amenity"] == "animal_training" || tags["animal_training"] == "dog" -> "🐩" to "Hundetraining"
+        tags["dog"] == "no"                  -> "🚫" to "Hundeverbot"
+        tags["dog"] == "leashed" || tags["dog"] == "leash" -> "🦮" to "Leinenzwang"
         tags["amenity"] == "waste_basket"    -> "🗑️" to "Mülleimer"
         tags["leisure"] == "firepit"         -> "🔥" to "Feuerstelle"
         tags["amenity"] == "bbq"             -> "🔥" to "Grillplatz"
@@ -2247,6 +2249,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         })
 
         pois.forEach { poi ->
+            val dp = resources.displayMetrics.density
+            val isRestricted = poi.category == "Hundeverbot" || poi.category == "Leinenzwang"
+            
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity     = Gravity.CENTER_VERTICAL
@@ -2255,9 +2260,19 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 ).also { it.bottomMargin = (6 * dp).toInt() }
                 setOnClickListener { showRoutePOIDialog(poi) }
-                setPadding(0, (4 * dp).toInt(), 0, (4 * dp).toInt())
+                setPadding((if (isRestricted) 8 * dp else 0f).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
                 isClickable  = true
                 isFocusable  = true
+                
+                if (isRestricted) {
+                    val bgColor = if (poi.category == "Hundeverbot") 
+                        Color.argb(40, 255, 0, 0) else Color.argb(40, 255, 152, 0)
+                    val bg = android.graphics.drawable.GradientDrawable().apply {
+                        setColor(bgColor)
+                        cornerRadius = 4 * dp
+                    }
+                    background = bg
+                }
             }
 
             row.addView(TextView(this).apply {
@@ -2276,26 +2291,34 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             infoCol.addView(TextView(this).apply {
                 text      = poi.name
                 textSize  = 11.5f
-                setTextColor(Color.parseColor("#CCCCCC"))
+                setTextColor(if (isRestricted) Color.WHITE else Color.parseColor("#CCCCCC"))
                 maxLines  = 1
                 ellipsize = android.text.TextUtils.TruncateAt.END
+                typeface = if (isRestricted) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
             })
             infoCol.addView(TextView(this).apply {
                 text     = "${poi.category} • ${formatDistance(poi.distance)}"
                 textSize = 10f
-                setTextColor(Color.parseColor("#888888"))
+                setTextColor(if (isRestricted) Color.parseColor("#EEEEEE") else Color.parseColor("#888888"))
             })
 
             row.addView(infoCol)
             binding.routePOIsContainer.addView(row)
 
-            // Trennlinie
-            binding.routePOIsContainer.addView(View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1
-                ).also { it.bottomMargin = (4 * dp).toInt() }
-                setBackgroundColor(Color.parseColor("#484848"))
-            })
+            // Trennlinie (nur wenn nicht hervorgehoben)
+            if (!isRestricted) {
+                binding.routePOIsContainer.addView(View(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 1
+                    ).also { it.bottomMargin = (4 * dp).toInt() }
+                    setBackgroundColor(Color.parseColor("#484848"))
+                })
+            } else {
+                // Abstand nach hervorgehobenem Element
+                binding.routePOIsContainer.addView(View(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(1, (4 * dp).toInt())
+                })
+            }
         }
     }
 
