@@ -220,8 +220,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupPOIList() {
         binding.poiRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> 
-            showPointInfoDialog(poi.lat, poi.lon, poi) 
+        binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi ->
+            showPointInfoDialog(poi.lat, poi.lon, poi)
         }
     }
 
@@ -999,9 +999,15 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         // Favoriten
         tiles.add(StartTile("poi_fav", label = "Favoriten", emoji = "⭐"))
 
-        // Kategorien
+        // Gewitterschutz direkt danach – prominente Position, da sicherheitsrelevant
+        val thunderstormCategory = POICategories.ALL_CATEGORIES.find { it.name == "Gewitterschutz" }
+        thunderstormCategory?.let { tiles.add(StartTile(it.name, label = it.name, emoji = it.icon)) }
+
+        // Restliche Kategorien (Gewitterschutz hier auslassen, da schon oben platziert)
         POICategories.ALL_CATEGORIES.forEach { category ->
-            tiles.add(StartTile(category.name, label = category.name, emoji = category.icon))
+            if (category.name != "Gewitterschutz") {
+                tiles.add(StartTile(category.name, label = category.name, emoji = category.icon))
+            }
         }
 
         val colors = StartGroupColors.forGroup(this, 3) // Ocker/Braun
@@ -1017,14 +1023,47 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     val cat = POICategories.ALL_CATEGORIES.find { it.name == id }
                     cat?.let {
                         selectedCategory = it
-                        loadPOIsForCategory(it)
+                        if (it.name == "Gewitterschutz") {
+                            loadPOIsForCategory(it, radiusMeters = 5000)
+                            showThunderstormShelterHint()
+                        } else {
+                            loadPOIsForCategory(it)
+                        }
                     }
                 }
             }
         )
     }
 
-    private fun loadPOIsForCategory(category: POICategories.Category) {
+    /**
+     * Sicherheitshinweis beim Öffnen der Gewitterschutz-Kategorie: OSM unterscheidet
+     * nicht zuverlässig zwischen offenen und geschlossenen Schutzobjekten. Brücken
+     * werden ungefiltert (nach Entfernung, max. 5 Stück) angezeigt – ein früherer
+     * automatischer Höhenvergleich erwies sich als unzuverlässig und wurde entfernt
+     * (siehe BridgeExposureFilter.kt). Als Dialog statt Toast, damit der Hinweis
+     * bewusst gelesen wird statt nur kurz aufzublitzen.
+     */
+    private fun showThunderstormShelterHint() {
+        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("⛈️ Gewitterschutz")
+            .setMessage(
+                "Angezeigt werden feste, geschlossene Gebäude in der Nähe (Hütten, Gasthäuser, Supermärkte u. ä.).\n\n" +
+                        "Vor Ort prüfen: Nur Gebäude mit durchgehenden Wänden und Dach bieten Schutz. Offene Schutzhütten oder Pavillons zählen NICHT dazu.\n\n" +
+                        "Brücken (🌉): Die 5 nächstgelegenen werden ANGEZEIGT, aber NICHT geprüft. Ob eine Brücke tatsächlich Schutz bietet, hängt stark vom Einzelfall ab – Geländeform, umliegende Hänge/Bäume, Nähe zu Gewässern. Diese Einschätzung musst Du vor Ort selbst treffen. Unterführungen sind bewusst nicht enthalten, da der DWD sie als Überflutungs-Gefahrenbereich nennt."
+            )
+            .setPositiveButton("Verstanden") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .apply {
+                show()
+                getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+            }
+    }
+
+    private fun loadPOIsForCategory(category: POICategories.Category, radiusMeters: Int = 3000) {
         currentLocation?.let { location ->
             binding.poiProgressBar.visibility = View.VISIBLE
             binding.categoryView.visibility = View.GONE
@@ -1034,15 +1073,51 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             lifecycleScope.launch {
                 try {
                     val pois = withContext(Dispatchers.IO) {
-                        fetchPOIsForCategory(location.latitude, location.longitude, category, 3000)
+                        fetchPOIsForCategory(location.latitude, location.longitude, category, radiusMeters)
+                    }.toMutableList()
+
+                    // Gewitterschutz: zusätzlich alle nahegelegenen Brücken laden.
+                    // KEINE automatische Eignungsprüfung mehr (siehe BridgeExposureFilter-
+                    // Kommentar) – jede Brücke bekommt stattdessen einen deutlichen
+                    // Warnhinweis, da Eignung stark vom Einzelfall abhängt. Fehler hier
+                    // dürfen die restliche, bereits geladene POI-Liste nicht blockieren.
+                    if (category.name == "Gewitterschutz") {
+                        try {
+                            val bridges = withContext(Dispatchers.IO) {
+                                BridgeExposureFilter.fetchNearbyBridges(location.latitude, location.longitude, radiusMeters)
+                            }
+                            bridges.forEach { bridge ->
+                                val dist = calculateDistance(location.latitude, location.longitude, bridge.centerLat, bridge.centerLon)
+                                val bearing = DirectionUtils.calculateBearing(location.latitude, location.longitude, bridge.centerLat, bridge.centerLon)
+                                pois.add(
+                                    POI(
+                                        id = "bridge_${bridge.id}",
+                                        name = "🌉 ${bridge.name}",
+                                        category = category.name,
+                                        categoryIcon = "🌉",
+                                        lat = bridge.centerLat,
+                                        lon = bridge.centerLon,
+                                        distance = dist,
+                                        bearing = bearing,
+                                        direction = DirectionUtils.bearingToDirection(bearing),
+                                        directionArrow = DirectionUtils.bearingToArrow(bearing),
+                                        description = "⚠️ UNGEPRÜFT: Diese Brücke wurde NICHT auf Eignung als Gewitterschutz geprüft. Vor Ort einschätzen: Liegt die Fahrbahn tiefer als die nähere Umgebung (Berge/Bäume ringsum, kein exponierter Hochpunkt)? Besteht Überflutungsgefahr durch angrenzendes Gewässer bei Starkregen? Im Zweifel meiden und festes Gebäude aufsuchen."
+                                    )
+                                )
+                            }
+                        } catch (e: Exception) {
+                            // Brücken-Suche fehlgeschlagen – normale Gebäude-Treffer bleiben trotzdem nutzbar
+                        }
                     }
+
                     val sorted = pois.sortedBy { it.distance }
                     poiList.clear(); poiList.addAll(sorted)
                     binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPOIOnMap(poi) }
-                    binding.poiCountText.text = "${pois.size} POI in 3 km"
+                    val radiusKm = radiusMeters / 1000
+                    binding.poiCountText.text = "${pois.size} POI in $radiusKm km"
                     binding.poiProgressBar.visibility = View.GONE
                     binding.emptyPoiText.visibility = if (pois.isEmpty()) View.VISIBLE else View.GONE
-                    if (pois.isEmpty()) binding.emptyPoiText.text = "Keine ${category.name} im Umkreis von 3 km gefunden"
+                    if (pois.isEmpty()) binding.emptyPoiText.text = "Keine ${category.name} im Umkreis von $radiusKm km gefunden"
                     showPOIsOnMap(sorted, category)
                 } catch (e: Exception) {
                     binding.poiProgressBar.visibility = View.GONE
@@ -1349,10 +1424,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun searchViaNominatim(query: String, lat: Double, lon: Double, radius: Int, isBounded: Boolean): List<POI> {
         val baseUrl = "https://nominatim.openstreetmap.org/search?q=${URLEncoder.encode(query, "UTF-8")}&format=json&addressdetails=1&limit=30"
-        
+
         val url = if (isBounded) {
             // Fokus auf Umkreis (ca. 40km Box)
-            val delta = 0.35 
+            val delta = 0.35
             val viewbox = "${lon - delta},${lat + delta},${lon + delta},${lat - delta}"
             "$baseUrl&viewbox=$viewbox&bounded=1"
         } else {
@@ -1364,10 +1439,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         conn.requestMethod = "GET"
         conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
         conn.connectTimeout = 8000; conn.readTimeout = 8000
-        
+
         if (conn.responseCode != 200) return emptyList()
         val response = conn.inputStream.bufferedReader().use { it.readText() }
-        
+
         // Bei globaler Suche filtern wir nicht nach Radius
         val filterRadius = if (isBounded) radius else Int.MAX_VALUE
         return parseNominatimResponse(response, lat, lon, filterRadius)
@@ -1614,7 +1689,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
         } catch (e: Exception) {}
-        
+
         try {
             if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
@@ -2088,7 +2163,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         // Farben nach dem Anzeigen setzen
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
-        
+
         if (isNavigating) {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#9C27B0")) // Lila für Zwischenziel
         } else {
@@ -2251,7 +2326,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         pois.forEach { poi ->
             val dp = resources.displayMetrics.density
             val isRestricted = poi.category == "Hundeverbot" || poi.category == "Leinenzwang"
-            
+
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity     = Gravity.CENTER_VERTICAL
@@ -2263,9 +2338,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 setPadding((if (isRestricted) 8 * dp else 0f).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
                 isClickable  = true
                 isFocusable  = true
-                
+
                 if (isRestricted) {
-                    val bgColor = if (poi.category == "Hundeverbot") 
+                    val bgColor = if (poi.category == "Hundeverbot")
                         Color.argb(40, 255, 0, 0) else Color.argb(40, 255, 152, 0)
                     val bg = android.graphics.drawable.GradientDrawable().apply {
                         setColor(bgColor)
@@ -2937,7 +3012,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             val baseText = "⚠️ Diese Route ist ca. $overPercent% länger als die Empfehlung für $dogName."
             val suitabilityText = "Diese Strecke ist für $dogName am Stück nicht geeignet."
             val carText = if (isCar) "\n\nℹ️ Diese Analyse ist rein theoretisch, da die Anreise per Auto geplant wird." else ""
-            
+
             binding.tvDistanceComparison.visibility = View.VISIBLE
             binding.tvDistanceComparison.text = "$baseText\n$suitabilityText$carText"
         } else {

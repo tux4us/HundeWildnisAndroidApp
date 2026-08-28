@@ -184,7 +184,22 @@ object POICategories {
         Category(name = "Feuerwehr",         icon = "🚒", queries = listOf("amenity=fire_station"), color = "#aa0000"),
         Category(name = "Notfall",           icon = "🆘", queries = listOf("emergency=defibrillator", "emergency=ambulance_station", "amenity=rescue_station", "emergency=mountain_rescue", "emergency=access_point", "emergency=first_aid_kit", "emergency=lifeguard", "healthcare=hospital", "emergency"), color = "#550000"),
         Category(name = "Naturschutzgebiet", icon = "🌲", queries = listOf("leisure=nature_reserve", "boundary=protected_area")),
-        Category(name = "Nationalpark",      icon = "🏞️", queries = listOf("boundary=national_park"))
+        Category(name = "Nationalpark",      icon = "🏞️", queries = listOf("boundary=national_park")),
+        // Nur feste, allseitig geschlossene Gebäude – bewusst OHNE einfache/offene
+        // Schutzhütten (amenity=shelter ohne Wände) und OHNE generisches building=*
+        // (würde in besiedelten Gebieten tausende irrelevante Wohnhäuser liefern).
+        // Ebenfalls bewusst OHNE Brücken/Tunnel/Unterführungen: Der DWD nennt
+        // Unterführungen explizit als zu MEIDENDEN Gefahrenbereich (akute
+        // Überflutungsgefahr bei Starkregen), und offene Brücken bieten keinen
+        // zuverlässigen Blitzschutz. Diese Objekte würden hier ein falsches
+        // Sicherheitsgefühl vermitteln.
+        Category(name = "Gewitterschutz",    icon = "⛈️", queries = listOf(
+            "tourism=alpine_hut", "tourism=wilderness_hut", "building=cabin",
+            "amenity=restaurant", "amenity=cafe", "tourism=hotel", "tourism=guest_house",
+            "building=chapel", "amenity=place_of_worship",
+            "shop=supermarket", "shop=convenience", "shop=mall",
+            "amenity=fuel", "railway=station"
+        ), color = "#5A6B7A")
     )
 
     fun generateOverpassQuery(lat: Double, lon: Double, radius: Int = 10000): String {

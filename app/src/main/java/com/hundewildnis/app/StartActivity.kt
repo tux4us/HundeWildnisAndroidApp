@@ -393,6 +393,7 @@ class StartActivity : BaseBottomNavActivity() {
             tiles = listOf(
                 StartTile("daily_notes", R.drawable.ic_notes, "Tagesnotizen"),
                 StartTile("weather", R.drawable.ic_weather, "Revier-Wetter"),
+                StartTile("thunderstorm", R.drawable.ic_thunderstorm, "Gewitterwarner"),
                 StartTile("location", R.drawable.ic_navigation, "Revier-Navigation"),
                 StartTile("compass", R.drawable.ic_compass, "Kompass"),
                 StartTile("altimeter", R.drawable.ic_altimeter, "Höhenmesser")
@@ -476,6 +477,7 @@ class StartActivity : BaseBottomNavActivity() {
             "nasenarbeit" -> startActivity(Intent(this, NasenarbeitActivity::class.java))
             "daily_notes" -> startActivity(Intent(this, DailyNotesActivity::class.java))
             "weather" -> startActivity(Intent(this, WeatherActivity::class.java))
+            "thunderstorm" -> startActivity(Intent(this, ThunderstormWarningActivity::class.java))
             "location" -> startActivity(Intent(this, LocationActivity::class.java))
             "compass" -> startActivity(Intent(this, CompassActivity::class.java))
             "altimeter" -> startActivity(Intent(this, AltimeterActivity::class.java))

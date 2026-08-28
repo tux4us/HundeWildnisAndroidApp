@@ -156,6 +156,13 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity" />
 
         <activity
+            android:name="com.hundewildnis.app.ThunderstormWarningActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:exported="false"
+            android:parentActivityName="com.hundewildnis.app.StartActivity" />
+
+        <activity
             android:name="com.hundewildnis.app.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.HundeWildnis" />
