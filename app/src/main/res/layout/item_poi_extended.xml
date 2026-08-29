@@ -44,9 +44,14 @@
                     android:id="@+id/poiCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="Hund"
                     android:textSize="@dimen/text_body_medium"
                     android:textColor="#999999"
+                    android:textAlignment="center"
+                    android:maxWidth="88dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
 
@@ -101,13 +106,14 @@
 
             </LinearLayout>
 
-            <!-- Navigations-Pfeil -->
+            <!-- Hinweis: Tap öffnet Details (nicht direkt Navigation) -->
             <TextView
+                android:id="@+id/poiMoreHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Start ▶"
+                android:text="Details ▸"
                 android:textSize="@dimen/text_body_medium"
-                android:textColor="@color/rd_overlay_accent"
+                android:textColor="#999999"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>

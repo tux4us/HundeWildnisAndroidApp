@@ -23,7 +23,10 @@ class POIAdapter(
             // ✅ Haupt-Daten setzen
             binding.poiName.text = poi.name
             binding.poiIcon.text = poi.categoryIcon
-            binding.poiCategory.text = poi.category
+            // Bei vorhandenem Subtyp (z.B. "Defibrillator", "Hydrant") diesen statt der
+            // Oberkategorie zeigen – wichtig v.a. bei "Notfall", wo sonst jede Card nur
+            // "Notfall" anzeigt und im Ernstfall nicht unterscheidbar wäre.
+            binding.poiCategory.text = poi.subtype ?: poi.category
             binding.poiDistance.text = formatDistance(poi.distance)
             binding.poiDirection.text = "${poi.directionArrow} ${poi.direction}"
 

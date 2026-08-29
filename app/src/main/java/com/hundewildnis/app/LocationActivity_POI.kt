@@ -42,6 +42,7 @@ import org.osmdroid.config.Configuration as OsmConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.ScaleBarOverlay
 import java.net.URL
@@ -73,6 +74,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private val poiList = mutableListOf<POI>()
     private val poiMarkers = mutableListOf<Marker>()
+    private val poiOutlineOverlays = mutableListOf<org.osmdroid.views.overlay.Overlay>()
 
     private var currentPOIMarker: Marker? = null
     private var currentRoutePolyline: Polyline? = null
@@ -155,6 +157,27 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         navBottomSheet = BottomSheetBehavior.from(binding.navigationCardsView)
         navBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         navBottomSheet.isHideable = true
+
+        // Der reine Drag-Balken ist als Touch-Ziel zu schmal/fehleranfällig (Nutzer
+        // schieben dabei versehentlich die App aus dem Fokus). Zusätzlich zum Ziehen
+        // lässt sich der Sheet-Zustand jetzt per Tap auf den ganzen Handle-Bereich
+        // umschalten – ein deutlich größeres und zuverlässigeres Ziel.
+        binding.navSheetHandle.setOnClickListener {
+            navBottomSheet.state = when (navBottomSheet.state) {
+                BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
+                else -> BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        navBottomSheet.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED  -> binding.tvNavExpandHint.text = "▼  Details ausblenden"
+                    BottomSheetBehavior.STATE_COLLAPSED -> binding.tvNavExpandHint.text = "▲  Details anzeigen"
+                    else -> {}
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
 
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
@@ -1112,7 +1135,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
                     val sorted = pois.sortedBy { it.distance }
                     poiList.clear(); poiList.addAll(sorted)
-                    binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPOIOnMap(poi) }
+                    binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPointInfoDialog(poi.lat, poi.lon, poi) }
                     val radiusKm = radiusMeters / 1000
                     binding.poiCountText.text = "${pois.size} POI in $radiusKm km"
                     binding.poiProgressBar.visibility = View.GONE
@@ -1141,20 +1164,65 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun showPOIsOnMap(pois: List<POI>, category: POICategories.Category) {
         clearPOIMarkers()
+        val categoryColor = try {
+            android.graphics.Color.parseColor(category.color)
+        } catch (e: Exception) {
+            android.graphics.Color.parseColor("#8FC357")
+        }
+
         pois.forEach { poi ->
-            val marker = Marker(binding.mapView).apply {
-                position = GeoPoint(poi.lat, poi.lon)
-                title   = poi.name
-                snippet = "${formatDistance(poi.distance)} • ${poi.direction}"
-                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                var clickCount = 0
-                setOnMarkerClickListener { _, _ ->
-                    showPointInfoDialog(poi.lat, poi.lon, poi)
-                    true
+            val outline = poi.outline
+            if (outline != null && outline.size >= 2) {
+                // Fläche/Linie aus OSMAND als tatsächlicher Umriss statt Einzelpunkt-Wolke.
+                // Polygon/Polyline sind selbst klickbar – ein zusätzlicher Zentrum-Marker
+                // entfällt hier bewusst, sonst erscheint neben der Fläche/dem Weg ein
+                // überflüssiger Einzelpunkt.
+                if (poi.outlineIsClosed) {
+                    val polygon = Polygon(binding.mapView).apply {
+                        points = outline
+                        fillPaint.color = android.graphics.Color.argb(50,
+                            android.graphics.Color.red(categoryColor),
+                            android.graphics.Color.green(categoryColor),
+                            android.graphics.Color.blue(categoryColor))
+                        outlinePaint.color = categoryColor
+                        outlinePaint.strokeWidth = 4f
+                        title = poi.name
+                        setOnClickListener { _, _, _ ->
+                            showPointInfoDialog(poi.lat, poi.lon, poi)
+                            true
+                        }
+                    }
+                    poiOutlineOverlays.add(polygon)
+                    binding.mapView.overlays.add(polygon)
+                } else {
+                    val polyline = Polyline(binding.mapView).apply {
+                        setPoints(outline)
+                        outlinePaint.color = categoryColor
+                        outlinePaint.strokeWidth = 6f
+                        title = poi.name
+                        setOnClickListener { _, _, _ ->
+                            showPointInfoDialog(poi.lat, poi.lon, poi)
+                            true
+                        }
+                    }
+                    poiOutlineOverlays.add(polyline)
+                    binding.mapView.overlays.add(polyline)
                 }
+            } else {
+                // Kein Umriss vorhanden (einfacher "node"-POI) → wie bisher als Marker anzeigen.
+                val marker = Marker(binding.mapView).apply {
+                    position = GeoPoint(poi.lat, poi.lon)
+                    title   = poi.name
+                    snippet = "${formatDistance(poi.distance)} • ${poi.direction}"
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    setOnMarkerClickListener { _, _ ->
+                        showPointInfoDialog(poi.lat, poi.lon, poi)
+                        true
+                    }
+                }
+                poiMarkers.add(marker)
+                binding.mapView.overlays.add(marker)
             }
-            poiMarkers.add(marker)
-            binding.mapView.overlays.add(marker)
         }
         binding.mapView.invalidate()
         if (pois.isNotEmpty()) zoomToShowAllPOIs(pois)
@@ -1165,6 +1233,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private fun clearPOIMarkers() {
         poiMarkers.forEach { binding.mapView.overlays.remove(it) }
         poiMarkers.clear()
+        poiOutlineOverlays.forEach { binding.mapView.overlays.remove(it) }
+        poiOutlineOverlays.clear()
         binding.mapView.invalidate()
     }
 
@@ -1196,11 +1266,21 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private suspend fun fetchPOIsForCategory(lat: Double, lon: Double, category: POICategories.Category, radius: Int = 3000): List<POI> {
         val queries = category.queries.flatMap { query ->
             val parts = query.split("=")
-            if (parts.size == 2) listOf(
-                """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
-                """way["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
-                """relation["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
-            ) else emptyList()
+            when (parts.size) {
+                2 -> listOf(
+                    """node["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                    """way["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);""",
+                    """relation["${parts[0]}"="${parts[1]}"](around:$radius,$lat,$lon);"""
+                )
+                // Einzelner Tag-Key ohne "=" (z.B. "emergency", "healthcare") ist ein
+                // bewusster Wildcard: liefert ALLE Werte dieses Tags, nicht nur einen.
+                1 -> listOf(
+                    """node["${parts[0]}"](around:$radius,$lat,$lon);""",
+                    """way["${parts[0]}"](around:$radius,$lat,$lon);""",
+                    """relation["${parts[0]}"](around:$radius,$lat,$lon);"""
+                )
+                else -> emptyList()
+            }
         }.filter { it.isNotEmpty() }
 
         val overpassQuery = """
@@ -1215,11 +1295,36 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val elements = json.getJSONArray("elements")
         val pois     = mutableListOf<POI>()
 
+        // Node-IDs sammeln, die nur als Geometrie-Bestandteil eines Way/Relation
+        // mitgeliefert wurden (durch "out body; >; out skel qt;"). Diese dürfen
+        // nicht zusätzlich als eigenständiger POI gerendert werden – sonst entsteht
+        // pro Fläche/Linie eine große Anzahl einzelner Punkte statt einem Umriss.
+        val childNodeIds = mutableSetOf<String>()
+        for (i in 0 until elements.length()) {
+            val el = elements.getJSONObject(i)
+            when (el.getString("type")) {
+                "way" -> el.optJSONArray("nodes")?.let { arr ->
+                    for (j in 0 until arr.length()) childNodeIds.add(arr.getString(j))
+                }
+                "relation" -> el.optJSONArray("members")?.let { arr ->
+                    for (j in 0 until arr.length()) {
+                        val m = arr.getJSONObject(j)
+                        if (m.getString("type") == "node") childNodeIds.add(m.getString("ref"))
+                    }
+                }
+            }
+        }
+
         for (i in 0 until elements.length()) {
             val el   = elements.getJSONObject(i)
             val type = el.getString("type")
             when (type) {
-                "node"            -> createPOIFromElement(el, lat, lon, category)?.let { pois.add(it) }
+                "node" -> {
+                    // Reine Geometrie-Stützpunkte eines Way/Relation überspringen –
+                    // nur eigenständige Treffer (z.B. ein Baum als loser Node) aufnehmen.
+                    if (el.getString("id") in childNodeIds) continue
+                    createPOIFromElement(el, lat, lon, category)?.let { pois.add(it) }
+                }
                 "way", "relation" -> createPOIFromWayOrRelation(el, elements, lat, lon, category)?.let { pois.add(it) }
             }
         }
@@ -1230,11 +1335,13 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val poiLat = element.getDouble("lat")
         val poiLon = element.getDouble("lon")
         val tags   = parseTags(element)
-        val name   = tags["name"] ?: tags["ref"] ?: category.name
+        val subtype = deriveSubtype(tags)
+        val name   = tags["name"] ?: tags["ref"] ?: subtype ?: category.name
         val dist   = calculateDistance(userLat, userLon, poiLat, poiLon)
         val bearing = DirectionUtils.calculateBearing(userLat, userLon, poiLat, poiLon)
         return POI(
             id = element.getString("id"), name = name, category = category.name, categoryIcon = category.icon,
+            subtype = subtype,
             lat = poiLat, lon = poiLon, distance = dist, tags = tags,
             bearing = bearing, direction = DirectionUtils.bearingToDirection(bearing),
             directionArrow = DirectionUtils.bearingToArrow(bearing),
@@ -1246,6 +1353,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun createPOIFromWayOrRelation(element: JSONObject, allElements: JSONArray, userLat: Double, userLon: Double, category: POICategories.Category): POI? {
+        // Reihenfolge der Way-Nodes bleibt erhalten (wichtig für die Umriss-Geometrie).
+        // Bei Relationen ist die Member-Reihenfolge nicht zwingend ein zusammenhängender
+        // Ring, daher wird dort bewusst nur der Mittelpunkt berechnet, keine Outline.
+        val isWay = element.getString("type") == "way"
         val nodeIds = mutableListOf<String>()
         if (element.has("nodes")) {
             val arr = element.getJSONArray("nodes")
@@ -1259,25 +1370,39 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
         if (nodeIds.isEmpty()) return null
 
-        var sumLat = 0.0; var sumLon = 0.0; var count = 0
+        // Koordinaten-Lookup einmalig aufbauen statt pro Way durch alle Elemente zu iterieren
+        val nodeCoords = mutableMapOf<String, GeoPoint>()
         for (i in 0 until allElements.length()) {
             val node = allElements.getJSONObject(i)
-            if (node.getString("type") == "node" && nodeIds.contains(node.getString("id"))) {
-                sumLat += node.getDouble("lat"); sumLon += node.getDouble("lon"); count++
+            if (node.getString("type") == "node") {
+                nodeCoords[node.getString("id")] = GeoPoint(node.getDouble("lat"), node.getDouble("lon"))
             }
+        }
+
+        // Outline in Original-Reihenfolge rekonstruieren (nur für "way")
+        val outlinePoints = if (isWay) nodeIds.mapNotNull { nodeCoords[it] } else emptyList()
+        val isClosed = outlinePoints.size >= 3 && nodeIds.first() == nodeIds.last()
+
+        var sumLat = 0.0; var sumLon = 0.0; var count = 0
+        for (id in nodeIds) {
+            nodeCoords[id]?.let { sumLat += it.latitude; sumLon += it.longitude; count++ }
         }
         if (count == 0) return null
 
         val centerLat = sumLat / count; val centerLon = sumLon / count
         val tags      = parseTags(element)
-        val name      = tags["name"] ?: tags["ref"] ?: category.name
+        val subtype   = deriveSubtype(tags)
+        val name      = tags["name"] ?: tags["ref"] ?: subtype ?: category.name
         val dist      = calculateDistance(userLat, userLon, centerLat, centerLon)
         val bearing   = DirectionUtils.calculateBearing(userLat, userLon, centerLat, centerLon)
         return POI(
             id = element.getString("id"), name = name, category = category.name, categoryIcon = category.icon,
+            subtype = subtype,
             lat = centerLat, lon = centerLon, distance = dist, tags = tags,
             bearing = bearing, direction = DirectionUtils.bearingToDirection(bearing),
             directionArrow = DirectionUtils.bearingToArrow(bearing),
+            outline = if (outlinePoints.size >= 2) outlinePoints else null,
+            outlineIsClosed = isClosed,
             address = buildAddress(tags), phone = tags["phone"] ?: tags["contact:phone"],
             website = tags["website"] ?: tags["contact:website"] ?: tags["url"],
             openingHours = tags["opening_hours"], description = tags["description"] ?: tags["note"],
@@ -1299,6 +1424,49 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         tags["addr:street"]?.let { parts.add("$it ${tags["addr:housenumber"] ?: ""}".trim()) }
         tags["addr:postcode"]?.let { parts.add("$it ${tags["addr:city"] ?: ""}".trim()) }
         return parts.joinToString(", ").ifEmpty { null }
+    }
+
+    // Leitet aus den OSM-Tags eine präzise deutsche Bezeichnung des konkreten
+    // Objekttyps ab (z.B. "Defibrillator", "Hydrant", "Arztpraxis"). Wichtig vor
+    // allem für die Kategorie "Notfall", die viele unterschiedliche Objekttypen
+    // unter einem Sammelbegriff zusammenfasst und sonst im Ernstfall unübersichtlich
+    // wäre, weil jeder Eintrag nur "Notfall" hieße.
+    private fun deriveSubtype(tags: Map<String, String>): String? {
+        tags["emergency"]?.let { value ->
+            return when (value) {
+                "defibrillator"      -> "Defibrillator (AED)"
+                "ambulance_station"  -> "Rettungswache"
+                "mountain_rescue"    -> "Bergrettung"
+                "access_point"       -> "Rettungspunkt"
+                "first_aid_kit"      -> "Erste-Hilfe-Kasten"
+                "lifeguard"          -> "Rettungsschwimmer"
+                "phone"              -> "Notruftelefon"
+                "fire_hydrant"       -> "Hydrant"
+                "assembly_point"     -> "Sammelplatz"
+                "water_rescue"       -> "Wasserrettung"
+                else                 -> value.replace('_', ' ').replaceFirstChar { it.uppercase() }
+            }
+        }
+        tags["healthcare"]?.let { value ->
+            return when (value) {
+                "hospital"  -> "Krankenhaus"
+                "clinic"    -> "Klinik"
+                "pharmacy"  -> "Apotheke"
+                "dentist"   -> "Zahnarzt"
+                "doctor"    -> "Arztpraxis"
+                else        -> value.replace('_', ' ').replaceFirstChar { it.uppercase() }
+            }
+        }
+        tags["amenity"]?.let { value ->
+            when (value) {
+                "rescue_station" -> return "Rettungsstation"
+                "hospital"       -> return "Krankenhaus"
+                "doctors"        -> return "Arztpraxis"
+                "pharmacy"       -> return "Apotheke"
+                "veterinary"     -> return "Tierarzt"
+            }
+        }
+        return null
     }
 
     // ════════════════════════════════════════════════════════
@@ -2103,6 +2271,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         if (poi != null) {
             title = "${poi.categoryIcon} ${poi.name}"
             msg.append("📂 ${poi.category}\n")
+            // Bei Notfall & Co. steht in "subtype" der konkrete Objekttyp (z.B.
+            // "Defibrillator", "Hydrant", "Arztpraxis"), damit nicht jeder Eintrag
+            // nur pauschal "Notfall" heißt – im Ernstfall entscheidend.
+            poi.subtype?.let { msg.append("🔖 $it\n") }
             poi.address?.let      { msg.append("📬 $it\n") }
             poi.phone?.let        { msg.append("📞 $it\n") }
             poi.openingHours?.let { msg.append("🕐 $it\n") }

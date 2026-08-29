@@ -122,6 +122,7 @@ data class POI(
     val name: String,
     val category: String,
     val categoryIcon: String,
+    val subtype: String? = null,
     val lat: Double,
     val lon: Double,
     val distance: Double = 0.0,
@@ -135,7 +136,15 @@ data class POI(
     val openingHours: String? = null,
     val description: String? = null,
     val operator: String? = null,
-    val access: String? = null
+    val access: String? = null,
+    // Für Overpass-"way"/"relation"-Objekte: die tatsächliche Umriss-Geometrie
+    // (Reihenfolge der Way-Nodes). Bei einer Relation wird nur der erste
+    // brauchbare Way-Ring verwendet (siehe createPOIFromWayOrRelation).
+    // null bei "node"-POIs oder wenn keine Geometrie rekonstruierbar war.
+    val outline: List<GeoPoint>? = null,
+    // true = geschlossener Ring (Fläche, z.B. Naturschutzgebiet) → als Polygon zeichnen
+    // false = offene Linie (z.B. Wanderweg) → als Polyline zeichnen
+    val outlineIsClosed: Boolean = false
 )
 
 // ═══════════════════════════════════════════════════════════
