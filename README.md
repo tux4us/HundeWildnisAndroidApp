@@ -141,7 +141,27 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | ⏲️ Intervall-Timer | Konfigurierbarer Intervall-Timer | Aktiv/Pause 10–120 s, 1–20 Runden, Abkühlphase 0–300 s · 6 Schnellprofile (Standard/Welpe/Senior/Energiegeladen/Arbeitshund/Tierschutzhund) · automatischer Vorschlag nach Wesensmerkmalen · Ton/Vibration je Phase · Historie · Übergabe ans Trainingstagebuch |
 | 📔 Trainingstagebuch | 18 Trainingskategorien je Hund, Wochenstatistik auf Hundekarte | Session-Erfassung (Dauer/Wiederholungen, Erfolg, Ablenkung, Schwierigkeit, Ort, Wetter, GPS, Notiz) · Fortschritt 0–100 % mit 5 Trainingsständen · Trend/Streak/Konsistenz · automatische Meilensteine · PDF-/CSV-Export gesamt, vollständiges Löschen je Hund |
 | 📅 Aktivitätskalender | Monatskalender mit Trainingstagen | Tagesdetail per Tap · Vorausplanung mit automatischem Dauervorschlag und Erinnerung · 7-Tage-Vorschau mit Wettereignungs-Ampel |
-| 🐾 Nasenarbeit | Regelbasiertes Expertensystem, 3 Disziplinen (Verlorensuche/Personensuche/Freisuche) | Vier-Schichten-Analyse (Wetter/Topografie/Bodentyp/Level) · automatische Gewitterwarnung · Karten-Werkzeug (Polyline/Polygon, Snap-to-Way) · Sitzungsdokumentation mit Fotos · Statistik, PDF-/CSV-Export je Hund |
+| 🐾 Nasenarbeit | Regelbasiertes Expertensystem, 3 Disziplinen – **siehe Detailabschnitt unten** | Sechsstufiger Beratungs-Wizard (Wetter → Gelände → Boden → Trainingsstand → Empfehlung) · Vier-Schichten-Analyse · Kartenwerkzeug · Sitzungsdokumentation · Statistik, PDF-/CSV-Export je Hund |
+
+##### Nasenarbeit im Detail
+
+**Zweck:** Nasenarbeit ist körperlich und mental anspruchsvoll; falsch dosiert (zu große Distanz, ungeeignetes Wetter, zu hohe Anforderung für den Trainingsstand) führt sie zu Frustration oder Überforderung statt zu Lernerfolg. Das Modul nimmt die Einschätzung „Ist die geplante Übung heute für meinen Hund angemessen?" ab und macht sie nachvollziehbar, statt sie dem Gefühl zu überlassen.
+
+Beim ersten Aufruf erscheint ein Einwilligungsdialog, der erläutert, dass GPS-Standort (temporär, nicht gespeichert) und automatisch abgerufene Wetterdaten für die Empfehlung benötigt werden.
+
+Der Beratungs-Wizard führt durch fünf Bildschirme mit Fortschrittsanzeige:
+
+1. **Wetter** – automatischer Abruf von Temperatur, Windstärke (Beaufort), Windrichtung relativ zur geplanten Suchlinie, Luftfeuchtigkeit und WMO-Wettercode; alle Werte manuell korrigierbar
+2. **Gelände** – Auswahl einer Sequenz aus Topografie-Typen (eben, Steigung, Kuppe, Hanglage, Mulde, Felsabbrüche u. a.) und Umgebungstypen (offen, Wald, Grünland, urban, Industrie u. a.); wahlweise Übernahme direkt aus dem Kartenwerkzeug
+3. **Boden** – je Geländeabschnitt Bodentyp (21 Varianten) und Bodenzustand (trocken bis Schnee in drei Stärken) einzeln festlegbar
+4. **Trainingsstand** – bisherige Leistung je Disziplin, Zeitpunkt der letzten Einheit und aktuelle Tagesverfassung des Hundes
+5. **Empfehlung** – Ergebnis in sechs Abschnitten: empfohlene Länge/Fläche mit Schwierigkeitsgrad und geschätztem Spuralter (2 Min. bis 24 h, je nach Bodenfeuchte/Wind) · kontextabhängige Vorbereitungscheckliste (z. B. Pfotenschutz bei Frost/Schnee, Trinkpausen ab 25 °C) · Eignungs-Ampel für alle drei Disziplinen gleichzeitig (✅/⚠️/❌) · Signal-Tabs „OK/Warnung/Stopp/Wetter" mit Begründungen · Nachbereitungshinweise inkl. automatischem Steigerungsvorschlag · Rücksetzen-Funktion für einen erneuten Durchlauf
+
+**Automatische Anpassung an Erholung und Tagesform:** Eine bereits am selben Tag absolvierte Einheit reduziert die empfohlene Distanz automatisch um 30 %, eine Einheit innerhalb der letzten 14 Tage um 15 %; hohe Tagesmotivation erhöht die Empfehlung dagegen um 10–20 %.
+
+**Kartenwerkzeug** (separat aufrufbar): Strecke oder Suchfläche direkt auf einer OSM-Karte einzeichnen; die App berechnet automatisch Distanz/Fläche und liest zusätzlich Umgebungs-, Boden- und Topografiedaten der betroffenen Abschnitte aus offenen Kartendaten (Overpass) aus, um Schritt 2 und 3 des Wizards vorauszufüllen. Einzelne Abschnitte lassen sich auf reale Wege einrasten (Snap-to-Way).
+
+**Level-System:** Je Disziplin steigt der Trainingsstand automatisch mit der Zahl absolvierter Sitzungen (Anfänger 0–49, Fortgeschritten 50–99, Erfahren 100–499, Experte 500+) und bestimmt damit die maximal empfohlene Distanz/Fläche und den Schwierigkeitsgrad.
 
 #### Gruppe 3 – Outdoorwerkzeuge
 | Kachel | Kernfunktionen | Unterfunktionen |
@@ -149,9 +169,24 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | 📝 Tagesnotizen | Notizen mit Text, Foto, Geodaten | Automatischer Wetter-/GPS-Abruf · Kamera/Galerie · PDF-/GPX-Export, Teilen, Löschen · Historie |
 | 🌦️ Revier-Wetter | Umfassender Wetterbericht (Open-Meteo) | Temperatur/Wind/Luftdruck/UV · Pfotenwetter-Index · Tageslicht/Mondphase · 24h-/7-Tage-Vorschau · Luftqualität/Pollen · Regenradar · Wetter-Favoriten |
 | ⛈️ Gewitterwarner | Zwei Funktionen: Blitz-Donner-Distanzrechner (offline) + Gewitterrisiko-Vorhersage | Zeitmessung Blitz→Donner, Ampel-Einstufung, Trend/Näherungsgeschwindigkeit/ETA bei Folgemessungen |
-| 🗺️ Revier-Navigation | OSM-Karte, POI-Suche, Routing – **s. Detailabschnitt „Was ist neu"** | 34 POI-Kategorien (3 km, Gewitterschutz 5 km) mit Untertyp-Erkennung und Flächen-/Wege-Umrissen · Routing Fuß/Fahrrad/Auto · Live-Rerouting · Favoriten · Zoom-Buttons, umschaltbares Bedienfeld |
-| 🧭 Kompass | Digitale Orientierung + Himmelsberechnung – **s. Detailabschnitt „Was ist neu"** | Sensor-Fallback-Kette · Sonne/Mond/Polaris-Anzeige inkl. Großer-Wagen-Uhrzeiger, alle 30 s aktualisiert, vollständig offline berechnet |
+| 🗺️ Revier-Navigation | OSM-Karte, POI-Suche, Routing – **siehe Detailabschnitt unten** | 34 POI-Kategorien (3 km, Gewitterschutz 5 km) mit Untertyp-Erkennung und Flächen-/Wege-Umrissen · Routing Fuß/Fahrrad/Auto · Live-Rerouting · Favoriten · Zoom-Buttons, umschaltbares Bedienfeld |
+| 🧭 Kompass | Digitale Orientierung + Himmelsberechnung – s. Abschnitt „Was ist neu" | Sensor-Fallback-Kette · Sonne/Mond/Polaris-Anzeige inkl. Großer-Wagen-Uhrzeiger, alle 30 s aktualisiert, vollständig offline berechnet |
 | ⛰️ Höhenmesser | GPS- und Barometer-Höhe | Automatische Kalibrierung über GPS-Startwert · QNH-Abruf für höhere Genauigkeit |
+
+##### Revier-Navigation im Detail
+
+**Zweck:** Ersetzt eine kommerzielle Navigations-App für die konkreten Bedürfnisse beim Gassigehen und Wandern mit Hund – wo ist der nächste Wasserzugang, wo herrscht Leinenzwang, wo ist ein Tierarzt in der Nähe, wie komme ich dorthin – ohne Google-Konto und ohne dass der eigene Standort an einen kommerziellen Anbieter übermittelt wird.
+
+- **Kartendarstellung:** OpenStreetMap-Kachelkarte (OSMDroid), eigener Standort als Marker, feste Zoom-Buttons zusätzlich zur Zwei-Finger-Geste, Kompass-Ausrichtung
+- **POI-Suche:** Auswahl einer von 34 Kategorien (Kategorienraster mit Icon und Farbe) → automatische Abfrage aller passenden Punkte, Wege und Flächen im Umkreis von 3 km (Gewitterschutz 5 km) über die Overpass-API; Ergebnisse erscheinen sowohl als Karten-Overlay als auch als sortierte Liste (nach Entfernung)
+- **Zwei-Tap-Bedienlogik:** erster Tap auf einen Treffer öffnet ein Infofenster mit Entfernung, Richtung, verfügbaren Zusatzangaben (Adresse, Telefon, Öffnungszeiten, Leinenpflicht) sowie Untertyp-Bezeichnung, wo vorhanden; zweiter Tap bzw. eigener Button startet die Navigation dorthin
+- **Flächen und Wege als echte Umrisse:** Naturschutzgebiete, Wanderwege oder Zeltplätze werden nicht als einzelner Punkt, sondern als tatsächliche Fläche (Polygon) bzw. Linie (Polyline) auf der Karte eingezeichnet
+- **Textsuche:** freie Ortssuche zusätzlich zur Kategoriensuche
+- **Favoriten:** beliebige Punkte dauerhaft speichern, frei sortierbar per Drag-and-Drop, als eigene Kategorie im Raster
+- **Routing:** drei Profile – Fuß, Fahrrad (Geschwindigkeitsschätzung realistisch auf 10 km/h für die Begleitung eines Hundes gedeckelt), Auto; die Route wird entlang des tatsächlichen Wegverlaufs berechnet (nicht Luftlinie) und zeigt den Wegbelag farblich codiert an; weicht man während der laufenden Navigation mehr als 30 m von der Route ab, wird automatisch neu berechnet
+- **Live-Standort teilen:** der aktuelle Standort lässt sich jederzeit als Link über die Android-Teilen-Funktion versenden
+
+**Untertyp-Erkennung (neu in 20.2):** Sammelkategorien wie „Notfall" fassen sehr unterschiedliche Objekte zusammen; die App leitet automatisch eine präzise Bezeichnung ab (z. B. „Defibrillator (AED)", „Hydrant", „Rettungswache", „Notruftelefon", „Arztpraxis") statt jeden Treffer nur „Notfall" zu nennen – im Ernstfall entscheidend, um schnell den richtigen Punkt zu erkennen.
 
 #### Gruppe 4 – Hund, Sicherheit und Notfall
 | Kachel | Kernfunktionen | Unterfunktionen |
@@ -160,8 +195,45 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | ❤️ Pulscheck | Geführte Puls-/Atemfrequenzmessung | 15-s-Countdowns mit automatischer Hochrechnung · Bewertung nach Schulterhöhe · Kapillarfüllzeit, Schleimhautfarbe, Bewusstsein, Belastungsszenario · Übernahme in Notfallmeldung · Verlauf, CSV-Export |
 | 🔍 Zeckenlupe | Digitale Lupe (Camera2 API) | 3 Filter (Wärmebild/Invertierung/Hoher Kontrast) · Antipp-Fokus · Freeze-Frame · Speichern in Galerie |
 | 🌿 Gefahrenpflanzen | Offline-Datenbank, 56 Giftpflanzen | Saisonale Warnung · Textsuche, Toxizitäts-Filter, Saisonal-Umschalter · eigene Fotos je Pflanze · Verknüpfung mit Notfall-Assistent |
-| 📍 Standortfreigabe | WebDAV-basierte Geräteortung – **s. Detailabschnitt „Was ist neu"** | Bewegungsbasierte Uploads mit Heartbeat-Fallback · frei wählbares Geräte-Label · Karte mit Stale-Markierung · Routing zum Standort |
-| 🚨 NOTFALL | Vierstufiger Erste-Hilfe-Assistent | Hund wählen → Unfall/Erkrankung → 17 Notfalltypen → Symptom-Check → Anleitung mit HLW-Timer (30:2, 120 BPM) und Countdown-Timer je nach Bedarf · Ein-Tap-Übergabe in Notfallmeldung mit PDF-Export |
+| 📍 Standortfreigabe | WebDAV-basierte Geräteortung – **siehe Detailabschnitt unten** | Bewegungsbasierte Uploads mit Heartbeat-Fallback · Akkustand-Anzeige · frei wählbares Geräte-Label · Karte mit Stale-Markierung · Routing zum Standort |
+| 🚨 NOTFALL | Vierstufiger Erste-Hilfe-Assistent – **siehe Detailabschnitt unten** | Hund wählen → Unfall/Erkrankung → 17 Notfalltypen → Symptom-Check → Anleitung mit HLW-Timer und Countdown-Timer je nach Bedarf · Notfallmeldung mit PDF-Export |
+
+##### Standortfreigabe im Detail
+
+**Zweck:** Beim gemeinsamen Wandern oder Trainieren in unübersichtlichem Gelände, bei getrennten Gruppen oder wenn eine Person mit dem Hund allein unterwegs ist, erlaubt diese Funktion es vertrauten Personen (z. B. Trainingspartnern, Familienmitgliedern), den eigenen Standort in Echtzeit mitzuverfolgen – etwa um sich im Wald wiederzufinden, im Ernstfall schnell Hilfe schicken zu können, oder um bei einer verabredeten Route zu sehen, wie weit jemand ist. Die Übertragung läuft ausschließlich über einen selbst gewählten WebDAV-Server, nicht über einen Standort-Dienst eines Drittanbieters.
+
+- Ohne hinterlegte WebDAV-Zugangsdaten ist die Funktion gesperrt und verlinkt direkt zu den WebDAV-Einstellungen
+- Nach Aktivierung läuft im Hintergrund ein Dienst, der den eigenen Standort automatisch überträgt und die Standorte anderer, ebenfalls freigebender Geräte abruft und auf einer Karte anzeigt
+- **Bewegungsbasierte Übertragung (überarbeitet in 20.2):** ein Upload erfolgt alle 60 Sekunden nur bei tatsächlicher Bewegung von mehr als 15 Metern; bei größerer Bewegung (> 20 m) sofort; im Stillstand nur alle 5 Minuten ein kurzes Status-Signal (Heartbeat), damit andere weiterhin erkennen können, dass das Gerät online ist – das schont spürbar den Akku, ohne dass bei aktiver Bewegung Genauigkeit verloren geht
+- Jedes angezeigte Gerät zeigt zusätzlich seinen aktuellen **Akkustand** an, damit rechtzeitig erkennbar ist, wenn ein Gerät bald offline gehen könnte
+- Standorte, die seit mehr als 10 Minuten nicht aktualisiert wurden, werden auf der Karte grau (veraltet) dargestellt
+- Direktes Routing zu einem freigegebenen Standort ist mit einem Tap möglich (Fuß/Fahrrad/Auto)
+- Jedes Gerät kann sich ein eigenes, frei wählbares Label geben (Standard: Gerätemodell), einzelne Geräte-Einträge lassen sich vom Server entfernen
+- Beim ersten Aktivieren erscheint ein Hinweis, die App von der Akkuoptimierung des Systems auszunehmen, damit die Freigabe auch bei gesperrtem Bildschirm zuverlässig weiterläuft
+
+##### NOTFALL-Assistent im Detail
+
+**Zweck:** In einer akuten Notfallsituation mit dem Hund fehlt oft die Ruhe, sich an die richtigen Erste-Hilfe-Schritte zu erinnern oder alle notwendigen Angaben für einen Tierarzt oder Helfer zusammenzustellen. Der Assistent führt strukturiert durch die Einschätzung der Lage, liefert konkrete Handlungsanweisungen und erstellt parallel eine vollständige, teilbare Notfallmeldung.
+
+**Ablauf in vier Schritten:**
+1. **Hund auswählen** aus den vorhandenen Stammdaten (bei mehreren Hunden per Auswahldialog)
+2. **Hauptkategorie wählen:** Unfall oder Erkrankung
+3. **Konkrete Notfallart wählen** – 9 Unfalltypen (u. a. Verkehrsunfall, Blutungen/Wunden, Knochenbruch/Lahmheit, Ertrinken, Unterkühlung, Hitzschlag, Fremdkörper verschluckt, Vergiftung mit bekannter Substanz) und 8 Erkrankungstypen (u. a. Bewusstlosigkeit/Kollaps, Krampfanfall, Magendrehung, Atemnot, Blutungen ohne Unfall, Erbrechen/Durchfall, Vergiftung mit unbekannter Substanz, Allergische Reaktion)
+4. **Symptom-Schnellcheck**, sofern für die gewählte Notfallart hinterlegt (7 der 17 Typen): kurze Ja/Nein-Fragen, die die Dringlichkeit direkt anhand der Antwort einschätzen (z. B. bei Hitzschlag: „Körpertemperatur über 40 °C?" wird als kritisch gewertet, wenn mit Ja beantwortet)
+
+**Ergebnis – die Erste-Hilfe-Anleitung** enthält für jeden der 17 Notfalltypen: eine Liste typischer Symptome, nummerierte Sofortmaßnahmen in der richtigen Reihenfolge, getrennte Was-tun- und Was-nicht-tun-Listen sowie einen Hinweis zum sicheren Transport des Hundes. Je nach Notfallart wird zusätzlich automatisch eingeblendet:
+- der **HLW-Timer** (bei Bewusstlosigkeit und Ertrinken) – automatisches Metronom für Herz-Lungen-Wiederbelebung: 30 Kompressionen in 15 Sekunden (120 pro Minute) gefolgt von 2 Beatmungen in 5 Sekunden, danach automatischer Neustart, mit Erinnerung alle 2 Minuten, den Puls erneut zu prüfen
+- ein **einfacher Countdown-Timer** (z. B. bei Hitzschlag zur Kühlungsdauer, bei Krampfanfall zur Beobachtungszeit)
+
+**Notfallmeldung:** Aus der Anleitung heraus lässt sich direkt eine Notfallmeldung anlegen, die auch unabhängig – etwa direkt von der Stammdaten-Profilkarte aus – aufgerufen werden kann, wenn keine geführte Anleitung benötigt wird. Sie übernimmt automatisch Symptomtitel und Dringlichkeitsstufe als Notiztext, erlaubt das Erfassen des aktuellen GPS-Standorts per Tastendruck sowie das Anhängen von Fotos, und erzeugt daraus ein PDF-Dokument mit:
+- Symptom- und Zusatzangaben sowie GPS-Standort inklusive anklickbarem OpenStreetMap-Kartenlink
+- vollständigen Stammdaten des Hundes (Name, Rasse, Geburtsdatum, Geschlecht, Kastrationsstatus, Gewicht, Schulterhöhe, Körperlänge, Chipnummer, Impfstatus, Vorerkrankungen, Besitzer)
+- bei intakten, unkastrierten Hündinnen automatisch dem aktuellen Läufigkeitsstatus inklusive Warnhinweis, falls die Hündin gerade läufig ist – eine für Tierärzte relevante Zusatzinformation (u. a. für Narkose- und Blutungseinschätzung)
+- allen angehängten Fotos
+
+Die ausführliche Erste-Hilfe-Anleitung selbst wird bewusst nicht vollständig ins PDF übernommen (sie bleibt während des Notfalls in der App einsehbar); Tierarzt-Kontaktdaten aus den Stammdaten werden aktuell ebenfalls nicht automatisch übernommen und können bei Bedarf im freien Notizfeld ergänzt werden.
+
+Das fertige PDF lässt sich mit einem Tap über die Android-Teilen-Funktion an Tierarzt, Tierrettung oder Begleitpersonen weitergeben; ein Begleittext sorgt dafür, dass auch Empfänger ohne PDF-Anwendung die wichtigsten Angaben direkt lesen können. Alle erstellten Meldungen bleiben in einer Verlaufshistorie erhalten.
 
 #### Gruppe 5 – Informationen und Lernen
 | Kachel | Beschreibung |
