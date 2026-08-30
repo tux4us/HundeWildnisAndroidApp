@@ -69,34 +69,6 @@ Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – 
 
 ---
 
-## 🆕 Was ist neu in 20.2
-
-**Version 20.2 · VersionCode 114**
-
-### Revier-Navigation
-- Overpass-Ergebnisse vom Typ „way" (Weg) und „relation" (Fläche) werden jetzt als **echter Umriss** (Polygon bzw. Polyline) statt als Punktwolke aus Einzelmarkern gezeichnet; reine Geometrie-Stützpunkte eines Weges/einer Fläche werden dabei korrekt herausgefiltert und nicht mehr zusätzlich als eigenständige Punkte angezeigt
-- Neue Untertyp-Erkennung (`deriveSubtype`): OSM-Rohdaten wie `emergency=defibrillator` werden in präzise deutsche Bezeichnungen übersetzt (z. B. „Defibrillator (AED)", „Rettungswache", „Hydrant", „Notruftelefon", „Arztpraxis"); besonders relevant für die Kategorie „Notfall", die zuvor jeden Eintrag nur als „Notfall" auswies. Der Untertyp erscheint sowohl auf der Ergebnis-Karte in der Liste als auch im Detaildialog
-- Suchabfragen für „Feuerwehr" (jetzt inkl. Hydranten) und „Notfall" (jetzt inkl. Wasserrettung, Notruftelefon, Rettungsstation) präzisiert; eine zu unscharfe Sammelabfrage wurde entfernt
-- Kartenbedienung: feste Zoom-Buttons (+/−) ergänzt; das Bedienfeld am unteren Rand lässt sich nun zusätzlich zum Ziehen auch per Tap auf den gesamten Griffbereich ein-/ausklappen (bisheriger reiner Ziehbalken war als Fläche zu schmal)
-- Suchergebnisse bleiben nach einem Kartenwechsel (z. B. Rückkehr aus der Navigation) jetzt korrekt erhalten, statt sich auf die zuletzt gewählte Kategorie zurückzusetzen
-
-### Kompass
-- Neue Klasse `SkyCalculator`: berechnet nach astronomischen Standardverfahren (Jean Meeus, vereinfacht) in Echtzeit die Position von Sonne, Mond und Polarstern/Großem Wagen für den aktuellen Standort
-- Anzeige von Azimut, Himmelsrichtung und Höhe über Horizont für Sonne und Mond, zusätzlich der Mond-Beleuchtungsgrad in Prozent
-- Polaris-Anzeige inklusive „Himmelsuhr": Position des Großen Wagens relativ zum Polarstern als Uhrzeigerstellung (1–12), eine traditionelle Orientierungsmethode zur nächtlichen Zeit- und Richtungsbestimmung
-- Sonne, Mond und Polaris werden zusätzlich direkt als Icons am Kompassring eingezeichnet (Sonnenscheibe mit Strahlen, Mondscheibe mit tatsächlicher Sichelform entsprechend dem Beleuchtungsgrad, funkelnder Polarstern mit Mini-Zifferblatt für den Großen Wagen); Himmelskörper unter dem Horizont werden abgedunkelt, aber weiterhin richtungsweisend dargestellt
-- Aktualisierung der Himmelsberechnung alle 30 Sekunden, ausschließlich während die Kompass-Ansicht aktiv im Vordergrund ist
-- Kompassglättung beschleunigt für spürbar direktere Reaktion (Glättungsfaktor von 0,2 auf 0,35 erhöht, Historienpuffer von 5 auf 3 Werte verkürzt, Mindest-Änderungsschwelle von 2° auf 1° gesenkt)
-
-### Standortfreigabe – Sicherheitsfeature mit Effizienzoptimierung
-Umfassende Überarbeitung von `LocationShareService` zur Reduzierung von Prozessorlast und Akkuverbrauch um geschätzt 80–90 %, ohne Genauigkeit bei tatsächlicher Bewegung einzubüßen:
-1. **Kein Dauer-WakeLock mehr:** Der Dienst hält den Prozessor nicht länger durchgehend wach. Ein WakeLock wird nur noch transient und ausschließlich für die Dauer eines einzelnen Upload-Vorgangs angefordert (maximal 60 Sekunden), inklusive Schutz gegen überlappende Anfragen (Mutex).
-2. **Adaptives GPS-Polling:** Das minimale GPS-Abfrageintervall wurde von 10 auf 20 Sekunden erhöht, zusätzlich wurde eine Mindestbewegungsdistanz von 10 Metern eingeführt – das GPS-Modul kann dadurch im Stillstand in einen Stromsparmodus übergehen.
-3. **Smart-Upload-Logik:** Ein regulärer Upload erfolgt alle 60 Sekunden nur dann, wenn seit dem letzten Upload eine Bewegung von mehr als 15 Metern erkannt wurde. Steht das Gerät still, wird stattdessen nur alle 5 Minuten ein Status-Paket (Heartbeat) gesendet, damit andere Teilnehmende weiterhin erkennen können, dass das Gerät online ist.
-4. **Sofort-Trigger:** Bei einer signifikanten Bewegung von mehr als 20 Metern wird unabhängig vom regulären Intervall sofort ein Upload ausgelöst, um bei aktiver Bewegung (z. B. beim Wandern) die Genauigkeit hochzuhalten.
-
----
-
 ## 🧭 Funktionsübersicht
 
 Die App gliedert sich in drei Bedienebenen: das **Hamburger-Menü** (App-weite Systemfunktionen), die **Startseite** mit sechs Kachelgruppen (die eigentlichen Funktionsmodule) und die **untere Navigationsleiste** als Footer (Wechsel zwischen den vier Hauptbereichen sowie externe Kanäle).
