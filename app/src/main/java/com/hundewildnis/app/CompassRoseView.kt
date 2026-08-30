@@ -35,14 +35,14 @@ class CompassRoseView @JvmOverloads constructor(
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
-        textSize = 40f
+        textSize = 42f
         textAlign = Paint.Align.CENTER
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
 
     private val cardinalPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = accentColor
-        textSize = 52f
+        textSize = 58f
         textAlign = Paint.Align.CENTER
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
@@ -67,7 +67,7 @@ class CompassRoseView @JvmOverloads constructor(
     }
     private val skyLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
-        textSize = 26f
+        textSize = 30f
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
     private val wagenPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -83,7 +83,7 @@ class CompassRoseView @JvmOverloads constructor(
     }
     private val chipTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
-        textSize = 20f
+        textSize = 24f
         color = Color.WHITE
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
     }
@@ -105,7 +105,7 @@ class CompassRoseView @JvmOverloads constructor(
         super.onSizeChanged(w, h, oldw, oldh)
         val cx = w / 2f
         val cy = h / 2f
-        val radius = (minOf(w, h) / 2f) * 0.9f
+        val radius = (minOf(w, h) / 2f) * 0.78f
         if (radius > 0) {
             val gradient = RadialGradient(cx, cy, radius,
                 Color.parseColor("#442d5016"), Color.parseColor("#11000000"), Shader.TileMode.CLAMP)
@@ -118,7 +118,7 @@ class CompassRoseView @JvmOverloads constructor(
 
         val cx = width / 2f
         val cy = height / 2f
-        val radius = (minOf(width, height) / 2f) * 0.9f
+        val radius = (minOf(width, height) / 2f) * 0.78f
 
         // 1. Subtile Hintergrund-Füllung
         canvas.drawCircle(cx, cy, radius, fillPaint)
@@ -163,12 +163,12 @@ class CompassRoseView @JvmOverloads constructor(
         drawCardinal(canvas, cx, cy, radius * 0.70f, "W", 270)
 
         // 4b. Zwischen-Himmelsrichtungen (kleiner)
-        cardinalPaint.textSize = 30f
+        cardinalPaint.textSize = 34f
         drawCardinal(canvas, cx, cy, radius * 0.70f, "NO", 45)
         drawCardinal(canvas, cx, cy, radius * 0.70f, "SO", 135)
         drawCardinal(canvas, cx, cy, radius * 0.70f, "SW", 225)
         drawCardinal(canvas, cx, cy, radius * 0.70f, "NW", 315)
-        cardinalPaint.textSize = 52f
+        cardinalPaint.textSize = 58f
 
         // 5. Himmelskörper (Sonne, Mond, Polaris + Großer Wagen) — zwischen Ring und Nadel
         skyData?.let { data ->
@@ -193,7 +193,7 @@ class CompassRoseView @JvmOverloads constructor(
     /** Berechnet Mittelpunkt eines Himmelskörper-Icons am äußeren Rand der Rose für ein Azimut. */
     private fun iconCenter(cx: Float, cy: Float, radius: Float, azimuthDeg: Double): Pair<Float, Float> {
         val angle = Math.toRadians(azimuthDeg - 90.0)
-        val iconR = radius * 1.08f // knapp außerhalb des äußeren Rings
+        val iconR = radius * 1.07f // Sehr nah am Ring für maximale Größe der Rose
         return (cx + cos(angle).toFloat() * iconR) to (cy + sin(angle).toFloat() * iconR)
     }
 
@@ -206,7 +206,7 @@ class CompassRoseView @JvmOverloads constructor(
         val (ix, iy) = iconCenter(cx, cy, radius, pos.azimuth)
         val alpha = if (pos.isVisible) ALPHA_VISIBLE else ALPHA_BELOW_HORIZON
         val sunColor = Color.parseColor("#FFC94A")
-        val iconRadius = radius * 0.075f
+        val iconRadius = radius * 0.11f
 
         // Strahlen (8 Stück, radial nach außen)
         skyIconStrokePaint.color = sunColor
@@ -243,7 +243,7 @@ class CompassRoseView @JvmOverloads constructor(
         canvas.drawCircle(ix, iy, iconRadius, skyIconStrokePaint)
         skyIconStrokePaint.color = sunColor
 
-        drawLabelChip(canvas, ix, iy + iconRadius * 2.6f, "Sonne", alpha)
+        drawLabelChip(canvas, ix, iy + iconRadius * 2.8f, "Sonne", alpha)
     }
 
     /**
@@ -265,7 +265,7 @@ class CompassRoseView @JvmOverloads constructor(
         val alpha = if (pos.isVisible) ALPHA_VISIBLE else ALPHA_BELOW_HORIZON
         val moonLight = Color.parseColor("#E8E8E8")
         val moonDark = Color.parseColor("#2a2a2a")
-        val iconRadius = radius * 0.075f
+        val iconRadius = radius * 0.11f
 
         val saved = canvas.save()
         // Kreisförmiger Clip, damit die Überlagerung nicht über den Mond hinausragt
@@ -299,14 +299,14 @@ class CompassRoseView @JvmOverloads constructor(
         skyIconStrokePaint.alpha = alpha
         canvas.drawCircle(ix, iy, iconRadius, skyIconStrokePaint)
 
-        drawLabelChip(canvas, ix, iy + iconRadius * 2.6f, "Mond", alpha)
+        drawLabelChip(canvas, ix, iy + iconRadius * 2.8f, "Mond", alpha)
     }
 
     /** Zeichnet einen abgerundeten dunklen Beschriftungs-Chip unter einem Icon. */
     private fun drawLabelChip(canvas: Canvas, cx: Float, chipCy: Float, text: String, alpha: Int) {
         val textWidth = chipTextPaint.measureText(text)
-        val paddingH = 14f
-        val paddingV = 6f
+        val paddingH = 18f
+        val paddingV = 8f
         val chipHeight = chipTextPaint.textSize + paddingV * 2
 
         chipRect.set(
@@ -355,39 +355,41 @@ class CompassRoseView @JvmOverloads constructor(
 
         val alpha = if (pos.isVisible) ALPHA_VISIBLE else ALPHA_BELOW_HORIZON
         val polarisColor = Color.parseColor("#CFE8FF")
-        val iconRadius = radius * 0.075f
+        val iconRadius = radius * 0.11f
 
-        // Weicher Glow hinter dem Stern
+        // Polaris und Wagen-Uhr nebeneinander anzeigen, um vertikalen Beschnitt zu vermeiden
+        // Vereinheitlichte Größe für beide Icons
+        val sharedR = iconRadius * 0.9f
+        val starIx = ix - iconRadius * 0.9f
+        val clockCx = ix + iconRadius * 1.1f
+        val clockCy = iy
+
+        // 1. Polaris (Stern) - Gleiche Größe wie die Uhr
         val glow = RadialGradient(
-            ix, iy, iconRadius * 2.0f,
+            starIx, iy, sharedR * 1.6f,
             intArrayOf(Color.argb((alpha * 0.5f).toInt(), 207, 232, 255), Color.argb(0, 207, 232, 255)),
             floatArrayOf(0.3f, 1f), Shader.TileMode.CLAMP
         )
         skyIconPaint.shader = glow
-        canvas.drawCircle(ix, iy, iconRadius * 2.0f, skyIconPaint)
+        canvas.drawCircle(starIx, iy, sharedR * 1.6f, skyIconPaint)
         skyIconPaint.shader = null
 
-        // Funkelnder Hauptstern (großer Diamant) + kleiner Querstern für den "Sparkle"-Effekt
         skyIconPaint.color = polarisColor
         skyIconPaint.alpha = alpha
-        drawSparkleStar(canvas, ix, iy, iconRadius * 1.3f, iconRadius * 0.35f, skyIconPaint)
+        // Hauptstern-Radius entspricht nun sharedR (Größe der Uhr)
+        drawSparkleStar(canvas, starIx, iy, sharedR, sharedR * 0.3f, skyIconPaint)
 
         skyIconPaint.alpha = (alpha * 0.8f).toInt()
-        drawSparkleStar(canvas, ix, iy, iconRadius * 0.75f * 1.3f, iconRadius * 0.75f * 0.35f, skyIconPaint)
-        // (kleinerer, um 90° dazu gedachter Glanzpunkt entsteht optisch bereits durch die Diamantform)
+        drawSparkleStar(canvas, starIx, iy, sharedR * 0.7f, sharedR * 0.2f, skyIconPaint)
 
-        drawLabelChip(canvas, ix, iy + iconRadius * 2.6f, "Polaris", alpha)
+        // Label weiter nach unten verschoben, um Überlappung mit dem Stern zu vermeiden
+        drawLabelChip(canvas, starIx, iy + sharedR * 3.2f, "Polaris", alpha)
 
-        // Großer-Wagen-Uhrzeiger: kleines Zifferblatt-Symbol neben Polaris,
-        // Zeiger zeigt auf die aktuelle "Stunde" (1-12) des Wagens relativ zu Polaris.
-        val clockCx = ix
-        val clockCy = iy - iconRadius * 3.2f
-        val clockR = iconRadius * 1.4f
-
+        // 2. Großer-Wagen-Uhrzeiger (rechts daneben)
+        val clockR = sharedR
         wagenPaint.alpha = alpha
         canvas.drawCircle(clockCx, clockCy, clockR, wagenPaint)
 
-        // Zeiger: 12 Uhr = oben (0°), im Uhrzeigersinn nach Stunde
         val clockAngleDeg = polarisResult.greatBearClockPosition * 30.0 - 90.0
         val clockAngleRad = Math.toRadians(clockAngleDeg)
         val pointerX = clockCx + cos(clockAngleRad).toFloat() * clockR * 0.85f
@@ -397,16 +399,16 @@ class CompassRoseView @JvmOverloads constructor(
         canvas.drawLine(clockCx, clockCy, pointerX, pointerY, wagenPaint)
         wagenPaint.strokeWidth = 3f
 
-        skyLabelPaint.textSize = 16f
+        skyLabelPaint.textSize = 20f
         skyLabelPaint.color = Color.parseColor("#CCE0FF")
         skyLabelPaint.alpha = alpha
         canvas.drawText(
-            "Wagen ${polarisResult.greatBearClockPosition}h",
+            "Gr.Wag. ${polarisResult.greatBearClockPosition}h",
             clockCx,
-            clockCy - clockR - 8f,
+            clockCy + clockR + 24f,
             skyLabelPaint
         )
-        skyLabelPaint.textSize = 26f
+        skyLabelPaint.textSize = 30f
     }
 
     private fun drawNeedle(canvas: Canvas, cx: Float, cy: Float, length: Float) {

@@ -30,21 +30,26 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- NEU: Wrapper für rotierbaren Kompass -->
-            <FrameLayout
+            <!-- Wrapper für rotierbaren Kompass (jetzt responsiv füllend) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/compassContainer"
-                android:layout_width="320dp"
-                android:layout_height="320dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="72dp"
                 android:layout_centerHorizontal="true">
 
-                <!-- Kompass-Anzeige (wird rotiert) -->
                 <com.hundewildnis.app.CompassRoseView
                     android:id="@+id/compassRoseView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintWidth_max="@dimen/compass_size"/>
 
-            </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Feststehender Indikator oben -->
             <View
@@ -79,7 +84,7 @@
                 android:layout_marginTop="32dp"
                 android:text="Nord"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_body_medium"
+                android:textSize="@dimen/text_body_large"
                 android:textStyle="normal"/>
 
             <!-- Himmelskörper-Info-Panel -->
@@ -105,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:text="☀ Sonne: wird berechnet …"
                         android:textColor="#FFFFFF"
-                        android:textSize="@dimen/text_body_medium"
+                        android:textSize="@dimen/text_body_large"
                         android:layout_marginBottom="8dp" />
 
                     <TextView
@@ -114,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:text="☾ Mond: wird berechnet …"
                         android:textColor="#FFFFFF"
-                        android:textSize="@dimen/text_body_medium"
+                        android:textSize="@dimen/text_body_large"
                         android:layout_marginBottom="8dp" />
 
                     <TextView
@@ -123,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:text="★ Polaris: wird berechnet …"
                         android:textColor="#FFFFFF"
-                        android:textSize="@dimen/text_body_medium" />
+                        android:textSize="@dimen/text_body_large" />
 
                 </LinearLayout>
 

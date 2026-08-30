@@ -36,7 +36,7 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener, LocationListe
     private var hasGeomagnetic = false
 
     // Views
-    private lateinit var compassContainer: FrameLayout
+    private lateinit var compassContainer: android.view.View
     private lateinit var compassRoseView: CompassRoseView
     private lateinit var degreeText: TextView
     private lateinit var directionText: TextView
