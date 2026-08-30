@@ -28,9 +28,10 @@ class LocationShareService : Service(), LocationListener {
         const val LOCATION_FILE_PREFIX = "location_"
         const val LOCATION_FILE_SUFFIX = ".json"
 
-        private const val UPLOAD_INTERVAL_MS = 30_000L
-        private const val GPS_MIN_TIME_MS = 10_000L
-        private const val GPS_MIN_DISTANCE_M = 0f
+        private const val UPLOAD_INTERVAL_MS = 60_000L
+        private const val HEARTBEAT_INTERVAL_MS = 300_000L // Alle 5 Min erzwungener Upload
+        private const val GPS_MIN_TIME_MS = 20_000L
+        private const val GPS_MIN_DISTANCE_M = 10f
 
         const val PREF_LOCATION_LABEL = "location_share_label"
 
@@ -43,7 +44,6 @@ class LocationShareService : Service(), LocationListener {
     private lateinit var locationManager: LocationManager
     private lateinit var notificationManager: NotificationManager
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
-    private var wakeLock: android.os.PowerManager.WakeLock? = null
 
     @Volatile private var lastLocation: Location? = null
 
@@ -61,7 +61,6 @@ class LocationShareService : Service(), LocationListener {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
-        acquireWakeLock()
 
         try {
             lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
@@ -79,16 +78,14 @@ class LocationShareService : Service(), LocationListener {
      * auch aus onStartCommand() aufgerufen, damit ein START_STICKY-Neustart
      * ohne onCreate() den Lock wiederherstellt.
      */
-    private fun acquireWakeLock() {
+    private fun acquireWakeLock(timeoutMs: Long = 60_000L) {
         try {
-            if (wakeLock?.isHeld == true) return  // bereits gehalten – nichts zu tun
             val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-            @Suppress("WakelockTimeout")
-            wakeLock = powerManager.newWakeLock(
+            powerManager.newWakeLock(
                 android.os.PowerManager.PARTIAL_WAKE_LOCK,
-                "HundeWildnis:LocationShareWakeLock"
-            ).also { it.acquire() }
-            Log.d(TAG, "WakeLock acquired")
+                "HundeWildnis:LocationShareUpload"
+            ).acquire(timeoutMs)
+            Log.d(TAG, "Transient WakeLock acquired for ${timeoutMs/1000}s")
         } catch (e: Exception) {
             Log.e(TAG, "WakeLock acquire fehlgeschlagen: ${e.message}")
         }
@@ -114,10 +111,6 @@ class LocationShareService : Service(), LocationListener {
             return START_NOT_STICKY
         }
 
-        // WakeLock bei jedem onStartCommand() sicherstellen –
-        // deckt den START_STICKY-Neustart ohne onCreate() ab.
-        acquireWakeLock()
-
         isServiceRunning = true
         BootReceiver.setServiceActive(this, true)
         startGpsUpdates()      // idempotent durch gpsUpdatesActive-Guard
@@ -133,12 +126,6 @@ class LocationShareService : Service(), LocationListener {
         uploadLoopActive = false
         BootReceiver.setServiceActive(this, false)
         locationManager.removeUpdates(this)
-
-        if (wakeLock?.isHeld == true) {
-            wakeLock?.release()
-            Log.d(TAG, "WakeLock released")
-        }
-        wakeLock = null
 
         serviceScope.launch { deleteOwnLocationFile() }
         Thread.sleep(2000)
@@ -177,6 +164,7 @@ class LocationShareService : Service(), LocationListener {
     }
 
     private var lastUploadedLocation: Location? = null
+    private var lastUploadTime = 0L
     private var hasUploadedOnce = false
 
     override fun onLocationChanged(location: Location) {
@@ -184,21 +172,15 @@ class LocationShareService : Service(), LocationListener {
         Log.d(TAG, "GPS-Update: ${location.latitude}, ${location.longitude}" +
                 if (location.hasAccuracy()) " (±${location.accuracy.toInt()}m)" else "")
 
-        if (!hasUploadedOnce) {
+        // Smart-Trigger: Bei signifikanten Bewegungen (>20m) sofort hochladen
+        val lastUploaded = lastUploadedLocation
+        if (lastUploaded != null && location.distanceTo(lastUploaded) > 20f) {
+            Log.d(TAG, "Signifikante Bewegung (${location.distanceTo(lastUploaded).toInt()}m) – Sofort-Upload")
+            serviceScope.launch { uploadLocation(location) }
+        } else if (!hasUploadedOnce) {
             val accuracyOk = !location.hasAccuracy() || location.accuracy < 50f
             if (accuracyOk) {
                 hasUploadedOnce = true
-                serviceScope.launch { uploadLocation(location) }
-            } else {
-                Log.d(TAG, "Erster Fix zu ungenau (${location.accuracy.toInt()}m) – warte auf besseren Fix")
-            }
-            return
-        }
-
-        val lastUploaded = lastUploadedLocation
-        if (lastUploaded != null) {
-            if (location.distanceTo(lastUploaded) > 15f) {
-                Log.d(TAG, "Signifikante Bewegung (${location.distanceTo(lastUploaded).toInt()}m) – Sofort-Upload")
                 serviceScope.launch { uploadLocation(location) }
             }
         }
@@ -218,11 +200,25 @@ class LocationShareService : Service(), LocationListener {
         }
         uploadLoopActive = true
         serviceScope.launch {
-            delay(2000)
+            delay(5000)
             while (isActive) {
+                val now = System.currentTimeMillis()
                 val location = lastLocation
-                if (location != null) uploadLocation(location)
-                else Log.d(TAG, "Warten auf GPS-Fix für Upload...")
+                
+                if (location != null) {
+                    val lastUploaded = lastUploadedLocation
+                    val timeSinceLastUpload = now - lastUploadTime
+                    val distSinceLastUpload = lastUploaded?.distanceTo(location) ?: Float.MAX_VALUE
+
+                    // Nur hochladen wenn:
+                    // 1. Seit 5 Minuten nichts mehr gesendet wurde (Heartbeat)
+                    // 2. ODER sich die Position signifikant geändert hat (>15m)
+                    if (timeSinceLastUpload >= HEARTBEAT_INTERVAL_MS || distSinceLastUpload > 15f) {
+                        uploadLocation(location)
+                    } else {
+                        Log.d(TAG, "Upload übersprungen – keine signifikante Bewegung")
+                    }
+                }
                 delay(UPLOAD_INTERVAL_MS)
             }
         }
@@ -232,11 +228,12 @@ class LocationShareService : Service(), LocationListener {
     private val uploadMutex = kotlinx.coroutines.sync.Mutex()
 
     private suspend fun uploadLocation(location: Location) {
-        // Überlappende Uploads vermeiden – wenn bereits einer läuft, überspringen
-        if (!uploadMutex.tryLock()) {
-            Log.d(TAG, "Upload läuft bereits – überspringe diesen Trigger")
-            return
-        }
+        // Überlappende Uploads vermeiden
+        if (!uploadMutex.tryLock()) return
+        
+        // WakeLock nur für die Dauer des Uploads halten (max 60s)
+        acquireWakeLock(60_000L)
+
         try {
             val config = prefs.loadConfig()
             if (config == null) {
@@ -273,6 +270,7 @@ class LocationShareService : Service(), LocationListener {
 
             if (result.isSuccess) {
                 lastUploadedLocation = location
+                lastUploadTime = System.currentTimeMillis()
                 Log.d(TAG, "Standort erfolgreich hochgeladen: $remotePath")
                 updateNotification("Standort aktualisiert: ${formatTime(payload.timestamp)}")
             } else {

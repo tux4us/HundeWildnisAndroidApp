@@ -193,6 +193,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private fun setupMap() {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
+        binding.mapView.setBuiltInZoomControls(false)
         binding.mapView.controller.setZoom(15.0)
 
         val mapEventsReceiver = object : org.osmdroid.events.MapEventsReceiver {
@@ -250,6 +251,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupButtons() {
         styleBackButton()
+
+        binding.btnZoomIn.setOnClickListener { binding.mapView.controller.zoomIn() }
+        binding.btnZoomOut.setOnClickListener { binding.mapView.controller.zoomOut() }
 
         binding.btnCurrentLocation.setOnClickListener {
             if (isNavigating) stopNavigation()
@@ -427,7 +431,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         waypointReachedDialogShown = false
         lastPOIFetchLocation = null
         finalDestination = GeoPoint(poi.lat, poi.lon)
-        binding.btnCurrentLocation.text = "🧭 Navigation beenden"
+        binding.btnCurrentLocation.text = getString(R.string.map_btn_navigation)
         clearPOIMarkers()   // ← NEU: Marker ausblenden
         binding.mapView.invalidate()
 
@@ -455,7 +459,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         NavigationForegroundService.savedDestLat = 0.0
         NavigationForegroundService.savedDestLon = 0.0
         isNavigating = false
-        binding.btnCurrentLocation.text = "📍 Standort"
+        binding.btnCurrentLocation.text = getString(R.string.map_btn_location)
         binding.navigationInfoText.visibility = View.GONE
 
         // Karte wieder nach Norden ausrichten
@@ -507,21 +511,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         tapMarker?.let { binding.mapView.overlays.remove(it) }
         tapMarker = null
 
-
-        // ← NEU: Marker wieder einblenden falls eine Kategorie aktiv ist
-        selectedCategory?.let { category ->
-            currentLocation?.let { location ->
-                lifecycleScope.launch {
-                    try {
-                        val pois = withContext(Dispatchers.IO) {
-                            fetchPOIsForCategory(location.latitude, location.longitude, category, 3000)
-                        }
-                        showPOIsOnMap(pois.sortedBy { it.distance }, category)
-                    } catch (e: Exception) {
-                        Log.e("LocationActivity", "POI Reload Fehler: ${e.message}")
-                    }
-                }
-            }
+        // Marker wiederherstellen
+        val category = selectedCategory
+        if (category != null) {
+            showPOIsOnMap(poiList.toList(), category)
+        } else if (isShowingSearchResults) {
+            displaySearchResults(poiList.toList())
+        } else if (isShowingFavorites) {
+            loadFavorites()
         }
     }
 
@@ -1151,8 +1148,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun showCategoryView() {
-        selectedCategory    = null
-        isShowingFavorites  = false          // ← NEU
+        selectedCategory       = null
+        isShowingSearchResults = false
+        isShowingFavorites     = false
         binding.categoryView.visibility = View.VISIBLE
         binding.poiListView.visibility  = View.GONE
         poiList.clear()
@@ -1663,8 +1661,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun displaySearchResults(results: List<POI>) {
+        val resultsCopy = results.toList() // Sicherungskopie, falls results == poiList
         // Marker auf Karte
-        results.forEach { poi ->
+        resultsCopy.forEach { poi ->
             val marker = Marker(binding.mapView).apply {
                 position = GeoPoint(poi.lat, poi.lon)
                 title   = "${poi.categoryIcon} ${poi.name}"
@@ -1676,14 +1675,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             searchResultMarkers.add(marker)
         }
         binding.mapView.invalidate()
-        if (results.isNotEmpty()) binding.mapView.controller.animateTo(GeoPoint(results[0].lat, results[0].lon))
+        if (resultsCopy.isNotEmpty()) binding.mapView.controller.animateTo(GeoPoint(resultsCopy[0].lat, resultsCopy[0].lon))
 
         // Ergebnisliste unter der Karte einblenden
         poiList.clear()
-        poiList.addAll(results)
+        poiList.addAll(resultsCopy)
         binding.poiRecyclerView.adapter?.notifyDataSetChanged()
         binding.categoryTitleText.text = "🔍 Suchergebnisse"
-        binding.poiCountText.text      = "${results.size} Ergebnis(se) in 20 km"
+        binding.poiCountText.text      = "${resultsCopy.size} Ergebnis(se) in 20 km"
         binding.emptyPoiText.visibility = View.GONE
         binding.categoryView.visibility = View.GONE
         binding.poiListView.visibility  = View.VISIBLE
@@ -1776,7 +1775,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             currentPOIMarker?.let { m -> binding.mapView.overlays.remove(m) }; currentPOIMarker = null
             currentRoutePolyline?.let { l -> binding.mapView.overlays.remove(l) }; currentRoutePolyline = null
             binding.mapView.invalidate()
-            binding.btnCurrentLocation.text = "📍 Standort"
+            binding.btnCurrentLocation.text = getString(R.string.map_btn_location)
         }
     }
 

@@ -190,8 +190,8 @@ object POICategories {
         Category(name = "Apotheke",          icon = "💊", queries = listOf("amenity=pharmacy", "healthcare=pharmacy"), color = "#aa0000"),
         Category(name = "Arzt",              icon = "⚕️", queries = listOf("amenity=doctors", "amenity=hospital", "amenity=clinic", "amenity=dentist", "healthcare"), color = "#aa0000"),
         Category(name = "Polizei",           icon = "🚔", queries = listOf("amenity=police"), color = "#aa0000"),
-        Category(name = "Feuerwehr",         icon = "🚒", queries = listOf("amenity=fire_station"), color = "#aa0000"),
-        Category(name = "Notfall",           icon = "🆘", queries = listOf("emergency=defibrillator", "emergency=ambulance_station", "amenity=rescue_station", "emergency=mountain_rescue", "emergency=access_point", "emergency=first_aid_kit", "emergency=lifeguard", "healthcare=hospital", "emergency"), color = "#550000"),
+        Category(name = "Feuerwehr",         icon = "🚒", queries = listOf("amenity=fire_station", "emergency=fire_hydrant"), color = "#aa0000"),
+        Category(name = "Notfall",           icon = "🆘", queries = listOf("emergency=defibrillator", "emergency=ambulance_station", "emergency=rescue_station", "amenity=rescue_station", "emergency=mountain_rescue", "emergency=water_rescue", "emergency=access_point", "emergency=phone", "emergency=first_aid_kit", "emergency=lifeguard", "healthcare=hospital"), color = "#550000"),
         Category(name = "Naturschutzgebiet", icon = "🌲", queries = listOf("leisure=nature_reserve", "boundary=protected_area")),
         Category(name = "Nationalpark",      icon = "🏞️", queries = listOf("boundary=national_park")),
         // Nur feste, allseitig geschlossene Gebäude – bewusst OHNE einfache/offene

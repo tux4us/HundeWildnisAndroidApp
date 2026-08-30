@@ -142,8 +142,14 @@
     <string name="star_2">2 Sterne</string>
     <string name="star_3">3 Sterne</string>
     <string name="star_4">4 Sterne</string>
+    <string name="map_btn_location">📍 Standort</string>
+    <string name="map_btn_share">📤 Teilen</string>
+    <string name="map_btn_navigation">🧭 Navigation</string>
     <string name="map_orientation_north">🧭 Nord</string>
     <string name="map_orientation_course">🧭 Kurs</string>
+
+    <!-- Compass -->
+    <string name="compass_hinweis">Bewege Dein Phone großräumig und mehrmals in Form einer Acht, um den Kompass zu kalibrieren. Halte Dein Phone von magnetischen Quellen fern!</string>
 
     <!-- Entspannungstraining -->
     <string name="entspannungstraining_title">Entspannungstraining</string>

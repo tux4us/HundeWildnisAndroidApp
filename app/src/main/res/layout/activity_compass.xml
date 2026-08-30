@@ -20,14 +20,14 @@
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="16dp">
 
             <!-- NEU: Wrapper für rotierbaren Kompass -->
@@ -35,7 +35,8 @@
                 android:id="@+id/compassContainer"
                 android:layout_width="320dp"
                 android:layout_height="320dp"
-                android:layout_centerInParent="true">
+                android:layout_marginTop="72dp"
+                android:layout_centerHorizontal="true">
 
                 <!-- Kompass-Anzeige (wird rotiert) -->
                 <com.hundewildnis.app.CompassRoseView
@@ -81,21 +82,75 @@
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="normal"/>
 
-            <!-- Info-Text -->
-            <TextView
-                android:id="@+id/infoText"
-                android:layout_width="wrap_content"
+            <!-- Himmelskörper-Info-Panel -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/skyInfoCard"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="24dp"
-                android:text="Bewege dein Gerät, um den Kompass zu kalibrieren und halte Dein Gerät von magnetischen Quellen fern!"
-                android:textAlignment="center"
-                android:textColor="#999999"
-                android:textSize="@dimen/text_body_medium" />
+                android:layout_below="@id/directionText"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="@color/rd_surface_alt"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/sunInfoText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="☀ Sonne: wird berechnet …"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_body_medium"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/moonInfoText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="☾ Mond: wird berechnet …"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_body_medium"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/polarisInfoText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="★ Polaris: wird berechnet …"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_body_medium" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Abstandshalter, damit der Scroll-Inhalt nicht hinter dem fixen Hinweistext verschwindet -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_below="@id/skyInfoCard" />
 
         </RelativeLayout>
 
-    </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Info-Text (Kalibrierungshinweis) — fest am unteren Rand der Activity, scrollt nicht mit -->
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#1a1a1a"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
+        android:text="@string/compass_hinweis"
+        android:textAlignment="center"
+        android:textColor="#999999"
+        android:textSize="@dimen/text_body_large" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
