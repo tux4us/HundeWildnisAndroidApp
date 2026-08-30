@@ -6,16 +6,16 @@
 
 [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-100%25-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Version](https://img.shields.io/badge/Version-17.0%20Build%2092-C9A84C?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/Version-20.2%20Build%20114-C9A84C?style=flat-square)](#)
 [![License](https://img.shields.io/badge/Lizenz-MIT-5C8A3C?style=flat-square)](LICENSE)
-[![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#datenschutz)
+[![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#-datenschutz--sicherheit)
 [![F-Droid](https://img.shields.io/badge/F--Droid-in%20Vorbereitung-lightgrey?style=flat-square)](https://f-droid.org/)
 
 > 🔒 **100 % Datenschutz** · Kein Tracking · Kein Datenabfluss · Keine Werbung · Keine Google Services · DSGVO-konform
 
 **Eine 100 %ige Eigenentwicklung der HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR, Freital**
 
-[📥 Download](#-download) · [🌐 Website](https://wildnislehrer.com/hundewildnisapp/) · [📖 Alle Module](#-module)
+[📥 Download](#-download) · [🌐 Website](https://wildnislehrer.com/hundewildnisapp/) · [📖 Funktionsübersicht](#-funktionsübersicht)
 
 </div>
 
@@ -25,42 +25,30 @@
 
 - [Über die App](#-über-die-app)
 - [Datenschutz & Sicherheit](#-datenschutz--sicherheit)
-- [Module](#-module)
-  - [1 · Hunde-Stammdaten](#1--hunde-stammdaten)
-  - [2 · Vitalwerte & Pulscheck](#2--vitalwerte--pulscheck)
-  - [3 · Läufigkeitstracker](#3--läufigkeitstracker)
-  - [4 · Trainingstagebuch](#4--trainingstagebuch)
-  - [5 · Nasenarbeit – Expertensystem](#5--nasenarbeit--expertensystem)
-  - [6 · Sprach-Trainer](#6--sprach-trainer)
-  - [7 · Tempo-Trainer](#7--tempo-trainer)
-  - [8 · Zeckenlupe](#8--zeckenlupe)
-  - [9 · Notfall-Assistent](#9--notfall-assistent)
-  - [10 · Hundewetter](#10--hundewetter)
-  - [11 · Revier-Navigation](#11--revier-navigation)
-  - [12 · Standort teilen](#12--standort-teilen)
-  - [13 · Kompass](#13--kompass)
-  - [14 · Höhenmesser](#14--höhenmesser)
-  - [15 · Tagesnotizen](#15--tagesnotizen)
-  - [16 · Backup & WebDAV-Sync](#16--backup--webdav-synchronisation)
-  - [17 · Blog, Kurse & Community](#17--blog-kurse--community)
+- [Was ist neu in 20.2](#-was-ist-neu-in-202)
+- [Funktionsübersicht](#-funktionsübersicht)
+  - [A · Hamburger-Menü](#a--hamburger-menü)
+  - [B · Startseite (6 Kachelgruppen)](#b--startseite-6-kachelgruppen)
+  - [C · Untere Navigationsleiste (Footer)](#c--untere-navigationsleiste-footer)
 - [Technologie-Stack](#️-technologie-stack)
 - [Berechtigungen](#-berechtigungen)
 - [Installation](#-installation)
 - [Download](#-download)
-- [Roadmap](#-roadmap)
 - [Mitmachen](#-mitmachen)
 - [Lizenz](#-lizenz)
+- [Danksagungen](#-danksagungen)
 
 ---
 
 ## 📱 Über die App
 
-Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – vom täglichen Training über Nasenarbeit, Vitalwertmessung und Erste Hilfe bis zu GPS-Navigation und Wetteranalyse. Alle 17 Module teilen eine gemeinsame Datenbasis: die Hunde-Profile.
+Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – vom täglichen Training über Nasenarbeit, Vitalwertmessung und Erste Hilfe bis zu GPS-Navigation und Wetteranalyse. Alle Funktionsbereiche teilen eine gemeinsame Datenbasis: die Hunde-Profile.
 
 **Kernprinzipien:**
 - Alle Nutzerdaten bleiben lokal auf dem Gerät – keine Cloud-Pflicht
 - Keine proprietären Google-Bibliotheken, keine Google Services
-- WebDAV-Synchronisation für geräteübergreifende Datensicherung
+- WebDAV-Synchronisation für geräteübergreifende Datensicherung (Nextcloud & kompatible Server)
+- **Ausschließlich verfügbar über den Google Play Store**
 
 ---
 
@@ -81,305 +69,177 @@ Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – 
 
 ---
 
-## 🧩 Module
+## 🧭 Funktionsübersicht
+
+Die App gliedert sich in drei Bedienebenen: das **Hamburger-Menü** (App-weite Systemfunktionen), die **Startseite** mit sechs Kachelgruppen (die eigentlichen Funktionsmodule) und die **untere Navigationsleiste** als Footer (Wechsel zwischen den vier Hauptbereichen sowie externe Kanäle).
 
 ---
 
-### 1 · 🐕 Hunde-Stammdaten
+### A · Hamburger-Menü
 
-Beliebig viele Hunde-Profile – kein Limit. Vollständige digitale Akte, gemeinsame Datenbasis für alle anderen Module.
+Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der Startseite ebenso wie in Blog, Seiten und Online-Kursen.
 
-**Datenfelder:**
-
-| Bereich | Felder |
+| Eintrag | Funktion |
 |---|---|
-| Basis | Name · Rasse · Geschlecht · Kastrationsstatus · Geburtsdatum · Herkunft · Fellfarbe · Profilfoto |
-| Identifikation | Chipnummer (15-stellig) · Steuernummer · TASSO-Nr. · Heimtierausweis-Land · Ausweisnummer |
-| Gesundheit | Impfstatus · Entwurmung · Floh-/Zeckenschutz · Gewicht mit Datum · Schulterhöhe · Körperlänge · Med. Hinweise |
-| Kontakte | Tierarzt · Haftpflichtversicherung · OP-Versicherung · Besitzer · Notfallkontakt |
-| Sonstiges | Futter · Verhaltensbesonderheiten |
+| 🔁 Aktualisieren | Lädt die Blog-Vorschau bzw. die aktuell sichtbare Liste neu |
+| 🌞🌒 Theme wechseln | Umschalten zwischen dunklem und hellem Erscheinungsbild, gespeichert für künftige Starts |
+| ⚙️ Einstellungen | Öffnet Dialog mit: Hintergrund-Updates ein/aus · Beschränkung auf WLAN · Benachrichtigungen ein/aus · eigener OpenRouteService-API-Key (eingeben/testen/löschen) |
+| 📦 Backup erstellen | Vollständige Sicherungsdatei in `Downloads/HundeWildnis_Backups`, anschließend Teilen-Angebot |
+| 📥 Backup importieren | Dateiauswahl, Prüfung, Abfrage der Merge-Art (Hinzufügen/Ersetzen/Zusammenführen) vor der Wiederherstellung |
+| 📖 Anleitung zur Nutzung | Kurzanleitung zu den wichtigsten Funktionen |
+| 🛡️ Berechtigungen der App | Erläuterung der angeforderten Systemberechtigungen |
+| 📜 Datenschutzerklärung | Vollständige Datenschutzerklärung von wildnislehrer.com, in-app |
+| 📎 Impressum | Anbieterkennzeichnung |
+| ℹ️ Über die App | Versionsnummer, Website- und Kontakt-Link |
 
-**Wesensmerkmale (6 Skalen, 1–5):** Grundtemperament · Selbstbewusstsein · Sozialverhalten · Erregbarkeit · Lerngeschwindigkeit · Frustrationstoleranz
-
-**11 Quick-Profile:** `Ausgeglichen` `Energiegeladen` `Sehr ruhig` `Unsicher` `Sehr selbstbewusst` `Welpe (4–8 Monate)` `Senior (8+ Jahre)` `Arbeitshund` `Sehr sozial` `Eigenständig` `Tierschutzhund`
-
-**Export:** PDF mit QR-Code · QR-Code einzelner Felder · Textliste per Share-Sheet
-
----
-
-### 2 · ❤️ Vitalwerte & Pulscheck
-
-Dokumentation und Verlauf der Vitalparameter pro Hund. Direktübergabe an den Notfall-Assistenten möglich.
-
-**Pulscheck-Assistent:**
-- 15-Sekunden-Timer für Puls (× 4 = /min) und Atemfrequenz
-- Automatische Bewertung Normal / Zu niedrig / Zu hoch nach Schulterhöhe:
-  - Kleinhund < 30 cm: 100–160 /min
-  - Mittelhund 30–50 cm: 70–120 /min
-  - Großhund > 50 cm: 60–100 /min
-- Kapillarfüllzeit (KFZ): 1s · 2s · >3s
-- Schleimhautfarbe: Rosa (normal) · Blass rosa · Weiß/Sehr blass · Blau/Grau (Zyanose) · Gelb (Ikterus) · Ziegelrot
-- Bewusstsein: Alert · Gedämpft · Somnolent · Bewusstlos
-- 8 Belastungsszenarien: Ruhe bis Erkrankung
-
-**Verlauf:** Chronologische Liste aller Messungen · Farbige Puls-Bewertung · CSV-Export · Share-Sheet · Backup-Integration
+**Zum ORS-Routing-Key:** Standardmäßig nutzt die App einen in der App hinterlegten OpenRouteService-Schlüssel. Ein eigener, kostenloser Schlüssel ist optional, wird verschlüsselt gespeichert und hat Vorrang. Ablauf der Routenberechnung: zunächst vollständige Route mit Höhenprofil/Oberflächen-/Wegtyp-Daten → bei Fehlschlag Route nur mit Höhendaten → letzter Fallback gestrichelte Luftlinie.
 
 ---
 
-### 3 · ♀️ Läufigkeitstracker
+### B · Startseite (6 Kachelgruppen)
 
-Nur sichtbar bei: Geschlecht = „Hündin" UND Kastrationsstatus ≠ „Ja".
-
-- Zyklus-Nummer (automatisch), Start-/Enddatum, Dauer in Tagen (automatisch berechnet)
-- Intensität: `Leicht` `Mittel` `Stark`
-- Körperliche Symptome (Freitext)
-- Verhaltensänderungen (10 Optionen + Freitext): Unruhe · Anhänglichkeit · Aggressivität · Markierverhalten · Fluchtversuche · Appetitverlust · Ablenkbarkeit · Urinieren · Reitverhalten · Interesse an Rüden
-- Scheinträchtigkeit (9 Optionen + Freitext): Nestbau · Gesäuge · Milch · Spielzeug adoptieren · Mutterschutzverhalten · Appetitverlust · Unruhe · Gewichtszunahme · Rückzug
-- Erinnerungen via WorkManager (`HeatCycleReminderWorker`)
-
----
-
-### 4 · 🦮 Trainingstagebuch
-
-Vollständiges Trainingsdokumentations- und Analysesystem für 18 Trainingskategorien, abgestimmt auf die HundeWildnis-Onlinekurse 13–31.
-
-**18 Kategorien:** `Leinenarbeit` `Fuß` `Sitz` `Platz` `Steh` `Sozialisierungstechniken` `Langleinentraining` `Distanzunterbrechungen` `Freilauf` `Freifolge` `Teamwalk` `Scouttechniken` `Jagdvermeidung` `Nasenarbeit` `Leinenführigkeit` `Begegnungssituationen` `Stresstoleranztraining` `Straßenroutinen`
-
-**Session-Parameter:**
-
-| Parameter | Optionen |
+#### Gruppe 1 – Übungen der Woche
+| Kachel | Beschreibung |
 |---|---|
-| Messungstyp | Minuten (bis 120) oder Wiederholungen (bis 100) |
-| Erfolgsbewertung | 🔴 Schwierigkeiten · 🟡 Teilweise · 🟢 Erfolgreich · 🟢🟢 Sehr erfolgreich |
-| Ablenkungslevel | Keine · Gering · Mittel · Hoch |
-| Schwierigkeitsgrad | Leicht · Normal · Schwer |
-| Trainingsort | Zuhause · Garten · Park · Wald · Feld · Stadt · Halle · Hundeschule · Sonstiges |
-| Wetterbedingung | Sonnig · Bewölkt · Regnerisch (+ automatischer Abruf) |
-| Geodaten | GPS-Koordinaten und -Ortsname automatisch |
+| 🏋️ Übung der Woche | Wöchentlich wechselnde Basisübung aus der Schulpraxis (Webinhalt in-app) |
+| 🧘 Meditation | Wöchentlich neue Teamgeist-Meditation (Webinhalt in-app) |
+| 🌬️ Entspannung | Geführte 4-Phasen-Atemübung (Ein-/Ausatmen/Halten, je 4 s) mit wachsendem/schrumpfendem Atemkreis, Vibration je Phasenwechsel, optionale Hintergrundmusik, Laufzeitanzeige |
 
-**Fortschrittsberechnung:** Session-Score (40 %) + Erfolgs-Score (40 %) + Aufwand-Score (20 %) = 0–100 %
-
-**Trainingsstände:** Beginn (0–20 %) → Grundlagen (20–40 %) → Aufbau (40–60 %) → Festigung (60–80 %) → Etabliert (80–100 %)
-
-**Meilensteine:** Erste Session · 5-Tage-Streak · 10-Tage-Streak · 50 % · 75 % · 100 % Fortschritt · 5× sehr erfolgreich · Perfekte Woche
-
-**Export:** PDF-Protokoll und CSV (alle Parameter inkl. korrekter Minuten/Wiederholungen-Anzeige via `getEffortText()`)
-
----
-
-### 5 · 🐾 Nasenarbeit – Expertensystem
-
-Regelbasiertes Vier-Schichten-Scoring für drei Disziplinen mit disziplingetrenntem Fortschritt.
-
-**Disziplinen:** Verlorensuche · Personensuche · Freisuche (Flächenangabe in Hektar)
-
-**Vier-Schichten-Analyse:**
-
-```
-Schicht 1 – Wetter (Open-Meteo API)
-  Temperatur: Ausschluss > 30 °C und < −10 °C (Hartausschluss)
-  Windstärke: Beaufort 0–12, levelabhängige Eignungsbewertung pro Disziplin
-  Windrichtung: von hinten / seitlich / von vorn relativ zur Suchlinie
-  WMO-Code: Gewitter + Sturm/Orkan → Hartausschluss
-
-Schicht 2 – Topografie (Open-Meteo Elevation API, SRTM 90m)
-  Klassen: eben · leichte Steigung · steil · Kuppe · Hanglage · Mulde · wechselnd · Felsabbrüche
-
-Schicht 3 – Bodentyp & Zustand (Overpass API/OSM)
-  Typen: Grasland (kurz/lang/frisch) · Laub-/Nadel-/Mischwald · Acker · Asphalt · Fels · Erde · Mineral
-  Zustände: trocken · feucht · nass · matschig · gefroren · Schnee (leicht/mittel/hoch)
-  Eignungswerte pro Bodentyp-Zustand-Disziplin-Kombination: 0=geeignet · 1=bedingt · 2=ungeeignet
-
-Schicht 4 – Trainingslevel (disziplingetrennt aus absolvierten Sessions)
-```
-
-**Level-Tabelle:**
-
-| Level | Sessions | Verlorensuche | Personensuche | Freisuche | Schwierigkeit |
-|---|---|---|---|---|---|
-| Anfänger | 0–49 | bis 100 Schritte | bis 100 Schritte | bis 0,2 ha | Leicht |
-| Fortgeschritten | 50–99 | bis 250 Schritte | bis 250 Schritte | bis 0,5 ha | Mittel |
-| Erfahren | 100–499 | bis 500 Schritte | bis 1.000 Schritte | bis 2,0 ha | Mittel–Schwer |
-| Experte | 500+ | bis 1.000 Schritte | bis 2.000 Schritte | bis 5,0 ha | Schwer |
-
-**Karten-Integration:** Strecke als Polyline / Fläche als Polygon auf OSMDroid-Karte zeichnen · Snap-to-Way (ORS) · Distanz- und Flächenberechnung · PDF- und CSV-Export
-
-> Alle automatisch ermittelten Werte können manuell überschrieben werden.
-
----
-
-### 6 · 🗣️ Sprach-Trainer
-
-Echtzeit-Stimmfrequenzanalyse via YIN-Algorithmus und `AudioRecord`. Feedback bei Treffer einer der 5 Zielfrequenzen (Toleranz ±5 Hz).
-
-**5 Zielfrequenzen:**
-
-| Hz | Name | Wirkung |
+#### Gruppe 2 – Trainingswerkzeuge
+| Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
-| 108 Hz | Tiefenentspannung | Ruhe & Erdung |
-| 216 Hz | Beruhigung | Entspannung & Vertrauen |
-| 324 Hz | Aufmerksamkeit | Fokus & Konzentration |
-| 432 Hz | Harmonie | Balance & Verbindung |
-| 648 Hz | Motivation | Aktivierung & Freude |
+| ⏱️ Tempo-Trainer | GPS-Geschwindigkeitsüberwachung als Hintergrunddienst | Limits 2,5/3,0/4,0 km/h laufend wechselbar · Vibration/Ton bei Überschreitung separat schaltbar · Live-Diagramm · Messintervall 30/60 s · eigenes Untermenü (Anleitung/Berechtigungen/Über) · Historie mit Löschfunktion · Export PDF/GPX/Teilen |
+| 🗣️ Sprach-Trainer | Stimmfrequenzanalyse, 5 Zielfrequenzen (108/216/324/432/648 Hz, ±5 Hz) | Ganzheitliches oder Fokus-Training · Vibration/Ton unabhängig schaltbar · Statistik je Sitzung · PDF-Export, Historie |
+| ⏲️ Intervall-Timer | Konfigurierbarer Intervall-Timer | Aktiv/Pause 10–120 s, 1–20 Runden, Abkühlphase 0–300 s · 6 Schnellprofile (Standard/Welpe/Senior/Energiegeladen/Arbeitshund/Tierschutzhund) · automatischer Vorschlag nach Wesensmerkmalen · Ton/Vibration je Phase · Historie · Übergabe ans Trainingstagebuch |
+| 📔 Trainingstagebuch | 18 Trainingskategorien je Hund, Wochenstatistik auf Hundekarte | Session-Erfassung (Dauer/Wiederholungen, Erfolg, Ablenkung, Schwierigkeit, Ort, Wetter, GPS, Notiz) · Fortschritt 0–100 % mit 5 Trainingsständen · Trend/Streak/Konsistenz · automatische Meilensteine · PDF-/CSV-Export gesamt, vollständiges Löschen je Hund |
+| 📅 Aktivitätskalender | Monatskalender mit Trainingstagen | Tagesdetail per Tap · Vorausplanung mit automatischem Dauervorschlag und Erinnerung · 7-Tage-Vorschau mit Wettereignungs-Ampel |
+| 🐾 Nasenarbeit | Regelbasiertes Expertensystem, 3 Disziplinen – **siehe Detailabschnitt unten** | Sechsstufiger Beratungs-Wizard (Wetter → Gelände → Boden → Trainingsstand → Empfehlung) · Vier-Schichten-Analyse · Kartenwerkzeug · Sitzungsdokumentation · Statistik, PDF-/CSV-Export je Hund |
 
-**Modi:** Ganzheitliches Training (alle 5 Zonen als Limit-Linien) · Fokus-Training (eine Zone)
+##### Nasenarbeit im Detail
 
-**Feedback:** Shimmer-Glüheffekt · Vibration (konfigurierbar) · Ton (ToneGenerator) · Mikrofon-Fallback-Kette: `MIC` → `VOICE_RECOGNITION` → `VOICE_COMMUNICATION` → `DEFAULT`
+**Zweck:** Nasenarbeit ist körperlich und mental anspruchsvoll; falsch dosiert (zu große Distanz, ungeeignetes Wetter, zu hohe Anforderung für den Trainingsstand) führt sie zu Frustration oder Überforderung statt zu Lernerfolg. Das Modul nimmt die Einschätzung „Ist die geplante Übung heute für meinen Hund angemessen?" ab und macht sie nachvollziehbar, statt sie dem Gefühl zu überlassen.
 
-**Statistiken:** Sprechzeit · Pausenzeit · Treffer-Anzahl · Verweildauer pro Frequenz (ms) · Durchschnittsfrequenz · PDF-Export (VoicePDFGenerator)
+Beim ersten Aufruf erscheint ein Einwilligungsdialog, der erläutert, dass GPS-Standort (temporär, nicht gespeichert) und automatisch abgerufene Wetterdaten für die Empfehlung benötigt werden.
 
----
+Der Beratungs-Wizard führt durch fünf Bildschirme mit Fortschrittsanzeige:
 
-### 7 · ⏱️ Tempo-Trainer
+1. **Wetter** – automatischer Abruf von Temperatur, Windstärke (Beaufort), Windrichtung relativ zur geplanten Suchlinie, Luftfeuchtigkeit und WMO-Wettercode; alle Werte manuell korrigierbar
+2. **Gelände** – Auswahl einer Sequenz aus Topografie-Typen (eben, Steigung, Kuppe, Hanglage, Mulde, Felsabbrüche u. a.) und Umgebungstypen (offen, Wald, Grünland, urban, Industrie u. a.); wahlweise Übernahme direkt aus dem Kartenwerkzeug
+3. **Boden** – je Geländeabschnitt Bodentyp (21 Varianten) und Bodenzustand (trocken bis Schnee in drei Stärken) einzeln festlegbar
+4. **Trainingsstand** – bisherige Leistung je Disziplin, Zeitpunkt der letzten Einheit und aktuelle Tagesverfassung des Hundes
+5. **Empfehlung** – Ergebnis in sechs Abschnitten: empfohlene Länge/Fläche mit Schwierigkeitsgrad und geschätztem Spuralter (2 Min. bis 24 h, je nach Bodenfeuchte/Wind) · kontextabhängige Vorbereitungscheckliste (z. B. Pfotenschutz bei Frost/Schnee, Trinkpausen ab 25 °C) · Eignungs-Ampel für alle drei Disziplinen gleichzeitig (✅/⚠️/❌) · Signal-Tabs „OK/Warnung/Stopp/Wetter" mit Begründungen · Nachbereitungshinweise inkl. automatischem Steigerungsvorschlag · Rücksetzen-Funktion für einen erneuten Durchlauf
 
-GPS-Geschwindigkeitsüberwachung via `WalkingSpeedService` (ForegroundService). GPS aktiv auch bei ausgeschaltetem Bildschirm.
+**Automatische Anpassung an Erholung und Tagesform:** Eine bereits am selben Tag absolvierte Einheit reduziert die empfohlene Distanz automatisch um 30 %, eine Einheit innerhalb der letzten 14 Tage um 15 %; hohe Tagesmotivation erhöht die Empfehlung dagegen um 10–20 %.
 
-- **Limits:** 2,5 km/h · 3,0 km/h · 4,0 km/h (während der Messung wechselbar)
-- **Messintervall:** 30 s oder 60 s
-- **Warnfunktion:** Benachrichtigung + Systemton bei Limit-Überschreitung
-- **Echtzeit-Chart:** MPAndroidChart mit Geschwindigkeitskurve und Limit-Linie
-- **Export:** GPX (Tempoverteilung auf Strecke) · PDF-Protokoll mit Limitwechseln
+**Kartenwerkzeug** (separat aufrufbar): Strecke oder Suchfläche direkt auf einer OSM-Karte einzeichnen; die App berechnet automatisch Distanz/Fläche und liest zusätzlich Umgebungs-, Boden- und Topografiedaten der betroffenen Abschnitte aus offenen Kartendaten (Overpass) aus, um Schritt 2 und 3 des Wizards vorauszufüllen. Einzelne Abschnitte lassen sich auf reale Wege einrasten (Snap-to-Way).
 
----
+**Level-System:** Je Disziplin steigt der Trainingsstand automatisch mit der Zahl absolvierter Sitzungen (Anfänger 0–49, Fortgeschritten 50–99, Erfahren 100–499, Experte 500+) und bestimmt damit die maximal empfohlene Distanz/Fläche und den Schwierigkeitsgrad.
 
-### 8 · 🔍 Zeckenlupe
-
-Digitale Lupe auf Basis der **Camera2 API** zur genauen Betrachtung von Zecken.
-
-- **2 Filter:** 🌡️ Wärmebild (Thermal-Pseudofarben) · ◑ Hoher Kontrast (invertiert S/W)
-- **Tap-to-Focus:** AF-Region 15 % der Sensorfläche, automatischer Reset nach 3 s
-- **Freeze-Frame:** Bild einfrieren zur veiwacklungsfreien Betrachtung
-- **Speichern:** Eingefrorenes Bild in Galerie (MediaStore, JPEG)
-- Sensor-Orientation aus `CameraCharacteristics` gelesen, Korrektur via `Matrix.postRotate()`
-- 4:3-Seitenverhältnis mit Center-Crop (keine Verzerrung)
-
----
-
-### 9 · 🚨 Notfall-Assistent
-
-Geführter Erste-Hilfe-Wizard mit HLW-Timer und sofortiger Notfall-PDF.
-
-**Notfallkategorien:**
-
-| Kategorie | Typen |
-|---|---|
-| ⚠️ Unfall | Verkehrsunfall · Blutungen/Wunden · Knochenbruch/Lahmheit · Augenverletzung · Ertrinken · Unterkühlung · Hitzschlag · Fremdkörper verschluckt · Vergiftung (bekannt) |
-| 💉 Erkrankung | Bewusstlosigkeit/Kollaps · Krampfanfall · Magendrehung · Atemnot · Blutungen (ohne Unfall) · Erbrechen/Durchfall · Vergiftung (unbekannt) · Allergische Reaktion |
-
-**HLW-Timer:**
-```
-30 Kompressionen  →  15 Sekunden (120 BPM)
- 2 Beatmungen     →   5 Sekunden
-Puls-Check-Erinnerung alle 2 Minuten (automatisch)
-```
-
-**Notfall-PDF:** Stammdaten · Symptombeschreibung · GPS (OSM-Link) · Fotos · Vitalwert-Übergabe · Ein-Tap-Teilen
-
----
-
-### 10 · 🌦️ Hundewetter
-
-Standortbasierter Wetterbericht via Open-Meteo API (CC BY 4.0) und RainViewer-Radar.
-
-| Funktion | Details |
-|---|---|
-| Aktuelle Daten | Temperatur · gefühlte Temperatur (Windchill) · Luftfeuchtigkeit · Luftdruck · Niederschlag · UV-Index |
-| Wind | km/h · Windrichtungspfeil · Böen · Beaufort 0–12 mit Symbol |
-| Pfotenwetter-Index | Asphalt-Warnung · Kälte · Zecken · UV · Gewitter · Starkregen · Wind kleine Hunde |
-| Tageslicht | Sonnenaufgang/-untergang · Dämmerung · Tageslänge · Goldene Stunde · Mondphase (offline, Canvas) |
-| Diagramme | 24h-Temperatur · 24h-Niederschlag · Stündliche Vorhersage · 7-Tage-Übersicht |
-| Wind-Card | Stündliche Windvorhersage (WindForecastAdapter) |
-| Luftqualität | AQI-Card stündlich (AirQualityAdapter) |
-| Pollen | Erle · Birke · Gräser · Beifuß · Olive · Ragweed – 2-Tage-Vorhersage mit hundesspezifischen Hinweisen |
-| Regenradar | RainViewer Leaflet.js in WebView · 2h-Animation · Play/Pause · 500ms-Frame-Intervall |
-| Wetter-Favoriten | Orte speichern und schnell auswählen (WeatherFavoritesManager · Backup-Integration) |
-
----
-
-### 11 · 🗺️ Revier-Navigation
-
-OpenStreetMap-Karte (OSMDroid) ohne Google Maps. 29 POI-Kategorien via Overpass API (3 km Radius).
-
-**POI-Kategorien:** `Hundeauslauf` `Hundebadestelle` `Hundebeutel` `Tierarzt` `Tierbedarf` `Tierheim` `Wanderweg` `Gipfel/Kreuz` `Aussichtspunkt` `Wegweiser` `Schutzhütte` `Zeltplatz` `Picknickplatz` `Sitzbank` `Feuerstelle` `Trinkwasser` `Toilette` `Supermarkt` `Bäckerei` `Outdoor-Shop` `Restaurant` `Parkplatz` `Apotheke` `Arzt` `Polizei` `Feuerwehr` `Notfall` `Naturschutzgebiet` `Nationalpark`
-
-**Routing-Kette:**
-
-| Dienst | Rolle | Profil |
+#### Gruppe 3 – Outdoorwerkzeuge
+| Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
-| OpenRouteService | Primär | foot-hiking oder cycling-road |
-| Graphhopper | Fallback 1 | – |
-| OSRM | Fallback 2 | – |
-| Luftlinie | Letzter Fallback | – |
+| 📝 Tagesnotizen | Notizen mit Text, Foto, Geodaten | Automatischer Wetter-/GPS-Abruf · Kamera/Galerie · PDF-/GPX-Export, Teilen, Löschen · Historie |
+| 🌦️ Revier-Wetter | Umfassender Wetterbericht (Open-Meteo) | Temperatur/Wind/Luftdruck/UV · Pfotenwetter-Index · Tageslicht/Mondphase · 24h-/7-Tage-Vorschau · Luftqualität/Pollen · Regenradar · Wetter-Favoriten |
+| ⛈️ Gewitterwarner | Zwei Funktionen: Blitz-Donner-Distanzrechner (offline) + Gewitterrisiko-Vorhersage | Zeitmessung Blitz→Donner, Ampel-Einstufung, Trend/Näherungsgeschwindigkeit/ETA bei Folgemessungen |
+| 🗺️ Revier-Navigation | OSM-Karte, POI-Suche, Routing – **siehe Detailabschnitt unten** | 34 POI-Kategorien (3 km, Gewitterschutz 5 km) mit Untertyp-Erkennung und Flächen-/Wege-Umrissen · Routing Fuß/Fahrrad/Auto · Live-Rerouting · Favoriten · Zoom-Buttons, umschaltbares Bedienfeld |
+| 🧭 Kompass | Digitale Orientierung + Himmelsberechnung – s. Abschnitt „Was ist neu" | Sensor-Fallback-Kette · Sonne/Mond/Polaris-Anzeige inkl. Großer-Wagen-Uhrzeiger, alle 30 s aktualisiert, vollständig offline berechnet |
+| ⛰️ Höhenmesser | GPS- und Barometer-Höhe | Automatische Kalibrierung über GPS-Startwert · QNH-Abruf für höhere Genauigkeit |
 
-- Toggle Fußgänger 🥾 / Fahrrad 🚲; Fahrrad-Profil: max. 10 km/h für Hundebegleitung
-- Rerouting-Flag verhindert Mehrfach-Anfragen bei > 30 m Abweichung
-- Zwei-Klick-Logik: 1. Tap → Info · 2. Tap → Navigation
-- Favoriten-System mit Drag-and-Drop-Sortierung
-- ORS-API-Key nutzerseitig eingebbar und AES256-GCM-verschlüsselt gespeichert
+##### Revier-Navigation im Detail
+
+**Zweck:** Ersetzt eine kommerzielle Navigations-App für die konkreten Bedürfnisse beim Gassigehen und Wandern mit Hund – wo ist der nächste Wasserzugang, wo herrscht Leinenzwang, wo ist ein Tierarzt in der Nähe, wie komme ich dorthin – ohne Google-Konto und ohne dass der eigene Standort an einen kommerziellen Anbieter übermittelt wird.
+
+- **Kartendarstellung:** OpenStreetMap-Kachelkarte (OSMDroid), eigener Standort als Marker, feste Zoom-Buttons zusätzlich zur Zwei-Finger-Geste, Kompass-Ausrichtung
+- **POI-Suche:** Auswahl einer von 34 Kategorien (Kategorienraster mit Icon und Farbe) → automatische Abfrage aller passenden Punkte, Wege und Flächen im Umkreis von 3 km (Gewitterschutz 5 km) über die Overpass-API; Ergebnisse erscheinen sowohl als Karten-Overlay als auch als sortierte Liste (nach Entfernung)
+- **Zwei-Tap-Bedienlogik:** erster Tap auf einen Treffer öffnet ein Infofenster mit Entfernung, Richtung, verfügbaren Zusatzangaben (Adresse, Telefon, Öffnungszeiten, Leinenpflicht) sowie Untertyp-Bezeichnung, wo vorhanden; zweiter Tap bzw. eigener Button startet die Navigation dorthin
+- **Flächen und Wege als echte Umrisse:** Naturschutzgebiete, Wanderwege oder Zeltplätze werden nicht als einzelner Punkt, sondern als tatsächliche Fläche (Polygon) bzw. Linie (Polyline) auf der Karte eingezeichnet
+- **Textsuche:** freie Ortssuche zusätzlich zur Kategoriensuche
+- **Favoriten:** beliebige Punkte dauerhaft speichern, frei sortierbar per Drag-and-Drop, als eigene Kategorie im Raster
+- **Routing:** drei Profile – Fuß, Fahrrad (Geschwindigkeitsschätzung realistisch auf 10 km/h für die Begleitung eines Hundes gedeckelt), Auto; die Route wird entlang des tatsächlichen Wegverlaufs berechnet (nicht Luftlinie) und zeigt den Wegbelag farblich codiert an; weicht man während der laufenden Navigation mehr als 30 m von der Route ab, wird automatisch neu berechnet
+- **Live-Standort teilen:** der aktuelle Standort lässt sich jederzeit als Link über die Android-Teilen-Funktion versenden
+
+**Untertyp-Erkennung (neu in 20.2):** Sammelkategorien wie „Notfall" fassen sehr unterschiedliche Objekte zusammen; die App leitet automatisch eine präzise Bezeichnung ab (z. B. „Defibrillator (AED)", „Hydrant", „Rettungswache", „Notruftelefon", „Arztpraxis") statt jeden Treffer nur „Notfall" zu nennen – im Ernstfall entscheidend, um schnell den richtigen Punkt zu erkennen.
+
+#### Gruppe 4 – Hund, Sicherheit und Notfall
+| Kachel | Kernfunktionen | Unterfunktionen |
+|---|---|---|
+| 🐕 Stammdaten | Beliebig viele Hundeprofile | Basis-/Identifikations-/Gesundheits-/Kontaktdaten · Läufigkeitstracker · 6 Wesensmerkmal-Skalen, 11 Schnellprofile · Export (Text/QR/PDF) · eigenständige Notfallmeldung ab Profilkarte |
+| ❤️ Pulscheck | Geführte Puls-/Atemfrequenzmessung | 15-s-Countdowns mit automatischer Hochrechnung · Bewertung nach Schulterhöhe · Kapillarfüllzeit, Schleimhautfarbe, Bewusstsein, Belastungsszenario · Übernahme in Notfallmeldung · Verlauf, CSV-Export |
+| 🔍 Zeckenlupe | Digitale Lupe (Camera2 API) | 3 Filter (Wärmebild/Invertierung/Hoher Kontrast) · Antipp-Fokus · Freeze-Frame · Speichern in Galerie |
+| 🌿 Gefahrenpflanzen | Offline-Datenbank, 56 Giftpflanzen | Saisonale Warnung · Textsuche, Toxizitäts-Filter, Saisonal-Umschalter · eigene Fotos je Pflanze · Verknüpfung mit Notfall-Assistent |
+| 📍 Standortfreigabe | WebDAV-basierte Geräteortung – **siehe Detailabschnitt unten** | Bewegungsbasierte Uploads mit Heartbeat-Fallback · Akkustand-Anzeige · frei wählbares Geräte-Label · Karte mit Stale-Markierung · Routing zum Standort |
+| 🚨 NOTFALL | Vierstufiger Erste-Hilfe-Assistent – **siehe Detailabschnitt unten** | Hund wählen → Unfall/Erkrankung → 17 Notfalltypen → Symptom-Check → Anleitung mit HLW-Timer und Countdown-Timer je nach Bedarf · Notfallmeldung mit PDF-Export |
+
+##### Standortfreigabe im Detail
+
+**Zweck:** Beim gemeinsamen Wandern oder Trainieren in unübersichtlichem Gelände, bei getrennten Gruppen oder wenn eine Person mit dem Hund allein unterwegs ist, erlaubt diese Funktion es vertrauten Personen (z. B. Trainingspartnern, Familienmitgliedern), den eigenen Standort in Echtzeit mitzuverfolgen – etwa um sich im Wald wiederzufinden, im Ernstfall schnell Hilfe schicken zu können, oder um bei einer verabredeten Route zu sehen, wie weit jemand ist. Die Übertragung läuft ausschließlich über einen selbst gewählten WebDAV-Server, nicht über einen Standort-Dienst eines Drittanbieters.
+
+- Ohne hinterlegte WebDAV-Zugangsdaten ist die Funktion gesperrt und verlinkt direkt zu den WebDAV-Einstellungen
+- Nach Aktivierung läuft im Hintergrund ein Dienst, der den eigenen Standort automatisch überträgt und die Standorte anderer, ebenfalls freigebender Geräte abruft und auf einer Karte anzeigt
+- **Bewegungsbasierte Übertragung (überarbeitet in 20.2):** ein Upload erfolgt alle 60 Sekunden nur bei tatsächlicher Bewegung von mehr als 15 Metern; bei größerer Bewegung (> 20 m) sofort; im Stillstand nur alle 5 Minuten ein kurzes Status-Signal (Heartbeat), damit andere weiterhin erkennen können, dass das Gerät online ist – das schont spürbar den Akku, ohne dass bei aktiver Bewegung Genauigkeit verloren geht
+- Jedes angezeigte Gerät zeigt zusätzlich seinen aktuellen **Akkustand** an, damit rechtzeitig erkennbar ist, wenn ein Gerät bald offline gehen könnte
+- Standorte, die seit mehr als 10 Minuten nicht aktualisiert wurden, werden auf der Karte grau (veraltet) dargestellt
+- Direktes Routing zu einem freigegebenen Standort ist mit einem Tap möglich (Fuß/Fahrrad/Auto)
+- Jedes Gerät kann sich ein eigenes, frei wählbares Label geben (Standard: Gerätemodell), einzelne Geräte-Einträge lassen sich vom Server entfernen
+- Beim ersten Aktivieren erscheint ein Hinweis, die App von der Akkuoptimierung des Systems auszunehmen, damit die Freigabe auch bei gesperrtem Bildschirm zuverlässig weiterläuft
+
+##### NOTFALL-Assistent im Detail
+
+**Zweck:** In einer akuten Notfallsituation mit dem Hund fehlt oft die Ruhe, sich an die richtigen Erste-Hilfe-Schritte zu erinnern oder alle notwendigen Angaben für einen Tierarzt oder Helfer zusammenzustellen. Der Assistent führt strukturiert durch die Einschätzung der Lage, liefert konkrete Handlungsanweisungen und erstellt parallel eine vollständige, teilbare Notfallmeldung.
+
+**Ablauf in vier Schritten:**
+1. **Hund auswählen** aus den vorhandenen Stammdaten (bei mehreren Hunden per Auswahldialog)
+2. **Hauptkategorie wählen:** Unfall oder Erkrankung
+3. **Konkrete Notfallart wählen** – 9 Unfalltypen (u. a. Verkehrsunfall, Blutungen/Wunden, Knochenbruch/Lahmheit, Ertrinken, Unterkühlung, Hitzschlag, Fremdkörper verschluckt, Vergiftung mit bekannter Substanz) und 8 Erkrankungstypen (u. a. Bewusstlosigkeit/Kollaps, Krampfanfall, Magendrehung, Atemnot, Blutungen ohne Unfall, Erbrechen/Durchfall, Vergiftung mit unbekannter Substanz, Allergische Reaktion)
+4. **Symptom-Schnellcheck**, sofern für die gewählte Notfallart hinterlegt (7 der 17 Typen): kurze Ja/Nein-Fragen, die die Dringlichkeit direkt anhand der Antwort einschätzen (z. B. bei Hitzschlag: „Körpertemperatur über 40 °C?" wird als kritisch gewertet, wenn mit Ja beantwortet)
+
+**Ergebnis – die Erste-Hilfe-Anleitung** enthält für jeden der 17 Notfalltypen: eine Liste typischer Symptome, nummerierte Sofortmaßnahmen in der richtigen Reihenfolge, getrennte Was-tun- und Was-nicht-tun-Listen sowie einen Hinweis zum sicheren Transport des Hundes. Je nach Notfallart wird zusätzlich automatisch eingeblendet:
+- der **HLW-Timer** (bei Bewusstlosigkeit und Ertrinken) – automatisches Metronom für Herz-Lungen-Wiederbelebung: 30 Kompressionen in 15 Sekunden (120 pro Minute) gefolgt von 2 Beatmungen in 5 Sekunden, danach automatischer Neustart, mit Erinnerung alle 2 Minuten, den Puls erneut zu prüfen
+- ein **einfacher Countdown-Timer** (z. B. bei Hitzschlag zur Kühlungsdauer, bei Krampfanfall zur Beobachtungszeit)
+
+**Notfallmeldung:** Aus der Anleitung heraus lässt sich direkt eine Notfallmeldung anlegen, die auch unabhängig – etwa direkt von der Stammdaten-Profilkarte aus – aufgerufen werden kann, wenn keine geführte Anleitung benötigt wird. Sie übernimmt automatisch Symptomtitel und Dringlichkeitsstufe als Notiztext, erlaubt das Erfassen des aktuellen GPS-Standorts per Tastendruck sowie das Anhängen von Fotos, und erzeugt daraus ein PDF-Dokument mit:
+- Symptom- und Zusatzangaben sowie GPS-Standort inklusive anklickbarem OpenStreetMap-Kartenlink
+- vollständigen Stammdaten des Hundes (Name, Rasse, Geburtsdatum, Geschlecht, Kastrationsstatus, Gewicht, Schulterhöhe, Körperlänge, Chipnummer, Impfstatus, Vorerkrankungen, Besitzer)
+- bei intakten, unkastrierten Hündinnen automatisch dem aktuellen Läufigkeitsstatus inklusive Warnhinweis, falls die Hündin gerade läufig ist – eine für Tierärzte relevante Zusatzinformation (u. a. für Narkose- und Blutungseinschätzung)
+- allen angehängten Fotos
+
+Die ausführliche Erste-Hilfe-Anleitung selbst wird bewusst nicht vollständig ins PDF übernommen (sie bleibt während des Notfalls in der App einsehbar); Tierarzt-Kontaktdaten aus den Stammdaten werden aktuell ebenfalls nicht automatisch übernommen und können bei Bedarf im freien Notizfeld ergänzt werden.
+
+Das fertige PDF lässt sich mit einem Tap über die Android-Teilen-Funktion an Tierarzt, Tierrettung oder Begleitpersonen weitergeben; ein Begleittext sorgt dafür, dass auch Empfänger ohne PDF-Anwendung die wichtigsten Angaben direkt lesen können. Alle erstellten Meldungen bleiben in einer Verlaufshistorie erhalten.
+
+#### Gruppe 5 – Informationen und Lernen
+| Kachel | Beschreibung |
+|---|---|
+| 📰 Blog | Artikel von wildnislehrer.com mit Kategorie-Filter |
+| 📄 Seiten | Themengruppen Hundeschule, Wildnisschule, weitere Informationen |
+| 🎓 Online-Kurse | 41 nummerierte Onlinekurse, Freischaltung über wildnislehrer.com |
+
+#### Gruppe 6 – App-Service
+| Kachel | Kernfunktionen | Unterfunktionen |
+|---|---|---|
+| 📦 Backup | Sicherung, Wiederherstellung, Synchronisation | Backup erstellen · Wiederherstellen (3 Merge-Modi) · WebDAV-Sync (Hub-and-Spoke, 14 selektive Datenbereiche) · Standortfreigabe-Zugriff · Speicher bereinigen |
+| 💛 Unterstützung | Freiwillige Finanzierung | Wero, PayPal, Banküberweisung, Zahlungslink · kostenlos: bewerten, teilen |
 
 ---
 
-### 12 · 📍 Standort teilen
+### C · Untere Navigationsleiste (Footer)
 
-Gegenseitige Echtzeit-Standortfreigabe über WebDAV.
+Durchgehend sichtbare Navigationsleiste am unteren Bildschirmrand mit fünf Einträgen:
 
-- `LocationShareService` (ForegroundService): eigener Standort alle 60 s hochgeladen
-- Fremd-Standorte alle 60 s abgerufen und auf OSMDroid-Karte dargestellt
-- Stale-Marker: Standorte > 10 Minuten werden grau dargestellt
-- Routing zum freigegebenen Standort direkt startbar
-- Ausschließlich über eigenen WebDAV-Server – keine Drittanbieter
+| Eintrag | Funktion |
+|---|---|
+| 🏠 Start | Zurück zur Kachel-Startseite |
+| 📰 Blog | Blog-Ansicht mit Kategorie-Filter |
+| 📄 Seiten | Seiten-Ansicht (Hundeschule/Wildnisschule/Weitere Informationen) |
+| 🎓 Kurse | Kursübersicht, 41 Onlinekurse |
+| ⋯ Mehr | Öffnet Auswahlfenster mit externen Kanälen |
 
----
-
-### 13 · 🧭 Kompass
-
-`TYPE_ROTATION_VECTOR`-Sensor · Exponentielle Glättung (α = 0,2, 5er-Historien-Puffer) · Mindest-Änderungsschwelle 2° · Eigene `CompassRoseView` (Canvas) · Vollständig offline
-
----
-
-### 14 · ⛰️ Höhenmesser
-
-GPS-Höhe (`LocationManager`) + Barometer-Höhe (`TYPE_PRESSURE`-Sensor, falls vorhanden) · Offline
-
----
-
-### 15 · 📝 Tagesnotizen
-
-- Titel + freies Textfeld · Automatische Wetterdaten (Open-Meteo) · GPS-Koordinaten (automatisch)
-- Fotos (Galerie via `PickMultipleVisualMedia` oder Kamera) · Export als PDF (iText7) und GPX
-- Langzeit-Historie · Backup-Integration (inkl. Fotos)
-
----
-
-### 16 · 📦 Backup & WebDAV-Synchronisation
-
-**Backup-Version 6** · Dateiendung `.hundebackup` · Offenes ZIP-Format
-
-**11 Datenbereiche (selektiv wählbar):**
-`Hunde-Profile` `Trainingstagebuch` `Tempo-Messungen` `Tagesnotizen & Fotos` `Sprach-Sessions` `Notfall-Meldungen` `Nasenarbeit` `Karten-Favoriten` `Wetter-Favoriten` `Vitalwerte` `App-Einstellungen`
-
-**3 Merge-Modi:**
-- `Hinzufügen` – Neue Daten ergänzen, vorhandene behalten
-- `Ersetzen` – Vollständiges Überschreiben
-- `Zusammenführen` – Neueste Version je Eintrag via `lastModified`-Timestamp
-
-**Deduplizierung:** Chipnummer (Primär) + UUID (Sekundär) · UUID-Erhaltung für referentielle Integrität
-
-**WebDAV-Synchronisation:**
-- Nextcloud · Hetzner Storage Box · Mailbox.org · ownCloud · oCloud · weitere selbst gehostete Server
-- Zugangsdaten AES256-GCM-verschlüsselt (`EncryptedSharedPreferences`)
-- Auto-Sync-Intervalle: 2h / 4h / 6h / 12h / 24h (WorkManager)
-- Hub-and-Spoke-Mergemuster mit gerätespezifischen Backup-Dateien
-
----
-
-### 17 · 📰 Blog, Kurse & Community
-
-- Übung der Woche · Meditation der Woche
-- Blog (WordPress REST API, Jsoup, Offline-Cache)
-- 40+ Online-Trainingskurse (nach Freischaltung auf wildnislehrer.com)
-- YouTube-Kanal · Podcast · X-Kanal · SIGNAL-Direktkontakt
-- Hintergrund-Updates via `ContentUpdateWorker` (WorkManager)
+**Untermenü „Mehr":**
+- 🎥 YouTube-Kanal (öffnet nach Möglichkeit direkt die YouTube-App)
+- 🎙️ Podcast-Übersicht auf wildnislehrer.com, in-app
+- 🎧 Podcast-Kanal auf Spotify
+- 💬 SIGNAL-Chat mit Manuela (mit Bestätigungsdialog vor Weiterleitung)
+- 💬 SIGNAL-Chat mit Jörg (mit Bestätigungsdialog vor Weiterleitung)
 
 ---
 
@@ -388,7 +248,7 @@ GPS-Höhe (`LocationManager`) + Barometer-Höhe (`TYPE_PRESSURE`-Sensor, falls v
 ```
 Sprache          Kotlin 100 %
 Android          7.0 – 15  (API 24 – 36)
-Version          17.0 (Build 92)
+Version          20.2 (Build 114)
 Architektur      MVVM + Kotlin Coroutines
 UI               Android Views · ViewBinding · Material Design
 ```
@@ -396,21 +256,20 @@ UI               Android Views · ViewBinding · Material Design
 | Kategorie | Bibliothek / Dienst |
 |---|---|
 | Karten | OSMDroid (OpenStreetMap) |
-| Routing | OpenRouteService (foot-hiking / cycling-road) |
+| Routing | OpenRouteService (Fuß/Fahrrad/Auto) |
 | Wetter | Open-Meteo API (CC BY 4.0) |
 | Regenradar | RainViewer API (Leaflet.js in WebView) |
 | Gelände / POI | Overpass API (OpenStreetMap) |
+| Astronomische Berechnung | Eigene Implementierung nach Jean Meeus (`SkyCalculator`) |
 | Diagramme | MPAndroidChart |
 | Kamera | Camera2 API |
 | PDF | iText7 |
-| HTML-Parser | Jsoup 1.17.2 |
+| HTML-Parser | Jsoup |
 | Hintergrund | WorkManager |
-| Netzwerk | OkHttp |
+| Netzwerk | HttpURLConnection |
 | JSON | Gson |
 | Sichere Einstellungen | EncryptedSharedPreferences (AES256-GCM) |
 | WebDAV | HttpURLConnection + Reflection-Workaround (PROPFIND/MKCOL) |
-| Mondphase | MoonPhaseView (eigene Canvas-Klasse) |
-| Kompass | CompassRoseView (eigene Canvas-Klasse) |
 | Build | Gradle Kotlin DSL |
 
 **Keine Google Play Services · Kein Tracking · Kein Ad-SDK · Kein Crash-Reporting an Dritte**
@@ -422,13 +281,13 @@ UI               Android Views · ViewBinding · Material Design
 | Berechtigung | Verwendung |
 |---|---|
 | `INTERNET` | Wetter, Karte, Blog, WebDAV-Sync |
-| `ACCESS_FINE_LOCATION` | Navigation, Wetter, Nasenarbeit-Karte, Tempo-Trainer |
+| `ACCESS_FINE_LOCATION` | Navigation, Wetter, Nasenarbeit-Karte, Tempo-Trainer, Kompass (Himmelsberechnung), Standortfreigabe |
 | `ACCESS_COARSE_LOCATION` | Standort-Fallback |
-| `FOREGROUND_SERVICE` | GPS-Tracking (Tempo-Trainer), Navigation, Standort teilen |
-| `CAMERA` | Zeckenlupe, Fotos für Notizen und Notfall-PDF |
+| `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | GPS-Tracking (Tempo-Trainer, Standortfreigabe, Navigation) |
+| `CAMERA` | Zeckenlupe, Fotos für Notizen, Notfall-PDF, Gefahrenpflanzen |
 | `RECORD_AUDIO` | Sprach-Trainer (Frequenzanalyse) |
-| `POST_NOTIFICATIONS` | Tempo-Trainer-Warnungen, Läufigkeits-Erinnerungen |
-| `VIBRATE` | Feedback im Sprach-Trainer |
+| `POST_NOTIFICATIONS` | Tempo-Trainer-Warnungen, Läufigkeits-Erinnerungen, Blog-Updates |
+| `VIBRATE` | Feedback in Sprach-Trainer, Entspannung, Intervall-Timer |
 | `READ_EXTERNAL_STORAGE` | Backup-Import, Foto-Auswahl |
 | `WRITE_EXTERNAL_STORAGE` | Backup-Export, PDF/GPX-Export |
 
@@ -439,31 +298,19 @@ UI               Android Views · ViewBinding · Material Design
 | Anforderung | Details |
 |---|---|
 | Android | 7.0 (API 24) oder höher |
-| Speicherplatz | ca. 30 MB |
 | Internet | Für Karte, Wetter, Blog-Inhalte, WebDAV-Sync |
-| GPS | Optional – für Navigation, Tempo-Trainer, Nasenarbeit |
-| ORS-API-Key | Optional – für Routing (kostenlos bei openrouteservice.org) |
+| GPS | Optional – für Navigation, Tempo-Trainer, Nasenarbeit, Kompass-Himmelsberechnung |
+| ORS-API-Key | Optional – eigener Schlüssel für Routing (kostenlos bei openrouteservice.org) |
 
 ---
 
 ## 📥 Download
 
-| Plattform | Status | Link |
-|---|---|---|
-| 🐙 GitHub Releases | ✅ Verfügbar | [Releases](https://github.com/tux4us/HundeWildnisAndroidApp/releases) |
-| ▶ Google Play | ✅ Verfügbar | [Play Store](https://play.google.com/store/apps/details?id=com.hundewildnis.app) |
+Die App ist **ausschließlich über den Google Play Store** verfügbar:
 
-Die App ist **kostenlos**, solange Sie sich durch freiwillige Spenden finanzieren kann.
+▶ [play.google.com/store/apps/details?id=com.hundewildnis.app](https://play.google.com/store/apps/details?id=com.hundewildnis.app)
 
----
-
-## 🔭 Roadmap
-
-| Version | Status | Inhalt |
-|---|---|---|
-| **17.0** | ✅ Aktuell | Vitalwerte & Pulscheck · Wetter-Favoriten · Luftqualität & Pollen · 7-Tage-Vorhersage · Wind-Card · Fahrrad-Routing |
-| **16.x** | ✅ | WebDAV-Sync · Standort teilen · Zeckenlupe · Nasenarbeit-Expertensystem |
-| **18.0** | 🔜 Geplant | Weitere Module nach Community-Feedback |
+Eine F-Droid-Veröffentlichung befindet sich in Vorbereitung. Die App ist kostenlos, solange sie sich durch freiwillige Unterstützung finanzieren kann.
 
 ---
 
@@ -498,6 +345,7 @@ Dieses Projekt ist unter [diesen Bedingungen](https://github.com/tux4us/HundeWil
 - Wetterdaten © [Open-Meteo](https://open-meteo.com/) (CC BY 4.0)
 - Regenradar © [RainViewer](https://www.rainviewer.com/)
 - Routing © [OpenRouteService](https://openrouteservice.org/) (HeiGIT gGmbH)
+- Astronomische Berechnungsgrundlage: Jean Meeus, *Astronomical Algorithms*
 
 ---
 
