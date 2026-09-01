@@ -92,3 +92,6 @@
     public static *** v(...);
     public static *** i(...);
 }
+
+# SLF4J
+-dontwarn org.slf4j.impl.StaticLoggerBinder
