@@ -406,7 +406,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 "wind_gusts_10m,uv_index,is_day" +
                 "&hourly=temperature_2m,precipitation,precipitation_probability,weather_code," +
                 "apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m," +
-                "cloud_cover,visibility,uv_index" +
+                "cloud_cover,visibility,uv_index,cape,surface_pressure" +
                 "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset," +
                 "weather_code,precipitation_probability_max," +
                 "wind_speed_10m_max,wind_gusts_10m_max,uv_index_max,sunshine_duration" +
@@ -482,6 +482,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         displayPrecipitationChart(data)
         displayDaylightInfo(data)
         displayMoonPhase()
+        displayBiowetter(data)    // NEU: Biowetter-Card
     }
 
 
@@ -2206,4 +2207,196 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         return sb.toString()
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // BIOWETTER-CARD
+    //
+    // EINBAU:
+    // 1. fetchWeatherData() – hourly-Block:
+    //    "cloud_cover,visibility,uv_index,cape,surface_pressure"
+    //
+    // 2. displayWeatherData() – nach displayMoonPhase():
+    //    displayBiowetter(data)
+    //
+    // 3. Diese Funktion + showBiowetterDetail() am Ende der Klasse einfügen.
+    // ════════════════════════════════════════════════════════════════
+
+    private fun displayBiowetter(data: JSONObject) {
+        try {
+            val current = data.getJSONObject("current")
+            val hourly  = data.getJSONObject("hourly")
+
+            val tempC       = current.getDouble("temperature_2m")
+            val humidity    = current.getInt("relative_humidity_2m")
+            val windSpeed   = current.getDouble("wind_speed_10m")
+            val weatherCode = current.getInt("weather_code")
+
+            val dateFmt  = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm", java.util.Locale.GERMAN)
+            val timeFmt  = hourly.getJSONArray("time")
+            val now      = System.currentTimeMillis()
+            val sixHours = 6 * 3600_000L
+            val oneHour  = 3_600_000L
+
+            // ── Luftdruck-Stundenwerte (letzten 6h) ───────────────────────
+            val pressureArr = hourly.getJSONArray("surface_pressure")
+            val recentPressures = mutableListOf<Double>()
+            for (i in 0 until timeFmt.length()) {
+                val date = dateFmt.parse(timeFmt.getString(i)) ?: continue
+                if (date.time in (now - sixHours)..(now + oneHour)) {
+                    if (!pressureArr.isNull(i)) recentPressures.add(pressureArr.getDouble(i))
+                }
+            }
+
+            // ── Niederschlagswahrscheinlichkeit aktuelle Stunde ───────────
+            val precipProbArr = hourly.getJSONArray("precipitation_probability")
+            var precipProb = 0
+            for (i in 0 until timeFmt.length()) {
+                val date = dateFmt.parse(timeFmt.getString(i)) ?: continue
+                if (date.time >= now - oneHour) {
+                    precipProb = if (!precipProbArr.isNull(i)) precipProbArr.getInt(i) else 0
+                    break
+                }
+            }
+
+            // ── CAPE aktuelle Stunde (optional) ───────────────────────────
+            var capeValue = -1.0
+            if (hourly.has("cape")) {
+                val capeArr = hourly.getJSONArray("cape")
+                for (i in 0 until timeFmt.length()) {
+                    val date = dateFmt.parse(timeFmt.getString(i)) ?: continue
+                    if (date.time >= now - oneHour) {
+                        capeValue = if (!capeArr.isNull(i)) capeArr.getDouble(i) else -1.0
+                        break
+                    }
+                }
+            }
+
+            // ── Biowetter-Bewertung ────────────────────────────────────────
+            val result = BiowetterEngine.evaluate(
+                pressureHourly = recentPressures,
+                tempC          = tempC,
+                relHumidityPct = humidity,
+                windSpeedKmh   = windSpeed,
+                capeJPerKg     = capeValue,
+                weatherCode    = weatherCode,
+                precipProb     = precipProb
+            )
+
+            // ── Gesamtampel ────────────────────────────────────────────────
+            binding.biowetterOverallBadge.text = "● ${result.overallLevel.label}"
+            binding.biowetterOverallBadge.setTextColor(result.overallLevel.color)
+            binding.biowetterSummaryText.text  = result.overallSummary
+            binding.biowetterAdviceText.text   = result.trainingAdvice
+
+            // ── Indikatoren dynamisch aufbauen ─────────────────────────────
+            binding.biowetterIndicatorsContainer.removeAllViews()
+            val density = resources.displayMetrics.density
+
+            result.indicators.forEachIndexed { idx, indicator ->
+                // Klickbare Zeile pro Indikator
+                val row = android.widget.LinearLayout(this).apply {
+                    orientation = android.widget.LinearLayout.VERTICAL
+                    setPadding(0, (8 * density).toInt(), 0, (8 * density).toInt())
+                    isClickable = true
+                    isFocusable = true
+                    setOnClickListener { showBiowetterDetail(indicator) }
+                }
+
+                // Kopfzeile: Name links, Ampel rechts
+                val header = android.widget.LinearLayout(this).apply {
+                    orientation = android.widget.LinearLayout.HORIZONTAL
+                    gravity = android.view.Gravity.CENTER_VERTICAL
+                }
+                val nameText = android.widget.TextView(this).apply {
+                    text = "${indicator.emoji} ${indicator.name}"
+                    textSize = 14f
+                    setTextColor(android.graphics.Color.WHITE)
+                    setTypeface(null, android.graphics.Typeface.BOLD)
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f
+                    )
+                }
+                val levelDot = android.widget.TextView(this).apply {
+                    text = "● ${indicator.level.label}"
+                    textSize = 12f
+                    setTextColor(indicator.level.color)
+                }
+                header.addView(nameText)
+                header.addView(levelDot)
+
+                // Messwert-Zeile
+                val valueText = android.widget.TextView(this).apply {
+                    text = indicator.valueText
+                    textSize = 12f
+                    setTextColor(android.graphics.Color.parseColor("#AAAAAA"))
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.topMargin = (2 * density).toInt() }
+                }
+
+                // Tipp-Hinweis
+                val tapHint = android.widget.TextView(this).apply {
+                    text = "👆 Tippe für Details"
+                    textSize = 11f
+                    setTextColor(android.graphics.Color.parseColor("#666666"))
+                    layoutParams = android.widget.LinearLayout.LayoutParams(
+                        android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.topMargin = (1 * density).toInt() }
+                }
+
+                row.addView(header)
+                row.addView(valueText)
+                row.addView(tapHint)
+                binding.biowetterIndicatorsContainer.addView(row)
+
+                // Trennlinie (nicht nach dem letzten Element)
+                if (idx < result.indicators.size - 1) {
+                    val divider = android.view.View(this).apply {
+                        layoutParams = android.widget.LinearLayout.LayoutParams(
+                            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                            1
+                        ).also {
+                            it.topMargin    = (4 * density).toInt()
+                            it.bottomMargin = (4 * density).toInt()
+                        }
+                        setBackgroundColor(android.graphics.Color.parseColor("#2a2a2a"))
+                    }
+                    binding.biowetterIndicatorsContainer.addView(divider)
+                }
+            }
+
+        } catch (e: Exception) {
+            // Fehler sichtbar machen statt stumm scheitern
+            android.util.Log.e("WeatherActivity", "Fehler bei Biowetter-Card: ${e.message}", e)
+            binding.biowetterOverallBadge.text = "● Daten nicht verfügbar"
+            binding.biowetterOverallBadge.setTextColor(android.graphics.Color.parseColor("#999999"))
+            binding.biowetterSummaryText.text  = "Biowetter-Daten konnten nicht berechnet werden."
+            binding.biowetterAdviceText.text   = ""
+        }
+    }
+
+    private fun showBiowetterDetail(indicator: BioIndicator) {
+        val isDark = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val accentColor = if (isDark) android.graphics.Color.WHITE
+        else android.graphics.Color.parseColor("#2d5016")
+
+        val message = buildString {
+            append("${indicator.valueText}\n\n")
+            append("👤 Auswirkung Mensch:\n${indicator.humanEffect}\n\n")
+            append("🐕 Hund & Training:\n${indicator.dogEffect}\n\n")
+            append("⚕️ Kein Ersatz für medizinische oder tierärztliche Beratung.")
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("${indicator.emoji} ${indicator.name} – ${indicator.level.label}")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .create().apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
+            }
+    }
 }
