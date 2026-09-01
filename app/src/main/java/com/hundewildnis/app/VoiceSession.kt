@@ -4,18 +4,18 @@ package com.hundewildnis.app
  * Repräsentiert einen einzelnen Frequenz-Messpunkt
  */
 data class FrequencyPoint(
-    val timestamp: Long,      // Zeitstempel relativ zum Session-Start (ms)
-    val frequency: Float,     // Gemessene Frequenz in Hz
-    val amplitude: Float      // Lautstärke (0.0 - 1.0)
+    val timestamp: Long = 0L,      // Zeitstempel relativ zum Session-Start (ms)
+    val frequency: Float = 0f,     // Gemessene Frequenz in Hz
+    val amplitude: Float = 0f      // Lautstärke (0.0 - 1.0)
 )
 
 /**
  * Zielfrequenz mit Namen und Bedeutung
  */
 data class TargetFrequency(
-    val hz: Float,
-    val name: String,
-    val description: String
+    val hz: Float = 432f,
+    val name: String = "",
+    val description: String = ""
 ) {
     companion object {
         val FREQUENCY_108 = TargetFrequency(108f, "Tiefenentspannung", "Ruhe & Erdung")
@@ -32,37 +32,37 @@ data class TargetFrequency(
  * Eine komplette Kommunikations-Session
  */
 data class VoiceSession(
-    val startTime: Long,                    // Zeitstempel Start
-    val endTime: Long,                      // Zeitstempel Ende
-    val mode: TrainingMode,                 // Trainingsmodus
-    val focusFrequency: TargetFrequency?,   // Nur bei Fokus-Training
+    val startTime: Long = 0L,                    // Zeitstempel Start
+    val endTime: Long = 0L,                      // Zeitstempel Ende
+    val mode: TrainingMode = TrainingMode.FREE,  // Trainingsmodus
+    val focusFrequency: TargetFrequency? = null, // Nur bei Fokus-Training
 
     // Statistische Daten
-    val totalDuration: Long,                // Gesamtdauer in ms
-    val voiceDuration: Long,                // Reine Sprechdauer in ms
-    val pauseDuration: Long,                // Pausenzeit in ms
+    val totalDuration: Long = 0L,                // Gesamtdauer in ms
+    val voiceDuration: Long = 0L,                // Reine Sprechdauer in ms
+    val pauseDuration: Long = 0L,                // Pausenzeit in ms
 
     // Treffer pro Frequenz
-    val hits108Hz: Int,
-    val hits216Hz: Int,
-    val hits324Hz: Int,
-    val hits432Hz: Int,
-    val hits648Hz: Int,
+    val hits108Hz: Int = 0,
+    val hits216Hz: Int = 0,
+    val hits324Hz: Int = 0,
+    val hits432Hz: Int = 0,
+    val hits648Hz: Int = 0,
 
     // Verweildauer in Toleranzbereich (±5 Hz) in ms
-    val time108Hz: Long,
-    val time216Hz: Long,
-    val time324Hz: Long,
-    val time432Hz: Long,
-    val time648Hz: Long,
+    val time108Hz: Long = 0L,
+    val time216Hz: Long = 0L,
+    val time324Hz: Long = 0L,
+    val time432Hz: Long = 0L,
+    val time648Hz: Long = 0L,
 
     // Frequenz-Statistiken
-    val avgFrequency: Float,                // Durchschnittsfrequenz
-    val minFrequency: Float,                // Niedrigste Frequenz
-    val maxFrequency: Float,                // Höchste Frequenz
+    val avgFrequency: Float = 0f,                // Durchschnittsfrequenz
+    val minFrequency: Float = 0f,                // Niedrigste Frequenz
+    val maxFrequency: Float = 0f,                // Höchste Frequenz
 
     // Detaillierte Kurvendaten (für PDF-Export & Detail-Ansicht)
-    val dataPoints: List<FrequencyPoint>
+    val dataPoints: List<FrequencyPoint> = emptyList()
 ) {
     /**
      * Effizienz: Prozent der Sprechzeit in harmonischen Bereichen

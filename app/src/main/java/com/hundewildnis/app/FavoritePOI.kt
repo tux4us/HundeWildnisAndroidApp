@@ -8,16 +8,16 @@ data class FavoritePOI(
     val id: String = java.util.UUID.randomUUID().toString(),
 
     @SerializedName("name")
-    val name: String,
+    val name: String = "",
 
     @SerializedName("customName")
     val customName: String? = null,
 
     @SerializedName("lat")
-    val lat: Double,
+    val lat: Double = 0.0,
 
     @SerializedName("lon")
-    val lon: Double,
+    val lon: Double = 0.0,
 
     @SerializedName("categoryIcon")
     val categoryIcon: String = "📍",

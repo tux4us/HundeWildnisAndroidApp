@@ -36,17 +36,17 @@ data class BackupData(
 )
 
 data class BackupMetadata(
-    @SerializedName("appVersion")    val appVersion: String,
-    @SerializedName("backupVersion") val backupVersion: Int,
-    @SerializedName("timestamp")     val timestamp: Long,
-    @SerializedName("deviceName")    val deviceName: String,
-    @SerializedName("itemCount")     val itemCount: BackupItemCount
+    @SerializedName("appVersion")    val appVersion: String = "",
+    @SerializedName("backupVersion") val backupVersion: Int = 0,
+    @SerializedName("timestamp")     val timestamp: Long = 0L,
+    @SerializedName("deviceName")    val deviceName: String = "",
+    @SerializedName("itemCount")     val itemCount: BackupItemCount = BackupItemCount(0, 0, 0)
 )
 
 data class BackupItemCount(
-    @SerializedName("dogs")               val dogs: Int,
-    @SerializedName("photos")             val photos: Int,
-    @SerializedName("notes")             val notes: Int,
+    @SerializedName("dogs")               val dogs: Int = 0,
+    @SerializedName("photos")             val photos: Int = 0,
+    @SerializedName("notes")             val notes: Int = 0,
     @SerializedName("speedSessions")     val speedSessions: Int = 0,
     @SerializedName("voiceSessions")     val voiceSessions: Int = 0,
     @SerializedName("emergencyReports")  val emergencyReports: Int = 0,
@@ -68,6 +68,4 @@ data class BackupItemCount(
     @SerializedName("plantPhotos") val plantPhotos: Int = 0,
     // ✅ NEU
     @SerializedName("plannedSessions") val plannedSessions: Int = 0
-
-
 )

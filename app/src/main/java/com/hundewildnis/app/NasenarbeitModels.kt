@@ -63,7 +63,7 @@ enum class NasenarbeitLevel(
 
 @Parcelize
 data class GelaendeAbschnitt(
-    @SerializedName("umgebung") val umgebung: String,
+    @SerializedName("umgebung") val umgebung: String = "",
     @SerializedName("bodenTyp") val bodenTyp: String = "",
     @SerializedName("bodenZustand") val bodenZustand: String = "",
     @SerializedName("laengeSchritte") val laengeSchritte: Int? = null,   // null = keine Angabe
@@ -95,8 +95,8 @@ data class NasenarbeitParameter(
     @SerializedName("gebietHa") val gebietHa: Double = 0.5,
 
     // Schicht 4: Trainingsstand
-    @SerializedName("letzteEinheit") val letzteEinheit: String = "Gestern",
-    @SerializedName("tagesverfassung") val tagesverfassung: String = "Normal motiviert",
+    @SerializedName("letzteEinheit") val letzteEinheit: String = "",
+    @SerializedName("tagesverfassung") val tagesverfassung: String = "",
     @SerializedName("letzteLeistungSchritte") val letzteLeistungSchritte: Int = 0,
     @SerializedName("letzteLeistungHa") val letzteLeistungHa: Double = 0.0
 ) : Parcelable
@@ -108,12 +108,12 @@ data class NasenarbeitParameter(
 @Parcelize
 data class NasenarbeitSession(
     @SerializedName("id") val id: String = UUID.randomUUID().toString(),
-    @SerializedName("dogId") val dogId: String,
+    @SerializedName("dogId") val dogId: String = "",
     @SerializedName("datum") val datum: Long = System.currentTimeMillis(),
 
     // Empfohlene + durchgeführte Disziplin
-    @SerializedName("empfohleneDisziplin") val empfohleneDisziplin: NasenarbeitDisziplin,
-    @SerializedName("durchgefuehrteDisziplin") val durchgefuehrteDisziplin: NasenarbeitDisziplin,
+    @SerializedName("empfohleneDisziplin") val empfohleneDisziplin: NasenarbeitDisziplin = NasenarbeitDisziplin.VERLORENSUCHE,
+    @SerializedName("durchgefuehrteDisziplin") val durchgefuehrteDisziplin: NasenarbeitDisziplin = NasenarbeitDisziplin.VERLORENSUCHE,
 
     // Scoring-Ergebnis
     @SerializedName("scoreVerlorensuche") val scoreVerlorensuche: Double = 0.0,
@@ -121,7 +121,7 @@ data class NasenarbeitSession(
     @SerializedName("scoreFreisuche") val scoreFreisuche: Double = 0.0,
 
     // Parameter der Session
-    @SerializedName("parameter") val parameter: NasenarbeitParameter,
+    @SerializedName("parameter") val parameter: NasenarbeitParameter = NasenarbeitParameter(),
 
     // Trainingsstand zur Zeit der Session
     @SerializedName("levelVerlorensuche") val levelVerlorensuche: String = "Anfänger",
@@ -150,7 +150,7 @@ data class NasenarbeitSession(
 
 @Parcelize
 data class NasenarbeitFortschritt(
-    @SerializedName("dogId") val dogId: String,
+    @SerializedName("dogId") val dogId: String = "",
     @SerializedName("sessionsVerlorensuche") val sessionsVerlorensuche: Int = 0,
     @SerializedName("sessionsPersonensuche") val sessionsPersonensuche: Int = 0,
     @SerializedName("sessionsFreisuche") val sessionsFreisuche: Int = 0,

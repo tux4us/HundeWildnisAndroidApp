@@ -63,15 +63,15 @@ import java.io.IOException
 
 data class EmergencyReport(
     val id: String = UUID.randomUUID().toString(),
-    val timestamp: Long,
-    val dogId: String,
-    val dogName: String,
-    val symptom: String,
-    val notes: String,
-    val latitude: Double?,
-    val longitude: Double?,
-    val photoUris: List<String>,
-    val pdfPath: String,
+    val timestamp: Long = System.currentTimeMillis(),
+    val dogId: String = "",
+    val dogName: String = "",
+    val symptom: String = "",
+    val notes: String = "",
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val photoUris: List<String> = emptyList(),
+    val pdfPath: String = "",
     val contentUri: String? = null
 )
 
@@ -97,7 +97,12 @@ class EmergencyActivity : SecureBaseActivity() {
     private val photoPickerLauncher = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(maxItems = 5)
     ) { uris: List<Uri> ->
-        uris.forEach { uri -> addPhoto(uri) }
+        uris.forEach { uri ->
+            try {
+                contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } catch (e: Exception) {}
+            addPhoto(uri)
+        }
     }
 
     private val locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->

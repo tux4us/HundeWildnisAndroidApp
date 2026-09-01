@@ -1,99 +1,94 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
+# ════════════════════════════════════════════════════════════
+# ALLGEMEINE OPTIMIERUNGEN
+# ════════════════════════════════════════════════════════════
 
-# Grundlegende Regeln
+# Wir entfernen die Regel, die ALLES behält:
+# -keep class com.hundewildnis.app.** { *; } <-- GELÖSCHT
+
+# Behalte Klassen, die für Android-System-Callbacks wichtig sind
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes InnerClasses
 -keepattributes Exceptions
 -keepattributes SourceFile,LineNumberTable
 
-# App-spezifische Klassen behalten
--keep class com.hundewildnis.app.** { *; }
+# ════════════════════════════════════════════════════════════
+# DATENMODELLE & GSON (WICHTIG!)
+# ════════════════════════════════════════════════════════════
 
-# WebView JavaScript Interface
--keepclassmembers class * {
-    @android.webkit.JavascriptInterface <methods>;
-}
+# Da Gson Reflection nutzt, müssen wir Datenklassen behalten, 
+# damit Feldnamen nicht verschleiert werden (sonst bricht das JSON-Format).
 
-# Gson/JSON
+# 1. Gson Basiskonfiguration
 -keep class com.google.gson.** { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 
-# OSMDroid
--keep class org.osmdroid.** { *; }
--dontwarn org.osmdroid.**
+# 2. Behalte alle Klassen mit @SerializedName
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
 
-# WorkManager
--keep class * extends androidx.work.Worker
--keep class * extends androidx.work.InputMerger
--keep class androidx.work.** { *; }
+# 3. Gezielte Keep-Regeln für Backup-Modelle
+# Wir müssen sowohl die Klassen als auch deren Mitglieder behalten,
+# da viele Modelle kein @SerializedName nutzen.
+-keep class com.hundewildnis.app.DogProfile { *; }
+-keep class com.hundewildnis.app.BackupData { *; }
+-keep class com.hundewildnis.app.BackupMetadata { *; }
+-keep class com.hundewildnis.app.BackupItemCount { *; }
+-keep class com.hundewildnis.app.HeatCycleEntry { *; }
+-keep class com.hundewildnis.app.VitalRecord { *; }
+-keep class com.hundewildnis.app.EmergencyReport { *; }
+-keep class com.hundewildnis.app.TrainingSession { *; }
+-keep class com.hundewildnis.app.TrainingProgress { *; }
+-keep class com.hundewildnis.app.Milestone { *; }
+-keep class com.hundewildnis.app.FavoritePOI { *; }
+-keep class com.hundewildnis.app.NasenarbeitSession { *; }
+-keep class com.hundewildnis.app.NasenarbeitFortschritt { *; }
+-keep class com.hundewildnis.app.WeatherFavorite { *; }
+-keep class com.hundewildnis.app.IntervalTimerSession { *; }
+-keep class com.hundewildnis.app.PlannedSession { *; }
+-keep class com.hundewildnis.app.NoteSession { *; }
+-keep class com.hundewildnis.app.SpeedSession { *; }
+-keep class com.hundewildnis.app.VoiceSession { *; }
+-keep class com.hundewildnis.app.ContentItem { *; }
+-keep class com.hundewildnis.app.DogCharacter { *; }
+-keep class com.hundewildnis.app.GelaendeAbschnitt { *; }
+-keep class com.hundewildnis.app.NasenarbeitParameter { *; }
+-keep class com.hundewildnis.app.BackupContainer { *; }
+-keep class com.hundewildnis.app.SelectiveBackupContainer { *; }
 
-# Material Components
--keep class com.google.android.material.** { *; }
--dontwarn com.google.android.material.**
+# 4. Enums in diesen Modellen schützen (Gson nutzt deren Namen)
+-keepclassmembers enum com.hundewildnis.app.** { *; }
 
-# Parcelable
+# 5. Behalte alle Parcelable-Klassen (für Intents/Bundles)
 -keepclassmembers class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
 
-# Remove logging in production
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-    public static *** v(...);
-    public static *** i(...);
-}
+# ════════════════════════════════════════════════════════════
+# SPEZIFISCHE FIXES (iText & Jsoup)
+# ════════════════════════════════════════════════════════════
 
-# ════════════════════════════════════════════════════════════
-# SLF4J - FIX FOR MISSING StaticLoggerBinder
-# ════════════════════════════════════════════════════════════
--dontwarn org.slf4j.**
--keep class org.slf4j.** { *; }
-
-# ════════════════════════════════════════════════════════════
-# JSOUP - FIX FÜR RE2J FEHLER
-# ════════════════════════════════════════════════════════════
--dontwarn org.jsoup.**
--dontwarn com.google.re2j.**
--keep class org.jsoup.** { *; }
--dontnote com.google.re2j.**
-
-# ════════════════════════════════════════════════════════════
-# KOTLIN & COROUTINES
-# ════════════════════════════════════════════════════════════
--keep class kotlin.** { *; }
--keep class kotlin.Metadata { *; }
--dontwarn kotlin.**
--keepclassmembers class **$WhenMappings {
-    <fields>;
-}
-
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--keepclassmembers class kotlinx.coroutines.** {
-    volatile <fields>;
-}
-
-# ════════════════════════════════════════════════════════════
-# ITEXT 7 - PDF GENERATION COMPREHENSIVE FIX
-# ════════════════════════════════════════════════════════════
+# iText 7 benötigt oft Reflection für interne Komponenten
 -keep class com.itextpdf.** { *; }
--keep interface com.itextpdf.** { *; }
 -dontwarn com.itextpdf.**
-
-# iText 7 nutzt Reflection für viele interne Komponenten
 -keepclassmembers class com.itextpdf.** {
     public <fields>;
     public <methods>;
 }
 
-# Verhindert Warnungen über fehlende optionale Abhängigkeiten
--dontwarn org.bouncycastle.**
--dontwarn java.awt.**
--dontwarn javax.xml.**
--dontwarn org.apache.fontbox.**
--dontwarn org.apache.pdfbox.**
+# Jsoup
+-dontwarn org.jsoup.**
+-dontwarn com.google.re2j.**
+
+# ════════════════════════════════════════════════════════════
+# LOGGING ENTFERNEN (Performance-Boost)
+# ════════════════════════════════════════════════════════════
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+}

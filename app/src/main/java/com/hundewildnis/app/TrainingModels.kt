@@ -117,12 +117,12 @@ enum class LocationType(val displayName: String) : Parcelable {
  */
 @Parcelize
 data class DogCharacter(
-    val temperament: Int,           // 1=Sehr ruhig, 5=Sehr lebhaft
-    val selfConfidence: Int,        // 1=Ängstlich, 5=Selbstsicher
-    val socialBehavior: Int,        // 1=Zurückhaltend, 5=Kontaktfreudig
-    val excitability: Int,          // 1=Gelassen, 5=Leicht erregbar
-    val learningSpeed: Int,         // 1=Langsam, 5=Schnell
-    val frustrationTolerance: Int   // 1=Niedrig, 5=Hoch
+    val temperament: Int = 3,           // 1=Sehr ruhig, 5=Sehr lebhaft
+    val selfConfidence: Int = 3,        // 1=Ängstlich, 5=Selbstsicher
+    val socialBehavior: Int = 3,        // 1=Zurückhaltend, 5=Kontaktfreudig
+    val excitability: Int = 3,          // 1=Gelassen, 5=Leicht erregbar
+    val learningSpeed: Int = 3,         // 1=Langsam, 5=Schnell
+    val frustrationTolerance: Int = 3   // 1=Niedrig, 5=Hoch
 ) : Parcelable {
 
     companion object {
@@ -468,9 +468,9 @@ enum class TrainingLevel(val displayName: String) : Parcelable {
 @Parcelize
 data class Milestone(
     val id: String = java.util.UUID.randomUUID().toString(),
-    val dogId: String,  // ✅ WICHTIG!
-    val category: TrainingCategory,
-    val type: MilestoneType,
+    val dogId: String = "",
+    val category: TrainingCategory = TrainingCategory.LEINENARBEIT,
+    val type: MilestoneType = MilestoneType.FIRST_SESSION,
     val achievedDate: Long = System.currentTimeMillis()
 ) : Parcelable {
 
@@ -510,11 +510,11 @@ enum class MilestoneType(val displayName: String, val icon: String) : Parcelable
  */
 @Parcelize
 data class TrainingRecommendation(
-    val recommendation: String,
-    val reasoning: String,
-    val suggestedDuration: Int,  // Minuten
-    val suggestedDifficulty: DifficultyLevel,
-    val priority: RecommendationPriority
+    val recommendation: String = "",
+    val reasoning: String = "",
+    val suggestedDuration: Int = 15,  // Minuten
+    val suggestedDifficulty: DifficultyLevel = DifficultyLevel.NORMAL,
+    val priority: RecommendationPriority = RecommendationPriority.MEDIUM
 ) : Parcelable
 
 /**
@@ -532,9 +532,9 @@ enum class RecommendationPriority : Parcelable {
  */
 @Parcelize
 data class ProgressAnalysis(
-    val trend: ProgressTrend,
-    val improvement: Double,  // Prozent
-    val consistency: Double   // 0-100
+    val trend: ProgressTrend = ProgressTrend.STABLE,
+    val improvement: Double = 0.0,  // Prozent
+    val consistency: Double = 0.0   // 0-100
 ) : Parcelable
 
 /**

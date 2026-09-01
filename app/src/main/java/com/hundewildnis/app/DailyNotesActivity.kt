@@ -67,11 +67,11 @@ import androidx.activity.result.contract.ActivityResultContracts
  */
 @Keep
 data class NoteSession(
-    val id: String,
-    val date: Long,
+    val id: String = java.util.UUID.randomUUID().toString(),
+    val date: Long = System.currentTimeMillis(),
     val title: String = "",
-    val notes: String,
-    val photoUris: List<String>,
+    val notes: String = "",
+    val photoUris: List<String> = emptyList(),
     val latitude: Double? = null,
     val longitude: Double? = null,
     val weatherInfo: String? = null
@@ -119,6 +119,9 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         uri?.let {
+            try {
+                contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } catch (e: Exception) {}
             addPhoto(it)
             saveToHistory(false)
         }
@@ -129,6 +132,9 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         ActivityResultContracts.PickMultipleVisualMedia(maxItems = 10)
     ) { uris: List<Uri> ->
         uris.forEach { uri ->
+            try {
+                contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } catch (e: Exception) {}
             addPhoto(uri)
         }
         if (uris.isNotEmpty()) {

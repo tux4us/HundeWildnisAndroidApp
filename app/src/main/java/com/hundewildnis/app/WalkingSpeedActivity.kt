@@ -52,26 +52,26 @@ import java.util.*
  * Data Classes
  */
 data class SpeedDataPoint(
-    val timestamp: Long,
-    val speed: Float,
-    val latitude: Double,
-    val longitude: Double
+    val timestamp: Long = 0L,
+    val speed: Float = 0f,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
 )
 
 data class SpeedSession(
-    val startTime: Long,
-    val endTime: Long,
-    val distance: Float,
-    val exceedCount: Int,
-    val dataPoints: List<SpeedDataPoint>,
-    val limit: Float,
+    val startTime: Long = 0L,
+    val endTime: Long = 0L,
+    val distance: Float = 0f,
+    val exceedCount: Int = 0,
+    val dataPoints: List<SpeedDataPoint> = emptyList(),
+    val limit: Float = 0f,
     val limitChanges: List<LimitChange> = emptyList()
 )
 
 data class LimitChange(
-    val timestamp: Long,
-    val oldLimit: Float,
-    val newLimit: Float
+    val timestamp: Long = 0L,
+    val oldLimit: Float = 0f,
+    val newLimit: Float = 0f
 )
 
 

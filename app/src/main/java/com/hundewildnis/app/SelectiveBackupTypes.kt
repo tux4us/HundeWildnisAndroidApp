@@ -105,17 +105,17 @@ enum class MergeMode(
 }
 
 data class BackupContainer(
-    val version: String,
-    val timestamp: Long,
-    val includedTypes: List<String>,
-    val data: MutableMap<String, Any?>
+    val version: String = "",
+    val timestamp: Long = 0L,
+    val includedTypes: List<String> = emptyList(),
+    val data: MutableMap<String, Any?> = mutableMapOf()
 )
 
 data class SelectiveBackupContainer(
-    val version: String,
-    val timestamp: Long,
-    val includedTypes: List<String>,
-    val data: MutableMap<String, Any?>,
+    val version: String = "",
+    val timestamp: Long = 0L,
+    val includedTypes: List<String> = emptyList(),
+    val data: MutableMap<String, Any?> = mutableMapOf(),
     val photoMapping: Map<String, String> = emptyMap()
 )
 
