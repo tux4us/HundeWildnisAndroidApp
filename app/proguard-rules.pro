@@ -12,6 +12,8 @@
 -keepattributes Exceptions
 -keepattributes SourceFile,LineNumberTable
 
+-keep class com.hundewildnis.app.SecureBaseActivity { *; }
+
 # ════════════════════════════════════════════════════════════
 # DATENMODELLE & GSON (WICHTIG!)
 # ════════════════════════════════════════════════════════════
@@ -60,6 +62,14 @@
 -keep class com.hundewildnis.app.BackupContainer { *; }
 -keep class com.hundewildnis.app.SelectiveBackupContainer { *; }
 
+# NEU: Standortfreigabe & WebDAV Modelle
+-keep class com.hundewildnis.app.LocationPayload { *; }
+-keep class com.hundewildnis.app.RouteData { *; }
+-keep class com.hundewildnis.app.SurfaceSummary { *; }
+-keep class com.hundewildnis.app.WebDavPreferences$WebDavConfig { *; }
+-keep class com.hundewildnis.app.POI { *; }
+-keep class com.hundewildnis.app.POICategories$Category { *; }
+
 # 4. Enums in diesen Modellen schützen (Gson nutzt deren Namen)
 -keepclassmembers enum com.hundewildnis.app.** { *; }
 
@@ -83,6 +93,10 @@
 # Jsoup
 -dontwarn org.jsoup.**
 -dontwarn com.google.re2j.**
+
+# OSMDroid
+-keep class org.osmdroid.** { *; }
+-dontwarn org.osmdroid.**
 
 # ════════════════════════════════════════════════════════════
 # LOGGING ENTFERNEN (Performance-Boost)
