@@ -13,22 +13,22 @@
     <color name="rd_text_secondary_light">#7A6F5C</color>
 
     <!-- Gruppenfarben Light (Chip-Hintergrund / Akzent) -->
-    <color name="rd_group1_chip_light">#F3EAD8</color>
+    <color name="rd_group1_chip_light">#F8E8C8</color>
     <color name="rd_group1_accent_light">#A3762F</color>
 
-    <color name="rd_group2_chip_light">#F0ECD8</color>
+    <color name="rd_group2_chip_light">#F2EAB8</color>
     <color name="rd_group2_accent_light">#8A7A1F</color>
 
-    <color name="rd_group3_chip_light">#E9F0E6</color>
+    <color name="rd_group3_chip_light">#D6E8D0</color>
     <color name="rd_group3_accent_light">#4A7A42</color>
 
-    <color name="rd_group4_chip_light">#F3E6DA</color>
+    <color name="rd_group4_chip_light">#FADFC5</color>
     <color name="rd_group4_accent_light">#A35A2F</color>
 
-    <color name="rd_group5_chip_light">#E6ECF3</color>
+    <color name="rd_group5_chip_light">#D6E3F5</color>
     <color name="rd_group5_accent_light">#3F5F8A</color>
 
-    <color name="rd_group6_chip_light">#ECE6F3</color>
+    <color name="rd_group6_chip_light">#E0D4F0</color>
     <color name="rd_group6_accent_light">#6A4F8A</color>
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -43,28 +43,32 @@
     <color name="rd_text_secondary_dark">#9A9A96</color>
 
     <!-- Gruppenfarben Dark (Chip-Hintergrund / Akzent) -->
-    <color name="rd_group1_chip_dark">#26241F</color>
+    <color name="rd_group1_chip_dark">#383228</color>
     <color name="rd_group1_accent_dark">#C9A26A</color>
 
-    <color name="rd_group2_chip_dark">#22221F</color>
+    <color name="rd_group2_chip_dark">#333324</color>
     <color name="rd_group2_accent_dark">#B0A25A</color>
 
-    <color name="rd_group3_chip_dark">#1F2420</color>
+    <color name="rd_group3_chip_dark">#28362A</color>
     <color name="rd_group3_accent_dark">#7FA07A</color>
 
-    <color name="rd_group4_chip_dark">#241F1F</color>
+    <color name="rd_group4_chip_dark">#3D2D2D</color>
     <color name="rd_group4_accent_dark">#C08A6A</color>
 
-    <color name="rd_group5_chip_dark">#1F2124</color>
+    <color name="rd_group5_chip_dark">#28323D</color>
     <color name="rd_group5_accent_dark">#7A92B0</color>
 
-    <color name="rd_group6_chip_dark">#201F24</color>
+    <color name="rd_group6_chip_dark">#302A3D</color>
     <color name="rd_group6_accent_dark">#9A8AB0</color>
 
     <!-- Notfall — bleibt in beiden Modi kräftig rot -->
     <color name="rd_danger_chip_dark">#8A2E22</color>
     <color name="rd_danger_chip_light">#C0392B</color>
     <color name="rd_danger_text">#FFE0D8</color>
+
+    <!-- Blog-Vorschau — waldiges Grün -->
+    <color name="rd_blog_header_light">#2D5016</color>
+    <color name="rd_blog_header_dark">#1B300D</color>
 
     <!-- Modus-automatischer Alias für direkte XML-Verwendung (z.B. Toolbar-Hintergrund).
          Wert hier = Light-Variante; values-night/colors_redesign.xml überschreibt mit Dark-Variante. -->

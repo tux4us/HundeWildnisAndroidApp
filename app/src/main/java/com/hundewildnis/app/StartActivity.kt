@@ -793,9 +793,11 @@ class StartActivity : BaseBottomNavActivity() {
     private fun displayBlogPreview(post: ContentItem) {
         binding.blogPreviewLoading.visibility = View.GONE
 
-        // Design-Farben für Blog-Kachel (Gruppe 5 = Index 4)
-        val colors = StartGroupColors.forGroup(this, 4)
-        binding.blogHeaderLayout.setBackgroundColor(ContextCompat.getColor(this, colors.accentColorRes))
+        // Design-Farben für Blog-Kachel (waldiges Grün statt Gruppe 5 Blau)
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        val headerColorRes = if (isDark) R.color.rd_blog_header_dark else R.color.rd_blog_header_light
+        binding.blogHeaderLayout.setBackgroundColor(ContextCompat.getColor(this, headerColorRes))
         binding.blogHeaderTitle.setTextColor(Color.WHITE)
         binding.blogHeaderAction.setTextColor(Color.WHITE)
 
