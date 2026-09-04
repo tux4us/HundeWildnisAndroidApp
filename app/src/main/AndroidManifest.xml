@@ -192,6 +192,13 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <activity
+            android:name="com.hundewildnis.app.SoundLevelActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
         <service
             android:name="com.hundewildnis.app.NavigationForegroundService"
             android:foregroundServiceType="location"

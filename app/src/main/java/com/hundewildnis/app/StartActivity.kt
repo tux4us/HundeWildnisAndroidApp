@@ -378,6 +378,7 @@ class StartActivity : BaseBottomNavActivity() {
             tiles = listOf(
                 StartTile("walking_speed", R.drawable.ic_stopwatch, "Tempo-Trainer"),
                 StartTile("communication", R.drawable.ic_microphone, "Sprach-Trainer"),
+                StartTile("sound_level", R.drawable.ic_sound_level, "Lautstärke-Trainer"),
                 StartTile("interval_timer", R.drawable.ic_interval, "Intervall-Timer"),
                 StartTile("training_diary", R.drawable.ic_diary, "Trainingstagebuch"),
                 StartTile("activity_calendar", R.drawable.ic_calendar_moon, "Aktivitätskalender"),
@@ -471,6 +472,7 @@ class StartActivity : BaseBottomNavActivity() {
             "entspannung" -> startActivity(Intent(this, EntspannungstrainingActivity::class.java))
             "walking_speed" -> startActivity(Intent(this, WalkingSpeedActivity::class.java))
             "communication" -> startActivity(Intent(this, CommunicationActivity::class.java))
+            "sound_level" -> startActivity(Intent(this, SoundLevelActivity::class.java))
             "interval_timer" -> startActivity(Intent(this, IntervalTimerSetupActivity::class.java))
             "training_diary" -> startActivity(Intent(this, TrainingDiaryActivity::class.java))
             "activity_calendar" -> startActivity(Intent(this, ActivityCalendarActivity::class.java))
