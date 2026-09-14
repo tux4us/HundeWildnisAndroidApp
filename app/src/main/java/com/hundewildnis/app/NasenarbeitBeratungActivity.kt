@@ -575,7 +575,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             if (bodenTyp.isNotEmpty()) {
                 entry.bodenTyp = bodenTyp
             }
-            
+
             // ✅ NEU: Korrekte Verteilung der Fläche bei Freisuche
             if (disziplin == NasenarbeitDisziplin.FREISUCHE) {
                 if (entry.flaechenM2 == null) {
@@ -746,13 +746,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         // Level display – auto-loaded
         binding.layoutLevelDisplay.removeAllViews()
         listOf(
-            Triple("🐾 Verlorensuche", fortschritt.sessionsVerlorensuche, fortschritt.levelVerlorensuche),
-            Triple("🧑 Personensuche", fortschritt.sessionsPersonensuche, fortschritt.levelPersonensuche),
-            Triple("🔍 Freisuche",     fortschritt.sessionsFreisuche,     fortschritt.levelFreisuche)
+            Triple("🐾 " + getString(R.string.nasenarbeit_disziplin_verlorensuche), fortschritt.sessionsVerlorensuche, fortschritt.levelVerlorensuche),
+            Triple("🧑 " + getString(R.string.nasenarbeit_disziplin_personensuche), fortschritt.sessionsPersonensuche, fortschritt.levelPersonensuche),
+            Triple("🔍 " + getString(R.string.nasenarbeit_disziplin_freisuche),     fortschritt.sessionsFreisuche,     fortschritt.levelFreisuche)
         ).forEach { (label, sessions, level) ->
             val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); lp.bottomMargin = dp(8); layoutParams = lp }
             row.addView(TextView(this).apply { text = label; textSize = 13f; val lp2 = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f); layoutParams = lp2 })
-            row.addView(TextView(this).apply { text = "${level.displayName} · $sessions Sessions"; textSize = 13f; setTypeface(null, android.graphics.Typeface.BOLD) })
+            row.addView(TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_level_sessions, level.displayName(this@NasenarbeitBeratungActivity), sessions); textSize = 13f; setTypeface(null, android.graphics.Typeface.BOLD) })
             binding.layoutLevelDisplay.addView(row)
         }
 
@@ -838,13 +838,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             }
 
         // Anzeige aktualisieren
-        binding.tvPerfV.text  = if (perfV > 0) "$perfV Schritte" else "0 Schritte"
-        binding.tvPerfP.text  = if (perfP > 0) "$perfP Schritte" else "0 Schritte"
-        binding.tvPerfFl.text = if (perfFl > 0.0) String.format(Locale.GERMAN, "%.1f ha", perfFl) else "0.0 ha"
+        binding.tvPerfV.text  = getString(R.string.nasenarbeit_beratung_steps, perfV)
+        binding.tvPerfP.text  = getString(R.string.nasenarbeit_beratung_steps, perfP)
+        binding.tvPerfFl.text = getString(R.string.nasenarbeit_beratung_hectares, perfFl)
 
         binding.btnTrainingWeiter.setOnClickListener {
             // Recommendation triggered BEFORE finalizing screen data to auto-set RadioButtons
-            val result = NasenarbeitScorer.calculate(buildParam(), fortschritt)
+            val result = NasenarbeitScorer.calculate(this, buildParam(), fortschritt)
             updateLetzteEinheitForDiz(result.primaer.ordinal)
             buildAndShowResult()
         }
@@ -873,23 +873,31 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
     private fun buildAndShowResult() {
         val param = buildParam()
-        scoringResult = NasenarbeitScorer.calculate(param, fortschritt)
+        scoringResult = NasenarbeitScorer.calculate(this, param, fortschritt)
         val result = scoringResult!!
 
         // Block 1
         if (result.isHardExcluded) {
-            binding.tvEmpfehlungDiz.text = "Training nicht möglich"
+            binding.tvEmpfehlungDiz.text = getString(R.string.nasenarbeit_beratung_training_not_possible)
             binding.tvEmpfehlungGrund.text = result.hardExclusionReason
             binding.tvEmpfehlungScore.text = ""
             binding.btnTrainingStarten.isEnabled = false
         } else {
             val p = result.primaer
-            binding.tvEmpfehlungDiz.text = "${p.icon} ${p.displayName}"
+            binding.tvEmpfehlungDiz.text = "${p.icon} ${p.displayName(this)}"
             binding.tvEmpfehlungGrund.text = result.begruendung
-            binding.tvEmpfehlungScore.text = "Score: ${DIZ_ICONS[0]}${fmt1(result.scores[0])}  ${DIZ_ICONS[1]}${fmt1(result.scores[1])}  ${DIZ_ICONS[2]}${fmt1(result.scores[2])}"
+            binding.tvEmpfehlungScore.text = getString(
+                R.string.nasenarbeit_beratung_score_line,
+                DIZ_ICONS[0], fmt1(result.scores[0]),
+                DIZ_ICONS[1], fmt1(result.scores[1]),
+                DIZ_ICONS[2], fmt1(result.scores[2])
+            )
             if (result.empfohlen.size > 1) {
                 binding.tvEmpfehlungAlt.visibility = View.VISIBLE
-                binding.tvEmpfehlungAlt.text = "Auch geeignet: " + result.empfohlen.filter { it != p }.joinToString(", ") { "${it.icon} ${it.displayName}" }
+                binding.tvEmpfehlungAlt.text = getString(
+                    R.string.nasenarbeit_beratung_also_suitable,
+                    result.empfohlen.filter { it != p }.joinToString(", ") { "${it.icon} ${it.displayName(this)}" }
+                )
             }
             binding.btnTrainingStarten.isEnabled = true
         }
@@ -970,12 +978,12 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val spuralter = calcSpuralter(lev.ordinal, param.beaufort, param.gelaendeAbschnitte.firstOrNull()?.bodenZustand ?: "")
 
         listOf(
-            "Empfohlene Länge/Fläche" to recStr,
-            "Schwierigkeit" to lev.schwierigkeit,
-            if (result.primaer != NasenarbeitDisziplin.FREISUCHE) "Spuralter" to spuralter else null,
-            "Letzte Einheit" to letzteEinheit,
-            "Tagesverfassung" to verfassung,
-            "Steigerungsfaktor" to "×${String.format(Locale.GERMAN,"%.2f", mult)}"
+            getString(R.string.nasenarbeit_beratung_label_recommended_length) to recStr,
+            getString(R.string.nasenarbeit_beratung_label_difficulty) to lev.schwierigkeit(this),
+            if (result.primaer != NasenarbeitDisziplin.FREISUCHE) getString(R.string.nasenarbeit_beratung_label_spuralter) to spuralter else null,
+            getString(R.string.nasenarbeit_beratung_label_letzte_einheit) to letzteEinheit,
+            getString(R.string.nasenarbeit_beratung_label_tagesverfassung) to verfassung,
+            getString(R.string.nasenarbeit_beratung_label_steigerungsfaktor) to "×${String.format(Locale.GERMAN,"%.2f", mult)}"
         ).filterNotNull().forEach { (label, value) -> binding.layoutParamGrid.addView(makeParamRow(label, value)) }
     }
 

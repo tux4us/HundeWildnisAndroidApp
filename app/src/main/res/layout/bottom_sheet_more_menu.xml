@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⋯ Mehr"
+            android:text="@string/more_menu_title"
             android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -72,7 +72,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Folge uns auf YouTube"
+                    android:text="@string/more_menu_youtube"
                     android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorPrimary" />
 
@@ -107,7 +107,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="HundeWildnis Podcast"
+                    android:text="@string/more_menu_podcast"
                     android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorPrimary" />
 
@@ -142,7 +142,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Folge uns auf Spotify"
+                    android:text="@string/more_menu_spotify"
                     android:textSize="@dimen/text_body_medium"
                     android:textColor="?android:attr/textColorPrimary" />
 
@@ -182,14 +182,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SIGNAL Chat mit Manuela"
+                        android:text="@string/more_menu_signal_manuela"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fragen und Antworten"
+                        android:text="@string/more_menu_qa"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary" />
 
@@ -231,14 +231,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SIGNAL Chat mit Jörg"
+                        android:text="@string/more_menu_signal_joerg"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fragen und Antworten"
+                        android:text="@string/more_menu_qa"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary" />
 

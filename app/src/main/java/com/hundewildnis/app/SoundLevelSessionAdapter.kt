@@ -32,8 +32,10 @@ class SoundLevelSessionAdapter(
         val sec = duration % 60
         val dominant = session.getDominantLevel()
 
-        holder.binding.tvSessionSummary.text =
-            "Ø ${session.avgEstimatedDb.toInt()} dB(A) · ${dominant.label} · ${String.format("%d:%02d", min, sec)} Min"
+        holder.binding.tvSessionSummary.text = holder.itemView.context.getString(
+            R.string.sound_level_session_summary,
+            session.avgEstimatedDb.toInt(), dominant.label(holder.itemView.context), min, sec
+        )
 
         holder.binding.sessionClickArea.setOnClickListener { onItemClick(session) }
         holder.binding.btnDeleteSession.setOnClickListener { onDeleteClick(session) }

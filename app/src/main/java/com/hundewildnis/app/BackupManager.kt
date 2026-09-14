@@ -82,7 +82,7 @@ object BackupManager {
             // ✅ NEU: Gefahrenpflanzen-Fotos sammeln (relativ für Backup)
             val originalPlantPhotoMap = PlantPhotoManager.getAllPhotos(context)
             val plantPhotoMapForBackup = mutableMapOf<String, List<String>>()
-            
+
             originalPlantPhotoMap.forEach { (plantId, paths) ->
                 val backupPaths = mutableListOf<String>()
                 paths.forEachIndexed { idx, path ->
@@ -530,7 +530,14 @@ object BackupManager {
             backupData.nasenarbeitSessions?.let { sessions ->
                 val restoredSessions = sessions.map { session ->
                     val restoredUris = session.fotoUris.map { restoredPhotoMapping[it] ?: it }
-                    session.copy(fotoUris = restoredUris)
+                    // Migration: ältere Backups speicherten den deutschen Anzeigetext
+                    // ("Anfänger" etc.) statt des stabilen Enum-Namens.
+                    session.copy(
+                        fotoUris = restoredUris,
+                        levelVerlorensuche = NasenarbeitLevel.fromLegacyStoredName(session.levelVerlorensuche).name,
+                        levelPersonensuche = NasenarbeitLevel.fromLegacyStoredName(session.levelPersonensuche).name,
+                        levelFreisuche = NasenarbeitLevel.fromLegacyStoredName(session.levelFreisuche).name
+                    )
                 }
                 if (mergeMode) {
                     val existing = NasenarbeitManager.loadSessions(context)
@@ -568,12 +575,12 @@ object BackupManager {
 
             // 12. Vitalwerte
             backupData.vitalRecords?.let { records ->
-                 VitalManager.importFromBackup(context, records, mergeMode)
+                VitalManager.importFromBackup(context, records, mergeMode)
             }
 
             // 13. ✅ NEU: Intervall-Timer
             backupData.intervalTimerSessions?.forEach { session ->
-                 IntervalTimerManager.saveSession(context, session)
+                IntervalTimerManager.saveSession(context, session)
             }
 
             // ✅ NEU: Gefahrenpflanzen-Fotos wiederherstellen
@@ -584,11 +591,11 @@ object BackupManager {
                     val destFile = File(context.filesDir, "plant_photos/${sourceFile.name}")
                     destFile.parentFile?.mkdirs()
                     try {
-                     sourceFile.copyTo(destFile, overwrite = true)
-                     destFile.absolutePath
+                        sourceFile.copyTo(destFile, overwrite = true)
+                        destFile.absolutePath
                     } catch (e: Exception) {
-                     Log.e(TAG, "Plant photo restore error: ${e.message}")
-                     null
+                        Log.e(TAG, "Plant photo restore error: ${e.message}")
+                        null
                     }
                 }
                 if (restoredPaths.isNotEmpty()) {
@@ -620,7 +627,7 @@ object BackupManager {
     fun purgeOrphanFiles(context: Context) {
         Log.d(TAG, "Starte Medienspeicher-Bereinigung (Purge)...")
         val activeUris = mutableSetOf<String>()
-        
+
         // 1. Alle aktuell referenzierten URIs aus allen Modulen sammeln
         try {
             DogProfileManager.getAllProfiles(context).forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
@@ -692,7 +699,7 @@ object BackupManager {
 
     private fun collectNotes(context: Context): List<NoteSession>? {
         val prefs = context.getSharedPreferences("notes_history", Context.MODE_PRIVATE)
-        
+
         // Versuche zuerst die Liste "sessions" (einzelne Notizen)
         val sessionsJson = prefs.getString("sessions", null)
         val sessions: List<NoteSession>? = if (sessionsJson != null) {
@@ -955,25 +962,25 @@ object BackupManager {
 
             // ✅ NEU: Pflanzen Photos
             if (BackupDataType.PLANT_PHOTOS in selectedTypes) {
-             val photoMap = PlantPhotoManager.getAllPhotos(context)
-             val photoMapping = mutableMapOf<String, List<String>>()
-             photoMap.forEach { (plantId, paths) ->
-                 val copiedPaths = mutableListOf<String>()
-                 paths.forEachIndexed { idx, path ->
-                     val src = File(path)
-                     if (src.exists()) {
-                         val dest = File(tempDir, "${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg")
-                         dest.parentFile?.mkdirs()
-                         try { src.copyTo(dest, overwrite = true); copiedPaths.add("${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg") }
-                         catch (_: Exception) {}
-                     }
-                 }
-                 if (copiedPaths.isNotEmpty()) photoMapping[plantId] = copiedPaths
-             }
-             data["plantPhotoMap"] = photoMapping
-         }
+                val photoMap = PlantPhotoManager.getAllPhotos(context)
+                val photoMapping = mutableMapOf<String, List<String>>()
+                photoMap.forEach { (plantId, paths) ->
+                    val copiedPaths = mutableListOf<String>()
+                    paths.forEachIndexed { idx, path ->
+                        val src = File(path)
+                        if (src.exists()) {
+                            val dest = File(tempDir, "${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg")
+                            dest.parentFile?.mkdirs()
+                            try { src.copyTo(dest, overwrite = true); copiedPaths.add("${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg") }
+                            catch (_: Exception) {}
+                        }
+                    }
+                    if (copiedPaths.isNotEmpty()) photoMapping[plantId] = copiedPaths
+                }
+                data["plantPhotoMap"] = photoMapping
+            }
 
-                // Container erstellen
+            // Container erstellen
             val backupContainer = SelectiveBackupContainer(
                 version = getAppVersion(context),
                 timestamp = timestamp,
@@ -1121,7 +1128,7 @@ object BackupManager {
 
             // ✅ NEU
             if (BackupDataType.INTERVAL_TIMER in selectedTypes && backup.data.containsKey("intervalTimerSessions")) {
-               restoreIntervalTimerSessionsSelective(context, backup.data["intervalTimerSessions"], mergeMode)
+                restoreIntervalTimerSessionsSelective(context, backup.data["intervalTimerSessions"], mergeMode)
             }
 
             // ✅ NEU
@@ -1130,8 +1137,8 @@ object BackupManager {
             }
 
             if (BackupDataType.PLANT_PHOTOS in selectedTypes &&                    // ✅ NEU
-             backup.data.containsKey("plantPhotoMap")) {
-               restorePlantPhotosSelective(context, backup.data["plantPhotoMap"], mergeMode, tempDir)
+                backup.data.containsKey("plantPhotoMap")) {
+                restorePlantPhotosSelective(context, backup.data["plantPhotoMap"], mergeMode, tempDir)
             }
 
             Log.d(TAG, "Selective backup restored successfully")
@@ -1500,7 +1507,18 @@ object BackupManager {
         mode: MergeMode
     ) {
         val type = object : TypeToken<List<NasenarbeitSession>>() {}.type
-        val sessions: List<NasenarbeitSession> = gson.fromJson(gson.toJson(data), type)
+        val rawSessions: List<NasenarbeitSession> = gson.fromJson(gson.toJson(data), type)
+
+        // Migration: ältere Backups (vor der Sprachumstellung) speicherten hier den
+        // deutschen Anzeigetext ("Anfänger" etc.) statt des stabilen Enum-Namens.
+        // fromLegacyStoredName() erkennt beide Formen und normalisiert auf den Enum-Namen.
+        val sessions = rawSessions.map { session ->
+            session.copy(
+                levelVerlorensuche = NasenarbeitLevel.fromLegacyStoredName(session.levelVerlorensuche).name,
+                levelPersonensuche = NasenarbeitLevel.fromLegacyStoredName(session.levelPersonensuche).name,
+                levelFreisuche = NasenarbeitLevel.fromLegacyStoredName(session.levelFreisuche).name
+            )
+        }
 
         when (mode) {
             MergeMode.ADD_NEW -> {

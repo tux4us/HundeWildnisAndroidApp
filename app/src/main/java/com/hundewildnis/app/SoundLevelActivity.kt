@@ -390,15 +390,14 @@ class SoundLevelActivity : SecureBaseActivity() {
         val counts = countByLevel(dataPoints)
         val total = dataPoints.size
 
-        binding.tvStats.text = """
-            🔈 Ø ${avg} dB(A) · Min ${min} · Max ${max} dB(A)
-            
-            📊 Verteilung:
-            ${SpeechLevel.A1_LEISE.label}: ${counts[SpeechLevel.A1_LEISE]} (${percent(counts[SpeechLevel.A1_LEISE]!!, total)}%)
-            ${SpeechLevel.A2_GESPRAECH.label}: ${counts[SpeechLevel.A2_GESPRAECH]} (${percent(counts[SpeechLevel.A2_GESPRAECH]!!, total)}%)
-            ${SpeechLevel.A3_ANGEHOBEN.label}: ${counts[SpeechLevel.A3_ANGEHOBEN]} (${percent(counts[SpeechLevel.A3_ANGEHOBEN]!!, total)}%)
-            ${SpeechLevel.A4_SCHARF.label}: ${counts[SpeechLevel.A4_SCHARF]} (${percent(counts[SpeechLevel.A4_SCHARF]!!, total)}%)
-        """.trimIndent()
+        binding.tvStats.text = getString(
+            R.string.sound_level_activity_stats,
+            avg, min, max,
+            SpeechLevel.A1_LEISE.label(this), counts[SpeechLevel.A1_LEISE], percent(counts[SpeechLevel.A1_LEISE]!!, total),
+            SpeechLevel.A2_GESPRAECH.label(this), counts[SpeechLevel.A2_GESPRAECH], percent(counts[SpeechLevel.A2_GESPRAECH]!!, total),
+            SpeechLevel.A3_ANGEHOBEN.label(this), counts[SpeechLevel.A3_ANGEHOBEN], percent(counts[SpeechLevel.A3_ANGEHOBEN]!!, total),
+            SpeechLevel.A4_SCHARF.label(this), counts[SpeechLevel.A4_SCHARF], percent(counts[SpeechLevel.A4_SCHARF]!!, total)
+        )
     }
 
     private fun countByLevel(points: List<SoundLevelPoint>): Map<SpeechLevel, Int> {
@@ -471,24 +470,22 @@ class SoundLevelActivity : SecureBaseActivity() {
             val sec = duration % 60
             val total = session.getTotalPoints()
 
-            binding.tvStats.text = """
-                ⏱️ Dauer: ${String.format("%02d:%02d", min, sec)}
-                🔈 Ø ${session.avgEstimatedDb.toInt()} dB(A) · Min ${session.minEstimatedDb.toInt()} · Max ${session.maxEstimatedDb.toInt()} dB(A)
-                
-                📊 Verteilung:
-                ${SpeechLevel.A1_LEISE.label}: ${session.countA1} (${session.getPercentage(session.countA1)}%)
-                ${SpeechLevel.A2_GESPRAECH.label}: ${session.countA2} (${session.getPercentage(session.countA2)}%)
-                ${SpeechLevel.A3_ANGEHOBEN.label}: ${session.countA3} (${session.getPercentage(session.countA3)}%)
-                ${SpeechLevel.A4_SCHARF.label}: ${session.countA4} (${session.getPercentage(session.countA4)}%)
-                
-                ⭐ Dominante Stufe: ${session.getDominantLevel().label}
-            """.trimIndent()
+            binding.tvStats.text = getString(
+                R.string.sound_level_activity_session_stats,
+                String.format("%02d:%02d", min, sec),
+                session.avgEstimatedDb.toInt(), session.minEstimatedDb.toInt(), session.maxEstimatedDb.toInt(),
+                SpeechLevel.A1_LEISE.label(this), session.countA1, session.getPercentage(session.countA1),
+                SpeechLevel.A2_GESPRAECH.label(this), session.countA2, session.getPercentage(session.countA2),
+                SpeechLevel.A3_ANGEHOBEN.label(this), session.countA3, session.getPercentage(session.countA3),
+                SpeechLevel.A4_SCHARF.label(this), session.countA4, session.getPercentage(session.countA4),
+                session.getDominantLevel().label(this)
+            )
 
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             binding.meterView.setValue(
                 session.avgEstimatedDb,
                 calibrated = true,
-                overrideLabel = "Ø · Session vom $dateStr"
+                overrideLabel = getString(R.string.sound_level_activity_session_from, dateStr)
             )
 
             binding.btnExport.isEnabled = true
@@ -497,13 +494,13 @@ class SoundLevelActivity : SecureBaseActivity() {
 
             Toast.makeText(
                 this,
-                "Session geladen: ${session.getDominantLevel().label}",
+                getString(R.string.sound_level_activity_session_loaded, session.getDominantLevel().label(this)),
                 Toast.LENGTH_SHORT
             ).show()
 
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Fehler beim Laden: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.sound_level_activity_load_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 

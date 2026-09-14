@@ -14,16 +14,23 @@ package com.hundewildnis.app
 
 // ── Steigungsklasse ──────────────────────────────────────────────
 enum class SlopeClass(
-    val displayName: String,
     val icon: String,
     val color: String,
     val maxGradePercent: Double
 ) {
-    FLAT("Flach", "🟢", "#4CAF50", 4.0),
-    LIGHT("Leicht hügelig", "🟡", "#8BC34A", 8.0),
-    MODERATE("Hügelig", "🟠", "#FF9800", 15.0),
-    DEMANDING("Anspruchsvoll", "🔴", "#E64A19", 25.0),
-    ALPINE("Alpin", "⛰️", "#7B0000", Double.MAX_VALUE);
+    FLAT("🟢", "#4CAF50", 4.0),
+    LIGHT("🟡", "#8BC34A", 8.0),
+    MODERATE("🟠", "#FF9800", 15.0),
+    DEMANDING("🔴", "#E64A19", 25.0),
+    ALPINE("⛰️", "#7B0000", Double.MAX_VALUE);
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        FLAT -> context.getString(R.string.slope_class_flat)
+        LIGHT -> context.getString(R.string.slope_class_light)
+        MODERATE -> context.getString(R.string.slope_class_moderate)
+        DEMANDING -> context.getString(R.string.slope_class_demanding)
+        ALPINE -> context.getString(R.string.slope_class_alpine)
+    }
 
     companion object {
         fun fromGrade(gradePercent: Double): SlopeClass = when {
@@ -45,9 +52,14 @@ enum class SlopeClass(
 }
 
 // ── Witterungsrisiko ──────────────────────────────────────────────
-enum class TerrainWarningLevel(val displayName: String, val icon: String, val color: String) {
-    CAUTION("Hinweis", "⚠️", "#FF9800"),
-    WARNING("Warnung", "🔴", "#E64A19")
+enum class TerrainWarningLevel(val icon: String, val color: String) {
+    CAUTION("⚠️", "#FF9800"),
+    WARNING("🔴", "#E64A19");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        CAUTION -> context.getString(R.string.terrain_warning_level_caution)
+        WARNING -> context.getString(R.string.terrain_warning_level_warning)
+    }
 }
 
 data class TerrainWarning(
@@ -109,6 +121,7 @@ object TerrainRecommendationEngine {
      * Wetter-Werten in LocationActivity_POI – kein zusätzlicher Call.
      */
     fun buildWarnings(
+        context: android.content.Context,
         slopeClass: SlopeClass,
         asphaltPercent: Double,
         tempC: Double?,
@@ -120,47 +133,47 @@ object TerrainRecommendationEngine {
 
         if (tempC != null && tempC >= 25.0 && asphaltPercent >= 50.0) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.WARNING, "Heißer Asphalt",
-                "Bei ${tempC.toInt()} °C und ${asphaltPercent.toInt()} % Asphaltanteil besteht Verbrennungsgefahr an den Pfoten. Handrücken-Test vor dem Loslaufen empfohlen."
+                TerrainWarningLevel.WARNING, context.getString(R.string.terrain_warning_hot_asphalt_title),
+                context.getString(R.string.terrain_warning_hot_asphalt_message, tempC.toInt(), asphaltPercent.toInt())
             ))
         } else if (tempC != null && tempC >= 22.0 && asphaltPercent >= 30.0) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.CAUTION, "Warmer Untergrund",
-                "Asphaltanteil und Temperatur erhöht – Pfoten unterwegs kontrollieren."
+                TerrainWarningLevel.CAUTION, context.getString(R.string.terrain_warning_warm_ground_title),
+                context.getString(R.string.terrain_warning_warm_ground_message)
             ))
         }
 
         if (isRain && (slopeClass == SlopeClass.DEMANDING || slopeClass == SlopeClass.ALPINE)) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.WARNING, "Rutschgefahr",
-                "Steiles Gelände in Kombination mit Regenwahrscheinlichkeit (${precipProbabilityPercent}%) erhöht das Rutsch- und Verletzungsrisiko erheblich."
+                TerrainWarningLevel.WARNING, context.getString(R.string.terrain_warning_slip_risk_title),
+                context.getString(R.string.terrain_warning_slip_risk_message, precipProbabilityPercent)
             ))
         } else if (isRain && slopeClass == SlopeClass.MODERATE) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.CAUTION, "Nässe im Gelände",
-                "Bei Regenwahrscheinlichkeit von ${precipProbabilityPercent}% auf rutschigen Abschnitten besonders vorsichtig sein."
+                TerrainWarningLevel.CAUTION, context.getString(R.string.terrain_warning_wet_terrain_title),
+                context.getString(R.string.terrain_warning_wet_terrain_message, precipProbabilityPercent)
             ))
         }
 
         if (tempC != null && tempC >= 28.0) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.WARNING, "Hitzewarnung",
-                "Bei ${tempC.toInt()} °C besteht Hitzschlaggefahr. Strecke kürzen, schattige Route wählen, ausreichend Wasser mitführen."
+                TerrainWarningLevel.WARNING, context.getString(R.string.terrain_warning_heat_warning_title),
+                context.getString(R.string.terrain_warning_heat_warning_message, tempC.toInt())
             ))
         }
 
         if (windKmh != null && windKmh >= 40.0 &&
             (slopeClass == SlopeClass.DEMANDING || slopeClass == SlopeClass.ALPINE)) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.WARNING, "Starker Wind im Höhengelände",
-                "${windKmh.toInt()} km/h Windgeschwindigkeit in exponiertem Gelände – erhöhtes Sturzrisiko."
+                TerrainWarningLevel.WARNING, context.getString(R.string.terrain_warning_strong_wind_title),
+                context.getString(R.string.terrain_warning_strong_wind_message, windKmh.toInt())
             ))
         }
 
         if (slopeClass == SlopeClass.ALPINE) {
             warnings.add(TerrainWarning(
-                TerrainWarningLevel.CAUTION, "Alpines Gelände",
-                "Steile Passagen erfordern Trittsicherheit. Nicht für Welpen, Senioren oder gesundheitlich eingeschränkte Hunde geeignet."
+                TerrainWarningLevel.CAUTION, context.getString(R.string.terrain_warning_alpine_terrain_title),
+                context.getString(R.string.terrain_warning_alpine_terrain_message)
             ))
         }
 

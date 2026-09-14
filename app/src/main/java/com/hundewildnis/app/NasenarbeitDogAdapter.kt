@@ -42,17 +42,20 @@ class NasenarbeitDogAdapter(
         val fortschritt = NasenarbeitManager.loadFortschrittForDog(context, profile.id)
         val lastDate = if (fortschritt.letzteSession > 0) {
             SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Date(fortschritt.letzteSession))
-        } else "Noch kein Training"
+        } else context.getString(R.string.nasenarbeit_dog_adapter_no_training_yet)
 
         binding.tvDogInfo.text = buildString {
-            append("Nasenarbeit:\n")
-            append("  🐾 Verlorensuche: ${fortschritt.sessionsVerlorensuche} Sessions")
-            append(" (${fortschritt.levelVerlorensuche.displayName})\n")
-            append("  🧑 Personensuche: ${fortschritt.sessionsPersonensuche} Sessions")
-            append(" (${fortschritt.levelPersonensuche.displayName})\n")
-            append("  🔍 Freisuche: ${fortschritt.sessionsFreisuche} Sessions")
-            append(" (${fortschritt.levelFreisuche.displayName})\n")
-            append("  Gesamt: ${fortschritt.gesamtSessions} | Letzte Einheit: $lastDate")
+            append(context.getString(R.string.nasenarbeit_dog_adapter_header)).append("\n")
+            append("  🐾 ${context.getString(R.string.nasenarbeit_disziplin_verlorensuche)}: ")
+            append(context.getString(R.string.nasenarbeit_dog_adapter_sessions_count, fortschritt.sessionsVerlorensuche))
+            append(" (${fortschritt.levelVerlorensuche.displayName(context)})\n")
+            append("  🧑 ${context.getString(R.string.nasenarbeit_disziplin_personensuche)}: ")
+            append(context.getString(R.string.nasenarbeit_dog_adapter_sessions_count, fortschritt.sessionsPersonensuche))
+            append(" (${fortschritt.levelPersonensuche.displayName(context)})\n")
+            append("  🔍 ${context.getString(R.string.nasenarbeit_disziplin_freisuche)}: ")
+            append(context.getString(R.string.nasenarbeit_dog_adapter_sessions_count, fortschritt.sessionsFreisuche))
+            append(" (${fortschritt.levelFreisuche.displayName(context)})\n")
+            append(context.getString(R.string.nasenarbeit_dog_adapter_total_line, fortschritt.gesamtSessions, lastDate))
         }
 
         // Click-Listeners

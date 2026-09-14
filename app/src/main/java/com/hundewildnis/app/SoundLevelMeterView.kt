@@ -89,9 +89,9 @@ class SoundLevelMeterView @JvmOverloads constructor(
 
         valueLabel = if (db != null) "${db.toInt()} dB(A)" else "-- dB(A)"
         levelLabel = overrideLabel ?: when {
-            !calibrated -> "Kalibrierung erforderlich"
-            db == null -> "Warte auf Stimme..."
-            else -> SoundLevelEstimator.classify(db).label
+            !calibrated -> context.getString(R.string.sound_level_meter_calibration_required)
+            db == null -> context.getString(R.string.sound_level_meter_waiting_for_voice)
+            else -> SoundLevelEstimator.classify(db).label(context)
         }
         needleColor = if (db != null) zoneColorForDb(db) else Color.GRAY
 

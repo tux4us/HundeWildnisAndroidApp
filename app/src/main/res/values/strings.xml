@@ -93,7 +93,7 @@
     <string name="current_weather_title">Aktuelles Wetter</string>
     <string name="feels_like_label">Gefühlt:</string>
     <string name="humidity_label">Luftfeuchtigkeit:</string>
-    <string name="humidity_placeholder">--%</string>
+    <string name="humidity_placeholder">--%%</string>
     <string name="wind_label">Wind:</string>
     <string name="wind_placeholder">-- km/h</string>
     <string name="precipitation_label">Niederschlag:</string>
@@ -160,4 +160,2519 @@
     <string name="entspannungstraining_exhale">Ausatmen...</string>
     <string name="entspannungstraining_info">Nehme eine bequeme Position ein. \nLockere Dich und folge dem Rhythmus.</string>
     <string name="entspannungstraining_music">Begleitung mit DREAM OF A NEW AGE © by Jörg Ulbricht</string>
+
+    <!-- QRCodeActivity -->
+    <string name="qrcode_activity_title">📱 QR-Code: %1$s</string>
+    <string name="qrcode_activity_default_dog_name">Hund</string>
+    <string name="qrcode_activity_error_generation_failed">❌ QR-Code konnte nicht erstellt werden</string>
+    <string name="qrcode_activity_tile_share">Teilen</string>
+    <string name="qrcode_activity_tile_save">Speichern</string>
+    <string name="qrcode_activity_share_text">QR-Code für %1$s</string>
+    <string name="qrcode_activity_share_chooser_title">QR-Code teilen</string>
+    <string name="qrcode_activity_error_sharing">❌ Fehler beim Teilen: %1$s</string>
+    <string name="qrcode_activity_saved_success">✅ QR-Code in Galerie gespeichert</string>
+    <string name="qrcode_activity_error_saving">❌ Fehler beim Speichern: %1$s</string>
+
+    <!-- PulscheckDogSelectActivity -->
+    <string name="pulscheck_dog_select_toolbar_title">❤️ Pulscheck – Hund wählen</string>
+    <string name="pulscheck_dog_select_question">Für welchen Hund möchtest Du Vitalwerte messen?</string>
+    <string name="pulscheck_dog_select_no_dogs">Kein Hund angelegt.\n\nBitte lege zuerst einen Hund in den Stammdaten an.</string>
+
+    <!-- NasenarbeitSessionDetailActivity -->
+    <string name="nasenarbeit_session_detail_toolbar_title">Session %1$s</string>
+    <string name="nasenarbeit_session_detail_section_scoring">Scoring</string>
+    <string name="nasenarbeit_session_detail_section_results">Trainingsergebnisse</string>
+    <string name="nasenarbeit_session_detail_section_weather">Wetterbedingungen</string>
+    <string name="nasenarbeit_session_detail_section_level">Trainingslevel</string>
+    <string name="nasenarbeit_session_detail_section_notes">Notizen</string>
+    <string name="nasenarbeit_session_detail_recommended">Empfohlen: %1$s %2$s</string>
+    <string name="nasenarbeit_session_detail_route">Strecke: %1$s Schritte\n</string>
+    <string name="nasenarbeit_session_detail_area">Fläche: %1$s ha\n</string>
+    <string name="nasenarbeit_session_detail_duration">Dauer: %1$s Min.\n</string>
+    <string name="nasenarbeit_session_detail_items_found">Gegenstände: %1$s von %2$s gefunden\n</string>
+    <string name="nasenarbeit_session_detail_person_found_success">✅ Erfolgreich</string>
+    <string name="nasenarbeit_session_detail_person_found_failure">❌ Nicht gefunden</string>
+    <string name="nasenarbeit_session_detail_person_found_label">Personenfund: %1$s\n</string>
+    <string name="nasenarbeit_session_detail_wind_tailwind">Rückenwind</string>
+    <string name="nasenarbeit_session_detail_wind_crosswind">Seitenwind</string>
+    <string name="nasenarbeit_session_detail_wind_headwind">Gegenwind</string>
+    <string name="nasenarbeit_session_detail_wind_label">Wind: %1$s</string>
+    <string name="nasenarbeit_session_detail_pdf_saved">✅ PDF gespeichert in Documents/HundeWildnis</string>
+    <string name="nasenarbeit_session_detail_pdf_share_chooser">Session als PDF teilen</string>
+    <string name="nasenarbeit_session_detail_pdf_error">PDF-Fehler: %1$s</string>
+    <string name="nasenarbeit_session_detail_score_label">Score</string>
+
+    <!-- NasenarbeitDisziplin (Enum, sprachneutral gespeichert, hier nur Anzeige) -->
+    <string name="nasenarbeit_disziplin_verlorensuche">Verlorensuche</string>
+    <string name="nasenarbeit_disziplin_personensuche">Personensuche</string>
+    <string name="nasenarbeit_disziplin_freisuche">Freisuche</string>
+    <string name="nasenarbeit_disziplin_verlorensuche_desc">Der Hund folgt dem Fährtenmischgeruch und findet verlorene Gegenstände. Keine zweite Person notwendig.</string>
+    <string name="nasenarbeit_disziplin_personensuche_desc">Der Hund folgt dem individuellen Geruch einer Zielperson. Zweite Person notwendig.</string>
+    <string name="nasenarbeit_disziplin_freisuche_desc">Der Hund durchsucht ein Gelände selbständig. Bei Personensuche zweite Person notwendig.</string>
+
+    <!-- NasenarbeitLevel (Enum, sprachneutral gespeichert, hier nur Anzeige) -->
+    <string name="nasenarbeit_level_anfaenger">Anfänger</string>
+    <string name="nasenarbeit_level_fortgeschritten">Fortgeschritten</string>
+    <string name="nasenarbeit_level_erfahren">Erfahren</string>
+    <string name="nasenarbeit_level_experte">Experte</string>
+    <string name="nasenarbeit_level_schwierigkeit_leicht">Leicht</string>
+    <string name="nasenarbeit_level_schwierigkeit_mittel">Mittel</string>
+    <string name="nasenarbeit_level_schwierigkeit_mittel_schwer">Mittel–Schwer</string>
+    <string name="nasenarbeit_level_schwierigkeit_schwer">Schwer</string>
+    <string name="nasenarbeit_beratung_level_sessions">%1$s · %2$d Sessions</string>
+    <string name="nasenarbeit_beratung_training_not_possible">Training nicht möglich</string>
+    <string name="nasenarbeit_beratung_score_line">Score: %1$s%2$s  %3$s%4$s  %5$s%6$s</string>
+    <string name="nasenarbeit_beratung_also_suitable">Auch geeignet: %1$s</string>
+
+    <!-- NasenarbeitHundActivity -->
+    <string name="nasenarbeit_hund_stat_line">%1$d\n%2$s\n%3$s</string>
+    <string name="nasenarbeit_hund_stat_total">Gesamt: %1$d Sessions</string>
+    <string name="nasenarbeit_hund_max_leistung">Max. Strecke: %1$d Schritte | Max. Fläche: %2$s ha</string>
+
+    <!-- Generisch, app-weit wiederverwendbar -->
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+
+    <!-- NasenarbeitCSVGenerator -->
+    <string name="nasenarbeit_csv_header">Datum;Disziplin;Empfohlen;Bewertung;Schritte;Ha;Minuten;Gefunden;Gesamt;Erfolg;Temperatur;Beaufort;Feuchtigkeit;Windrichtung;LevelV;LevelP;LevelF;Notizen</string>
+
+    <!-- NasenarbeitDogAdapter -->
+    <string name="nasenarbeit_dog_adapter_no_training_yet">Noch kein Training</string>
+    <string name="nasenarbeit_dog_adapter_header">Nasenarbeit:</string>
+    <string name="nasenarbeit_dog_adapter_sessions_count">%1$d Sessions</string>
+    <string name="nasenarbeit_dog_adapter_total_line">  Gesamt: %1$d | Letzte Einheit: %2$s</string>
+
+    <!-- NasenarbeitMapActivity -->
+    <string name="nasenarbeit_map_toolbar_title">Karte · %1$s</string>
+
+    <!-- NasenarbeitBeratungActivity: Parameter-Grid-Labels -->
+    <string name="nasenarbeit_beratung_label_recommended_length">Empfohlene Länge/Fläche</string>
+    <string name="nasenarbeit_beratung_label_difficulty">Schwierigkeit</string>
+    <string name="nasenarbeit_beratung_label_spuralter">Spuralter</string>
+    <string name="nasenarbeit_beratung_label_letzte_einheit">Letzte Einheit</string>
+    <string name="nasenarbeit_beratung_label_tagesverfassung">Tagesverfassung</string>
+    <string name="nasenarbeit_beratung_label_steigerungsfaktor">Steigerungsfaktor</string>
+
+    <!-- DistractionLevel -->
+    <string name="distraction_level_none">Keine Ablenkung</string>
+    <string name="distraction_level_low">Geringe Ablenkung</string>
+    <string name="distraction_level_medium">Mittlere Ablenkung</string>
+    <string name="distraction_level_high">Hohe Ablenkung</string>
+
+    <!-- DifficultyLevel -->
+    <string name="difficulty_level_easy">Leicht</string>
+    <string name="difficulty_level_normal">Normal</string>
+    <string name="difficulty_level_hard">Schwer</string>
+
+    <!-- WeatherCondition -->
+    <string name="weather_condition_sunny">Sonnig</string>
+    <string name="weather_condition_cloudy">Bewölkt</string>
+    <string name="weather_condition_rainy">Regnerisch</string>
+    <string name="weather_condition_snowy">Schnee</string>
+    <string name="weather_condition_windy">Windig</string>
+    <string name="weather_condition_foggy">Neblig</string>
+    <string name="weather_condition_stormy">Stürmisch</string>
+
+    <!-- LocationType -->
+    <string name="location_type_home">Zuhause</string>
+    <string name="location_type_garden">Garten</string>
+    <string name="location_type_park">Park</string>
+    <string name="location_type_forest">Wald</string>
+    <string name="location_type_field">Feld/Wiese</string>
+    <string name="location_type_city">Stadt</string>
+    <string name="location_type_indoor_hall">Trainingshalle</string>
+    <string name="location_type_dog_school">Hundeschule</string>
+    <string name="location_type_other">Sonstiges</string>
+
+    <!-- AddSessionActivity -->
+    <string name="add_session_not_specified">Nicht angegeben</string>
+    <string name="add_session_fill_required_fields">Bitte alle Pflichtfelder ausfüllen</string>
+
+    <!-- TrainingExportManager -->
+    <string name="training_export_csv_header">Datum,Kategorie,Aufwand,Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen</string>
+    <string name="training_export_csv_header_category">Datum,Aufwand,Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen</string>
+    <string name="training_export_csv_field_value_header">Feld,Wert</string>
+    <string name="training_export_field_date">Datum</string>
+    <string name="training_export_field_category">Kategorie</string>
+    <string name="training_export_field_effort">Aufwand</string>
+    <string name="training_export_field_success">Erfolg</string>
+    <string name="training_export_field_distraction">Ablenkung</string>
+    <string name="training_export_field_difficulty">Schwierigkeit</string>
+    <string name="training_export_field_weather">Wetter</string>
+    <string name="training_export_field_gps">GPS</string>
+    <string name="training_export_field_notes">Notizen</string>
+
+    <!-- TrainingReminderWorker -->
+    <string name="training_reminder_default_dog_name">Dein Hund</string>
+    <string name="training_reminder_default_category">Training</string>
+    <string name="training_reminder_notification_title">🦮 Trainingseinheit in 30 Minuten</string>
+    <string name="training_reminder_notification_text">%1$s: %2$s (ca. %3$d Min)</string>
+    <string name="training_reminder_notification_big_text">Geplante Trainingseinheit für %1$s:\n%2$s – ca. %3$d Minuten.\n\nIm Aktivitätskalender ansehen oder direkt starten.</string>
+    <string name="training_reminder_channel_name">Trainingsplanung – Erinnerungen</string>
+    <string name="training_reminder_channel_description">Erinnert 30 Minuten vor geplanten Trainingseinheiten.</string>
+
+    <!-- BackupDataType -->
+    <string name="backup_type_profiles">Hunde-Profile</string>
+    <string name="backup_type_profiles_desc">Name, Geburtsdatum, Chip-Nr, Foto, etc.</string>
+    <string name="backup_type_diary">Trainingstagebuch</string>
+    <string name="backup_type_diary_desc">Trainingseinheiten, Fortschritt, Meilensteine</string>
+    <string name="backup_type_walking_speed">Tempo-Messungen</string>
+    <string name="backup_type_walking_speed_desc">Walking Speed Aufzeichnungen</string>
+    <string name="backup_type_notes">Notizen</string>
+    <string name="backup_type_notes_desc">Alle Notizen mit Fotos</string>
+    <string name="backup_type_voice">Sprachaufnahmen</string>
+    <string name="backup_type_voice_desc">Kommunikations-Sessions</string>
+    <string name="backup_type_emergency">Notfall-Meldungen</string>
+    <string name="backup_type_emergency_desc">Notfallberichte mit Fotos</string>
+    <string name="backup_type_nasenarbeit">Nasenarbeit</string>
+    <string name="backup_type_nasenarbeit_desc">Alle Nasenarbeit-Sessions und Fortschritte</string>
+    <string name="backup_type_favorites">Favoriten</string>
+    <string name="backup_type_favorites_desc">Markierte Orte auf der Karte</string>
+    <string name="backup_type_app_settings">App-Einstellungen</string>
+    <string name="backup_type_app_settings_desc">Theme, Benachrichtigungen, etc.</string>
+    <string name="backup_type_weather_favorites">Wetter-Favoriten</string>
+    <string name="backup_type_weather_favorites_desc">Gespeicherte Orte für die Wettervorhersage</string>
+    <string name="backup_type_vital_records">Vitalwerte</string>
+    <string name="backup_type_vital_records_desc">Alle Puls- und Vitalwert-Messungen</string>
+    <string name="backup_type_interval_timer">Intervall-Timer</string>
+    <string name="backup_type_interval_timer_desc">Alle Timer-Sessions</string>
+    <string name="backup_type_plant_photos">Pflanzen-Fotos</string>
+    <string name="backup_type_plant_photos_desc">Eigene Fotos zu Gefahrenpflanzen</string>
+    <string name="backup_type_planned_sessions">Trainingsplanung</string>
+    <string name="backup_type_planned_sessions_desc">Geplante Trainingseinheiten im Aktivitätskalender</string>
+
+    <!-- MergeMode -->
+    <string name="merge_mode_add_new">Hinzufügen</string>
+    <string name="merge_mode_add_new_desc">Neue Daten hinzufügen, vorhandene behalten</string>
+    <string name="merge_mode_replace_all">Ersetzen</string>
+    <string name="merge_mode_replace_all_desc">Alle vorhandenen Daten löschen und durch Backup ersetzen</string>
+    <string name="merge_mode_merge_by_timestamp">Zusammenführen</string>
+    <string name="merge_mode_merge_by_timestamp_desc">Neueste Version jedes Eintrags behalten</string>
+
+    <!-- EmergencyMainCategory -->
+    <string name="emergency_main_category_accident">Unfall</string>
+    <string name="emergency_main_category_illness">Erkrankung</string>
+
+    <!-- AccidentType -->
+    <string name="accident_type_traffic_accident">Verkehrsunfall</string>
+    <string name="accident_type_bleeding">Blutungen / Wunden</string>
+    <string name="accident_type_bone_fracture">Knochenbruch / Lahmheit</string>
+    <string name="accident_type_eye_injury">Augenverletzung</string>
+    <string name="accident_type_drowning">Ertrinken / Wasserunfall</string>
+    <string name="accident_type_hypothermia">Unterkühlung / Eis</string>
+    <string name="accident_type_heat_stroke">Hitzschlag</string>
+    <string name="accident_type_foreign_object">Fremdkörper verschluckt</string>
+    <string name="accident_type_poisoning_known">Vergiftung (Substanz bekannt)</string>
+
+    <!-- IllnessType -->
+    <string name="illness_type_unconsciousness">Bewusstlosigkeit / Kollaps</string>
+    <string name="illness_type_seizure">Krampfanfall</string>
+    <string name="illness_type_gastric_torsion">Magendrehung</string>
+    <string name="illness_type_breathing_difficulty">Atemnot</string>
+    <string name="illness_type_bleeding_no_accident">Blutungen (ohne Unfall)</string>
+    <string name="illness_type_vomiting">Erbrechen / Durchfall</string>
+    <string name="illness_type_poisoning_unknown">Vergiftung (unbekannt)</string>
+    <string name="illness_type_allergic_reaction">Allergische Reaktion</string>
+
+    <!-- UrgencyLevel -->
+    <string name="urgency_level_critical">🔴 LEBENSBEDROHLICH</string>
+    <string name="urgency_level_urgent">🟡 DRINGEND</string>
+    <string name="urgency_level_moderate">🟢 BEOBACHTEN</string>
+
+    <!-- FirstAidWizardActivity -->
+    <string name="first_aid_wizard_subcategory_question">Welche Art von %1$s?</string>
+
+    <!-- FirstAidInstructionActivity -->
+    <string name="first_aid_instruction_not_found">Anleitung nicht gefunden</string>
+    <string name="first_aid_instruction_toolbar_title">🚨 Erste Hilfe</string>
+    <string name="first_aid_instruction_no_profile_selected">Kein Hundeprofil ausgewählt</string>
+    <string name="first_aid_instruction_timer_button">⏱️ Timer: %1$d Min</string>
+    <string name="first_aid_instruction_notes_emergency">NOTFALL: %1$s</string>
+    <string name="first_aid_instruction_notes_urgency">Dringlichkeit: %1$s</string>
+    <string name="first_aid_instruction_notes_symptoms">SYMPTOME:</string>
+    <string name="first_aid_instruction_text_header">═══ ERSTE-HILFE ANLEITUNG ═══</string>
+    <string name="first_aid_instruction_text_immediate_actions">SOFORTMASSNAHMEN:</string>
+    <string name="first_aid_instruction_text_do_list">WAS TUN:</string>
+    <string name="first_aid_instruction_text_dont_list">WAS NICHT TUN:</string>
+    <string name="first_aid_instruction_text_transport">TRANSPORT:\n%1$s</string>
+    <string name="first_aid_instruction_text_important">WICHTIG:\n%1$s</string>
+
+    <!-- SlopeClass -->
+    <string name="slope_class_flat">Flach</string>
+    <string name="slope_class_light">Leicht hügelig</string>
+    <string name="slope_class_moderate">Hügelig</string>
+    <string name="slope_class_demanding">Anspruchsvoll</string>
+    <string name="slope_class_alpine">Alpin</string>
+
+    <!-- TerrainWarningLevel -->
+    <string name="terrain_warning_level_caution">Hinweis</string>
+    <string name="terrain_warning_level_warning">Warnung</string>
+
+    <!-- TerrainRecommendationEngine: Warnungstexte -->
+    <string name="terrain_warning_hot_asphalt_title">Heißer Asphalt</string>
+    <string name="terrain_warning_hot_asphalt_message">Bei %1$d °C und %2$d %% Asphaltanteil besteht Verbrennungsgefahr an den Pfoten. Handrücken-Test vor dem Loslaufen empfohlen.</string>
+    <string name="terrain_warning_warm_ground_title">Warmer Untergrund</string>
+    <string name="terrain_warning_warm_ground_message">Asphaltanteil und Temperatur erhöht – Pfoten unterwegs kontrollieren.</string>
+    <string name="terrain_warning_slip_risk_title">Rutschgefahr</string>
+    <string name="terrain_warning_slip_risk_message">Steiles Gelände in Kombination mit Regenwahrscheinlichkeit (%1$d%%) erhöht das Rutsch- und Verletzungsrisiko erheblich.</string>
+    <string name="terrain_warning_wet_terrain_title">Nässe im Gelände</string>
+    <string name="terrain_warning_wet_terrain_message">Bei Regenwahrscheinlichkeit von %1$d%% auf rutschigen Abschnitten besonders vorsichtig sein.</string>
+    <string name="terrain_warning_heat_warning_title">Hitzewarnung</string>
+    <string name="terrain_warning_heat_warning_message">Bei %1$d °C besteht Hitzschlaggefahr. Strecke kürzen, schattige Route wählen, ausreichend Wasser mitführen.</string>
+    <string name="terrain_warning_strong_wind_title">Starker Wind im Höhengelände</string>
+    <string name="terrain_warning_strong_wind_message">%1$d km/h Windgeschwindigkeit in exponiertem Gelände – erhöhtes Sturzrisiko.</string>
+    <string name="terrain_warning_alpine_terrain_title">Alpines Gelände</string>
+    <string name="terrain_warning_alpine_terrain_message">Steile Passagen erfordern Trittsicherheit. Nicht für Welpen, Senioren oder gesundheitlich eingeschränkte Hunde geeignet.</string>
+
+    <!-- StormProximityLevel -->
+    <string name="storm_proximity_level_safe">Entfernt</string>
+    <string name="storm_proximity_level_caution">Nähert sich</string>
+    <string name="storm_proximity_level_danger">Akute Gefahr</string>
+
+    <!-- StormTrend -->
+    <string name="storm_trend_approaching">Gewitter nähert sich</string>
+    <string name="storm_trend_receding">Gewitter entfernt sich</string>
+    <string name="storm_trend_stable">Keine eindeutige Veränderung</string>
+    <string name="storm_trend_unknown">Noch nicht genug Messungen</string>
+
+    <!-- LightningCalculator: Handlungsempfehlungen -->
+    <string name="storm_recommendation_safe">Das Gewitter ist noch weiter entfernt. Wetterlage im Auge behalten und Rückweg einplanen.</string>
+    <string name="storm_recommendation_caution">Das Gewitter kommt näher. Spaziergang jetzt beenden und festes Gebäude oder Auto aufsuchen – nicht unter Einzelbäumen oder auf offenen Flächen bleiben.</string>
+    <string name="storm_recommendation_danger">Sofort Schutz suchen! Offenes Gelände, Gewässer, Metallzäune und Baumkronen meiden. In geschützter Position (geduckt, Füße geschlossen) ausharren, bis das Gewitter abgezogen ist.</string>
+
+    <!-- ThunderstormForecastLevel -->
+    <string name="thunderstorm_forecast_level_low">Gering</string>
+    <string name="thunderstorm_forecast_level_moderate">Erhöht</string>
+    <string name="thunderstorm_forecast_level_high">Hoch</string>
+
+    <!-- ThunderstormWarningActivity -->
+    <string name="thunderstorm_distance_result">≈ %1$.1f km entfernt</string>
+    <string name="thunderstorm_rule_of_thumb">Faustregel: %1$.1f s ÷ 3 ≈ %2$.1f km</string>
+    <string name="thunderstorm_measure_saved_status">Messung gespeichert. Bei erneutem Blitz kannst Du direkt weitermessen, um den Trend zu sehen.</string>
+    <string name="thunderstorm_no_measurement_yet">Noch keine Messung</string>
+    <string name="thunderstorm_measurement_count">%1$d Messung(en) in dieser Serie</string>
+
+    <!-- Windrichtungen -->
+    <string name="wind_direction_north">Norden</string>
+    <string name="wind_direction_northeast">Nordosten</string>
+    <string name="wind_direction_east">Osten</string>
+    <string name="wind_direction_southeast">Südosten</string>
+    <string name="wind_direction_south">Süden</string>
+    <string name="wind_direction_southwest">Südwesten</string>
+    <string name="wind_direction_west">Westen</string>
+    <string name="wind_direction_northwest">Nordwesten</string>
+    <string name="wind_direction_unknown">unbekannt</string>
+
+    <!-- Wettercodes (Open-Meteo WMO Codes) -->
+    <string name="weather_code_clear">klar</string>
+    <string name="weather_code_cloudy">bewölkt</string>
+    <string name="weather_code_fog">Nebel</string>
+    <string name="weather_code_drizzle">Nieselregen</string>
+    <string name="weather_code_freezing_drizzle">gefr. Niesel</string>
+    <string name="weather_code_light_rain">leichter Regen</string>
+    <string name="weather_code_moderate_rain">mäßiger Regen</string>
+    <string name="weather_code_heavy_rain">starker Regen</string>
+    <string name="weather_code_freezing_rain">gefr. Regen</string>
+    <string name="weather_code_snow">Schnee</string>
+    <string name="weather_code_snow_grains">Schneegriesel</string>
+    <string name="weather_code_light_shower">leichter Schauer</string>
+    <string name="weather_code_moderate_shower">mäßiger Schauer</string>
+    <string name="weather_code_heavy_shower">heftiger Schauer</string>
+    <string name="weather_code_snow_shower">Schneeschauer</string>
+    <string name="weather_code_thunderstorm">Gewitter</string>
+    <string name="weather_code_thunderstorm_hail">Gewitter mit Hagel</string>
+    <string name="weather_code_prefix">Code %1$d: %2$s</string>
+
+    <!-- ThunderstormWarningActivity: Forecast-Zusammenfassung -->
+    <string name="thunderstorm_forecast_direction_suffix">, Richtung %1$s %2$s</string>
+    <string name="thunderstorm_forecast_line">%1$s Uhr: %2$s %3$s (CAPE %4$.0f J/kg, Niederschlag %5$d%%, %6$s%7$s)</string>
+    <string name="thunderstorm_forecast_from_direction">\naus %1$s %2$s</string>
+    <string name="thunderstorm_forecast_summary_risk">%1$s Höchstes Gewitterrisiko: %2$s\ngegen %3$s Uhr erwartet%4$s</string>
+    <string name="thunderstorm_forecast_summary_no_risk">🟢 Kein erhöhtes Gewitterrisiko\nin den nächsten 12 Stunden erkennbar</string>
+
+    <!-- QuickCharacterProfile -->
+    <string name="character_profile_balanced">Ausgeglichen</string>
+    <string name="character_profile_balanced_desc">Normales, ausgeglichenes Wesen ohne besondere Auffälligkeiten</string>
+    <string name="character_profile_energetic">Energiegeladen</string>
+    <string name="character_profile_energetic_desc">Sehr aktiv, lebhaft, immer in Bewegung, braucht viel Auslastung</string>
+    <string name="character_profile_calm">Sehr ruhig</string>
+    <string name="character_profile_calm_desc">Gelassen, entspannt, wenig Bewegungsdrang, genießt Ruhe</string>
+    <string name="character_profile_anxious">Unsicher</string>
+    <string name="character_profile_anxious_desc">Ängstlich, zurückhaltend, braucht viel Sicherheit und Geduld</string>
+    <string name="character_profile_confident">Sehr selbstbewusst</string>
+    <string name="character_profile_confident_desc">Selbstsicher, mutig, geht neue Situationen aktiv an</string>
+    <string name="character_profile_puppy">Welpe (4-8 Monate)</string>
+    <string name="character_profile_puppy_desc">Verspielt, neugierig, leicht ablenkbar, lernt schnell aber unkonzentriert</string>
+    <string name="character_profile_senior">Senior (8+ Jahre)</string>
+    <string name="character_profile_senior_desc">Ruhiger, bedächtiger, braucht längere Lernphasen und Ruhepausen</string>
+    <string name="character_profile_working_dog">Arbeitshund</string>
+    <string name="character_profile_working_dog_desc">Fokussiert, ausdauernd, braucht klare Aufgaben und Struktur</string>
+    <string name="character_profile_social_butterfly">Sehr sozial</string>
+    <string name="character_profile_social_butterfly_desc">Liebt andere Hunde und Menschen, sehr kontaktfreudig</string>
+    <string name="character_profile_independent">Eigenständig</string>
+    <string name="character_profile_independent_desc">Selbstständig, braucht weniger Führung, arbeitet gerne allein</string>
+    <string name="character_profile_rescue_dog">Tierschutzhund</string>
+    <string name="character_profile_rescue_dog_desc">Vorsichtig, braucht Zeit zum Vertrauen aufbauen, sensibel</string>
+
+    <!-- Generisch, app-weit wiederverwendbar -->
+    <string name="cancel">Abbrechen</string>
+
+    <!-- DogEditActivity -->
+    <string name="dog_edit_quick_profile_dialog_title">📋 Wesens-Profil wählen</string>
+    <string name="dog_edit_quick_profile_applied">✅ Profil \'%1$s\' angewendet</string>
+
+    <!-- IntervalTimerSetupActivity: Presets -->
+    <string name="interval_timer_preset_standard">Standard (45s / 30s / 6 Runden)</string>
+    <string name="interval_timer_preset_puppy">Welpe – sanft (20s / 40s / 4 Runden)</string>
+    <string name="interval_timer_preset_senior">Senior – ruhig (30s / 60s / 5 Runden)</string>
+    <string name="interval_timer_preset_energetic">Energiegeladen (60s / 30s / 8 Runden)</string>
+    <string name="interval_timer_preset_working_dog">Arbeitshund (90s / 30s / 8 Runden)</string>
+    <string name="interval_timer_preset_rescue_dog">Tierschutzhund (20s / 50s / 4 Runden)</string>
+
+    <!-- MeasurementType -->
+    <string name="measurement_type_time">Minuten</string>
+    <string name="measurement_type_repetitions">Wiederholungen</string>
+
+    <!-- TrainingCategory -->
+    <string name="training_category_leinenarbeit">Leinenarbeit</string>
+    <string name="training_category_leinenarbeit_desc">Grundlagen der Leinenführung</string>
+    <string name="training_category_fuss">Fuß</string>
+    <string name="training_category_fuss_desc">Präzise Fußarbeit</string>
+    <string name="training_category_sitz">Sitz</string>
+    <string name="training_category_sitz_desc">Sitz-Kommando und Festigung</string>
+    <string name="training_category_platz">Platz</string>
+    <string name="training_category_platz_desc">Platz-Kommando und Ausdauer</string>
+    <string name="training_category_steh">Steh</string>
+    <string name="training_category_steh_desc">Steh-Kommando und Position</string>
+    <string name="training_category_sozialisierung">Sozialisierungstechniken</string>
+    <string name="training_category_sozialisierung_desc">Sozialverhalten fördern</string>
+    <string name="training_category_langleine">Langleinentraining</string>
+    <string name="training_category_langleine_desc">Arbeit mit langer Leine</string>
+    <string name="training_category_distanzunterbrechung">Distanzunterbrechungen</string>
+    <string name="training_category_distanzunterbrechung_desc">Unterbrechung auf Distanz</string>
+    <string name="training_category_freilauf">Freilauf</string>
+    <string name="training_category_freilauf_desc">Freiarbeit ohne Leine</string>
+    <string name="training_category_freifolge">Freifolge</string>
+    <string name="training_category_freifolge_desc">Folgen ohne Leine</string>
+    <string name="training_category_teamwalk">Teamwalk</string>
+    <string name="training_category_teamwalk_desc">Gemeinsames Laufen</string>
+    <string name="training_category_scouttechniken">Scouttechniken</string>
+    <string name="training_category_scouttechniken_desc">Vorausschau und Orientierung</string>
+    <string name="training_category_jagdvermeidung">Jagdvermeidung</string>
+    <string name="training_category_jagdvermeidung_desc">Anti-Jagd-Training</string>
+    <string name="training_category_nasenarbeit">Nasenarbeit</string>
+    <string name="training_category_nasenarbeit_desc">Geruchsarbeit und Suche</string>
+    <string name="training_category_leinenfuehrigkeit">Leinenführigkeit</string>
+    <string name="training_category_leinenfuehrigkeit_desc">Entspannte Leinenführung</string>
+    <string name="training_category_begegnungen">Begegnungssituationen</string>
+    <string name="training_category_begegnungen_desc">Souveräne Begegnungen</string>
+    <string name="training_category_stresstoleranz">Stresstoleranztraining</string>
+    <string name="training_category_stresstoleranz_desc">Gelassenheit unter Stress</string>
+    <string name="training_category_strassenroutinen">Straßenroutinen</string>
+    <string name="training_category_strassenroutinen_desc">Sicheres Verhalten im Straßenverkehr</string>
+
+    <!-- TrainingLevel -->
+    <string name="training_level_beginner">Beginn</string>
+    <string name="training_level_basics">Grundlagen</string>
+    <string name="training_level_intermediate">Aufbau</string>
+    <string name="training_level_advanced">Festigung</string>
+    <string name="training_level_established">Etabliert</string>
+
+    <!-- MilestoneType -->
+    <string name="milestone_type_first_session">Erste Trainingseinheit</string>
+    <string name="milestone_type_five_sessions">5 Trainingseinheiten</string>
+    <string name="milestone_type_ten_sessions">10 Trainingseinheiten</string>
+    <string name="milestone_type_twenty_sessions">20 Trainingseinheiten</string>
+    <string name="milestone_type_fifty_sessions">50 Trainingseinheiten</string>
+    <string name="milestone_type_five_day_streak">5 Tage am Stück</string>
+    <string name="milestone_type_ten_day_streak">10 Tage am Stück</string>
+    <string name="milestone_type_progress_50">50%% Fortschritt</string>
+    <string name="milestone_type_progress_75">75%% Fortschritt</string>
+    <string name="milestone_type_progress_100">100%% Fortschritt</string>
+    <string name="milestone_type_success_streak">5x sehr erfolgreich</string>
+    <string name="milestone_type_perfect_week">Perfekte Woche</string>
+
+    <!-- ProgressTrend -->
+    <string name="progress_trend_improving">Verbesserung</string>
+    <string name="progress_trend_stable">Stabil</string>
+    <string name="progress_trend_declining">Rückläufig</string>
+
+    <!-- CategoryListActivity -->
+    <string name="category_list_toolbar_title">Trainingskategorien</string>
+    <string name="category_list_subtitle">Wähle eine Kategorie für das Training</string>
+
+    <!-- AddSessionActivity -->
+    <string name="add_session_toolbar_title">Neue Trainingseinheit</string>
+
+    <!-- ActivityCalendarActivity -->
+    <string name="activity_calendar_completed_header">✅ Absolviert:</string>
+    <string name="activity_calendar_session_line">• %1$s – %2$s (%3$s)</string>
+    <string name="activity_calendar_planned_header">📅 Geplant:</string>
+    <string name="activity_calendar_status_done">✓ erledigt</string>
+    <string name="activity_calendar_status_open">offen</string>
+    <string name="activity_calendar_planned_line">• %1$s – %2$d Min (%3$s)</string>
+    <string name="activity_calendar_no_entries">Keine Einträge an diesem Tag.</string>
+    <string name="activity_calendar_trained_days_ago">vor %1$d Tagen trainiert</string>
+    <string name="activity_calendar_never_trained">noch nie trainiert</string>
+
+    <!-- TrainingDetailActivity -->
+    <string name="training_detail_total_sessions">%1$d Einheiten</string>
+    <string name="training_detail_effort_both">%1$d Min / %2$dx</string>
+    <string name="training_detail_effort_repetitions">%1$d Wiederholungen</string>
+    <string name="training_detail_effort_minutes">%1$d Min</string>
+    <string name="training_detail_consecutive_days">%1$d Tage</string>
+    <string name="training_detail_average_success">Ø %1$s / 4.0</string>
+    <string name="training_detail_latest_milestone">🎯 %1$s</string>
+    <string name="training_detail_no_milestones">Noch keine Meilensteine</string>
+
+    <!-- TrainingExportManager: zusätzliche Strings -->
+    <string name="training_export_category_progress_line">%1$s: %2$d%% (%3$s)</string>
+    <string name="training_export_effort_both">%1$d Sessions • %2$d Min / %3$dx • Ø %4$s/4.0</string>
+    <string name="training_export_effort_repetitions">%1$d Sessions • %2$dx • Ø %3$s/4.0</string>
+    <string name="training_export_effort_minutes">%1$d Sessions • %2$d Min • Ø %3$s/4.0</string>
+    <string name="training_export_all_sessions_header">📋 ALLE TRAININGSEINHEITEN</string>
+    <string name="training_export_progress_status">Trainingsstand: %1$d%% (%2$s)</string>
+
+    <!-- NasenarbeitScorer: harte Ausschlüsse -->
+    <string name="nasenarbeit_exclusion_too_hot">Temperatur über 30°C – Training nicht möglich</string>
+    <string name="nasenarbeit_exclusion_too_cold">Temperatur unter −10°C – Training nicht möglich</string>
+    <string name="nasenarbeit_exclusion_thunderstorm">Gewitter – Training nicht möglich</string>
+    <string name="nasenarbeit_exclusion_storm">Sturm/Orkan (Beaufort %1$d) – Training nicht möglich</string>
+
+    <!-- NasenarbeitScorer: Begründungstexte -->
+    <string name="nasenarbeit_begruendung_optimal">%1$s ist heute optimal. </string>
+    <string name="nasenarbeit_begruendung_wet_ground">Feuchter Boden begünstigt die Spurhaltung.</string>
+    <string name="nasenarbeit_begruendung_dry_ground">Trockener Boden eignet sich gut für Personensuche.</string>
+    <string name="nasenarbeit_begruendung_strong_wind">Starker Wind begünstigt die Freisuche.</string>
+
+    <!-- NasenarbeitBeratungActivity: Performance-Anzeige -->
+    <string name="nasenarbeit_beratung_steps">%1$d Schritte</string>
+    <string name="nasenarbeit_beratung_hectares">%1$.1f ha</string>
+
+    <!-- WeatherActivity: UV-Index -->
+    <string name="uv_index_minimal">Minimal</string>
+    <string name="uv_index_low">Gering</string>
+    <string name="uv_index_medium">Mittel</string>
+    <string name="uv_index_high">Hoch</string>
+    <string name="uv_index_very_high">Sehr hoch</string>
+    <string name="uv_index_extreme">Extrem</string>
+
+    <!-- WeatherActivity: UV-Schutzempfehlung -->
+    <string name="uv_protection_header">🔆 UV-Schutzempfehlung (Tages-Maximum: %1$s):</string>
+    <string name="uv_protection_human_moderate">👤 Mensch: Sonnenschutz empfohlen bei längeren Aufenthalten draussen.</string>
+    <string name="uv_protection_dog_moderate">🐕 Hund: Helle oder dünn behaarte Hunde sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen.</string>
+    <string name="uv_protection_human_high">👤 Mensch: Sonnenschutz, gegebenenfalls Kopfbedeckung und Sonnenbrille empfohlen. Mittagssonne meiden.</string>
+    <string name="uv_protection_dog_high">🐕 Hund: Trainingseinheiten vor 10 oder nach 16 Uhr legen. Tagsüber Schatten bevorzugen.</string>
+    <string name="uv_protection_human_very_high">👤 Mensch: Sonnenschutz beachten, Schatten bevorzugen, zwischen 11 und 16 Uhr dauerhaften Aufenthalt in der Sonne vermeiden.</string>
+    <string name="uv_protection_dog_very_high">🐕 Hund: Training auf frühe Morgen- oder Abendstunden verschieben. Ausreichend Wasser mitführen. Asphaltstraßen vermeiden. Im schattigen Umfeld bewegen.</string>
+    <string name="uv_protection_human_extreme">⚠️ Extrem-UV! Mensch: Aufenthalt im Freien so kurz wie möglich.</string>
+    <string name="uv_protection_dog_extreme">🐕 Hund: Training heute meiden. Bei notwendigen Runden: schattige Routen wählen, sonnige Exposition minimieren. Trinkwasser mitführen. Hund regelmäßig auf der Bauchseite anfeuchten.</string>
+    <string name="uv_protection_vet_disclaimer">⚕️ Kein Ersatz für tierärztliche Beratung.</string>
+
+    <!-- BioLevel -->
+    <string name="biolevel_none">Kein Einfluss</string>
+    <string name="biolevel_low">Geringer Einfluss</string>
+    <string name="biolevel_moderate">Mäßiger Einfluss</string>
+    <string name="biolevel_high">Starker Einfluss</string>
+    <string name="biolevel_extreme">Sehr starker Einfluss</string>
+
+    <!-- BiowetterEngine: gemeinsame Texte -->
+    <string name="biowetter_not_enough_data">Nicht genug Daten</string>
+    <string name="biowetter_no_evaluation_possible">Keine Auswertung möglich.</string>
+
+    <!-- BiowetterEngine: Wetterfühligkeit (Luftdruck) -->
+    <string name="biowetter_pressure_name">Wetterfühligkeit</string>
+    <string name="biowetter_pressure_drop">Druckabfall</string>
+    <string name="biowetter_pressure_rise">Druckanstieg</string>
+    <string name="biowetter_pressure_value">%1$s hPa / 3h (%2$s)</string>
+    <string name="biowetter_pressure_human_none">Stabiler Luftdruck. Kein wetterfühligkeitsbedingter Einfluss erwartet.</string>
+    <string name="biowetter_pressure_human_low">Leichter Druckwechsel. Sehr empfindliche Personen bemerken möglicherweise leichte Müdigkeit.</string>
+    <string name="biowetter_pressure_human_moderate_drop">Merklicher Druckabfall. Häufig: Kopfschmerzen, erhöhte Reizbarkeit, Konzentrationsschwäche – besonders bei wetterfühligen Personen, Migränepatienten und Personen mit alten Verletzungen.</string>
+    <string name="biowetter_pressure_human_moderate_rise">Merklicher Druckanstieg. Manche Personen reagieren mit Schlafstörungen oder innerer Anspannung.</string>
+    <string name="biowetter_pressure_human_high_drop">Starker Druckabfall. Wetterfühligkeit ausgeprägt wahrscheinlich: Migräne, Gelenkschmerzen, Narben-/Wundschmerzen, Kreislaufprobleme möglich. Ruhepausen einplanen.</string>
+    <string name="biowetter_pressure_human_high_rise">Starker Druckanstieg. Manche Personen berichten von Kopfdruck, Ohrenpfeifen, gesteigerter Anspannung.</string>
+    <string name="biowetter_pressure_human_extreme">Extremer Druckwechsel. Körperlich belastend, besonders für chronisch kranke, ältere oder wetterempfindliche Personen. Heute Belastungen reduzieren.</string>
+    <string name="biowetter_pressure_dog_none_low">Keine Auswirkungen auf das Training erwartet.</string>
+    <string name="biowetter_pressure_dog_moderate">Hunde registrieren Druckveränderungen oft früher als Menschen und reagieren mit erhöhter Aufmerksamkeit oder leichter Unruhe. Wenn Du selbst wetterfühlig bist: kürzere Einheiten, keine Präzisionsarbeit.</string>
+    <string name="biowetter_pressure_dog_high">Erhöhte Sensibilität wahrscheinlich – sowohl beim Hund als auch beim Menschen. Dein eigener Stresslevel beeinflusst die Trainingsqualität direkt. Heute Routineübungen statt neuer Anforderungen. Ruhige Geländerunden bevorzugen.</string>
+    <string name="biowetter_pressure_dog_extreme">Extremer Wetterwechsel. Hunde können deutlich unruhiger und schwerer führbar sein. Auf Zwang und intensive Trainingsanforderungen heute verzichten. Nur kurze, entspannte Runden.</string>
+
+    <!-- BiowetterEngine: Schwüle -->
+    <string name="biowetter_humidity_name">Schwüle</string>
+    <string name="biowetter_humidity_none">Angenehm trocken</string>
+    <string name="biowetter_humidity_low">Leicht feucht, angenehm</string>
+    <string name="biowetter_humidity_moderate">Spürbar schwül</string>
+    <string name="biowetter_humidity_high">Deutlich schwül</string>
+    <string name="biowetter_humidity_extreme">Extrem schwül</string>
+    <string name="biowetter_humidity_value">Taupunkt %1$s°C – %2$s</string>
+    <string name="biowetter_humidity_human_none">Die Luft fühlt sich trocken und angenehm an. Kein Schwüleeinfluss.</string>
+    <string name="biowetter_humidity_human_low">Angenehme Luftfeuchtigkeit. Kein nennenswerter Einfluss auf das Wohlbefinden.</string>
+    <string name="biowetter_humidity_human_moderate">Spürbare Schwüle. Schwitzen kühlt weniger effektiv. Erhöhtes Durstgefühl, Leistungsfähigkeit leicht reduziert bei körperlicher Aktivität.</string>
+    <string name="biowetter_humidity_human_high">Deutliche Schwüle. Thermoregulation des Körpers eingeschränkt. Kreislauf stärker belastet. Auf ausreichend Trinken achten, intensive Aktivitäten besser in kühlere Stunden verlegen.</string>
+    <string name="biowetter_humidity_human_extreme">Extreme Schwüle. Hitzeerschöpfung möglich. Körperliche Aktivitäten stark einschränken. Viel trinken, Schatten aufsuchen, Körpertemperatur beobachten.</string>
+    <string name="biowetter_humidity_dog_none_low">Keine schwülebedingten Einschränkungen für Training oder Aktivität.</string>
+    <string name="biowetter_humidity_dog_moderate">Hunde können bei Schwüle weniger effektiv über die Zunge kühlen. Tempotraining und intensives Apportieren heute reduzieren. Trinkpausen einplanen.</string>
+    <string name="biowetter_humidity_dog_high">Hunde sind bei hoher Schwüle deutlich überhitzungsgefährdeter als bei gleicher Temperatur bei trockener Luft. Intensive Belastung heute meiden, kurze Runden, viel Wasser, Schatten. Brachycephale Rassen (Bulldogge, Mops, Französische Bulldogge) besonders gefährdet.</string>
+    <string name="biowetter_humidity_dog_extreme">Extrem schwüle Bedingungen – akute Überhitzungsgefahr für Hunde. Körperliche Aktivität auf das Minimum (kurze Gassi-Runden) begrenzen. Zeichen für Hitzschlag: starkes Hecheln, Sabberfluss, Koordinationsstörungen, Apathie → sofort kühlen und Tierarzt aufsuchen.</string>
+
+    <!-- BiowetterEngine: Wärmebelastung -->
+    <string name="biowetter_heat_name">Wärmebelastung</string>
+    <string name="biowetter_heat_index_value">Hitze-Index: %1$s°C (gefühlt)</string>
+    <string name="biowetter_heat_human_none">Angenehme Wärme. Kein Hitzestress.</string>
+    <string name="biowetter_heat_human_low">Leichter Hitzestress bei anhaltender körperlicher Aktivität möglich.</string>
+    <string name="biowetter_heat_human_moderate">Mäßiger Hitzestress. Viel trinken, Mittagshitze meiden. Kreislauf-empfindliche Personen besonders achtsam sein.</string>
+    <string name="biowetter_heat_human_high">Starker Hitzestress. Intensive körperliche Aktivitäten meiden, im Schatten aufhalten, ausreichend trinken. Hitzekrämpfe und -erschöpfung möglich.</string>
+    <string name="biowetter_heat_human_extreme">Extremer Hitzestress. Gefahr von Hitzschlag. Aktivitäten auf ein Minimum reduzieren.</string>
+    <string name="biowetter_heat_dog_none_low">Auf Trinkwasser achten. Kurze Pausen einplanen.</string>
+    <string name="biowetter_heat_dog_moderate">Training auf frühe Morgen- oder Abendstunden verlegen. Asphalt meiden – kann Pfoten verbrennen. Viel Wasser.</string>
+    <string name="biowetter_heat_dog_high">Keine intensiven Trainingseinheiten. Kürzeste Runden, maximaler Schatten. Körpertemperatur und Hecheln beobachten.</string>
+    <string name="biowetter_heat_dog_extreme">Hund nur für Notdurft raus. Akute Hitzschlaggefahr. Brachycephale Rassen, ältere und kranke Hunde sind besonders gefährdet.</string>
+
+    <!-- BiowetterEngine: Kältebelastung -->
+    <string name="biowetter_cold_name">Kältebelastung</string>
+    <string name="biowetter_windchill_value">Windchill: %1$s°C (gefühlt)</string>
+    <string name="biowetter_cold_human_none_low">Kühle Bedingungen, kein kritischer Kältestress.</string>
+    <string name="biowetter_cold_human_moderate">Spürbarer Kältestress. Warme Kleidung notwendig, besonders Hände, Kopf und Füße schützen.</string>
+    <string name="biowetter_cold_human_high">Starke Kältebelastung. Erfrierungsrisiko bei Windexposition ohne Schutzkleidung. Aufenthalt begrenzen.</string>
+    <string name="biowetter_cold_human_extreme">Extreme Kältegefahr. Erfrierungen möglich innerhalb von Minuten auf unbedeckter Haut.</string>
+    <string name="biowetter_cold_dog_none_low">Kein kritischer Kältestress für gesunde Hunde mit Unterwolle.</string>
+    <string name="biowetter_cold_dog_moderate">Kurzhaarige, kleine und alte Hunde: Mantel empfohlen. Pfoten auf Salz und Eis prüfen.</string>
+    <string name="biowetter_cold_dog_high">Alle Hunde: Runden kurz halten. Kurzhaarige Rassen: Mantel notwendig. Pfoten nach der Runde reinigen und auf Risse prüfen.</string>
+    <string name="biowetter_cold_dog_extreme">Lebensgefährliche Kälte auch für Hunde. Nur für Notdurft raus, so kurz wie möglich.</string>
+
+    <!-- BiowetterEngine: thermisch neutral -->
+    <string name="biowetter_thermal_neutral_name">Thermische Belastung</string>
+    <string name="biowetter_thermal_neutral_value">Angenehmer Temperaturbereich</string>
+    <string name="biowetter_thermal_neutral_human">Keine thermische Sonderbelastung. Angenehme Bedingungen für Aktivitäten im Freien.</string>
+    <string name="biowetter_thermal_neutral_dog">Sehr gute Bedingungen für Training und Freilandrunden.</string>
+
+    <!-- BiowetterEngine: Gewitterpotenzial (CAPE) -->
+    <string name="biowetter_cape_name">Gewitterpotenzial</string>
+    <string name="biowetter_cape_value">CAPE: %1$s J/kg – %2$s</string>
+    <string name="biowetter_cape_human_none">Geringes Gewitterpotenzial. Kein Einfluss auf Wohlbefinden.</string>
+    <string name="biowetter_cape_human_moderate">Erhöhtes Gewitterpotenzial. Atmosphärische Instabilität kann Unruhe und Unwohlsein verstärken, besonders bei gewitterempfindlichen Personen.</string>
+    <string name="biowetter_cape_human_high">Hohes Gewitterpotenzial. Wetterbedingte Stimmungsschwankungen und Kreislaufbeschwerden möglich. Rückweg früh einplanen.</string>
+    <string name="biowetter_cape_dog_none">Kein Einfluss auf Training erwartet.</string>
+    <string name="biowetter_cape_dog_moderate">Viele Hunde reagieren auf atmosphärische Instabilität vor Gewittern mit erhöhter Unruhe oder Ängstlichkeit – auch ohne sichtbare Wetterzeichen. Leine als Sicherheitsbasis beibehalten.</string>
+    <string name="biowetter_cape_dog_high">Gewitterangst: Hunde können Druckveränderungen und elektrostatische Aufladung vor Gewittern wahrnehmen. Runde zeitlich begrenzen, sicheres Rückzugsquartier bereithalten. Ängstliche Hunde nicht ableinen.</string>
+
+    <!-- BiowetterEngine: Gesamtbewertung -->
+    <string name="biowetter_summary_none_low">Günstige Biowetterlage. Keine nennenswerten meteorologischen Einflüsse auf Mensch und Hund.</string>
+    <string name="biowetter_summary_moderate">Mäßige Biowetterbelastung durch: %1$s. Beobachte Dich und Deinen Hund aufmerksam.</string>
+    <string name="biowetter_summary_high">Erhöhte Biowetterbelastung durch: %1$s. Trainingsplanung anpassen, Pausen einplanen.</string>
+    <string name="biowetter_summary_extreme">Starke Biowetterbelastung durch: %1$s. Heute Belastungen für Mensch und Hund deutlich reduzieren.</string>
+    <string name="biowetter_advice_none_low">✅ Gute Bedingungen für Training. Alle Übungen wie geplant möglich.</string>
+    <string name="biowetter_advice_moderate">⚡ Moderate Belastung: Präzisionsübungen und neue Anforderungen eher meiden. Entspannte Geländerunden bevorzugen. Auf Stresssignale des Hundes achten.</string>
+    <string name="biowetter_advice_high">⚠️ Erhöhte Belastung: Trainingseinheiten heute kürzen und Anforderungen deutlich reduzieren. Dein eigenes Wohlbefinden beeinflusst den Hund direkt – Stress überträgt sich. Ruhige Spaziergänge statt Training.</string>
+    <string name="biowetter_advice_extreme">🚨 Starke Belastung: Nur Notfallrunden. Kein Training heute. Mensch und Hund brauchen heute Erholung statt Leistung.</string>
+
+    <!-- WeatherActivity: Biowetter-Detail-Dialog -->
+    <string name="biowetter_dialog_human_effect">👤 Auswirkung Mensch:\n%1$s</string>
+    <string name="biowetter_dialog_dog_effect">🐕 Hund &amp; Training:\n%1$s</string>
+    <string name="biowetter_dialog_disclaimer">⚕️ Kein Ersatz für medizinische oder tierärztliche Beratung.</string>
+
+    <!-- DayWeatherSuitability -->
+    <string name="day_weather_suitability_ideal">Ideal</string>
+    <string name="day_weather_suitability_conditional">Bedingt</string>
+    <string name="day_weather_suitability_not_recommended">Nicht empfohlen</string>
+    <string name="day_weather_suitability_unknown">Unbekannt</string>
+
+    <!-- ActivityCalendarActivity: Wochenvorhersage -->
+    <string name="activity_calendar_week_forecast_toast">%1$s %2$s · %3$d°C · %4$d%% Regen</string>
+
+    <!-- CyclePattern -->
+    <string name="cycle_pattern_unknown">Unbekannt</string>
+    <string name="cycle_pattern_unknown_desc">Nicht genug Daten</string>
+    <string name="cycle_pattern_annual">Jährlich</string>
+    <string name="cycle_pattern_annual_desc">Ca. 1× pro Jahr</string>
+    <string name="cycle_pattern_biannual">Halbjährlich</string>
+    <string name="cycle_pattern_biannual_desc">Ca. 2× pro Jahr (normal)</string>
+    <string name="cycle_pattern_frequent">Häufig</string>
+    <string name="cycle_pattern_frequent_desc">3× oder öfter pro Jahr</string>
+    <string name="cycle_pattern_irregular">Unregelmäßig</string>
+    <string name="cycle_pattern_irregular_desc">Stark schwankende Abstände</string>
+
+    <!-- EmergencyActivity: Läufigkeits-PDF-Abschnitt -->
+    <string name="emergency_heat_cycle_symptoms_label">Körperliche Symptome:</string>
+    <string name="emergency_heat_cycle_observed">Beobachtet</string>
+    <string name="emergency_heat_cycle_pseudopregnancy_label">Scheinträchtigkeit:</string>
+    <string name="emergency_heat_cycle_not_yet_calculable">Noch nicht berechenbar (mind. 2 Läufigkeiten)</string>
+    <string name="emergency_heat_cycle_average">%1$d Tage · %2$s</string>
+    <string name="emergency_heat_cycle_filtered_intervals"> (%1$d Zwischenläufigkeit(en) herausgefiltert)</string>
+    <string name="emergency_heat_cycle_vet_notice">⚠️ HINWEIS FÜR DEN BEHANDELNDEN TIERARZT: Die Hündin befindet sich aktuell in der Läufigkeit (seit %1$s). Dies kann bei der Behandlung, Narkose und Medikamentendosierung relevant sein.</string>
+
+    <!-- TickLoupeActivity: FilterMode -->
+    <string name="tick_loupe_filter_thermal">🌡️ Wärmebild</string>
+    <string name="tick_loupe_filter_invert">🔲 Invertierung</string>
+    <string name="tick_loupe_filter_high_contrast">◑ Hoher Kontrast</string>
+
+    <!-- SpeechLevel -->
+    <string name="speech_level_a1_label">A1 – harmonisch / beruhigend</string>
+    <string name="speech_level_a1_desc">Optimaler Bereich, um mit dem Hund zu kommunizieren.</string>
+    <string name="speech_level_a2_label">A2 – gesprächig / aktivierend</string>
+    <string name="speech_level_a2_desc">Energetischer Kommunikationslevel.</string>
+    <string name="speech_level_a3_label">A3 – angehoben / aufregend</string>
+    <string name="speech_level_a3_desc">Angehobene Stimme mit aufregender Wirkung.</string>
+    <string name="speech_level_a4_label">A4 – scharf / druckvoll</string>
+    <string name="speech_level_a4_desc">Laut, rufend mit alarmierender Wirkung.</string>
+
+    <!-- SoundLevelPDFGenerator -->
+    <string name="sound_level_pdf_title">LAUTSTÄRKE-TRAINER – AUSWERTUNG</string>
+    <string name="sound_level_pdf_date">Datum: %1$s</string>
+    <string name="sound_level_pdf_overview">ÜBERSICHT</string>
+    <string name="sound_level_pdf_duration">Dauer</string>
+    <string name="sound_level_pdf_avg_level">Ø Pegel</string>
+    <string name="sound_level_pdf_minimum">Minimum</string>
+    <string name="sound_level_pdf_maximum">Maximum</string>
+    <string name="sound_level_pdf_dominant_level">Dominante Stufe</string>
+    <string name="sound_level_pdf_distribution">VERTEILUNG SPRECHWEISE-STUFEN</string>
+    <string name="sound_level_pdf_column_level">Stufe</string>
+    <string name="sound_level_pdf_column_range">Bereich</string>
+    <string name="sound_level_pdf_column_data_points">Datenpunkte</string>
+    <string name="sound_level_pdf_column_share">Anteil</string>
+    <string name="sound_level_pdf_disclaimer">Hinweis: Geschätzter Wert auf Basis einer einmaligen Nutzerkalibrierung. Kein kalibriertes Messgerät nach DIN EN 61672 – dient nur der eigenen Vergleichbarkeit über mehrere Sessions. Die Wirkung auf den Hund wird dadurch nicht bewertet; entscheidend sind Tonhöhe, Plötzlichkeit, Vorhersagbarkeit und die Beobachtung des Hundeverhaltens.</string>
+    <string name="sound_level_pdf_footer">Erstellt mit HundeWildnis App von www.wildnislehrer.de</string>
+
+    <!-- SoundLevelSessionAdapter -->
+    <string name="sound_level_session_summary">Ø %1$d dB(A) · %2$s · %3$d:%4$02d Min</string>
+
+    <!-- SoundLevelMeterView -->
+    <string name="sound_level_meter_calibration_required">Kalibrierung erforderlich</string>
+    <string name="sound_level_meter_waiting_for_voice">Warte auf Stimme...</string>
+
+    <!-- SoundLevelActivity -->
+    <string name="sound_level_activity_stats">🔈 Ø %1$d dB(A) · Min %2$d · Max %3$d dB(A)\n\n📊 Verteilung:\n%4$s: %5$d (%6$d%%)\n%7$s: %8$d (%9$d%%)\n%10$s: %11$d (%12$d%%)\n%13$s: %14$d (%15$d%%)</string>
+    <string name="sound_level_activity_session_stats">⏱️ Dauer: %1$s\n🔈 Ø %2$d dB(A) · Min %3$d · Max %4$d dB(A)\n\n📊 Verteilung:\n%5$s: %6$d (%7$d%%)\n%8$s: %9$d (%10$d%%)\n%11$s: %12$d (%13$d%%)\n%14$s: %15$d (%16$d%%)\n\n⭐ Dominante Stufe: %17$s</string>
+    <string name="sound_level_activity_session_from">Ø · Session vom %1$s</string>
+    <string name="sound_level_activity_session_loaded">Session geladen: %1$s</string>
+    <string name="sound_level_activity_load_error">Fehler beim Laden: %1$s</string>
+
+    <!-- HeatCycleManager: analysisLabel -->
+    <string name="heat_cycle_analysis_label">Ø %1$d Tage · %2$s</string>
+    <string name="heat_cycle_zwischenlaeufe_singular"> · ⚠️ %1$d Zwischenläufigkeit erkannt</string>
+    <string name="heat_cycle_zwischenlaeufe_plural"> · ⚠️ %1$d Zwischenläufigkeiten erkannt</string>
+
+    <!-- DogViewActivity -->
+    <string name="dog_view_heat_next_predicted">Nächste Läufigkeit voraussichtlich: %1$s</string>
+
+    <!-- ToxicPlantData: Eibe -->
+    <string name="plant_eibe_name">Eibe</string>
+    <string name="plant_eibe_alt_1">Eibenbaum</string>
+    <string name="plant_eibe_alt_2">Taxus</string>
+    <string name="plant_eibe_part_1">Nadeln</string>
+    <string name="plant_eibe_part_2">Samen (Kern)</string>
+    <string name="plant_eibe_part_3">Rinde</string>
+    <string name="plant_eibe_part_4">Holz</string>
+    <string name="plant_eibe_symptom_1">Erbrechen</string>
+    <string name="plant_eibe_symptom_2">Speichelfluss</string>
+    <string name="plant_eibe_symptom_3">Herzrhythmusstörungen</string>
+    <string name="plant_eibe_symptom_4">Krämpfe</string>
+    <string name="plant_eibe_symptom_5">Tod durch Herzstillstand</string>
+    <string name="plant_eibe_feature_1">Immergrüner Nadelbaum</string>
+    <string name="plant_eibe_feature_2">Rote beerenartige Früchte</string>
+    <string name="plant_eibe_feature_3">Flache Nadeln</string>
+    <string name="plant_eibe_habitat_1">Garten</string>
+    <string name="plant_eibe_habitat_2">Park</string>
+    <string name="plant_eibe_habitat_3">Friedhof</string>
+    <string name="plant_eibe_habitat_4">Wald</string>
+    <string name="plant_eibe_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_eibe_firstaid_2">Kein Erbrechen induzieren</string>
+    <string name="plant_eibe_firstaid_3">Ruhe bewahren</string>
+    <string name="plant_eibe_note">Sehr hochgiftig. Bereits wenige Gramm Nadeln sind tödlich.</string>
+
+    <!-- ToxicPlantData: Oleander -->
+    <string name="plant_oleander_name">Oleander</string>
+    <string name="plant_oleander_alt_1">Rosenlorbeer</string>
+    <string name="plant_oleander_part_1">Alle Teile</string>
+    <string name="plant_oleander_part_2">auch Blüten und Wasser</string>
+    <string name="plant_oleander_symptom_1">Erbrechen</string>
+    <string name="plant_oleander_symptom_2">blutiger Durchfall</string>
+    <string name="plant_oleander_symptom_3">Herzrhythmusstörungen</string>
+    <string name="plant_oleander_symptom_4">Koma</string>
+    <string name="plant_oleander_feature_1">Immergrüner Strauch</string>
+    <string name="plant_oleander_feature_2">Lanzettliche ledrige Blätter</string>
+    <string name="plant_oleander_feature_3">Rosa/Weiße Blüten</string>
+    <string name="plant_oleander_habitat_1">Garten</string>
+    <string name="plant_oleander_habitat_2">Terrasse</string>
+    <string name="plant_oleander_habitat_3">Kübelpflanze</string>
+    <string name="plant_oleander_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_oleander_firstaid_2">Aktivkohle</string>
+    <string name="plant_oleander_firstaid_3">Herzüberwachung</string>
+    <string name="plant_oleander_note">Sehr hochgiftig. Schon wenige Blätter können tödlich sein.</string>
+
+    <!-- ToxicPlantData: Blauer Eisenhut -->
+    <string name="plant_eisenhut_name">Blauer Eisenhut</string>
+    <string name="plant_eisenhut_alt_1">Sturmhut</string>
+    <string name="plant_eisenhut_alt_2">Wolfswurz</string>
+    <string name="plant_eisenhut_part_1">Alle Teile</string>
+    <string name="plant_eisenhut_part_2">besonders Wurzel</string>
+    <string name="plant_eisenhut_symptom_1">Brennen im Mund</string>
+    <string name="plant_eisenhut_symptom_2">Speichelfluss</string>
+    <string name="plant_eisenhut_symptom_3">Taubheit</string>
+    <string name="plant_eisenhut_symptom_4">Atemlähmung</string>
+    <string name="plant_eisenhut_symptom_5">Herzstillstand</string>
+    <string name="plant_eisenhut_feature_1">Hohe Staude</string>
+    <string name="plant_eisenhut_feature_2">Blau-violette Helmblüten</string>
+    <string name="plant_eisenhut_feature_3">Handförmige Blätter</string>
+    <string name="plant_eisenhut_habitat_1">Gebirge</string>
+    <string name="plant_eisenhut_habitat_2">Wiese</string>
+    <string name="plant_eisenhut_habitat_3">Wald</string>
+    <string name="plant_eisenhut_habitat_4">Garten</string>
+    <string name="plant_eisenhut_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_eisenhut_firstaid_2">Intensivmedizin nötig</string>
+    <string name="plant_eisenhut_firstaid_3">Hautkontakt vermeiden</string>
+    <string name="plant_eisenhut_note">Eine der giftigsten Pflanzen Europas. Kleinste Mengen lebensgefährlich.</string>
+
+    <!-- ToxicPlantData: Goldregen -->
+    <string name="plant_goldregen_name">Goldregen</string>
+    <string name="plant_goldregen_alt_1">Bohnenbaum</string>
+    <string name="plant_goldregen_part_1">Samen (in Hülsen)</string>
+    <string name="plant_goldregen_part_2">Rinde</string>
+    <string name="plant_goldregen_part_3">Blätter</string>
+    <string name="plant_goldregen_symptom_1">Übelkeit</string>
+    <string name="plant_goldregen_symptom_2">Erbrechen</string>
+    <string name="plant_goldregen_symptom_3">Krämpfe</string>
+    <string name="plant_goldregen_symptom_4">Lähmungen</string>
+    <string name="plant_goldregen_symptom_5">Atemstillstand</string>
+    <string name="plant_goldregen_feature_1">Strauch/Baum</string>
+    <string name="plant_goldregen_feature_2">Hängende gelbe Blütentrauben</string>
+    <string name="plant_goldregen_feature_3">Hülsenfrüchte</string>
+    <string name="plant_goldregen_habitat_1">Garten</string>
+    <string name="plant_goldregen_habitat_2">Park</string>
+    <string name="plant_goldregen_habitat_3">Straße</string>
+    <string name="plant_goldregen_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_goldregen_firstaid_2">Aktivkohle</string>
+    <string name="plant_goldregen_firstaid_3">Beatmung bei Bedarf</string>
+
+    <!-- ToxicPlantData: Herbstzeitlose -->
+    <string name="plant_herbstzeitlose_name">Herbstzeitlose</string>
+    <string name="plant_herbstzeitlose_alt_1">Wiesenzeitlose</string>
+    <string name="plant_herbstzeitlose_alt_2">Zeitlose</string>
+    <string name="plant_herbstzeitlose_part_1">Alle Teile</string>
+    <string name="plant_herbstzeitlose_part_2">besonders Zwiebel und Samen</string>
+    <string name="plant_herbstzeitlose_symptom_1">Erbrechen</string>
+    <string name="plant_herbstzeitlose_symptom_2">blutiger Durchfall</string>
+    <string name="plant_herbstzeitlose_symptom_3">Koliken</string>
+    <string name="plant_herbstzeitlose_symptom_4">Atemlähmung (verzögert)</string>
+    <string name="plant_herbstzeitlose_feature_1">Blüte im Herbst ohne Blätter</string>
+    <string name="plant_herbstzeitlose_feature_2">Rosa-lila Blüten</string>
+    <string name="plant_herbstzeitlose_feature_3">Ähnelt Krokus</string>
+    <string name="plant_herbstzeitlose_habitat_1">Wiese</string>
+    <string name="plant_herbstzeitlose_habitat_2">Weide</string>
+    <string name="plant_herbstzeitlose_habitat_3">Garten</string>
+    <string name="plant_herbstzeitlose_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_herbstzeitlose_firstaid_2">Aktivkohle</string>
+    <string name="plant_herbstzeitlose_firstaid_3">Supportive Care</string>
+    <string name="plant_herbstzeitlose_note">Extrem toxisch. Symptome oft erst nach Stunden oder Tagen.</string>
+
+    <!-- ToxicPlantData: Gefleckter Schierling -->
+    <string name="plant_schierling_name">Gefleckter Schierling</string>
+    <string name="plant_schierling_alt_1">Schierling</string>
+    <string name="plant_schierling_part_1">Alle Teile</string>
+    <string name="plant_schierling_part_2">besonders junge Triebe und Samen</string>
+    <string name="plant_schierling_symptom_1">Brennen im Mund</string>
+    <string name="plant_schierling_symptom_2">aufsteigende Lähmung</string>
+    <string name="plant_schierling_symptom_3">Krämpfe</string>
+    <string name="plant_schierling_symptom_4">Atemlähmung</string>
+    <string name="plant_schierling_feature_1">Rote Flecken am Stängel</string>
+    <string name="plant_schierling_feature_2">Fein gefiederte Blätter</string>
+    <string name="plant_schierling_feature_3">Mäuseuringeruch</string>
+    <string name="plant_schierling_habitat_1">Wegrand</string>
+    <string name="plant_schierling_habitat_2">Brachland</string>
+    <string name="plant_schierling_habitat_3">Ufer</string>
+    <string name="plant_schierling_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_schierling_firstaid_2">Aktivkohle</string>
+    <string name="plant_schierling_firstaid_3">Beatmung</string>
+
+    <!-- ToxicPlantData: Schwarze Tollkirsche -->
+    <string name="plant_tollkirsche_name">Schwarze Tollkirsche</string>
+    <string name="plant_tollkirsche_alt_1">Belladonna</string>
+    <string name="plant_tollkirsche_part_1">Beeren</string>
+    <string name="plant_tollkirsche_part_2">Blätter</string>
+    <string name="plant_tollkirsche_part_3">Wurzel</string>
+    <string name="plant_tollkirsche_symptom_1">Trockener Mund</string>
+    <string name="plant_tollkirsche_symptom_2">weite Pupillen</string>
+    <string name="plant_tollkirsche_symptom_3">Erregung</string>
+    <string name="plant_tollkirsche_symptom_4">Krämpfe</string>
+    <string name="plant_tollkirsche_symptom_5">Atemlähmung</string>
+    <string name="plant_tollkirsche_feature_1">Glänzend schwarze Beeren</string>
+    <string name="plant_tollkirsche_feature_2">Violett-braune Glockenblüten</string>
+    <string name="plant_tollkirsche_habitat_1">Wald</string>
+    <string name="plant_tollkirsche_habitat_2">Lichtung</string>
+    <string name="plant_tollkirsche_habitat_3">Garten</string>
+    <string name="plant_tollkirsche_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_tollkirsche_firstaid_2">Physostigmin als Antidot möglich</string>
+
+    <!-- ToxicPlantData: Wunderbaum -->
+    <string name="plant_wunderbaum_name">Wunderbaum</string>
+    <string name="plant_wunderbaum_alt_1">Rizinus</string>
+    <string name="plant_wunderbaum_part_1">Samen (Rizin)</string>
+    <string name="plant_wunderbaum_symptom_1">Schwere Magen-Darm-Blutungen</string>
+    <string name="plant_wunderbaum_symptom_2">Organversagen</string>
+    <string name="plant_wunderbaum_symptom_3">Krämpfe</string>
+    <string name="plant_wunderbaum_symptom_4">Tod</string>
+    <string name="plant_wunderbaum_feature_1">Große handförmige Blätter</string>
+    <string name="plant_wunderbaum_feature_2">Stachelige Früchte</string>
+    <string name="plant_wunderbaum_habitat_1">Garten</string>
+    <string name="plant_wunderbaum_habitat_2">Zierpflanze</string>
+    <string name="plant_wunderbaum_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_wunderbaum_firstaid_2">Intensivmedizin</string>
+    <string name="plant_wunderbaum_firstaid_3">Magenspülung</string>
+    <string name="plant_wunderbaum_note">Rizin ist eines der stärksten Gifte. Zerkaute Samen sind extrem gefährlich.</string>
+
+    <!-- ToxicPlantData: Stechapfel -->
+    <string name="plant_stechapfel_name">Stechapfel</string>
+    <string name="plant_stechapfel_alt_1">Dornapfel</string>
+    <string name="plant_stechapfel_part_1">Alle Teile</string>
+    <string name="plant_stechapfel_part_2">besonders Samen</string>
+    <string name="plant_stechapfel_symptom_1">Halluzinationen</string>
+    <string name="plant_stechapfel_symptom_2">Herzrasen</string>
+    <string name="plant_stechapfel_symptom_3">Trockene Schleimhäute</string>
+    <string name="plant_stechapfel_symptom_4">Lähmung</string>
+    <string name="plant_stechapfel_feature_1">Weiße Trichterblüten</string>
+    <string name="plant_stechapfel_feature_2">Stachelige Kapselfrüchte</string>
+    <string name="plant_stechapfel_habitat_1">Brachland</string>
+    <string name="plant_stechapfel_habitat_2">Garten</string>
+    <string name="plant_stechapfel_habitat_3">Wegrand</string>
+    <string name="plant_stechapfel_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_stechapfel_firstaid_2">Supportive Care</string>
+
+    <!-- ToxicPlantData: Adonisröschen -->
+    <string name="plant_adonisroeschen_name">Adonisröschen</string>
+    <string name="plant_adonisroeschen_alt_1">Frühlings-Adonisröschen</string>
+    <string name="plant_adonisroeschen_part_1">Alle Teile</string>
+    <string name="plant_adonisroeschen_symptom_1">Erbrechen</string>
+    <string name="plant_adonisroeschen_symptom_2">Herzrhythmusstörungen</string>
+    <string name="plant_adonisroeschen_symptom_3">Benommenheit</string>
+    <string name="plant_adonisroeschen_symptom_4">Krämpfe</string>
+    <string name="plant_adonisroeschen_feature_1">Gelbe Blüten</string>
+    <string name="plant_adonisroeschen_feature_2">Fein geschlitzte Blätter</string>
+    <string name="plant_adonisroeschen_habitat_1">Steppe</string>
+    <string name="plant_adonisroeschen_habitat_2">Trockenrasen</string>
+    <string name="plant_adonisroeschen_habitat_3">Garten</string>
+    <string name="plant_adonisroeschen_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_adonisroeschen_firstaid_2">Herzmonitoring</string>
+
+    <!-- ToxicPlantData: Maiglöckchen -->
+    <string name="plant_maigloeckchen_name">Maiglöckchen</string>
+    <string name="plant_maigloeckchen_alt_1">Maienröschen</string>
+    <string name="plant_maigloeckchen_part_1">Alle Teile</string>
+    <string name="plant_maigloeckchen_part_2">auch Vasenwasser</string>
+    <string name="plant_maigloeckchen_symptom_1">Erbrechen</string>
+    <string name="plant_maigloeckchen_symptom_2">Durchfall</string>
+    <string name="plant_maigloeckchen_symptom_3">Herzrhythmusstörungen</string>
+    <string name="plant_maigloeckchen_symptom_4">Schwäche</string>
+    <string name="plant_maigloeckchen_feature_1">Weiße Glockenblüten</string>
+    <string name="plant_maigloeckchen_feature_2">Rote Beeren</string>
+    <string name="plant_maigloeckchen_feature_3">Ovale Blätter</string>
+    <string name="plant_maigloeckchen_habitat_1">Wald</string>
+    <string name="plant_maigloeckchen_habitat_2">Garten</string>
+    <string name="plant_maigloeckchen_firstaid_1">Tierarzt sofort</string>
+    <string name="plant_maigloeckchen_firstaid_2">Kein Erbrechen induzieren</string>
+    <string name="plant_maigloeckchen_firstaid_3">EKG</string>
+
+    <!-- ToxicPlantData: Roter Fingerhut -->
+    <string name="plant_fingerhut_name">Roter Fingerhut</string>
+    <string name="plant_fingerhut_alt_1">Fingerhut</string>
+    <string name="plant_fingerhut_part_1">Alle Teile</string>
+    <string name="plant_fingerhut_part_2">besonders Blätter und Samen</string>
+    <string name="plant_fingerhut_symptom_1">Erbrechen</string>
+    <string name="plant_fingerhut_symptom_2">blutiger Durchfall</string>
+    <string name="plant_fingerhut_symptom_3">Herzrhythmusstörungen</string>
+    <string name="plant_fingerhut_symptom_4">Tod möglich</string>
+    <string name="plant_fingerhut_feature_1">Purpurne Glockenblüten</string>
+    <string name="plant_fingerhut_feature_2">Hoher Blütenstand</string>
+    <string name="plant_fingerhut_feature_3">Behaarte Blätter</string>
+    <string name="plant_fingerhut_habitat_1">Waldrand</string>
+    <string name="plant_fingerhut_habitat_2">Lichtung</string>
+    <string name="plant_fingerhut_habitat_3">Garten</string>
+    <string name="plant_fingerhut_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_fingerhut_firstaid_2">EKG</string>
+    <string name="plant_fingerhut_firstaid_3">Aktivkohle</string>
+
+    <!-- ToxicPlantData: Kirschlorbeer -->
+    <string name="plant_kirschlorbeer_name">Kirschlorbeer</string>
+    <string name="plant_kirschlorbeer_alt_1">Lorbeerkirsche</string>
+    <string name="plant_kirschlorbeer_part_1">Blätter</string>
+    <string name="plant_kirschlorbeer_part_2">Samen/Kerne</string>
+    <string name="plant_kirschlorbeer_part_3">Rinde</string>
+    <string name="plant_kirschlorbeer_symptom_1">Speichelfluss</string>
+    <string name="plant_kirschlorbeer_symptom_2">Atemnot</string>
+    <string name="plant_kirschlorbeer_symptom_3">Zellatmungshemmung</string>
+    <string name="plant_kirschlorbeer_symptom_4">Atemlähmung</string>
+    <string name="plant_kirschlorbeer_feature_1">Immergrüner Strauch</string>
+    <string name="plant_kirschlorbeer_feature_2">Glänzende ledrige Blätter</string>
+    <string name="plant_kirschlorbeer_feature_3">Schwarze Früchte</string>
+    <string name="plant_kirschlorbeer_habitat_1">Hecke</string>
+    <string name="plant_kirschlorbeer_habitat_2">Garten</string>
+    <string name="plant_kirschlorbeer_habitat_3">Park</string>
+    <string name="plant_kirschlorbeer_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_kirschlorbeer_firstaid_2">Blausäure-Antidot möglich</string>
+    <string name="plant_kirschlorbeer_firstaid_3">Frische Luft</string>
+
+    <!-- ToxicPlantData: Rhododendron / Azalee -->
+    <string name="plant_rhododendron_name">Rhododendron / Azalee</string>
+    <string name="plant_rhododendron_alt_1">Alpenrose</string>
+    <string name="plant_rhododendron_alt_2">Azalee</string>
+    <string name="plant_rhododendron_part_1">Alle Teile</string>
+    <string name="plant_rhododendron_part_2">besonders Blätter und Blüten</string>
+    <string name="plant_rhododendron_symptom_1">Erbrechen</string>
+    <string name="plant_rhododendron_symptom_2">Speichelfluss</string>
+    <string name="plant_rhododendron_symptom_3">Schwäche</string>
+    <string name="plant_rhododendron_symptom_4">Bradykardie</string>
+    <string name="plant_rhododendron_symptom_5">Krämpfe</string>
+    <string name="plant_rhododendron_feature_1">Große ledrige Blätter</string>
+    <string name="plant_rhododendron_feature_2">Bunte Blütendolden</string>
+    <string name="plant_rhododendron_habitat_1">Garten</string>
+    <string name="plant_rhododendron_habitat_2">Park</string>
+    <string name="plant_rhododendron_habitat_3">Gebirge</string>
+    <string name="plant_rhododendron_firstaid_1">Tierarzt</string>
+    <string name="plant_rhododendron_firstaid_2">Aktivkohle</string>
+    <string name="plant_rhododendron_firstaid_3">Infusionen</string>
+
+    <!-- ToxicPlantData: Buchsbaum -->
+    <string name="plant_buchsbaum_name">Buchsbaum</string>
+    <string name="plant_buchsbaum_alt_1">Buchs</string>
+    <string name="plant_buchsbaum_part_1">Blätter</string>
+    <string name="plant_buchsbaum_part_2">Rinde</string>
+    <string name="plant_buchsbaum_symptom_1">Erbrechen</string>
+    <string name="plant_buchsbaum_symptom_2">Durchfall</string>
+    <string name="plant_buchsbaum_symptom_3">Zittern</string>
+    <string name="plant_buchsbaum_symptom_4">Lähmungen</string>
+    <string name="plant_buchsbaum_symptom_5">Atemlähmung</string>
+    <string name="plant_buchsbaum_feature_1">Kleine ovale Blätter</string>
+    <string name="plant_buchsbaum_feature_2">Immergrüner Strauch</string>
+    <string name="plant_buchsbaum_habitat_1">Garten</string>
+    <string name="plant_buchsbaum_habitat_2">Park</string>
+    <string name="plant_buchsbaum_habitat_3">Hecke</string>
+    <string name="plant_buchsbaum_firstaid_1">Tierarzt</string>
+    <string name="plant_buchsbaum_firstaid_2">Krampftherapie</string>
+    <string name="plant_buchsbaum_firstaid_3">Atemsupport</string>
+
+    <!-- ToxicPlantData: Seidelbast -->
+    <string name="plant_seidelbast_name">Seidelbast</string>
+    <string name="plant_seidelbast_alt_1">Kellerhals</string>
+    <string name="plant_seidelbast_part_1">Beeren</string>
+    <string name="plant_seidelbast_part_2">Rinde</string>
+    <string name="plant_seidelbast_part_3">Blätter</string>
+    <string name="plant_seidelbast_symptom_1">Brennen im Mund</string>
+    <string name="plant_seidelbast_symptom_2">blutiger Durchfall</string>
+    <string name="plant_seidelbast_symptom_3">Krämpfe</string>
+    <string name="plant_seidelbast_symptom_4">Lähmungen</string>
+    <string name="plant_seidelbast_feature_1">Rosa Blüten vor Laub</string>
+    <string name="plant_seidelbast_feature_2">Rote Beeren am Stängel</string>
+    <string name="plant_seidelbast_habitat_1">Wald</string>
+    <string name="plant_seidelbast_habitat_2">Garten</string>
+    <string name="plant_seidelbast_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_seidelbast_firstaid_2">Aktivkohle</string>
+
+    <!-- ToxicPlantData: Engelstrompete -->
+    <string name="plant_engelstrompete_name">Engelstrompete</string>
+    <string name="plant_engelstrompete_alt_1">Brugmansia</string>
+    <string name="plant_engelstrompete_part_1">Alle Teile</string>
+    <string name="plant_engelstrompete_symptom_1">Erbrechen</string>
+    <string name="plant_engelstrompete_symptom_2">Herzrhythmusstörungen</string>
+    <string name="plant_engelstrompete_symptom_3">Halluzinationen</string>
+    <string name="plant_engelstrompete_symptom_4">Koma</string>
+    <string name="plant_engelstrompete_feature_1">Große hängende Trompetenblüten</string>
+    <string name="plant_engelstrompete_feature_2">Starker Duft nachts</string>
+    <string name="plant_engelstrompete_habitat_1">Garten</string>
+    <string name="plant_engelstrompete_habitat_2">Terrasse</string>
+    <string name="plant_engelstrompete_habitat_3">Kübelpflanze</string>
+    <string name="plant_engelstrompete_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_engelstrompete_firstaid_2">Physostigmin möglich</string>
+
+    <!-- ToxicPlantData: Schwarzes Bilsenkraut -->
+    <string name="plant_bilsenkraut_name">Schwarzes Bilsenkraut</string>
+    <string name="plant_bilsenkraut_alt_1">Bilsenkraut</string>
+    <string name="plant_bilsenkraut_part_1">Samen</string>
+    <string name="plant_bilsenkraut_part_2">Wurzel</string>
+    <string name="plant_bilsenkraut_part_3">Blätter</string>
+    <string name="plant_bilsenkraut_symptom_1">Pupillenerweiterung</string>
+    <string name="plant_bilsenkraut_symptom_2">Herzrasen</string>
+    <string name="plant_bilsenkraut_symptom_3">Erregung</string>
+    <string name="plant_bilsenkraut_symptom_4">Krämpfe</string>
+    <string name="plant_bilsenkraut_feature_1">Gelblich-violette Blüten</string>
+    <string name="plant_bilsenkraut_feature_2">Klebrige Blätter</string>
+    <string name="plant_bilsenkraut_habitat_1">Brachland</string>
+    <string name="plant_bilsenkraut_habitat_2">Wegrand</string>
+    <string name="plant_bilsenkraut_habitat_3">Garten</string>
+    <string name="plant_bilsenkraut_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_bilsenkraut_firstaid_2">Supportive Care</string>
+
+    <!-- ToxicPlantData: Christrose -->
+    <string name="plant_christrose_name">Christrose</string>
+    <string name="plant_christrose_alt_1">Schneerose</string>
+    <string name="plant_christrose_part_1">Alle Teile</string>
+    <string name="plant_christrose_part_2">besonders Wurzel</string>
+    <string name="plant_christrose_symptom_1">Erbrechen</string>
+    <string name="plant_christrose_symptom_2">Durchfall</string>
+    <string name="plant_christrose_symptom_3">Herzprobleme</string>
+    <string name="plant_christrose_symptom_4">Lähmung</string>
+    <string name="plant_christrose_feature_1">Weiße Blüten im Winter</string>
+    <string name="plant_christrose_feature_2">Ledrige gefingerte Blätter</string>
+    <string name="plant_christrose_habitat_1">Garten</string>
+    <string name="plant_christrose_habitat_2">Alpen</string>
+    <string name="plant_christrose_firstaid_1">Sofort Tierarzt</string>
+    <string name="plant_christrose_firstaid_2">Herzmonitoring</string>
+
+    <!-- ToxicPlantData: Dieffenbachia -->
+    <string name="plant_dieffenbachia_name">Dieffenbachia</string>
+    <string name="plant_dieffenbachia_alt_1">Giftwurz</string>
+    <string name="plant_dieffenbachia_part_1">Alle Teile</string>
+    <string name="plant_dieffenbachia_part_2">besonders Milchsaft</string>
+    <string name="plant_dieffenbachia_symptom_1">Massive Schwellung im Mund</string>
+    <string name="plant_dieffenbachia_symptom_2">Speichelfluss</string>
+    <string name="plant_dieffenbachia_symptom_3">Atemnot durch Schwellung</string>
+    <string name="plant_dieffenbachia_feature_1">Große grün-weiß gemusterte Blätter</string>
+    <string name="plant_dieffenbachia_habitat_1">Zimmerpflanze</string>
+    <string name="plant_dieffenbachia_firstaid_1">Mund sofort spülen</string>
+    <string name="plant_dieffenbachia_firstaid_2">Tierarzt wegen Erstickungsgefahr</string>
+    <string name="plant_dieffenbachia_note">Enthält Calciumoxalat-Nadeln, die sich in Schleimhäute bohren.</string>
+
+    <!-- ToxicPlantData: Rittersporn -->
+    <string name="plant_rittersporn_name">Rittersporn</string>
+    <string name="plant_rittersporn_alt_1">Lerchensporn</string>
+    <string name="plant_rittersporn_part_1">Alle Teile</string>
+    <string name="plant_rittersporn_part_2">besonders Samen</string>
+    <string name="plant_rittersporn_symptom_1">Erbrechen</string>
+    <string name="plant_rittersporn_symptom_2">Speichelfluss</string>
+    <string name="plant_rittersporn_symptom_3">Krämpfe</string>
+    <string name="plant_rittersporn_symptom_4">Lähmungen</string>
+    <string name="plant_rittersporn_feature_1">Hohe Blütenkerzen</string>
+    <string name="plant_rittersporn_feature_2">Blau/Rosa/Weiße Blüten</string>
+    <string name="plant_rittersporn_habitat_1">Garten</string>
+    <string name="plant_rittersporn_firstaid_1">Tierarzt</string>
+    <string name="plant_rittersporn_firstaid_2">Krampftherapie</string>
+
+    <!-- ToxicPlantData: Robinie -->
+    <string name="plant_robinie_name">Robinie</string>
+    <string name="plant_robinie_alt_1">Falsche Akazie</string>
+    <string name="plant_robinie_part_1">Rinde</string>
+    <string name="plant_robinie_part_2">Blätter</string>
+    <string name="plant_robinie_part_3">Samen</string>
+    <string name="plant_robinie_symptom_1">Erbrechen</string>
+    <string name="plant_robinie_symptom_2">Durchfall</string>
+    <string name="plant_robinie_symptom_3">Schwäche</string>
+    <string name="plant_robinie_symptom_4">Krämpfe</string>
+    <string name="plant_robinie_feature_1">Gefiederte Blätter</string>
+    <string name="plant_robinie_feature_2">Dornen</string>
+    <string name="plant_robinie_feature_3">Weiße Blütentrauben</string>
+    <string name="plant_robinie_habitat_1">Park</string>
+    <string name="plant_robinie_habitat_2">Garten</string>
+    <string name="plant_robinie_habitat_3">Wald</string>
+    <string name="plant_robinie_firstaid_1">Tierarzt</string>
+    <string name="plant_robinie_firstaid_2">Aktivkohle</string>
+
+    <!-- ToxicPlantData: Jakobskreuzkraut -->
+    <string name="plant_jakobskreuzkraut_name">Jakobskreuzkraut</string>
+    <string name="plant_jakobskreuzkraut_alt_1">Jakobsgreiskraut</string>
+    <string name="plant_jakobskreuzkraut_part_1">Alle Teile</string>
+    <string name="plant_jakobskreuzkraut_part_2">besonders getrocknet</string>
+    <string name="plant_jakobskreuzkraut_symptom_1">Leberschäden (oft spät)</string>
+    <string name="plant_jakobskreuzkraut_symptom_2">Gelbsucht</string>
+    <string name="plant_jakobskreuzkraut_symptom_3">Gewichtsverlust</string>
+    <string name="plant_jakobskreuzkraut_feature_1">Gelbe Korbblüten</string>
+    <string name="plant_jakobskreuzkraut_feature_2">Tief eingeschnittene Blätter</string>
+    <string name="plant_jakobskreuzkraut_habitat_1">Weide</string>
+    <string name="plant_jakobskreuzkraut_habitat_2">Wegrand</string>
+    <string name="plant_jakobskreuzkraut_habitat_3">Magerwiese</string>
+    <string name="plant_jakobskreuzkraut_firstaid_1">Bei Verdacht: Lebercheck beim Tierarzt</string>
+    <string name="plant_jakobskreuzkraut_note">Wirkt kumulativ über Wochen.</string>
+
+    <!-- ToxicPlantData: Schwarzer Holunder (roh) -->
+    <string name="plant_schwarzer_holunder_roh_name">Schwarzer Holunder (roh)</string>
+    <string name="plant_schwarzer_holunder_roh_alt_1">Holunderbeere</string>
+    <string name="plant_schwarzer_holunder_roh_part_1">Rohe Beeren</string>
+    <string name="plant_schwarzer_holunder_roh_part_2">Blätter</string>
+    <string name="plant_schwarzer_holunder_roh_part_3">Rinde</string>
+    <string name="plant_schwarzer_holunder_roh_symptom_1">Heftiges Erbrechen</string>
+    <string name="plant_schwarzer_holunder_roh_symptom_2">Durchfall</string>
+    <string name="plant_schwarzer_holunder_roh_symptom_3">Atemnot bei großen Mengen</string>
+    <string name="plant_schwarzer_holunder_roh_feature_1">Weiße Blütendolden</string>
+    <string name="plant_schwarzer_holunder_roh_feature_2">Schwarze Beeren</string>
+    <string name="plant_schwarzer_holunder_roh_habitat_1">Waldrand</string>
+    <string name="plant_schwarzer_holunder_roh_habitat_2">Hecke</string>
+    <string name="plant_schwarzer_holunder_roh_habitat_3">Garten</string>
+    <string name="plant_schwarzer_holunder_roh_firstaid_1">Tierarzt bei größeren Mengen</string>
+    <string name="plant_schwarzer_holunder_roh_firstaid_2">Viel Wasser</string>
+
+    <!-- ToxicPlantData: Bärlauch -->
+    <string name="plant_baerlauch_name">Bärlauch</string>
+    <string name="plant_baerlauch_alt_1">Wilder Knoblauch</string>
+    <string name="plant_baerlauch_part_1">Alle Teile</string>
+    <string name="plant_baerlauch_part_2">besonders Zwiebeln</string>
+    <string name="plant_baerlauch_symptom_1">Erbrechen</string>
+    <string name="plant_baerlauch_symptom_2">Durchfall</string>
+    <string name="plant_baerlauch_symptom_3">Anämie (Blutarmut)</string>
+    <string name="plant_baerlauch_symptom_4">Schwäche</string>
+    <string name="plant_baerlauch_feature_1">Knoblauchgeruch</string>
+    <string name="plant_baerlauch_feature_2">Breite ovale Blätter</string>
+    <string name="plant_baerlauch_habitat_1">Wald</string>
+    <string name="plant_baerlauch_habitat_2">Auwald</string>
+    <string name="plant_baerlauch_firstaid_1">Tierarzt bei größeren Mengen</string>
+    <string name="plant_baerlauch_confusion">Maiglöckchen, Herbstzeitlose (beide ohne Knoblauchgeruch)</string>
+
+    <!-- ToxicPlantData: Narzisse -->
+    <string name="plant_narzisse_name">Narzisse</string>
+    <string name="plant_narzisse_alt_1">Osterglocke</string>
+    <string name="plant_narzisse_part_1">Zwiebeln</string>
+    <string name="plant_narzisse_part_2">Blätter</string>
+    <string name="plant_narzisse_part_3">Blüten</string>
+    <string name="plant_narzisse_symptom_1">Speichelfluss</string>
+    <string name="plant_narzisse_symptom_2">Erbrechen</string>
+    <string name="plant_narzisse_symptom_3">Durchfall</string>
+    <string name="plant_narzisse_symptom_4">Krämpfe bei großen Mengen</string>
+    <string name="plant_narzisse_feature_1">Gelbe/Weiße Blüten mit Trompete</string>
+    <string name="plant_narzisse_habitat_1">Garten</string>
+    <string name="plant_narzisse_habitat_2">Park</string>
+    <string name="plant_narzisse_habitat_3">Rasen</string>
+    <string name="plant_narzisse_firstaid_1">Tierarzt anrufen</string>
+
+    <!-- ToxicPlantData: Buschwindröschen -->
+    <string name="plant_buschwindroeschen_name">Buschwindröschen</string>
+    <string name="plant_buschwindroeschen_alt_1">Windröschen</string>
+    <string name="plant_buschwindroeschen_part_1">Alle Teile</string>
+    <string name="plant_buschwindroeschen_symptom_1">Reizung</string>
+    <string name="plant_buschwindroeschen_symptom_2">Speichelfluss</string>
+    <string name="plant_buschwindroeschen_symptom_3">Erbrechen</string>
+    <string name="plant_buschwindroeschen_symptom_4">Durchfall</string>
+    <string name="plant_buschwindroeschen_feature_1">Weiße Blüten im Frühling</string>
+    <string name="plant_buschwindroeschen_habitat_1">Wald</string>
+    <string name="plant_buschwindroeschen_habitat_2">Garten</string>
+    <string name="plant_buschwindroeschen_firstaid_1">Maul ausspülen</string>
+
+    <!-- ToxicPlantData: Stechpalme -->
+    <string name="plant_stechpalme_name">Stechpalme</string>
+    <string name="plant_stechpalme_alt_1">Ilex</string>
+    <string name="plant_stechpalme_part_1">Beeren</string>
+    <string name="plant_stechpalme_part_2">Blätter</string>
+    <string name="plant_stechpalme_symptom_1">Erbrechen</string>
+    <string name="plant_stechpalme_symptom_2">Durchfall</string>
+    <string name="plant_stechpalme_symptom_3">Bauchschmerzen</string>
+    <string name="plant_stechpalme_feature_1">Stachelige glänzende Blätter</string>
+    <string name="plant_stechpalme_feature_2">Rote Beeren</string>
+    <string name="plant_stechpalme_habitat_1">Wald</string>
+    <string name="plant_stechpalme_habitat_2">Garten</string>
+    <string name="plant_stechpalme_habitat_3">Hecke</string>
+    <string name="plant_stechpalme_firstaid_1">Tierarzt bei mehr als 2-3 Beeren</string>
+
+    <!-- ToxicPlantData: Tulpe -->
+    <string name="plant_tulpe_name">Tulpe</string>
+    <string name="plant_tulpe_alt_1">Gartentulpe</string>
+    <string name="plant_tulpe_part_1">Zwiebeln (besonders)</string>
+    <string name="plant_tulpe_part_2">Blätter</string>
+    <string name="plant_tulpe_symptom_1">Erbrechen</string>
+    <string name="plant_tulpe_symptom_2">Durchfall</string>
+    <string name="plant_tulpe_symptom_3">Speichelfluss</string>
+    <string name="plant_tulpe_symptom_4">Hautreizung</string>
+    <string name="plant_tulpe_feature_1">Kelchförmige Blüten</string>
+    <string name="plant_tulpe_feature_2">Breite parallele Blätter</string>
+    <string name="plant_tulpe_habitat_1">Garten</string>
+    <string name="plant_tulpe_habitat_2">Park</string>
+    <string name="plant_tulpe_firstaid_1">Tierarzt bei Zwiebelaufnahme</string>
+
+    <!-- ToxicPlantData: Clematis -->
+    <string name="plant_clematis_name">Clematis</string>
+    <string name="plant_clematis_alt_1">Waldrebe</string>
+    <string name="plant_clematis_part_1">Alle Teile</string>
+    <string name="plant_clematis_part_2">besonders Saft</string>
+    <string name="plant_clematis_symptom_1">Schleimhautreizung</string>
+    <string name="plant_clematis_symptom_2">Speichelfluss</string>
+    <string name="plant_clematis_symptom_3">Erbrechen</string>
+    <string name="plant_clematis_feature_1">Kletterpflanze</string>
+    <string name="plant_clematis_feature_2">Große gefiederte Blüten</string>
+    <string name="plant_clematis_habitat_1">Garten</string>
+    <string name="plant_clematis_habitat_2">Zaun</string>
+    <string name="plant_clematis_firstaid_1">Maul ausspülen</string>
+
+    <!-- ToxicPlantData: Glyzinie -->
+    <string name="plant_wisteria_name">Glyzinie</string>
+    <string name="plant_wisteria_alt_1">Blauregen</string>
+    <string name="plant_wisteria_part_1">Samen</string>
+    <string name="plant_wisteria_part_2">Hülsen</string>
+    <string name="plant_wisteria_part_3">Rinde</string>
+    <string name="plant_wisteria_symptom_1">Erbrechen</string>
+    <string name="plant_wisteria_symptom_2">Durchfall</string>
+    <string name="plant_wisteria_symptom_3">Bauchschmerzen</string>
+    <string name="plant_wisteria_symptom_4">Krämpfe</string>
+    <string name="plant_wisteria_feature_1">Hängende lila Blütentrauben</string>
+    <string name="plant_wisteria_feature_2">Bohnenähnliche Hülsen</string>
+    <string name="plant_wisteria_habitat_1">Garten</string>
+    <string name="plant_wisteria_habitat_2">Hauswand</string>
+    <string name="plant_wisteria_firstaid_1">Tierarzt bei Hülsen-Aufnahme</string>
+
+    <!-- ToxicPlantData: Efeu -->
+    <string name="plant_efeu_name">Efeu</string>
+    <string name="plant_efeu_alt_1">Gemeiner Efeu</string>
+    <string name="plant_efeu_part_1">Blätter</string>
+    <string name="plant_efeu_part_2">Beeren</string>
+    <string name="plant_efeu_part_3">Saft</string>
+    <string name="plant_efeu_symptom_1">Erbrechen</string>
+    <string name="plant_efeu_symptom_2">Durchfall</string>
+    <string name="plant_efeu_symptom_3">Hautreizung</string>
+    <string name="plant_efeu_symptom_4">Krämpfe bei großen Mengen</string>
+    <string name="plant_efeu_feature_1">Kletterpflanze</string>
+    <string name="plant_efeu_feature_2">Gelappte Blätter</string>
+    <string name="plant_efeu_feature_3">Schwarze Beeren</string>
+    <string name="plant_efeu_habitat_1">Wald</string>
+    <string name="plant_efeu_habitat_2">Garten</string>
+    <string name="plant_efeu_habitat_3">Mauer</string>
+    <string name="plant_efeu_firstaid_1">Haut abwaschen</string>
+    <string name="plant_efeu_firstaid_2">Tierarzt bei Symptomen</string>
+
+    <!-- ToxicPlantData: Aronstab -->
+    <string name="plant_aronstab_name">Aronstab</string>
+    <string name="plant_aronstab_alt_1">Gefleckter Aronstab</string>
+    <string name="plant_aronstab_part_1">Beeren</string>
+    <string name="plant_aronstab_part_2">Knolle</string>
+    <string name="plant_aronstab_part_3">Blätter</string>
+    <string name="plant_aronstab_symptom_1">Brennen im Mund</string>
+    <string name="plant_aronstab_symptom_2">Schwellung im Rachen</string>
+    <string name="plant_aronstab_symptom_3">Erbrechen</string>
+    <string name="plant_aronstab_symptom_4">Atemnot</string>
+    <string name="plant_aronstab_feature_1">Pfeilförmige Blätter</string>
+    <string name="plant_aronstab_feature_2">Blütenkolben</string>
+    <string name="plant_aronstab_feature_3">Rote Beeren</string>
+    <string name="plant_aronstab_habitat_1">Laubwald</string>
+    <string name="plant_aronstab_habitat_2">Hecke</string>
+    <string name="plant_aronstab_habitat_3">Park</string>
+    <string name="plant_aronstab_firstaid_1">Mund spülen</string>
+    <string name="plant_aronstab_firstaid_2">Tierarzt bei Schwellung</string>
+
+    <!-- ToxicPlantData: Adlerfarn -->
+    <string name="plant_adlerfarn_name">Adlerfarn</string>
+    <string name="plant_adlerfarn_alt_1">Farn</string>
+    <string name="plant_adlerfarn_part_1">Alle Teile</string>
+    <string name="plant_adlerfarn_part_2">besonders junge Wedel</string>
+    <string name="plant_adlerfarn_symptom_1">Erbrechen</string>
+    <string name="plant_adlerfarn_symptom_2">Durchfall</string>
+    <string name="plant_adlerfarn_symptom_3">Thiaminmangel</string>
+    <string name="plant_adlerfarn_symptom_4">neurologische Störungen</string>
+    <string name="plant_adlerfarn_feature_1">Großer Farn</string>
+    <string name="plant_adlerfarn_feature_2">Eingekringelte junge Wedel</string>
+    <string name="plant_adlerfarn_habitat_1">Wald</string>
+    <string name="plant_adlerfarn_habitat_2">Heide</string>
+    <string name="plant_adlerfarn_habitat_3">Garten</string>
+    <string name="plant_adlerfarn_firstaid_1">Aktivkohle</string>
+    <string name="plant_adlerfarn_firstaid_2">Thiamin-Supplementation (Vet)</string>
+
+    <!-- ToxicPlantData: Rainfarn -->
+    <string name="plant_rainfarn_name">Rainfarn</string>
+    <string name="plant_rainfarn_alt_1">Wurmkraut</string>
+    <string name="plant_rainfarn_part_1">Blüten</string>
+    <string name="plant_rainfarn_part_2">Blätter</string>
+    <string name="plant_rainfarn_part_3">Stängel</string>
+    <string name="plant_rainfarn_symptom_1">Erbrechen</string>
+    <string name="plant_rainfarn_symptom_2">Entzündung Magen/Darm</string>
+    <string name="plant_rainfarn_symptom_3">Krämpfe</string>
+    <string name="plant_rainfarn_symptom_4">Herzrhythmusstörungen</string>
+    <string name="plant_rainfarn_feature_1">Gelbe knopfartige Blüten</string>
+    <string name="plant_rainfarn_feature_2">Fiederige Blätter</string>
+    <string name="plant_rainfarn_habitat_1">Wegrand</string>
+    <string name="plant_rainfarn_habitat_2">Wiese</string>
+    <string name="plant_rainfarn_habitat_3">Brachland</string>
+    <string name="plant_rainfarn_firstaid_1">Tierarzt bei Symptomen</string>
+
+    <!-- ToxicPlantData: Pfaffenhütchen -->
+    <string name="plant_pfaffenhuetchen_name">Pfaffenhütchen</string>
+    <string name="plant_pfaffenhuetchen_alt_1">Spindelstrauch</string>
+    <string name="plant_pfaffenhuetchen_part_1">Samen</string>
+    <string name="plant_pfaffenhuetchen_part_2">Früchte</string>
+    <string name="plant_pfaffenhuetchen_symptom_1">Bauchschmerzen</string>
+    <string name="plant_pfaffenhuetchen_symptom_2">Übelkeit</string>
+    <string name="plant_pfaffenhuetchen_symptom_3">Erbrechen</string>
+    <string name="plant_pfaffenhuetchen_symptom_4">herztoxische Effekte</string>
+    <string name="plant_pfaffenhuetchen_feature_1">Rosa-rote vierlappige Früchte</string>
+    <string name="plant_pfaffenhuetchen_feature_2">Orange Samen</string>
+    <string name="plant_pfaffenhuetchen_habitat_1">Wald</string>
+    <string name="plant_pfaffenhuetchen_habitat_2">Hecke</string>
+    <string name="plant_pfaffenhuetchen_habitat_3">Garten</string>
+    <string name="plant_pfaffenhuetchen_firstaid_1">Tierarzt bei größeren Mengen</string>
+
+    <!-- ToxicPlantData: Bittersüßer Nachtschatten -->
+    <string name="plant_nachtschatten_name">Bittersüßer Nachtschatten</string>
+    <string name="plant_nachtschatten_alt_1">Nachtschatten</string>
+    <string name="plant_nachtschatten_part_1">Alle Teile</string>
+    <string name="plant_nachtschatten_part_2">besonders unreife Früchte</string>
+    <string name="plant_nachtschatten_symptom_1">Erbrechen</string>
+    <string name="plant_nachtschatten_symptom_2">Durchfall</string>
+    <string name="plant_nachtschatten_symptom_3">Lähmungen bei großen Mengen</string>
+    <string name="plant_nachtschatten_feature_1">Violette Blüten</string>
+    <string name="plant_nachtschatten_feature_2">Rote Beeren</string>
+    <string name="plant_nachtschatten_feature_3">Herzförmige Blätter</string>
+    <string name="plant_nachtschatten_habitat_1">Wald</string>
+    <string name="plant_nachtschatten_habitat_2">Ufer</string>
+    <string name="plant_nachtschatten_habitat_3">Garten</string>
+    <string name="plant_nachtschatten_firstaid_1">Tierarzt bei Symptomen</string>
+
+    <!-- ToxicPlantData: Hortensie -->
+    <string name="plant_hortensie_name">Hortensie</string>
+    <string name="plant_hortensie_alt_1">Gartenhortensie</string>
+    <string name="plant_hortensie_part_1">Blätter</string>
+    <string name="plant_hortensie_part_2">Blüten</string>
+    <string name="plant_hortensie_symptom_1">Erbrechen</string>
+    <string name="plant_hortensie_symptom_2">Durchfall</string>
+    <string name="plant_hortensie_symptom_3">Krämpfe bei großen Mengen</string>
+    <string name="plant_hortensie_feature_1">Große Blütenballen</string>
+    <string name="plant_hortensie_feature_2">Gezackte Blätter</string>
+    <string name="plant_hortensie_habitat_1">Garten</string>
+    <string name="plant_hortensie_habitat_2">Kübelpflanze</string>
+    <string name="plant_hortensie_firstaid_1">Tierarzt bei Symptomen</string>
+
+    <!-- ToxicPlantData: Hyazinthe -->
+    <string name="plant_hyazinthe_name">Hyazinthe</string>
+    <string name="plant_hyazinthe_alt_1">Gartenhyazinthe</string>
+    <string name="plant_hyazinthe_part_1">Zwiebeln (besonders)</string>
+    <string name="plant_hyazinthe_symptom_1">Erbrechen</string>
+    <string name="plant_hyazinthe_symptom_2">blutiger Durchfall bei großen Mengen</string>
+    <string name="plant_hyazinthe_feature_1">Dichte Blütentrauben</string>
+    <string name="plant_hyazinthe_feature_2">Starker Duft</string>
+    <string name="plant_hyazinthe_habitat_1">Garten</string>
+    <string name="plant_hyazinthe_habitat_2">Topfpflanze</string>
+    <string name="plant_hyazinthe_firstaid_1">Tierarzt bei Zwiebelaufnahme</string>
+
+    <!-- ToxicPlantData: Alpenveilchen -->
+    <string name="plant_alpenveilchen_name">Alpenveilchen</string>
+    <string name="plant_alpenveilchen_alt_1">Zyklame</string>
+    <string name="plant_alpenveilchen_part_1">Knolle</string>
+    <string name="plant_alpenveilchen_part_2">Blätter</string>
+    <string name="plant_alpenveilchen_part_3">Blüten</string>
+    <string name="plant_alpenveilchen_symptom_1">Erbrechen</string>
+    <string name="plant_alpenveilchen_symptom_2">Durchfall</string>
+    <string name="plant_alpenveilchen_symptom_3">Speichelfluss</string>
+    <string name="plant_alpenveilchen_symptom_4">Herzprobleme</string>
+    <string name="plant_alpenveilchen_feature_1">Herzförmige gemusterte Blätter</string>
+    <string name="plant_alpenveilchen_feature_2">Zurückgeschlagene Blütenblätter</string>
+    <string name="plant_alpenveilchen_habitat_1">Zimmerpflanze</string>
+    <string name="plant_alpenveilchen_habitat_2">Garten</string>
+    <string name="plant_alpenveilchen_firstaid_1">Tierarzt</string>
+
+    <!-- ToxicPlantData: Amaryllis -->
+    <string name="plant_amaryllis_name">Amaryllis</string>
+    <string name="plant_amaryllis_alt_1">Ritterstern</string>
+    <string name="plant_amaryllis_part_1">Zwiebeln (besonders)</string>
+    <string name="plant_amaryllis_symptom_1">Erbrechen</string>
+    <string name="plant_amaryllis_symptom_2">Durchfall</string>
+    <string name="plant_amaryllis_symptom_3">Herzrhythmusstörungen</string>
+    <string name="plant_amaryllis_feature_1">Große trichterförmige Blüten</string>
+    <string name="plant_amaryllis_feature_2">Dicker hohler Stängel</string>
+    <string name="plant_amaryllis_habitat_1">Zimmerpflanze</string>
+    <string name="plant_amaryllis_habitat_2">Schnittblume</string>
+    <string name="plant_amaryllis_firstaid_1">Tierarzt bei Zwiebelaufnahme</string>
+
+    <!-- ToxicPlantData: Clivia -->
+    <string name="plant_clivia_name">Clivia</string>
+    <string name="plant_clivia_alt_1">Riemenblatt</string>
+    <string name="plant_clivia_part_1">Alle Teile</string>
+    <string name="plant_clivia_part_2">besonders Wurzelstock</string>
+    <string name="plant_clivia_symptom_1">Erbrechen</string>
+    <string name="plant_clivia_symptom_2">Schweißausbrüche</string>
+    <string name="plant_clivia_symptom_3">neurologische Störungen</string>
+    <string name="plant_clivia_feature_1">Riemenförmige Blätter</string>
+    <string name="plant_clivia_feature_2">Orange Blütendolden</string>
+    <string name="plant_clivia_habitat_1">Zimmerpflanze</string>
+    <string name="plant_clivia_firstaid_1">Tierarzt</string>
+
+    <!-- ToxicPlantData: Philodendron -->
+    <string name="plant_philodendron_name">Philodendron</string>
+    <string name="plant_philodendron_alt_1">Baumfreund</string>
+    <string name="plant_philodendron_part_1">Blätter</string>
+    <string name="plant_philodendron_part_2">Stängel</string>
+    <string name="plant_philodendron_part_3">Saft</string>
+    <string name="plant_philodendron_symptom_1">Brennen</string>
+    <string name="plant_philodendron_symptom_2">Speichelfluss</string>
+    <string name="plant_philodendron_symptom_3">Erbrechen</string>
+    <string name="plant_philodendron_symptom_4">Schluckbeschwerden</string>
+    <string name="plant_philodendron_feature_1">Kletterpflanze</string>
+    <string name="plant_philodendron_feature_2">Oft herzförmige Blätter</string>
+    <string name="plant_philodendron_habitat_1">Zimmerpflanze</string>
+    <string name="plant_philodendron_firstaid_1">Mund spülen</string>
+    <string name="plant_philodendron_firstaid_2">Tierarzt bei starken Symptomen</string>
+
+    <!-- ToxicPlantData: Chrysantheme -->
+    <string name="plant_chrysantheme_name">Chrysantheme</string>
+    <string name="plant_chrysantheme_alt_1">Winteraster</string>
+    <string name="plant_chrysantheme_part_1">Blüten</string>
+    <string name="plant_chrysantheme_part_2">Blätter</string>
+    <string name="plant_chrysantheme_symptom_1">Durchfall</string>
+    <string name="plant_chrysantheme_symptom_2">Atemnot</string>
+    <string name="plant_chrysantheme_symptom_3">Gleichgewichtsstörungen</string>
+    <string name="plant_chrysantheme_symptom_4">Hautreizung</string>
+    <string name="plant_chrysantheme_feature_1">Dichte Blütenköpfe</string>
+    <string name="plant_chrysantheme_feature_2">Typischer Herbstblüher</string>
+    <string name="plant_chrysantheme_habitat_1">Garten</string>
+    <string name="plant_chrysantheme_habitat_2">Park</string>
+    <string name="plant_chrysantheme_habitat_3">Balkon</string>
+    <string name="plant_chrysantheme_firstaid_1">Tierarzt bei größeren Mengen</string>
+
+    <!-- ToxicPlantData: Thuja -->
+    <string name="plant_thuja_name">Thuja</string>
+    <string name="plant_thuja_alt_1">Lebensbaum</string>
+    <string name="plant_thuja_part_1">Alle Teile</string>
+    <string name="plant_thuja_part_2">ätherische Öle</string>
+    <string name="plant_thuja_symptom_1">Erbrechen</string>
+    <string name="plant_thuja_symptom_2">Durchfall</string>
+    <string name="plant_thuja_symptom_3">Nierenschäden bei Daueraufnahme</string>
+    <string name="plant_thuja_feature_1">Immergrün</string>
+    <string name="plant_thuja_feature_2">Schuppenartige Blätter</string>
+    <string name="plant_thuja_habitat_1">Hecke</string>
+    <string name="plant_thuja_habitat_2">Garten</string>
+    <string name="plant_thuja_firstaid_1">Maul ausspülen</string>
+    <string name="plant_thuja_firstaid_2">Tierarzt bei größeren Mengen</string>
+
+    <!-- ToxicPlantData: Primel -->
+    <string name="plant_primel_name">Primel</string>
+    <string name="plant_primel_alt_1">Giftprimel</string>
+    <string name="plant_primel_part_1">Blätter</string>
+    <string name="plant_primel_part_2">Stängelsaft</string>
+    <string name="plant_primel_symptom_1">Hautreizung</string>
+    <string name="plant_primel_symptom_2">Juckreiz</string>
+    <string name="plant_primel_symptom_3">Erbrechen bei Aufnahme</string>
+    <string name="plant_primel_feature_1">Runzlige behaarte Blätter</string>
+    <string name="plant_primel_feature_2">Bunte Blüten</string>
+    <string name="plant_primel_habitat_1">Balkon</string>
+    <string name="plant_primel_habitat_2">Garten</string>
+    <string name="plant_primel_habitat_3">Zimmer</string>
+    <string name="plant_primel_firstaid_1">Haut abwaschen</string>
+
+    <!-- ToxicPlantData: Liguster -->
+    <string name="plant_liguster_name">Liguster</string>
+    <string name="plant_liguster_alt_1">Hartriegel</string>
+    <string name="plant_liguster_part_1">Beeren</string>
+    <string name="plant_liguster_part_2">Blätter</string>
+    <string name="plant_liguster_symptom_1">Erbrechen</string>
+    <string name="plant_liguster_symptom_2">Durchfall</string>
+    <string name="plant_liguster_feature_1">Heckenstrauch</string>
+    <string name="plant_liguster_feature_2">Schwarze Beeren im Herbst</string>
+    <string name="plant_liguster_habitat_1">Hecke</string>
+    <string name="plant_liguster_habitat_2">Garten</string>
+    <string name="plant_liguster_habitat_3">Park</string>
+    <string name="plant_liguster_firstaid_1">Viel Wasser anbieten</string>
+
+    <!-- ToxicPlantData: Ficus / Gummibaum -->
+    <string name="plant_ficus_name">Ficus / Gummibaum</string>
+    <string name="plant_ficus_alt_1">Birkenfeige</string>
+    <string name="plant_ficus_part_1">Milchsaft</string>
+    <string name="plant_ficus_symptom_1">Reizung</string>
+    <string name="plant_ficus_symptom_2">Erbrechen</string>
+    <string name="plant_ficus_symptom_3">Durchfall</string>
+    <string name="plant_ficus_symptom_4">Hautreizung</string>
+    <string name="plant_ficus_feature_1">Glänzende Blätter</string>
+    <string name="plant_ficus_feature_2">Milchiger Saft</string>
+    <string name="plant_ficus_habitat_1">Zimmerpflanze</string>
+    <string name="plant_ficus_firstaid_1">Spülen</string>
+    <string name="plant_ficus_firstaid_2">Waschen</string>
+
+    <!-- ToxicPlantData: Weihnachtsstern -->
+    <string name="plant_weihnachtsstern_name">Weihnachtsstern</string>
+    <string name="plant_weihnachtsstern_alt_1">Adventsstern</string>
+    <string name="plant_weihnachtsstern_part_1">Milchsaft</string>
+    <string name="plant_weihnachtsstern_symptom_1">Erbrechen</string>
+    <string name="plant_weihnachtsstern_symptom_2">Durchfall</string>
+    <string name="plant_weihnachtsstern_symptom_3">neurologische Störungen bei großen Mengen</string>
+    <string name="plant_weihnachtsstern_feature_1">Rote Hochblätter im Winter</string>
+    <string name="plant_weihnachtsstern_habitat_1">Zimmerpflanze</string>
+    <string name="plant_weihnachtsstern_firstaid_1">Tierarzt bei Symptomen</string>
+
+    <!-- ToxicPlantData: Aloe Vera -->
+    <string name="plant_aloevera_name">Aloe Vera</string>
+    <string name="plant_aloevera_alt_1">Wüstenlilie</string>
+    <string name="plant_aloevera_part_1">Blattsaft (Aloin)</string>
+    <string name="plant_aloevera_symptom_1">Erbrechen</string>
+    <string name="plant_aloevera_symptom_2">Durchfall</string>
+    <string name="plant_aloevera_symptom_3">Koliken</string>
+    <string name="plant_aloevera_feature_1">Fleischige gezackte Blätter</string>
+    <string name="plant_aloevera_habitat_1">Zimmerpflanze</string>
+    <string name="plant_aloevera_habitat_2">Heilpflanze</string>
+    <string name="plant_aloevera_firstaid_1">Tierarzt bei größeren Mengen</string>
+
+    <!-- ToxicPlantData: Geranie -->
+    <string name="plant_geranie_name">Geranie</string>
+    <string name="plant_geranie_alt_1">Pelargonie</string>
+    <string name="plant_geranie_part_1">Blätter</string>
+    <string name="plant_geranie_part_2">Stängel</string>
+    <string name="plant_geranie_part_3">Blüten</string>
+    <string name="plant_geranie_symptom_1">Leichte Magen-Darm-Beschwerden</string>
+    <string name="plant_geranie_symptom_2">Hautreizung</string>
+    <string name="plant_geranie_feature_1">Balkonblume</string>
+    <string name="plant_geranie_feature_2">Behaarte Blätter</string>
+    <string name="plant_geranie_habitat_1">Balkon</string>
+    <string name="plant_geranie_habitat_2">Garten</string>
+    <string name="plant_geranie_firstaid_1">Maul spülen</string>
+
+    <!-- ToxicPlantData: Agave -->
+    <string name="plant_agave_name">Agave</string>
+    <string name="plant_agave_alt_1">Hundertjährige Agave</string>
+    <string name="plant_agave_part_1">Blattsaft</string>
+    <string name="plant_agave_symptom_1">Reizung</string>
+    <string name="plant_agave_symptom_2">Erbrechen</string>
+    <string name="plant_agave_feature_1">Große Rosetten</string>
+    <string name="plant_agave_feature_2">Spitze fleischige Blätter</string>
+    <string name="plant_agave_habitat_1">Garten</string>
+    <string name="plant_agave_habitat_2">Topfpflanze</string>
+    <string name="plant_agave_firstaid_1">Spülen</string>
+
+    <!-- ToxicPlantData: Begonie -->
+    <string name="plant_begonie_name">Begonie</string>
+    <string name="plant_begonie_alt_1">Schiefblatt</string>
+    <string name="plant_begonie_part_1">Alle Teile</string>
+    <string name="plant_begonie_symptom_1">Leichte Reizung</string>
+    <string name="plant_begonie_symptom_2">Erbrechen</string>
+    <string name="plant_begonie_symptom_3">Durchfall</string>
+    <string name="plant_begonie_feature_1">Asymmetrische Blätter</string>
+    <string name="plant_begonie_feature_2">Fleischige Stängel</string>
+    <string name="plant_begonie_habitat_1">Garten</string>
+    <string name="plant_begonie_habitat_2">Zimmer</string>
+    <string name="plant_begonie_firstaid_1">Maul spülen</string>
+
+    <!-- ToxicPlantData: Wacholder -->
+    <string name="plant_wacholder_name">Wacholder</string>
+    <string name="plant_wacholder_alt_1">Feuerbaum</string>
+    <string name="plant_wacholder_part_1">Beeren</string>
+    <string name="plant_wacholder_part_2">Nadeln</string>
+    <string name="plant_wacholder_symptom_1">Leichte Magen-Darm-Beschwerden</string>
+    <string name="plant_wacholder_symptom_2">Nierenreizung bei großen Mengen</string>
+    <string name="plant_wacholder_feature_1">Immergrüner Nadelstrauch</string>
+    <string name="plant_wacholder_feature_2">Blaue Scheinbeeren</string>
+    <string name="plant_wacholder_habitat_1">Heide</string>
+    <string name="plant_wacholder_habitat_2">Wald</string>
+    <string name="plant_wacholder_habitat_3">Garten</string>
+    <string name="plant_wacholder_firstaid_1">Viel Wasser</string>
+
+    <!-- ToxicPlantData: Riesenbärenklau -->
+    <string name="plant_riesenbaerenklau_name">Riesenbärenklau</string>
+    <string name="plant_riesenbaerenklau_alt_1">Herkulesstaude</string>
+    <string name="plant_riesenbaerenklau_part_1">Saft der Blätter und Stängel</string>
+    <string name="plant_riesenbaerenklau_symptom_1">Phototoxische Verbrennungen</string>
+    <string name="plant_riesenbaerenklau_symptom_2">Rötung</string>
+    <string name="plant_riesenbaerenklau_symptom_3">Blasen bei Sonnenlicht</string>
+    <string name="plant_riesenbaerenklau_feature_1">Sehr große Staude (bis 3-4m)</string>
+    <string name="plant_riesenbaerenklau_feature_2">Große weiße Dolden</string>
+    <string name="plant_riesenbaerenklau_habitat_1">Wegrand</string>
+    <string name="plant_riesenbaerenklau_habitat_2">Ufer</string>
+    <string name="plant_riesenbaerenklau_habitat_3">Waldrand</string>
+    <string name="plant_riesenbaerenklau_firstaid_1">Sofort mit Wasser und Seife waschen</string>
+    <string name="plant_riesenbaerenklau_firstaid_2">Vor Sonne schützen</string>
+    <string name="plant_riesenbaerenklau_note">Dermatotoxisch. Kontakt mit Saft + UV-Licht führt zu schweren Verbrennungen.</string>
+    <!-- PlantToxicityLevel -->
+    <string name="plant_toxicity_slightly_toxic">Leicht giftig</string>
+    <string name="plant_toxicity_slightly_toxic_short">Leicht</string>
+    <string name="plant_toxicity_moderately_toxic">Giftig</string>
+    <string name="plant_toxicity_moderately_toxic_short">Giftig</string>
+    <string name="plant_toxicity_highly_toxic">Stark giftig</string>
+    <string name="plant_toxicity_highly_toxic_short">Stark</string>
+    <string name="plant_toxicity_deadly">Tödlich</string>
+    <string name="plant_toxicity_deadly_short">Tödlich</string>
+
+    <!-- PlantBodySystem -->
+    <string name="plant_body_system_digestive">Magen-Darm</string>
+    <string name="plant_body_system_cardiovascular">Herz-Kreislauf</string>
+    <string name="plant_body_system_nervous">Nervensystem</string>
+    <string name="plant_body_system_liver">Leber</string>
+    <string name="plant_body_system_kidneys">Nieren</string>
+    <string name="plant_body_system_skin">Haut / Schleimhaut</string>
+    <string name="plant_body_system_respiratory">Atemwege</string>
+    <string name="plant_body_system_blood">Blut</string>
+
+    <!-- Monatsnamen, app-weit wiederverwendbar -->
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">März</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Dezember</string>
+
+    <!-- PlantListAdapter -->
+    <string name="plant_list_currently_seasonal">⚠️ Aktuell</string>
+
+    <!-- PlantScoutActivity -->
+    <string name="plant_scout_toolbar_title">🌿 Gefahrenpflanzen-Scout</string>
+    <string name="plant_scout_season_title">⚠️ Aktuell im %1$s besonders relevant</string>
+    <string name="plant_scout_season_warning">Achtung: %1$s</string>
+    <string name="plant_scout_season_count">%1$d Pflanzen in dieser Jahreszeit relevant</string>
+
+    <!-- PlantDetailActivity -->
+    <string name="plant_detail_also_known_as">Auch bekannt als: %1$s</string>
+    <string name="plant_detail_toxic_parts">☠️ Giftige Teile: %1$s</string>
+    <string name="plant_detail_affected_systems">🫀 Betroffen: %1$s</string>
+    <string name="plant_detail_currently_relevant">⚠️ Aktuell relevant – %1$s</string>
+    <string name="plant_detail_habitat">📍 Vorkommen: %1$s</string>
+    <string name="plant_detail_confusion_risk">⚠️ Verwechslungsgefahr: %1$s</string>
+    <string name="plant_detail_note">ℹ️ %1$s</string>
+    <string name="plant_detail_open_emergency">🚨 Notfall-Assistent öffnen</string>
+
+    <!-- FirstAidInstructions: Bewusstlosigkeit -->
+    <string name="firstaid_unconsciousness_title">Bewusstlosigkeit</string>
+    <string name="firstaid_unconsciousness_symptom_1">Keine Reaktion auf Ansprache</string>
+    <string name="firstaid_unconsciousness_symptom_2">Keine Reaktion auf Berührung</string>
+    <string name="firstaid_unconsciousness_symptom_3">Schlaffer Muskeltonus</string>
+    <string name="firstaid_unconsciousness_symptom_4">Augen ggf. offen mit starrem Blick</string>
+    <string name="firstaid_unconsciousness_action_1">1️⃣ ATEMWEGE FREI MACHEN</string>
+    <string name="firstaid_unconsciousness_action_2">• Kopf leicht nach hinten überstrecken</string>
+    <string name="firstaid_unconsciousness_action_3">• Zunge nach vorne ziehen</string>
+    <string name="firstaid_unconsciousness_action_4">• Fremdkörper entfernen (sichtbar!)</string>
+    <string name="firstaid_unconsciousness_action_5"></string>
+    <string name="firstaid_unconsciousness_action_6">2️⃣ ATMUNG &amp; PULS PRÜFEN</string>
+    <string name="firstaid_unconsciousness_action_7">• Brustkorb beobachten (hebt/senkt sich?)</string>
+    <string name="firstaid_unconsciousness_action_8">• Puls an Oberschenkelinnenseite fühlen</string>
+    <string name="firstaid_unconsciousness_action_9">• KEIN PULS → SOFORT HLW!</string>
+    <string name="firstaid_unconsciousness_action_10"></string>
+    <string name="firstaid_unconsciousness_action_11">3️⃣ STABILE SEITENLAGE</string>
+    <string name="firstaid_unconsciousness_action_12">• Hund auf RECHTE Seite legen</string>
+    <string name="firstaid_unconsciousness_action_13">• Kopf leicht gestreckt</string>
+    <string name="firstaid_unconsciousness_action_14">• Zunge raus</string>
+    <string name="firstaid_unconsciousness_action_15">• Atemwege frei halten</string>
+    <string name="firstaid_unconsciousness_do_1">✅ Atemwege freihalten</string>
+    <string name="firstaid_unconsciousness_do_2">✅ Stabile Seitenlage (rechts!)</string>
+    <string name="firstaid_unconsciousness_do_3">✅ Alle 30 Sek. Atmung/Puls prüfen</string>
+    <string name="firstaid_unconsciousness_do_4">✅ SOFORT Tierarzt anrufen</string>
+    <string name="firstaid_unconsciousness_do_5">✅ Warm halten (Decke)</string>
+    <string name="firstaid_unconsciousness_dont_1">❌ KEIN Wasser eingeben</string>
+    <string name="firstaid_unconsciousness_dont_2">❌ KEINE Medikamente</string>
+    <string name="firstaid_unconsciousness_dont_3">❌ NICHT allein lassen</string>
+    <string name="firstaid_unconsciousness_dont_4">❌ NICHT zu stark bewegen</string>
+    <string name="firstaid_unconsciousness_transport">Vorsichtig auf festem Brett/Decke. Kopf gestreckt halten.</string>
+
+    <!-- FirstAidInstructions: Hitzschlag -->
+    <string name="firstaid_heatstroke_title">Hitzschlag</string>
+    <string name="firstaid_heatstroke_symptom_1">Starkes, lautes Hecheln</string>
+    <string name="firstaid_heatstroke_symptom_2">Ziegelrote Schleimhäute</string>
+    <string name="firstaid_heatstroke_symptom_3">Glasige Augen</string>
+    <string name="firstaid_heatstroke_symptom_4">Speichelfluss</string>
+    <string name="firstaid_heatstroke_symptom_5">Taumeln, Koordinationsstörungen</string>
+    <string name="firstaid_heatstroke_symptom_6">Erbrechen, Durchfall</string>
+    <string name="firstaid_heatstroke_symptom_7">Körpertemperatur &gt; 40,5°C</string>
+    <string name="firstaid_heatstroke_action_1">1️⃣ SOFORT IN DEN SCHATTEN</string>
+    <string name="firstaid_heatstroke_action_2"></string>
+    <string name="firstaid_heatstroke_action_3">2️⃣ LANGSAM KÜHLEN (15-20 Min)</string>
+    <string name="firstaid_heatstroke_action_4">• Lauwarmes (!) Wasser</string>
+    <string name="firstaid_heatstroke_action_5">• Von Pfoten → Beine → Körper</string>
+    <string name="firstaid_heatstroke_action_6">• KEIN Eiswasser!</string>
+    <string name="firstaid_heatstroke_action_7">• NICHT in nasse Tücher wickeln!</string>
+    <string name="firstaid_heatstroke_action_8"></string>
+    <string name="firstaid_heatstroke_action_9">3️⃣ ZAHNFLEISCH BEFEUCHTEN</string>
+    <string name="firstaid_heatstroke_action_10">• Wenige Tropfen Wasser</string>
+    <string name="firstaid_heatstroke_action_11">• Nur wenn bewusst!</string>
+    <string name="firstaid_heatstroke_action_12">4️⃣ TIERARZT - SOFORT!</string>
+    <string name="firstaid_heatstroke_do_1">✅ Sofort Schatten</string>
+    <string name="firstaid_heatstroke_do_2">✅ Lauwarmes Wasser von unten</string>
+    <string name="firstaid_heatstroke_do_3">✅ Luftzirkulation (Fächer)</string>
+    <string name="firstaid_heatstroke_do_4">✅ Zahnfleisch feucht halten</string>
+    <string name="firstaid_heatstroke_do_5">✅ Temperatur messen (rektal)</string>
+    <string name="firstaid_heatstroke_dont_1">❌ KEIN Eiswasser</string>
+    <string name="firstaid_heatstroke_dont_2">❌ NICHT in feuchte Tücher wickeln</string>
+    <string name="firstaid_heatstroke_dont_3">❌ NICHT große Mengen trinken lassen</string>
+    <string name="firstaid_heatstroke_dont_4">❌ NICHT zu schnell kühlen</string>
+    <string name="firstaid_heatstroke_transport">Klimaanlage an. Fenster offen. Unterwegs weiter leicht kühlen.</string>
+    <string name="firstaid_heatstroke_special_notes">🚨 Auch nach scheinbarer Erholung IMMER zum Tierarzt! Organschäden können verzögert auftreten!</string>
+
+    <!-- FirstAidInstructions: Vergiftung (bekannt) -->
+    <string name="firstaid_poisoning_known_title">Vergiftung (bekannt)</string>
+    <string name="firstaid_poisoning_known_symptom_1">Erbrechen, Durchfall</string>
+    <string name="firstaid_poisoning_known_symptom_2">Zittern, Krämpfe</string>
+    <string name="firstaid_poisoning_known_symptom_3">Schläfrigkeit / Lethargie</string>
+    <string name="firstaid_poisoning_known_symptom_4">Atemnot, Herzrasen</string>
+    <string name="firstaid_poisoning_known_symptom_5">Speichelfluss</string>
+    <string name="firstaid_poisoning_known_symptom_6">Blasse/Blaue Schleimhäute</string>
+    <string name="firstaid_poisoning_known_action_1">1️⃣ TIERGIFTNOTRUF SOFORT ANRUFEN</string>
+    <string name="firstaid_poisoning_known_action_2">📞 Berlin: 030 19240</string>
+    <string name="firstaid_poisoning_known_action_3">📞 München: 089 19240</string>
+    <string name="firstaid_poisoning_known_action_4">📞 Freiburg: 0761 19240</string>
+    <string name="firstaid_poisoning_known_action_5"></string>
+    <string name="firstaid_poisoning_known_action_6">2️⃣ SUBSTANZ SICHERN</string>
+    <string name="firstaid_poisoning_known_action_7">• Verpackung mitnehmen!</string>
+    <string name="firstaid_poisoning_known_action_8">• Erbrochenes in Tüte</string>
+    <string name="firstaid_poisoning_known_action_9">• Pflanzenprobe (Handschuhe!)</string>
+    <string name="firstaid_poisoning_known_action_10"></string>
+    <string name="firstaid_poisoning_known_action_11">3️⃣ KEIN ERBRECHEN OHNE ANWEISUNG!</string>
+    <string name="firstaid_poisoning_known_action_12"></string>
+    <string name="firstaid_poisoning_known_action_13">4️⃣ SOFORT ZUM TIERARZT</string>
+    <string name="firstaid_poisoning_known_do_1">✅ Giftzentrale anrufen</string>
+    <string name="firstaid_poisoning_known_do_2">✅ Verpackung/Probe mitnehmen</string>
+    <string name="firstaid_poisoning_known_do_3">✅ Zeitpunkt notieren</string>
+    <string name="firstaid_poisoning_known_do_4">✅ Menge schätzen</string>
+    <string name="firstaid_poisoning_known_do_5">✅ Ruhig halten</string>
+    <string name="firstaid_poisoning_known_dont_1">❌ KEIN Erbrechen provozieren!</string>
+    <string name="firstaid_poisoning_known_dont_2">❌ KEINE Milch geben</string>
+    <string name="firstaid_poisoning_known_dont_3">❌ KEIN Öl geben</string>
+    <string name="firstaid_poisoning_known_dont_4">❌ NICHT abwarten!</string>
+    <string name="firstaid_poisoning_known_transport">Verpackung/Gift mitnehmen. Erbrochenes in Tüte. Hund ruhig halten.</string>
+    <string name="firstaid_poisoning_known_special_notes">⚠️ TIERGIFTZENTRALE: Berlin 030 19240, München 089 19240, Freiburg 0761 19240</string>
+
+    <!-- FirstAidInstructions: Magendrehung -->
+    <string name="firstaid_gastric_torsion_title">Magendrehung</string>
+    <string name="firstaid_gastric_torsion_symptom_1">Aufgeblähter, harter Bauch</string>
+    <string name="firstaid_gastric_torsion_symptom_2">Erfolgloses Würgen ohne Erbrechen</string>
+    <string name="firstaid_gastric_torsion_symptom_3">Starke Unruhe</string>
+    <string name="firstaid_gastric_torsion_symptom_4">Speichelfluss</string>
+    <string name="firstaid_gastric_torsion_symptom_5">Schnelle, flache Atmung</string>
+    <string name="firstaid_gastric_torsion_symptom_6">Blasse Schleimhäute</string>
+    <string name="firstaid_gastric_torsion_symptom_7">Schwäche, Kollaps</string>
+    <string name="firstaid_gastric_torsion_action_1">🚨 ABSOLUTE NOTFALL-SITUATION!</string>
+    <string name="firstaid_gastric_torsion_action_2"></string>
+    <string name="firstaid_gastric_torsion_action_3">1️⃣ SOFORT TIERKLINIK ANRUFEN</string>
+    <string name="firstaid_gastric_torsion_action_4">• Operation innerhalb von 1-2h nötig!</string>
+    <string name="firstaid_gastric_torsion_action_5"></string>
+    <string name="firstaid_gastric_torsion_action_6">2️⃣ NICHT MEHR FÜTTERN/TRÄNKEN</string>
+    <string name="firstaid_gastric_torsion_action_7"></string>
+    <string name="firstaid_gastric_torsion_action_8">3️⃣ BEWEGUNG MINIMIEREN</string>
+    <string name="firstaid_gastric_torsion_action_9">• Ruhig halten</string>
+    <string name="firstaid_gastric_torsion_action_10">• Nicht rennen lassen</string>
+    <string name="firstaid_gastric_torsion_action_11"></string>
+    <string name="firstaid_gastric_torsion_action_12">4️⃣ SCHNELLSTER TRANSPORT</string>
+    <string name="firstaid_gastric_torsion_action_13">• Jede Minute zählt!</string>
+    <string name="firstaid_gastric_torsion_action_14">• Klinik vorab informieren</string>
+    <string name="firstaid_gastric_torsion_do_1">✅ SOFORT Tierklinik</string>
+    <string name="firstaid_gastric_torsion_do_2">✅ Vorab anrufen</string>
+    <string name="firstaid_gastric_torsion_do_3">✅ Bewegung minimieren</string>
+    <string name="firstaid_gastric_torsion_do_4">✅ Zeit notieren (wichtig!)</string>
+    <string name="firstaid_gastric_torsion_dont_1">❌ KEIN Futter/Wasser</string>
+    <string name="firstaid_gastric_torsion_dont_2">❌ NICHT warten</string>
+    <string name="firstaid_gastric_torsion_dont_3">❌ NICHT selbst behandeln</string>
+    <string name="firstaid_gastric_torsion_dont_4">❌ KEINE Bewegung</string>
+    <string name="firstaid_gastric_torsion_transport">Vorsichtig transportieren. Bauch nicht drücken. SCHNELLSTE Route zur Klinik!</string>
+    <string name="firstaid_gastric_torsion_special_notes">⚠️ LEBENSBEDROHLICH! Überlebenschance sinkt mit jeder Minute. Risikohunde: Schäferhund, Dogge, Setter, Dobermann, Sennenhunde.</string>
+
+    <!-- FirstAidInstructions: Krampfanfall -->
+    <string name="firstaid_seizure_title">Krampfanfall / Epilepsie</string>
+    <string name="firstaid_seizure_symptom_1">Plötzlicher Bewusstseinsverlust</string>
+    <string name="firstaid_seizure_symptom_2">Unkontrollierte Muskelzuckungen</string>
+    <string name="firstaid_seizure_symptom_3">Paddelbewegungen</string>
+    <string name="firstaid_seizure_symptom_4">Kieferschlagen</string>
+    <string name="firstaid_seizure_symptom_5">Speichelfluss, Schaum</string>
+    <string name="firstaid_seizure_symptom_6">Unkontrollierter Kot-/Urinabsatz</string>
+    <string name="firstaid_seizure_action_1">1️⃣ UMGEBUNG SICHERN</string>
+    <string name="firstaid_seizure_action_2">• Möbel wegräumen</string>
+    <string name="firstaid_seizure_action_3">• Polster unterlegen</string>
+    <string name="firstaid_seizure_action_4">• Raum abdunkeln</string>
+    <string name="firstaid_seizure_action_5"></string>
+    <string name="firstaid_seizure_action_6">2️⃣ ZEIT STOPPEN</string>
+    <string name="firstaid_seizure_action_7">• Dauer notieren!</string>
+    <string name="firstaid_seizure_action_8">• &gt; 5 Min = NOTFALL</string>
+    <string name="firstaid_seizure_action_9"></string>
+    <string name="firstaid_seizure_action_10">3️⃣ NICHT FESTHALTEN</string>
+    <string name="firstaid_seizure_action_11">• Hund nicht berühren!</string>
+    <string name="firstaid_seizure_action_12">• Nicht in Maul greifen!</string>
+    <string name="firstaid_seizure_action_13"></string>
+    <string name="firstaid_seizure_action_14">4️⃣ NACH DEM ANFALL</string>
+    <string name="firstaid_seizure_action_15">• Ruhig bleiben</string>
+    <string name="firstaid_seizure_action_16">• Sanft ansprechen</string>
+    <string name="firstaid_seizure_action_17">• Nicht bedrängen</string>
+    <string name="firstaid_seizure_do_1">✅ Umgebung sichern</string>
+    <string name="firstaid_seizure_do_2">✅ Zeit stoppen</string>
+    <string name="firstaid_seizure_do_3">✅ Ruhig bleiben</string>
+    <string name="firstaid_seizure_do_4">✅ Raum abdunkeln</string>
+    <string name="firstaid_seizure_do_5">✅ Nach &gt; 5 Min → Tierarzt</string>
+    <string name="firstaid_seizure_dont_1">❌ NICHT festhalten</string>
+    <string name="firstaid_seizure_dont_2">❌ NICHT ins Maul greifen</string>
+    <string name="firstaid_seizure_dont_3">❌ NICHT erschrecken</string>
+    <string name="firstaid_seizure_dont_4">❌ NICHT bedrängen danach</string>
+    <string name="firstaid_seizure_transport">Nach Anfall: Hund ist desorientiert. Langsam, vorsichtig. Kann aggressiv reagieren.</string>
+    <string name="firstaid_seizure_special_notes">⚠️ Tierarzt wenn: &gt; 5 Min Dauer, mehrere Anfälle hintereinander, erster Anfall überhaupt.</string>
+
+    <!-- FirstAidInstructions: Starke Blutung -->
+    <string name="firstaid_bleeding_title">Starke Blutung</string>
+    <string name="firstaid_bleeding_symptom_1">Hellrotes, pulsierendes Blut (Arterie - NOTFALL!)</string>
+    <string name="firstaid_bleeding_symptom_2">Dunkelrotes, stetiges Blut (Vene)</string>
+    <string name="firstaid_bleeding_symptom_3">Große Wundfläche</string>
+    <string name="firstaid_bleeding_symptom_4">Schockzeichen: blasse Schleimhäute, Schwäche</string>
+    <string name="firstaid_bleeding_action_1">1️⃣ DRUCKVERBAND ANLEGEN</string>
+    <string name="firstaid_bleeding_action_2">• Sterile Kompresse auf Wunde</string>
+    <string name="firstaid_bleeding_action_3">• Fest andrücken (2-3 Min)</string>
+    <string name="firstaid_bleeding_action_4">• Mit Binde fixieren</string>
+    <string name="firstaid_bleeding_action_5">• NICHT zu fest!</string>
+    <string name="firstaid_bleeding_action_6"></string>
+    <string name="firstaid_bleeding_action_7">2️⃣ VERBAND NICHT ENTFERNEN</string>
+    <string name="firstaid_bleeding_action_8">• Blutet durch → 2. Lage drauf</string>
+    <string name="firstaid_bleeding_action_9">• Nie alten Verband abnehmen!</string>
+    <string name="firstaid_bleeding_action_10"></string>
+    <string name="firstaid_bleeding_action_11">3️⃣ HUND RUHIG HALTEN</string>
+    <string name="firstaid_bleeding_action_12">• Keine Bewegung</string>
+    <string name="firstaid_bleeding_action_13">• Warm halten</string>
+    <string name="firstaid_bleeding_action_14"></string>
+    <string name="firstaid_bleeding_action_15">4️⃣ SOFORT TIERARZT</string>
+    <string name="firstaid_bleeding_do_1">✅ Druckverband</string>
+    <string name="firstaid_bleeding_do_2">✅ Fest andrücken</string>
+    <string name="firstaid_bleeding_do_3">✅ Ruhig halten</string>
+    <string name="firstaid_bleeding_do_4">✅ Warm halten (Schock!)</string>
+    <string name="firstaid_bleeding_do_5">✅ SOFORT Tierarzt</string>
+    <string name="firstaid_bleeding_dont_1">❌ NICHT Verband abnehmen</string>
+    <string name="firstaid_bleeding_dont_2">❌ KEINE Abbindung (Tourniquet)</string>
+    <string name="firstaid_bleeding_dont_3">❌ NICHT Wunde ausspülen</string>
+    <string name="firstaid_bleeding_dont_4">❌ NICHT zu fest abbinden</string>
+    <string name="firstaid_bleeding_transport">Vorsichtig. Verletzte Stelle ruhig stellen. Bei Schock: Hinterbeine leicht erhöhen.</string>
+    <string name="firstaid_bleeding_special_notes">🚨 Arteriell (hellrot, pulsierend) = HÖCHSTE GEFAHR! Jede Minute zählt!</string>
+
+    <!-- FirstAidInstructions: Knochenbruch -->
+    <string name="firstaid_bone_fracture_title">Knochenbruch / Lahmheit</string>
+    <string name="firstaid_bone_fracture_symptom_1">Humpeln oder nicht auftreten</string>
+    <string name="firstaid_bone_fracture_symptom_2">Abnormale Stellung der Gliedmaße</string>
+    <string name="firstaid_bone_fracture_symptom_3">Sichtbare Knochenteile (offener Bruch!)</string>
+    <string name="firstaid_bone_fracture_symptom_4">Schwellung, Schmerzen</string>
+    <string name="firstaid_bone_fracture_symptom_5">Schonhaltung</string>
+    <string name="firstaid_bone_fracture_action_1">1️⃣ HUND RUHIG HALTEN</string>
+    <string name="firstaid_bone_fracture_action_2">• Keine Bewegung!</string>
+    <string name="firstaid_bone_fracture_action_3">• Nicht aufstehen lassen</string>
+    <string name="firstaid_bone_fracture_action_4"></string>
+    <string name="firstaid_bone_fracture_action_5">2️⃣ NICHT SCHIENEN</string>
+    <string name="firstaid_bone_fracture_action_6">• Nur bei extremer Outdoor-Notsituation</string>
+    <string name="firstaid_bone_fracture_action_7">• Falsches Schienen → mehr Schaden!</string>
+    <string name="firstaid_bone_fracture_action_8"></string>
+    <string name="firstaid_bone_fracture_action_9">3️⃣ BEI OFFENER FRAKTUR</string>
+    <string name="firstaid_bone_fracture_action_10">• Sterile Kompresse auflegen</string>
+    <string name="firstaid_bone_fracture_action_11">• Nicht reinigen! Locker abdecken</string>
+    <string name="firstaid_bone_fracture_action_12"></string>
+    <string name="firstaid_bone_fracture_action_13">4️⃣ BEWEGUNGSARMER TRANSPORT</string>
+    <string name="firstaid_bone_fracture_do_1">✅ Bewegung minimieren</string>
+    <string name="firstaid_bone_fracture_do_2">✅ Ruhig halten</string>
+    <string name="firstaid_bone_fracture_do_3">✅ Offene Wunde abdecken</string>
+    <string name="firstaid_bone_fracture_do_4">✅ Vorsichtiger Transport</string>
+    <string name="firstaid_bone_fracture_do_5">✅ Schmerzäußerungen beachten</string>
+    <string name="firstaid_bone_fracture_dont_1">❌ NICHT schienen (Ausnahme: Profi)</string>
+    <string name="firstaid_bone_fracture_dont_2">❌ NICHT Knochen zurückdrücken</string>
+    <string name="firstaid_bone_fracture_dont_3">❌ NICHT offene Wunde spülen</string>
+    <string name="firstaid_bone_fracture_dont_4">❌ NICHT bewegen lassen</string>
+    <string name="firstaid_bone_fracture_transport">Brett/Trage. Bei Wirbelsäulenverdacht: keine Rotation! Kleinhunde: stabiler Karton.</string>
+    <string name="firstaid_bone_fracture_special_notes">⚠️ Wirbelsäulenverletzung? Lähmung, Inkontinenz → ABSOLUT KEINE BEWEGUNG!</string>
+
+    <!-- FirstAidInstructions: Augenverletzung -->
+    <string name="firstaid_eye_injury_title">Augenverletzung</string>
+    <string name="firstaid_eye_injury_symptom_1">Zugekniffenes Auge</string>
+    <string name="firstaid_eye_injury_symptom_2">Rötung, Schwellung</string>
+    <string name="firstaid_eye_injury_symptom_3">Tränenfluss</string>
+    <string name="firstaid_eye_injury_symptom_4">Sichtbare Verletzung</string>
+    <string name="firstaid_eye_injury_symptom_5">Trübe Hornhaut</string>
+    <string name="firstaid_eye_injury_symptom_6">Fremdkörper sichtbar</string>
+    <string name="firstaid_eye_injury_action_1">1️⃣ NICHT REIBEN LASSEN</string>
+    <string name="firstaid_eye_injury_action_2">• Halskragen/Trichter!</string>
+    <string name="firstaid_eye_injury_action_3"></string>
+    <string name="firstaid_eye_injury_action_4">2️⃣ BEI VERSCHMUTZUNG (keine Verletzung)</string>
+    <string name="firstaid_eye_injury_action_5">• Sterile NaCl 0,9%% Lösung</string>
+    <string name="firstaid_eye_injury_action_6">• Von innen nach außen spülen</string>
+    <string name="firstaid_eye_injury_action_7">• Sanft, kein Druck</string>
+    <string name="firstaid_eye_injury_action_8"></string>
+    <string name="firstaid_eye_injury_action_9">3️⃣ BEI VERLETZUNG</string>
+    <string name="firstaid_eye_injury_action_10">• NICHT spülen!</string>
+    <string name="firstaid_eye_injury_action_11">• Feuchte Kompresse auflegen</string>
+    <string name="firstaid_eye_injury_action_12">• Locker abdecken</string>
+    <string name="firstaid_eye_injury_action_13"></string>
+    <string name="firstaid_eye_injury_action_14">4️⃣ SOFORT TIERARZT</string>
+    <string name="firstaid_eye_injury_do_1">✅ Halskragen anlegen</string>
+    <string name="firstaid_eye_injury_do_2">✅ Bei Schmutz: NaCl spülen</string>
+    <string name="firstaid_eye_injury_do_3">✅ Feuchte Kompresse</string>
+    <string name="firstaid_eye_injury_do_4">✅ Abdunkeln (Licht meiden)</string>
+    <string name="firstaid_eye_injury_do_5">✅ SOFORT Tierarzt</string>
+    <string name="firstaid_eye_injury_dont_1">❌ NICHT reiben lassen</string>
+    <string name="firstaid_eye_injury_dont_2">❌ NICHT Fremdkörper entfernen</string>
+    <string name="firstaid_eye_injury_dont_3">❌ KEINE Salben ohne Tierarzt</string>
+    <string name="firstaid_eye_injury_dont_4">❌ NICHT bei Verletzung spülen</string>
+    <string name="firstaid_eye_injury_transport">Abdunkeln. Ruhig halten. Halskragen anlegen. Auge feucht halten.</string>
+    <string name="firstaid_eye_injury_special_notes">🚨 Hornhautverletzung = NOTFALL! Jede Stunde zählt für Sehkraft.</string>
+
+    <!-- FirstAidInstructions: Ertrinken -->
+    <string name="firstaid_drowning_title">Ertrinken / Beinahe-Ertrinken</string>
+    <string name="firstaid_drowning_symptom_1">Wasser in Atemwegen</string>
+    <string name="firstaid_drowning_symptom_2">Husten, Würgen</string>
+    <string name="firstaid_drowning_symptom_3">Atemnot</string>
+    <string name="firstaid_drowning_symptom_4">Blau-graue Schleimhäute</string>
+    <string name="firstaid_drowning_symptom_5">Bewusstlosigkeit</string>
+    <string name="firstaid_drowning_symptom_6">Unterkühlung</string>
+    <string name="firstaid_drowning_action_1">1️⃣ WASSER AUS ATEMWEGEN</string>
+    <string name="firstaid_drowning_action_2">• Hinterbeine 15-30 Sek. hochhalten</string>
+    <string name="firstaid_drowning_action_3">• Kopf nach unten</string>
+    <string name="firstaid_drowning_action_4">• Wasser ablaufen lassen</string>
+    <string name="firstaid_drowning_action_5"></string>
+    <string name="firstaid_drowning_action_6">2️⃣ ATMUNG &amp; PULS PRÜFEN</string>
+    <string name="firstaid_drowning_action_7">• Kein Puls → HLW sofort!</string>
+    <string name="firstaid_drowning_action_8"></string>
+    <string name="firstaid_drowning_action_9">3️⃣ TROCKNEN &amp; WÄRMEN</string>
+    <string name="firstaid_drowning_action_10">• Nasses Fell trocknen</string>
+    <string name="firstaid_drowning_action_11">• In Decken wickeln</string>
+    <string name="firstaid_drowning_action_12">• Körperwärme</string>
+    <string name="firstaid_drowning_action_13"></string>
+    <string name="firstaid_drowning_action_14">4️⃣ AUCH BEI ERHOLUNG: TIERARZT!</string>
+    <string name="firstaid_drowning_action_15">• Lungenödem kann verzögert auftreten</string>
+    <string name="firstaid_drowning_do_1">✅ Wasser aus Atemwegen</string>
+    <string name="firstaid_drowning_do_2">✅ Trocknen</string>
+    <string name="firstaid_drowning_do_3">✅ Aufwärmen</string>
+    <string name="firstaid_drowning_do_4">✅ Atmung/Puls überwachen</string>
+    <string name="firstaid_drowning_do_5">✅ IMMER zum Tierarzt (24-48h Risiko!)</string>
+    <string name="firstaid_drowning_dont_1">❌ NICHT zu lange kopfüber halten</string>
+    <string name="firstaid_drowning_dont_2">❌ NICHT zu schnell erwärmen</string>
+    <string name="firstaid_drowning_dont_3">❌ NICHT allein lassen</string>
+    <string name="firstaid_drowning_dont_4">❌ NICHT auf Erholung verlassen</string>
+    <string name="firstaid_drowning_transport">Warm halten. Atemwege frei. Beobachten auf Atemnot.</string>
+    <string name="firstaid_drowning_special_notes">⚠️ NACHBEOBACHTUNG 24-48h PFLICHT! Verzögertes Lungenödem möglich.</string>
+
+    <!-- FirstAidInstructions: Unterkühlung -->
+    <string name="firstaid_hypothermia_title">Unterkühlung</string>
+    <string name="firstaid_hypothermia_symptom_1">Körpertemperatur &lt; 37,5°C</string>
+    <string name="firstaid_hypothermia_symptom_2">Zittern</string>
+    <string name="firstaid_hypothermia_symptom_3">Steife Muskeln</string>
+    <string name="firstaid_hypothermia_symptom_4">Apathie, Lethargie</string>
+    <string name="firstaid_hypothermia_symptom_5">Verlangsamter Puls</string>
+    <string name="firstaid_hypothermia_symptom_6">Kalte Haut</string>
+    <string name="firstaid_hypothermia_action_1">1️⃣ NASSES FELL SOFORT TROCKNEN</string>
+    <string name="firstaid_hypothermia_action_2">• Handtücher</string>
+    <string name="firstaid_hypothermia_action_3">• Föhn (lauwarm, Abstand!)</string>
+    <string name="firstaid_hypothermia_action_4"></string>
+    <string name="firstaid_hypothermia_action_5">2️⃣ LANGSAM AUFWÄRMEN</string>
+    <string name="firstaid_hypothermia_action_6">• In Decken wickeln</string>
+    <string name="firstaid_hypothermia_action_7">• Körperwärme</string>
+    <string name="firstaid_hypothermia_action_8">• Warme Umgebung</string>
+    <string name="firstaid_hypothermia_action_9"></string>
+    <string name="firstaid_hypothermia_action_10">3️⃣ WARME GETRÄNKE</string>
+    <string name="firstaid_hypothermia_action_11">• Nur wenn bewusst!</string>
+    <string name="firstaid_hypothermia_action_12">• Lauwarm, nicht heiß</string>
+    <string name="firstaid_hypothermia_action_13">• Kleine Mengen</string>
+    <string name="firstaid_hypothermia_action_14"></string>
+    <string name="firstaid_hypothermia_action_15">4️⃣ BEI &lt; 35°C → TIERARZT NOTFALL</string>
+    <string name="firstaid_hypothermia_do_1">✅ Trocknen</string>
+    <string name="firstaid_hypothermia_do_2">✅ Langsam aufwärmen</string>
+    <string name="firstaid_hypothermia_do_3">✅ Decken, Körperwärme</string>
+    <string name="firstaid_hypothermia_do_4">✅ Temperatur messen</string>
+    <string name="firstaid_hypothermia_do_5">✅ Bei &lt; 35°C → Notfall!</string>
+    <string name="firstaid_hypothermia_dont_1">❌ NICHT zu schnell erwärmen</string>
+    <string name="firstaid_hypothermia_dont_2">❌ KEINE Wärmflasche direkt auf Haut</string>
+    <string name="firstaid_hypothermia_dont_3">❌ KEIN heißes Wasser</string>
+    <string name="firstaid_hypothermia_dont_4">❌ KEIN Alkohol</string>
+    <string name="firstaid_hypothermia_transport">Warm einpacken. Temperatur überwachen. Bei &lt; 35°C sofort Klinik.</string>
+    <string name="firstaid_hypothermia_special_notes">🧊 Nach Eiseinbruch: EIGENSICHERUNG BEACHTEN!</string>
+
+    <!-- FirstAidInstructions: Fremdkörper -->
+    <string name="firstaid_foreign_object_title">Fremdkörper verschluckt</string>
+    <string name="firstaid_foreign_object_symptom_1">Plötzliches Würgen, Husten</string>
+    <string name="firstaid_foreign_object_symptom_2">Pfoten ans Maul</string>
+    <string name="firstaid_foreign_object_symptom_3">Speichelfluss</string>
+    <string name="firstaid_foreign_object_symptom_4">Blaue/graue Schleimhäute (Erstickung!)</string>
+    <string name="firstaid_foreign_object_symptom_5">Erstickungsanfall</string>
+    <string name="firstaid_foreign_object_action_1">1️⃣ MAUL ÖFFNEN &amp; SCHAUEN</string>
+    <string name="firstaid_foreign_object_action_2">• NUR wenn sichtbar!</string>
+    <string name="firstaid_foreign_object_action_3">• Nicht blind greifen</string>
+    <string name="firstaid_foreign_object_action_4"></string>
+    <string name="firstaid_foreign_object_action_5">2️⃣ BEI SICHTBAREM OBJEKT</string>
+    <string name="firstaid_foreign_object_action_6">• Vorsichtig entfernen</string>
+    <string name="firstaid_foreign_object_action_7">• Mit Finger/Pinzette</string>
+    <string name="firstaid_foreign_object_action_8"></string>
+    <string name="firstaid_foreign_object_action_9">3️⃣ BEI ERSTICKUNG (HEIMLICH-GRIFF)</string>
+    <string name="firstaid_foreign_object_action_10">• Hund aufrecht/stehend</string>
+    <string name="firstaid_foreign_object_action_11">• Hände unter Rippenbogen</string>
+    <string name="firstaid_foreign_object_action_12">• 5x kräftig nach oben drücken</string>
+    <string name="firstaid_foreign_object_action_13">• Prüfen ob Objekt raus</string>
+    <string name="firstaid_foreign_object_action_14"></string>
+    <string name="firstaid_foreign_object_action_15">4️⃣ SOFORT TIERARZT</string>
+    <string name="firstaid_foreign_object_action_16">• Auch wenn Objekt raus!</string>
+    <string name="firstaid_foreign_object_do_1">✅ Maul inspizieren (vorsichtig!)</string>
+    <string name="firstaid_foreign_object_do_2">✅ Nur sichtbare Objekte entfernen</string>
+    <string name="firstaid_foreign_object_do_3">✅ Bei Erstickung: Heimlich-Griff</string>
+    <string name="firstaid_foreign_object_do_4">✅ IMMER zum Tierarzt danach</string>
+    <string name="firstaid_foreign_object_dont_1">❌ NICHT blind in Rachen greifen</string>
+    <string name="firstaid_foreign_object_dont_2">❌ NICHT zu tief greifen</string>
+    <string name="firstaid_foreign_object_dont_3">❌ KEIN Wasser eingeben</string>
+    <string name="firstaid_foreign_object_dont_4">❌ NICHT abwarten</string>
+    <string name="firstaid_foreign_object_transport">Kopf leicht nach unten. Maul offen halten. Notfalls weiter Heimlich-Griff.</string>
+    <string name="firstaid_foreign_object_special_notes">🚨 Blaue Schleimhäute = AKUTE ERSTICKUNG! Heimlich-Griff SOFORT!</string>
+
+    <!-- FirstAidInstructions: Atemnot -->
+    <string name="firstaid_breathing_difficulty_title">Atemnot</string>
+    <string name="firstaid_breathing_difficulty_symptom_1">Schnelle, flache Atmung</string>
+    <string name="firstaid_breathing_difficulty_symptom_2">Ringen nach Luft</string>
+    <string name="firstaid_breathing_difficulty_symptom_3">Geräuschvolle Atmung</string>
+    <string name="firstaid_breathing_difficulty_symptom_4">Blaue/graue Schleimhäute</string>
+    <string name="firstaid_breathing_difficulty_symptom_5">Panik, Unruhe</string>
+    <string name="firstaid_breathing_difficulty_symptom_6">Atmung &gt; 30/Min in Ruhe</string>
+    <string name="firstaid_breathing_difficulty_action_1">1️⃣ FRISCHE LUFT</string>
+    <string name="firstaid_breathing_difficulty_action_2">• Fenster auf</string>
+    <string name="firstaid_breathing_difficulty_action_3">• Raus ins Freie</string>
+    <string name="firstaid_breathing_difficulty_action_4">• Nichts einengen</string>
+    <string name="firstaid_breathing_difficulty_action_5"></string>
+    <string name="firstaid_breathing_difficulty_action_6">2️⃣ HALSBAND/GESCHIRR LOCKERN</string>
+    <string name="firstaid_breathing_difficulty_action_7"></string>
+    <string name="firstaid_breathing_difficulty_action_8">3️⃣ RUHIG HALTEN</string>
+    <string name="firstaid_breathing_difficulty_action_9">• Panik überträgt sich!</string>
+    <string name="firstaid_breathing_difficulty_action_10">• Beruhigend sprechen</string>
+    <string name="firstaid_breathing_difficulty_action_11"></string>
+    <string name="firstaid_breathing_difficulty_action_12">4️⃣ AUFRECHTE POSITION</string>
+    <string name="firstaid_breathing_difficulty_action_13">• Brust frei</string>
+    <string name="firstaid_breathing_difficulty_action_14">• Nicht hinlegen zwingen</string>
+    <string name="firstaid_breathing_difficulty_action_15"></string>
+    <string name="firstaid_breathing_difficulty_action_16">5️⃣ SOFORT TIERARZT ANRUFEN</string>
+    <string name="firstaid_breathing_difficulty_do_1">✅ Frische Luft</string>
+    <string name="firstaid_breathing_difficulty_do_2">✅ Halsband ab</string>
+    <string name="firstaid_breathing_difficulty_do_3">✅ Aufrecht lagern</string>
+    <string name="firstaid_breathing_difficulty_do_4">✅ Ruhig bleiben</string>
+    <string name="firstaid_breathing_difficulty_do_5">✅ SOFORT Tierarzt</string>
+    <string name="firstaid_breathing_difficulty_dont_1">❌ NICHT hinlegen zwingen</string>
+    <string name="firstaid_breathing_difficulty_dont_2">❌ KEIN Maulkorb</string>
+    <string name="firstaid_breathing_difficulty_dont_3">❌ NICHT einengen</string>
+    <string name="firstaid_breathing_difficulty_dont_4">❌ KEINE Panik</string>
+    <string name="firstaid_breathing_difficulty_transport">Aufrecht/sitzend transportieren. Brust frei. Fenster offen.</string>
+    <string name="firstaid_breathing_difficulty_special_notes">🚨 Blaue Schleimhäute = AKUTER SAUERSTOFFMANGEL! Lebensbedrohlich!</string>
+
+    <!-- FirstAidInstructions: Erbrechen / Durchfall -->
+    <string name="firstaid_vomiting_title">Erbrechen / Durchfall</string>
+    <string name="firstaid_vomiting_symptom_1">Häufiges Erbrechen</string>
+    <string name="firstaid_vomiting_symptom_2">Wässriger/blutiger Durchfall</string>
+    <string name="firstaid_vomiting_symptom_3">Apathie</string>
+    <string name="firstaid_vomiting_symptom_4">Bauchschmerzen</string>
+    <string name="firstaid_vomiting_symptom_5">Dehydration</string>
+    <string name="firstaid_vomiting_symptom_6">Fieber</string>
+    <string name="firstaid_vomiting_action_1">1️⃣ FUTTER-PAUSE (12-24h)</string>
+    <string name="firstaid_vomiting_action_2">• Kein Futter</string>
+    <string name="firstaid_vomiting_action_3">• Wasser in kleinen Mengen</string>
+    <string name="firstaid_vomiting_action_4"></string>
+    <string name="firstaid_vomiting_action_5">2️⃣ DEHYDRATION PRÜFEN</string>
+    <string name="firstaid_vomiting_action_6">• Hautfalte ziehen</string>
+    <string name="firstaid_vomiting_action_7">• Bleibt stehen → dehydriert!</string>
+    <string name="firstaid_vomiting_action_8"></string>
+    <string name="firstaid_vomiting_action_9">3️⃣ PROBE SICHERN</string>
+    <string name="firstaid_vomiting_action_10">• Erbrochenes/Kot in Tüte</string>
+    <string name="firstaid_vomiting_action_11">• Zum Tierarzt mitnehmen</string>
+    <string name="firstaid_vomiting_action_12"></string>
+    <string name="firstaid_vomiting_action_13">4️⃣ TIERARZT WENN:</string>
+    <string name="firstaid_vomiting_action_14">• Blut im Erbrochenen/Kot</string>
+    <string name="firstaid_vomiting_action_15">• &gt; 6x in 24h</string>
+    <string name="firstaid_vomiting_action_16">• Welpe/Senior</string>
+    <string name="firstaid_vomiting_action_17">• Starke Apathie</string>
+    <string name="firstaid_vomiting_do_1">✅ Futter-Pause 12-24h</string>
+    <string name="firstaid_vomiting_do_2">✅ Kleine Wassermengen</string>
+    <string name="firstaid_vomiting_do_3">✅ Probe sichern</string>
+    <string name="firstaid_vomiting_do_4">✅ Dehydration prüfen</string>
+    <string name="firstaid_vomiting_do_5">✅ Temperatur messen</string>
+    <string name="firstaid_vomiting_dont_1">❌ KEIN Futter</string>
+    <string name="firstaid_vomiting_dont_2">❌ KEINE großen Wassermengen</string>
+    <string name="firstaid_vomiting_dont_3">❌ KEINE Medikamente ohne Tierarzt</string>
+    <string name="firstaid_vomiting_dont_4">❌ NICHT abwarten bei Blut</string>
+    <string name="firstaid_vomiting_transport">Probe mitnehmen. Temperatur notieren. Zeitpunkt/Häufigkeit dokumentieren.</string>
+    <string name="firstaid_vomiting_special_notes">⚠️ SOFORT Tierarzt bei: Blut, Welpen, &gt; 6x/24h, Fieber &gt; 39,5°C</string>
+
+    <!-- FirstAidInstructions: Allergische Reaktion -->
+    <string name="firstaid_allergic_reaction_title">Allergische Reaktion</string>
+    <string name="firstaid_allergic_reaction_symptom_1">Schwellung (Gesicht, Schnauze)</string>
+    <string name="firstaid_allergic_reaction_symptom_2">Nesselsucht, Quaddeln</string>
+    <string name="firstaid_allergic_reaction_symptom_3">Juckreiz, Kratzen</string>
+    <string name="firstaid_allergic_reaction_symptom_4">Rötung der Haut</string>
+    <string name="firstaid_allergic_reaction_symptom_5">Atemnot (NOTFALL!)</string>
+    <string name="firstaid_allergic_reaction_symptom_6">Erbrechen, Durchfall</string>
+    <string name="firstaid_allergic_reaction_action_1">1️⃣ AUSLÖSER ENTFERNEN</string>
+    <string name="firstaid_allergic_reaction_action_2">• Halsband/Geschirr ab</string>
+    <string name="firstaid_allergic_reaction_action_3">• Fell abwaschen (Kontaktaller.)</string>
+    <string name="firstaid_allergic_reaction_action_4"></string>
+    <string name="firstaid_allergic_reaction_action_5">2️⃣ KÜHLEN</string>
+    <string name="firstaid_allergic_reaction_action_6">• Kalte Kompressen</string>
+    <string name="firstaid_allergic_reaction_action_7">• Auf Schwellungen</string>
+    <string name="firstaid_allergic_reaction_action_8"></string>
+    <string name="firstaid_allergic_reaction_action_9">3️⃣ BEI ATEMNOT → NOTFALL!</string>
+    <string name="firstaid_allergic_reaction_action_10">• Sofort Tierklinik</string>
+    <string name="firstaid_allergic_reaction_action_11">• Anaphylaktischer Schock!</string>
+    <string name="firstaid_allergic_reaction_action_12"></string>
+    <string name="firstaid_allergic_reaction_action_13">4️⃣ TIERARZT</string>
+    <string name="firstaid_allergic_reaction_action_14">• Antihistaminikum</string>
+    <string name="firstaid_allergic_reaction_action_15">• Ggf. Kortison</string>
+    <string name="firstaid_allergic_reaction_do_1">✅ Auslöser entfernen</string>
+    <string name="firstaid_allergic_reaction_do_2">✅ Kühlen</string>
+    <string name="firstaid_allergic_reaction_do_3">✅ Beobachten</string>
+    <string name="firstaid_allergic_reaction_do_4">✅ Bei Atemnot → NOTFALL</string>
+    <string name="firstaid_allergic_reaction_do_5">✅ Foto der Reaktion</string>
+    <string name="firstaid_allergic_reaction_dont_1">❌ KEINE Medikamente ohne Tierarzt</string>
+    <string name="firstaid_allergic_reaction_dont_2">❌ NICHT kratzen lassen</string>
+    <string name="firstaid_allergic_reaction_dont_3">❌ KEIN Cortison ohne Rücksprache</string>
+    <string name="firstaid_allergic_reaction_dont_4">❌ NICHT abwarten bei Atemnot</string>
+    <string name="firstaid_allergic_reaction_transport">Auslöser dokumentieren (Foto). Zeitverlauf notieren.</string>
+    <string name="firstaid_allergic_reaction_special_notes">🚨 Atemnot/Schwellung am Hals = ANAPHYLAXIE = NOTFALL!</string>
+
+    <!-- FirstAidInstructions: Verkehrsunfall -->
+    <string name="firstaid_traffic_accident_title">Verkehrsunfall</string>
+    <string name="firstaid_traffic_accident_symptom_1">Sichtbare Verletzungen</string>
+    <string name="firstaid_traffic_accident_symptom_2">Schock</string>
+    <string name="firstaid_traffic_accident_symptom_3">Blutungen</string>
+    <string name="firstaid_traffic_accident_symptom_4">Lahmheit</string>
+    <string name="firstaid_traffic_accident_symptom_5">Bewusstlosigkeit</string>
+    <string name="firstaid_traffic_accident_symptom_6">Atemnot</string>
+    <string name="firstaid_traffic_accident_action_1">1️⃣ EIGENSCHUTZ!</string>
+    <string name="firstaid_traffic_accident_action_2">• Warndreieck aufstellen</string>
+    <string name="firstaid_traffic_accident_action_3">• Warnweste anziehen</string>
+    <string name="firstaid_traffic_accident_action_4"></string>
+    <string name="firstaid_traffic_accident_action_5">2️⃣ HUND SICHERN</string>
+    <string name="firstaid_traffic_accident_action_6">• Aus Gefahrenzone</string>
+    <string name="firstaid_traffic_accident_action_7">• Provisorischer Maulkorb!</string>
+    <string name="firstaid_traffic_accident_action_8">• Seitlich nähern</string>
+    <string name="firstaid_traffic_accident_action_9"></string>
+    <string name="firstaid_traffic_accident_action_10">3️⃣ VITALFUNKTIONEN PRÜFEN</string>
+    <string name="firstaid_traffic_accident_action_11">• Atmung, Puls, Bewusstsein</string>
+    <string name="firstaid_traffic_accident_action_12">• Sichtbare Verletzungen</string>
+    <string name="firstaid_traffic_accident_action_13"></string>
+    <string name="firstaid_traffic_accident_action_14">4️⃣ ERSTE HILFE</string>
+    <string name="firstaid_traffic_accident_action_15">• Blutung stillen</string>
+    <string name="firstaid_traffic_accident_action_16">• Schock behandeln</string>
+    <string name="firstaid_traffic_accident_action_17">• Nicht bewegen (Wirbelsäule!)</string>
+    <string name="firstaid_traffic_accident_action_18"></string>
+    <string name="firstaid_traffic_accident_action_19">5️⃣ NOTFALL-TRANSPORT</string>
+    <string name="firstaid_traffic_accident_do_1">✅ EIGENSCHUTZ zuerst!</string>
+    <string name="firstaid_traffic_accident_do_2">✅ Provisorischer Maulkorb</string>
+    <string name="firstaid_traffic_accident_do_3">✅ Vitalfunktionen checken</string>
+    <string name="firstaid_traffic_accident_do_4">✅ Blutung stillen</string>
+    <string name="firstaid_traffic_accident_do_5">✅ 112 + Tierarzt anrufen</string>
+    <string name="firstaid_traffic_accident_dont_1">❌ NICHT ohne Eigenschutz</string>
+    <string name="firstaid_traffic_accident_dont_2">❌ NICHT frontal nähern</string>
+    <string name="firstaid_traffic_accident_dont_3">❌ NICHT bewegen (außer Gefahr)</string>
+    <string name="firstaid_traffic_accident_dont_4">❌ NICHT allein transportieren</string>
+    <string name="firstaid_traffic_accident_transport">Bei Wirbelsäulenverdacht: feste Unterlage, keine Rotation. Zu zweit tragen.</string>
+    <string name="firstaid_traffic_accident_special_notes">⚠️ Auch sanftester Hund beißt aus Schmerz! IMMER Maulschutz!</string>
+
+    <!-- FirstAidInstructions: Verätzung -->
+    <string name="firstaid_chemical_burn_title">Verätzung (Säure/Lauge)</string>
+    <string name="firstaid_chemical_burn_symptom_1">Starke Schmerzen</string>
+    <string name="firstaid_chemical_burn_symptom_2">Speichelfluss</string>
+    <string name="firstaid_chemical_burn_symptom_3">Kratzen im Gesicht/Maul</string>
+    <string name="firstaid_chemical_burn_symptom_4">Gerötete/weiße Schleimhäute</string>
+    <string name="firstaid_chemical_burn_symptom_5">Atemnot</string>
+    <string name="firstaid_chemical_burn_symptom_6">Erbrechen</string>
+    <string name="firstaid_chemical_burn_action_1">1️⃣ EIGENSCHUTZ!</string>
+    <string name="firstaid_chemical_burn_action_2">• Handschuhe anziehen</string>
+    <string name="firstaid_chemical_burn_action_3">• Schutzbrille</string>
+    <string name="firstaid_chemical_burn_action_4"></string>
+    <string name="firstaid_chemical_burn_action_5">2️⃣ 15-20 MIN SPÜLEN</string>
+    <string name="firstaid_chemical_burn_action_6">• Lauwarmes Wasser</string>
+    <string name="firstaid_chemical_burn_action_7">• Kontaminierte Bereiche</string>
+    <string name="firstaid_chemical_burn_action_8">• Von Wunde wegspülen</string>
+    <string name="firstaid_chemical_burn_action_9"></string>
+    <string name="firstaid_chemical_burn_action_10">3️⃣ NICHT NEUTRALISIEREN!</string>
+    <string name="firstaid_chemical_burn_action_11">• Keine Säure + Natron</string>
+    <string name="firstaid_chemical_burn_action_12">• Keine Lauge + Essig</string>
+    <string name="firstaid_chemical_burn_action_13">• = Hitzeentwicklung!</string>
+    <string name="firstaid_chemical_burn_action_14"></string>
+    <string name="firstaid_chemical_burn_action_15">4️⃣ VERPACKUNG MITNEHMEN</string>
+    <string name="firstaid_chemical_burn_action_16"></string>
+    <string name="firstaid_chemical_burn_action_17">5️⃣ SOFORT TIERKLINIK</string>
+    <string name="firstaid_chemical_burn_do_1">✅ EIGENSCHUTZ (Handschuhe!)</string>
+    <string name="firstaid_chemical_burn_do_2">✅ 15-20 Min spülen</string>
+    <string name="firstaid_chemical_burn_do_3">✅ Verpackung mitnehmen</string>
+    <string name="firstaid_chemical_burn_do_4">✅ SOFORT Klinik</string>
+    <string name="firstaid_chemical_burn_do_5">✅ Tiergiftnotruf anrufen</string>
+    <string name="firstaid_chemical_burn_dont_1">❌ NICHT neutralisieren!</string>
+    <string name="firstaid_chemical_burn_dont_2">❌ KEIN Erbrechen auslösen</string>
+    <string name="firstaid_chemical_burn_dont_3">❌ KEIN Öl/Milch</string>
+    <string name="firstaid_chemical_burn_dont_4">❌ NICHT ins Fell sprühen</string>
+    <string name="firstaid_chemical_burn_transport">Weiter spülen während Transport. Verpackung mitnehmen. Kontaminiertes Fell abwaschen.</string>
+    <string name="firstaid_chemical_burn_special_notes">☎️ Tiergiftnotruf: Berlin 030 19240, München 089 19240</string>
+
+    <!-- FirstAidInstructions: Blutungen ohne Unfall -->
+    <string name="firstaid_bleeding_no_accident_title">Blutungen ohne Unfall</string>
+    <string name="firstaid_bleeding_no_accident_symptom_1">Blut aus Nase/Maul/After</string>
+    <string name="firstaid_bleeding_no_accident_symptom_2">Blut im Urin/Kot</string>
+    <string name="firstaid_bleeding_no_accident_symptom_3">Blut im Erbrochenen</string>
+    <string name="firstaid_bleeding_no_accident_symptom_4">Blutergüsse ohne Ursache</string>
+    <string name="firstaid_bleeding_no_accident_symptom_5">Schockzeichen</string>
+    <string name="firstaid_bleeding_no_accident_action_1">1️⃣ RUHE &amp; BEOBACHTUNG</string>
+    <string name="firstaid_bleeding_no_accident_action_2">• Keine Bewegung</string>
+    <string name="firstaid_bleeding_no_accident_action_3">• Nicht aufregen</string>
+    <string name="firstaid_bleeding_no_accident_action_4"></string>
+    <string name="firstaid_bleeding_no_accident_action_5">2️⃣ BLUTUNGSQUELLE LOKALISIEREN</string>
+    <string name="firstaid_bleeding_no_accident_action_6">• Nase? Maul? After?</string>
+    <string name="firstaid_bleeding_no_accident_action_7">• Menge schätzen</string>
+    <string name="firstaid_bleeding_no_accident_action_8"></string>
+    <string name="firstaid_bleeding_no_accident_action_9">3️⃣ PROBE SICHERN</string>
+    <string name="firstaid_bleeding_no_accident_action_10">• In Tüte/Behälter</string>
+    <string name="firstaid_bleeding_no_accident_action_11">• Zum Tierarzt mitnehmen</string>
+    <string name="firstaid_bleeding_no_accident_action_12"></string>
+    <string name="firstaid_bleeding_no_accident_action_13">4️⃣ BEI SCHOCK:</string>
+    <string name="firstaid_bleeding_no_accident_action_14">• Hinterbeine erhöhen</string>
+    <string name="firstaid_bleeding_no_accident_action_15">• Warm halten</string>
+    <string name="firstaid_bleeding_no_accident_action_16"></string>
+    <string name="firstaid_bleeding_no_accident_action_17">5️⃣ SOFORT TIERARZT</string>
+    <string name="firstaid_bleeding_no_accident_do_1">✅ Ruhig halten</string>
+    <string name="firstaid_bleeding_no_accident_do_2">✅ Probe sichern</string>
+    <string name="firstaid_bleeding_no_accident_do_3">✅ Menge/Farbe notieren</string>
+    <string name="firstaid_bleeding_no_accident_do_4">✅ Bei Schock: erhöhte Lagerung</string>
+    <string name="firstaid_bleeding_no_accident_do_5">✅ SOFORT Tierarzt</string>
+    <string name="firstaid_bleeding_no_accident_dont_1">❌ NICHT bewegen lassen</string>
+    <string name="firstaid_bleeding_no_accident_dont_2">❌ KEIN Wasser/Futter</string>
+    <string name="firstaid_bleeding_no_accident_dont_3">❌ NICHT abwarten</string>
+    <string name="firstaid_bleeding_no_accident_dont_4">❌ NICHT selbst behandeln</string>
+    <string name="firstaid_bleeding_no_accident_transport">Vorsichtig. Probe mitnehmen. Zeitverlauf dokumentieren.</string>
+    <string name="firstaid_bleeding_no_accident_special_notes">🚨 Innere Blutung möglich! Schock ohne sichtbare Verletzung = NOTFALL!</string>
+
+    <!-- FirstAidInstructions: Vergiftung (unbekannt) -->
+    <string name="firstaid_poisoning_unknown_title">Vergiftung (unbekannt)</string>
+    <string name="firstaid_poisoning_unknown_symptom_1">Plötzliches Erbrechen, Durchfall</string>
+    <string name="firstaid_poisoning_unknown_symptom_2">Zittern, Krämpfe</string>
+    <string name="firstaid_poisoning_unknown_symptom_3">Starker Speichelfluss</string>
+    <string name="firstaid_poisoning_unknown_symptom_4">Schläfrigkeit, Apathie</string>
+    <string name="firstaid_poisoning_unknown_symptom_5">Atemnot, unregelmäßiger Herzschlag</string>
+    <string name="firstaid_poisoning_unknown_symptom_6">Blasse oder blaue Schleimhäute</string>
+    <string name="firstaid_poisoning_unknown_symptom_7">Koordinationsstörungen, Taumeln</string>
+    <string name="firstaid_poisoning_unknown_symptom_8">Veränderte Pupillen</string>
+    <string name="firstaid_poisoning_unknown_action_1">1️⃣ TIERGIFTNOTRUF SOFORT ANRUFEN</string>
+    <string name="firstaid_poisoning_unknown_action_2">📞 Berlin: 030 19240</string>
+    <string name="firstaid_poisoning_unknown_action_3">📞 München: 089 19240</string>
+    <string name="firstaid_poisoning_unknown_action_4">📞 Freiburg: 0761 19240</string>
+    <string name="firstaid_poisoning_unknown_action_5"></string>
+    <string name="firstaid_poisoning_unknown_action_6">2️⃣ SYMPTOME GENAU BEOBACHTEN</string>
+    <string name="firstaid_poisoning_unknown_action_7">• Zeitpunkt notieren (wann begonnen?)</string>
+    <string name="firstaid_poisoning_unknown_action_8">• Alle Symptome aufschreiben</string>
+    <string name="firstaid_poisoning_unknown_action_9">• Bewusstsein, Atmung, Puls prüfen</string>
+    <string name="firstaid_poisoning_unknown_action_10"></string>
+    <string name="firstaid_poisoning_unknown_action_11">3️⃣ UMGEBUNG UNTERSUCHEN</string>
+    <string name="firstaid_poisoning_unknown_action_12">• Was könnte gefressen worden sein?</string>
+    <string name="firstaid_poisoning_unknown_action_13">• Pflanzen in der Nähe? (Foto machen!)</string>
+    <string name="firstaid_poisoning_unknown_action_14">• Erbrochenes sichern (Tüte/Behälter)</string>
+    <string name="firstaid_poisoning_unknown_action_15">• Verdächtige Substanzen mitnehmen</string>
+    <string name="firstaid_poisoning_unknown_action_16"></string>
+    <string name="firstaid_poisoning_unknown_action_17">4️⃣ KEIN ERBRECHEN OHNE TIERGIFTNOTRUF!</string>
+    <string name="firstaid_poisoning_unknown_action_18"></string>
+    <string name="firstaid_poisoning_unknown_action_19">5️⃣ SOFORT ZUM TIERARZT</string>
+    <string name="firstaid_poisoning_unknown_action_20">• Probe/Erbrochenes mitnehmen</string>
+    <string name="firstaid_poisoning_unknown_action_21">• Zeitverlauf dokumentieren</string>
+    <string name="firstaid_poisoning_unknown_do_1">✅ Sofort Tiergiftnotruf anrufen</string>
+    <string name="firstaid_poisoning_unknown_do_2">✅ Zeitpunkt &amp; Symptome notieren</string>
+    <string name="firstaid_poisoning_unknown_do_3">✅ Erbrochenes sichern</string>
+    <string name="firstaid_poisoning_unknown_do_4">✅ Umgebung fotografieren</string>
+    <string name="firstaid_poisoning_unknown_do_5">✅ Verdächtige Substanzen mitnehmen</string>
+    <string name="firstaid_poisoning_unknown_do_6">✅ Ruhig halten, beobachten</string>
+    <string name="firstaid_poisoning_unknown_do_7">✅ Bewusstsein/Atmung/Puls prüfen</string>
+    <string name="firstaid_poisoning_unknown_dont_1">❌ KEIN Erbrechen ohne Rücksprache!</string>
+    <string name="firstaid_poisoning_unknown_dont_2">❌ KEINE Milch geben</string>
+    <string name="firstaid_poisoning_unknown_dont_3">❌ KEIN Öl geben</string>
+    <string name="firstaid_poisoning_unknown_dont_4">❌ KEINE Kohle ohne Anweisung</string>
+    <string name="firstaid_poisoning_unknown_dont_5">❌ NICHT abwarten</string>
+    <string name="firstaid_poisoning_unknown_dont_6">❌ NICHT selbst behandeln</string>
+    <string name="firstaid_poisoning_unknown_transport">Erbrochenes/Probe in Tüte mitnehmen. Zeitverlauf dokumentieren. Bei Bewusstlosigkeit: Stabile Seitenlage.</string>
+    <string name="firstaid_poisoning_unknown_special_notes">⚠️ TIERGIFTNOTRUF:\nBerlin: 030 19240\nMünchen: 089 19240\nFreiburg: 0761 19240\n\n🚨 HÄUFIGE GIFTE:\n• Schokolade/Kakao (Theobromin)\n• Weintrauben/Rosinen (Nierenversagen)\n• Zwiebeln/Knoblauch (Blutarmut)\n• Xylitol/Birkenzucker (Unterzucker)\n• Schneckenkorn (Krämpfe)\n• Rattengift (innere Blutungen)\n• Giftpflanzen (Oleander, Eibe, Buchsbaum)\n• Frostschutzmittel (süßlich! = verlockend)</string>
+
+    <!-- FirstAidInstructions: Symptom-Check-Fragen -->
+    <string name="firstaid_check_unconsciousness_q1">Reagiert der Hund auf Ansprache?</string>
+    <string name="firstaid_check_unconsciousness_q2">Reagiert der Hund auf Berührung?</string>
+    <string name="firstaid_check_unconsciousness_q3">Ist Atmung sichtbar?</string>
+    <string name="firstaid_check_unconsciousness_q4">Ist Puls fühlbar?</string>
+    <string name="firstaid_check_heat_stroke_q1">Körpertemperatur über 40°C?</string>
+    <string name="firstaid_check_heat_stroke_q2">Starkes, lautes Hecheln?</string>
+    <string name="firstaid_check_heat_stroke_q3">Ziegelrote Schleimhäute?</string>
+    <string name="firstaid_check_heat_stroke_q4">Taumeln oder Koordinationsstörungen?</string>
+    <string name="firstaid_check_poisoning_known_q1">Substanz bekannt?</string>
+    <string name="firstaid_check_poisoning_known_q2">Erbrechen oder Durchfall?</string>
+    <string name="firstaid_check_poisoning_known_q3">Krämpfe oder Zittern?</string>
+    <string name="firstaid_check_poisoning_known_q4">Atemnot?</string>
+    <string name="firstaid_check_gastric_torsion_q1">Aufgeblähter, harter Bauch?</string>
+    <string name="firstaid_check_gastric_torsion_q2">Erfolgloses Würgen ohne Erbrechen?</string>
+    <string name="firstaid_check_gastric_torsion_q3">Starke Unruhe?</string>
+    <string name="firstaid_check_gastric_torsion_q4">Schnelle, flache Atmung?</string>
+    <string name="firstaid_check_seizure_q1">Dauer länger als 5 Minuten?</string>
+    <string name="firstaid_check_seizure_q2">Mehrere Anfälle hintereinander?</string>
+    <string name="firstaid_check_seizure_q3">Erster Anfall überhaupt?</string>
+    <string name="firstaid_check_bleeding_q1">Hellrotes, pulsierendes Blut?</string>
+    <string name="firstaid_check_bleeding_q2">Große Wundfläche?</string>
+    <string name="firstaid_check_bleeding_q3">Blasse Schleimhäute?</string>
+    <string name="firstaid_check_bleeding_q4">Schwäche oder Kollaps?</string>
+    <string name="firstaid_check_poisoning_unknown_q1">Plötzliches Erbrechen oder Durchfall?</string>
+    <string name="firstaid_check_poisoning_unknown_q2">Krämpfe oder Zittern?</string>
+    <string name="firstaid_check_poisoning_unknown_q3">Atemnot oder unregelmäßiger Herzschlag?</string>
+    <string name="firstaid_check_poisoning_unknown_q4">Blasse oder blaue Schleimhäute?</string>
+    <string name="firstaid_check_poisoning_unknown_q5">Koordinationsstörungen, Taumeln?</string>
+
+    <!-- FirstAidWizardActivity -->
+    <string name="first_aid_wizard_quick_check">SCHNELL-CHECK</string>
+
+    <!-- HLWData -->
+    <string name="hlw_compression_depth_default">1/3 bis 1/2 der Brusttiefe</string>
+
+    <!-- StartActivity -->
+    <string name="start_error_reading_backup">Fehler beim Lesen: %1$s</string>
+    <string name="start_notifications_enabled">✅ Benachrichtigungen aktiviert</string>
+    <string name="start_blog_refreshing">Blog-Vorschau wird aktualisiert...</string>
+    <string name="start_notification_disclosure_title">🔔 Wichtige Informationen zu:\nBenachrichtigungen aktivieren</string>
+    <string name="start_notification_disclosure_message">HundeWildnis nutzt Benachrichtigungen für folgende Zwecke:\n\n• BLOG-AKTUALISIERUNGEN:\nDamit Du immer informiert bist, wenn neue Blog-Artikel veröffentlicht werden.\n\n• NAVIGATION &amp; TEMPO-TRAINER  SPRACH-TRAINER:\nDamit Navigation, Tempo-Trainer und Sprach-Trainer auch dann zuverlässig funktionieren, wenn das Display ausgeschaltet ist oder die App in den Hintergrund verschoben wird (z.B. wenn das Handy beim Training in der Tasche steckt oder die Hände für Aktivitäten frei sein müssen). In diesem Fall wird eine dauerhafte Benachrichtigung angezeigt, um den Standortdienst aktiv zu halten.\nBei deaktivierten Benachrichtigungen funktionieren NAVIGATION, TEMPO-TRAINER und SPRACH-TRAINER nur, wenn die App im Vordergrund ist und der Bildschirm aktiv ist.\n\nDATENSCHUTZ:\nEs werden keine personenbezogenen Daten für die Benachrichtigungen an externe Server übermittelt. Du kannst diese Funktion jederzeit in den Einstellungen:\nDein Gerät - Einstellungen - Apps - HundeWildnis - Benachrichtigungen\naktivieren, anpassen oder deaktivieren.</string>
+    <string name="start_notification_disclosure_accept">AKTIVIEREN</string>
+    <string name="start_notification_disclosure_decline">ABLEHNEN</string>
+    <string name="start_understood">Verstanden</string>
+    <string name="start_version">Version %1$s</string>
+    <string name="start_feedback_subject">HundeWildnis App Feedback</string>
+    <string name="start_send_email">E-Mail senden</string>
+    <string name="start_close">Schließen</string>
+    <string name="start_language_dialog_title">🌐 Sprache / Language</string>
+
+    <!-- StartActivity: Settings-Dialog -->
+    <string name="start_delete_key_title">🗑️ Key löschen?</string>
+    <string name="start_delete_key_message">Möchtest Du den gespeicherten API-Key wirklich entfernen?</string>
+    <string name="start_delete">Löschen</string>
+    <string name="start_key_deleted">Key gelöscht</string>
+    <string name="start_settings_title">⚙️ Einstellungen</string>
+    <string name="start_done">Fertig</string>
+    <string name="start_ors_api_key_title">ORS API Key</string>
+    <string name="start_ors_api_key_message">Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\nAnleitung:\n1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n2. Erstelle unter \'Tokens\' einen neuen API-Key.\n3. Kopiere diesen Key und füge ihn hier ein.\n\nHinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie zwischen zwei Punkten angezeigt werden.</string>
+    <string name="start_privacy_policy_title">Datenschutzerklärung</string>
+
+    <!-- StartActivity: Hauptmenü-Kacheln -->
+    <string name="tile_daily_exercise">Übung der Woche</string>
+    <string name="tile_meditation">Meditation</string>
+    <string name="tile_relaxation">Entspannung</string>
+    <string name="tile_pace_trainer">Tempo-Trainer</string>
+    <string name="tile_voice_trainer">Sprach-Trainer</string>
+    <string name="tile_volume_trainer">Lautstärke-Trainer</string>
+    <string name="tile_interval_timer">Intervall-Timer</string>
+    <string name="tile_training_diary">Trainingstagebuch</string>
+    <string name="tile_activity_calendar">Aktivitätskalender</string>
+    <string name="tile_nasenarbeit">Nasenarbeit</string>
+    <string name="tile_daily_notes">Tagesnotizen</string>
+    <string name="tile_area_weather">Revier-Wetter</string>
+    <string name="tile_thunderstorm_warning">Gewitterwarner</string>
+    <string name="tile_area_navigation">Revier-Navigation</string>
+    <string name="tile_compass">Kompass</string>
+    <string name="tile_altimeter">Höhenmesser</string>
+    <string name="tile_master_data">Stammdaten</string>
+    <string name="tile_pulse_check">Pulscheck</string>
+    <string name="tile_tick_loupe">Zeckenlupe</string>
+    <string name="tile_hazardous_plants">Gefahrenpflanzen</string>
+    <string name="tile_location_share">Standortfreigabe</string>
+    <string name="tile_emergency">NOTFALL</string>
+    <string name="tile_blog">Blog</string>
+    <string name="tile_pages">Seiten</string>
+    <string name="tile_online_courses">Online-Kurse</string>
+    <string name="tile_backup">Backup</string>
+    <string name="tile_support">Unterstützung</string>
+
+    <!-- StartActivity: Notfall / Backup -->
+    <string name="start_no_dog_title">🐕 Kein Hund angelegt</string>
+    <string name="start_no_dog_message">Bitte lege zuerst einen Hund in den Stammdaten an.\n\nDie Erste-Hilfe Funktion benötigt die Stammdaten für die Notfallmeldung.</string>
+    <string name="start_to_master_data">Zu Stammdaten</string>
+    <string name="start_which_dog_title">🐕 Welcher Hund?</string>
+    <string name="start_create_backup">Backup erstellen</string>
+    <string name="start_please_wait">Bitte warten...</string>
+    <string name="start_backup_saved">✅ Backup gespeichert in Downloads/HundeWildnis_Backups</string>
+    <string name="start_error_generic">❌ Fehler: %1$s</string>
+    <string name="start_restore_backup_title">⚠️ Backup wiederherstellen?</string>
+    <string name="start_restore_backup_message">Alle Daten werden überschrieben!</string>
+    <string name="start_restoration">Wiederherstellung</string>
+    <string name="start_import_error">❌ Fehler beim Import</string>
+    <string name="start_share_backup_title">Backup teilen?</string>
+    <string name="start_share">Teilen</string>
+    <string name="start_later">Später</string>
+
+    <!-- StartActivity: Blog-Preview -->
+    <string name="start_loading">Lädt...</string>
+
+    <!-- activity_start.xml: Layout-Texte -->
+    <string name="start_new_blog_post">💬 Neuer Blogbeitrag</string>
+    <string name="start_view_all">Alle anzeigen ›</string>
+    <string name="start_group_weekly_exercises">Übungen der Woche</string>
+    <string name="start_group_training_tools">Trainingswerkzeuge</string>
+    <string name="start_group_outdoor_tools">Outdoorwerkzeuge</string>
+    <string name="start_group_dog_safety_emergency">Hund, Sicherheit und Notfall</string>
+    <string name="start_group_information_learning">Informationen und Lernen</string>
+    <string name="start_group_app_service">App-Service</string>
+
+    <!-- dialog_settings.xml -->
+    <string name="settings_background_updates">Hintergrund-Updates</string>
+    <string name="settings_background_updates_desc">Die App prüft zweimal täglich 8 Uhr morgens und 20 Uhr abends auf neue Inhalte. Du kannst aber auch jederzeit selbst die Aktualisierung starten.</string>
+    <string name="settings_enable_background_updates">Hintergrund-Updates aktivieren</string>
+    <string name="settings_wifi_only">Nur über WLAN aktualisieren</string>
+    <string name="settings_show_notifications">Benachrichtigungen anzeigen</string>
+    <string name="settings_data_usage_note">ℹ️ Datenverbrauch bei 2x täglich Update der Inhaltslisten ist sehr gering.</string>
+    <string name="settings_ors_navigation">OpenRouteService (Navigation)</string>
+    <string name="settings_ors_desc">Für die Routenberechnung wird ein API-Key benötigt. Diesen erhältst du kostenlos auf openrouteservice.org.</string>
+    <string name="settings_delete_reset_key">Key löschen / zurücksetzen</string>
+
+    <!-- dialog_about.xml -->
+    <string name="about_provider">Anbieter:</string>
+    <string name="about_website">Webadresse:</string>
+    <string name="about_bug_reports">Fehlermeldungen an:</string>
+    <string name="about_footer">Entwickelt mit Herz, Erfahrung und Liebe ❤️</string>
+
+    <!-- dialog_permissions.xml -->
+    <string name="permissions_title">🛡️ App-Berechtigungen</string>
+    <string name="permissions_intro">Damit die HundeWildnis App alle Funktionen wie Standortdienste, Fotos, Mikrofon und Benachrichtigungen korrekt ausführen kann, werden bestimmte Berechtigungen benötigt. Hier findest Du eine Übersicht:</string>
+    <string name="permissions_location_title">📍 Standort (GPS)</string>
+    <string name="permissions_location_desc">Wird für die Standortermittlung, die POI-Suche, das Routing, die Navigation, das Standortwetter, den Tempo-Trainer und das optionale Geotagging Deiner Tagesnotizen verwendet.\n• Wähle \'Beim Benutzen der App\'. Dank eines Vordergrunddienstes bleibt die Funktion auch bei gesperrtem Bildschirm aktiv, vorausgesetzt, dass benchrichtigungen für die App aktiviert wurden, welche technische Voraussetzung dafür sind.</string>
+    <string name="permissions_camera_title">📸 Kamera &amp; Fotos</string>
+    <string name="permissions_camera_desc">Wird benötigt, um Fotos für Deine Tagesnotizen aufzunehmen oder Bilder aus der Galerie an die Tagesnotizen anzufügen oder ein Fotos Deines Hundes in das Profil der Hunde-Stammdaten einzufügen.</string>
+    <string name="permissions_microphone_title">🎤 Mikrofon</string>
+    <string name="permissions_microphone_desc">Wird für die Frequenz-Analyse im Sprach-Trainer benötigt. Deine Stimme wird nur lokal in Deinem Gerät analysiert, die Frequenzen grafisch und tabellarisch für Deinen Lernerfolg dargestellt. Eine Speicherung der Audiodaten erfolgt nicht.</string>
+    <string name="permissions_notifications_title">🔔 Benachrichtigungen</string>
+    <string name="permissions_notifications_desc">Benachrichtigungen werden benötigt, um Dich über neue Blog-Artikel zu informieren. Weiterhin kannst Du zur Unterstützung Deines Trainings Benachrichtigungen für den Tempo-Trainer aktivieren, um bei Tempoüberschreitungen gewarnt zu werden. Weiterhin kannst Du Benachrichtugungen im Sprach-Trainer nutzen, um ein Feedback beim Kommunikationstraining mit Deinem Hund bei erfolgreicher Kommunikation zu erhalten. \nDamit Navigation und Geschwindigkeits-Überwachung auch dann zuverlässig funktionieren, wenn das Display ausgeschaltet ist oder die App in den Hintergrund verschoben wird (z.B. wenn das Handy beim Training in der Tasche steckt oder die Hände für Aktivitäten frei sein müssen). In diesem Fall wird eine dauerhafte Benachrichtigung angezeigt, um den Standortdienst aktiv zu halten.\nBei deaktivierten Benachrichtigungen funktionieren NAVIGATION und TEMPO-TRAINER nur, wenn die App im Vordergrund ist und der Bildschirm aktiv ist.\n\nDATENSCHUTZ:\nEs werden keine personenbezogenen Daten für die Benachrichtigungen an externe Server übermittelt. Du kannst diese Funktion jederzeit in den Einstellungen:\nDein Gerät - Einstellungen - Apps - HundeWildnis - Benachrichtigungen\naktivieren, anpassen oder deaktivieren.</string>
+    <string name="permissions_vibration_title">📳 Vibration</string>
+    <string name="permissions_vibration_desc">Kann für das haptische Feedback bei Warnungen im Tempo-Trainer und/oder Sprach-Trainer genutzt werden.</string>
+    <string name="permissions_manual_control_title">⚙️ So steuerst Du Benachrichtigungen und Berechtigungen manuell:</string>
+    <string name="permissions_manual_control_steps">1. Öffne die Android-Einstellungen.\n2. Gehe zu \'Apps\' -&gt; \'Alle Apps anzeigen\'.\n3. Suche \'HundeWildnis\' in der Liste.\n4. Tippe auf \'Berechtigungen\', um Kamera, Standort, Mikrofon etc. zu verwalten.\n5. Tippe auf \'Benachrichtigungen\', um alle Optionen der benachrichtigungen zu verwalten.</string>
+
+    <!-- dialog_instructions.xml (In-App-Bedienungsanleitung) -->
+    <string name="instr_title">📖 Bedienungsanleitung</string>
+    <string name="instr_data_security_title">💾 Datensicherheit</string>
+    <string name="instr_data_security_desc">Alle Deine von Dir eingegebenen und generierten Daten gehören Dir und werden lokal auf Deinem Gerät gespeichert. Für das Teilen der Daten zu Dritten bist Du selbst verantwortlich.\n\nDatensicherheit der ONLINETRAINER-KURSE\nNotizen, welche Du in den einzelnen Onlinetrainer-Kursen ablegst, bleiben in Deinem Browser-Cache gespeichert und können durch das Leeren des Caches gelöscht werden. Für eine dauerhafte Sicherung der Notizen in den Onlinetrainer-Kursen gibt es die Möglichkeit des Exports bzw. zum Teilen der Notizen.</string>
+    <string name="instr_weekly_exercise_title">🦮📖 Übung der Woche</string>
+    <string name="instr_weekly_exercise_desc">Lass Dich inspirieren von einer wöchentlichen Basisübung, ergänzend zu Deinen Trainingsinhalten mit Deinem Hund.</string>
+    <string name="instr_meditation_title">🧘🐕 Meditationsübung</string>
+    <string name="instr_meditation_desc">Lass Dich inspirieren von einer wöchentlichen Meditationsübung, welche den teamgeist zwischen Dir und Deinem Hund spürbar verbessert und Training für Dich zu mehr Gelassenheit und Gegenwärtigkeit ist.</string>
+    <string name="instr_pace_trainer_title">⏱️🔔 Tempo - Trainer</string>
+    <string name="instr_pace_trainer_desc">Trainiere Deine optimale Geh-Geschwindigkeit beim Training. \n• Wähle ein Limit (Wege- und Geländetraining, Alltags- und Strassentraining, Wandertraining) und wähle das Messintervall (Messung aller 30 sekunden oder 60 Sekunden). Während der Messung kann das Limit in Abhängigkeit vom Trainingsinhalt auch jederzeit gewechselt werden, ohne die Messung zu unterbrechen.\n• Die App warnt Dich optional per Benachrichtigung / Ton bei Überschreitung. Dazu bitte die Benachrichtigungen in den Android-Einstellungen (Einstellungen - Apps - HundeWildnis - Benachrichtigungen) für HundeWildnis App aktivieren.\n• Die App legt ein Messprotokoll an, welches in der Historie abgespeichert wird und per GPX und PDF gespeichert und exportiert werden kann. Die GPX Datei kann in einer Navigationsapp geöffnet und ausgewertet werden. Du kannst sehen, in welchem Wegabschnitt Du wie schnell gegangen bist und kannst daraus Rückschlüsse auf Verhaltensmuster und Trainingsverbesserungen ziehen.</string>
+    <string name="instr_voice_trainer_title">🗣️🎤 Sprach-Trainer</string>
+    <string name="instr_voice_trainer_desc">Unterstützung und Training Deiner sprachlichen Kommunikation mit Deinem Hund.\n• Wähle zwischen \'Ganzheitliches Training\' mit 5 Zielfrequenzzonen oder \'Fokus Training\' mit der Auswahl einer Zielfrequenzzone für eine jeweils optimale Kommunikationsart.\n• Erhalte sofortiges Feedback für erfolgreiche Kommunikation.\n• Nach jedem training wird eine statistische Auswertung erstellt und protokolliert, welche zusätzlich als PDF abgespeichert und geteilt werden kann.</string>
+    <string name="instr_dog_training_title">🦮📖 Hundetraining</string>
+    <string name="instr_dog_training_desc">Trainiere mit Deinem Hund mittels Unterstützung aus aktuell 18 Trainingskategorien.\n•Wähle Deinen Hund (muss zuvor in den Hunde-Stammdaten angelegt werden). Es können mehrere Hunde angelegt werden.\n• Wähle das jeweils gewünschte Training aus. Sehe Deine bisherigen Trainingserfolge in der gewählten Trainingskategorie. \n• Wähle \'+ Neue Trainingseinheit\' und definiere die Parameter, wie zum Beispiel: \n• Trainingsdauer, \n• Anzahl der Wiederholungen, \n• Ablenkungslevel, \n• Schwierigkeitsgrad, \n• Wetterbedingungen (Wetterdaten werden automatisch für Deinen Standort abgerufen), \n• Trainingsstandort (GPS-Daten werden automatisch abgerufen und eingepflegt), \n• Wetterbeschreibung, \n• Geländebeschreibung \n• und zusätzliche individuelle Notizen\n•Alle Trainings werden in der Historie abgelegt.</string>
+    <string name="instr_daily_notes_title">📝📸 Tagesnotizen</string>
+    <string name="instr_daily_notes_desc">Dokumentiere Dein Training, Deine Beobachtungen und alles Wichtige mit Fotos, Text und Geodaten.\n• Textfeld für Notiztitel, \n• Textfeld für Deine Notizen. Optional können \n• Wetterdaten (werden automatisch für Deinen Standort abgerufen) und \n• GPS-Koordinaten (GPS-Daten werden automatisch abgerufen) eingefügt werden. Zusätzlich können \n• Fotos aus der Galerie bzw. über \n• Kamera angehangen werden\n• Die Notizen können als \n• PDF-Datei und \n• GPX-Datei gespeichert und geteilt werden. \n• \'Notiz sichern\' speichert die aktuelle Notiz zusätzlich in der Historie.</string>
+    <string name="instr_weather_title">🌦📍 Hundewetter</string>
+    <string name="instr_weather_desc">Umfangreicher Wetterbericht für Deinen aktuelle Standort zur Planung Deiner Aktivitäten und zur Unterstützung Deines Trainings\n• Trainingswetter-Index (mit wetterabhängigen Tipps).\n• Tageslicht- und Dämmerungsinformationen (Tageslänge, Morgendämmerung, Sonnenaufgang, Sonneuntergang, Abenddämmerung, Tipps, Berechnung der \'Goldenen Stunde\' für tolle Fotos)\n• tägliche Minimal- und Maximaltemperatur\n• 24h Temperaturverlaufsdiagramm\n• aktuelle Daten (gefühlte Temperatur, Luftfeuchte, Wind, Windrichtung, Windstärke, Windböen, Niederschlag)\n• Weitere Details (Luftdruck, Sichtweite, UV-Index)\n• 24h Vorhersage für jede Stunde inclusive Details\n• Niederschlagsradar der letzten 6h inclusive 1h Prognose\n• Alle Wetterdaten von Open-Meteo (CC BY 4.0).</string>
+    <string name="instr_navigation_title">🗺🛰 Revier - Navigation</string>
+    <string name="instr_navigation_desc">Interaktive Karte mit Anzeige von Kategorien von wander- und hunderelevanten Orten via OpenStreetMap und Routing. Interaktive OSM-Karte: Nutzt das freie OpenStreetMap (Mapnik) Material für eine detaillierte Darstellung der Umgebung.\n• Standort-Anzeige: Zeigt die aktuelle Position auf der Karte an.\n• Echtzeit-Tracking: Die Karte folgt der eigenen Bewegung im Gelände (aktualisiert sich alle 5 Meter oder alle 2 Sekunden).\n• Standort-Zentrierung: Über den Button \'📍 Standort\' lässt sich die Karte jederzeit wieder auf die aktuelle Position ausrichten.\n• Koordinaten-Anzeige: Die exakten GPS-Daten (Breiten- und Längengrad) werden live eingeblendet.\n• Standort teilen: Die aktuelle Position lässt sich direkt an weitere Personen versenden oder zu anderen Apps teilen.\n• POI-Suche (Points of Interest) mit Detailinfos (falls in OpenStreetMap hinterlegt)\n Kategorien-Grid für schnelle Auswahl hundespezifischer Orte:\n• Hundeausläufe und Hundeparks\n• Tierärzte und Tierkliniken\n• Tierbedarf und Tierheime\n• Wanderwege und Aussichtspunkte\n• Trinkwasser und Toiletten\n• Supermärkte, Bäckereien und Restaurants\n• Notfall-Services (Apotheke, Polizei, Feuerwehr, Arztpraxen, Krankenhäuser)\n• Naturschutzgebiete und Nationalparks\n• SOS-Punkte und vieles mehr\n• Radar-Suche: Sucht automatisch in einem Umkreis von 3 km nach allen Einträgen der gewählten Kategorie via Overpass-API.\n• Ergebnis-Vorschau: Zeigt alle Fundorte gleichzeitig als Marker auf der Karte an und zoomt so, dass alle Ziele plus die eigene Position sichtbar sind.\nIntelligente Navigation (Routing)\n• Ein Klick auf einen Ort in der Liste oder einen Marker auf der Karte startet die Navigation.\n• Routenberechnung: Die App nutzt professionelle Routing-Dienste (OpenRouteService, Graphhopper oder OSRM), um den besten Weg für Fußgänger zu berechnen.\n• Statistiken: Zeigt die exakte Entfernung und die geschätzte Gehzeit zum Ziel an.\n• Live-Update: Während des Laufens wird die Route ständig an die aktuelle Position angepasst.\n• Luftlinie-Fallback: Sollte kein Fußweg in der Karte bekannt sein, wird automatisch eine gestrichelte Luftlinie zum Ziel angezeigt.\nPOI-Details\n• Umfassende Infos: Sofern in OSM hinterlegt, zeigt die App Details wie Adresse, Telefonnummer, Webseite, Öffnungszeiten und Zutrittsbeschränkungen (z. B. Leinenpflicht) an.\n• Direkt-Aktionen: Telefonnummern und Web-Links sind klickbar, um sofort Kontakt aufzunehmen.\n• Lokal und Frei: Keine Nutzung von Google Maps. Der Standort wird nur für die aktuelle Suche anonym an freie Karten-Server gesendet.\n• Zwei-Klick-Logik: Erster Klick auf Marker zeigt Info, zweiter Klick startet die Navigation – für eine fehlerfreie Bedienung.\n• Suchfeld für textbasierte Suche</string>
+    <string name="instr_compass_title">🧭🌐 Kompass</string>
+    <string name="instr_compass_desc">Digitale Orientierungshilfe für Wanderungen und Gelände.</string>
+    <string name="instr_altimeter_title">⛰️〽️ Höhenmesser</string>
+    <string name="instr_altimeter_desc">Anzeige der aktuellen Höhe über Meeresspiegel via GPS.</string>
+    <string name="instr_dog_profiles_title">🐕 Hunde-Stammdaten</string>
+    <string name="instr_dog_profiles_desc">Verwaltung mehrerer Hunde-Profile. Die Stammdaten werden über Infokarten dargestellt und können angezeigt, bearbeitet und geteilt werden.\n\nDie Stammdaten sind auch Voraussetzung um die Funktionen \'Hundetraining\' nutzen zu können\n\nBasis-Informationen\n• Name: Rufname des Hundes.\n• Rasse: Rassebezeichnung oder Mischling.\n• Geschlecht: Rüde oder Hündin.\n• Kastrationsstatus: Ja, Nein oder Unbekannt.\n• Geburtsdatum: Tag-Monat-Jahr, Monat-Jahr, Jahr oder unbekannt eintragen.\n• Herkunft: Herkunftsort / -land.\n• Farbe: Fellfarbe und besondere Kennzeichen.\n• Foto: Ein individuelles Profilbild des Hundes aus der Galerie ins Profil einfügen.\n\nIdentifikation\n• Chipnummer: Die 15-stellige Transponder-Nummer.\n• Steuernummer: Steuernummer und Gemeinde\n• Tasso-Nummer: Kennnummer der Registrierung bei Tasso e.V.\n• Heimtierausweis Land: Ausstellungsland des Heimtierausweises.\n• Ausweisnummer: Nummer des Heimtierausweises.\n\nGesundheit und Vorsorge\n• Impfstatus: Aktuelle Information zur Schutzimpfung.\n• Weitere Impfungen: Raum für weitere Eintragungen zu Impfungen.\n• Letzte Entwurmung: Datum der letzten Behandlung.\n• Letzter Floh-/Zeckenschutz: Datum der letzten Prophylaxe.\n• Gewicht: Aktuelles Körpergewicht inklusive Datum der Messung.\n• Körpermaße: Schulterhöhe und Körperlänge\n• Medizinische Hinweise: Platz für chronische Krankheiten, Allergien oder notwendige Medikamente.\n\nKontakte und Versicherung\n• Tierarzt: Name und Kontaktdaten des Haustierarztes.\n• Versicherung: Angaben zur Hundehaftpflichtversicherung.\n• Versicherung: Angaben zur Kranken- /OP-versicherung.\n• Besitzer: Name und Adresse des Eigentümers.\n• Notfallkontakt: Telefonnummern für dringende Rückfragen.\n\nHaltung und Verhalten\n• Futter: Spezielle Ernährungsanforderungen oder Futtersorten.\n• Verhalten: Besonderheiten im Umgang, besondere Eigenschaften.\n\nAnzeige, Export und Transfer\n• Anzeigen: Zeigt alle Stammdaten übersichtlich auf dem Bildschirm an.\n• Bearbeiten: Öffnet die Stammdaten des Hundes zum Bearbeiten.\n• QR-Code: Öffnet eine Auswahlliste aller Stammdateneinträge. Nach erfolgter Auswahl wird ein entsprechender QR-Code generiert, welcher geteilt, vom Empfänger gescannt und/oder abgespeichert werden kann.\n• PDF: Öffnet eine Auswahlliste aller Stammdateneinträge. Die App generiert aus den gewählten Stammdaten eine PDF incl. QR-Code. Diese PDF kann geteilt und abgespeichert werden.\n• Teilen: Öffnet eine Auswahlliste aller Stammdateneinträge. Die App generiert eine Liste der gewählten Einträge, welche schnell kopiert bzw. an eine Zielapp der eigenen Wahl geteilt und darüber versendet oder weiterverarbeitet werden kann.\n• 🚨NOTFALL: Im Falle einer schnell auftretenden Erkrankung, eines Unfalls oder anderen Notlagen erstellt die App eine Notfallmeldung mit allen wichtigen Informationen für den Tierarzt, die Tierklinik bzw. die Tierrettung. Voreingetragen sind Name, Rasse, Geschlecht und Gewicht des betroffenen Hundes. Aus einer Auswahlliste kann ein Symptom hinzugefügt werden und per Textfeld eine Beschreibung der Notlage ergänzt werden. Im Bedarfsfall können noch der GPS-Standort und Fotos per Kamera bzw. aus Galerie beigefügt werden. Der Button \'Kontaktmeldung absenden\' generiert eine PDF mit allen Informationen und Fotos, welche über das Kontextmenü sofort geteilt und verschickt werden kann, damit Tierarzt, Tierklinik, Tierrettung bereits im Vorfeld alle wichtigen Informationen erhalten. Je nach App wird zudem ein Text mit allen Informationen beigefügt, damit alle wichtigen Informationen für den Empfänger auch ohne PDF-Anzeige lesbar sind. GPS Daten werden als Link für OpenStreetMap generiert, um sofort im Browser oder NavigationsApp verfügbar zu sein.\n• Datenschutz: Alle Daten werden ausschließlich lokal auf dem Smartphone gespeichert und verlassen das Gerät nur, wenn der Nutzer aktiv den Export (Teilen, PDF, QR-Code) nutzt.</string>
+    <string name="instr_emergency_title">🚨 NOTFALL 🚨</string>
+    <string name="instr_emergency_desc">Schnelle Hilfe, wenn jede Sekunde zählt.\n• Hund auswählen\n• Zwischen \'Unfall\' oder \'Erkrankung\' wählen\n• jeweilige Ereigniskategorie auswählen\n• Schnell-Check-Fragen mit JA oder NEIN bestätigen\n\n Notfall-Assistent erstellt sofort eine \n• \'Erste-Hilfe-Anleitung\' \n• ein PDF mit GPS-Standort und Stammdaten für den Tierarzt, welche per Button sofort an einen Kontakt aus dem Adressbuch (z.B. Tierarzt, Tierettung, etc) über eine Anwendung der eigenen Wahl abgesendet werden kann.</string>
+    <string name="instr_backup_title">📦💾 Backup App Daten</string>
+    <string name="instr_backup_desc">Sichere deine Daten regelmäßig.\n• Verwende alle Deine Daten auf weiteren Android-Geräten mit der HundeWildnisApp\n• Das Backup umfasst Profile, Notizen, Fotos und Statistiken.\n• Speicherort: Downloads/HundeWildnis_Backups/.</string>
+    <string name="instr_support_title">💖🤝 Deine Unterstützung</string>
+    <string name="instr_support_desc">Unterstütze uns gern mit einer Spende. Wir haben dazu sichere Wege eingerichtet, über welche Du uns und die Entwicklung der App mit einem kleinen Honorar Deiner wahl einmalig oder gern regelmäßig unterstützen kannst. Damit wir auch künftig die App kostenlos zur Verfügung stellen können.</string>
+    <string name="instr_bottom_nav_title">Navigationsleiste unten</string>
+    <string name="instr_bottom_nav_desc">Rufe jederzeit auf:\n• Startseite der App\n• HundeWildnis - Blog\n• Informationsseiten der HundeWildnisSchule\n• Online-Trainingskurse (nur nach individueller Freischaltung)\n• \'Mehr\' (Youtube-Kanal, HundeWildnis-Podcast, X-Kanal, Direktchats mit Manuela und Jörg)</string>
+    <string name="instr_top_menu_title">Menue oben</string>
+    <string name="instr_top_menu_desc">Nutze das Hauptmenü (Hamburger-Icon oben rechts) für schnelle Aktionen wie \n• Aktualisieren\n• Wechsel zwischen hellen oder dunklen Modus\n• Appeinstellungen\n• Backup erstellen\n• Backup importieren\n• Anleitung zur Nutzung der App\n• Berechtigungen der App\n• Datenschutzerklärung\n• Impressum\n• Über die App\n• Startseite</string>
+
+    <!-- Generisch, app-weit wiederverwendbar -->
+    <string name="ok">OK</string>
+    <string name="close">Schließen</string>
+    <string name="btn_continue">Fortfahren</string>
+    <string name="meditation_title">Meditation der Woche</string>
+    <string name="backup_share_title">Backup teilen</string>
+    <string name="signal_contact_title">Signal Kontakt: %1$s</string>
+    <string name="signal_redirect_message">Du wirst zu Signal weitergeleitet...</string>
+    <string name="error_signal_not_found">Signal App nicht gefunden</string>
+    <!-- Main Menu (StartActivity Options Menu) -->
+    <string name="menu_main_language">🌐 Sprache / Language</string>
+    <string name="menu_main_refresh">🔁 Aktualisieren</string>
+    <string name="menu_main_theme">🌞🌒 Theme wechseln</string>
+    <string name="menu_main_settings">⚙️ Einstellungen</string>
+    <string name="menu_main_backup_create">📦 Backup erstellen</string>
+    <string name="menu_main_backup_restore">📥 Backup importieren</string>
+    <string name="menu_main_instructions">📖 Anleitung zur Nutzung</string>
+    <string name="menu_main_permissions">🛡️ Berechtigungen der App</string>
+    <string name="menu_main_privacy">📜 Datenschutzerklärung</string>
+    <string name="menu_main_imprint">📎 Impressum</string>
+    <string name="menu_main_about">ℹ️ Über die App</string>
+
+    <!-- More Menu (Bottom Sheet) -->
+    <string name="more_menu_title">⋯ Mehr</string>
+    <string name="more_menu_youtube">Folge uns auf YouTube</string>
+    <string name="more_menu_podcast">HundeWildnis Podcast</string>
+    <string name="more_menu_spotify">Folge uns auf Spotify</string>
+    <string name="more_menu_signal_manuela">SIGNAL Chat mit Manuela</string>
+    <string name="more_menu_signal_joerg">SIGNAL Chat mit Jörg</string>
+    <string name="more_menu_qa">Fragen und Antworten</string>
+
+    <!-- Bottom Navigation Menu -->
+    <string name="nav_home">Home</string>
+    <string name="nav_blog">Blog</string>
+    <string name="nav_pages">Seiten</string>
+    <string name="nav_courses">Kurse</string>
+    <string name="nav_more">Mehr</string>
 </resources>

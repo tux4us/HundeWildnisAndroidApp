@@ -11,25 +11,26 @@ import java.util.*
 
 @Parcelize
 enum class NasenarbeitDisziplin(
-    val displayName: String,
-    val icon: String,
-    val description: String
+    val icon: String
 ) : Parcelable {
-    VERLORENSUCHE(
-        "Verlorensuche",
-        "🐾",
-        "Der Hund folgt dem Fährtenmischgeruch und findet verlorene Gegenstände. Keine zweite Person notwendig."
-    ),
-    PERSONENSUCHE(
-        "Personensuche",
-        "🧑",
-        "Der Hund folgt dem individuellen Geruch einer Zielperson. Zweite Person notwendig."
-    ),
-    FREISUCHE(
-        "Freisuche",
-        "🔍",
-        "Der Hund durchsucht ein Gelände selbständig. Bei Personensuche zweite Person notwendig."
-    )
+    VERLORENSUCHE("🐾"),
+    PERSONENSUCHE("🧑"),
+    FREISUCHE("🔍");
+
+    /** Sprachabhängiger Anzeigename – wird zur Laufzeit aus strings.xml gezogen.
+     *  NIEMALS für Vergleiche oder Speicherung nutzen, dafür den Enum-Namen (VERLORENSUCHE etc.) verwenden. */
+    fun displayName(context: android.content.Context): String = when (this) {
+        VERLORENSUCHE -> context.getString(R.string.nasenarbeit_disziplin_verlorensuche)
+        PERSONENSUCHE -> context.getString(R.string.nasenarbeit_disziplin_personensuche)
+        FREISUCHE -> context.getString(R.string.nasenarbeit_disziplin_freisuche)
+    }
+
+    /** Sprachabhängige Beschreibung – wird zur Laufzeit aus strings.xml gezogen. */
+    fun description(context: android.content.Context): String = when (this) {
+        VERLORENSUCHE -> context.getString(R.string.nasenarbeit_disziplin_verlorensuche_desc)
+        PERSONENSUCHE -> context.getString(R.string.nasenarbeit_disziplin_personensuche_desc)
+        FREISUCHE -> context.getString(R.string.nasenarbeit_disziplin_freisuche_desc)
+    }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -37,23 +38,48 @@ enum class NasenarbeitDisziplin(
 // ════════════════════════════════════════════════════════════════
 
 enum class NasenarbeitLevel(
-    val displayName: String,
     val minSessions: Int,
     val maxSessions: Int,
     val maxSchritte_V: Int,   // Verlorensuche
     val maxSchritte_P: Int,   // Personensuche
     val maxHa_F: Double,       // Freisuche
-    val steigerung: Double,
-    val schwierigkeit: String
+    val steigerung: Double
 ) {
-    ANFAENGER("Anfänger", 0, 49, 100, 100, 0.2, 0.20, "Leicht"),
-    FORTGESCHRITTEN("Fortgeschritten", 50, 99, 250, 250, 0.5, 0.15, "Mittel"),
-    ERFAHREN("Erfahren", 100, 499, 500, 1000, 2.0, 0.10, "Mittel–Schwer"),
-    EXPERTE("Experte", 500, Int.MAX_VALUE, 1000, 2000, 5.0, 0.05, "Schwer");
+    ANFAENGER(0, 49, 100, 100, 0.2, 0.20),
+    FORTGESCHRITTEN(50, 99, 250, 250, 0.5, 0.15),
+    ERFAHREN(100, 499, 500, 1000, 2.0, 0.10),
+    EXPERTE(500, Int.MAX_VALUE, 1000, 2000, 5.0, 0.05);
+
+    /** Sprachabhängiger Anzeigename – wird zur Laufzeit aus strings.xml gezogen.
+     *  NIEMALS für Vergleiche oder Speicherung nutzen, dafür den Enum-Namen (ANFAENGER etc.) verwenden. */
+    fun displayName(context: android.content.Context): String = when (this) {
+        ANFAENGER -> context.getString(R.string.nasenarbeit_level_anfaenger)
+        FORTGESCHRITTEN -> context.getString(R.string.nasenarbeit_level_fortgeschritten)
+        ERFAHREN -> context.getString(R.string.nasenarbeit_level_erfahren)
+        EXPERTE -> context.getString(R.string.nasenarbeit_level_experte)
+    }
+
+    /** Sprachabhängige Schwierigkeitsangabe – wird zur Laufzeit aus strings.xml gezogen. */
+    fun schwierigkeit(context: android.content.Context): String = when (this) {
+        ANFAENGER -> context.getString(R.string.nasenarbeit_level_schwierigkeit_leicht)
+        FORTGESCHRITTEN -> context.getString(R.string.nasenarbeit_level_schwierigkeit_mittel)
+        ERFAHREN -> context.getString(R.string.nasenarbeit_level_schwierigkeit_mittel_schwer)
+        EXPERTE -> context.getString(R.string.nasenarbeit_level_schwierigkeit_schwer)
+    }
 
     companion object {
         fun fromSessions(sessions: Int): NasenarbeitLevel =
             values().find { sessions in it.minSessions..it.maxSessions } ?: ANFAENGER
+
+        /** Migration: löst alte, bereits als Text gespeicherte Level-Namen (Deutsch,
+         *  aus Backups vor der Sprachumstellung) robust auf den stabilen Enum-Wert auf. */
+        fun fromLegacyStoredName(name: String): NasenarbeitLevel = when (name) {
+            "Anfänger" -> ANFAENGER
+            "Fortgeschritten" -> FORTGESCHRITTEN
+            "Erfahren" -> ERFAHREN
+            "Experte" -> EXPERTE
+            else -> values().find { it.name == name } ?: ANFAENGER
+        }
     }
 }
 
@@ -124,9 +150,11 @@ data class NasenarbeitSession(
     @SerializedName("parameter") val parameter: NasenarbeitParameter = NasenarbeitParameter(),
 
     // Trainingsstand zur Zeit der Session
-    @SerializedName("levelVerlorensuche") val levelVerlorensuche: String = "Anfänger",
-    @SerializedName("levelPersonensuche") val levelPersonensuche: String = "Anfänger",
-    @SerializedName("levelFreisuche") val levelFreisuche: String = "Anfänger",
+    // WICHTIG: Speichert den stabilen Enum-Namen (z. B. "ANFAENGER"), NICHT den
+    // sprachabhängigen Anzeigetext. Für Anzeige: NasenarbeitLevel.valueOf(...).displayName(context)
+    @SerializedName("levelVerlorensuche") val levelVerlorensuche: String = NasenarbeitLevel.ANFAENGER.name,
+    @SerializedName("levelPersonensuche") val levelPersonensuche: String = NasenarbeitLevel.ANFAENGER.name,
+    @SerializedName("levelFreisuche") val levelFreisuche: String = NasenarbeitLevel.ANFAENGER.name,
 
     // Ergebnisse
     @SerializedName("durchgefuehrteSchritte") val durchgefuehrteSchritte: Int? = null,

@@ -32,7 +32,10 @@ class QRCodeActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "📱 QR-Code: ${profile?.name ?: "Hund"}"
+            title = getString(
+                R.string.qrcode_activity_title,
+                profile?.name ?: getString(R.string.qrcode_activity_default_dog_name)
+            )
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -68,7 +71,7 @@ class QRCodeActivity : SecureBaseActivity() {
         } else {
             // ✅ Fehler
             binding.progressBar.visibility = View.GONE
-            Toast.makeText(this, "❌ QR-Code konnte nicht erstellt werden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.qrcode_activity_error_generation_failed), Toast.LENGTH_SHORT).show()
             finish()
         }
     }
@@ -76,8 +79,8 @@ class QRCodeActivity : SecureBaseActivity() {
     private fun setupGrids(qrBitmap: Bitmap, dogName: String) {
         binding.gridQrActions.visibility = View.VISIBLE
         val tiles = listOf(
-            StartTile("qr_share", R.drawable.ic_map_pin_share, "Teilen"),
-            StartTile("qr_save", R.drawable.ic_notes, "Speichern")
+            StartTile("qr_share", R.drawable.ic_map_pin_share, getString(R.string.qrcode_activity_tile_share)),
+            StartTile("qr_save", R.drawable.ic_notes, getString(R.string.qrcode_activity_tile_save))
         )
         val colors = StartGroupColors.forGroup(this, 2) // Grün
         binding.gridQrActions.layoutManager = GridLayoutManager(this, 2)
@@ -101,15 +104,15 @@ class QRCodeActivity : SecureBaseActivity() {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_TEXT, "QR-Code für ${dogName}")
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.qrcode_activity_share_text, dogName))
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
 
-            startActivity(Intent.createChooser(intent, "QR-Code teilen"))
+            startActivity(Intent.createChooser(intent, getString(R.string.qrcode_activity_share_chooser_title)))
 
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "❌ Fehler beim Teilen: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.qrcode_activity_error_sharing, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -142,11 +145,11 @@ class QRCodeActivity : SecureBaseActivity() {
                 MediaScannerConnection.scanFile(this, arrayOf(file.absolutePath), arrayOf("image/png"), null)
             }
 
-            Toast.makeText(this, "✅ QR-Code in Galerie gespeichert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.qrcode_activity_saved_success), Toast.LENGTH_SHORT).show()
 
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "❌ Fehler beim Speichern: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.qrcode_activity_error_saving, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 

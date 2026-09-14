@@ -132,13 +132,13 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         
         AlertDialog.Builder(this)
-            .setTitle("Signal Kontakt: $name")
-            .setMessage("Du wirst zu Signal weitergeleitet...")
-            .setPositiveButton("Fortfahren") { _, _ ->
+            .setTitle(getString(R.string.signal_contact_title, name))
+            .setMessage(getString(R.string.signal_redirect_message))
+            .setPositiveButton(getString(R.string.btn_continue)) { _, _ ->
                 try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link))) }
-                catch (e: Exception) { Toast.makeText(this, "Signal App nicht gefunden", Toast.LENGTH_SHORT).show() }
+                catch (e: Exception) { Toast.makeText(this, getString(R.string.error_signal_not_found), Toast.LENGTH_SHORT).show() }
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
             .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
     }

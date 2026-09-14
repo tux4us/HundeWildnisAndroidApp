@@ -34,7 +34,7 @@ object SoundLevelPDFGenerator {
             val grayColor = DeviceRgb(128, 128, 128)
 
             document.add(
-                Paragraph("LAUTSTÄRKE-TRAINER – AUSWERTUNG")
+                Paragraph(context.getString(R.string.sound_level_pdf_title))
                     .setFontSize(24f)
                     .setBold()
                     .setFontColor(greenColor)
@@ -44,28 +44,33 @@ object SoundLevelPDFGenerator {
 
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             document.add(
-                Paragraph("Datum: $dateStr")
+                Paragraph(context.getString(R.string.sound_level_pdf_date, dateStr))
                     .setFontSize(12f)
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginBottom(20f)
             )
 
-            addSectionTitle(document, "ÜBERSICHT", greenColor)
+            addSectionTitle(document, context.getString(R.string.sound_level_pdf_overview), greenColor)
             val duration = session.totalDuration / 1000
             addDataTable(document, listOf(
-                "Dauer" to formatDuration(duration),
-                "Ø Pegel" to "${session.avgEstimatedDb.toInt()} dB(A)",
-                "Minimum" to "${session.minEstimatedDb.toInt()} dB(A)",
-                "Maximum" to "${session.maxEstimatedDb.toInt()} dB(A)",
-                "Dominante Stufe" to session.getDominantLevel().label
+                context.getString(R.string.sound_level_pdf_duration) to formatDuration(duration),
+                context.getString(R.string.sound_level_pdf_avg_level) to "${session.avgEstimatedDb.toInt()} dB(A)",
+                context.getString(R.string.sound_level_pdf_minimum) to "${session.minEstimatedDb.toInt()} dB(A)",
+                context.getString(R.string.sound_level_pdf_maximum) to "${session.maxEstimatedDb.toInt()} dB(A)",
+                context.getString(R.string.sound_level_pdf_dominant_level) to session.getDominantLevel().label(context)
             ))
 
-            addSectionTitle(document, "VERTEILUNG SPRECHWEISE-STUFEN", greenColor)
+            addSectionTitle(document, context.getString(R.string.sound_level_pdf_distribution), greenColor)
             val table = Table(UnitValue.createPercentArray(floatArrayOf(45f, 20f, 20f, 15f)))
                 .useAllAvailableWidth()
                 .setMarginBottom(10f)
 
-            listOf("Stufe", "Bereich", "Datenpunkte", "Anteil").forEach { header ->
+            listOf(
+                context.getString(R.string.sound_level_pdf_column_level),
+                context.getString(R.string.sound_level_pdf_column_range),
+                context.getString(R.string.sound_level_pdf_column_data_points),
+                context.getString(R.string.sound_level_pdf_column_share)
+            ).forEach { header ->
                 table.addCell(Cell().add(Paragraph(header).setBold()).setPadding(5f))
             }
 
@@ -75,7 +80,7 @@ object SoundLevelPDFGenerator {
                 SpeechLevel.A3_ANGEHOBEN to session.countA3,
                 SpeechLevel.A4_SCHARF to session.countA4
             ).forEach { (level, count) ->
-                table.addCell(Paragraph(level.label).setPadding(5f))
+                table.addCell(Paragraph(level.label(context)).setPadding(5f))
                 table.addCell(Paragraph(level.rangeLabel).setPadding(5f))
                 table.addCell(Paragraph("$count").setPadding(5f))
                 table.addCell(Paragraph("${session.getPercentage(count)}%").setPadding(5f))
@@ -83,13 +88,7 @@ object SoundLevelPDFGenerator {
             document.add(table)
 
             document.add(
-                Paragraph(
-                    "Hinweis: Geschätzter Wert auf Basis einer einmaligen Nutzerkalibrierung. " +
-                        "Kein kalibriertes Messgerät nach DIN EN 61672 – dient nur der eigenen " +
-                        "Vergleichbarkeit über mehrere Sessions. Die Wirkung auf den Hund wird " +
-                        "dadurch nicht bewertet; entscheidend sind Tonhöhe, Plötzlichkeit, " +
-                        "Vorhersagbarkeit und die Beobachtung des Hundeverhaltens."
-                )
+                Paragraph(context.getString(R.string.sound_level_pdf_disclaimer))
                     .setFontSize(9f)
                     .setFontColor(grayColor)
                     .setMarginTop(10f)
@@ -97,7 +96,7 @@ object SoundLevelPDFGenerator {
             )
 
             document.add(
-                Paragraph("Erstellt mit HundeWildnis App von www.wildnislehrer.de")
+                Paragraph(context.getString(R.string.sound_level_pdf_footer))
                     .setFontSize(10f)
                     .setFontColor(grayColor)
                     .setTextAlignment(TextAlignment.CENTER)

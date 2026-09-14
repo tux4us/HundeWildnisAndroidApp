@@ -103,13 +103,13 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
         val allSessions = NasenarbeitManager.loadSessionsForDog(this, profile.id)
 
         // Stats
-        binding.tvStatV.text = "${fortschritt.sessionsVerlorensuche}\nVerlorensuche\n${fortschritt.levelVerlorensuche.displayName}"
-        binding.tvStatP.text = "${fortschritt.sessionsPersonensuche}\nPersonensuche\n${fortschritt.levelPersonensuche.displayName}"
-        binding.tvStatF.text = "${fortschritt.sessionsFreisuche}\nFreisuche\n${fortschritt.levelFreisuche.displayName}"
-        binding.tvStatGesamt.text = "Gesamt: ${fortschritt.gesamtSessions} Sessions"
+        binding.tvStatV.text = getString(R.string.nasenarbeit_hund_stat_line, fortschritt.sessionsVerlorensuche, getString(R.string.nasenarbeit_disziplin_verlorensuche), fortschritt.levelVerlorensuche.displayName(this))
+        binding.tvStatP.text = getString(R.string.nasenarbeit_hund_stat_line, fortschritt.sessionsPersonensuche, getString(R.string.nasenarbeit_disziplin_personensuche), fortschritt.levelPersonensuche.displayName(this))
+        binding.tvStatF.text = getString(R.string.nasenarbeit_hund_stat_line, fortschritt.sessionsFreisuche, getString(R.string.nasenarbeit_disziplin_freisuche), fortschritt.levelFreisuche.displayName(this))
+        binding.tvStatGesamt.text = getString(R.string.nasenarbeit_hund_stat_total, fortschritt.gesamtSessions)
 
         if (fortschritt.maxSchritte > 0)
-            binding.tvMaxLeistung.text = "Max. Strecke: ${fortschritt.maxSchritte} Schritte | Max. Fläche: ${String.format("%.1f", fortschritt.maxHa)} ha"
+            binding.tvMaxLeistung.text = getString(R.string.nasenarbeit_hund_max_leistung, fortschritt.maxSchritte, String.format("%.1f", fortschritt.maxHa))
 
         sessions.clear()
         sessions.addAll(allSessions)
@@ -229,7 +229,7 @@ class NasenarbeitSessionAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val s = sessions[position]
         holder.tvDate.text = df.format(Date(s.datum))
-        holder.tvDiz.text = "${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName}"
+        holder.tvDiz.text = "${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName(holder.itemView.context)}"
         holder.tvScore.text = "⭐".repeat(s.erfolgsbewertung)
         holder.tvInfo.text = buildString {
             s.durchgefuehrteSchritte?.let { append("$it Schritte  ") }

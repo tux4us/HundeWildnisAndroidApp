@@ -26,14 +26,14 @@ import java.util.*
 // ════════════════════════════════════════════════════════════════
 
 object TrainingExportManager {
-    
+
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
     private val fileNameFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
-    
+
     // Farben (wie Emergency PDFs)
     private val colorPrimary = DeviceRgb(45, 80, 22)  // #2d5016
     private val colorSecondary = DeviceRgb(122, 146, 101)  // #7a9265
-    
+
     // ════════════════════════════════════════════════════════════
     // 1. GESAMT-TAGEBUCH EXPORT (alle Kategorien eines Hundes)
     // ════════════════════════════════════════════════════════════
@@ -55,7 +55,7 @@ object TrainingExportManager {
             ExportFormat.CSV -> exportCompleteDiaryCSV(context, dog, allSessions, fileName)
         }
     }
-    
+
     private fun exportCompleteDiaryPDF(
         context: Context,
         dog: DogProfile,
@@ -69,7 +69,7 @@ object TrainingExportManager {
             val writer = PdfWriter(file)
             val pdfDoc = PdfDocument(writer)
             val document = Document(pdfDoc)
-            
+
             // Header
             document.add(
                 Paragraph("🦮 TRAININGSTAGEBUCH")
@@ -78,36 +78,38 @@ object TrainingExportManager {
                     .setFontColor(colorPrimary)
                     .setTextAlignment(TextAlignment.CENTER)
             )
-            
+
             document.add(
                 Paragraph("${dog.name}")
                     .setFontSize(16f)
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginBottom(20f)
             )
-            
+
             // Übersicht
             document.add(Paragraph("📊 ÜBERSICHT").setBold().setFontSize(14f).setFontColor(colorPrimary))
             document.add(Paragraph("Erstellt: ${dateFormat.format(Date())}").setFontSize(10f))
             document.add(Paragraph("Gesamt-Sessions: ${sessions.size}").setFontSize(10f))
             document.add(Paragraph("Trainierte Kategorien: ${progressList.size}").setFontSize(10f))
             document.add(Paragraph("Erreichte Meilensteine: ${milestones.size}").setFontSize(10f).setMarginBottom(15f))
-            
+
             // Fortschritt pro Kategorie
             document.add(Paragraph("📈 FORTSCHRITT PRO KATEGORIE").setBold().setFontSize(14f).setFontColor(colorPrimary))
-            
+
             progressList.sortedByDescending { it.progressPercentage }.forEach { progress ->
                 document.add(
-                    Paragraph("${progress.category.displayName}: ${progress.progressPercentage}% (${progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName})")
+                    Paragraph(context.getString(R.string.training_export_category_progress_line,
+                        progress.category.displayName(context), progress.progressPercentage,
+                        progress.currentLevel?.displayName(context) ?: TrainingLevel.BEGINNER.displayName(context)))
                         .setFontSize(11f)
                         .setMarginBottom(3f)
                 )
                 val effortStr = if (progress.totalMinutes > 0 && progress.totalRepetitions > 0) {
-                    "${progress.totalSessions} Sessions • ${progress.totalMinutes} Min / ${progress.totalRepetitions}x • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0"
+                    context.getString(R.string.training_export_effort_both, progress.totalSessions, progress.totalMinutes, progress.totalRepetitions, String.format("%.1f", progress.averageSuccess))
                 } else if (progress.totalRepetitions > 0) {
-                    "${progress.totalSessions} Sessions • ${progress.totalRepetitions}x • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0"
+                    context.getString(R.string.training_export_effort_repetitions, progress.totalSessions, progress.totalRepetitions, String.format("%.1f", progress.averageSuccess))
                 } else {
-                    "${progress.totalSessions} Sessions • ${progress.totalMinutes} Min • Ø ${String.format("%.1f", progress.averageSuccess)}/4.0"
+                    context.getString(R.string.training_export_effort_minutes, progress.totalSessions, progress.totalMinutes, String.format("%.1f", progress.averageSuccess))
                 }
 
                 document.add(
@@ -117,18 +119,18 @@ object TrainingExportManager {
                         .setFontColor(ColorConstants.DARK_GRAY)
                 )
             }
-            
+
             // Sessions gruppiert nach Kategorie
-            document.add(Paragraph("\n📋 ALLE TRAININGSEINHEITEN").setBold().setFontSize(14f).setFontColor(colorPrimary))
-            
+            document.add(Paragraph(context.getString(R.string.training_export_all_sessions_header)).setBold().setFontSize(14f).setFontColor(colorPrimary))
+
             sessions.groupBy { it.category }.forEach { (category, categorySessions) ->
-                document.add(Paragraph("\n${category.displayName}").setBold().setFontSize(12f).setFontColor(colorSecondary))
-                
+                document.add(Paragraph("\n${category.displayName(context)}").setBold().setFontSize(12f).setFontColor(colorSecondary))
+
                 categorySessions.sortedByDescending { it.date }.forEach { session ->
-                    addSessionToDocument(document, session)
+                    addSessionToDocument(context, document, session)
                 }
             }
-            
+
             document.close()
             file
         } catch (e: Exception) {
@@ -136,7 +138,7 @@ object TrainingExportManager {
             null
         }
     }
-    
+
     private fun exportCompleteDiaryCSV(
         context: Context,
         dog: DogProfile,
@@ -146,23 +148,23 @@ object TrainingExportManager {
         return try {
             val file = createTempFile(context, "$fileName.csv")
             val csv = StringBuilder()
-            
+
             // Header
-            csv.append("Datum,Kategorie,Aufwand,Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen\n")
-            
+            csv.append(context.getString(R.string.training_export_csv_header)).append("\n")
+
             // Sessions
             sessions.sortedByDescending { it.date }.forEach { session ->
                 csv.append("\"${dateFormat.format(Date(session.date))}\",")
-                csv.append("\"${session.category.displayName}\",")
+                csv.append("\"${session.category.displayName(context)}\",")
                 csv.append("\"${session.getEffortText()}\",")
                 csv.append("\"${session.getSuccessText()}\",")
-                csv.append("\"${session.distractionLevel.displayName}\",")
-                csv.append("\"${session.difficulty.displayName}\",")
+                csv.append("\"${session.distractionLevel.displayName(context)}\",")
+                csv.append("\"${session.difficulty.displayName(context)}\",")
                 csv.append("\"${session.weatherData}\",")
                 csv.append("\"${session.getGpsShortFormat()}\",")
                 csv.append("\"${session.notes.replace("\"", "\"\"")}\"\n")
             }
-            
+
             file.writeText(csv.toString())
             file
         } catch (e: Exception) {
@@ -170,11 +172,11 @@ object TrainingExportManager {
             null
         }
     }
-    
+
     // ════════════════════════════════════════════════════════════
     // 2. KATEGORIE EXPORT (eine Kategorie eines Hundes)
     // ════════════════════════════════════════════════════════════
-    
+
     fun exportCategory(
         context: Context,
         dog: DogProfile,
@@ -184,14 +186,14 @@ object TrainingExportManager {
         val sessions = TrainingManager.getSessionsForCategory(context, dog.id, category)
         val progress = TrainingManager.getProgress(context, dog.id, category)
 
-        val fileName = "Training_${dog.name}_${category.displayName}_${fileNameFormat.format(Date())}"
+        val fileName = "Training_${dog.name}_${category.displayName(context)}_${fileNameFormat.format(Date())}"
 
         return when (format) {
             ExportFormat.PDF -> exportCategoryPDF(context, dog, category, sessions, progress, fileName)
             ExportFormat.CSV -> exportCategoryCSV(context, dog, category, sessions, fileName)
         }
     }
-    
+
     private fun exportCategoryPDF(
         context: Context,
         dog: DogProfile,
@@ -205,26 +207,26 @@ object TrainingExportManager {
             val writer = PdfWriter(file)
             val pdfDoc = PdfDocument(writer)
             val document = Document(pdfDoc)
-            
+
             // Header
             document.add(
-                Paragraph("📋 ${category.displayName}")
+                Paragraph("📋 ${category.displayName(context)}")
                     .setFontSize(18f)
                     .setBold()
                     .setFontColor(colorPrimary)
                     .setTextAlignment(TextAlignment.CENTER)
             )
-            
+
             document.add(
                 Paragraph("${dog.name}")
                     .setFontSize(14f)
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginBottom(20f)
             )
-            
+
             // Fortschritt
             document.add(Paragraph("📊 FORTSCHRITT").setBold().setFontSize(14f).setFontColor(colorPrimary))
-            document.add(Paragraph("Trainingsstand: ${progress.progressPercentage}% (${progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName})").setFontSize(11f))
+            document.add(Paragraph(context.getString(R.string.training_export_progress_status, progress.progressPercentage, progress.currentLevel?.displayName(context) ?: TrainingLevel.BEGINNER.displayName(context))).setFontSize(11f))
             document.add(Paragraph("Gesamt-Sessions: ${progress.totalSessions}").setFontSize(10f))
 
             if (progress.totalMinutes > 0) {
@@ -236,13 +238,13 @@ object TrainingExportManager {
 
             document.add(Paragraph("Durchschnitt: ${String.format("%.1f", progress.averageSuccess)}/4.0").setFontSize(10f))
             document.add(Paragraph("Aufeinanderfolgende Tage: ${progress.consecutiveDays}").setFontSize(10f).setMarginBottom(15f))
-            
+
             // Sessions
             document.add(Paragraph("📝 TRAININGSEINHEITEN").setBold().setFontSize(14f).setFontColor(colorPrimary))
             sessions.sortedByDescending { it.date }.forEach { session ->
-                addSessionToDocument(document, session)
+                addSessionToDocument(context, document, session)
             }
-            
+
             document.close()
             file
         } catch (e: Exception) {
@@ -250,7 +252,7 @@ object TrainingExportManager {
             null
         }
     }
-    
+
     private fun exportCategoryCSV(
         context: Context,
         dog: DogProfile,
@@ -261,20 +263,20 @@ object TrainingExportManager {
         return try {
             val file = createTempFile(context, "$fileName.csv")
             val csv = StringBuilder()
-            
-            csv.append("Datum,Aufwand,Erfolg,Ablenkung,Schwierigkeit,Wetter,GPS,Notizen\n")
-            
+
+            csv.append(context.getString(R.string.training_export_csv_header_category)).append("\n")
+
             sessions.sortedByDescending { it.date }.forEach { session ->
                 csv.append("\"${dateFormat.format(Date(session.date))}\",")
                 csv.append("\"${session.getEffortText()}\",")
                 csv.append("\"${session.getSuccessText()}\",")
-                csv.append("\"${session.distractionLevel.displayName}\",")
-                csv.append("\"${session.difficulty.displayName}\",")
+                csv.append("\"${session.distractionLevel.displayName(context)}\",")
+                csv.append("\"${session.difficulty.displayName(context)}\",")
                 csv.append("\"${session.weatherData}\",")
                 csv.append("\"${session.getGpsShortFormat()}\",")
                 csv.append("\"${session.notes.replace("\"", "\"\"")}\"\n")
             }
-            
+
             file.writeText(csv.toString())
             file
         } catch (e: Exception) {
@@ -282,25 +284,25 @@ object TrainingExportManager {
             null
         }
     }
-    
+
     // ════════════════════════════════════════════════════════════
     // 3. EINZELNE SESSION EXPORT
     // ════════════════════════════════════════════════════════════
-    
+
     fun exportSession(
         context: Context,
         dog: DogProfile,
         session: TrainingSession,
         format: ExportFormat
     ): File? {
-        val fileName = "Training_${dog.name}_${session.category.displayName}_${fileNameFormat.format(Date(session.date))}"
-        
+        val fileName = "Training_${dog.name}_${session.category.displayName(context)}_${fileNameFormat.format(Date(session.date))}"
+
         return when (format) {
             ExportFormat.PDF -> exportSessionPDF(context, dog, session, fileName)
             ExportFormat.CSV -> exportSessionCSV(context, session, fileName)
         }
     }
-    
+
     private fun exportSessionPDF(
         context: Context,
         dog: DogProfile,
@@ -312,7 +314,7 @@ object TrainingExportManager {
             val writer = PdfWriter(file)
             val pdfDoc = PdfDocument(writer)
             val document = Document(pdfDoc)
-            
+
             document.add(
                 Paragraph("📝 TRAININGSEINHEIT")
                     .setFontSize(18f)
@@ -321,9 +323,9 @@ object TrainingExportManager {
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginBottom(20f)
             )
-            
-            addSessionToDocument(document, session, detailed = true)
-            
+
+            addSessionToDocument(context, document, session, detailed = true)
+
             document.close()
             file
         } catch (e: Exception) {
@@ -331,7 +333,7 @@ object TrainingExportManager {
             null
         }
     }
-    
+
     private fun exportSessionCSV(
         context: Context,
         session: TrainingSession,
@@ -340,25 +342,25 @@ object TrainingExportManager {
         return try {
             val file = createTempFile(context, "$fileName.csv")
             val csv = StringBuilder()
-            
-            csv.append("Feld,Wert\n")
-            csv.append("\"Datum\",\"${dateFormat.format(Date(session.date))}\"\n")
-            csv.append("\"Kategorie\",\"${session.category.displayName}\"\n")
-            csv.append("\"Aufwand\",\"${session.getEffortText()}\"\n")
-            csv.append("\"Erfolg\",\"${session.getSuccessText()}\"\n")
-            csv.append("\"Ablenkung\",\"${session.distractionLevel.displayName}\"\n")
-            csv.append("\"Schwierigkeit\",\"${session.difficulty.displayName}\"\n")
+
+            csv.append(context.getString(R.string.training_export_csv_field_value_header)).append("\n")
+            csv.append("\"${context.getString(R.string.training_export_field_date)}\",\"${dateFormat.format(Date(session.date))}\"\n")
+            csv.append("\"${context.getString(R.string.training_export_field_category)}\",\"${session.category.displayName(context)}\"\n")
+            csv.append("\"${context.getString(R.string.training_export_field_effort)}\",\"${session.getEffortText()}\"\n")
+            csv.append("\"${context.getString(R.string.training_export_field_success)}\",\"${session.getSuccessText()}\"\n")
+            csv.append("\"${context.getString(R.string.training_export_field_distraction)}\",\"${session.distractionLevel.displayName(context)}\"\n")
+            csv.append("\"${context.getString(R.string.training_export_field_difficulty)}\",\"${session.difficulty.displayName(context)}\"\n")
             if (session.weatherData.isNotEmpty()) {
-                csv.append("\"Wetter\",\"${session.weatherData}\"\n")
+                csv.append("\"${context.getString(R.string.training_export_field_weather)}\",\"${session.weatherData}\"\n")
             }
             if (session.gpsLatitude != null && session.gpsLongitude != null) {
-                csv.append("\"GPS\",\"${session.getGpsShortFormat()}\"\n")
+                csv.append("\"${context.getString(R.string.training_export_field_gps)}\",\"${session.getGpsShortFormat()}\"\n")
                 csv.append("\"OpenStreetMap\",\"${session.getOpenStreetMapLink()}\"\n")
             }
             if (session.notes.isNotEmpty()) {
-                csv.append("\"Notizen\",\"${session.notes.replace("\"", "\"\"")}\"\n")
+                csv.append("\"${context.getString(R.string.training_export_field_notes)}\",\"${session.notes.replace("\"", "\"\"")}\"\n")
             }
-            
+
             file.writeText(csv.toString())
             file
         } catch (e: Exception) {
@@ -366,41 +368,41 @@ object TrainingExportManager {
             null
         }
     }
-    
+
     // ════════════════════════════════════════════════════════════
     // HILFSFUNKTIONEN
     // ════════════════════════════════════════════════════════════
-    
-    private fun addSessionToDocument(document: Document, session: TrainingSession, detailed: Boolean = false) {
+
+    private fun addSessionToDocument(context: Context, document: Document, session: TrainingSession, detailed: Boolean = false) {
         // ✅ Fix: Absolute Breite statt 100% (verhindert Überlauf bei langen Inhalten)
         val table = Table(UnitValue.createPointArray(floatArrayOf(100f, 400f)))
             .setMarginBottom(10f)
-        
+
         table.addCell(createCell("Datum:", true))
         table.addCell(createCell(dateFormat.format(Date(session.date))))
-        
+
         if (detailed) {
             table.addCell(createCell("Kategorie:", true))
-            table.addCell(createCell(session.category.displayName))
+            table.addCell(createCell(session.category.displayName(context)))
         }
-        
+
         table.addCell(createCell("Aufwand:", true))
         table.addCell(createCell(session.getEffortText()))
-        
+
         table.addCell(createCell("Erfolg:", true))
         table.addCell(createCell("${session.getSuccessIcon()} ${session.getSuccessText()}"))
-        
+
         table.addCell(createCell("Ablenkung:", true))
-        table.addCell(createCell(session.distractionLevel.displayName))
-        
+        table.addCell(createCell(session.distractionLevel.displayName(context)))
+
         table.addCell(createCell("Schwierigkeit:", true))
-        table.addCell(createCell(session.difficulty.displayName))
-        
+        table.addCell(createCell(session.difficulty.displayName(context)))
+
         if (session.weatherData.isNotEmpty()) {
             table.addCell(createCell("Wetter:", true))
             table.addCell(createCell(session.weatherData))
         }
-        
+
         if (session.gpsLatitude != null && session.gpsLongitude != null) {
             table.addCell(createCell("Standort:", true))
             val locationText = if (session.gpsLocationName.isNotEmpty()) {
@@ -409,27 +411,27 @@ object TrainingExportManager {
                 session.getGpsShortFormat()
             }
             table.addCell(createCell(locationText))
-            
+
             session.getOpenStreetMapLink()?.let { link ->
                 table.addCell(createCell("Karte:", true))
                 // ✅ Fix: Link-Text verkleinern falls zu lang
                 table.addCell(createCell(link, fontSize = 8f))
             }
         }
-        
+
         if (session.notes.isNotEmpty()) {
             table.addCell(createCell("Notizen:", true))
             // ✅ Fix: Notizen-Zelle bekommt automatischen Zeilenumbruch
             table.addCell(createCell(session.notes))
         }
-        
+
         document.add(table)
     }
-    
+
     private fun createCell(text: String, bold: Boolean = false, fontSize: Float = 10f): Cell {
         val paragraph = Paragraph(text).setFontSize(fontSize)
         if (bold) paragraph.setBold()
-        
+
         return Cell().add(paragraph)
             .setPadding(5f)
             .setKeepTogether(true) // Verhindert unschöne Seitenumbrüche innerhalb einer Zeile
@@ -463,7 +465,7 @@ object TrainingExportManager {
                         inputStream.copyTo(outputStream)
                     }
                 }
-                
+
                 // MediaScanner benachrichtigen
                 android.media.MediaScannerConnection.scanFile(
                     context,

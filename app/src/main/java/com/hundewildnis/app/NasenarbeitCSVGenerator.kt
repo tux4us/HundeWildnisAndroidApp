@@ -19,24 +19,26 @@ object NasenarbeitCSVGenerator {
 
         val sb = StringBuilder()
         // Header
-        sb.append("Datum;Disziplin;Empfohlen;Bewertung;Schritte;Ha;Minuten;Gefunden;Gesamt;Erfolg;Temperatur;Beaufort;Feuchtigkeit;Windrichtung;LevelV;LevelP;LevelF;Notizen\n")
+        sb.append(context.getString(R.string.nasenarbeit_csv_header)).append("\n")
 
         sessions.forEach { s ->
             val p = s.parameter
             sb.append(df.format(Date(s.datum))).append(";")
-            sb.append(s.durchgefuehrteDisziplin.displayName).append(";")
-            sb.append(s.empfohleneDisziplin.displayName).append(";")
+            sb.append(s.durchgefuehrteDisziplin.displayName(context)).append(";")
+            sb.append(s.empfohleneDisziplin.displayName(context)).append(";")
             sb.append(s.erfolgsbewertung).append(";")
             sb.append(s.durchgefuehrteSchritte ?: "").append(";")
             sb.append(s.durchgefuehrteHa?.let { String.format("%.1f", it) } ?: "").append(";")
             sb.append(s.suchdauerMinuten ?: "").append(";")
             sb.append(s.gefundeneGegenstaende ?: "").append(";")
             sb.append(s.gegenstaendeGesamt ?: "").append(";")
-            sb.append(s.personenfundErfolgreich?.let { if(it) "Ja" else "Nein" } ?: "").append(";")
+            sb.append(s.personenfundErfolgreich?.let { if(it) context.getString(R.string.yes) else context.getString(R.string.no) } ?: "").append(";")
             sb.append(p.temperaturCelsius).append(";")
             sb.append(p.beaufort).append(";")
             sb.append(p.luftfeuchtigkeit).append(";")
-            sb.append(listOf("Rücken","Seite","Gegen")[p.windrichtung]).append(";")
+            sb.append(context.resources.getStringArray(R.array.nasenarbeit_wind_directions)[p.windrichtung]).append(";")
+            // Level-Werte bewusst als stabiler Enum-Name (z. B. "ANFAENGER"), nicht übersetzt:
+            // maschinenlesbar und unabhängig von der App-Sprache zum Exportzeitpunkt.
             sb.append(s.levelVerlorensuche).append(";")
             sb.append(s.levelPersonensuche).append(";")
             sb.append(s.levelFreisuche).append(";")

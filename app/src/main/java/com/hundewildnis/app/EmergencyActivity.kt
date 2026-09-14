@@ -779,14 +779,14 @@ class EmergencyActivity : SecureBaseActivity() {
                 heatTable.addCell(Cell().add(Paragraph(lastCycle.behaviorSigns.joinToString(", "))))
             }
             if (lastCycle.symptoms.isNotEmpty()) {
-                heatTable.addCell(Cell().add(Paragraph("Körperliche Symptome:").setBold()))
+                heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_heat_cycle_symptoms_label)).setBold()))
                 heatTable.addCell(Cell().add(Paragraph(lastCycle.symptoms)))
             }
             if (lastCycle.hasPseudoPregnancy) {
                 val pseudoText = if (lastCycle.pseudoPregnancySigns.isNotEmpty()) {
                     lastCycle.pseudoPregnancySigns.joinToString(", ")
-                } else "Beobachtet"
-                heatTable.addCell(Cell().add(Paragraph("Scheinträchtigkeit:").setBold()))
+                } else getString(R.string.emergency_heat_cycle_observed)
+                heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_heat_cycle_pseudopregnancy_label)).setBold()))
                 heatTable.addCell(Cell().add(Paragraph(pseudoText)))
             }
         }
@@ -794,13 +794,13 @@ class EmergencyActivity : SecureBaseActivity() {
         // ── Zyklusstatistik ──────────────────────────────────────────
         val analysis = HeatCycleManager.analyze(cycles)
         val avgText = when (analysis.pattern) {
-            CyclePattern.UNKNOWN -> "Noch nicht berechenbar (mind. 2 Läufigkeiten)"
-            else -> "${analysis.averageDays} Tage · ${analysis.pattern.descriptionShort}" +
-               if (analysis.zwischenlaeufe > 0)
-                   " (${analysis.zwischenlaeufe} Zwischenläufigkeit(en) herausgefiltert)"
-               else ""
-   }
-   heatTable.addCell(Cell().add(Paragraph(avgText)))
+            CyclePattern.UNKNOWN -> getString(R.string.emergency_heat_cycle_not_yet_calculable)
+            else -> getString(R.string.emergency_heat_cycle_average, analysis.averageDays, analysis.pattern.descriptionShort(this)) +
+                    if (analysis.zwischenlaeufe > 0)
+                        getString(R.string.emergency_heat_cycle_filtered_intervals, analysis.zwischenlaeufe)
+                    else ""
+        }
+        heatTable.addCell(Cell().add(Paragraph(avgText)))
 
 
         document.add(heatTable)
@@ -809,9 +809,7 @@ class EmergencyActivity : SecureBaseActivity() {
         if (activeCycle != null) {
             document.add(Paragraph("\n"))
             document.add(Paragraph(
-                "⚠️ HINWEIS FÜR DEN BEHANDELNDEN TIERARZT: " +
-                        "Die Hündin befindet sich aktuell in der Läufigkeit (seit ${activeCycle.startDate}). " +
-                        "Dies kann bei der Behandlung, Narkose und Medikamentendosierung relevant sein."
+                getString(R.string.emergency_heat_cycle_vet_notice, activeCycle.startDate)
             ).setFontSize(11f)
                 .setFontColor(DeviceRgb(176, 0, 32))
                 .setBold())

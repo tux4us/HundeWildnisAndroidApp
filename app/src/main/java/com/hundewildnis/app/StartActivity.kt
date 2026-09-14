@@ -52,7 +52,7 @@ class StartActivity : BaseBottomNavActivity() {
                     }
                     confirmRestore(tempFile)
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Fehler beim Lesen: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.start_error_reading_backup, e.message ?: ""), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -62,7 +62,7 @@ class StartActivity : BaseBottomNavActivity() {
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            Toast.makeText(this, "✅ Benachrichtigungen aktiviert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.start_notifications_enabled), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -79,7 +79,7 @@ class StartActivity : BaseBottomNavActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "HundeWildnis"
+        supportActionBar?.title = getString(R.string.app_name)
         binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)?.apply {
             // Themenkonformes Tinting: das Icon war fest auf Weiß kodiert und dadurch
             // im hellen Modus auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
@@ -122,9 +122,10 @@ class StartActivity : BaseBottomNavActivity() {
         return when (item.itemId) {
             R.id.action_refresh -> {
                 loadLatestBlogPost()
-                Toast.makeText(this, "Blog-Vorschau wird aktualisiert...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.start_blog_refreshing), Toast.LENGTH_SHORT).show()
                 true
             }
+            R.id.action_language -> { showLanguageDialog(); true }
             R.id.action_theme -> { toggleTheme(); true }
             R.id.action_settings -> { showSettingsDialog(); true }
             R.id.action_instructions -> { showInstructionsDialog(); true }
@@ -153,12 +154,9 @@ class StartActivity : BaseBottomNavActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         AlertDialog.Builder(this)
-            .setTitle("🔔 Wichtige Informationen zu:\nBenachrichtigungen aktivieren")
-            .setMessage("HundeWildnis nutzt Benachrichtigungen für folgende Zwecke:\n\n" +
-                    "• BLOG-AKTUALISIERUNGEN:\nDamit Du immer informiert bist, wenn neue Blog-Artikel veröffentlicht werden.\n\n" +
-                    "• NAVIGATION & TEMPO-TRAINER  SPRACH-TRAINER:\nDamit Navigation, Tempo-Trainer und Sprach-Trainer auch dann zuverlässig funktionieren, wenn das Display ausgeschaltet ist oder die App in den Hintergrund verschoben wird (z.B. wenn das Handy beim Training in der Tasche steckt oder die Hände für Aktivitäten frei sein müssen). In diesem Fall wird eine dauerhafte Benachrichtigung angezeigt, um den Standortdienst aktiv zu halten.\nBei deaktivierten Benachrichtigungen funktionieren NAVIGATION, TEMPO-TRAINER und SPRACH-TRAINER nur, wenn die App im Vordergrund ist und der Bildschirm aktiv ist.\n\n" +
-                    "DATENSCHUTZ:\nEs werden keine personenbezogenen Daten für die Benachrichtigungen an externe Server übermittelt. Du kannst diese Funktion jederzeit in den Einstellungen:\nDein Gerät - Einstellungen - Apps - HundeWildnis - Benachrichtigungen\naktivieren, anpassen oder deaktivieren.")
-            .setPositiveButton("AKTIVIEREN") { _, _ ->
+            .setTitle(getString(R.string.start_notification_disclosure_title))
+            .setMessage(getString(R.string.start_notification_disclosure_message))
+            .setPositiveButton(getString(R.string.start_notification_disclosure_accept)) { _, _ ->
                 getSharedPreferences("app_prefs", MODE_PRIVATE).edit()
                     .putBoolean("notification_disclosure_accepted", true).apply()
 
@@ -166,7 +164,7 @@ class StartActivity : BaseBottomNavActivity() {
                     notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
-            .setNegativeButton("ABLEHNEN", null)
+            .setNegativeButton(getString(R.string.start_notification_disclosure_decline), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -179,7 +177,7 @@ class StartActivity : BaseBottomNavActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
-        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("Verstanden", null).create()
+        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.start_understood), null).create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
     }
@@ -188,7 +186,7 @@ class StartActivity : BaseBottomNavActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
-        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("OK", null).create()
+        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.ok), null).create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
     }
@@ -208,18 +206,18 @@ class StartActivity : BaseBottomNavActivity() {
         tvEmail.setTextColor(linkColor)
 
         val versionName = try { packageManager.getPackageInfo(packageName, 0).versionName } catch (e: Exception) { "1.0.0" }
-        dialogView.findViewById<TextView>(R.id.tvAboutVersion).text = "Version $versionName"
+        dialogView.findViewById<TextView>(R.id.tvAboutVersion).text = getString(R.string.start_version, versionName)
 
         tvWeb.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.wildnislehrer.com"))) }
         tvEmail.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:hundewildnisschuleapp@online.de")
-                putExtra(Intent.EXTRA_SUBJECT, "HundeWildnis App Feedback")
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.start_feedback_subject))
             }
-            startActivity(Intent.createChooser(intent, "E-Mail senden"))
+            startActivity(Intent.createChooser(intent, getString(R.string.start_send_email)))
         }
 
-        val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton("Schließen", null).create()
+        val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton(getString(R.string.start_close), null).create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
     }
@@ -230,6 +228,50 @@ class StartActivity : BaseBottomNavActivity() {
         sharedPreferences.edit().putBoolean("is_dark_mode", !isDarkMode).apply()
         AppCompatDelegate.setDefaultNightMode(if (isDarkMode) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
         recreate()
+    }
+
+    private fun showLanguageDialog() {
+        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
+
+        // Explizite Liste um Index-Fehler zu vermeiden
+        val supportedLanguages = listOf(
+            LanguageManager.SupportedLanguage.ENGLISH,
+            LanguageManager.SupportedLanguage.GERMAN
+        )
+        
+        val displayNames = supportedLanguages.map { it.displayName }.toTypedArray()
+        val currentLanguage = LanguageManager.getCurrentLanguage()
+        
+        // Finde den Index der aktuellen Sprache in unserer Liste
+        val currentIndex = supportedLanguages.indexOfFirst { it.tag == currentLanguage.tag }
+            .let { if (it == -1) 0 else it }
+
+        var selectedIndex = currentIndex
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.start_language_dialog_title))
+            .setSingleChoiceItems(displayNames, currentIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                if (selectedIndex != currentIndex) {
+                    val chosen = supportedLanguages[selectedIndex]
+                    LanguageManager.setLanguage(chosen)
+                    
+                    // Recreate wird oft automatisch gerufen, aber wir forcieren es für sofortige Wirkung
+                    // und nutzen eine kleine Verzögerung um AppCompatDelegate Zeit zu geben
+                    binding.root.postDelayed({
+                        recreate()
+                    }, 100)
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
+            .apply {
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
+                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(accentColor)
+            }
     }
 
     private fun showSettingsDialog() {
@@ -253,14 +295,14 @@ class StartActivity : BaseBottomNavActivity() {
 
         btnClearOrs.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("🗑️ Key löschen?")
-                .setMessage("Möchtest Du den gespeicherten API-Key wirklich entfernen?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.start_delete_key_title))
+                .setMessage(getString(R.string.start_delete_key_message))
+                .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                     appSettings.clearOrsApiKey()
                     orsEdit.setText("")
-                    Toast.makeText(this, "Key gelöscht", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.start_key_deleted), Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
 
@@ -272,7 +314,7 @@ class StartActivity : BaseBottomNavActivity() {
         s1.isChecked = prefs.getBoolean("background_updates_enabled", true)
         s2.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
         s3.isChecked = prefs.getBoolean("notifications_enabled", true)
-        
+
         if (appSettings.hasCustomOrsKey()) {
             orsEdit.setText("********")
         }
@@ -287,9 +329,9 @@ class StartActivity : BaseBottomNavActivity() {
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("⚙️ Einstellungen")
+            .setTitle(getString(R.string.start_settings_title))
             .setView(dialogView)
-            .setPositiveButton("Fertig") { _, _ ->
+            .setPositiveButton(getString(R.string.start_done)) { _, _ ->
                 val newKey = orsEdit.text?.toString() ?: ""
                 if (newKey.isNotBlank() && newKey != "********") {
                     appSettings.saveOrsApiKey(newKey)
@@ -304,14 +346,9 @@ class StartActivity : BaseBottomNavActivity() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         AlertDialog.Builder(this)
-            .setTitle("ORS API Key")
-            .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
-                    "Anleitung:\n" +
-                    "1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n" +
-                    "2. Erstelle unter 'Tokens' einen neuen API-Key.\n" +
-                    "3. Kopiere diesen Key und füge ihn hier ein.\n\n" +
-                    "Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie zwischen zwei Punkten angezeigt werden.")
-            .setPositiveButton("OK", null)
+            .setTitle(getString(R.string.start_ors_api_key_title))
+            .setMessage(getString(R.string.start_ors_api_key_message))
+            .setPositiveButton(getString(R.string.ok), null)
             .create()
             .apply {
                 show()
@@ -322,7 +359,7 @@ class StartActivity : BaseBottomNavActivity() {
     private fun openPrivacyPolicy() {
         startActivity(Intent(this, ContentActivity::class.java).apply {
             putExtra("url", "https://wildnislehrer.com/datenschutzerklaerung/")
-            putExtra("title", "Datenschutzerklärung")
+            putExtra("title", getString(R.string.start_privacy_policy_title))
             putExtra(ContentActivity.EXTRA_SOURCE_VIEW, MainActivity.VIEW_START)
         })
     }
@@ -364,9 +401,9 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 0,
             tiles = listOf(
-                StartTile("daily_exercise", R.drawable.ic_exercise, "Übung der Woche"),
-                StartTile("daily_meditation", R.drawable.ic_meditation, "Meditation"),
-                StartTile("entspannung", R.drawable.ic_breathing, "Entspannung")
+                StartTile("daily_exercise", R.drawable.ic_exercise, getString(R.string.tile_daily_exercise)),
+                StartTile("daily_meditation", R.drawable.ic_meditation, getString(R.string.tile_meditation)),
+                StartTile("entspannung", R.drawable.ic_breathing, getString(R.string.tile_relaxation))
             )
         )
 
@@ -376,13 +413,13 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 1,
             tiles = listOf(
-                StartTile("walking_speed", R.drawable.ic_stopwatch, "Tempo-Trainer"),
-                StartTile("communication", R.drawable.ic_microphone, "Sprach-Trainer"),
-                StartTile("sound_level", R.drawable.ic_sound_level, "Lautstärke-Trainer"),
-                StartTile("interval_timer", R.drawable.ic_interval, "Intervall-Timer"),
-                StartTile("training_diary", R.drawable.ic_diary, "Trainingstagebuch"),
-                StartTile("activity_calendar", R.drawable.ic_calendar_moon, "Aktivitätskalender"),
-                StartTile("nasenarbeit", R.drawable.ic_nose_work, "Nasenarbeit")
+                StartTile("walking_speed", R.drawable.ic_stopwatch, getString(R.string.tile_pace_trainer)),
+                StartTile("communication", R.drawable.ic_microphone, getString(R.string.tile_voice_trainer)),
+                StartTile("sound_level", R.drawable.ic_sound_level, getString(R.string.tile_volume_trainer)),
+                StartTile("interval_timer", R.drawable.ic_interval, getString(R.string.tile_interval_timer)),
+                StartTile("training_diary", R.drawable.ic_diary, getString(R.string.tile_training_diary)),
+                StartTile("activity_calendar", R.drawable.ic_calendar_moon, getString(R.string.tile_activity_calendar)),
+                StartTile("nasenarbeit", R.drawable.ic_nose_work, getString(R.string.tile_nasenarbeit))
             )
         )
 
@@ -392,12 +429,12 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 2,
             tiles = listOf(
-                StartTile("daily_notes", R.drawable.ic_notes, "Tagesnotizen"),
-                StartTile("weather", R.drawable.ic_weather, "Revier-Wetter"),
-                StartTile("thunderstorm", R.drawable.ic_thunderstorm, "Gewitterwarner"),
-                StartTile("location", R.drawable.ic_navigation, "Revier-Navigation"),
-                StartTile("compass", R.drawable.ic_compass, "Kompass"),
-                StartTile("altimeter", R.drawable.ic_altimeter, "Höhenmesser")
+                StartTile("daily_notes", R.drawable.ic_notes, getString(R.string.tile_daily_notes)),
+                StartTile("weather", R.drawable.ic_weather, getString(R.string.tile_area_weather)),
+                StartTile("thunderstorm", R.drawable.ic_thunderstorm, getString(R.string.tile_thunderstorm_warning)),
+                StartTile("location", R.drawable.ic_navigation, getString(R.string.tile_area_navigation)),
+                StartTile("compass", R.drawable.ic_compass, getString(R.string.tile_compass)),
+                StartTile("altimeter", R.drawable.ic_altimeter, getString(R.string.tile_altimeter))
             )
         )
 
@@ -407,12 +444,12 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 3,
             tiles = listOf(
-                StartTile("dog_profiles", R.drawable.ic_dog, "Stammdaten"),
-                StartTile("pulscheck", R.drawable.ic_heartbeat, "Pulscheck"),
-                StartTile("tick_loupe", R.drawable.ic_magnifier, "Zeckenlupe"),
-                StartTile("plant_scout", R.drawable.ic_plant_warning, "Gefahrenpflanzen"),
-                StartTile("location_share", R.drawable.ic_map_pin_share, "Standortfreigabe"),
-                StartTile("emergency", R.drawable.ic_emergency, "NOTFALL", isDanger = true)
+                StartTile("dog_profiles", R.drawable.ic_dog, getString(R.string.tile_master_data)),
+                StartTile("pulscheck", R.drawable.ic_heartbeat, getString(R.string.tile_pulse_check)),
+                StartTile("tick_loupe", R.drawable.ic_magnifier, getString(R.string.tile_tick_loupe)),
+                StartTile("plant_scout", R.drawable.ic_plant_warning, getString(R.string.tile_hazardous_plants)),
+                StartTile("location_share", R.drawable.ic_map_pin_share, getString(R.string.tile_location_share)),
+                StartTile("emergency", R.drawable.ic_emergency, getString(R.string.tile_emergency), isDanger = true)
             )
         )
 
@@ -422,9 +459,9 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 4,
             tiles = listOf(
-                StartTile("nav_blog", R.drawable.ic_blog, "Blog"),
-                StartTile("nav_pages", R.drawable.ic_pages, "Seiten"),
-                StartTile("nav_courses", R.drawable.ic_courses, "Online-Kurse")
+                StartTile("nav_blog", R.drawable.ic_blog, getString(R.string.tile_blog)),
+                StartTile("nav_pages", R.drawable.ic_pages, getString(R.string.tile_pages)),
+                StartTile("nav_courses", R.drawable.ic_courses, getString(R.string.tile_online_courses))
             )
         )
 
@@ -434,8 +471,8 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 5,
             tiles = listOf(
-                StartTile("backup", R.drawable.ic_backup, "Backup"),
-                StartTile("support", R.drawable.ic_heart_support, "Unterstützung")
+                StartTile("backup", R.drawable.ic_backup, getString(R.string.tile_backup)),
+                StartTile("support", R.drawable.ic_heart_support, getString(R.string.tile_support))
             )
         )
     }
@@ -467,8 +504,8 @@ class StartActivity : BaseBottomNavActivity() {
      */
     private fun handleTileClick(tileId: String) {
         when (tileId) {
-            "daily_exercise" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", "Übung der Woche")
-            "daily_meditation" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", "Meditation der Woche")
+            "daily_exercise" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", getString(R.string.tile_daily_exercise))
+            "daily_meditation" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", getString(R.string.meditation_title))
             "entspannung" -> startActivity(Intent(this, EntspannungstrainingActivity::class.java))
             "walking_speed" -> startActivity(Intent(this, WalkingSpeedActivity::class.java))
             "communication" -> startActivity(Intent(this, CommunicationActivity::class.java))
@@ -510,15 +547,15 @@ class StartActivity : BaseBottomNavActivity() {
         val screenWidthDp = resources.configuration.screenWidthDp
         val fontScale = resources.configuration.fontScale
         val effectiveItemWidthDp = referenceItemWidthDp * fontScale
-        
+
         // Dynamische Berechnung
         val rawSpan = (screenWidthDp / effectiveItemWidthDp).toInt()
-        
+
         // Korrektur für Phones vs Tablets:
         // Phones haben meist screenWidthDp < 600.
         // Wir erzwingen auf Phones 2 Spalten, auf Tablets erlauben wir mehr.
         return if (screenWidthDp < 600) {
-            rawSpan.coerceIn(2, 2) 
+            rawSpan.coerceIn(2, 2)
         } else {
             rawSpan.coerceIn(3, 5)
         }
@@ -535,13 +572,12 @@ class StartActivity : BaseBottomNavActivity() {
             val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
-                .setTitle("🐕 Kein Hund angelegt")
-                .setMessage("Bitte lege zuerst einen Hund in den Stammdaten an.\n\n" +
-                        "Die Erste-Hilfe Funktion benötigt die Stammdaten für die Notfallmeldung.")
-                .setPositiveButton("Zu Stammdaten") { _, _ ->
+                .setTitle(getString(R.string.start_no_dog_title))
+                .setMessage(getString(R.string.start_no_dog_message))
+                .setPositiveButton(getString(R.string.start_to_master_data)) { _, _ ->
                     startActivity(Intent(this, DogProfileActivity::class.java))
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .create()
                 .apply {
                     show()
@@ -558,12 +594,12 @@ class StartActivity : BaseBottomNavActivity() {
             val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
-                .setTitle("🐕 Welcher Hund?")
+                .setTitle(getString(R.string.start_which_dog_title))
                 .setItems(dogNames) { _, which ->
                     val selectedProfile = profiles[which]
                     openFirstAidWizard(selectedProfile)
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .create().apply {
                     show()
                     getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
@@ -581,16 +617,16 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun createBackup() {
-        val progress = AlertDialog.Builder(this).setTitle("Backup erstellen").setMessage("Bitte warten...").setCancelable(false).show()
+        val progress = AlertDialog.Builder(this).setTitle(getString(R.string.start_create_backup)).setMessage(getString(R.string.start_please_wait)).setCancelable(false).show()
         scope.launch {
             try {
                 val file = withContext(Dispatchers.IO) { BackupManager.createBackup(this@StartActivity) }
                 progress.dismiss()
-                Toast.makeText(this@StartActivity, "✅ Backup gespeichert in Downloads/HundeWildnis_Backups", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@StartActivity, getString(R.string.start_backup_saved), Toast.LENGTH_LONG).show()
                 offerShare(file)
             } catch (e: Exception) {
                 progress.dismiss()
-                Toast.makeText(this@StartActivity, "❌ Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@StartActivity, getString(R.string.start_error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -603,22 +639,22 @@ class StartActivity : BaseBottomNavActivity() {
     private fun confirmRestore(file: File) {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
-        val dialog = AlertDialog.Builder(this).setTitle("⚠️ Backup wiederherstellen?").setMessage("Alle Daten werden überschrieben!").setPositiveButton("Ja") { _, _ -> restoreBackup(file) }.setNegativeButton("Abbrechen") { _, _ -> file.delete() }.create()
+        val dialog = AlertDialog.Builder(this).setTitle(getString(R.string.start_restore_backup_title)).setMessage(getString(R.string.start_restore_backup_message)).setPositiveButton(getString(R.string.yes)) { _, _ -> restoreBackup(file) }.setNegativeButton(getString(R.string.cancel)) { _, _ -> file.delete() }.create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
     }
 
     private fun restoreBackup(file: File) {
-        val progress = AlertDialog.Builder(this).setTitle("Wiederherstellung").setMessage("Bitte warten...").setCancelable(false).show()
+        val progress = AlertDialog.Builder(this).setTitle(getString(R.string.start_restoration)).setMessage(getString(R.string.start_please_wait)).setCancelable(false).show()
         scope.launch {
             try {
                 val success = withContext(Dispatchers.IO) { BackupManager.restoreBackup(this@StartActivity, file) }
                 file.delete(); progress.dismiss()
                 if (success) restartApp()
-                else Toast.makeText(this@StartActivity, "❌ Fehler beim Import", Toast.LENGTH_LONG).show()
+                else Toast.makeText(this@StartActivity, getString(R.string.start_import_error), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                progress.dismiss(); Toast.makeText(this@StartActivity, "❌ Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                progress.dismiss(); Toast.makeText(this@StartActivity, getString(R.string.start_error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -628,9 +664,9 @@ class StartActivity : BaseBottomNavActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         AlertDialog.Builder(this)
-            .setTitle("Backup teilen?")
-            .setPositiveButton("Teilen") { _, _ -> shareBackupFile(file) }
-            .setNegativeButton("Später", null)
+            .setTitle(getString(R.string.start_share_backup_title))
+            .setPositiveButton(getString(R.string.start_share)) { _, _ -> shareBackupFile(file) }
+            .setNegativeButton(getString(R.string.start_later), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -640,7 +676,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun shareBackupFile(file: File) {
         val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-        startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply { type = "application/octet-stream"; putExtra(Intent.EXTRA_STREAM, uri); addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) }, "Backup teilen"))
+        startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply { type = "application/octet-stream"; putExtra(Intent.EXTRA_STREAM, uri); addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) }, getString(R.string.backup_share_title)))
     }
 
     private fun restartApp() {
@@ -691,7 +727,7 @@ class StartActivity : BaseBottomNavActivity() {
 
         dialogView.findViewById<TextView>(R.id.tvUpdateTitle).setTextColor(titleColor)
         dialogView.findViewById<TextView>(R.id.tvUpdateVersion).apply {
-            text = "Version ${BuildConfig.VERSION_NAME}"
+            text = getString(R.string.start_version, BuildConfig.VERSION_NAME)
             setTextColor(textColor)
         }
         dialogView.findViewById<TextView>(R.id.tvUpdateMessage).setTextColor(textColor)
@@ -746,7 +782,7 @@ class StartActivity : BaseBottomNavActivity() {
                     binding.blogPreviewLoading.visibility = View.GONE
                     android.util.Log.d("StartActivity", "Blog-Preview aus Cache angezeigt")
                 } else {
-                    binding.blogPreviewTitle.text = "Lädt..."
+                    binding.blogPreviewTitle.text = getString(R.string.start_loading)
                 }
 
                 // 2. DANN: Immer im Hintergrund prüfen, ob es einen neueren Post gibt
@@ -782,7 +818,7 @@ class StartActivity : BaseBottomNavActivity() {
 
             } catch (e: Exception) {
                 android.util.Log.e("StartActivity", "Fehler bei Blog-Preview", e)
-                if (binding.blogPreviewTitle.text == "Lädt...") {
+                if (binding.blogPreviewTitle.text == getString(R.string.start_loading)) {
                     hideBlogPreview()
                 }
             }

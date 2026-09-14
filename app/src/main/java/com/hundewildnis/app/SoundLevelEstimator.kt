@@ -81,28 +81,24 @@ object SoundLevelEstimator {
  * über mehrere Sessions vergleichbar zu machen.
  */
 enum class SpeechLevel(
-    val label: String,
-    val rangeLabel: String,
-    val description: String
+    val rangeLabel: String
 ) {
-    A1_LEISE(
-        "A1 – harmonisch / beruhigend",
-        "< 60 dB(A)",
-        "Optimaler Bereich, um mit dem Hund zu kommunizieren."
-    ),
-    A2_GESPRAECH(
-        "A2 – gesprächig / aktivierend",
-        "60–70 dB(A)",
-        "Energetischer Kommunikationslevel."
-    ),
-    A3_ANGEHOBEN(
-        "A3 – angehoben / aufregend",
-        "70–80 dB(A)",
-        "Angehobene Stimme mit aufregender Wirkung."
-    ),
-    A4_SCHARF(
-        "A4 – scharf / druckvoll",
-        "> 80 dB(A)",
-        "Laut, rufend mit alarmierender Wirkung."
-    )
+    A1_LEISE("< 60 dB(A)"),
+    A2_GESPRAECH("60–70 dB(A)"),
+    A3_ANGEHOBEN("70–80 dB(A)"),
+    A4_SCHARF("> 80 dB(A)");
+
+    fun label(context: android.content.Context): String = when (this) {
+        A1_LEISE -> context.getString(R.string.speech_level_a1_label)
+        A2_GESPRAECH -> context.getString(R.string.speech_level_a2_label)
+        A3_ANGEHOBEN -> context.getString(R.string.speech_level_a3_label)
+        A4_SCHARF -> context.getString(R.string.speech_level_a4_label)
+    }
+
+    fun description(context: android.content.Context): String = when (this) {
+        A1_LEISE -> context.getString(R.string.speech_level_a1_desc)
+        A2_GESPRAECH -> context.getString(R.string.speech_level_a2_desc)
+        A3_ANGEHOBEN -> context.getString(R.string.speech_level_a3_desc)
+        A4_SCHARF -> context.getString(R.string.speech_level_a4_desc)
+    }
 }

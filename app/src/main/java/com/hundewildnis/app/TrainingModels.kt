@@ -8,29 +8,67 @@ import java.util.*
 // TRAININGSKATEGORIEN - Die 18 ausgewählten Kurse
 // ════════════════════════════════════════════════════════════════
 
-enum class TrainingCategory(
-    val id: Int,
-    val displayName: String,
-    val description: String
-) {
-    LEINENARBEIT(13, "Leinenarbeit", "Grundlagen der Leinenführung"),
-    FUSS(15, "Fuß", "Präzise Fußarbeit"),
-    SITZ(16, "Sitz", "Sitz-Kommando und Festigung"),
-    PLATZ(17, "Platz", "Platz-Kommando und Ausdauer"),
-    STEH(18, "Steh", "Steh-Kommando und Position"),
-    SOZIALISIERUNG(19, "Sozialisierungstechniken", "Sozialverhalten fördern"),
-    LANGLEINE(20, "Langleinentraining", "Arbeit mit langer Leine"),
-    DISTANZUNTERBRECHUNG(21, "Distanzunterbrechungen", "Unterbrechung auf Distanz"),
-    FREILAUF(22, "Freilauf", "Freiarbeit ohne Leine"),
-    FREIFOLGE(23, "Freifolge", "Folgen ohne Leine"),
-    TEAMWALK(24, "Teamwalk", "Gemeinsames Laufen"),
-    SCOUTTECHNIKEN(25, "Scouttechniken", "Vorausschau und Orientierung"),
-    JAGDVERMEIDUNG(26, "Jagdvermeidung", "Anti-Jagd-Training"),
-    NASENARBEIT(27, "Nasenarbeit", "Geruchsarbeit und Suche"),
-    LEINENFUEHRIGKEIT(28, "Leinenführigkeit", "Entspannte Leinenführung"),
-    BEGEGNUNGEN(29, "Begegnungssituationen", "Souveräne Begegnungen"),
-    STRESSTOLERANZ(30, "Stresstoleranztraining", "Gelassenheit unter Stress"),
-    STRASSENROUTINEN(31, "Straßenroutinen", "Sicheres Verhalten im Straßenverkehr");
+enum class TrainingCategory(val id: Int) {
+    LEINENARBEIT(13),
+    FUSS(15),
+    SITZ(16),
+    PLATZ(17),
+    STEH(18),
+    SOZIALISIERUNG(19),
+    LANGLEINE(20),
+    DISTANZUNTERBRECHUNG(21),
+    FREILAUF(22),
+    FREIFOLGE(23),
+    TEAMWALK(24),
+    SCOUTTECHNIKEN(25),
+    JAGDVERMEIDUNG(26),
+    NASENARBEIT(27),
+    LEINENFUEHRIGKEIT(28),
+    BEGEGNUNGEN(29),
+    STRESSTOLERANZ(30),
+    STRASSENROUTINEN(31);
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        LEINENARBEIT -> context.getString(R.string.training_category_leinenarbeit)
+        FUSS -> context.getString(R.string.training_category_fuss)
+        SITZ -> context.getString(R.string.training_category_sitz)
+        PLATZ -> context.getString(R.string.training_category_platz)
+        STEH -> context.getString(R.string.training_category_steh)
+        SOZIALISIERUNG -> context.getString(R.string.training_category_sozialisierung)
+        LANGLEINE -> context.getString(R.string.training_category_langleine)
+        DISTANZUNTERBRECHUNG -> context.getString(R.string.training_category_distanzunterbrechung)
+        FREILAUF -> context.getString(R.string.training_category_freilauf)
+        FREIFOLGE -> context.getString(R.string.training_category_freifolge)
+        TEAMWALK -> context.getString(R.string.training_category_teamwalk)
+        SCOUTTECHNIKEN -> context.getString(R.string.training_category_scouttechniken)
+        JAGDVERMEIDUNG -> context.getString(R.string.training_category_jagdvermeidung)
+        NASENARBEIT -> context.getString(R.string.training_category_nasenarbeit)
+        LEINENFUEHRIGKEIT -> context.getString(R.string.training_category_leinenfuehrigkeit)
+        BEGEGNUNGEN -> context.getString(R.string.training_category_begegnungen)
+        STRESSTOLERANZ -> context.getString(R.string.training_category_stresstoleranz)
+        STRASSENROUTINEN -> context.getString(R.string.training_category_strassenroutinen)
+    }
+
+    fun description(context: android.content.Context): String = when (this) {
+        LEINENARBEIT -> context.getString(R.string.training_category_leinenarbeit_desc)
+        FUSS -> context.getString(R.string.training_category_fuss_desc)
+        SITZ -> context.getString(R.string.training_category_sitz_desc)
+        PLATZ -> context.getString(R.string.training_category_platz_desc)
+        STEH -> context.getString(R.string.training_category_steh_desc)
+        SOZIALISIERUNG -> context.getString(R.string.training_category_sozialisierung_desc)
+        LANGLEINE -> context.getString(R.string.training_category_langleine_desc)
+        DISTANZUNTERBRECHUNG -> context.getString(R.string.training_category_distanzunterbrechung_desc)
+        FREILAUF -> context.getString(R.string.training_category_freilauf_desc)
+        FREIFOLGE -> context.getString(R.string.training_category_freifolge_desc)
+        TEAMWALK -> context.getString(R.string.training_category_teamwalk_desc)
+        SCOUTTECHNIKEN -> context.getString(R.string.training_category_scouttechniken_desc)
+        JAGDVERMEIDUNG -> context.getString(R.string.training_category_jagdvermeidung_desc)
+        NASENARBEIT -> context.getString(R.string.training_category_nasenarbeit_desc)
+        LEINENFUEHRIGKEIT -> context.getString(R.string.training_category_leinenfuehrigkeit_desc)
+        BEGEGNUNGEN -> context.getString(R.string.training_category_begegnungen_desc)
+        STRESSTOLERANZ -> context.getString(R.string.training_category_stresstoleranz_desc)
+        STRASSENROUTINEN -> context.getString(R.string.training_category_strassenroutinen_desc)
+    }
 
     companion object {
         fun fromId(id: Int): TrainingCategory? = values().find { it.id == id }
@@ -46,29 +84,51 @@ enum class TrainingCategory(
  * Ablenkungslevel während des Trainings
  */
 @Parcelize
-enum class DistractionLevel(val displayName: String) : Parcelable {
-    NONE("Keine Ablenkung"),
-    LOW("Geringe Ablenkung"),
-    MEDIUM("Mittlere Ablenkung"),
-    HIGH("Hohe Ablenkung");
+enum class DistractionLevel : Parcelable {
+    NONE, LOW, MEDIUM, HIGH;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        NONE -> context.getString(R.string.distraction_level_none)
+        LOW -> context.getString(R.string.distraction_level_low)
+        MEDIUM -> context.getString(R.string.distraction_level_medium)
+        HIGH -> context.getString(R.string.distraction_level_high)
+    }
+
+    companion object {
+        fun fromDisplayName(context: android.content.Context, text: String): DistractionLevel? =
+            values().find { it.displayName(context) == text }
+    }
 }
 
 /**
  * Schwierigkeitsgrad der Trainingseinheit
  */
 @Parcelize
-enum class DifficultyLevel(val displayName: String) : Parcelable {
-    EASY("Leicht"),
-    NORMAL("Normal"),
-    HARD("Schwer");
+enum class DifficultyLevel : Parcelable {
+    EASY, NORMAL, HARD;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        EASY -> context.getString(R.string.difficulty_level_easy)
+        NORMAL -> context.getString(R.string.difficulty_level_normal)
+        HARD -> context.getString(R.string.difficulty_level_hard)
+    }
+
+    companion object {
+        fun fromDisplayName(context: android.content.Context, text: String): DifficultyLevel? =
+            values().find { it.displayName(context) == text }
+    }
 }
 
 /**
  * Messungstyp für Trainingseinheiten
  */
-enum class MeasurementType(val displayName: String) {
-    TIME("Minuten"),
-    REPETITIONS("Wiederholungen");
+enum class MeasurementType {
+    TIME, REPETITIONS;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        TIME -> context.getString(R.string.measurement_type_time)
+        REPETITIONS -> context.getString(R.string.measurement_type_repetitions)
+    }
 
     companion object {
         fun fromString(value: String): MeasurementType {
@@ -81,30 +141,48 @@ enum class MeasurementType(val displayName: String) {
  * Wetterbedingungen (optional)
  */
 @Parcelize
-enum class WeatherCondition(val displayName: String) : Parcelable {
-    SUNNY("Sonnig"),
-    CLOUDY("Bewölkt"),
-    RAINY("Regnerisch"),
-    SNOWY("Schnee"),
-    WINDY("Windig"),
-    FOGGY("Neblig"),
-    STORMY("Stürmisch");
+enum class WeatherCondition : Parcelable {
+    SUNNY, CLOUDY, RAINY, SNOWY, WINDY, FOGGY, STORMY;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        SUNNY -> context.getString(R.string.weather_condition_sunny)
+        CLOUDY -> context.getString(R.string.weather_condition_cloudy)
+        RAINY -> context.getString(R.string.weather_condition_rainy)
+        SNOWY -> context.getString(R.string.weather_condition_snowy)
+        WINDY -> context.getString(R.string.weather_condition_windy)
+        FOGGY -> context.getString(R.string.weather_condition_foggy)
+        STORMY -> context.getString(R.string.weather_condition_stormy)
+    }
+
+    companion object {
+        fun fromDisplayName(context: android.content.Context, text: String): WeatherCondition? =
+            values().find { it.displayName(context) == text }
+    }
 }
 
 /**
  * Trainingsort (optional)
  */
 @Parcelize
-enum class LocationType(val displayName: String) : Parcelable {
-    HOME("Zuhause"),
-    GARDEN("Garten"),
-    PARK("Park"),
-    FOREST("Wald"),
-    FIELD("Feld/Wiese"),
-    CITY("Stadt"),
-    INDOOR_HALL("Trainingshalle"),
-    DOG_SCHOOL("Hundeschule"),
-    OTHER("Sonstiges");
+enum class LocationType : Parcelable {
+    HOME, GARDEN, PARK, FOREST, FIELD, CITY, INDOOR_HALL, DOG_SCHOOL, OTHER;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        HOME -> context.getString(R.string.location_type_home)
+        GARDEN -> context.getString(R.string.location_type_garden)
+        PARK -> context.getString(R.string.location_type_park)
+        FOREST -> context.getString(R.string.location_type_forest)
+        FIELD -> context.getString(R.string.location_type_field)
+        CITY -> context.getString(R.string.location_type_city)
+        INDOOR_HALL -> context.getString(R.string.location_type_indoor_hall)
+        DOG_SCHOOL -> context.getString(R.string.location_type_dog_school)
+        OTHER -> context.getString(R.string.location_type_other)
+    }
+
+    companion object {
+        fun fromDisplayName(context: android.content.Context, text: String): LocationType? =
+            values().find { it.displayName(context) == text }
+    }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -438,12 +516,16 @@ data class TrainingProgress(
 // ════════════════════════════════════════════════════════════════
 
 @Parcelize
-enum class TrainingLevel(val displayName: String) : Parcelable {
-    BEGINNER("Beginn"),
-    BASICS("Grundlagen"),
-    INTERMEDIATE("Aufbau"),
-    ADVANCED("Festigung"),
-    ESTABLISHED("Etabliert");
+enum class TrainingLevel : Parcelable {
+    BEGINNER, BASICS, INTERMEDIATE, ADVANCED, ESTABLISHED;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        BEGINNER -> context.getString(R.string.training_level_beginner)
+        BASICS -> context.getString(R.string.training_level_basics)
+        INTERMEDIATE -> context.getString(R.string.training_level_intermediate)
+        ADVANCED -> context.getString(R.string.training_level_advanced)
+        ESTABLISHED -> context.getString(R.string.training_level_established)
+    }
 
     companion object {
         fun fromProgress(percentage: Int): TrainingLevel {
@@ -487,22 +569,37 @@ data class Milestone(
  * Meilenstein-Typen
  */
 @Parcelize
-enum class MilestoneType(val displayName: String, val icon: String) : Parcelable {
-    FIRST_SESSION("Erste Trainingseinheit", "🎯"),
-    FIVE_SESSIONS("5 Trainingseinheiten", "⭐"),
-    TEN_SESSIONS("10 Trainingseinheiten", "🏅"),
-    TWENTY_SESSIONS("20 Trainingseinheiten", "🏆"),
-    FIFTY_SESSIONS("50 Trainingseinheiten", "👑"),
+enum class MilestoneType(val icon: String) : Parcelable {
+    FIRST_SESSION("🎯"),
+    FIVE_SESSIONS("⭐"),
+    TEN_SESSIONS("🏅"),
+    TWENTY_SESSIONS("🏆"),
+    FIFTY_SESSIONS("👑"),
 
-    FIVE_DAY_STREAK("5 Tage am Stück", "🔥"),
-    TEN_DAY_STREAK("10 Tage am Stück", "🔥🔥"),
+    FIVE_DAY_STREAK("🔥"),
+    TEN_DAY_STREAK("🔥🔥"),
 
-    PROGRESS_50("50% Fortschritt", "📈"),
-    PROGRESS_75("75% Fortschritt", "⭐"),
-    PROGRESS_100("100% Fortschritt", "🏆"),
+    PROGRESS_50("📈"),
+    PROGRESS_75("⭐"),
+    PROGRESS_100("🏆"),
 
-    SUCCESS_STREAK("5x sehr erfolgreich", "💯"),
-    PERFECT_WEEK("Perfekte Woche", "🌟");
+    SUCCESS_STREAK("💯"),
+    PERFECT_WEEK("🌟");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        FIRST_SESSION -> context.getString(R.string.milestone_type_first_session)
+        FIVE_SESSIONS -> context.getString(R.string.milestone_type_five_sessions)
+        TEN_SESSIONS -> context.getString(R.string.milestone_type_ten_sessions)
+        TWENTY_SESSIONS -> context.getString(R.string.milestone_type_twenty_sessions)
+        FIFTY_SESSIONS -> context.getString(R.string.milestone_type_fifty_sessions)
+        FIVE_DAY_STREAK -> context.getString(R.string.milestone_type_five_day_streak)
+        TEN_DAY_STREAK -> context.getString(R.string.milestone_type_ten_day_streak)
+        PROGRESS_50 -> context.getString(R.string.milestone_type_progress_50)
+        PROGRESS_75 -> context.getString(R.string.milestone_type_progress_75)
+        PROGRESS_100 -> context.getString(R.string.milestone_type_progress_100)
+        SUCCESS_STREAK -> context.getString(R.string.milestone_type_success_streak)
+        PERFECT_WEEK -> context.getString(R.string.milestone_type_perfect_week)
+    }
 }
 
 /**
@@ -542,12 +639,17 @@ data class ProgressAnalysis(
  */
 @Parcelize
 enum class ProgressTrend(
-    val displayName: String,
     val icon: String
 ) : Parcelable {
-    IMPROVING("Verbesserung", "📈"),
-    STABLE("Stabil", "➡️"),
-    DECLINING("Rückläufig", "📉");
+    IMPROVING("📈"),
+    STABLE("➡️"),
+    DECLINING("📉");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        IMPROVING -> context.getString(R.string.progress_trend_improving)
+        STABLE -> context.getString(R.string.progress_trend_stable)
+        DECLINING -> context.getString(R.string.progress_trend_declining)
+    }
 }
 
 /**

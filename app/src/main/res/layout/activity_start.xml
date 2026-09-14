@@ -97,7 +97,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="💬 Neuer Blogbeitrag"
+                                android:text="@string/start_new_blog_post"
                                 android:textColor="?attr/colorOnSecondary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -106,7 +106,7 @@
                                 android:id="@+id/blogHeaderAction"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Alle anzeigen ›"
+                                android:text="@string/start_view_all"
                                 android:textColor="?attr/colorOnSecondary"
                                 android:alpha="0.7"
                                 android:textSize="12sp" />
@@ -130,7 +130,7 @@
                                 android:id="@+id/blogPreviewTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Lädt..."
+                                android:text="@string/start_loading"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="?android:textColorPrimary"
@@ -195,7 +195,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Übungen der Woche"
+                        android:text="@string/start_group_weekly_exercises"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -231,7 +231,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Trainingswerkzeuge"
+                        android:text="@string/start_group_training_tools"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -267,7 +267,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Outdoorwerkzeuge"
+                        android:text="@string/start_group_outdoor_tools"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -303,7 +303,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hund, Sicherheit und Notfall"
+                        android:text="@string/start_group_dog_safety_emergency"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -339,7 +339,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Informationen und Lernen"
+                        android:text="@string/start_group_information_learning"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -375,7 +375,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="App-Service"
+                        android:text="@string/start_group_app_service"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorSecondary" />

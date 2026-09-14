@@ -22,4 +22,11 @@
         <item>Jahr bekannt</item>
         <item>Unbekannt</item>
     </string-array>
+
+    <!-- NasenarbeitSessionDetailActivity: Windrichtung relativ zur Suchrichtung -->
+    <string-array name="nasenarbeit_wind_directions">
+        <item>Rückenwind</item>
+        <item>Seitenwind</item>
+        <item>Gegenwind</item>
+    </string-array>
 </resources>

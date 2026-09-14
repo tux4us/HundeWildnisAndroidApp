@@ -17,45 +17,45 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "UNCONSCIOUSNESS" to FirstAidInstruction(
             type = "UNCONSCIOUSNESS",
-            title = "Bewusstlosigkeit",
+            titleRes = R.string.firstaid_unconsciousness_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Keine Reaktion auf Ansprache",
-                "Keine Reaktion auf Berührung",
-                "Schlaffer Muskeltonus",
-                "Augen ggf. offen mit starrem Blick"
+            symptomsRes = listOf(
+                R.string.firstaid_unconsciousness_symptom_1,
+                R.string.firstaid_unconsciousness_symptom_2,
+                R.string.firstaid_unconsciousness_symptom_3,
+                R.string.firstaid_unconsciousness_symptom_4
             ),
-            immediateActions = listOf(
-                "1️⃣ ATEMWEGE FREI MACHEN",
-                "• Kopf leicht nach hinten überstrecken",
-                "• Zunge nach vorne ziehen",
-                "• Fremdkörper entfernen (sichtbar!)",
-                "",
-                "2️⃣ ATMUNG & PULS PRÜFEN",
-                "• Brustkorb beobachten (hebt/senkt sich?)",
-                "• Puls an Oberschenkelinnenseite fühlen",
-                "• KEIN PULS → SOFORT HLW!",
-                "",
-                "3️⃣ STABILE SEITENLAGE",
-                "• Hund auf RECHTE Seite legen",
-                "• Kopf leicht gestreckt",
-                "• Zunge raus",
-                "• Atemwege frei halten"
+            immediateActionsRes = listOf(
+                R.string.firstaid_unconsciousness_action_1,
+                R.string.firstaid_unconsciousness_action_2,
+                R.string.firstaid_unconsciousness_action_3,
+                R.string.firstaid_unconsciousness_action_4,
+                R.string.firstaid_unconsciousness_action_5,
+                R.string.firstaid_unconsciousness_action_6,
+                R.string.firstaid_unconsciousness_action_7,
+                R.string.firstaid_unconsciousness_action_8,
+                R.string.firstaid_unconsciousness_action_9,
+                R.string.firstaid_unconsciousness_action_10,
+                R.string.firstaid_unconsciousness_action_11,
+                R.string.firstaid_unconsciousness_action_12,
+                R.string.firstaid_unconsciousness_action_13,
+                R.string.firstaid_unconsciousness_action_14,
+                R.string.firstaid_unconsciousness_action_15
             ),
-            doList = listOf(
-                "✅ Atemwege freihalten",
-                "✅ Stabile Seitenlage (rechts!)",
-                "✅ Alle 30 Sek. Atmung/Puls prüfen",
-                "✅ SOFORT Tierarzt anrufen",
-                "✅ Warm halten (Decke)"
+            doListRes = listOf(
+                R.string.firstaid_unconsciousness_do_1,
+                R.string.firstaid_unconsciousness_do_2,
+                R.string.firstaid_unconsciousness_do_3,
+                R.string.firstaid_unconsciousness_do_4,
+                R.string.firstaid_unconsciousness_do_5
             ),
-            dontList = listOf(
-                "❌ KEIN Wasser eingeben",
-                "❌ KEINE Medikamente",
-                "❌ NICHT allein lassen",
-                "❌ NICHT zu stark bewegen"
+            dontListRes = listOf(
+                R.string.firstaid_unconsciousness_dont_1,
+                R.string.firstaid_unconsciousness_dont_2,
+                R.string.firstaid_unconsciousness_dont_3,
+                R.string.firstaid_unconsciousness_dont_4
             ),
-            transportInfo = "Vorsichtig auf festem Brett/Decke. Kopf gestreckt halten.",
+            transportInfoRes = R.string.firstaid_unconsciousness_transport,
             needsHLW = true
         ),
 
@@ -64,48 +64,46 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "HEAT_STROKE" to FirstAidInstruction(
             type = "HEAT_STROKE",
-            title = "Hitzschlag",
+            titleRes = R.string.firstaid_heatstroke_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Starkes, lautes Hecheln",
-                "Ziegelrote Schleimhäute",
-                "Glasige Augen",
-                "Speichelfluss",
-                "Taumeln, Koordinationsstörungen",
-                "Erbrechen, Durchfall",
-                "Körpertemperatur > 40,5°C"
+            symptomsRes = listOf(
+                R.string.firstaid_heatstroke_symptom_1,
+                R.string.firstaid_heatstroke_symptom_2,
+                R.string.firstaid_heatstroke_symptom_3,
+                R.string.firstaid_heatstroke_symptom_4,
+                R.string.firstaid_heatstroke_symptom_5,
+                R.string.firstaid_heatstroke_symptom_6,
+                R.string.firstaid_heatstroke_symptom_7
             ),
-            immediateActions = listOf(
-                "1️⃣ SOFORT IN DEN SCHATTEN",
-                "",
-                "2️⃣ LANGSAM KÜHLEN (15-20 Min)",
-                "• Lauwarmes (!) Wasser",
-                "• Von Pfoten → Beine → Körper",
-                "• KEIN Eiswasser!",
-                "• NICHT in nasse Tücher wickeln!",
-                "",
-                "3️⃣ ZAHNFLEISCH BEFEUCHTEN",
-                "• Wenige Tropfen Wasser",
-                "• Nur wenn bewusst!",
-                "",
-                "4️⃣ TIERARZT - SOFORT!"
+            immediateActionsRes = listOf(
+                R.string.firstaid_heatstroke_action_1,
+                R.string.firstaid_heatstroke_action_2,
+                R.string.firstaid_heatstroke_action_3,
+                R.string.firstaid_heatstroke_action_4,
+                R.string.firstaid_heatstroke_action_5,
+                R.string.firstaid_heatstroke_action_6,
+                R.string.firstaid_heatstroke_action_7,
+                R.string.firstaid_heatstroke_action_8,
+                R.string.firstaid_heatstroke_action_9,
+                R.string.firstaid_heatstroke_action_10,
+                R.string.firstaid_heatstroke_action_11,
+                R.string.firstaid_heatstroke_action_12
             ),
-            doList = listOf(
-                "✅ Sofort Schatten",
-                "✅ Lauwarmes Wasser von unten",
-                "✅ Luftzirkulation (Fächer)",
-                "✅ Zahnfleisch feucht halten",
-                "✅ Temperatur messen (rektal)"
+            doListRes = listOf(
+                R.string.firstaid_heatstroke_do_1,
+                R.string.firstaid_heatstroke_do_2,
+                R.string.firstaid_heatstroke_do_3,
+                R.string.firstaid_heatstroke_do_4,
+                R.string.firstaid_heatstroke_do_5
             ),
-            dontList = listOf(
-                "❌ KEIN Eiswasser",
-                "❌ NICHT in feuchte Tücher wickeln",
-                "❌ NICHT große Mengen trinken lassen",
-                "❌ NICHT zu schnell kühlen"
+            dontListRes = listOf(
+                R.string.firstaid_heatstroke_dont_1,
+                R.string.firstaid_heatstroke_dont_2,
+                R.string.firstaid_heatstroke_dont_3,
+                R.string.firstaid_heatstroke_dont_4
             ),
-            transportInfo = "Klimaanlage an. Fenster offen. Unterwegs weiter leicht kühlen.",
-            specialNotes = "🚨 Auch nach scheinbarer Erholung IMMER zum Tierarzt! " +
-                    "Organschäden können verzögert auftreten!",
+            transportInfoRes = R.string.firstaid_heatstroke_transport,
+            specialNotesRes = R.string.firstaid_heatstroke_special_notes,
             needsTimer = true,
             timerMinutes = 15
         ),
@@ -115,48 +113,46 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "POISONING_KNOWN" to FirstAidInstruction(
             type = "POISONING_KNOWN",
-            title = "Vergiftung (bekannt)",
+            titleRes = R.string.firstaid_poisoning_known_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Erbrechen, Durchfall",
-                "Zittern, Krämpfe",
-                "Schläfrigkeit / Lethargie",
-                "Atemnot, Herzrasen",
-                "Speichelfluss",
-                "Blasse/Blaue Schleimhäute"
+            symptomsRes = listOf(
+                R.string.firstaid_poisoning_known_symptom_1,
+                R.string.firstaid_poisoning_known_symptom_2,
+                R.string.firstaid_poisoning_known_symptom_3,
+                R.string.firstaid_poisoning_known_symptom_4,
+                R.string.firstaid_poisoning_known_symptom_5,
+                R.string.firstaid_poisoning_known_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ TIERGIFTNOTRUF SOFORT ANRUFEN",
-                "📞 Berlin: 030 19240",
-                "📞 München: 089 19240",
-                "📞 Freiburg: 0761 19240",
-                "",
-                "2️⃣ SUBSTANZ SICHERN",
-                "• Verpackung mitnehmen!",
-                "• Erbrochenes in Tüte",
-                "• Pflanzenprobe (Handschuhe!)",
-                "",
-                "3️⃣ KEIN ERBRECHEN OHNE ANWEISUNG!",
-                "",
-                "4️⃣ SOFORT ZUM TIERARZT"
+            immediateActionsRes = listOf(
+                R.string.firstaid_poisoning_known_action_1,
+                R.string.firstaid_poisoning_known_action_2,
+                R.string.firstaid_poisoning_known_action_3,
+                R.string.firstaid_poisoning_known_action_4,
+                R.string.firstaid_poisoning_known_action_5,
+                R.string.firstaid_poisoning_known_action_6,
+                R.string.firstaid_poisoning_known_action_7,
+                R.string.firstaid_poisoning_known_action_8,
+                R.string.firstaid_poisoning_known_action_9,
+                R.string.firstaid_poisoning_known_action_10,
+                R.string.firstaid_poisoning_known_action_11,
+                R.string.firstaid_poisoning_known_action_12,
+                R.string.firstaid_poisoning_known_action_13
             ),
-            doList = listOf(
-                "✅ Giftzentrale anrufen",
-                "✅ Verpackung/Probe mitnehmen",
-                "✅ Zeitpunkt notieren",
-                "✅ Menge schätzen",
-                "✅ Ruhig halten"
+            doListRes = listOf(
+                R.string.firstaid_poisoning_known_do_1,
+                R.string.firstaid_poisoning_known_do_2,
+                R.string.firstaid_poisoning_known_do_3,
+                R.string.firstaid_poisoning_known_do_4,
+                R.string.firstaid_poisoning_known_do_5
             ),
-            dontList = listOf(
-                "❌ KEIN Erbrechen provozieren!",
-                "❌ KEINE Milch geben",
-                "❌ KEIN Öl geben",
-                "❌ NICHT abwarten!"
+            dontListRes = listOf(
+                R.string.firstaid_poisoning_known_dont_1,
+                R.string.firstaid_poisoning_known_dont_2,
+                R.string.firstaid_poisoning_known_dont_3,
+                R.string.firstaid_poisoning_known_dont_4
             ),
-            transportInfo = "Verpackung/Gift mitnehmen. Erbrochenes in Tüte. " +
-                    "Hund ruhig halten.",
-            specialNotes = "⚠️ TIERGIFTZENTRALE: Berlin 030 19240, München 089 19240, " +
-                    "Freiburg 0761 19240"
+            transportInfoRes = R.string.firstaid_poisoning_known_transport,
+            specialNotesRes = R.string.firstaid_poisoning_known_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -164,49 +160,47 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "GASTRIC_TORSION" to FirstAidInstruction(
             type = "GASTRIC_TORSION",
-            title = "Magendrehung",
+            titleRes = R.string.firstaid_gastric_torsion_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Aufgeblähter, harter Bauch",
-                "Erfolgloses Würgen ohne Erbrechen",
-                "Starke Unruhe",
-                "Speichelfluss",
-                "Schnelle, flache Atmung",
-                "Blasse Schleimhäute",
-                "Schwäche, Kollaps"
+            symptomsRes = listOf(
+                R.string.firstaid_gastric_torsion_symptom_1,
+                R.string.firstaid_gastric_torsion_symptom_2,
+                R.string.firstaid_gastric_torsion_symptom_3,
+                R.string.firstaid_gastric_torsion_symptom_4,
+                R.string.firstaid_gastric_torsion_symptom_5,
+                R.string.firstaid_gastric_torsion_symptom_6,
+                R.string.firstaid_gastric_torsion_symptom_7
             ),
-            immediateActions = listOf(
-                "🚨 ABSOLUTE NOTFALL-SITUATION!",
-                "",
-                "1️⃣ SOFORT TIERKLINIK ANRUFEN",
-                "• Operation innerhalb von 1-2h nötig!",
-                "",
-                "2️⃣ NICHT MEHR FÜTTERN/TRÄNKEN",
-                "",
-                "3️⃣ BEWEGUNG MINIMIEREN",
-                "• Ruhig halten",
-                "• Nicht rennen lassen",
-                "",
-                "4️⃣ SCHNELLSTER TRANSPORT",
-                "• Jede Minute zählt!",
-                "• Klinik vorab informieren"
+            immediateActionsRes = listOf(
+                R.string.firstaid_gastric_torsion_action_1,
+                R.string.firstaid_gastric_torsion_action_2,
+                R.string.firstaid_gastric_torsion_action_3,
+                R.string.firstaid_gastric_torsion_action_4,
+                R.string.firstaid_gastric_torsion_action_5,
+                R.string.firstaid_gastric_torsion_action_6,
+                R.string.firstaid_gastric_torsion_action_7,
+                R.string.firstaid_gastric_torsion_action_8,
+                R.string.firstaid_gastric_torsion_action_9,
+                R.string.firstaid_gastric_torsion_action_10,
+                R.string.firstaid_gastric_torsion_action_11,
+                R.string.firstaid_gastric_torsion_action_12,
+                R.string.firstaid_gastric_torsion_action_13,
+                R.string.firstaid_gastric_torsion_action_14
             ),
-            doList = listOf(
-                "✅ SOFORT Tierklinik",
-                "✅ Vorab anrufen",
-                "✅ Bewegung minimieren",
-                "✅ Zeit notieren (wichtig!)"
+            doListRes = listOf(
+                R.string.firstaid_gastric_torsion_do_1,
+                R.string.firstaid_gastric_torsion_do_2,
+                R.string.firstaid_gastric_torsion_do_3,
+                R.string.firstaid_gastric_torsion_do_4
             ),
-            dontList = listOf(
-                "❌ KEIN Futter/Wasser",
-                "❌ NICHT warten",
-                "❌ NICHT selbst behandeln",
-                "❌ KEINE Bewegung"
+            dontListRes = listOf(
+                R.string.firstaid_gastric_torsion_dont_1,
+                R.string.firstaid_gastric_torsion_dont_2,
+                R.string.firstaid_gastric_torsion_dont_3,
+                R.string.firstaid_gastric_torsion_dont_4
             ),
-            transportInfo = "Vorsichtig transportieren. Bauch nicht drücken. " +
-                    "SCHNELLSTE Route zur Klinik!",
-            specialNotes = "⚠️ LEBENSBEDROHLICH! Überlebenschance sinkt mit jeder Minute. " +
-                    "Risikohunde: Schäferhund, Dogge, Setter, Dobermann, Sennenhunde."
+            transportInfoRes = R.string.firstaid_gastric_torsion_transport,
+            specialNotesRes = R.string.firstaid_gastric_torsion_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -214,52 +208,50 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "SEIZURE" to FirstAidInstruction(
             type = "SEIZURE",
-            title = "Krampfanfall / Epilepsie",
+            titleRes = R.string.firstaid_seizure_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Plötzlicher Bewusstseinsverlust",
-                "Unkontrollierte Muskelzuckungen",
-                "Paddelbewegungen",
-                "Kieferschlagen",
-                "Speichelfluss, Schaum",
-                "Unkontrollierter Kot-/Urinabsatz"
+            symptomsRes = listOf(
+                R.string.firstaid_seizure_symptom_1,
+                R.string.firstaid_seizure_symptom_2,
+                R.string.firstaid_seizure_symptom_3,
+                R.string.firstaid_seizure_symptom_4,
+                R.string.firstaid_seizure_symptom_5,
+                R.string.firstaid_seizure_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ UMGEBUNG SICHERN",
-                "• Möbel wegräumen",
-                "• Polster unterlegen",
-                "• Raum abdunkeln",
-                "",
-                "2️⃣ ZEIT STOPPEN",
-                "• Dauer notieren!",
-                "• > 5 Min = NOTFALL",
-                "",
-                "3️⃣ NICHT FESTHALTEN",
-                "• Hund nicht berühren!",
-                "• Nicht in Maul greifen!",
-                "",
-                "4️⃣ NACH DEM ANFALL",
-                "• Ruhig bleiben",
-                "• Sanft ansprechen",
-                "• Nicht bedrängen"
+            immediateActionsRes = listOf(
+                R.string.firstaid_seizure_action_1,
+                R.string.firstaid_seizure_action_2,
+                R.string.firstaid_seizure_action_3,
+                R.string.firstaid_seizure_action_4,
+                R.string.firstaid_seizure_action_5,
+                R.string.firstaid_seizure_action_6,
+                R.string.firstaid_seizure_action_7,
+                R.string.firstaid_seizure_action_8,
+                R.string.firstaid_seizure_action_9,
+                R.string.firstaid_seizure_action_10,
+                R.string.firstaid_seizure_action_11,
+                R.string.firstaid_seizure_action_12,
+                R.string.firstaid_seizure_action_13,
+                R.string.firstaid_seizure_action_14,
+                R.string.firstaid_seizure_action_15,
+                R.string.firstaid_seizure_action_16,
+                R.string.firstaid_seizure_action_17
             ),
-            doList = listOf(
-                "✅ Umgebung sichern",
-                "✅ Zeit stoppen",
-                "✅ Ruhig bleiben",
-                "✅ Raum abdunkeln",
-                "✅ Nach > 5 Min → Tierarzt"
+            doListRes = listOf(
+                R.string.firstaid_seizure_do_1,
+                R.string.firstaid_seizure_do_2,
+                R.string.firstaid_seizure_do_3,
+                R.string.firstaid_seizure_do_4,
+                R.string.firstaid_seizure_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT festhalten",
-                "❌ NICHT ins Maul greifen",
-                "❌ NICHT erschrecken",
-                "❌ NICHT bedrängen danach"
+            dontListRes = listOf(
+                R.string.firstaid_seizure_dont_1,
+                R.string.firstaid_seizure_dont_2,
+                R.string.firstaid_seizure_dont_3,
+                R.string.firstaid_seizure_dont_4
             ),
-            transportInfo = "Nach Anfall: Hund ist desorientiert. Langsam, vorsichtig. " +
-                    "Kann aggressiv reagieren.",
-            specialNotes = "⚠️ Tierarzt wenn: > 5 Min Dauer, mehrere Anfälle hintereinander, " +
-                    "erster Anfall überhaupt.",
+            transportInfoRes = R.string.firstaid_seizure_transport,
+            specialNotesRes = R.string.firstaid_seizure_special_notes,
             needsTimer = true,
             timerMinutes = 5
         ),
@@ -269,99 +261,92 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "BLEEDING" to FirstAidInstruction(
             type = "BLEEDING",
-            title = "Starke Blutung",
+            titleRes = R.string.firstaid_bleeding_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Hellrotes, pulsierendes Blut (Arterie - NOTFALL!)",
-                "Dunkelrotes, stetiges Blut (Vene)",
-                "Große Wundfläche",
-                "Schockzeichen: blasse Schleimhäute, Schwäche"
+            symptomsRes = listOf(
+                R.string.firstaid_bleeding_symptom_1,
+                R.string.firstaid_bleeding_symptom_2,
+                R.string.firstaid_bleeding_symptom_3,
+                R.string.firstaid_bleeding_symptom_4
             ),
-            immediateActions = listOf(
-                "1️⃣ DRUCKVERBAND ANLEGEN",
-                "• Sterile Kompresse auf Wunde",
-                "• Fest andrücken (2-3 Min)",
-                "• Mit Binde fixieren",
-                "• NICHT zu fest!",
-                "",
-                "2️⃣ VERBAND NICHT ENTFERNEN",
-                "• Blutet durch → 2. Lage drauf",
-                "• Nie alten Verband abnehmen!",
-                "",
-                "3️⃣ HUND RUHIG HALTEN",
-                "• Keine Bewegung",
-                "• Warm halten",
-                "",
-                "4️⃣ SOFORT TIERARZT"
+            immediateActionsRes = listOf(
+                R.string.firstaid_bleeding_action_1,
+                R.string.firstaid_bleeding_action_2,
+                R.string.firstaid_bleeding_action_3,
+                R.string.firstaid_bleeding_action_4,
+                R.string.firstaid_bleeding_action_5,
+                R.string.firstaid_bleeding_action_6,
+                R.string.firstaid_bleeding_action_7,
+                R.string.firstaid_bleeding_action_8,
+                R.string.firstaid_bleeding_action_9,
+                R.string.firstaid_bleeding_action_10,
+                R.string.firstaid_bleeding_action_11,
+                R.string.firstaid_bleeding_action_12,
+                R.string.firstaid_bleeding_action_13,
+                R.string.firstaid_bleeding_action_14,
+                R.string.firstaid_bleeding_action_15
             ),
-            doList = listOf(
-                "✅ Druckverband",
-                "✅ Fest andrücken",
-                "✅ Ruhig halten",
-                "✅ Warm halten (Schock!)",
-                "✅ SOFORT Tierarzt"
+            doListRes = listOf(
+                R.string.firstaid_bleeding_do_1,
+                R.string.firstaid_bleeding_do_2,
+                R.string.firstaid_bleeding_do_3,
+                R.string.firstaid_bleeding_do_4,
+                R.string.firstaid_bleeding_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT Verband abnehmen",
-                "❌ KEINE Abbindung (Tourniquet)",
-                "❌ NICHT Wunde ausspülen",
-                "❌ NICHT zu fest abbinden"
+            dontListRes = listOf(
+                R.string.firstaid_bleeding_dont_1,
+                R.string.firstaid_bleeding_dont_2,
+                R.string.firstaid_bleeding_dont_3,
+                R.string.firstaid_bleeding_dont_4
             ),
-            transportInfo = "Vorsichtig. Verletzte Stelle ruhig stellen. " +
-                    "Bei Schock: Hinterbeine leicht erhöhen.",
-            specialNotes = "🚨 Arteriell (hellrot, pulsierend) = HÖCHSTE GEFAHR! " +
-                    "Jede Minute zählt!"
-        )
-
-        ,
+            transportInfoRes = R.string.firstaid_bleeding_transport,
+            specialNotesRes = R.string.firstaid_bleeding_special_notes
+        ),
 
         // ════════════════════════════════════════════════════════
         // KNOCHENBRUCH
         // ════════════════════════════════════════════════════════
         "BONE_FRACTURE" to FirstAidInstruction(
             type = "BONE_FRACTURE",
-            title = "Knochenbruch / Lahmheit",
+            titleRes = R.string.firstaid_bone_fracture_title,
             urgency = UrgencyLevel.URGENT,
-            symptoms = listOf(
-                "Humpeln oder nicht auftreten",
-                "Abnormale Stellung der Gliedmaße",
-                "Sichtbare Knochenteile (offener Bruch!)",
-                "Schwellung, Schmerzen",
-                "Schonhaltung"
+            symptomsRes = listOf(
+                R.string.firstaid_bone_fracture_symptom_1,
+                R.string.firstaid_bone_fracture_symptom_2,
+                R.string.firstaid_bone_fracture_symptom_3,
+                R.string.firstaid_bone_fracture_symptom_4,
+                R.string.firstaid_bone_fracture_symptom_5
             ),
-            immediateActions = listOf(
-                "1️⃣ HUND RUHIG HALTEN",
-                "• Keine Bewegung!",
-                "• Nicht aufstehen lassen",
-                "",
-                "2️⃣ NICHT SCHIENEN",
-                "• Nur bei extremer Outdoor-Notsituation",
-                "• Falsches Schienen → mehr Schaden!",
-                "",
-                "3️⃣ BEI OFFENER FRAKTUR",
-                "• Sterile Kompresse auflegen",
-                "• Nicht reinigen!",
-                "• Locker abdecken",
-                "",
-                "4️⃣ BEWEGUNGSARMER TRANSPORT"
+            immediateActionsRes = listOf(
+                R.string.firstaid_bone_fracture_action_1,
+                R.string.firstaid_bone_fracture_action_2,
+                R.string.firstaid_bone_fracture_action_3,
+                R.string.firstaid_bone_fracture_action_4,
+                R.string.firstaid_bone_fracture_action_5,
+                R.string.firstaid_bone_fracture_action_6,
+                R.string.firstaid_bone_fracture_action_7,
+                R.string.firstaid_bone_fracture_action_8,
+                R.string.firstaid_bone_fracture_action_9,
+                R.string.firstaid_bone_fracture_action_10,
+                R.string.firstaid_bone_fracture_action_11,
+                R.string.firstaid_bone_fracture_action_12,
+                R.string.firstaid_bone_fracture_action_13
             ),
-            doList = listOf(
-                "✅ Bewegung minimieren",
-                "✅ Ruhig halten",
-                "✅ Offene Wunde abdecken",
-                "✅ Vorsichtiger Transport",
-                "✅ Schmerzäußerungen beachten"
+            doListRes = listOf(
+                R.string.firstaid_bone_fracture_do_1,
+                R.string.firstaid_bone_fracture_do_2,
+                R.string.firstaid_bone_fracture_do_3,
+                R.string.firstaid_bone_fracture_do_4,
+                R.string.firstaid_bone_fracture_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT schienen (Ausnahme: Profi)",
-                "❌ NICHT Knochen zurückdrücken",
-                "❌ NICHT offene Wunde spülen",
-                "❌ NICHT bewegen lassen"
+            dontListRes = listOf(
+                R.string.firstaid_bone_fracture_dont_1,
+                R.string.firstaid_bone_fracture_dont_2,
+                R.string.firstaid_bone_fracture_dont_3,
+                R.string.firstaid_bone_fracture_dont_4
             ),
-            transportInfo = "Brett/Trage. Bei Wirbelsäulenverdacht: keine Rotation! " +
-                    "Kleinhunde: stabiler Karton.",
-            specialNotes = "⚠️ Wirbelsäulenverletzung? Lähmung, Inkontinenz → " +
-                    "ABSOLUT KEINE BEWEGUNG!"
+            transportInfoRes = R.string.firstaid_bone_fracture_transport,
+            specialNotesRes = R.string.firstaid_bone_fracture_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -369,48 +354,47 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "EYE_INJURY" to FirstAidInstruction(
             type = "EYE_INJURY",
-            title = "Augenverletzung",
+            titleRes = R.string.firstaid_eye_injury_title,
             urgency = UrgencyLevel.URGENT,
-            symptoms = listOf(
-                "Zugekniffenes Auge",
-                "Rötung, Schwellung",
-                "Tränenfluss",
-                "Sichtbare Verletzung",
-                "Trübe Hornhaut",
-                "Fremdkörper sichtbar"
+            symptomsRes = listOf(
+                R.string.firstaid_eye_injury_symptom_1,
+                R.string.firstaid_eye_injury_symptom_2,
+                R.string.firstaid_eye_injury_symptom_3,
+                R.string.firstaid_eye_injury_symptom_4,
+                R.string.firstaid_eye_injury_symptom_5,
+                R.string.firstaid_eye_injury_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ NICHT REIBEN LASSEN",
-                "• Halskragen/Trichter!",
-                "",
-                "2️⃣ BEI VERSCHMUTZUNG (keine Verletzung)",
-                "• Sterile NaCl 0,9% Lösung",
-                "• Von innen nach außen spülen",
-                "• Sanft, kein Druck",
-                "",
-                "3️⃣ BEI VERLETZUNG",
-                "• NICHT spülen!",
-                "• Feuchte Kompresse auflegen",
-                "• Locker abdecken",
-                "",
-                "4️⃣ SOFORT TIERARZT"
+            immediateActionsRes = listOf(
+                R.string.firstaid_eye_injury_action_1,
+                R.string.firstaid_eye_injury_action_2,
+                R.string.firstaid_eye_injury_action_3,
+                R.string.firstaid_eye_injury_action_4,
+                R.string.firstaid_eye_injury_action_5,
+                R.string.firstaid_eye_injury_action_6,
+                R.string.firstaid_eye_injury_action_7,
+                R.string.firstaid_eye_injury_action_8,
+                R.string.firstaid_eye_injury_action_9,
+                R.string.firstaid_eye_injury_action_10,
+                R.string.firstaid_eye_injury_action_11,
+                R.string.firstaid_eye_injury_action_12,
+                R.string.firstaid_eye_injury_action_13,
+                R.string.firstaid_eye_injury_action_14
             ),
-            doList = listOf(
-                "✅ Halskragen anlegen",
-                "✅ Bei Schmutz: NaCl spülen",
-                "✅ Feuchte Kompresse",
-                "✅ Abdunkeln (Licht meiden)",
-                "✅ SOFORT Tierarzt"
+            doListRes = listOf(
+                R.string.firstaid_eye_injury_do_1,
+                R.string.firstaid_eye_injury_do_2,
+                R.string.firstaid_eye_injury_do_3,
+                R.string.firstaid_eye_injury_do_4,
+                R.string.firstaid_eye_injury_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT reiben lassen",
-                "❌ NICHT Fremdkörper entfernen",
-                "❌ KEINE Salben ohne Tierarzt",
-                "❌ NICHT bei Verletzung spülen"
+            dontListRes = listOf(
+                R.string.firstaid_eye_injury_dont_1,
+                R.string.firstaid_eye_injury_dont_2,
+                R.string.firstaid_eye_injury_dont_3,
+                R.string.firstaid_eye_injury_dont_4
             ),
-            transportInfo = "Abdunkeln. Ruhig halten. Halskragen anlegen. " +
-                    "Auge feucht halten.",
-            specialNotes = "🚨 Hornhautverletzung = NOTFALL! Jede Stunde zählt für Sehkraft."
+            transportInfoRes = R.string.firstaid_eye_injury_transport,
+            specialNotesRes = R.string.firstaid_eye_injury_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -418,48 +402,48 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "DROWNING" to FirstAidInstruction(
             type = "DROWNING",
-            title = "Ertrinken / Beinahe-Ertrinken",
+            titleRes = R.string.firstaid_drowning_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Wasser in Atemwegen",
-                "Husten, Würgen",
-                "Atemnot",
-                "Blau-graue Schleimhäute",
-                "Bewusstlosigkeit",
-                "Unterkühlung"
+            symptomsRes = listOf(
+                R.string.firstaid_drowning_symptom_1,
+                R.string.firstaid_drowning_symptom_2,
+                R.string.firstaid_drowning_symptom_3,
+                R.string.firstaid_drowning_symptom_4,
+                R.string.firstaid_drowning_symptom_5,
+                R.string.firstaid_drowning_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ WASSER AUS ATEMWEGEN",
-                "• Hinterbeine 15-30 Sek. hochhalten",
-                "• Kopf nach unten",
-                "• Wasser ablaufen lassen",
-                "",
-                "2️⃣ ATMUNG & PULS PRÜFEN",
-                "• Kein Puls → HLW sofort!",
-                "",
-                "3️⃣ TROCKNEN & WÄRMEN",
-                "• Nasses Fell trocknen",
-                "• In Decken wickeln",
-                "• Körperwärme",
-                "",
-                "4️⃣ AUCH BEI ERHOLUNG: TIERARZT!",
-                "• Lungenödem kann verzögert auftreten"
+            immediateActionsRes = listOf(
+                R.string.firstaid_drowning_action_1,
+                R.string.firstaid_drowning_action_2,
+                R.string.firstaid_drowning_action_3,
+                R.string.firstaid_drowning_action_4,
+                R.string.firstaid_drowning_action_5,
+                R.string.firstaid_drowning_action_6,
+                R.string.firstaid_drowning_action_7,
+                R.string.firstaid_drowning_action_8,
+                R.string.firstaid_drowning_action_9,
+                R.string.firstaid_drowning_action_10,
+                R.string.firstaid_drowning_action_11,
+                R.string.firstaid_drowning_action_12,
+                R.string.firstaid_drowning_action_13,
+                R.string.firstaid_drowning_action_14,
+                R.string.firstaid_drowning_action_15
             ),
-            doList = listOf(
-                "✅ Wasser aus Atemwegen",
-                "✅ Trocknen",
-                "✅ Aufwärmen",
-                "✅ Atmung/Puls überwachen",
-                "✅ IMMER zum Tierarzt (24-48h Risiko!)"
+            doListRes = listOf(
+                R.string.firstaid_drowning_do_1,
+                R.string.firstaid_drowning_do_2,
+                R.string.firstaid_drowning_do_3,
+                R.string.firstaid_drowning_do_4,
+                R.string.firstaid_drowning_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT zu lange kopfüber halten",
-                "❌ NICHT zu schnell erwärmen",
-                "❌ NICHT allein lassen",
-                "❌ NICHT auf Erholung verlassen"
+            dontListRes = listOf(
+                R.string.firstaid_drowning_dont_1,
+                R.string.firstaid_drowning_dont_2,
+                R.string.firstaid_drowning_dont_3,
+                R.string.firstaid_drowning_dont_4
             ),
-            transportInfo = "Warm halten. Atemwege frei. Beobachten auf Atemnot.",
-            specialNotes = "⚠️ NACHBEOBACHTUNG 24-48h PFLICHT! Verzögertes Lungenödem möglich.",
+            transportInfoRes = R.string.firstaid_drowning_transport,
+            specialNotesRes = R.string.firstaid_drowning_special_notes,
             needsHLW = true
         ),
 
@@ -468,49 +452,48 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "HYPOTHERMIA" to FirstAidInstruction(
             type = "HYPOTHERMIA",
-            title = "Unterkühlung",
+            titleRes = R.string.firstaid_hypothermia_title,
             urgency = UrgencyLevel.URGENT,
-            symptoms = listOf(
-                "Körpertemperatur < 37,5°C",
-                "Zittern",
-                "Steife Muskeln",
-                "Apathie, Lethargie",
-                "Verlangsamter Puls",
-                "Kalte Haut"
+            symptomsRes = listOf(
+                R.string.firstaid_hypothermia_symptom_1,
+                R.string.firstaid_hypothermia_symptom_2,
+                R.string.firstaid_hypothermia_symptom_3,
+                R.string.firstaid_hypothermia_symptom_4,
+                R.string.firstaid_hypothermia_symptom_5,
+                R.string.firstaid_hypothermia_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ NASSES FELL SOFORT TROCKNEN",
-                "• Handtücher",
-                "• Föhn (lauwarm, Abstand!)",
-                "",
-                "2️⃣ LANGSAM AUFWÄRMEN",
-                "• In Decken wickeln",
-                "• Körperwärme",
-                "• Warme Umgebung",
-                "",
-                "3️⃣ WARME GETRÄNKE",
-                "• Nur wenn bewusst!",
-                "• Lauwarm, nicht heiß",
-                "• Kleine Mengen",
-                "",
-                "4️⃣ BEI < 35°C → TIERARZT NOTFALL"
+            immediateActionsRes = listOf(
+                R.string.firstaid_hypothermia_action_1,
+                R.string.firstaid_hypothermia_action_2,
+                R.string.firstaid_hypothermia_action_3,
+                R.string.firstaid_hypothermia_action_4,
+                R.string.firstaid_hypothermia_action_5,
+                R.string.firstaid_hypothermia_action_6,
+                R.string.firstaid_hypothermia_action_7,
+                R.string.firstaid_hypothermia_action_8,
+                R.string.firstaid_hypothermia_action_9,
+                R.string.firstaid_hypothermia_action_10,
+                R.string.firstaid_hypothermia_action_11,
+                R.string.firstaid_hypothermia_action_12,
+                R.string.firstaid_hypothermia_action_13,
+                R.string.firstaid_hypothermia_action_14,
+                R.string.firstaid_hypothermia_action_15
             ),
-            doList = listOf(
-                "✅ Trocknen",
-                "✅ Langsam aufwärmen",
-                "✅ Decken, Körperwärme",
-                "✅ Temperatur messen",
-                "✅ Bei < 35°C → Notfall!"
+            doListRes = listOf(
+                R.string.firstaid_hypothermia_do_1,
+                R.string.firstaid_hypothermia_do_2,
+                R.string.firstaid_hypothermia_do_3,
+                R.string.firstaid_hypothermia_do_4,
+                R.string.firstaid_hypothermia_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT zu schnell erwärmen",
-                "❌ KEINE Wärmflasche direkt auf Haut",
-                "❌ KEIN heißes Wasser",
-                "❌ KEIN Alkohol"
+            dontListRes = listOf(
+                R.string.firstaid_hypothermia_dont_1,
+                R.string.firstaid_hypothermia_dont_2,
+                R.string.firstaid_hypothermia_dont_3,
+                R.string.firstaid_hypothermia_dont_4
             ),
-            transportInfo = "Warm einpacken. Temperatur überwachen. " +
-                    "Bei < 35°C sofort Klinik.",
-            specialNotes = "🧊 Nach Eiseinbruch: EIGENSICHERUNG BEACHTEN!"
+            transportInfoRes = R.string.firstaid_hypothermia_transport,
+            specialNotesRes = R.string.firstaid_hypothermia_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -518,49 +501,47 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "FOREIGN_OBJECT" to FirstAidInstruction(
             type = "FOREIGN_OBJECT",
-            title = "Fremdkörper verschluckt",
+            titleRes = R.string.firstaid_foreign_object_title,
             urgency = UrgencyLevel.URGENT,
-            symptoms = listOf(
-                "Plötzliches Würgen, Husten",
-                "Pfoten ans Maul",
-                "Speichelfluss",
-                "Blaue/graue Schleimhäute (Erstickung!)",
-                "Erstickungsanfall"
+            symptomsRes = listOf(
+                R.string.firstaid_foreign_object_symptom_1,
+                R.string.firstaid_foreign_object_symptom_2,
+                R.string.firstaid_foreign_object_symptom_3,
+                R.string.firstaid_foreign_object_symptom_4,
+                R.string.firstaid_foreign_object_symptom_5
             ),
-            immediateActions = listOf(
-                "1️⃣ MAUL ÖFFNEN & SCHAUEN",
-                "• NUR wenn sichtbar!",
-                "• Nicht blind greifen",
-                "",
-                "2️⃣ BEI SICHTBAREM OBJEKT",
-                "• Vorsichtig entfernen",
-                "• Mit Finger/Pinzette",
-                "",
-                "3️⃣ BEI ERSTICKUNG (HEIMLICH-GRIFF)",
-                "• Hund aufrecht/stehend",
-                "• Hände unter Rippenbogen",
-                "• 5x kräftig nach oben drücken",
-                "• Prüfen ob Objekt raus",
-                "",
-                "4️⃣ SOFORT TIERARZT",
-                "• Auch wenn Objekt raus!"
+            immediateActionsRes = listOf(
+                R.string.firstaid_foreign_object_action_1,
+                R.string.firstaid_foreign_object_action_2,
+                R.string.firstaid_foreign_object_action_3,
+                R.string.firstaid_foreign_object_action_4,
+                R.string.firstaid_foreign_object_action_5,
+                R.string.firstaid_foreign_object_action_6,
+                R.string.firstaid_foreign_object_action_7,
+                R.string.firstaid_foreign_object_action_8,
+                R.string.firstaid_foreign_object_action_9,
+                R.string.firstaid_foreign_object_action_10,
+                R.string.firstaid_foreign_object_action_11,
+                R.string.firstaid_foreign_object_action_12,
+                R.string.firstaid_foreign_object_action_13,
+                R.string.firstaid_foreign_object_action_14,
+                R.string.firstaid_foreign_object_action_15,
+                R.string.firstaid_foreign_object_action_16
             ),
-            doList = listOf(
-                "✅ Maul inspizieren (vorsichtig!)",
-                "✅ Nur sichtbare Objekte entfernen",
-                "✅ Bei Erstickung: Heimlich-Griff",
-                "✅ IMMER zum Tierarzt danach"
+            doListRes = listOf(
+                R.string.firstaid_foreign_object_do_1,
+                R.string.firstaid_foreign_object_do_2,
+                R.string.firstaid_foreign_object_do_3,
+                R.string.firstaid_foreign_object_do_4
             ),
-            dontList = listOf(
-                "❌ NICHT blind in Rachen greifen",
-                "❌ NICHT zu tief greifen",
-                "❌ KEIN Wasser eingeben",
-                "❌ NICHT abwarten"
+            dontListRes = listOf(
+                R.string.firstaid_foreign_object_dont_1,
+                R.string.firstaid_foreign_object_dont_2,
+                R.string.firstaid_foreign_object_dont_3,
+                R.string.firstaid_foreign_object_dont_4
             ),
-            transportInfo = "Kopf leicht nach unten. Maul offen halten. " +
-                    "Notfalls weiter Heimlich-Griff.",
-            specialNotes = "🚨 Blaue Schleimhäute = AKUTE ERSTICKUNG! " +
-                    "Heimlich-Griff SOFORT!"
+            transportInfoRes = R.string.firstaid_foreign_object_transport,
+            specialNotesRes = R.string.firstaid_foreign_object_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -568,51 +549,49 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "BREATHING_DIFFICULTY" to FirstAidInstruction(
             type = "BREATHING_DIFFICULTY",
-            title = "Atemnot",
+            titleRes = R.string.firstaid_breathing_difficulty_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Schnelle, flache Atmung",
-                "Ringen nach Luft",
-                "Geräuschvolle Atmung",
-                "Blaue/graue Schleimhäute",
-                "Panik, Unruhe",
-                "Atmung > 30/Min in Ruhe"
+            symptomsRes = listOf(
+                R.string.firstaid_breathing_difficulty_symptom_1,
+                R.string.firstaid_breathing_difficulty_symptom_2,
+                R.string.firstaid_breathing_difficulty_symptom_3,
+                R.string.firstaid_breathing_difficulty_symptom_4,
+                R.string.firstaid_breathing_difficulty_symptom_5,
+                R.string.firstaid_breathing_difficulty_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ FRISCHE LUFT",
-                "• Fenster auf",
-                "• Raus ins Freie",
-                "• Nichts einengen",
-                "",
-                "2️⃣ HALSBAND/GESCHIRR LOCKERN",
-                "",
-                "3️⃣ RUHIG HALTEN",
-                "• Panik überträgt sich!",
-                "• Beruhigend sprechen",
-                "",
-                "4️⃣ AUFRECHTE POSITION",
-                "• Brust frei",
-                "• Nicht hinlegen zwingen",
-                "",
-                "5️⃣ SOFORT TIERARZT ANRUFEN"
+            immediateActionsRes = listOf(
+                R.string.firstaid_breathing_difficulty_action_1,
+                R.string.firstaid_breathing_difficulty_action_2,
+                R.string.firstaid_breathing_difficulty_action_3,
+                R.string.firstaid_breathing_difficulty_action_4,
+                R.string.firstaid_breathing_difficulty_action_5,
+                R.string.firstaid_breathing_difficulty_action_6,
+                R.string.firstaid_breathing_difficulty_action_7,
+                R.string.firstaid_breathing_difficulty_action_8,
+                R.string.firstaid_breathing_difficulty_action_9,
+                R.string.firstaid_breathing_difficulty_action_10,
+                R.string.firstaid_breathing_difficulty_action_11,
+                R.string.firstaid_breathing_difficulty_action_12,
+                R.string.firstaid_breathing_difficulty_action_13,
+                R.string.firstaid_breathing_difficulty_action_14,
+                R.string.firstaid_breathing_difficulty_action_15,
+                R.string.firstaid_breathing_difficulty_action_16
             ),
-            doList = listOf(
-                "✅ Frische Luft",
-                "✅ Halsband ab",
-                "✅ Aufrecht lagern",
-                "✅ Ruhig bleiben",
-                "✅ SOFORT Tierarzt"
+            doListRes = listOf(
+                R.string.firstaid_breathing_difficulty_do_1,
+                R.string.firstaid_breathing_difficulty_do_2,
+                R.string.firstaid_breathing_difficulty_do_3,
+                R.string.firstaid_breathing_difficulty_do_4,
+                R.string.firstaid_breathing_difficulty_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT hinlegen zwingen",
-                "❌ KEIN Maulkorb",
-                "❌ NICHT einengen",
-                "❌ KEINE Panik"
+            dontListRes = listOf(
+                R.string.firstaid_breathing_difficulty_dont_1,
+                R.string.firstaid_breathing_difficulty_dont_2,
+                R.string.firstaid_breathing_difficulty_dont_3,
+                R.string.firstaid_breathing_difficulty_dont_4
             ),
-            transportInfo = "Aufrecht/sitzend transportieren. Brust frei. " +
-                    "Fenster offen.",
-            specialNotes = "🚨 Blaue Schleimhäute = AKUTER SAUERSTOFFMANGEL! " +
-                    "Lebensbedrohlich!"
+            transportInfoRes = R.string.firstaid_breathing_difficulty_transport,
+            specialNotesRes = R.string.firstaid_breathing_difficulty_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -620,51 +599,50 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "VOMITING" to FirstAidInstruction(
             type = "VOMITING",
-            title = "Erbrechen / Durchfall",
+            titleRes = R.string.firstaid_vomiting_title,
             urgency = UrgencyLevel.URGENT,
-            symptoms = listOf(
-                "Häufiges Erbrechen",
-                "Wässriger/blutiger Durchfall",
-                "Apathie",
-                "Bauchschmerzen",
-                "Dehydration",
-                "Fieber"
+            symptomsRes = listOf(
+                R.string.firstaid_vomiting_symptom_1,
+                R.string.firstaid_vomiting_symptom_2,
+                R.string.firstaid_vomiting_symptom_3,
+                R.string.firstaid_vomiting_symptom_4,
+                R.string.firstaid_vomiting_symptom_5,
+                R.string.firstaid_vomiting_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ FUTTER-PAUSE (12-24h)",
-                "• Kein Futter",
-                "• Wasser in kleinen Mengen",
-                "",
-                "2️⃣ DEHYDRATION PRÜFEN",
-                "• Hautfalte ziehen",
-                "• Bleibt stehen → dehydriert!",
-                "",
-                "3️⃣ PROBE SICHERN",
-                "• Erbrochenes/Kot in Tüte",
-                "• Zum Tierarzt mitnehmen",
-                "",
-                "4️⃣ TIERARZT WENN:",
-                "• Blut im Erbrochenen/Kot",
-                "• > 6x in 24h",
-                "• Welpe/Senior",
-                "• Starke Apathie"
+            immediateActionsRes = listOf(
+                R.string.firstaid_vomiting_action_1,
+                R.string.firstaid_vomiting_action_2,
+                R.string.firstaid_vomiting_action_3,
+                R.string.firstaid_vomiting_action_4,
+                R.string.firstaid_vomiting_action_5,
+                R.string.firstaid_vomiting_action_6,
+                R.string.firstaid_vomiting_action_7,
+                R.string.firstaid_vomiting_action_8,
+                R.string.firstaid_vomiting_action_9,
+                R.string.firstaid_vomiting_action_10,
+                R.string.firstaid_vomiting_action_11,
+                R.string.firstaid_vomiting_action_12,
+                R.string.firstaid_vomiting_action_13,
+                R.string.firstaid_vomiting_action_14,
+                R.string.firstaid_vomiting_action_15,
+                R.string.firstaid_vomiting_action_16,
+                R.string.firstaid_vomiting_action_17
             ),
-            doList = listOf(
-                "✅ Futter-Pause 12-24h",
-                "✅ Kleine Wassermengen",
-                "✅ Probe sichern",
-                "✅ Dehydration prüfen",
-                "✅ Temperatur messen"
+            doListRes = listOf(
+                R.string.firstaid_vomiting_do_1,
+                R.string.firstaid_vomiting_do_2,
+                R.string.firstaid_vomiting_do_3,
+                R.string.firstaid_vomiting_do_4,
+                R.string.firstaid_vomiting_do_5
             ),
-            dontList = listOf(
-                "❌ KEIN Futter",
-                "❌ KEINE großen Wassermengen",
-                "❌ KEINE Medikamente ohne Tierarzt",
-                "❌ NICHT abwarten bei Blut"
+            dontListRes = listOf(
+                R.string.firstaid_vomiting_dont_1,
+                R.string.firstaid_vomiting_dont_2,
+                R.string.firstaid_vomiting_dont_3,
+                R.string.firstaid_vomiting_dont_4
             ),
-            transportInfo = "Probe mitnehmen. Temperatur notieren. " +
-                    "Zeitpunkt/Häufigkeit dokumentieren.",
-            specialNotes = "⚠️ SOFORT Tierarzt bei: Blut, Welpen, > 6x/24h, Fieber > 39,5°C"
+            transportInfoRes = R.string.firstaid_vomiting_transport,
+            specialNotesRes = R.string.firstaid_vomiting_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -672,48 +650,48 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "ALLERGIC_REACTION" to FirstAidInstruction(
             type = "ALLERGIC_REACTION",
-            title = "Allergische Reaktion",
+            titleRes = R.string.firstaid_allergic_reaction_title,
             urgency = UrgencyLevel.URGENT,
-            symptoms = listOf(
-                "Schwellung (Gesicht, Schnauze)",
-                "Nesselsucht, Quaddeln",
-                "Juckreiz, Kratzen",
-                "Rötung der Haut",
-                "Atemnot (NOTFALL!)",
-                "Erbrechen, Durchfall"
+            symptomsRes = listOf(
+                R.string.firstaid_allergic_reaction_symptom_1,
+                R.string.firstaid_allergic_reaction_symptom_2,
+                R.string.firstaid_allergic_reaction_symptom_3,
+                R.string.firstaid_allergic_reaction_symptom_4,
+                R.string.firstaid_allergic_reaction_symptom_5,
+                R.string.firstaid_allergic_reaction_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ AUSLÖSER ENTFERNEN",
-                "• Halsband/Geschirr ab",
-                "• Fell abwaschen (Kontaktaller.)",
-                "",
-                "2️⃣ KÜHLEN",
-                "• Kalte Kompressen",
-                "• Auf Schwellungen",
-                "",
-                "3️⃣ BEI ATEMNOT → NOTFALL!",
-                "• Sofort Tierklinik",
-                "• Anaphylaktischer Schock!",
-                "",
-                "4️⃣ TIERARZT",
-                "• Antihistaminikum",
-                "• Ggf. Kortison"
+            immediateActionsRes = listOf(
+                R.string.firstaid_allergic_reaction_action_1,
+                R.string.firstaid_allergic_reaction_action_2,
+                R.string.firstaid_allergic_reaction_action_3,
+                R.string.firstaid_allergic_reaction_action_4,
+                R.string.firstaid_allergic_reaction_action_5,
+                R.string.firstaid_allergic_reaction_action_6,
+                R.string.firstaid_allergic_reaction_action_7,
+                R.string.firstaid_allergic_reaction_action_8,
+                R.string.firstaid_allergic_reaction_action_9,
+                R.string.firstaid_allergic_reaction_action_10,
+                R.string.firstaid_allergic_reaction_action_11,
+                R.string.firstaid_allergic_reaction_action_12,
+                R.string.firstaid_allergic_reaction_action_13,
+                R.string.firstaid_allergic_reaction_action_14,
+                R.string.firstaid_allergic_reaction_action_15
             ),
-            doList = listOf(
-                "✅ Auslöser entfernen",
-                "✅ Kühlen",
-                "✅ Beobachten",
-                "✅ Bei Atemnot → NOTFALL",
-                "✅ Foto der Reaktion"
+            doListRes = listOf(
+                R.string.firstaid_allergic_reaction_do_1,
+                R.string.firstaid_allergic_reaction_do_2,
+                R.string.firstaid_allergic_reaction_do_3,
+                R.string.firstaid_allergic_reaction_do_4,
+                R.string.firstaid_allergic_reaction_do_5
             ),
-            dontList = listOf(
-                "❌ KEINE Medikamente ohne Tierarzt",
-                "❌ NICHT kratzen lassen",
-                "❌ KEIN Cortison ohne Rücksprache",
-                "❌ NICHT abwarten bei Atemnot"
+            dontListRes = listOf(
+                R.string.firstaid_allergic_reaction_dont_1,
+                R.string.firstaid_allergic_reaction_dont_2,
+                R.string.firstaid_allergic_reaction_dont_3,
+                R.string.firstaid_allergic_reaction_dont_4
             ),
-            transportInfo = "Auslöser dokumentieren (Foto). Zeitverlauf notieren.",
-            specialNotes = "🚨 Atemnot/Schwellung am Hals = ANAPHYLAXIE = NOTFALL!"
+            transportInfoRes = R.string.firstaid_allergic_reaction_transport,
+            specialNotesRes = R.string.firstaid_allergic_reaction_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -721,53 +699,52 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "TRAFFIC_ACCIDENT" to FirstAidInstruction(
             type = "TRAFFIC_ACCIDENT",
-            title = "Verkehrsunfall",
+            titleRes = R.string.firstaid_traffic_accident_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Sichtbare Verletzungen",
-                "Schock",
-                "Blutungen",
-                "Lahmheit",
-                "Bewusstlosigkeit",
-                "Atemnot"
+            symptomsRes = listOf(
+                R.string.firstaid_traffic_accident_symptom_1,
+                R.string.firstaid_traffic_accident_symptom_2,
+                R.string.firstaid_traffic_accident_symptom_3,
+                R.string.firstaid_traffic_accident_symptom_4,
+                R.string.firstaid_traffic_accident_symptom_5,
+                R.string.firstaid_traffic_accident_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ EIGENSCHUTZ!",
-                "• Warndreieck aufstellen",
-                "• Warnweste anziehen",
-                "",
-                "2️⃣ HUND SICHERN",
-                "• Aus Gefahrenzone",
-                "• Provisorischer Maulkorb!",
-                "• Seitlich nähern",
-                "",
-                "3️⃣ VITALFUNKTIONEN PRÜFEN",
-                "• Atmung, Puls, Bewusstsein",
-                "• Sichtbare Verletzungen",
-                "",
-                "4️⃣ ERSTE HILFE",
-                "• Blutung stillen",
-                "• Schock behandeln",
-                "• Nicht bewegen (Wirbelsäule!)",
-                "",
-                "5️⃣ NOTFALL-TRANSPORT"
+            immediateActionsRes = listOf(
+                R.string.firstaid_traffic_accident_action_1,
+                R.string.firstaid_traffic_accident_action_2,
+                R.string.firstaid_traffic_accident_action_3,
+                R.string.firstaid_traffic_accident_action_4,
+                R.string.firstaid_traffic_accident_action_5,
+                R.string.firstaid_traffic_accident_action_6,
+                R.string.firstaid_traffic_accident_action_7,
+                R.string.firstaid_traffic_accident_action_8,
+                R.string.firstaid_traffic_accident_action_9,
+                R.string.firstaid_traffic_accident_action_10,
+                R.string.firstaid_traffic_accident_action_11,
+                R.string.firstaid_traffic_accident_action_12,
+                R.string.firstaid_traffic_accident_action_13,
+                R.string.firstaid_traffic_accident_action_14,
+                R.string.firstaid_traffic_accident_action_15,
+                R.string.firstaid_traffic_accident_action_16,
+                R.string.firstaid_traffic_accident_action_17,
+                R.string.firstaid_traffic_accident_action_18,
+                R.string.firstaid_traffic_accident_action_19
             ),
-            doList = listOf(
-                "✅ EIGENSCHUTZ zuerst!",
-                "✅ Provisorischer Maulkorb",
-                "✅ Vitalfunktionen checken",
-                "✅ Blutung stillen",
-                "✅ 112 + Tierarzt anrufen"
+            doListRes = listOf(
+                R.string.firstaid_traffic_accident_do_1,
+                R.string.firstaid_traffic_accident_do_2,
+                R.string.firstaid_traffic_accident_do_3,
+                R.string.firstaid_traffic_accident_do_4,
+                R.string.firstaid_traffic_accident_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT ohne Eigenschutz",
-                "❌ NICHT frontal nähern",
-                "❌ NICHT bewegen (außer Gefahr)",
-                "❌ NICHT allein transportieren"
+            dontListRes = listOf(
+                R.string.firstaid_traffic_accident_dont_1,
+                R.string.firstaid_traffic_accident_dont_2,
+                R.string.firstaid_traffic_accident_dont_3,
+                R.string.firstaid_traffic_accident_dont_4
             ),
-            transportInfo = "Bei Wirbelsäulenverdacht: feste Unterlage, keine Rotation. " +
-                    "Zu zweit tragen.",
-            specialNotes = "⚠️ Auch sanftester Hund beißt aus Schmerz! IMMER Maulschutz!"
+            transportInfoRes = R.string.firstaid_traffic_accident_transport,
+            specialNotesRes = R.string.firstaid_traffic_accident_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -775,51 +752,50 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "CHEMICAL_BURN" to FirstAidInstruction(
             type = "CHEMICAL_BURN",
-            title = "Verätzung (Säure/Lauge)",
+            titleRes = R.string.firstaid_chemical_burn_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Starke Schmerzen",
-                "Speichelfluss",
-                "Kratzen im Gesicht/Maul",
-                "Gerötete/weiße Schleimhäute",
-                "Atemnot",
-                "Erbrechen"
+            symptomsRes = listOf(
+                R.string.firstaid_chemical_burn_symptom_1,
+                R.string.firstaid_chemical_burn_symptom_2,
+                R.string.firstaid_chemical_burn_symptom_3,
+                R.string.firstaid_chemical_burn_symptom_4,
+                R.string.firstaid_chemical_burn_symptom_5,
+                R.string.firstaid_chemical_burn_symptom_6
             ),
-            immediateActions = listOf(
-                "1️⃣ EIGENSCHUTZ!",
-                "• Handschuhe anziehen",
-                "• Schutzbrille",
-                "",
-                "2️⃣ 15-20 MIN SPÜLEN",
-                "• Lauwarmes Wasser",
-                "• Kontaminierte Bereiche",
-                "• Von Wunde wegspülen",
-                "",
-                "3️⃣ NICHT NEUTRALISIEREN!",
-                "• Keine Säure + Natron",
-                "• Keine Lauge + Essig",
-                "• = Hitzeentwicklung!",
-                "",
-                "4️⃣ VERPACKUNG MITNEHMEN",
-                "",
-                "5️⃣ SOFORT TIERKLINIK"
+            immediateActionsRes = listOf(
+                R.string.firstaid_chemical_burn_action_1,
+                R.string.firstaid_chemical_burn_action_2,
+                R.string.firstaid_chemical_burn_action_3,
+                R.string.firstaid_chemical_burn_action_4,
+                R.string.firstaid_chemical_burn_action_5,
+                R.string.firstaid_chemical_burn_action_6,
+                R.string.firstaid_chemical_burn_action_7,
+                R.string.firstaid_chemical_burn_action_8,
+                R.string.firstaid_chemical_burn_action_9,
+                R.string.firstaid_chemical_burn_action_10,
+                R.string.firstaid_chemical_burn_action_11,
+                R.string.firstaid_chemical_burn_action_12,
+                R.string.firstaid_chemical_burn_action_13,
+                R.string.firstaid_chemical_burn_action_14,
+                R.string.firstaid_chemical_burn_action_15,
+                R.string.firstaid_chemical_burn_action_16,
+                R.string.firstaid_chemical_burn_action_17
             ),
-            doList = listOf(
-                "✅ EIGENSCHUTZ (Handschuhe!)",
-                "✅ 15-20 Min spülen",
-                "✅ Verpackung mitnehmen",
-                "✅ SOFORT Klinik",
-                "✅ Tiergiftnotruf anrufen"
+            doListRes = listOf(
+                R.string.firstaid_chemical_burn_do_1,
+                R.string.firstaid_chemical_burn_do_2,
+                R.string.firstaid_chemical_burn_do_3,
+                R.string.firstaid_chemical_burn_do_4,
+                R.string.firstaid_chemical_burn_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT neutralisieren!",
-                "❌ KEIN Erbrechen auslösen",
-                "❌ KEIN Öl/Milch",
-                "❌ NICHT ins Fell sprühen"
+            dontListRes = listOf(
+                R.string.firstaid_chemical_burn_dont_1,
+                R.string.firstaid_chemical_burn_dont_2,
+                R.string.firstaid_chemical_burn_dont_3,
+                R.string.firstaid_chemical_burn_dont_4
             ),
-            transportInfo = "Weiter spülen während Transport. Verpackung mitnehmen. " +
-                    "Kontaminiertes Fell abwaschen.",
-            specialNotes = "☎️ Tiergiftnotruf: Berlin 030 19240, München 089 19240"
+            transportInfoRes = R.string.firstaid_chemical_burn_transport,
+            specialNotesRes = R.string.firstaid_chemical_burn_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -827,49 +803,49 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "BLEEDING_NO_ACCIDENT" to FirstAidInstruction(
             type = "BLEEDING_NO_ACCIDENT",
-            title = "Blutungen ohne Unfall",
+            titleRes = R.string.firstaid_bleeding_no_accident_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Blut aus Nase/Maul/After",
-                "Blut im Urin/Kot",
-                "Blut im Erbrochenen",
-                "Blutergüsse ohne Ursache",
-                "Schockzeichen"
+            symptomsRes = listOf(
+                R.string.firstaid_bleeding_no_accident_symptom_1,
+                R.string.firstaid_bleeding_no_accident_symptom_2,
+                R.string.firstaid_bleeding_no_accident_symptom_3,
+                R.string.firstaid_bleeding_no_accident_symptom_4,
+                R.string.firstaid_bleeding_no_accident_symptom_5
             ),
-            immediateActions = listOf(
-                "1️⃣ RUHE & BEOBACHTUNG",
-                "• Keine Bewegung",
-                "• Nicht aufregen",
-                "",
-                "2️⃣ BLUTUNGSQUELLE LOKALISIEREN",
-                "• Nase? Maul? After?",
-                "• Menge schätzen",
-                "",
-                "3️⃣ PROBE SICHERN",
-                "• In Tüte/Behälter",
-                "• Zum Tierarzt mitnehmen",
-                "",
-                "4️⃣ BEI SCHOCK:",
-                "• Hinterbeine erhöhen",
-                "• Warm halten",
-                "",
-                "5️⃣ SOFORT TIERARZT"
+            immediateActionsRes = listOf(
+                R.string.firstaid_bleeding_no_accident_action_1,
+                R.string.firstaid_bleeding_no_accident_action_2,
+                R.string.firstaid_bleeding_no_accident_action_3,
+                R.string.firstaid_bleeding_no_accident_action_4,
+                R.string.firstaid_bleeding_no_accident_action_5,
+                R.string.firstaid_bleeding_no_accident_action_6,
+                R.string.firstaid_bleeding_no_accident_action_7,
+                R.string.firstaid_bleeding_no_accident_action_8,
+                R.string.firstaid_bleeding_no_accident_action_9,
+                R.string.firstaid_bleeding_no_accident_action_10,
+                R.string.firstaid_bleeding_no_accident_action_11,
+                R.string.firstaid_bleeding_no_accident_action_12,
+                R.string.firstaid_bleeding_no_accident_action_13,
+                R.string.firstaid_bleeding_no_accident_action_14,
+                R.string.firstaid_bleeding_no_accident_action_15,
+                R.string.firstaid_bleeding_no_accident_action_16,
+                R.string.firstaid_bleeding_no_accident_action_17
             ),
-            doList = listOf(
-                "✅ Ruhig halten",
-                "✅ Probe sichern",
-                "✅ Menge/Farbe notieren",
-                "✅ Bei Schock: erhöhte Lagerung",
-                "✅ SOFORT Tierarzt"
+            doListRes = listOf(
+                R.string.firstaid_bleeding_no_accident_do_1,
+                R.string.firstaid_bleeding_no_accident_do_2,
+                R.string.firstaid_bleeding_no_accident_do_3,
+                R.string.firstaid_bleeding_no_accident_do_4,
+                R.string.firstaid_bleeding_no_accident_do_5
             ),
-            dontList = listOf(
-                "❌ NICHT bewegen lassen",
-                "❌ KEIN Wasser/Futter",
-                "❌ NICHT abwarten",
-                "❌ NICHT selbst behandeln"
+            dontListRes = listOf(
+                R.string.firstaid_bleeding_no_accident_dont_1,
+                R.string.firstaid_bleeding_no_accident_dont_2,
+                R.string.firstaid_bleeding_no_accident_dont_3,
+                R.string.firstaid_bleeding_no_accident_dont_4
             ),
-            transportInfo = "Vorsichtig. Probe mitnehmen. Zeitverlauf dokumentieren.",
-            specialNotes = "🚨 Innere Blutung möglich! Schock ohne sichtbare Verletzung = NOTFALL!"
+            transportInfoRes = R.string.firstaid_bleeding_no_accident_transport,
+            specialNotesRes = R.string.firstaid_bleeding_no_accident_special_notes
         ),
 
         // ════════════════════════════════════════════════════════
@@ -877,127 +853,114 @@ object FirstAidInstructions {
         // ════════════════════════════════════════════════════════
         "POISONING_UNKNOWN" to FirstAidInstruction(
             type = "POISONING_UNKNOWN",
-            title = "Vergiftung (unbekannt)",
+            titleRes = R.string.firstaid_poisoning_unknown_title,
             urgency = UrgencyLevel.CRITICAL,
-            symptoms = listOf(
-                "Plötzliches Erbrechen, Durchfall",
-                "Zittern, Krämpfe",
-                "Starker Speichelfluss",
-                "Schläfrigkeit, Apathie",
-                "Atemnot, unregelmäßiger Herzschlag",
-                "Blasse oder blaue Schleimhäute",
-                "Koordinationsstörungen, Taumeln",
-                "Veränderte Pupillen"
+            symptomsRes = listOf(
+                R.string.firstaid_poisoning_unknown_symptom_1,
+                R.string.firstaid_poisoning_unknown_symptom_2,
+                R.string.firstaid_poisoning_unknown_symptom_3,
+                R.string.firstaid_poisoning_unknown_symptom_4,
+                R.string.firstaid_poisoning_unknown_symptom_5,
+                R.string.firstaid_poisoning_unknown_symptom_6,
+                R.string.firstaid_poisoning_unknown_symptom_7,
+                R.string.firstaid_poisoning_unknown_symptom_8
             ),
-            immediateActions = listOf(
-                "1️⃣ TIERGIFTNOTRUF SOFORT ANRUFEN",
-                "📞 Berlin: 030 19240",
-                "📞 München: 089 19240",
-                "📞 Freiburg: 0761 19240",
-                "",
-                "2️⃣ SYMPTOME GENAU BEOBACHTEN",
-                "• Zeitpunkt notieren (wann begonnen?)",
-                "• Alle Symptome aufschreiben",
-                "• Bewusstsein, Atmung, Puls prüfen",
-                "",
-                "3️⃣ UMGEBUNG UNTERSUCHEN",
-                "• Was könnte gefressen worden sein?",
-                "• Pflanzen in der Nähe? (Foto machen!)",
-                "• Erbrochenes sichern (Tüte/Behälter)",
-                "• Verdächtige Substanzen mitnehmen",
-                "",
-                "4️⃣ KEIN ERBRECHEN OHNE TIERGIFTNOTRUF!",
-                "",
-                "5️⃣ SOFORT ZUM TIERARZT",
-                "• Probe/Erbrochenes mitnehmen",
-                "• Zeitverlauf dokumentieren"
+            immediateActionsRes = listOf(
+                R.string.firstaid_poisoning_unknown_action_1,
+                R.string.firstaid_poisoning_unknown_action_2,
+                R.string.firstaid_poisoning_unknown_action_3,
+                R.string.firstaid_poisoning_unknown_action_4,
+                R.string.firstaid_poisoning_unknown_action_5,
+                R.string.firstaid_poisoning_unknown_action_6,
+                R.string.firstaid_poisoning_unknown_action_7,
+                R.string.firstaid_poisoning_unknown_action_8,
+                R.string.firstaid_poisoning_unknown_action_9,
+                R.string.firstaid_poisoning_unknown_action_10,
+                R.string.firstaid_poisoning_unknown_action_11,
+                R.string.firstaid_poisoning_unknown_action_12,
+                R.string.firstaid_poisoning_unknown_action_13,
+                R.string.firstaid_poisoning_unknown_action_14,
+                R.string.firstaid_poisoning_unknown_action_15,
+                R.string.firstaid_poisoning_unknown_action_16,
+                R.string.firstaid_poisoning_unknown_action_17,
+                R.string.firstaid_poisoning_unknown_action_18,
+                R.string.firstaid_poisoning_unknown_action_19,
+                R.string.firstaid_poisoning_unknown_action_20,
+                R.string.firstaid_poisoning_unknown_action_21
             ),
-            doList = listOf(
-                "✅ Sofort Tiergiftnotruf anrufen",
-                "✅ Zeitpunkt & Symptome notieren",
-                "✅ Erbrochenes sichern",
-                "✅ Umgebung fotografieren",
-                "✅ Verdächtige Substanzen mitnehmen",
-                "✅ Ruhig halten, beobachten",
-                "✅ Bewusstsein/Atmung/Puls prüfen"
+            doListRes = listOf(
+                R.string.firstaid_poisoning_unknown_do_1,
+                R.string.firstaid_poisoning_unknown_do_2,
+                R.string.firstaid_poisoning_unknown_do_3,
+                R.string.firstaid_poisoning_unknown_do_4,
+                R.string.firstaid_poisoning_unknown_do_5,
+                R.string.firstaid_poisoning_unknown_do_6,
+                R.string.firstaid_poisoning_unknown_do_7
             ),
-            dontList = listOf(
-                "❌ KEIN Erbrechen ohne Rücksprache!",
-                "❌ KEINE Milch geben",
-                "❌ KEIN Öl geben",
-                "❌ KEINE Kohle ohne Anweisung",
-                "❌ NICHT abwarten",
-                "❌ NICHT selbst behandeln"
+            dontListRes = listOf(
+                R.string.firstaid_poisoning_unknown_dont_1,
+                R.string.firstaid_poisoning_unknown_dont_2,
+                R.string.firstaid_poisoning_unknown_dont_3,
+                R.string.firstaid_poisoning_unknown_dont_4,
+                R.string.firstaid_poisoning_unknown_dont_5,
+                R.string.firstaid_poisoning_unknown_dont_6
             ),
-            transportInfo = "Erbrochenes/Probe in Tüte mitnehmen. Zeitverlauf dokumentieren. " +
-                    "Bei Bewusstlosigkeit: Stabile Seitenlage.",
-            specialNotes = "⚠️ TIERGIFTNOTRUF:\n" +
-                    "Berlin: 030 19240\n" +
-                    "München: 089 19240\n" +
-                    "Freiburg: 0761 19240\n\n" +
-                    "🚨 HÄUFIGE GIFTE:\n" +
-                    "• Schokolade/Kakao (Theobromin)\n" +
-                    "• Weintrauben/Rosinen (Nierenversagen)\n" +
-                    "• Zwiebeln/Knoblauch (Blutarmut)\n" +
-                    "• Xylitol/Birkenzucker (Unterzucker)\n" +
-                    "• Schneckenkorn (Krämpfe)\n" +
-                    "• Rattengift (innere Blutungen)\n" +
-                    "• Giftpflanzen (Oleander, Eibe, Buchsbaum)\n" +
-                    "• Frostschutzmittel (süßlich! = verlockend)"
+            transportInfoRes = R.string.firstaid_poisoning_unknown_transport,
+            specialNotesRes = R.string.firstaid_poisoning_unknown_special_notes
         )
     )
 
     /**
      * Symptom-Check Fragen pro Typ
      */
-    fun getSymptomChecks(type: String): List<SymptomCheckQuestion> = when (type) {
+    fun getSymptomChecks(context: android.content.Context, type: String): List<SymptomCheckQuestion> = when (type) {
         "UNCONSCIOUSNESS" -> listOf(
-            SymptomCheckQuestion("Reagiert der Hund auf Ansprache?", criticalIfNo = true),
-            SymptomCheckQuestion("Reagiert der Hund auf Berührung?", criticalIfNo = true),
-            SymptomCheckQuestion("Ist Atmung sichtbar?", criticalIfNo = true),
-            SymptomCheckQuestion("Ist Puls fühlbar?", criticalIfNo = true)
+            SymptomCheckQuestion(R.string.firstaid_check_unconsciousness_q1, criticalIfNo = true),
+            SymptomCheckQuestion(R.string.firstaid_check_unconsciousness_q2, criticalIfNo = true),
+            SymptomCheckQuestion(R.string.firstaid_check_unconsciousness_q3, criticalIfNo = true),
+            SymptomCheckQuestion(R.string.firstaid_check_unconsciousness_q4, criticalIfNo = true)
         )
 
         "HEAT_STROKE" -> listOf(
-            SymptomCheckQuestion("Körpertemperatur über 40°C?", criticalIfYes = true),
-            SymptomCheckQuestion("Starkes, lautes Hecheln?", criticalIfYes = true),
-            SymptomCheckQuestion("Ziegelrote Schleimhäute?", criticalIfYes = true),
-            SymptomCheckQuestion("Taumeln oder Koordinationsstörungen?", criticalIfYes = true)
+            SymptomCheckQuestion(R.string.firstaid_check_heat_stroke_q1, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_heat_stroke_q2, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_heat_stroke_q3, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_heat_stroke_q4, criticalIfYes = true)
         )
 
         "POISONING_KNOWN" -> listOf(
-            SymptomCheckQuestion("Substanz bekannt?", criticalIfNo = false),
-            SymptomCheckQuestion("Erbrechen oder Durchfall?", criticalIfYes = false),
-            SymptomCheckQuestion("Krämpfe oder Zittern?", criticalIfYes = true),
-            SymptomCheckQuestion("Atemnot?", criticalIfYes = true)
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_known_q1, criticalIfNo = false),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_known_q2, criticalIfYes = false),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_known_q3, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_known_q4, criticalIfYes = true)
         )
 
         "GASTRIC_TORSION" -> listOf(
-            SymptomCheckQuestion("Aufgeblähter, harter Bauch?", criticalIfYes = true),
-            SymptomCheckQuestion("Erfolgloses Würgen ohne Erbrechen?", criticalIfYes = true),
-            SymptomCheckQuestion("Starke Unruhe?", criticalIfYes = true),
-            SymptomCheckQuestion("Schnelle, flache Atmung?", criticalIfYes = true)
+            SymptomCheckQuestion(R.string.firstaid_check_gastric_torsion_q1, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_gastric_torsion_q2, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_gastric_torsion_q3, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_gastric_torsion_q4, criticalIfYes = true)
         )
 
         "SEIZURE" -> listOf(
-            SymptomCheckQuestion("Dauer länger als 5 Minuten?", criticalIfYes = true),
-            SymptomCheckQuestion("Mehrere Anfälle hintereinander?", criticalIfYes = true),
-            SymptomCheckQuestion("Erster Anfall überhaupt?", criticalIfYes = false)
+            SymptomCheckQuestion(R.string.firstaid_check_seizure_q1, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_seizure_q2, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_seizure_q3, criticalIfYes = false)
         )
 
         "BLEEDING" -> listOf(
-            SymptomCheckQuestion("Hellrotes, pulsierendes Blut?", criticalIfYes = true),
-            SymptomCheckQuestion("Große Wundfläche?", criticalIfYes = true),
-            SymptomCheckQuestion("Blasse Schleimhäute?", criticalIfYes = true),
-            SymptomCheckQuestion("Schwäche oder Kollaps?", criticalIfYes = true)
+            SymptomCheckQuestion(R.string.firstaid_check_bleeding_q1, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_bleeding_q2, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_bleeding_q3, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_bleeding_q4, criticalIfYes = true)
         )
 
         "POISONING_UNKNOWN" -> listOf(
-            SymptomCheckQuestion("Plötzliches Erbrechen oder Durchfall?", criticalIfYes = false),
-            SymptomCheckQuestion("Krämpfe oder Zittern?", criticalIfYes = true),
-            SymptomCheckQuestion("Atemnot oder unregelmäßiger Herzschlag?", criticalIfYes = true),
-            SymptomCheckQuestion("Blasse oder blaue Schleimhäute?", criticalIfYes = true),
-            SymptomCheckQuestion("Koordinationsstörungen, Taumeln?", criticalIfYes = true)
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_unknown_q1, criticalIfYes = false),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_unknown_q2, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_unknown_q3, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_unknown_q4, criticalIfYes = true),
+            SymptomCheckQuestion(R.string.firstaid_check_poisoning_unknown_q5, criticalIfYes = true)
         )
 
         else -> emptyList()

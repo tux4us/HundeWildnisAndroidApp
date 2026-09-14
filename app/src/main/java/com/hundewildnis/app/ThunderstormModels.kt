@@ -25,10 +25,16 @@ data class LightningMeasurement(
 )
 
 /** Ampel-Einstufung nach Distanz zum Gewitter. */
-enum class StormProximityLevel(val displayName: String, val icon: String, val color: String) {
-    SAFE("Entfernt", "🟢", "#4CAF50"),
-    CAUTION("Nähert sich", "🟠", "#FF9800"),
-    DANGER("Akute Gefahr", "🔴", "#E64A19");
+enum class StormProximityLevel(val icon: String, val color: String) {
+    SAFE("🟢", "#4CAF50"),
+    CAUTION("🟠", "#FF9800"),
+    DANGER("🔴", "#E64A19");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        SAFE -> context.getString(R.string.storm_proximity_level_safe)
+        CAUTION -> context.getString(R.string.storm_proximity_level_caution)
+        DANGER -> context.getString(R.string.storm_proximity_level_danger)
+    }
 
     companion object {
         fun fromDistanceKm(km: Double): StormProximityLevel = when {
@@ -40,11 +46,18 @@ enum class StormProximityLevel(val displayName: String, val icon: String, val co
 }
 
 /** Trend über mehrere Messungen: nähert sich, entfernt sich, oder unklar/stabil. */
-enum class StormTrend(val displayName: String, val icon: String) {
-    APPROACHING("Gewitter nähert sich", "⬇️"),
-    RECEDING("Gewitter entfernt sich", "⬆️"),
-    STABLE("Keine eindeutige Veränderung", "➡️"),
-    UNKNOWN("Noch nicht genug Messungen", "❔")
+enum class StormTrend(val icon: String) {
+    APPROACHING("⬇️"),
+    RECEDING("⬆️"),
+    STABLE("➡️"),
+    UNKNOWN("❔");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        APPROACHING -> context.getString(R.string.storm_trend_approaching)
+        RECEDING -> context.getString(R.string.storm_trend_receding)
+        STABLE -> context.getString(R.string.storm_trend_stable)
+        UNKNOWN -> context.getString(R.string.storm_trend_unknown)
+    }
 }
 
 /**
@@ -145,21 +158,24 @@ object LightningCalculator {
     }
 
     /** Handlungsempfehlung passend zur Ampel-Stufe. */
-    fun recommendationFor(level: StormProximityLevel): String = when (level) {
-        StormProximityLevel.SAFE ->
-            "Das Gewitter ist noch weiter entfernt. Wetterlage im Auge behalten und Rückweg einplanen."
-        StormProximityLevel.CAUTION ->
-            "Das Gewitter kommt näher. Spaziergang jetzt beenden und festes Gebäude oder Auto aufsuchen – nicht unter Einzelbäumen oder auf offenen Flächen bleiben."
-        StormProximityLevel.DANGER ->
-            "Sofort Schutz suchen! Offenes Gelände, Gewässer, Metallzäune und Baumkronen meiden. In geschützter Position (geduckt, Füße geschlossen) ausharren, bis das Gewitter abgezogen ist."
+    fun recommendationFor(context: android.content.Context, level: StormProximityLevel): String = when (level) {
+        StormProximityLevel.SAFE -> context.getString(R.string.storm_recommendation_safe)
+        StormProximityLevel.CAUTION -> context.getString(R.string.storm_recommendation_caution)
+        StormProximityLevel.DANGER -> context.getString(R.string.storm_recommendation_danger)
     }
 }
 
 /** Risikoeinstufung aus Open-Meteo-Daten (CAPE, Niederschlag, Wetter-Code). */
-enum class ThunderstormForecastLevel(val displayName: String, val icon: String, val color: String) {
-    LOW("Gering", "🟢", "#4CAF50"),
-    MODERATE("Erhöht", "🟠", "#FF9800"),
-    HIGH("Hoch", "🔴", "#E64A19")
+enum class ThunderstormForecastLevel(val icon: String, val color: String) {
+    LOW("🟢", "#4CAF50"),
+    MODERATE("🟠", "#FF9800"),
+    HIGH("🔴", "#E64A19");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        LOW -> context.getString(R.string.thunderstorm_forecast_level_low)
+        MODERATE -> context.getString(R.string.thunderstorm_forecast_level_moderate)
+        HIGH -> context.getString(R.string.thunderstorm_forecast_level_high)
+    }
 }
 
 data class ThunderstormForecastHour(

@@ -44,7 +44,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Anbieter:"
+        android:text="@string/about_provider"
         android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorSecondary"
@@ -61,7 +61,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Webadresse:"
+        android:text="@string/about_website"
         android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorSecondary"
@@ -79,7 +79,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fehlermeldungen an:"
+        android:text="@string/about_bug_reports"
         android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorSecondary"
@@ -97,7 +97,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Entwickelt mit Herz, Erfahrung und Liebe ❤️"
+        android:text="@string/about_footer"
         android:textSize="@dimen/text_body_medium"
         android:textStyle="italic"
         android:gravity="center"

@@ -3143,7 +3143,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         )
 
         // Badge aktualisieren
-        binding.tvSlopeClassBadge.text = "${slopeClass.icon} ${slopeClass.displayName}"
+        binding.tvSlopeClassBadge.text = "${slopeClass.icon} ${slopeClass.displayName(this)}"
         binding.cardSlopeClassBadge.setCardBackgroundColor(
             Color.parseColor(slopeClass.color)
         )
@@ -3198,6 +3198,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         // Warnungen aus Steigung + Asphalt + Wetter-Snapshot
         val snapshot = lastWeatherSnapshot
         val warnings = TerrainRecommendationEngine.buildWarnings(
+            context                    = this,
             slopeClass                = slopeClass,
             asphaltPercent            = asphaltPercent,
             tempC                     = snapshot?.tempC,

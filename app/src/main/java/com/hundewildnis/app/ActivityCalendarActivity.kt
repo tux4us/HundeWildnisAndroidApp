@@ -182,7 +182,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
                 PlannedSession.startOfDay(it.plannedDateMillis) == dayStart
             }
             val isOverdue = sessionsThisDay.isEmpty() &&
-                isOverdueDay(dayStart, dogSessions)
+                    isOverdueDay(dayStart, dogSessions)
 
             binding.calendarGrid.addView(
                 buildDayCell(day, dayStart, sessionsThisDay, plannedThisDay, isOverdue)
@@ -321,21 +321,21 @@ class ActivityCalendarActivity : SecureBaseActivity() {
 
         val msg = StringBuilder()
         if (sessions.isNotEmpty()) {
-            msg.append("✅ Absolviert:\n")
+            msg.append(getString(R.string.activity_calendar_completed_header)).append("\n")
             sessions.forEach { s ->
-                msg.append("• ${s.category.displayName} – ${s.getEffortText()} (${s.getSuccessText()})\n")
+                msg.append(getString(R.string.activity_calendar_session_line, s.category.displayName(this), s.getEffortText(), s.getSuccessText())).append("\n")
             }
             msg.append("\n")
         }
         if (planned.isNotEmpty()) {
-            msg.append("📅 Geplant:\n")
+            msg.append(getString(R.string.activity_calendar_planned_header)).append("\n")
             planned.forEach { p ->
-                val status = if (p.completed) "✓ erledigt" else "offen"
-                msg.append("• ${p.category().displayName} – ${p.plannedDurationMinutes} Min ($status)\n")
+                val status = if (p.completed) getString(R.string.activity_calendar_status_done) else getString(R.string.activity_calendar_status_open)
+                msg.append(getString(R.string.activity_calendar_planned_line, p.category().displayName(this), p.plannedDurationMinutes, status)).append("\n")
             }
         }
         if (sessions.isEmpty() && planned.isEmpty()) {
-            msg.append("Keine Einträge an diesem Tag.")
+            msg.append(getString(R.string.activity_calendar_no_entries))
         }
 
         val isFuture = dayStart >= PlannedSession.startOfDay(System.currentTimeMillis())
@@ -380,7 +380,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         tvDate.text = dateFmt.format(targetDay.time).replaceFirstChar { it.uppercase() }
 
         val categories = TrainingCategory.values().toList()
-        val catNames = categories.map { it.displayName }
+        val catNames = categories.map { it.displayName(this) }
         val catAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, catNames)
         catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = catAdapter
@@ -462,10 +462,10 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         if (delay <= 0) return // Termin liegt bereits in der Vergangenheit oder zu nah
 
         val data = workDataOf(
-            TrainingReminderWorker.KEY_DOG_NAME   to planned.dogName,
-            TrainingReminderWorker.KEY_CATEGORY   to planned.category().displayName,
-            TrainingReminderWorker.KEY_DURATION   to planned.plannedDurationMinutes,
-            TrainingReminderWorker.KEY_SESSION_ID to planned.id
+            TrainingReminderWorker.KEY_DOG_NAME    to planned.dogName,
+            TrainingReminderWorker.KEY_CATEGORY_ID to planned.category().id,
+            TrainingReminderWorker.KEY_DURATION    to planned.plannedDurationMinutes,
+            TrainingReminderWorker.KEY_SESSION_ID  to planned.id
         )
         val request = OneTimeWorkRequestBuilder<TrainingReminderWorker>()
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
@@ -524,11 +524,11 @@ class ActivityCalendarActivity : SecureBaseActivity() {
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         infoCol.addView(TextView(this).apply {
-            text = item.category.displayName
+            text = item.category.displayName(this@ActivityCalendarActivity)
             textSize = 12.5f
             setTextColor(Color.parseColor("#DDDDDD"))
         })
-        val daysText = item.daysSinceLastSession?.let { "vor $it Tagen trainiert" } ?: "noch nie trainiert"
+        val daysText = item.daysSinceLastSession?.let { getString(R.string.activity_calendar_trained_days_ago, it) } ?: getString(R.string.activity_calendar_never_trained)
         infoCol.addView(TextView(this).apply {
             text = daysText
             textSize = 10.5f
@@ -582,9 +582,9 @@ class ActivityCalendarActivity : SecureBaseActivity() {
 
     private fun fetchOpenMeteoWeekForecast(lat: Double, lon: Double): List<CalendarDayForecast> {
         val url = "https://api.open-meteo.com/v1/forecast?" +
-            "latitude=$lat&longitude=$lon" +
-            "&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max" +
-            "&forecast_days=7&timezone=auto"
+                "latitude=$lat&longitude=$lon" +
+                "&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max" +
+                "&forecast_days=7&timezone=auto"
 
         val json = JSONObject(URL(url).readText())
         val daily = json.getJSONObject("daily")
@@ -645,7 +645,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
                 val cal = Calendar.getInstance().apply { timeInMillis = day.dateMillis }
                 Toast.makeText(
                     this@ActivityCalendarActivity,
-                    "${suitability.icon} ${suitability.label} · ${day.tempMax.toInt()}°C · ${day.precipProbability}% Regen",
+                    getString(R.string.activity_calendar_week_forecast_toast, suitability.icon, suitability.label(this@ActivityCalendarActivity), day.tempMax.toInt(), day.precipProbability),
                     Toast.LENGTH_SHORT
                 ).show()
             }

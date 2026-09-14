@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hintergrund-Updates"
+        android:text="@string/settings_background_updates"
         android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:paddingBottom="8dp" />
@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Die App prüft zweimal täglich 8 Uhr morgens und 20 Uhr abends auf neue Inhalte. Du kannst aber auch jederzeit selbst die Aktualisierung starten."
+        android:text="@string/settings_background_updates_desc"
         android:textSize="@dimen/text_body_medium"
         android:paddingBottom="16dp"
         android:textColor="?android:attr/textColorSecondary" />
@@ -26,28 +26,28 @@
         android:id="@+id/switchBackgroundUpdates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hintergrund-Updates aktivieren"
+        android:text="@string/settings_enable_background_updates"
         android:checked="true" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchWifiOnly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nur über WLAN aktualisieren"
+        android:text="@string/settings_wifi_only"
         android:layout_marginTop="8dp" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchNotifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Benachrichtigungen anzeigen"
+        android:text="@string/settings_show_notifications"
         android:layout_marginTop="8dp"
         android:checked="true" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ℹ️ Datenverbrauch bei 2x täglich Update der Inhaltslisten ist sehr gering."
+        android:text="@string/settings_data_usage_note"
         android:textSize="@dimen/text_body_medium"
         android:layout_marginTop="16dp"
         android:textColor="?android:attr/textColorSecondary" />
@@ -62,7 +62,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OpenRouteService (Navigation)"
+        android:text="@string/settings_ors_navigation"
         android:textSize="@dimen/text_body_medium"
         android:textStyle="bold"
         android:paddingBottom="8dp" />
@@ -70,7 +70,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Für die Routenberechnung wird ein API-Key benötigt. Diesen erhältst du kostenlos auf openrouteservice.org."
+        android:text="@string/settings_ors_desc"
         android:textSize="@dimen/text_body_medium"
         android:paddingBottom="12dp"
         android:textColor="?android:attr/textColorSecondary" />
@@ -101,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:text="Key löschen / zurücksetzen"
+        android:text="@string/settings_delete_reset_key"
         android:textColor="#D32F2F"
         android:textSize="12sp"
         android:padding="0dp"

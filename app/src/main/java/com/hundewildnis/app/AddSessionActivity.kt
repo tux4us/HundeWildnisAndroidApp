@@ -92,9 +92,9 @@ class AddSessionActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Neue Trainingseinheit"
+        supportActionBar?.title = getString(R.string.add_session_toolbar_title)
 
-        binding.tvCategoryName.text = category.displayName
+        binding.tvCategoryName.text = category.displayName(this)
         binding.tvDogName.text = profile.name
 
         setupGrids()
@@ -137,11 +137,11 @@ class AddSessionActivity : SecureBaseActivity() {
             StartTile("type_time", R.drawable.ic_stopwatch, "⏱️ Minuten"),
             StartTile("type_reps", R.drawable.ic_notes, "🔢 Wiederholungen")
         )
-        // Das gewählte Tile soll eine andere Farbe haben. 
+        // Das gewählte Tile soll eine andere Farbe haben.
         // Hier nutzen wir unterschiedliche Gruppen für "aktiv" / "inaktiv" wenn möglich.
-        // Einfacher: Wir nutzen Group 2 (Grün) für aktiv und 5 (Violett/Grau) für inaktiv? 
+        // Einfacher: Wir nutzen Group 2 (Grün) für aktiv und 5 (Violett/Grau) für inaktiv?
         // StartTileAdapter unterstützt das nicht direkt ohne Neuzuweisung des Adapters.
-        
+
         val colors = StartGroupColors.forGroup(this, 3) // Ocker
         binding.gridMeasurementType.layoutManager = GridLayoutManager(this, 2)
         binding.gridMeasurementType.adapter = StartTileAdapter(tiles, colors.chipColorRes, colors.accentColorRes) { id ->
@@ -188,28 +188,29 @@ class AddSessionActivity : SecureBaseActivity() {
 
     private fun setupDropdowns() {
         // Ablenkung
-        val distractionLevels = DistractionLevel.values().map { it.displayName }
+        val distractionLevels = DistractionLevel.values().map { it.displayName(this) }
         val distractionAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, distractionLevels)
         binding.spinnerDistraction.setAdapter(distractionAdapter)
-        binding.spinnerDistraction.setText(DistractionLevel.LOW.displayName, false)
+        binding.spinnerDistraction.setText(DistractionLevel.LOW.displayName(this), false)
 
         // Schwierigkeit
-        val difficultyLevels = DifficultyLevel.values().map { it.displayName }
+        val difficultyLevels = DifficultyLevel.values().map { it.displayName(this) }
         val difficultyAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, difficultyLevels)
         binding.spinnerDifficulty.setAdapter(difficultyAdapter)
-        binding.spinnerDifficulty.setText(DifficultyLevel.NORMAL.displayName, false)
+        binding.spinnerDifficulty.setText(DifficultyLevel.NORMAL.displayName(this), false)
 
         // Wetter (optional)
-        val weatherConditions = listOf("Nicht angegeben") + WeatherCondition.values().map { it.displayName }
+        val notSpecified = getString(R.string.add_session_not_specified)
+        val weatherConditions = listOf(notSpecified) + WeatherCondition.values().map { it.displayName(this) }
         val weatherAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, weatherConditions)
         binding.spinnerWeather.setAdapter(weatherAdapter)
-        binding.spinnerWeather.setText("Nicht angegeben", false)
+        binding.spinnerWeather.setText(notSpecified, false)
 
         // Ort (optional)
-        val locations = listOf("Nicht angegeben") + LocationType.values().map { it.displayName }
+        val locations = listOf(notSpecified) + LocationType.values().map { it.displayName(this) }
         val locationAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locations)
         binding.spinnerLocation.setAdapter(locationAdapter)
-        binding.spinnerLocation.setText("Nicht angegeben", false)
+        binding.spinnerLocation.setText(notSpecified, false)
     }
 
     private fun setupListeners() {
@@ -483,22 +484,23 @@ class AddSessionActivity : SecureBaseActivity() {
         val difficultyText = binding.spinnerDifficulty.text.toString()
 
         if (distractionText.isEmpty() || difficultyText.isEmpty()) {
-            Toast.makeText(this, "Bitte alle Pflichtfelder ausfüllen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.add_session_fill_required_fields), Toast.LENGTH_SHORT).show()
             return
         }
 
-        val distraction = DistractionLevel.values().find { it.displayName == distractionText }
+        val distraction = DistractionLevel.fromDisplayName(this, distractionText)
             ?: DistractionLevel.LOW
-        val difficulty = DifficultyLevel.values().find { it.displayName == difficultyText }
+        val difficulty = DifficultyLevel.fromDisplayName(this, difficultyText)
             ?: DifficultyLevel.NORMAL
 
+        val notSpecified = getString(R.string.add_session_not_specified)
         val weatherText = binding.spinnerWeather.text.toString()
-        val weather = if (weatherText == "Nicht angegeben") null
-        else WeatherCondition.values().find { it.displayName == weatherText }
+        val weather = if (weatherText == notSpecified) null
+        else WeatherCondition.fromDisplayName(this, weatherText)
 
         val locationText = binding.spinnerLocation.text.toString()
-        val location = if (locationText == "Nicht angegeben") null
-        else LocationType.values().find { it.displayName == locationText }
+        val location = if (locationText == notSpecified) null
+        else LocationType.fromDisplayName(this, locationText)
 
         // ✅ Session erstellen - mit measurementType!
         val session = TrainingSession(

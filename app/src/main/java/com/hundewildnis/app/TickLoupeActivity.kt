@@ -57,10 +57,14 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
     private val mainHandler = Handler(Looper.getMainLooper())
 
     // ─── Filter ────────────────────────────────────────────────────────────────
-    private enum class FilterMode(val label: String) {
-        THERMAL("🌡️ Wärmebild"),
-        INVERT("🔲 Invertierung"),
-        HIGH_CONTRAST("◑ Hoher Kontrast")
+    private enum class FilterMode {
+        THERMAL, INVERT, HIGH_CONTRAST;
+
+        fun label(context: android.content.Context): String = when (this) {
+            THERMAL -> context.getString(R.string.tick_loupe_filter_thermal)
+            INVERT -> context.getString(R.string.tick_loupe_filter_invert)
+            HIGH_CONTRAST -> context.getString(R.string.tick_loupe_filter_high_contrast)
+        }
     }
 
     private var currentFilter = FilterMode.THERMAL
@@ -144,7 +148,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 PERMISSION_REQUEST
             )
         }
@@ -341,12 +345,12 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
 
         // Schritt 2: AF auslösen
         builder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                    CameraMetadata.CONTROL_AF_TRIGGER_START)
+            CameraMetadata.CONTROL_AF_TRIGGER_START)
         session.capture(builder.build(), null, cameraHandler)
 
         // Schritt 3: Trigger zurücksetzen (einmalig, nicht dauerhaft im Repeating)
         builder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                    CameraMetadata.CONTROL_AF_TRIGGER_IDLE)
+            CameraMetadata.CONTROL_AF_TRIGGER_IDLE)
 
         // Nach TAP_FOCUS_RESET_MS zurück zu CONTINUOUS_VIDEO
         mainHandler.removeCallbacksAndMessages(null)
@@ -436,17 +440,17 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
         for (i in 0..255) {
             val (r, g, b) = when {
                 i < 64  -> Triple(0,
-                                  0,
-                                  (i * 4).coerceIn(0, 255))
+                    0,
+                    (i * 4).coerceIn(0, 255))
                 i < 128 -> Triple(0,
-                                  ((i - 64) * 4).coerceIn(0, 255),
-                                  255)
+                    ((i - 64) * 4).coerceIn(0, 255),
+                    255)
                 i < 192 -> Triple(((i - 128) * 4).coerceIn(0, 255),
-                                  255,
-                                  (255 - (i - 128) * 4).coerceIn(0, 255))
+                    255,
+                    (255 - (i - 128) * 4).coerceIn(0, 255))
                 else    -> Triple(255,
-                                  (255 - (i - 192) * 4).coerceIn(0, 255),
-                                  0)
+                    (255 - (i - 192) * 4).coerceIn(0, 255),
+                    0)
             }
             lut[i] = Color.rgb(r, g, b)
         }
@@ -460,8 +464,8 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
         for (i in pixels.indices) {
             val c    = pixels[i]
             val gray = (Color.red(c) * 0.299 +
-                        Color.green(c) * 0.587 +
-                        Color.blue(c)  * 0.114).toInt().coerceIn(0, 255)
+                    Color.green(c) * 0.587 +
+                    Color.blue(c)  * 0.114).toInt().coerceIn(0, 255)
             pixels[i] = thermalLut[gray]
         }
         val out = src.copy(Bitmap.Config.ARGB_8888, true)
@@ -471,9 +475,9 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
 
     private fun buildInvertMatrix() = ColorMatrix(floatArrayOf(
         -1f,  0f,  0f, 0f, 255f,
-         0f, -1f,  0f, 0f, 255f,
-         0f,  0f, -1f, 0f, 255f,
-         0f,  0f,  0f, 1f,   0f
+        0f, -1f,  0f, 0f, 255f,
+        0f,  0f, -1f, 0f, 255f,
+        0f,  0f,  0f, 1f,   0f
     ))
 
     private fun buildHighContrastMatrix(): ColorMatrix {
@@ -531,18 +535,18 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
     }
 
     private fun updateFilterLabel() {
-        tvFilterLabel.text = currentFilter.label
+        tvFilterLabel.text = currentFilter.label(this)
     }
 
     private fun updateActionGrid() {
         val actions = mutableListOf<StartTile>()
-        
+
         actions.add(StartTile("tick_filter", R.drawable.ic_magnifier, "Filter"))
-        
+
         val freezeLabel = if (isFrozen) "▶ Weiter" else "⏸ Einfrieren"
         val freezeIcon = if (isFrozen) R.drawable.ic_stopwatch else R.drawable.ic_remove
         actions.add(StartTile("tick_freeze", freezeIcon, freezeLabel))
-        
+
         if (isFrozen) {
             actions.add(StartTile("tick_save", R.drawable.ic_notes, "Speichern"))
         }

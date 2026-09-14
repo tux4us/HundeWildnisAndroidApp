@@ -28,7 +28,7 @@ class NasenarbeitSessionDetailActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Session ${df.format(Date(session.datum))}"
+        supportActionBar?.title = getString(R.string.nasenarbeit_session_detail_toolbar_title, df.format(Date(session.datum)))
 
         displaySession()
     }
@@ -49,37 +49,43 @@ class NasenarbeitSessionDetailActivity : SecureBaseActivity() {
         val p = session.parameter
 
         binding.tvDatum.text      = df.format(Date(session.datum))
-        binding.tvDisziplin.text  = "${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName}"
-        binding.tvEmpfohlen.text  = "Empfohlen: ${session.empfohleneDisziplin.icon} ${session.empfohleneDisziplin.displayName}"
+        binding.tvDisziplin.text  = "${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName(this)}"
+        binding.tvEmpfohlen.text  = getString(
+            R.string.nasenarbeit_session_detail_recommended,
+            session.empfohleneDisziplin.icon,
+            session.empfohleneDisziplin.displayName(this)
+        )
         binding.tvBewertung.text  = "⭐".repeat(session.erfolgsbewertung)
 
         // Scores
         binding.tvScores.text = buildString {
-            append("Score 🐾 "); append(fmt(session.scoreVerlorensuche))
+            append(getString(R.string.nasenarbeit_session_detail_score_label)); append(" 🐾 "); append(fmt(session.scoreVerlorensuche))
             append("  🧑 ");     append(fmt(session.scorePersonensuche))
             append("  🔍 ");     append(fmt(session.scoreFreisuche))
         }
 
         // Ergebnisse
         binding.tvErgebnisse.text = buildString {
-            session.durchgefuehrteSchritte?.let { append("Strecke: $it Schritte\n") }
-            session.durchgefuehrteHa?.let { append("Fläche: ${String.format("%.1f", it)} ha\n") }
-            session.suchdauerMinuten?.let { append("Dauer: ${it} Min.\n") }
+            session.durchgefuehrteSchritte?.let { append(getString(R.string.nasenarbeit_session_detail_route, it.toString())) }
+            session.durchgefuehrteHa?.let { append(getString(R.string.nasenarbeit_session_detail_area, String.format("%.1f", it))) }
+            session.suchdauerMinuten?.let { append(getString(R.string.nasenarbeit_session_detail_duration, it.toString())) }
             session.gefundeneGegenstaende?.let { g ->
                 session.gegenstaendeGesamt?.let { ges ->
-                    append("Gegenstände: $g von $ges gefunden\n")
+                    append(getString(R.string.nasenarbeit_session_detail_items_found, g.toString(), ges.toString()))
                 }
             }
             session.personenfundErfolgreich?.let {
-                append("Personenfund: ${if (it) "✅ Erfolgreich" else "❌ Nicht gefunden"}\n")
+                val statusText = if (it) getString(R.string.nasenarbeit_session_detail_person_found_success)
+                else getString(R.string.nasenarbeit_session_detail_person_found_failure)
+                append(getString(R.string.nasenarbeit_session_detail_person_found_label, statusText))
             }
         }.trimEnd()
 
         // Wetter
         binding.tvWetter.text = buildString {
             append("${p.temperaturCelsius}°C  Bf ${p.beaufort}  Feuchte ${p.luftfeuchtigkeit}%\n")
-            val windDir = listOf("Rückenwind", "Seitenwind", "Gegenwind")[p.windrichtung]
-            append("Wind: $windDir")
+            val windDir = resources.getStringArray(R.array.nasenarbeit_wind_directions)[p.windrichtung]
+            append(getString(R.string.nasenarbeit_session_detail_wind_label, windDir))
         }
 
         // Level
@@ -104,17 +110,17 @@ class NasenarbeitSessionDetailActivity : SecureBaseActivity() {
         try {
             val file = NasenarbeitPDFGenerator.generateSessionPDF(this, session, profile, saveToPublic = true)
             if (file != null) {
-                android.widget.Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", android.widget.Toast.LENGTH_LONG).show()
+                android.widget.Toast.makeText(this, getString(R.string.nasenarbeit_session_detail_pdf_saved), android.widget.Toast.LENGTH_LONG).show()
                 val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "application/pdf"
                     putExtra(Intent.EXTRA_STREAM, uri)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                startActivity(Intent.createChooser(intent, "Session als PDF teilen"))
+                startActivity(Intent.createChooser(intent, getString(R.string.nasenarbeit_session_detail_pdf_share_chooser)))
             }
         } catch (e: Exception) {
-            android.widget.Toast.makeText(this, "PDF-Fehler: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, getString(R.string.nasenarbeit_session_detail_pdf_error, e.message ?: ""), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 

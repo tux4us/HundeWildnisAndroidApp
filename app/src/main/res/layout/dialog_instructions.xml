@@ -14,7 +14,7 @@
             android:id="@+id/tvInsTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📖 Bedienungsanleitung"
+            android:text="@string/instr_title"
             android:textSize="@dimen/text_body_medium"
             android:textStyle="bold"
             android:textColor="@color/green_primary"
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="💾 Datensicherheit"
+            android:text="@string/instr_data_security_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
@@ -39,7 +39,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Alle Deine von Dir eingegebenen und generierten Daten gehören Dir und werden lokal auf Deinem Gerät gespeichert. Für das Teilen der Daten zu Dritten bist Du selbst verantwortlich.\n\nDatensicherheit der ONLINETRAINER-KURSE\nNotizen, welche Du in den einzelnen Onlinetrainer-Kursen ablegst, bleiben in Deinem Browser-Cache gespeichert und können durch das Leeren des Caches gelöscht werden. Für eine dauerhafte Sicherung der Notizen in den Onlinetrainer-Kursen gibt es die Möglichkeit des Exports bzw. zum Teilen der Notizen."
+            android:text="@string/instr_data_security_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -55,14 +55,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🦮📖 Übung der Woche"
+            android:text="@string/instr_weekly_exercise_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lass Dich inspirieren von einer wöchentlichen Basisübung, ergänzend zu Deinen Trainingsinhalten mit Deinem Hund."
+            android:text="@string/instr_weekly_exercise_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -78,14 +78,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🧘🐕 Meditationsübung"
+            android:text="@string/instr_meditation_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lass Dich inspirieren von einer wöchentlichen Meditationsübung, welche den teamgeist zwischen Dir und Deinem Hund spürbar verbessert und Training für Dich zu mehr Gelassenheit und Gegenwärtigkeit ist."
+            android:text="@string/instr_meditation_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -101,14 +101,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⏱️🔔 Tempo - Trainer"
+            android:text="@string/instr_pace_trainer_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trainiere Deine optimale Geh-Geschwindigkeit beim Training. \n• Wähle ein Limit (Wege- und Geländetraining, Alltags- und Strassentraining, Wandertraining) und wähle das Messintervall (Messung aller 30 sekunden oder 60 Sekunden). Während der Messung kann das Limit in Abhängigkeit vom Trainingsinhalt auch jederzeit gewechselt werden, ohne die Messung zu unterbrechen.\n• Die App warnt Dich optional per Benachrichtigung / Ton bei Überschreitung. Dazu bitte die Benachrichtigungen in den Android-Einstellungen (Einstellungen - Apps - HundeWildnis - Benachrichtigungen) für HundeWildnis App aktivieren.\n• Die App legt ein Messprotokoll an, welches in der Historie abgespeichert wird und per GPX und PDF gespeichert und exportiert werden kann. Die GPX Datei kann in einer Navigationsapp geöffnet und ausgewertet werden. Du kannst sehen, in welchem Wegabschnitt Du wie schnell gegangen bist und kannst daraus Rückschlüsse auf Verhaltensmuster und Trainingsverbesserungen ziehen."
+            android:text="@string/instr_pace_trainer_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -124,14 +124,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🗣️🎤 Sprach-Trainer"
+            android:text="@string/instr_voice_trainer_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Unterstützung und Training Deiner sprachlichen Kommunikation mit Deinem Hund.\n• Wähle zwischen 'Ganzheitliches Training' mit 5 Zielfrequenzzonen oder 'Fokus Training' mit der Auswahl einer Zielfrequenzzone für eine jeweils optimale Kommunikationsart.\n• Erhalte sofortiges Feedback für erfolgreiche Kommunikation.\n• Nach jedem training wird eine statistische Auswertung erstellt und protokolliert, welche zusätzlich als PDF abgespeichert und geteilt werden kann."
+            android:text="@string/instr_voice_trainer_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -147,14 +147,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🦮📖 Hundetraining"
+            android:text="@string/instr_dog_training_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trainiere mit Deinem Hund mittels Unterstützung aus aktuell 18 Trainingskategorien.\n•Wähle Deinen Hund (muss zuvor in den Hunde-Stammdaten angelegt werden). Es können maximal 3 Hunde angelegt werden.\n• Wähle das jeweils gewünschte Training aus. Sehe Deine bisherigen Trainingserfolge in der gewählten Trainingskategorie. \n• Wähle '+ Neue Trainingseinheit' und definiere die Parameter, wie zum Beispiel: \n• Trainingsdauer, \n• Anzahl der Wiederholungen, \n• Ablenkungslevel, \n• Schwierigkeitsgrad, \n• Wetterbedingungen (Wetterdaten werden automatisch für Deinen Standort abgerufen), \n• Trainingsstandort (GPS-Daten werden automatisch abgerufen und eingepflegt), \n• Wetterbeschreibung, \n• Geländebeschreibung \n• und zusätzliche individuelle Notizen\n•Alle Trainings werden in der Historie abgelegt."
+            android:text="@string/instr_dog_training_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -170,14 +170,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📝📸 Tagesnotizen"
+            android:text="@string/instr_daily_notes_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dokumentiere Dein Training, Deine Beobachtungen und alles Wichtige mit Fotos, Text und Geodaten.\n• Textfeld für Notiztitel, \n• Textfeld für Deine Notizen. Optional können \n• Wetterdaten (werden automatisch für Deinen Standort abgerufen) und \n• GPS-Koordinaten (GPS-Daten werden automatisch abgerufen) eingefügt werden. Zusätzlich können \n• Fotos aus der Galerie bzw. über \n• Kamera angehangen werden\n• Die Notizen können als \n• PDF-Datei und \n• GPX-Datei gespeichert und geteilt werden. \n• 'Notiz sichern' speichert die aktuelle Notiz zusätzlich in der Historie."
+            android:text="@string/instr_daily_notes_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -193,14 +193,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🌦📍 Hundewetter"
+            android:text="@string/instr_weather_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Umfangreicher Wetterbericht für Deinen aktuelle Standort zur Planung Deiner Aktivitäten und zur Unterstützung Deines Trainings\n• Trainingswetter-Index (mit wetterabhängigen Tipps).\n• Tageslicht- und Dämmerungsinformationen (Tageslänge, Morgendämmerung, Sonnenaufgang, Sonneuntergang, Abenddämmerung, Tipps, Berechnung der 'Goldenen Stunde' für tolle Fotos)\n• tägliche Minimal- und Maximaltemperatur\n• 24h Temperaturverlaufsdiagramm\n• aktuelle Daten (gefühlte Temperatur, Luftfeuchte, Wind, Windrichtung, Windstärke, Windböen, Niederschlag)\n• Weitere Details (Luftdruck, Sichtweite, UV-Index)\n• 24h Vorhersage für jede Stunde inclusive Details\n• Niederschlagsradar der letzten 6h inclusive 1h Prognose\n• Alle Wetterdaten von Open-Meteo (CC BY 4.0)."
+            android:text="@string/instr_weather_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -216,14 +216,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🗺🛰 Revier - Navigation"
+            android:text="@string/instr_navigation_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Interaktive Karte mit Anzeige von Kategorien von wander- und hunderelevanten Orten via OpenStreetMap und Routing. Interaktive OSM-Karte: Nutzt das freie OpenStreetMap (Mapnik) Material für eine detaillierte Darstellung der Umgebung.\n• Standort-Anzeige: Zeigt die aktuelle Position auf der Karte an.\n• Echtzeit-Tracking: Die Karte folgt der eigenen Bewegung im Gelände (aktualisiert sich alle 5 Meter oder alle 2 Sekunden).\n• Standort-Zentrierung: Über den Button '📍 Standort' lässt sich die Karte jederzeit wieder auf die aktuelle Position ausrichten.\n• Koordinaten-Anzeige: Die exakten GPS-Daten (Breiten- und Längengrad) werden live eingeblendet.\n• Standort teilen: Die aktuelle Position lässt sich direkt an weitere Personen versenden oder zu anderen Apps teilen.\n• POI-Suche (Points of Interest) mit Detailinfos (falls in OpenStreetMap hinterlegt)\n Kategorien-Grid für schnelle Auswahl hundespezifischer Orte:\n• Hundeausläufe und Hundeparks\n• Tierärzte und Tierkliniken\n• Tierbedarf und Tierheime\n• Wanderwege und Aussichtspunkte\n• Trinkwasser und Toiletten\n• Supermärkte, Bäckereien und Restaurants\n• Notfall-Services (Apotheke, Polizei, Feuerwehr, Arztpraxen, Krankenhäuser)\n• Naturschutzgebiete und Nationalparks\n• SOS-Punkte und vieles mehr\n• Radar-Suche: Sucht automatisch in einem Umkreis von 3 km nach allen Einträgen der gewählten Kategorie via Overpass-API.\n• Ergebnis-Vorschau: Zeigt alle Fundorte gleichzeitig als Marker auf der Karte an und zoomt so, dass alle Ziele plus die eigene Position sichtbar sind.\nIntelligente Navigation (Routing)\n• Ein Klick auf einen Ort in der Liste oder einen Marker auf der Karte startet die Navigation.\n• Routenberechnung: Die App nutzt professionelle Routing-Dienste (OpenRouteService, Graphhopper oder OSRM), um den besten Weg für Fußgänger zu berechnen.\n• Statistiken: Zeigt die exakte Entfernung und die geschätzte Gehzeit zum Ziel an.\n• Live-Update: Während des Laufens wird die Route ständig an die aktuelle Position angepasst.\n• Luftlinie-Fallback: Sollte kein Fußweg in der Karte bekannt sein, wird automatisch eine gestrichelte Luftlinie zum Ziel angezeigt.\nPOI-Details\n• Umfassende Infos: Sofern in OSM hinterlegt, zeigt die App Details wie Adresse, Telefonnummer, Webseite, Öffnungszeiten und Zutrittsbeschränkungen (z. B. Leinenpflicht) an.\n• Direkt-Aktionen: Telefonnummern und Web-Links sind klickbar, um sofort Kontakt aufzunehmen.\n• Lokal und Frei: Keine Nutzung von Google Maps. Der Standort wird nur für die aktuelle Suche anonym an freie Karten-Server gesendet.\n• Zwei-Klick-Logik: Erster Klick auf Marker zeigt Info, zweiter Klick startet die Navigation – für eine fehlerfreie Bedienung.\n• Suchfeld für textbasierte Suche"
+            android:text="@string/instr_navigation_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -239,14 +239,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🧭🌐 Kompass"
+            android:text="@string/instr_compass_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Digitale Orientierungshilfe für Wanderungen und Gelände."
+            android:text="@string/instr_compass_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -262,14 +262,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⛰️〽️ Höhenmesser"
+            android:text="@string/instr_altimeter_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Anzeige der aktuellen Höhe über Meeresspiegel via GPS."
+            android:text="@string/instr_altimeter_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -285,14 +285,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🐕 Hunde-Stammdaten"
+            android:text="@string/instr_dog_profiles_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Verwaltung von bis zu 3 Hunde-Profilen. Die Stammdaten werden über Infokarten dargestellt und können angezeigt, bearbeitet und geteilt werden.\n\nDie Stammdaten sind auch Voraussetzung um die Funktionen 'Hundetraining' nutzen zu können\n\nBasis-Informationen\n• Name: Rufname des Hundes.\n• Rasse: Rassebezeichnung oder Mischling.\n• Geschlecht: Rüde oder Hündin.\n• Kastrationsstatus: Ja, Nein oder Unbekannt.\n• Geburtsdatum: Tag-Monat-Jahr, Monat-Jahr, Jahr oder unbekannt eintragen.\n• Herkunft: Herkunftsort / -land.\n• Farbe: Fellfarbe und besondere Kennzeichen.\n• Foto: Ein individuelles Profilbild des Hundes aus der Galerie ins Profil einfügen.\n\nIdentifikation\n• Chipnummer: Die 15-stellige Transponder-Nummer.\n• Steuernummer: Steuernummer und Gemeinde\n• Tasso-Nummer: Kennnummer der Registrierung bei Tasso e.V.\n• Heimtierausweis Land: Ausstellungsland des Heimtierausweises.\n• Ausweisnummer: Nummer des Heimtierausweises.\n\nGesundheit und Vorsorge\n• Impfstatus: Aktuelle Information zur Schutzimpfung.\n• Weitere Impfungen: Raum für weitere Eintragungen zu Impfungen.\n• Letzte Entwurmung: Datum der letzten Behandlung.\n• Letzter Floh-/Zeckenschutz: Datum der letzten Prophylaxe.\n• Gewicht: Aktuelles Körpergewicht inklusive Datum der Messung.\n• Körpermaße: Schulterhöhe und Körperlänge\n• Medizinische Hinweise: Platz für chronische Krankheiten, Allergien oder notwendige Medikamente.\n\nKontakte und Versicherung\n• Tierarzt: Name und Kontaktdaten des Haustierarztes.\n• Versicherung: Angaben zur Hundehaftpflichtversicherung.\n• Versicherung: Angaben zur Kranken- /OP-versicherung.\n• Besitzer: Name und Adresse des Eigentümers.\n• Notfallkontakt: Telefonnummern für dringende Rückfragen.\n\nHaltung und Verhalten\n• Futter: Spezielle Ernährungsanforderungen oder Futtersorten.\n• Verhalten: Besonderheiten im Umgang, besondere Eigenschaften.\n\nAnzeige, Export und Transfer\n• Anzeigen: Zeigt alle Stammdaten übersichtlich auf dem Bildschirm an.\n• Bearbeiten: Öffnet die Stammdaten des Hundes zum Bearbeiten.\n• QR-Code: Öffnet eine Auswahlliste aller Stammdateneinträge. Nach erfolgter Auswahl wird ein entsprechender QR-Code generiert, welcher geteilt, vom Empfänger gescannt und/oder abgespeichert werden kann.\n• PDF: Öffnet eine Auswahlliste aller Stammdateneinträge. Die App generiert aus den gewählten Stammdaten eine PDF incl. QR-Code. Diese PDF kann geteilt und abgespeichert werden.\n• Teilen: Öffnet eine Auswahlliste aller Stammdateneinträge. Die App generiert eine Liste der gewählten Einträge, welche schnell kopiert bzw. an eine Zielapp der eigenen Wahl geteilt und darüber versendet oder weiterverarbeitet werden kann.\n• 🚨NOTFALL: Im Falle einer schnell auftretenden Erkrankung, eines Unfalls oder anderen Notlagen erstellt die App eine Notfallmeldung mit allen wichtigen Informationen für den Tierarzt, die Tierklinik bzw. die Tierrettung. Voreingetragen sind Name, Rasse, Geschlecht und Gewicht des betroffenen Hundes. Aus einer Auswahlliste kann ein Symptom hinzugefügt werden und per Textfeld eine Beschreibung der Notlage ergänzt werden. Im Bedarfsfall können noch der GPS-Standort und Fotos per Kamera bzw. aus Galerie beigefügt werden. Der Button 'Kontaktmeldung absenden' generiert eine PDF mit allen Informationen und Fotos, welche über das Kontextmenü sofort geteilt und verschickt werden kann, damit Tierarzt, Tierklinik, Tierrettung bereits im Vorfeld alle wichtigen Informationen erhalten. Je nach App wird zudem ein Text mit allen Informationen beigefügt, damit alle wichtigen Informationen für den Empfänger auch ohne PDF-Anzeige lesbar sind. GPS Daten werden als Link für OpenStreetMap generiert, um sofort im Browser oder NavigationsApp verfügbar zu sein.\n• Datenschutz: Alle Daten werden ausschließlich lokal auf dem Smartphone gespeichert und verlassen das Gerät nur, wenn der Nutzer aktiv den Export (Teilen, PDF, QR-Code) nutzt."
+            android:text="@string/instr_dog_profiles_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -308,14 +308,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🚨 NOTFALL 🚨"
+            android:text="@string/instr_emergency_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Schnelle Hilfe, wenn jede Sekunde zählt.\n• Hund auswählen\n• Zwischen 'Unfall' oder 'Erkrankung' wählen\n• jeweilige Ereigniskategorie auswählen\n• Schnell-Check-Fragen mit JA oder NEIN bestätigen\n\n Notfall-Assistent erstellt sofort eine \n• 'Erste-Hilfe-Anleitung' \n• ein PDF mit GPS-Standort und Stammdaten für den Tierarzt, welche per Button sofort an einen Kontakt aus dem Adressbuch (z.B. Tierarzt, Tierettung, etc) über eine Anwendung der eigenen Wahl abgesendet werden kann."
+            android:text="@string/instr_emergency_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -331,14 +331,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📦💾 Backup App Daten"
+            android:text="@string/instr_backup_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sichere deine Daten regelmäßig.\n• Verwende alle Deine Daten auf weiteren Android-Geräten mit der HundeWildnisApp\n• Das Backup umfasst Profile, Notizen, Fotos und Statistiken.\n• Speicherort: Downloads/HundeWildnis_Backups/."
+            android:text="@string/instr_backup_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -354,14 +354,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="💖🤝 Deine Unterstützung"
+            android:text="@string/instr_support_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Unterstütze uns gern mit einer Spende. Wir haben dazu sichere Wege eingerichtet, über welche Du uns und die Entwicklung der App mit einem kleinen Honorar Deiner wahl einmalig oder gern regelmäßig unterstützen kannst. Damit wir auch künftig die App kostenlos zur Verfügung stellen können."
+            android:text="@string/instr_support_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -377,14 +377,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Navigationsleiste unten"
+            android:text="@string/instr_bottom_nav_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rufe jederzeit auf:\n• Startseite der App\n• HundeWildnis - Blog\n• Informationsseiten der HundeWildnisSchule\n• Online-Trainingskurse (nur nach individueller Freischaltung)\n• 'Mehr' (Youtube-Kanal, HundeWildnis-Podcast, X-Kanal, Direktchats mit Manuela und Jörg)"
+            android:text="@string/instr_bottom_nav_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -400,14 +400,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Menue oben"
+            android:text="@string/instr_top_menu_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nutze das Hauptmenü (Hamburger-Icon oben rechts) für schnelle Aktionen wie \n• Aktualisieren\n• Wechsel zwischen hellen oder dunklen Modus\n• Appeinstellungen\n• Backup erstellen\n• Backup importieren\n• Anleitung zur Nutzung der App\n• Berechtigungen der App\n• Datenschutzerklärung\n• Impressum\n• Über die App\n• Startseite"
+            android:text="@string/instr_top_menu_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 

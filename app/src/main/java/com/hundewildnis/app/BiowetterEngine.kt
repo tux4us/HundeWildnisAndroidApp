@@ -24,12 +24,12 @@ enum class BioLevel(val color: Int) {
     HIGH    (0xFFFF9800.toInt()),   // orange – starker Einfluss
     EXTREME (0xFFF44336.toInt());   // rot – sehr starker Einfluss
 
-    val label: String get() = when (this) {
-        NONE     -> "Kein Einfluss"
-        LOW      -> "Geringer Einfluss"
-        MODERATE -> "Mäßiger Einfluss"
-        HIGH     -> "Starker Einfluss"
-        EXTREME  -> "Sehr starker Einfluss"
+    fun label(context: android.content.Context): String = when (this) {
+        NONE     -> context.getString(R.string.biolevel_none)
+        LOW      -> context.getString(R.string.biolevel_low)
+        MODERATE -> context.getString(R.string.biolevel_moderate)
+        HIGH     -> context.getString(R.string.biolevel_high)
+        EXTREME  -> context.getString(R.string.biolevel_extreme)
     }
 }
 
@@ -65,6 +65,7 @@ object BiowetterEngine {
      * @param precipProb      Niederschlagswahrscheinlichkeit aktuell (%)
      */
     fun evaluate(
+        context: android.content.Context,
         pressureHourly: List<Double>,
         tempC: Double,
         relHumidityPct: Int,
@@ -78,27 +79,27 @@ object BiowetterEngine {
 
         // ── 1. Wetterfühligkeit (Luftdrucktendenz 3h) ─────────────────────
         val pressureTendency = calcPressureTendency3h(pressureHourly)
-        indicators.add(buildPressureIndicator(pressureTendency))
+        indicators.add(buildPressureIndicator(context, pressureTendency))
 
         // ── 2. Schwüle (Taupunkt) ──────────────────────────────────────────
         val dewPoint = calcDewPoint(tempC, relHumidityPct)
-        indicators.add(buildHumidityIndicator(dewPoint, tempC))
+        indicators.add(buildHumidityIndicator(context, dewPoint, tempC))
 
         // ── 3. Thermische Belastung (Hitze-Index oder Windchill) ──────────
-        indicators.add(buildThermalIndicator(tempC, relHumidityPct, windSpeedKmh))
+        indicators.add(buildThermalIndicator(context, tempC, relHumidityPct, windSpeedKmh))
 
         // ── 4. Konvektionspotenzial (CAPE / Gewitterpotenzial) ─────────────
         if (capeJPerKg >= 0) {
             val forecastLevel = ThunderstormForecastEngine.classify(
                 capeJPerKg, precipProb, weatherCode
             )
-            indicators.add(buildCapeIndicator(capeJPerKg, forecastLevel))
+            indicators.add(buildCapeIndicator(context, capeJPerKg, forecastLevel))
         }
 
         // ── Gesamteinstufung: höchste Einzelstufe ─────────────────────────
         val overallLevel = indicators.maxByOrNull { it.level.ordinal }?.level ?: BioLevel.NONE
 
-        val (summary, advice) = buildOverallTexts(overallLevel, indicators)
+        val (summary, advice) = buildOverallTexts(context, overallLevel, indicators)
 
         return BiowetterResult(
             indicators    = indicators,
@@ -145,9 +146,9 @@ object BiowetterEngine {
         val T = tempC * 9.0 / 5.0 + 32.0   // Fahrenheit
         val R = relHumidityPct.toDouble()
         val hi = -42.379 + 2.04901523 * T + 10.14333127 * R -
-                 0.22475541 * T * R - 0.00683783 * T * T -
-                 0.05481717 * R * R + 0.00122874 * T * T * R +
-                 0.00085282 * T * R * R - 0.00000199 * T * T * R * R
+                0.22475541 * T * R - 0.00683783 * T * T -
+                0.05481717 * R * R + 0.00122874 * T * T * R +
+                0.00085282 * T * R * R - 0.00000199 * T * T * R * R
         return (hi - 32.0) * 5.0 / 9.0     // zurück in Celsius
     }
 
@@ -155,15 +156,15 @@ object BiowetterEngine {
     // INDIKATOREN AUFBAUEN
     // ════════════════════════════════════════════════════════════════
 
-    private fun buildPressureIndicator(tendency: Double?): BioIndicator {
+    private fun buildPressureIndicator(context: android.content.Context, tendency: Double?): BioIndicator {
         if (tendency == null) {
             return BioIndicator(
-                name        = "Wetterfühligkeit",
+                name        = context.getString(R.string.biowetter_pressure_name),
                 emoji       = "🌡️",
                 level       = BioLevel.NONE,
-                valueText   = "Nicht genug Daten",
-                humanEffect = "Keine Auswertung möglich.",
-                dogEffect   = "Keine Auswertung möglich."
+                valueText   = context.getString(R.string.biowetter_not_enough_data),
+                humanEffect = context.getString(R.string.biowetter_no_evaluation_possible),
+                dogEffect   = context.getString(R.string.biowetter_no_evaluation_possible)
             )
         }
         val absT = Math.abs(tendency)
@@ -174,38 +175,38 @@ object BiowetterEngine {
             absT < 10.0 -> BioLevel.HIGH
             else        -> BioLevel.EXTREME
         }
-        val direction = if (tendency < 0) "Druckabfall" else "Druckanstieg"
-        val valueText = "${String.format("%.1f", tendency)} hPa / 3h ($direction)"
+        val direction = if (tendency < 0) context.getString(R.string.biowetter_pressure_drop) else context.getString(R.string.biowetter_pressure_rise)
+        val valueText = context.getString(R.string.biowetter_pressure_value, String.format("%.1f", tendency), direction)
 
         val humanEffect = when (level) {
-            BioLevel.NONE     -> "Stabiler Luftdruck. Kein wetterfühligkeitsbedingter Einfluss erwartet."
-            BioLevel.LOW      -> "Leichter Druckwechsel. Sehr empfindliche Personen bemerken möglicherweise leichte Müdigkeit."
+            BioLevel.NONE     -> context.getString(R.string.biowetter_pressure_human_none)
+            BioLevel.LOW      -> context.getString(R.string.biowetter_pressure_human_low)
             BioLevel.MODERATE -> if (tendency < 0)
-                "Merklicher Druckabfall. Häufig: Kopfschmerzen, erhöhte Reizbarkeit, Konzentrationsschwäche – besonders bei wetterfühligen Personen, Migränepatienten und Personen mit alten Verletzungen."
+                context.getString(R.string.biowetter_pressure_human_moderate_drop)
             else
-                "Merklicher Druckanstieg. Manche Personen reagieren mit Schlafstörungen oder innerer Anspannung."
+                context.getString(R.string.biowetter_pressure_human_moderate_rise)
             BioLevel.HIGH     -> if (tendency < 0)
-                "Starker Druckabfall. Wetterfühligkeit ausgeprägt wahrscheinlich: Migräne, Gelenkschmerzen, Narben-/Wundschmerzen, Kreislaufprobleme möglich. Ruhepausen einplanen."
+                context.getString(R.string.biowetter_pressure_human_high_drop)
             else
-                "Starker Druckanstieg. Manche Personen berichten von Kopfdruck, Ohrenpfeifen, gesteigerter Anspannung."
-            BioLevel.EXTREME  -> "Extremer Druckwechsel. Körperlich belastend, besonders für chronisch kranke, ältere oder wetterempfindliche Personen. Heute Belastungen reduzieren."
+                context.getString(R.string.biowetter_pressure_human_high_rise)
+            BioLevel.EXTREME  -> context.getString(R.string.biowetter_pressure_human_extreme)
         }
 
         val dogEffect = when (level) {
             BioLevel.NONE, BioLevel.LOW ->
-                "Keine Auswirkungen auf das Training erwartet."
+                context.getString(R.string.biowetter_pressure_dog_none_low)
             BioLevel.MODERATE ->
-                "Hunde registrieren Druckveränderungen oft früher als Menschen und reagieren mit erhöhter Aufmerksamkeit oder leichter Unruhe. Wenn Du selbst wetterfühlig bist: kürzere Einheiten, keine Präzisionsarbeit."
+                context.getString(R.string.biowetter_pressure_dog_moderate)
             BioLevel.HIGH ->
-                "Erhöhte Sensibilität wahrscheinlich – sowohl beim Hund als auch beim Menschen. Dein eigener Stresslevel beeinflusst die Trainingsqualität direkt. Heute Routineübungen statt neuer Anforderungen. Ruhige Geländerunden bevorzugen."
+                context.getString(R.string.biowetter_pressure_dog_high)
             BioLevel.EXTREME ->
-                "Extremer Wetterwechsel. Hunde können deutlich unruhiger und schwerer führbar sein. Auf Zwang und intensive Trainingsanforderungen heute verzichten. Nur kurze, entspannte Runden."
+                context.getString(R.string.biowetter_pressure_dog_extreme)
         }
 
-        return BioIndicator("Wetterfühligkeit", "🌡️", level, valueText, humanEffect, dogEffect)
+        return BioIndicator(context.getString(R.string.biowetter_pressure_name), "🌡️", level, valueText, humanEffect, dogEffect)
     }
 
-    private fun buildHumidityIndicator(dewPoint: Double, tempC: Double): BioIndicator {
+    private fun buildHumidityIndicator(context: android.content.Context, dewPoint: Double, tempC: Double): BioIndicator {
         val level = when {
             dewPoint < 10  -> BioLevel.NONE
             dewPoint < 16  -> BioLevel.LOW
@@ -213,38 +214,38 @@ object BiowetterEngine {
             dewPoint < 24  -> BioLevel.HIGH
             else           -> BioLevel.EXTREME
         }
-        val schwüleText = when (level) {
-            BioLevel.NONE     -> "Angenehm trocken"
-            BioLevel.LOW      -> "Leicht feucht, angenehm"
-            BioLevel.MODERATE -> "Spürbar schwül"
-            BioLevel.HIGH     -> "Deutlich schwül"
-            BioLevel.EXTREME  -> "Extrem schwül"
+        val schwueleText = when (level) {
+            BioLevel.NONE     -> context.getString(R.string.biowetter_humidity_none)
+            BioLevel.LOW      -> context.getString(R.string.biowetter_humidity_low)
+            BioLevel.MODERATE -> context.getString(R.string.biowetter_humidity_moderate)
+            BioLevel.HIGH     -> context.getString(R.string.biowetter_humidity_high)
+            BioLevel.EXTREME  -> context.getString(R.string.biowetter_humidity_extreme)
         }
-        val valueText = "Taupunkt ${String.format("%.1f", dewPoint)}°C – $schwüleText"
+        val valueText = context.getString(R.string.biowetter_humidity_value, String.format("%.1f", dewPoint), schwueleText)
 
         val humanEffect = when (level) {
-            BioLevel.NONE     -> "Die Luft fühlt sich trocken und angenehm an. Kein Schwüleeinfluss."
-            BioLevel.LOW      -> "Angenehme Luftfeuchtigkeit. Kein nennenswerter Einfluss auf das Wohlbefinden."
-            BioLevel.MODERATE -> "Spürbare Schwüle. Schwitzen kühlt weniger effektiv. Erhöhtes Durstgefühl, Leistungsfähigkeit leicht reduziert bei körperlicher Aktivität."
-            BioLevel.HIGH     -> "Deutliche Schwüle. Thermoregulation des Körpers eingeschränkt. Kreislauf stärker belastet. Auf ausreichend Trinken achten, intensive Aktivitäten besser in kühlere Stunden verlegen."
-            BioLevel.EXTREME  -> "Extreme Schwüle. Hitzeerschöpfung möglich. Körperliche Aktivitäten stark einschränken. Viel trinken, Schatten aufsuchen, Körpertemperatur beobachten."
+            BioLevel.NONE     -> context.getString(R.string.biowetter_humidity_human_none)
+            BioLevel.LOW      -> context.getString(R.string.biowetter_humidity_human_low)
+            BioLevel.MODERATE -> context.getString(R.string.biowetter_humidity_human_moderate)
+            BioLevel.HIGH     -> context.getString(R.string.biowetter_humidity_human_high)
+            BioLevel.EXTREME  -> context.getString(R.string.biowetter_humidity_human_extreme)
         }
 
         val dogEffect = when (level) {
             BioLevel.NONE, BioLevel.LOW ->
-                "Keine schwülebedingten Einschränkungen für Training oder Aktivität."
+                context.getString(R.string.biowetter_humidity_dog_none_low)
             BioLevel.MODERATE ->
-                "Hunde können bei Schwüle weniger effektiv über die Zunge kühlen. Tempotraining und intensives Apportieren heute reduzieren. Trinkpausen einplanen."
+                context.getString(R.string.biowetter_humidity_dog_moderate)
             BioLevel.HIGH ->
-                "Hunde sind bei hoher Schwüle deutlich überhitzungsgefährdeter als bei gleicher Temperatur bei trockener Luft. Intensive Belastung heute meiden, kurze Runden, viel Wasser, Schatten. Brachycephale Rassen (Bulldogge, Mops, Französische Bulldogge) besonders gefährdet."
+                context.getString(R.string.biowetter_humidity_dog_high)
             BioLevel.EXTREME ->
-                "Extrem schwüle Bedingungen – akute Überhitzungsgefahr für Hunde. Körperliche Aktivität auf das Minimum (kurze Gassi-Runden) begrenzen. Zeichen für Hitzschlag: starkes Hecheln, Sabberfluss, Koordinationsstörungen, Apathie → sofort kühlen und Tierarzt aufsuchen."
+                context.getString(R.string.biowetter_humidity_dog_extreme)
         }
 
-        return BioIndicator("Schwüle", "💧", level, valueText, humanEffect, dogEffect)
+        return BioIndicator(context.getString(R.string.biowetter_humidity_name), "💧", level, valueText, humanEffect, dogEffect)
     }
 
-    private fun buildThermalIndicator(tempC: Double, relHumidityPct: Int, windSpeedKmh: Double): BioIndicator {
+    private fun buildThermalIndicator(context: android.content.Context, tempC: Double, relHumidityPct: Int, windSpeedKmh: Double): BioIndicator {
         return when {
             tempC >= 27 && relHumidityPct >= 40 -> {
                 // Hitze-Index-Regime
@@ -256,26 +257,26 @@ object BiowetterEngine {
                     hi < 44 -> BioLevel.HIGH
                     else    -> BioLevel.EXTREME
                 }
-                val valueText = "Hitze-Index: ${String.format("%.1f", hi)}°C (gefühlt)"
+                val valueText = context.getString(R.string.biowetter_heat_index_value, String.format("%.1f", hi))
                 val humanEffect = when (level) {
-                    BioLevel.NONE     -> "Angenehme Wärme. Kein Hitzestress."
-                    BioLevel.LOW      -> "Leichter Hitzestress bei anhaltender körperlicher Aktivität möglich."
-                    BioLevel.MODERATE -> "Mäßiger Hitzestress. Viel trinken, Mittagshitze meiden. Kreislauf-empfindliche Personen besonders achtsam sein."
-                    BioLevel.HIGH     -> "Starker Hitzestress. Intensive körperliche Aktivitäten meiden, im Schatten aufhalten, ausreichend trinken. Hitzekrämpfe und -erschöpfung möglich."
-                    BioLevel.EXTREME  -> "Extremer Hitzestress. Gefahr von Hitzschlag. Aktivitäten auf ein Minimum reduzieren."
+                    BioLevel.NONE     -> context.getString(R.string.biowetter_heat_human_none)
+                    BioLevel.LOW      -> context.getString(R.string.biowetter_heat_human_low)
+                    BioLevel.MODERATE -> context.getString(R.string.biowetter_heat_human_moderate)
+                    BioLevel.HIGH     -> context.getString(R.string.biowetter_heat_human_high)
+                    BioLevel.EXTREME  -> context.getString(R.string.biowetter_heat_human_extreme)
                 }
                 val dogEffect = when (level) {
-                    BioLevel.NONE, BioLevel.LOW -> "Auf Trinkwasser achten. Kurze Pausen einplanen."
-                    BioLevel.MODERATE -> "Training auf frühe Morgen- oder Abendstunden verlegen. Asphalt meiden – kann Pfoten verbrennen. Viel Wasser."
-                    BioLevel.HIGH     -> "Keine intensiven Trainingseinheiten. Kürzeste Runden, maximaler Schatten. Körpertemperatur und Hecheln beobachten."
-                    BioLevel.EXTREME  -> "Hund nur für Notdurft raus. Akute Hitzschlaggefahr. Brachycephale Rassen, ältere und kranke Hunde sind besonders gefährdet."
+                    BioLevel.NONE, BioLevel.LOW -> context.getString(R.string.biowetter_heat_dog_none_low)
+                    BioLevel.MODERATE -> context.getString(R.string.biowetter_heat_dog_moderate)
+                    BioLevel.HIGH     -> context.getString(R.string.biowetter_heat_dog_high)
+                    BioLevel.EXTREME  -> context.getString(R.string.biowetter_heat_dog_extreme)
                 }
-                BioIndicator("Wärmebelastung", "🌡️", level, valueText, humanEffect, dogEffect)
+                BioIndicator(context.getString(R.string.biowetter_heat_name), "🌡️", level, valueText, humanEffect, dogEffect)
             }
             tempC <= 10 && windSpeedKmh >= 10 -> {
                 // Windchill-Regime
                 val wc = 13.12 + 0.6215 * tempC - 11.37 * Math.pow(windSpeedKmh, 0.16) +
-                         0.3965 * tempC * Math.pow(windSpeedKmh, 0.16)
+                        0.3965 * tempC * Math.pow(windSpeedKmh, 0.16)
                 val level = when {
                     wc > 0   -> BioLevel.NONE
                     wc > -10 -> BioLevel.LOW
@@ -283,33 +284,34 @@ object BiowetterEngine {
                     wc > -30 -> BioLevel.HIGH
                     else     -> BioLevel.EXTREME
                 }
-                val valueText = "Windchill: ${String.format("%.1f", wc)}°C (gefühlt)"
+                val valueText = context.getString(R.string.biowetter_windchill_value, String.format("%.1f", wc))
                 val humanEffect = when (level) {
-                    BioLevel.NONE, BioLevel.LOW -> "Kühle Bedingungen, kein kritischer Kältestress."
-                    BioLevel.MODERATE -> "Spürbarer Kältestress. Warme Kleidung notwendig, besonders Hände, Kopf und Füße schützen."
-                    BioLevel.HIGH     -> "Starke Kältebelastung. Erfrierungsrisiko bei Windexposition ohne Schutzkleidung. Aufenthalt begrenzen."
-                    BioLevel.EXTREME  -> "Extreme Kältegefahr. Erfrierungen möglich innerhalb von Minuten auf unbedeckter Haut."
+                    BioLevel.NONE, BioLevel.LOW -> context.getString(R.string.biowetter_cold_human_none_low)
+                    BioLevel.MODERATE -> context.getString(R.string.biowetter_cold_human_moderate)
+                    BioLevel.HIGH     -> context.getString(R.string.biowetter_cold_human_high)
+                    BioLevel.EXTREME  -> context.getString(R.string.biowetter_cold_human_extreme)
                 }
                 val dogEffect = when (level) {
-                    BioLevel.NONE, BioLevel.LOW -> "Kein kritischer Kältestress für gesunde Hunde mit Unterwolle."
-                    BioLevel.MODERATE -> "Kurzhaarige, kleine und alte Hunde: Mantel empfohlen. Pfoten auf Salz und Eis prüfen."
-                    BioLevel.HIGH     -> "Alle Hunde: Runden kurz halten. Kurzhaarige Rassen: Mantel notwendig. Pfoten nach der Runde reinigen und auf Risse prüfen."
-                    BioLevel.EXTREME  -> "Lebensgefährliche Kälte auch für Hunde. Nur für Notdurft raus, so kurz wie möglich."
+                    BioLevel.NONE, BioLevel.LOW -> context.getString(R.string.biowetter_cold_dog_none_low)
+                    BioLevel.MODERATE -> context.getString(R.string.biowetter_cold_dog_moderate)
+                    BioLevel.HIGH     -> context.getString(R.string.biowetter_cold_dog_high)
+                    BioLevel.EXTREME  -> context.getString(R.string.biowetter_cold_dog_extreme)
                 }
-                BioIndicator("Kältebelastung", "❄️", level, valueText, humanEffect, dogEffect)
+                BioIndicator(context.getString(R.string.biowetter_cold_name), "❄️", level, valueText, humanEffect, dogEffect)
             }
             else -> BioIndicator(
-                name        = "Thermische Belastung",
+                name        = context.getString(R.string.biowetter_thermal_neutral_name),
                 emoji       = "🌡️",
                 level       = BioLevel.NONE,
-                valueText   = "Angenehmer Temperaturbereich",
-                humanEffect = "Keine thermische Sonderbelastung. Angenehme Bedingungen für Aktivitäten im Freien.",
-                dogEffect   = "Sehr gute Bedingungen für Training und Freilandrunden."
+                valueText   = context.getString(R.string.biowetter_thermal_neutral_value),
+                humanEffect = context.getString(R.string.biowetter_thermal_neutral_human),
+                dogEffect   = context.getString(R.string.biowetter_thermal_neutral_dog)
             )
         }
     }
 
     private fun buildCapeIndicator(
+        context: android.content.Context,
         capeJPerKg: Double,
         forecastLevel: ThunderstormForecastLevel
     ): BioIndicator {
@@ -318,18 +320,18 @@ object BiowetterEngine {
             ThunderstormForecastLevel.MODERATE -> BioLevel.MODERATE
             ThunderstormForecastLevel.HIGH     -> BioLevel.HIGH
         }
-        val valueText = "CAPE: ${String.format("%.0f", capeJPerKg)} J/kg – ${forecastLevel.displayName}"
+        val valueText = context.getString(R.string.biowetter_cape_value, String.format("%.0f", capeJPerKg), forecastLevel.displayName(context))
         val humanEffect = when (level) {
-            BioLevel.NONE     -> "Geringes Gewitterpotenzial. Kein Einfluss auf Wohlbefinden."
-            BioLevel.MODERATE -> "Erhöhtes Gewitterpotenzial. Atmosphärische Instabilität kann Unruhe und Unwohlsein verstärken, besonders bei gewitterempfindlichen Personen."
-            else              -> "Hohes Gewitterpotenzial. Wetterbedingte Stimmungsschwankungen und Kreislaufbeschwerden möglich. Rückweg früh einplanen."
+            BioLevel.NONE     -> context.getString(R.string.biowetter_cape_human_none)
+            BioLevel.MODERATE -> context.getString(R.string.biowetter_cape_human_moderate)
+            else              -> context.getString(R.string.biowetter_cape_human_high)
         }
         val dogEffect = when (level) {
-            BioLevel.NONE     -> "Kein Einfluss auf Training erwartet."
-            BioLevel.MODERATE -> "Viele Hunde reagieren auf atmosphärische Instabilität vor Gewittern mit erhöhter Unruhe oder Ängstlichkeit – auch ohne sichtbare Wetterzeichen. Leine als Sicherheitsbasis beibehalten."
-            else              -> "Gewitterangst: Hunde können Druckveränderungen und elektrostatische Aufladung vor Gewittern wahrnehmen. Runde zeitlich begrenzen, sicheres Rückzugsquartier bereithalten. Ängstliche Hunde nicht ableinen."
+            BioLevel.NONE     -> context.getString(R.string.biowetter_cape_dog_none)
+            BioLevel.MODERATE -> context.getString(R.string.biowetter_cape_dog_moderate)
+            else              -> context.getString(R.string.biowetter_cape_dog_high)
         }
-        return BioIndicator("Gewitterpotenzial", "⛈️", level, valueText, humanEffect, dogEffect)
+        return BioIndicator(context.getString(R.string.biowetter_cape_name), "⛈️", level, valueText, humanEffect, dogEffect)
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -337,6 +339,7 @@ object BiowetterEngine {
     // ════════════════════════════════════════════════════════════════
 
     private fun buildOverallTexts(
+        context: android.content.Context,
         level: BioLevel,
         indicators: List<BioIndicator>
     ): Pair<String, String> {
@@ -345,24 +348,24 @@ object BiowetterEngine {
 
         val summary = when (level) {
             BioLevel.NONE, BioLevel.LOW ->
-                "Günstige Biowetterlage. Keine nennenswerten meteorologischen Einflüsse auf Mensch und Hund."
+                context.getString(R.string.biowetter_summary_none_low)
             BioLevel.MODERATE ->
-                "Mäßige Biowetterbelastung durch: $activeFactors. Beobachte Dich und Deinen Hund aufmerksam."
+                context.getString(R.string.biowetter_summary_moderate, activeFactors)
             BioLevel.HIGH ->
-                "Erhöhte Biowetterbelastung durch: $activeFactors. Trainingsplanung anpassen, Pausen einplanen."
+                context.getString(R.string.biowetter_summary_high, activeFactors)
             BioLevel.EXTREME ->
-                "Starke Biowetterbelastung durch: $activeFactors. Heute Belastungen für Mensch und Hund deutlich reduzieren."
+                context.getString(R.string.biowetter_summary_extreme, activeFactors)
         }
 
         val advice = when (level) {
             BioLevel.NONE, BioLevel.LOW ->
-                "✅ Gute Bedingungen für Training. Alle Übungen wie geplant möglich."
+                context.getString(R.string.biowetter_advice_none_low)
             BioLevel.MODERATE ->
-                "⚡ Moderate Belastung: Präzisionsübungen und neue Anforderungen eher meiden. Entspannte Geländerunden bevorzugen. Auf Stresssignale des Hundes achten."
+                context.getString(R.string.biowetter_advice_moderate)
             BioLevel.HIGH ->
-                "⚠️ Erhöhte Belastung: Trainingseinheiten heute kürzen und Anforderungen deutlich reduzieren. Dein eigenes Wohlbefinden beeinflusst den Hund direkt – Stress überträgt sich. Ruhige Spaziergänge statt Training."
+                context.getString(R.string.biowetter_advice_high)
             BioLevel.EXTREME ->
-                "🚨 Starke Belastung: Nur Notfallrunden. Kein Training heute. Mensch und Hund brauchen heute Erholung statt Leistung."
+                context.getString(R.string.biowetter_advice_extreme)
         }
 
         return Pair(summary, advice)

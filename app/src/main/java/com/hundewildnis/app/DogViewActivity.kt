@@ -268,10 +268,10 @@ class DogViewActivity : SecureBaseActivity() {
         val cycles = p.heatCycles
 
         // ── Stats-Karte ──────────────────────────────────────────
-        binding.tvHeatAvg.text = HeatCycleManager.analysisLabel(cycles)
+        binding.tvHeatAvg.text = HeatCycleManager.analysisLabel(this, cycles)
 
         binding.tvHeatNextDate.text =
-            "Nächste Läufigkeit voraussichtlich: ${HeatCycleManager.predictedNextDateFormatted(cycles)}"
+            getString(R.string.dog_view_heat_next_predicted, HeatCycleManager.predictedNextDateFormatted(cycles))
 
         val countdown = HeatCycleManager.daysUntilNext(cycles)
         binding.tvHeatCountdown.text = if (countdown != null) {

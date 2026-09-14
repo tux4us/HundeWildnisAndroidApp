@@ -44,10 +44,10 @@ class TrainingDetailActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = category.displayName
+        supportActionBar?.title = category.displayName(this)
 
         binding.tvDogName.text = profile.name
-        binding.tvCategoryTitle.text = category.displayName
+        binding.tvCategoryTitle.text = category.displayName(this)
 
         // RecyclerView mit Callbacks
         sessionAdapter = SessionHistoryAdapter(
@@ -93,31 +93,31 @@ class TrainingDetailActivity : SecureBaseActivity() {
     private fun displayProgress(progress: TrainingProgress) {
         binding.progressBar.progress = progress.progressPercentage
         binding.tvProgressPercent.text = "${progress.progressPercentage}%"
-        binding.tvProgressLevel.text = progress.currentLevel?.displayName ?: TrainingLevel.BEGINNER.displayName
+        binding.tvProgressLevel.text = progress.currentLevel?.displayName(this) ?: TrainingLevel.BEGINNER.displayName(this)
 
-        binding.tvTotalSessions.text = "${progress.totalSessions} Einheiten"
+        binding.tvTotalSessions.text = getString(R.string.training_detail_total_sessions, progress.totalSessions)
 
         // ✅ Zeige Min oder Wiederholungen oder beides
         val effortText = if (progress.totalMinutes > 0 && progress.totalRepetitions > 0) {
-            "${progress.totalMinutes} Min / ${progress.totalRepetitions}x"
+            getString(R.string.training_detail_effort_both, progress.totalMinutes, progress.totalRepetitions)
         } else if (progress.totalRepetitions > 0) {
-            "${progress.totalRepetitions} Wiederholungen"
+            getString(R.string.training_detail_effort_repetitions, progress.totalRepetitions)
         } else {
-            "${progress.totalMinutes} Min"
+            getString(R.string.training_detail_effort_minutes, progress.totalMinutes)
         }
         binding.tvTotalMinutes.text = effortText
 
-        binding.tvConsecutiveDays.text = "${progress.consecutiveDays} Tage"
+        binding.tvConsecutiveDays.text = getString(R.string.training_detail_consecutive_days, progress.consecutiveDays)
 
         val avgSuccess = String.format(Locale.GERMAN, "%.1f", progress.averageSuccess)
-        binding.tvAverageSuccess.text = "Ø $avgSuccess / 4.0"
+        binding.tvAverageSuccess.text = getString(R.string.training_detail_average_success, avgSuccess)
 
         val milestones = manager.getMilestones(progress.dogId, progress.category)
         if (milestones.isNotEmpty()) {
             val latest = milestones.last()
-            binding.tvLatestMilestone.text = "🎯 ${latest.type.displayName}"
+            binding.tvLatestMilestone.text = getString(R.string.training_detail_latest_milestone, latest.type.displayName(this))
         } else {
-            binding.tvLatestMilestone.text = "Noch keine Meilensteine"
+            binding.tvLatestMilestone.text = getString(R.string.training_detail_no_milestones)
         }
     }
 
@@ -142,7 +142,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
 
     private fun displayAnalysis(analysis: ProgressAnalysis) {
         binding.tvTrendIcon.text = analysis.trend.icon
-        binding.tvTrendText.text = analysis.trend.displayName
+        binding.tvTrendText.text = analysis.trend.displayName(this)
 
         val improvementText = when {
             analysis.improvement > 0 -> String.format(Locale.GERMAN, "+%.1f%%", analysis.improvement)
@@ -167,8 +167,8 @@ class TrainingDetailActivity : SecureBaseActivity() {
         dialogBinding.tvDetailDate.text = dateFormat.format(Date(session.date))
         dialogBinding.tvDetailDuration.text = session.getEffortText() // ✅ Nutzt autom. Min oder Wiederholungen
         dialogBinding.tvDetailSuccess.text = session.getSuccessText()
-        dialogBinding.tvDetailDistraction.text = session.distractionLevel.displayName
-        dialogBinding.tvDetailDifficulty.text = session.difficulty.displayName
+        dialogBinding.tvDetailDistraction.text = session.distractionLevel.displayName(this)
+        dialogBinding.tvDetailDifficulty.text = session.difficulty.displayName(this)
 
         // Optional: Wetter
         if (session.weatherData.isNotEmpty()) {
@@ -353,8 +353,9 @@ class SessionHistoryAdapter(
         holder.binding.tvSessionSuccess.text = successText
 
         holder.binding.tvSessionDetails.text = buildString {
-            append("${session.difficulty.displayName}")
-            append(" • ${session.distractionLevel.displayName}")
+            val ctx = holder.itemView.context
+            append(session.difficulty.displayName(ctx))
+            append(" • ${session.distractionLevel.displayName(ctx)}")
             if (session.notes.isNotEmpty()) {
                 append("\n${session.notes}")
             }

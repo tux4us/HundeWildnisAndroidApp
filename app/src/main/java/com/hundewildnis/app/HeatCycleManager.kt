@@ -9,12 +9,24 @@ import java.util.concurrent.TimeUnit
 // ════════════════════════════════════════════════════════════════════
 // ZYKLUSMUSTER — erkanntes Reproduktionsverhalten der Hündin
 // ════════════════════════════════════════════════════════════════════
-enum class CyclePattern(val label: String, val descriptionShort: String) {
-    UNKNOWN(    "Unbekannt",           "Nicht genug Daten"),
-    ANNUAL(     "Jährlich",            "Ca. 1× pro Jahr"),
-    BIANNUAL(   "Halbjährlich",        "Ca. 2× pro Jahr (normal)"),
-    FREQUENT(   "Häufig",              "3× oder öfter pro Jahr"),
-    IRREGULAR(  "Unregelmäßig",        "Stark schwankende Abstände")
+enum class CyclePattern {
+    UNKNOWN, ANNUAL, BIANNUAL, FREQUENT, IRREGULAR;
+
+    fun label(context: android.content.Context): String = when (this) {
+        UNKNOWN -> context.getString(R.string.cycle_pattern_unknown)
+        ANNUAL -> context.getString(R.string.cycle_pattern_annual)
+        BIANNUAL -> context.getString(R.string.cycle_pattern_biannual)
+        FREQUENT -> context.getString(R.string.cycle_pattern_frequent)
+        IRREGULAR -> context.getString(R.string.cycle_pattern_irregular)
+    }
+
+    fun descriptionShort(context: android.content.Context): String = when (this) {
+        UNKNOWN -> context.getString(R.string.cycle_pattern_unknown_desc)
+        ANNUAL -> context.getString(R.string.cycle_pattern_annual_desc)
+        BIANNUAL -> context.getString(R.string.cycle_pattern_biannual_desc)
+        FREQUENT -> context.getString(R.string.cycle_pattern_frequent_desc)
+        IRREGULAR -> context.getString(R.string.cycle_pattern_irregular_desc)
+    }
 }
 
 data class CycleAnalysis(
@@ -191,16 +203,22 @@ object HeatCycleManager {
      * Kompakter Analyse-Text für Anzeige in der UI.
      * Z.B. "Ø 183 Tage · Halbjährlich · ⚠️ 1 Zwischenläufigkeit"
      */
-    fun analysisLabel(cycles: List<HeatCycleEntry>): String {
+    fun analysisLabel(context: android.content.Context, cycles: List<HeatCycleEntry>): String {
         val a = analyze(cycles)
         return buildString {
             if (a.pattern == CyclePattern.UNKNOWN) {
-                append("Noch nicht berechenbar (mind. 2 Läufigkeiten)")
+                append(context.getString(R.string.emergency_heat_cycle_not_yet_calculable))
                 return@buildString
             }
-            append("Ø ${a.averageDays} Tage · ${a.pattern.descriptionShort}")
-            if (a.zwischenlaeufe > 0)
-                append(" · ⚠️ ${a.zwischenlaeufe} Zwischenläufigkeit${if (a.zwischenlaeufe > 1) "en" else ""} erkannt")
+            append(context.getString(R.string.heat_cycle_analysis_label, a.averageDays, a.pattern.descriptionShort(context)))
+            if (a.zwischenlaeufe > 0) {
+                append(
+                    if (a.zwischenlaeufe > 1)
+                        context.getString(R.string.heat_cycle_zwischenlaeufe_plural, a.zwischenlaeufe)
+                    else
+                        context.getString(R.string.heat_cycle_zwischenlaeufe_singular, a.zwischenlaeufe)
+                )
+            }
         }
     }
 

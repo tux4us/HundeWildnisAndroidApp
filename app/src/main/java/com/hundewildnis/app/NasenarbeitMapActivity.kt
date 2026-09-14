@@ -114,7 +114,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Karte · ${disziplin.displayName}"
+        supportActionBar?.title = getString(R.string.nasenarbeit_map_toolbar_title, disziplin.displayName(this))
 
         setupMap()
         setupControls()

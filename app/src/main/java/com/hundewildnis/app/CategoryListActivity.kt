@@ -29,20 +29,20 @@ class CategoryListActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Trainingskategorien"
-        
+        supportActionBar?.title = getString(R.string.category_list_toolbar_title)
+
         binding.tvDogName.text = profile.name
-        binding.tvDogInfo.text = "Wähle eine Kategorie für das Training"
+        binding.tvDogInfo.text = getString(R.string.category_list_subtitle)
     }
 
     private fun setupRecyclerView() {
         // Alle 18 Kategorien
         val categories = TrainingCategory.values().toList()
-        
+
         adapter = CategoryAdapter(categories) { category ->
             openTrainingDetail(category)
         }
-        
+
         binding.rvCategories.layoutManager = LinearLayoutManager(this)
         binding.rvCategories.adapter = adapter
     }
@@ -69,7 +69,7 @@ class CategoryAdapter(
     private val onCategoryClick: (TrainingCategory) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemTrainingCategoryBinding) : 
+    inner class ViewHolder(val binding: ItemTrainingCategoryBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -81,10 +81,10 @@ class CategoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = categories[position]
-        
-        holder.binding.tvCategoryName.text = category.displayName
-        holder.binding.tvCategoryDescription.text = category.description
-        
+
+        holder.binding.tvCategoryName.text = category.displayName(holder.itemView.context)
+        holder.binding.tvCategoryDescription.text = category.description(holder.itemView.context)
+
         // Zeige Fortschritt wenn vorhanden
         // (wird in TrainingDetailActivity genauer angezeigt)
         holder.binding.root.setOnClickListener {

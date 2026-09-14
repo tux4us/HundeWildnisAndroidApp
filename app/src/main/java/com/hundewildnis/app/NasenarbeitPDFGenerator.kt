@@ -93,9 +93,9 @@ object NasenarbeitPDFGenerator {
         tbl.addCell(labelCell("Datum"))
         tbl.addCell(valueCell(df.format(Date(session.datum))))
         tbl.addCell(labelCell("Disziplin"))
-        tbl.addCell(valueCell("${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName}"))
+        tbl.addCell(valueCell("${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName(context)}"))
         tbl.addCell(labelCell("Empfohlen"))
-        tbl.addCell(valueCell("${session.empfohleneDisziplin.icon} ${session.empfohleneDisziplin.displayName}"))
+        tbl.addCell(valueCell("${session.empfohleneDisziplin.icon} ${session.empfohleneDisziplin.displayName(context)}"))
         tbl.addCell(labelCell("Bewertung"))
         tbl.addCell(valueCell("⭐".repeat(session.erfolgsbewertung)))
         doc.add(tbl)
@@ -224,9 +224,9 @@ object NasenarbeitPDFGenerator {
 
         if (saveToPublic) {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                exportPdfViaMediaStore(context, fileName) { doc -> writeGesamtContent(doc, sessions, fortschritt, profile) }
+                exportPdfViaMediaStore(context, fileName) { doc -> writeGesamtContent(context, doc, sessions, fortschritt, profile) }
             } else {
-                exportPdfOldWay(fileName) { doc -> writeGesamtContent(doc, sessions, fortschritt, profile) }
+                exportPdfOldWay(fileName) { doc -> writeGesamtContent(context, doc, sessions, fortschritt, profile) }
             }
         }
 
@@ -237,7 +237,7 @@ object NasenarbeitPDFGenerator {
             val writer = PdfWriter(file)
             val pdf    = PdfDocument(writer)
             val doc    = Document(pdf)
-            writeGesamtContent(doc, sessions, fortschritt, profile)
+            writeGesamtContent(context, doc, sessions, fortschritt, profile)
             doc.close()
             return file
         } catch (e: Exception) {
@@ -247,6 +247,7 @@ object NasenarbeitPDFGenerator {
     }
 
     private fun writeGesamtContent(
+        context: Context,
         doc: Document,
         sessions: List<NasenarbeitSession>,
         fortschritt: NasenarbeitFortschritt,
@@ -263,11 +264,11 @@ object NasenarbeitPDFGenerator {
         addSectionTitle(doc, "Übersicht")
         val ov = twoColTable()
         ov.addCell(labelCell("🐾 Verlorensuche"))
-        ov.addCell(valueCell("${fortschritt.sessionsVerlorensuche} Sessions – ${fortschritt.levelVerlorensuche.displayName}"))
+        ov.addCell(valueCell("${fortschritt.sessionsVerlorensuche} Sessions – ${fortschritt.levelVerlorensuche.displayName(context)}"))
         ov.addCell(labelCell("🧑 Personensuche"))
-        ov.addCell(valueCell("${fortschritt.sessionsPersonensuche} Sessions – ${fortschritt.levelPersonensuche.displayName}"))
+        ov.addCell(valueCell("${fortschritt.sessionsPersonensuche} Sessions – ${fortschritt.levelPersonensuche.displayName(context)}"))
         ov.addCell(labelCell("🔍 Freisuche"))
-        ov.addCell(valueCell("${fortschritt.sessionsFreisuche} Sessions – ${fortschritt.levelFreisuche.displayName}"))
+        ov.addCell(valueCell("${fortschritt.sessionsFreisuche} Sessions – ${fortschritt.levelFreisuche.displayName(context)}"))
         ov.addCell(labelCell("Gesamt"))
         ov.addCell(valueCell("${fortschritt.gesamtSessions} Sessions"))
         if (fortschritt.maxSchritte > 0) {
@@ -289,7 +290,7 @@ object NasenarbeitPDFGenerator {
         sessions.forEach { s ->
             val line = Paragraph().apply {
                 add(Text(df.format(Date(s.datum))).setFontSize(10f))
-                add(Text("  ${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName}").setFontSize(10f).setBold())
+                add(Text("  ${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName(context)}").setFontSize(10f).setBold())
                 s.durchgefuehrteSchritte?.let { add(Text("  $it Schr.").setFontSize(10f)) }
                 s.durchgefuehrteHa?.let { add(Text("  ${String.format("%.1f",it)} ha").setFontSize(10f)) }
                 add(Text("  ${"⭐".repeat(s.erfolgsbewertung)}").setFontSize(10f))

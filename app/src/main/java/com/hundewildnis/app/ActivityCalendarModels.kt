@@ -52,17 +52,24 @@ data class PlannedSession(
             val ca = Calendar.getInstance().apply { timeInMillis = a }
             val cb = Calendar.getInstance().apply { timeInMillis = b }
             return ca.get(Calendar.YEAR) == cb.get(Calendar.YEAR) &&
-                   ca.get(Calendar.DAY_OF_YEAR) == cb.get(Calendar.DAY_OF_YEAR)
+                    ca.get(Calendar.DAY_OF_YEAR) == cb.get(Calendar.DAY_OF_YEAR)
         }
     }
 }
 
 // ── Wetter-Eignung pro Tag ────────────────────────────────────────
-enum class DayWeatherSuitability(val icon: String, val label: String, val color: String) {
-    IDEAL("🟢", "Ideal", "#4CAF50"),
-    CONDITIONAL("🟡", "Bedingt", "#FF9800"),
-    NOT_RECOMMENDED("🔴", "Nicht empfohlen", "#E53935"),
-    UNKNOWN("⚪", "Unbekannt", "#777777")
+enum class DayWeatherSuitability(val icon: String, val color: String) {
+    IDEAL("🟢", "#4CAF50"),
+    CONDITIONAL("🟡", "#FF9800"),
+    NOT_RECOMMENDED("🔴", "#E53935"),
+    UNKNOWN("⚪", "#777777");
+
+    fun label(context: android.content.Context): String = when (this) {
+        IDEAL -> context.getString(R.string.day_weather_suitability_ideal)
+        CONDITIONAL -> context.getString(R.string.day_weather_suitability_conditional)
+        NOT_RECOMMENDED -> context.getString(R.string.day_weather_suitability_not_recommended)
+        UNKNOWN -> context.getString(R.string.day_weather_suitability_unknown)
+    }
 }
 
 // ── Vorhersage-Eintrag für einen einzelnen Tag (eigenständig, leichtgewichtig) ──

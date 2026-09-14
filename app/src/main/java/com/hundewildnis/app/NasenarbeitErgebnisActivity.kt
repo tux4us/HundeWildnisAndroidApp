@@ -84,7 +84,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
     // ── EMPFEHLUNG ────────────────────────────────────────────
 
     private fun setupEmpfehlung() {
-        binding.tvEmpfohlen.text = "Empfohlen: ${primaerDisziplin.icon} ${primaerDisziplin.displayName}"
+        binding.tvEmpfohlen.text = getString(R.string.nasenarbeit_session_detail_recommended, primaerDisziplin.icon, primaerDisziplin.displayName(this))
         binding.tvScores.text    = "Score: 🐾 ${fmt(scoreV)}  🧑 ${fmt(scoreP)}  🔍 ${fmt(scoreF)}"
         selectedDisziplin = primaerDisziplin
     }
@@ -100,7 +100,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
             Pair(binding.btnDizF, NasenarbeitDisziplin.FREISUCHE)
         )
         btns.forEach { (btn, diz) ->
-            btn.text = "${diz.icon} ${diz.displayName}"
+            btn.text = "${diz.icon} ${diz.displayName(this)}"
             btn.isSelected = diz == primaerDisziplin
             btn.setOnClickListener {
                 selectedDisziplin = diz
@@ -253,9 +253,9 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
             scorePersonensuche = scoreP,
             scoreFreisuche = scoreF,
             parameter = parameter,
-            levelVerlorensuche = fortschritt.levelVerlorensuche.displayName,
-            levelPersonensuche = fortschritt.levelPersonensuche.displayName,
-            levelFreisuche = fortschritt.levelFreisuche.displayName,
+            levelVerlorensuche = fortschritt.levelVerlorensuche.name,
+            levelPersonensuche = fortschritt.levelPersonensuche.name,
+            levelFreisuche = fortschritt.levelFreisuche.name,
             durchgefuehrteSchritte = schritte,
             durchgefuehrteHa = ha,
             durchgefuehrteM2 = m2,
@@ -272,7 +272,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         )
 
         NasenarbeitManager.addSession(this, session)
-        
+
         // PDF Export in den öffentlichen Dokumenten-Ordner
         lifecycleScope.launch(Dispatchers.IO) {
             val file = NasenarbeitPDFGenerator.generateSessionPDF(this@NasenarbeitErgebnisActivity, session, profile, saveToPublic = true)

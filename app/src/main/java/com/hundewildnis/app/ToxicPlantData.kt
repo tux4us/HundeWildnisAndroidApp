@@ -10,66 +10,67 @@ import java.util.Calendar
 
 // ── Giftigkeitsstufen ────────────────────────────────────────────
 enum class PlantToxicityLevel(
-    val displayName: String,
     val icon: String,
-    val color: String,
-    val shortLabel: String
+    val color: String
 ) {
-    SLIGHTLY_TOXIC(
-        "Leicht giftig",
-        "🟡",
-        "#F57C00",
-        "Leicht"
-    ),
-    MODERATELY_TOXIC(
-        "Giftig",
-        "🟠",
-        "#E64A19",
-        "Giftig"
-    ),
-    HIGHLY_TOXIC(
-        "Stark giftig",
-        "🔴",
-        "#C62828",
-        "Stark"
-    ),
-    DEADLY(
-        "Tödlich",
-        "☠️",
-        "#7B0000",
-        "Tödlich"
-    )
+    SLIGHTLY_TOXIC("🟡", "#F57C00"),
+    MODERATELY_TOXIC("🟠", "#E64A19"),
+    HIGHLY_TOXIC("🔴", "#C62828"),
+    DEADLY("☠️", "#7B0000");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        SLIGHTLY_TOXIC -> context.getString(R.string.plant_toxicity_slightly_toxic)
+        MODERATELY_TOXIC -> context.getString(R.string.plant_toxicity_moderately_toxic)
+        HIGHLY_TOXIC -> context.getString(R.string.plant_toxicity_highly_toxic)
+        DEADLY -> context.getString(R.string.plant_toxicity_deadly)
+    }
+
+    fun shortLabel(context: android.content.Context): String = when (this) {
+        SLIGHTLY_TOXIC -> context.getString(R.string.plant_toxicity_slightly_toxic_short)
+        MODERATELY_TOXIC -> context.getString(R.string.plant_toxicity_moderately_toxic_short)
+        HIGHLY_TOXIC -> context.getString(R.string.plant_toxicity_highly_toxic_short)
+        DEADLY -> context.getString(R.string.plant_toxicity_deadly_short)
+    }
 }
 
 // ── Betroffene Körpersysteme ─────────────────────────────────────
-enum class PlantBodySystem(val displayName: String) {
-    DIGESTIVE("Magen-Darm"),
-    CARDIOVASCULAR("Herz-Kreislauf"),
-    NERVOUS("Nervensystem"),
-    LIVER("Leber"),
-    KIDNEYS("Nieren"),
-    SKIN("Haut / Schleimhaut"),
-    RESPIRATORY("Atemwege"),
-    BLOOD("Blut")
+enum class PlantBodySystem {
+    DIGESTIVE, CARDIOVASCULAR, NERVOUS, LIVER, KIDNEYS, SKIN, RESPIRATORY, BLOOD;
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        DIGESTIVE -> context.getString(R.string.plant_body_system_digestive)
+        CARDIOVASCULAR -> context.getString(R.string.plant_body_system_cardiovascular)
+        NERVOUS -> context.getString(R.string.plant_body_system_nervous)
+        LIVER -> context.getString(R.string.plant_body_system_liver)
+        KIDNEYS -> context.getString(R.string.plant_body_system_kidneys)
+        SKIN -> context.getString(R.string.plant_body_system_skin)
+        RESPIRATORY -> context.getString(R.string.plant_body_system_respiratory)
+        BLOOD -> context.getString(R.string.plant_body_system_blood)
+    }
 }
 
 // ── Pflanzendaten-Modell ─────────────────────────────────────────
+// WICHTIG: Alle Textfelder sind String-Resource-IDs (R.string.*), keine
+// rohen Strings. Anzeige immer über context.getString(id) auflösen.
+// So ist die id (z.B. "eibe") weiterhin der stabile, sprachneutrale
+// Schlüssel für Suche/Vergleich/Speicherung; nur der ANGEZEIGTE Text
+// wird sprachabhängig aus strings.xml gezogen.
 data class ToxicPlant(
     val id: String,
-    val name: String,                        // Hauptname (Deutsch)
-    val latinName: String,                   // Lateinischer Name
-    val alternativeNames: List<String>,      // Weitere deutsche Namen
+    @androidx.annotation.StringRes val nameRes: Int,
+    val latinName: String,                              // wissenschaftlicher Name, sprachneutral
+    @androidx.annotation.StringRes val alternativeNamesRes: List<Int> = emptyList(),
     val toxicityLevel: PlantToxicityLevel,
-    val toxicParts: List<String>,            // Welche Teile giftig sind
+    @androidx.annotation.StringRes val toxicPartsRes: List<Int>,
     val affectedSystems: List<PlantBodySystem>,
-    val symptoms: List<String>,              // Symptome nach Aufnahme
-    val identificationFeatures: List<String>, // Erkennungsmerkmale
-    val bloomMonths: List<Int>,              // Monate 1–12 (Blütezeit / Risikozeit)
-    val habitat: List<String>,               // Wo vorkommt (Wald, Garten, …)
-    val firstAidSteps: List<String>,         // Sofortmaßnahmen
-    val mustCallVet: Boolean,                // Immer sofort Tierarzt?
-    val confusionRisk: String? = null,       // Verwechslungsgefahr mit
-    val note: String? = null                 // Besonderer Hinweis
+    @androidx.annotation.StringRes val symptomsRes: List<Int>,
+    @androidx.annotation.StringRes val identificationFeaturesRes: List<Int>,
+    val bloomMonths: List<Int>,                          // Monate 1–12, sprachneutral
+    @androidx.annotation.StringRes val habitatRes: List<Int>,
+    @androidx.annotation.StringRes val firstAidStepsRes: List<Int>,
+    val mustCallVet: Boolean,
+    @androidx.annotation.StringRes val confusionRiskRes: Int? = null,
+    @androidx.annotation.StringRes val noteRes: Int? = null
 ) {
     /** Ist diese Pflanze im aktuellen Monat besonders relevant? */
     fun isCurrentlySeasonal(): Boolean {
@@ -77,9 +78,19 @@ data class ToxicPlant(
         return month in bloomMonths
     }
 
-    /** Alle Namen für die Suche kombiniert */
-    fun allSearchNames(): String =
-        "$name $latinName ${alternativeNames.joinToString(" ")}".lowercase()
+    fun name(context: android.content.Context): String = context.getString(nameRes)
+    fun alternativeNames(context: android.content.Context): List<String> = alternativeNamesRes.map { context.getString(it) }
+    fun toxicParts(context: android.content.Context): List<String> = toxicPartsRes.map { context.getString(it) }
+    fun symptoms(context: android.content.Context): List<String> = symptomsRes.map { context.getString(it) }
+    fun identificationFeatures(context: android.content.Context): List<String> = identificationFeaturesRes.map { context.getString(it) }
+    fun habitat(context: android.content.Context): List<String> = habitatRes.map { context.getString(it) }
+    fun firstAidSteps(context: android.content.Context): List<String> = firstAidStepsRes.map { context.getString(it) }
+    fun confusionRisk(context: android.content.Context): String? = confusionRiskRes?.let { context.getString(it) }
+    fun note(context: android.content.Context): String? = noteRes?.let { context.getString(it) }
+
+    /** Alle Namen für die Suche kombiniert (aktuelle App-Sprache + lateinischer Name) */
+    fun allSearchNames(context: android.content.Context): String =
+        "${name(context)} $latinName ${alternativeNames(context).joinToString(" ")}".lowercase()
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -93,906 +104,900 @@ object ToxicPlantDatabase {
 
         ToxicPlant(
             id = "eibe",
-            name = "Eibe",
+            nameRes = R.string.plant_eibe_name,
             latinName = "Taxus baccata",
-            alternativeNames = listOf("Eibenbaum", "Taxus"),
+            alternativeNamesRes = listOf(R.string.plant_eibe_alt_1, R.string.plant_eibe_alt_2),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Nadeln", "Samen (Kern)", "Rinde", "Holz"),
+            toxicPartsRes = listOf(R.string.plant_eibe_part_1, R.string.plant_eibe_part_2, R.string.plant_eibe_part_3, R.string.plant_eibe_part_4),
             affectedSystems = listOf(PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.NERVOUS, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Speichelfluss", "Herzrhythmusstörungen", "Krämpfe", "Tod durch Herzstillstand"),
-            identificationFeatures = listOf("Immergrüner Nadelbaum", "Rote beerenartige Früchte", "Flache Nadeln"),
+            symptomsRes = listOf(R.string.plant_eibe_symptom_1, R.string.plant_eibe_symptom_2, R.string.plant_eibe_symptom_3, R.string.plant_eibe_symptom_4, R.string.plant_eibe_symptom_5),
+            identificationFeaturesRes = listOf(R.string.plant_eibe_feature_1, R.string.plant_eibe_feature_2, R.string.plant_eibe_feature_3),
             bloomMonths = listOf(1, 2, 3, 4, 9, 10, 11, 12),
-            habitat = listOf("Garten", "Park", "Friedhof", "Wald"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Kein Erbrechen induzieren", "Ruhe bewahren"),
+            habitatRes = listOf(R.string.plant_eibe_habitat_1, R.string.plant_eibe_habitat_2, R.string.plant_eibe_habitat_3, R.string.plant_eibe_habitat_4),
+            firstAidStepsRes = listOf(R.string.plant_eibe_firstaid_1, R.string.plant_eibe_firstaid_2, R.string.plant_eibe_firstaid_3),
             mustCallVet = true,
-            note = "Sehr hochgiftig. Bereits wenige Gramm Nadeln sind tödlich."
+            noteRes = R.string.plant_eibe_note
         ),
 
         ToxicPlant(
             id = "oleander",
-            name = "Oleander",
+            nameRes = R.string.plant_oleander_name,
             latinName = "Nerium oleander",
-            alternativeNames = listOf("Rosenlorbeer"),
+            alternativeNamesRes = listOf(R.string.plant_oleander_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Alle Teile", "auch Blüten und Wasser"),
+            toxicPartsRes = listOf(R.string.plant_oleander_part_1, R.string.plant_oleander_part_2),
             affectedSystems = listOf(PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "blutiger Durchfall", "Herzrhythmusstörungen", "Koma"),
-            identificationFeatures = listOf("Immergrüner Strauch", "Lanzettliche ledrige Blätter", "Rosa/Weiße Blüten"),
+            symptomsRes = listOf(R.string.plant_oleander_symptom_1, R.string.plant_oleander_symptom_2, R.string.plant_oleander_symptom_3, R.string.plant_oleander_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_oleander_feature_1, R.string.plant_oleander_feature_2, R.string.plant_oleander_feature_3),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Garten", "Terrasse", "Kübelpflanze"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Aktivkohle", "Herzüberwachung"),
+            habitatRes = listOf(R.string.plant_oleander_habitat_1, R.string.plant_oleander_habitat_2, R.string.plant_oleander_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_oleander_firstaid_1, R.string.plant_oleander_firstaid_2, R.string.plant_oleander_firstaid_3),
             mustCallVet = true,
-            note = "Sehr hochgiftig. Schon wenige Blätter können tödlich sein."
+            noteRes = R.string.plant_oleander_note
         ),
 
         ToxicPlant(
             id = "eisenhut",
-            name = "Blauer Eisenhut",
+            nameRes = R.string.plant_eisenhut_name,
             latinName = "Aconitum napellus",
-            alternativeNames = listOf("Sturmhut", "Wolfswurz"),
+            alternativeNamesRes = listOf(R.string.plant_eisenhut_alt_1, R.string.plant_eisenhut_alt_2),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Alle Teile", "besonders Wurzel"),
+            toxicPartsRes = listOf(R.string.plant_eisenhut_part_1, R.string.plant_eisenhut_part_2),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.RESPIRATORY),
-            symptoms = listOf("Brennen im Mund", "Speichelfluss", "Taubheit", "Atemlähmung", "Herzstillstand"),
-            identificationFeatures = listOf("Hohe Staude", "Blau-violette Helmblüten", "Handförmige Blätter"),
+            symptomsRes = listOf(R.string.plant_eisenhut_symptom_1, R.string.plant_eisenhut_symptom_2, R.string.plant_eisenhut_symptom_3, R.string.plant_eisenhut_symptom_4, R.string.plant_eisenhut_symptom_5),
+            identificationFeaturesRes = listOf(R.string.plant_eisenhut_feature_1, R.string.plant_eisenhut_feature_2, R.string.plant_eisenhut_feature_3),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Gebirge", "Wiese", "Wald", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Intensivmedizin nötig", "Hautkontakt vermeiden"),
+            habitatRes = listOf(R.string.plant_eisenhut_habitat_1, R.string.plant_eisenhut_habitat_2, R.string.plant_eisenhut_habitat_3, R.string.plant_eisenhut_habitat_4),
+            firstAidStepsRes = listOf(R.string.plant_eisenhut_firstaid_1, R.string.plant_eisenhut_firstaid_2, R.string.plant_eisenhut_firstaid_3),
             mustCallVet = true,
-            note = "Eine der giftigsten Pflanzen Europas. Kleinste Mengen lebensgefährlich."
+            noteRes = R.string.plant_eisenhut_note
         ),
 
         ToxicPlant(
             id = "goldregen",
-            name = "Goldregen",
+            nameRes = R.string.plant_goldregen_name,
             latinName = "Laburnum anagyroides",
-            alternativeNames = listOf("Bohnenbaum"),
+            alternativeNamesRes = listOf(R.string.plant_goldregen_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Samen (in Hülsen)", "Rinde", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_goldregen_part_1, R.string.plant_goldregen_part_2, R.string.plant_goldregen_part_3),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.DIGESTIVE, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Übelkeit", "Erbrechen", "Krämpfe", "Lähmungen", "Atemstillstand"),
-            identificationFeatures = listOf("Strauch/Baum", "Hängende gelbe Blütentrauben", "Hülsenfrüchte"),
+            symptomsRes = listOf(R.string.plant_goldregen_symptom_1, R.string.plant_goldregen_symptom_2, R.string.plant_goldregen_symptom_3, R.string.plant_goldregen_symptom_4, R.string.plant_goldregen_symptom_5),
+            identificationFeaturesRes = listOf(R.string.plant_goldregen_feature_1, R.string.plant_goldregen_feature_2, R.string.plant_goldregen_feature_3),
             bloomMonths = listOf(4, 5, 6),
-            habitat = listOf("Garten", "Park", "Straße"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Aktivkohle", "Beatmung bei Bedarf"),
+            habitatRes = listOf(R.string.plant_goldregen_habitat_1, R.string.plant_goldregen_habitat_2, R.string.plant_goldregen_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_goldregen_firstaid_1, R.string.plant_goldregen_firstaid_2, R.string.plant_goldregen_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "herbstzeitlose",
-            name = "Herbstzeitlose",
+            nameRes = R.string.plant_herbstzeitlose_name,
             latinName = "Colchicum autumnale",
-            alternativeNames = listOf("Wiesenzeitlose", "Zeitlose"),
+            alternativeNamesRes = listOf(R.string.plant_herbstzeitlose_alt_1, R.string.plant_herbstzeitlose_alt_2),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Alle Teile", "besonders Zwiebel und Samen"),
+            toxicPartsRes = listOf(R.string.plant_herbstzeitlose_part_1, R.string.plant_herbstzeitlose_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS, PlantBodySystem.RESPIRATORY),
-            symptoms = listOf("Erbrechen", "blutiger Durchfall", "Koliken", "Atemlähmung (verzögert)"),
-            identificationFeatures = listOf("Blüte im Herbst ohne Blätter", "Rosa-lila Blüten", "Ähnelt Krokus"),
+            symptomsRes = listOf(R.string.plant_herbstzeitlose_symptom_1, R.string.plant_herbstzeitlose_symptom_2, R.string.plant_herbstzeitlose_symptom_3, R.string.plant_herbstzeitlose_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_herbstzeitlose_feature_1, R.string.plant_herbstzeitlose_feature_2, R.string.plant_herbstzeitlose_feature_3),
             bloomMonths = listOf(8, 9, 10),
-            habitat = listOf("Wiese", "Weide", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Aktivkohle", "Supportive Care"),
+            habitatRes = listOf(R.string.plant_herbstzeitlose_habitat_1, R.string.plant_herbstzeitlose_habitat_2, R.string.plant_herbstzeitlose_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_herbstzeitlose_firstaid_1, R.string.plant_herbstzeitlose_firstaid_2, R.string.plant_herbstzeitlose_firstaid_3),
             mustCallVet = true,
-            note = "Extrem toxisch. Symptome oft erst nach Stunden oder Tagen."
+            noteRes = R.string.plant_herbstzeitlose_note
         ),
 
         ToxicPlant(
             id = "schierling",
-            name = "Gefleckter Schierling",
+            nameRes = R.string.plant_schierling_name,
             latinName = "Conium maculatum",
-            alternativeNames = listOf("Schierling"),
+            alternativeNamesRes = listOf(R.string.plant_schierling_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Alle Teile", "besonders junge Triebe und Samen"),
+            toxicPartsRes = listOf(R.string.plant_schierling_part_1, R.string.plant_schierling_part_2),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.RESPIRATORY, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Brennen im Mund", "aufsteigende Lähmung", "Krämpfe", "Atemlähmung"),
-            identificationFeatures = listOf("Rote Flecken am Stängel", "Fein gefiederte Blätter", "Mäuseuringeruch"),
+            symptomsRes = listOf(R.string.plant_schierling_symptom_1, R.string.plant_schierling_symptom_2, R.string.plant_schierling_symptom_3, R.string.plant_schierling_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_schierling_feature_1, R.string.plant_schierling_feature_2, R.string.plant_schierling_feature_3),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Wegrand", "Brachland", "Ufer"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Aktivkohle", "Beatmung"),
+            habitatRes = listOf(R.string.plant_schierling_habitat_1, R.string.plant_schierling_habitat_2, R.string.plant_schierling_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_schierling_firstaid_1, R.string.plant_schierling_firstaid_2, R.string.plant_schierling_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "tollkirsche",
-            name = "Schwarze Tollkirsche",
+            nameRes = R.string.plant_tollkirsche_name,
             latinName = "Atropa belladonna",
-            alternativeNames = listOf("Belladonna"),
+            alternativeNamesRes = listOf(R.string.plant_tollkirsche_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Beeren", "Blätter", "Wurzel"),
+            toxicPartsRes = listOf(R.string.plant_tollkirsche_part_1, R.string.plant_tollkirsche_part_2, R.string.plant_tollkirsche_part_3),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Trockener Mund", "weite Pupillen", "Erregung", "Krämpfe", "Atemlähmung"),
-            identificationFeatures = listOf("Glänzend schwarze Beeren", "Violett-braune Glockenblüten"),
+            symptomsRes = listOf(R.string.plant_tollkirsche_symptom_1, R.string.plant_tollkirsche_symptom_2, R.string.plant_tollkirsche_symptom_3, R.string.plant_tollkirsche_symptom_4, R.string.plant_tollkirsche_symptom_5),
+            identificationFeaturesRes = listOf(R.string.plant_tollkirsche_feature_1, R.string.plant_tollkirsche_feature_2),
             bloomMonths = listOf(6, 7, 8),
-            habitat = listOf("Wald", "Lichtung", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Physostigmin als Antidot möglich"),
+            habitatRes = listOf(R.string.plant_tollkirsche_habitat_1, R.string.plant_tollkirsche_habitat_2, R.string.plant_tollkirsche_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_tollkirsche_firstaid_1, R.string.plant_tollkirsche_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "wunderbaum",
-            name = "Wunderbaum",
+            nameRes = R.string.plant_wunderbaum_name,
             latinName = "Ricinus communis",
-            alternativeNames = listOf("Rizinus"),
+            alternativeNamesRes = listOf(R.string.plant_wunderbaum_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Samen (Rizin)"),
+            toxicPartsRes = listOf(R.string.plant_wunderbaum_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Schwere Magen-Darm-Blutungen", "Organversagen", "Krämpfe", "Tod"),
-            identificationFeatures = listOf("Große handförmige Blätter", "Stachelige Früchte"),
+            symptomsRes = listOf(R.string.plant_wunderbaum_symptom_1, R.string.plant_wunderbaum_symptom_2, R.string.plant_wunderbaum_symptom_3, R.string.plant_wunderbaum_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_wunderbaum_feature_1, R.string.plant_wunderbaum_feature_2),
             bloomMonths = listOf(8, 9, 10),
-            habitat = listOf("Garten", "Zierpflanze"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Intensivmedizin", "Magenspülung"),
+            habitatRes = listOf(R.string.plant_wunderbaum_habitat_1, R.string.plant_wunderbaum_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_wunderbaum_firstaid_1, R.string.plant_wunderbaum_firstaid_2, R.string.plant_wunderbaum_firstaid_3),
             mustCallVet = true,
-            note = "Rizin ist eines der stärksten Gifte. Zerkaute Samen sind extrem gefährlich."
+            noteRes = R.string.plant_wunderbaum_note
         ),
 
         ToxicPlant(
             id = "stechapfel",
-            name = "Stechapfel",
+            nameRes = R.string.plant_stechapfel_name,
             latinName = "Datura stramonium",
-            alternativeNames = listOf("Dornapfel"),
+            alternativeNamesRes = listOf(R.string.plant_stechapfel_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Alle Teile", "besonders Samen"),
+            toxicPartsRes = listOf(R.string.plant_stechapfel_part_1, R.string.plant_stechapfel_part_2),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Halluzinationen", "Herzrasen", "Trockene Schleimhäute", "Lähmung"),
-            identificationFeatures = listOf("Weiße Trichterblüten", "Stachelige Kapselfrüchte"),
+            symptomsRes = listOf(R.string.plant_stechapfel_symptom_1, R.string.plant_stechapfel_symptom_2, R.string.plant_stechapfel_symptom_3, R.string.plant_stechapfel_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_stechapfel_feature_1, R.string.plant_stechapfel_feature_2),
             bloomMonths = listOf(6, 7, 8, 9, 10),
-            habitat = listOf("Brachland", "Garten", "Wegrand"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Supportive Care"),
+            habitatRes = listOf(R.string.plant_stechapfel_habitat_1, R.string.plant_stechapfel_habitat_2, R.string.plant_stechapfel_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_stechapfel_firstaid_1, R.string.plant_stechapfel_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "adonisroeschen",
-            name = "Adonisröschen",
+            nameRes = R.string.plant_adonisroeschen_name,
             latinName = "Adonis vernalis",
-            alternativeNames = listOf("Frühlings-Adonisröschen"),
+            alternativeNamesRes = listOf(R.string.plant_adonisroeschen_alt_1),
             toxicityLevel = PlantToxicityLevel.DEADLY,
-            toxicParts = listOf("Alle Teile"),
+            toxicPartsRes = listOf(R.string.plant_adonisroeschen_part_1),
             affectedSystems = listOf(PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Herzrhythmusstörungen", "Benommenheit", "Krämpfe"),
-            identificationFeatures = listOf("Gelbe Blüten", "Fein geschlitzte Blätter"),
+            symptomsRes = listOf(R.string.plant_adonisroeschen_symptom_1, R.string.plant_adonisroeschen_symptom_2, R.string.plant_adonisroeschen_symptom_3, R.string.plant_adonisroeschen_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_adonisroeschen_feature_1, R.string.plant_adonisroeschen_feature_2),
             bloomMonths = listOf(4, 5),
-            habitat = listOf("Steppe", "Trockenrasen", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Herzmonitoring"),
+            habitatRes = listOf(R.string.plant_adonisroeschen_habitat_1, R.string.plant_adonisroeschen_habitat_2, R.string.plant_adonisroeschen_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_adonisroeschen_firstaid_1, R.string.plant_adonisroeschen_firstaid_2),
             mustCallVet = true
         ),
 
-        // ── STARK GIFTIG (HIGHLY TOXIC) ──────────────────────────
-
         ToxicPlant(
             id = "maigloeckchen",
-            name = "Maiglöckchen",
+            nameRes = R.string.plant_maigloeckchen_name,
             latinName = "Convallaria majalis",
-            alternativeNames = listOf("Maienröschen"),
+            alternativeNamesRes = listOf(R.string.plant_maigloeckchen_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "auch Vasenwasser"),
+            toxicPartsRes = listOf(R.string.plant_maigloeckchen_part_1, R.string.plant_maigloeckchen_part_2),
             affectedSystems = listOf(PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Durchfall", "Herzrhythmusstörungen", "Schwäche"),
-            identificationFeatures = listOf("Weiße Glockenblüten", "Rote Beeren", "Ovale Blätter"),
+            symptomsRes = listOf(R.string.plant_maigloeckchen_symptom_1, R.string.plant_maigloeckchen_symptom_2, R.string.plant_maigloeckchen_symptom_3, R.string.plant_maigloeckchen_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_maigloeckchen_feature_1, R.string.plant_maigloeckchen_feature_2, R.string.plant_maigloeckchen_feature_3),
             bloomMonths = listOf(4, 5, 6),
-            habitat = listOf("Wald", "Garten"),
-            firstAidSteps = listOf("Tierarzt sofort", "Kein Erbrechen induzieren", "EKG"),
+            habitatRes = listOf(R.string.plant_maigloeckchen_habitat_1, R.string.plant_maigloeckchen_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_maigloeckchen_firstaid_1, R.string.plant_maigloeckchen_firstaid_2, R.string.plant_maigloeckchen_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "fingerhut",
-            name = "Roter Fingerhut",
+            nameRes = R.string.plant_fingerhut_name,
             latinName = "Digitalis purpurea",
-            alternativeNames = listOf("Fingerhut"),
+            alternativeNamesRes = listOf(R.string.plant_fingerhut_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Blätter und Samen"),
+            toxicPartsRes = listOf(R.string.plant_fingerhut_part_1, R.string.plant_fingerhut_part_2),
             affectedSystems = listOf(PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "blutiger Durchfall", "Herzrhythmusstörungen", "Tod möglich"),
-            identificationFeatures = listOf("Purpurne Glockenblüten", "Hoher Blütenstand", "Behaarte Blätter"),
+            symptomsRes = listOf(R.string.plant_fingerhut_symptom_1, R.string.plant_fingerhut_symptom_2, R.string.plant_fingerhut_symptom_3, R.string.plant_fingerhut_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_fingerhut_feature_1, R.string.plant_fingerhut_feature_2, R.string.plant_fingerhut_feature_3),
             bloomMonths = listOf(6, 7, 8),
-            habitat = listOf("Waldrand", "Lichtung", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "EKG", "Aktivkohle"),
+            habitatRes = listOf(R.string.plant_fingerhut_habitat_1, R.string.plant_fingerhut_habitat_2, R.string.plant_fingerhut_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_fingerhut_firstaid_1, R.string.plant_fingerhut_firstaid_2, R.string.plant_fingerhut_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "kirschlorbeer",
-            name = "Kirschlorbeer",
+            nameRes = R.string.plant_kirschlorbeer_name,
             latinName = "Prunus laurocerasus",
-            alternativeNames = listOf("Lorbeerkirsche"),
+            alternativeNamesRes = listOf(R.string.plant_kirschlorbeer_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Blätter", "Samen/Kerne", "Rinde"),
+            toxicPartsRes = listOf(R.string.plant_kirschlorbeer_part_1, R.string.plant_kirschlorbeer_part_2, R.string.plant_kirschlorbeer_part_3),
             affectedSystems = listOf(PlantBodySystem.RESPIRATORY, PlantBodySystem.DIGESTIVE, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Speichelfluss", "Atemnot", "Zellatmungshemmung", "Atemlähmung"),
-            identificationFeatures = listOf("Immergrüner Strauch", "Glänzende ledrige Blätter", "Schwarze Früchte"),
+            symptomsRes = listOf(R.string.plant_kirschlorbeer_symptom_1, R.string.plant_kirschlorbeer_symptom_2, R.string.plant_kirschlorbeer_symptom_3, R.string.plant_kirschlorbeer_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_kirschlorbeer_feature_1, R.string.plant_kirschlorbeer_feature_2, R.string.plant_kirschlorbeer_feature_3),
             bloomMonths = listOf(4, 5, 6),
-            habitat = listOf("Hecke", "Garten", "Park"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Blausäure-Antidot möglich", "Frische Luft"),
+            habitatRes = listOf(R.string.plant_kirschlorbeer_habitat_1, R.string.plant_kirschlorbeer_habitat_2, R.string.plant_kirschlorbeer_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_kirschlorbeer_firstaid_1, R.string.plant_kirschlorbeer_firstaid_2, R.string.plant_kirschlorbeer_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "rhododendron",
-            name = "Rhododendron / Azalee",
+            nameRes = R.string.plant_rhododendron_name,
             latinName = "Rhododendron spp.",
-            alternativeNames = listOf("Alpenrose", "Azalee"),
+            alternativeNamesRes = listOf(R.string.plant_rhododendron_alt_1, R.string.plant_rhododendron_alt_2),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Blätter und Blüten"),
+            toxicPartsRes = listOf(R.string.plant_rhododendron_part_1, R.string.plant_rhododendron_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Erbrechen", "Speichelfluss", "Schwäche", "Bradykardie", "Krämpfe"),
-            identificationFeatures = listOf("Große ledrige Blätter", "Bunte Blütendolden"),
+            symptomsRes = listOf(R.string.plant_rhododendron_symptom_1, R.string.plant_rhododendron_symptom_2, R.string.plant_rhododendron_symptom_3, R.string.plant_rhododendron_symptom_4, R.string.plant_rhododendron_symptom_5),
+            identificationFeaturesRes = listOf(R.string.plant_rhododendron_feature_1, R.string.plant_rhododendron_feature_2),
             bloomMonths = listOf(4, 5, 6),
-            habitat = listOf("Garten", "Park", "Gebirge"),
-            firstAidSteps = listOf("Tierarzt", "Aktivkohle", "Infusionen"),
+            habitatRes = listOf(R.string.plant_rhododendron_habitat_1, R.string.plant_rhododendron_habitat_2, R.string.plant_rhododendron_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_rhododendron_firstaid_1, R.string.plant_rhododendron_firstaid_2, R.string.plant_rhododendron_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "buchsbaum",
-            name = "Buchsbaum",
+            nameRes = R.string.plant_buchsbaum_name,
             latinName = "Buxus sempervirens",
-            alternativeNames = listOf("Buchs"),
+            alternativeNamesRes = listOf(R.string.plant_buchsbaum_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Blätter", "Rinde"),
+            toxicPartsRes = listOf(R.string.plant_buchsbaum_part_1, R.string.plant_buchsbaum_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS, PlantBodySystem.RESPIRATORY),
-            symptoms = listOf("Erbrechen", "Durchfall", "Zittern", "Lähmungen", "Atemlähmung"),
-            identificationFeatures = listOf("Kleine ovale Blätter", "Immergrüner Strauch"),
+            symptomsRes = listOf(R.string.plant_buchsbaum_symptom_1, R.string.plant_buchsbaum_symptom_2, R.string.plant_buchsbaum_symptom_3, R.string.plant_buchsbaum_symptom_4, R.string.plant_buchsbaum_symptom_5),
+            identificationFeaturesRes = listOf(R.string.plant_buchsbaum_feature_1, R.string.plant_buchsbaum_feature_2),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Garten", "Park", "Hecke"),
-            firstAidSteps = listOf("Tierarzt", "Krampftherapie", "Atemsupport"),
+            habitatRes = listOf(R.string.plant_buchsbaum_habitat_1, R.string.plant_buchsbaum_habitat_2, R.string.plant_buchsbaum_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_buchsbaum_firstaid_1, R.string.plant_buchsbaum_firstaid_2, R.string.plant_buchsbaum_firstaid_3),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "seidelbast",
-            name = "Seidelbast",
+            nameRes = R.string.plant_seidelbast_name,
             latinName = "Daphne mezereum",
-            alternativeNames = listOf("Kellerhals"),
+            alternativeNamesRes = listOf(R.string.plant_seidelbast_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Beeren", "Rinde", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_seidelbast_part_1, R.string.plant_seidelbast_part_2, R.string.plant_seidelbast_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Brennen im Mund", "blutiger Durchfall", "Krämpfe", "Lähmungen"),
-            identificationFeatures = listOf("Rosa Blüten vor Laub", "Rote Beeren am Stängel"),
+            symptomsRes = listOf(R.string.plant_seidelbast_symptom_1, R.string.plant_seidelbast_symptom_2, R.string.plant_seidelbast_symptom_3, R.string.plant_seidelbast_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_seidelbast_feature_1, R.string.plant_seidelbast_feature_2),
             bloomMonths = listOf(2, 3, 4),
-            habitat = listOf("Wald", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Aktivkohle"),
+            habitatRes = listOf(R.string.plant_seidelbast_habitat_1, R.string.plant_seidelbast_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_seidelbast_firstaid_1, R.string.plant_seidelbast_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "engelstrompete",
-            name = "Engelstrompete",
+            nameRes = R.string.plant_engelstrompete_name,
             latinName = "Brugmansia spp.",
-            alternativeNames = listOf("Brugmansia"),
+            alternativeNamesRes = listOf(R.string.plant_engelstrompete_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile"),
+            toxicPartsRes = listOf(R.string.plant_engelstrompete_part_1),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Herzrhythmusstörungen", "Halluzinationen", "Koma"),
-            identificationFeatures = listOf("Große hängende Trompetenblüten", "Starker Duft nachts"),
+            symptomsRes = listOf(R.string.plant_engelstrompete_symptom_1, R.string.plant_engelstrompete_symptom_2, R.string.plant_engelstrompete_symptom_3, R.string.plant_engelstrompete_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_engelstrompete_feature_1, R.string.plant_engelstrompete_feature_2),
             bloomMonths = listOf(6, 7, 8, 9, 10),
-            habitat = listOf("Garten", "Terrasse", "Kübelpflanze"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Physostigmin möglich"),
+            habitatRes = listOf(R.string.plant_engelstrompete_habitat_1, R.string.plant_engelstrompete_habitat_2, R.string.plant_engelstrompete_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_engelstrompete_firstaid_1, R.string.plant_engelstrompete_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "bilsenkraut",
-            name = "Schwarzes Bilsenkraut",
+            nameRes = R.string.plant_bilsenkraut_name,
             latinName = "Hyoscyamus niger",
-            alternativeNames = listOf("Bilsenkraut"),
+            alternativeNamesRes = listOf(R.string.plant_bilsenkraut_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Samen", "Wurzel", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_bilsenkraut_part_1, R.string.plant_bilsenkraut_part_2, R.string.plant_bilsenkraut_part_3),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Pupillenerweiterung", "Herzrasen", "Erregung", "Krämpfe"),
-            identificationFeatures = listOf("Gelblich-violette Blüten", "Klebrige Blätter"),
+            symptomsRes = listOf(R.string.plant_bilsenkraut_symptom_1, R.string.plant_bilsenkraut_symptom_2, R.string.plant_bilsenkraut_symptom_3, R.string.plant_bilsenkraut_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_bilsenkraut_feature_1, R.string.plant_bilsenkraut_feature_2),
             bloomMonths = listOf(6, 7, 8, 9, 10),
-            habitat = listOf("Brachland", "Wegrand", "Garten"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Supportive Care"),
+            habitatRes = listOf(R.string.plant_bilsenkraut_habitat_1, R.string.plant_bilsenkraut_habitat_2, R.string.plant_bilsenkraut_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_bilsenkraut_firstaid_1, R.string.plant_bilsenkraut_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "christrose",
-            name = "Christrose",
+            nameRes = R.string.plant_christrose_name,
             latinName = "Helleborus niger",
-            alternativeNames = listOf("Schneerose"),
+            alternativeNamesRes = listOf(R.string.plant_christrose_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Wurzel"),
+            toxicPartsRes = listOf(R.string.plant_christrose_part_1, R.string.plant_christrose_part_2),
             affectedSystems = listOf(PlantBodySystem.CARDIOVASCULAR, PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "Herzprobleme", "Lähmung"),
-            identificationFeatures = listOf("Weiße Blüten im Winter", "Ledrige gefingerte Blätter"),
+            symptomsRes = listOf(R.string.plant_christrose_symptom_1, R.string.plant_christrose_symptom_2, R.string.plant_christrose_symptom_3, R.string.plant_christrose_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_christrose_feature_1, R.string.plant_christrose_feature_2),
             bloomMonths = listOf(12, 1, 2, 3, 4),
-            habitat = listOf("Garten", "Alpen"),
-            firstAidSteps = listOf("Sofort Tierarzt", "Herzmonitoring"),
+            habitatRes = listOf(R.string.plant_christrose_habitat_1, R.string.plant_christrose_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_christrose_firstaid_1, R.string.plant_christrose_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "dieffenbachia",
-            name = "Dieffenbachia",
+            nameRes = R.string.plant_dieffenbachia_name,
             latinName = "Dieffenbachia seguine",
-            alternativeNames = listOf("Giftwurz"),
+            alternativeNamesRes = listOf(R.string.plant_dieffenbachia_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Milchsaft"),
+            toxicPartsRes = listOf(R.string.plant_dieffenbachia_part_1, R.string.plant_dieffenbachia_part_2),
             affectedSystems = listOf(PlantBodySystem.SKIN, PlantBodySystem.DIGESTIVE, PlantBodySystem.RESPIRATORY),
-            symptoms = listOf("Massive Schwellung im Mund", "Speichelfluss", "Atemnot durch Schwellung"),
-            identificationFeatures = listOf("Große grün-weiß gemusterte Blätter"),
+            symptomsRes = listOf(R.string.plant_dieffenbachia_symptom_1, R.string.plant_dieffenbachia_symptom_2, R.string.plant_dieffenbachia_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_dieffenbachia_feature_1),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Zimmerpflanze"),
-            firstAidSteps = listOf("Mund sofort spülen", "Tierarzt wegen Erstickungsgefahr"),
+            habitatRes = listOf(R.string.plant_dieffenbachia_habitat_1),
+            firstAidStepsRes = listOf(R.string.plant_dieffenbachia_firstaid_1, R.string.plant_dieffenbachia_firstaid_2),
             mustCallVet = true,
-            note = "Enthält Calciumoxalat-Nadeln, die sich in Schleimhäute bohren."
+            noteRes = R.string.plant_dieffenbachia_note
         ),
 
         ToxicPlant(
             id = "rittersporn",
-            name = "Rittersporn",
+            nameRes = R.string.plant_rittersporn_name,
             latinName = "Delphinium spp.",
-            alternativeNames = listOf("Lerchensporn"),
+            alternativeNamesRes = listOf(R.string.plant_rittersporn_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Samen"),
+            toxicPartsRes = listOf(R.string.plant_rittersporn_part_1, R.string.plant_rittersporn_part_2),
             affectedSystems = listOf(PlantBodySystem.NERVOUS, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Speichelfluss", "Krämpfe", "Lähmungen"),
-            identificationFeatures = listOf("Hohe Blütenkerzen", "Blau/Rosa/Weiße Blüten"),
+            symptomsRes = listOf(R.string.plant_rittersporn_symptom_1, R.string.plant_rittersporn_symptom_2, R.string.plant_rittersporn_symptom_3, R.string.plant_rittersporn_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_rittersporn_feature_1, R.string.plant_rittersporn_feature_2),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Garten"),
-            firstAidSteps = listOf("Tierarzt", "Krampftherapie"),
+            habitatRes = listOf(R.string.plant_rittersporn_habitat_1),
+            firstAidStepsRes = listOf(R.string.plant_rittersporn_firstaid_1, R.string.plant_rittersporn_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "robinie",
-            name = "Robinie",
+            nameRes = R.string.plant_robinie_name,
             latinName = "Robinia pseudoacacia",
-            alternativeNames = listOf("Falsche Akazie"),
+            alternativeNamesRes = listOf(R.string.plant_robinie_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Rinde", "Blätter", "Samen"),
+            toxicPartsRes = listOf(R.string.plant_robinie_part_1, R.string.plant_robinie_part_2, R.string.plant_robinie_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Erbrechen", "Durchfall", "Schwäche", "Krämpfe"),
-            identificationFeatures = listOf("Gefiederte Blätter", "Dornen", "Weiße Blütentrauben"),
+            symptomsRes = listOf(R.string.plant_robinie_symptom_1, R.string.plant_robinie_symptom_2, R.string.plant_robinie_symptom_3, R.string.plant_robinie_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_robinie_feature_1, R.string.plant_robinie_feature_2, R.string.plant_robinie_feature_3),
             bloomMonths = listOf(5, 6),
-            habitat = listOf("Park", "Garten", "Wald"),
-            firstAidSteps = listOf("Tierarzt", "Aktivkohle"),
+            habitatRes = listOf(R.string.plant_robinie_habitat_1, R.string.plant_robinie_habitat_2, R.string.plant_robinie_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_robinie_firstaid_1, R.string.plant_robinie_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "jakobskreuzkraut",
-            name = "Jakobskreuzkraut",
+            nameRes = R.string.plant_jakobskreuzkraut_name,
             latinName = "Jacobaea vulgaris",
-            alternativeNames = listOf("Jakobsgreiskraut"),
+            alternativeNamesRes = listOf(R.string.plant_jakobskreuzkraut_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders getrocknet"),
+            toxicPartsRes = listOf(R.string.plant_jakobskreuzkraut_part_1, R.string.plant_jakobskreuzkraut_part_2),
             affectedSystems = listOf(PlantBodySystem.LIVER),
-            symptoms = listOf("Leberschäden (oft spät)", "Gelbsucht", "Gewichtsverlust"),
-            identificationFeatures = listOf("Gelbe Korbblüten", "Tief eingeschnittene Blätter"),
+            symptomsRes = listOf(R.string.plant_jakobskreuzkraut_symptom_1, R.string.plant_jakobskreuzkraut_symptom_2, R.string.plant_jakobskreuzkraut_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_jakobskreuzkraut_feature_1, R.string.plant_jakobskreuzkraut_feature_2),
             bloomMonths = listOf(7, 8, 9),
-            habitat = listOf("Weide", "Wegrand", "Magerwiese"),
-            firstAidSteps = listOf("Bei Verdacht: Lebercheck beim Tierarzt"),
+            habitatRes = listOf(R.string.plant_jakobskreuzkraut_habitat_1, R.string.plant_jakobskreuzkraut_habitat_2, R.string.plant_jakobskreuzkraut_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_jakobskreuzkraut_firstaid_1),
             mustCallVet = false,
-            note = "Wirkt kumulativ über Wochen."
+            noteRes = R.string.plant_jakobskreuzkraut_note
         ),
 
         ToxicPlant(
             id = "schwarzer-holunder-roh",
-            name = "Schwarzer Holunder (roh)",
+            nameRes = R.string.plant_schwarzer_holunder_roh_name,
             latinName = "Sambucus nigra",
-            alternativeNames = listOf("Holunderbeere"),
+            alternativeNamesRes = listOf(R.string.plant_schwarzer_holunder_roh_alt_1),
             toxicityLevel = PlantToxicityLevel.HIGHLY_TOXIC,
-            toxicParts = listOf("Rohe Beeren", "Blätter", "Rinde"),
+            toxicPartsRes = listOf(R.string.plant_schwarzer_holunder_roh_part_1, R.string.plant_schwarzer_holunder_roh_part_2, R.string.plant_schwarzer_holunder_roh_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.RESPIRATORY),
-            symptoms = listOf("Heftiges Erbrechen", "Durchfall", "Atemnot bei großen Mengen"),
-            identificationFeatures = listOf("Weiße Blütendolden", "Schwarze Beeren"),
+            symptomsRes = listOf(R.string.plant_schwarzer_holunder_roh_symptom_1, R.string.plant_schwarzer_holunder_roh_symptom_2, R.string.plant_schwarzer_holunder_roh_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_schwarzer_holunder_roh_feature_1, R.string.plant_schwarzer_holunder_roh_feature_2),
             bloomMonths = listOf(8, 9, 10),
-            habitat = listOf("Waldrand", "Hecke", "Garten"),
-            firstAidSteps = listOf("Tierarzt bei größeren Mengen", "Viel Wasser"),
+            habitatRes = listOf(R.string.plant_schwarzer_holunder_roh_habitat_1, R.string.plant_schwarzer_holunder_roh_habitat_2, R.string.plant_schwarzer_holunder_roh_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_schwarzer_holunder_roh_firstaid_1, R.string.plant_schwarzer_holunder_roh_firstaid_2),
             mustCallVet = false
         ),
 
-        // ── GIFTIG (MODERATELY TOXIC) ────────────────────────────
-
         ToxicPlant(
             id = "baerlauch",
-            name = "Bärlauch",
+            nameRes = R.string.plant_baerlauch_name,
             latinName = "Allium ursinum",
-            alternativeNames = listOf("Wilder Knoblauch"),
+            alternativeNamesRes = listOf(R.string.plant_baerlauch_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Zwiebeln"),
+            toxicPartsRes = listOf(R.string.plant_baerlauch_part_1, R.string.plant_baerlauch_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.BLOOD),
-            symptoms = listOf("Erbrechen", "Durchfall", "Anämie (Blutarmut)", "Schwäche"),
-            identificationFeatures = listOf("Knoblauchgeruch", "Breite ovale Blätter"),
+            symptomsRes = listOf(R.string.plant_baerlauch_symptom_1, R.string.plant_baerlauch_symptom_2, R.string.plant_baerlauch_symptom_3, R.string.plant_baerlauch_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_baerlauch_feature_1, R.string.plant_baerlauch_feature_2),
             bloomMonths = listOf(3, 4, 5, 6),
-            habitat = listOf("Wald", "Auwald"),
-            firstAidSteps = listOf("Tierarzt bei größeren Mengen"),
+            habitatRes = listOf(R.string.plant_baerlauch_habitat_1, R.string.plant_baerlauch_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_baerlauch_firstaid_1),
             mustCallVet = false,
-            confusionRisk = "Maiglöckchen, Herbstzeitlose (beide ohne Knoblauchgeruch)"
+            confusionRiskRes = R.string.plant_baerlauch_confusion
         ),
 
         ToxicPlant(
             id = "narzisse",
-            name = "Narzisse",
+            nameRes = R.string.plant_narzisse_name,
             latinName = "Narcissus spp.",
-            alternativeNames = listOf("Osterglocke"),
+            alternativeNamesRes = listOf(R.string.plant_narzisse_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Zwiebeln", "Blätter", "Blüten"),
+            toxicPartsRes = listOf(R.string.plant_narzisse_part_1, R.string.plant_narzisse_part_2, R.string.plant_narzisse_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Speichelfluss", "Erbrechen", "Durchfall", "Krämpfe bei großen Mengen"),
-            identificationFeatures = listOf("Gelbe/Weiße Blüten mit Trompete"),
+            symptomsRes = listOf(R.string.plant_narzisse_symptom_1, R.string.plant_narzisse_symptom_2, R.string.plant_narzisse_symptom_3, R.string.plant_narzisse_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_narzisse_feature_1),
             bloomMonths = listOf(2, 3, 4, 5),
-            habitat = listOf("Garten", "Park", "Rasen"),
-            firstAidSteps = listOf("Tierarzt anrufen"),
+            habitatRes = listOf(R.string.plant_narzisse_habitat_1, R.string.plant_narzisse_habitat_2, R.string.plant_narzisse_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_narzisse_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "buschwindroeschen",
-            name = "Buschwindröschen",
+            nameRes = R.string.plant_buschwindroeschen_name,
             latinName = "Anemone nemorosa",
-            alternativeNames = listOf("Windröschen"),
+            alternativeNamesRes = listOf(R.string.plant_buschwindroeschen_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Alle Teile"),
+            toxicPartsRes = listOf(R.string.plant_buschwindroeschen_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN),
-            symptoms = listOf("Reizung", "Speichelfluss", "Erbrechen", "Durchfall"),
-            identificationFeatures = listOf("Weiße Blüten im Frühling"),
+            symptomsRes = listOf(R.string.plant_buschwindroeschen_symptom_1, R.string.plant_buschwindroeschen_symptom_2, R.string.plant_buschwindroeschen_symptom_3, R.string.plant_buschwindroeschen_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_buschwindroeschen_feature_1),
             bloomMonths = listOf(3, 4, 5),
-            habitat = listOf("Wald", "Garten"),
-            firstAidSteps = listOf("Maul ausspülen"),
+            habitatRes = listOf(R.string.plant_buschwindroeschen_habitat_1, R.string.plant_buschwindroeschen_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_buschwindroeschen_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "stechpalme",
-            name = "Stechpalme",
+            nameRes = R.string.plant_stechpalme_name,
             latinName = "Ilex aquifolium",
-            alternativeNames = listOf("Ilex"),
+            alternativeNamesRes = listOf(R.string.plant_stechpalme_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Beeren", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_stechpalme_part_1, R.string.plant_stechpalme_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Durchfall", "Bauchschmerzen"),
-            identificationFeatures = listOf("Stachelige glänzende Blätter", "Rote Beeren"),
+            symptomsRes = listOf(R.string.plant_stechpalme_symptom_1, R.string.plant_stechpalme_symptom_2, R.string.plant_stechpalme_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_stechpalme_feature_1, R.string.plant_stechpalme_feature_2),
             bloomMonths = listOf(11, 12, 1),
-            habitat = listOf("Wald", "Garten", "Hecke"),
-            firstAidSteps = listOf("Tierarzt bei mehr als 2-3 Beeren"),
+            habitatRes = listOf(R.string.plant_stechpalme_habitat_1, R.string.plant_stechpalme_habitat_2, R.string.plant_stechpalme_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_stechpalme_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "tulpe",
-            name = "Tulpe",
+            nameRes = R.string.plant_tulpe_name,
             latinName = "Tulipa spp.",
-            alternativeNames = listOf("Gartentulpe"),
+            alternativeNamesRes = listOf(R.string.plant_tulpe_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Zwiebeln (besonders)", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_tulpe_part_1, R.string.plant_tulpe_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN),
-            symptoms = listOf("Erbrechen", "Durchfall", "Speichelfluss", "Hautreizung"),
-            identificationFeatures = listOf("Kelchförmige Blüten", "Breite parallele Blätter"),
+            symptomsRes = listOf(R.string.plant_tulpe_symptom_1, R.string.plant_tulpe_symptom_2, R.string.plant_tulpe_symptom_3, R.string.plant_tulpe_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_tulpe_feature_1, R.string.plant_tulpe_feature_2),
             bloomMonths = listOf(3, 4, 5),
-            habitat = listOf("Garten", "Park"),
-            firstAidSteps = listOf("Tierarzt bei Zwiebelaufnahme"),
+            habitatRes = listOf(R.string.plant_tulpe_habitat_1, R.string.plant_tulpe_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_tulpe_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "clematis",
-            name = "Clematis",
+            nameRes = R.string.plant_clematis_name,
             latinName = "Clematis spp.",
-            alternativeNames = listOf("Waldrebe"),
+            alternativeNamesRes = listOf(R.string.plant_clematis_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Saft"),
+            toxicPartsRes = listOf(R.string.plant_clematis_part_1, R.string.plant_clematis_part_2),
             affectedSystems = listOf(PlantBodySystem.SKIN, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Schleimhautreizung", "Speichelfluss", "Erbrechen"),
-            identificationFeatures = listOf("Kletterpflanze", "Große gefiederte Blüten"),
+            symptomsRes = listOf(R.string.plant_clematis_symptom_1, R.string.plant_clematis_symptom_2, R.string.plant_clematis_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_clematis_feature_1, R.string.plant_clematis_feature_2),
             bloomMonths = listOf(5, 6, 7, 8, 9),
-            habitat = listOf("Garten", "Zaun"),
-            firstAidSteps = listOf("Maul ausspülen"),
+            habitatRes = listOf(R.string.plant_clematis_habitat_1, R.string.plant_clematis_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_clematis_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "wisteria",
-            name = "Glyzinie",
+            nameRes = R.string.plant_wisteria_name,
             latinName = "Wisteria sinensis",
-            alternativeNames = listOf("Blauregen"),
+            alternativeNamesRes = listOf(R.string.plant_wisteria_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Samen", "Hülsen", "Rinde"),
+            toxicPartsRes = listOf(R.string.plant_wisteria_part_1, R.string.plant_wisteria_part_2, R.string.plant_wisteria_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "Bauchschmerzen", "Krämpfe"),
-            identificationFeatures = listOf("Hängende lila Blütentrauben", "Bohnenähnliche Hülsen"),
+            symptomsRes = listOf(R.string.plant_wisteria_symptom_1, R.string.plant_wisteria_symptom_2, R.string.plant_wisteria_symptom_3, R.string.plant_wisteria_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_wisteria_feature_1, R.string.plant_wisteria_feature_2),
             bloomMonths = listOf(4, 5, 6),
-            habitat = listOf("Garten", "Hauswand"),
-            firstAidSteps = listOf("Tierarzt bei Hülsen-Aufnahme"),
+            habitatRes = listOf(R.string.plant_wisteria_habitat_1, R.string.plant_wisteria_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_wisteria_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "efeu",
-            name = "Efeu",
+            nameRes = R.string.plant_efeu_name,
             latinName = "Hedera helix",
-            alternativeNames = listOf("Gemeiner Efeu"),
+            alternativeNamesRes = listOf(R.string.plant_efeu_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Blätter", "Beeren", "Saft"),
+            toxicPartsRes = listOf(R.string.plant_efeu_part_1, R.string.plant_efeu_part_2, R.string.plant_efeu_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "Hautreizung", "Krämpfe bei großen Mengen"),
-            identificationFeatures = listOf("Kletterpflanze", "Gelappte Blätter", "Schwarze Beeren"),
+            symptomsRes = listOf(R.string.plant_efeu_symptom_1, R.string.plant_efeu_symptom_2, R.string.plant_efeu_symptom_3, R.string.plant_efeu_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_efeu_feature_1, R.string.plant_efeu_feature_2, R.string.plant_efeu_feature_3),
             bloomMonths = listOf(9, 10, 11, 12),
-            habitat = listOf("Wald", "Garten", "Mauer"),
-            firstAidSteps = listOf("Haut abwaschen", "Tierarzt bei Symptomen"),
+            habitatRes = listOf(R.string.plant_efeu_habitat_1, R.string.plant_efeu_habitat_2, R.string.plant_efeu_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_efeu_firstaid_1, R.string.plant_efeu_firstaid_2),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "aronstab",
-            name = "Aronstab",
+            nameRes = R.string.plant_aronstab_name,
             latinName = "Arum maculatum",
-            alternativeNames = listOf("Gefleckter Aronstab"),
+            alternativeNamesRes = listOf(R.string.plant_aronstab_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Beeren", "Knolle", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_aronstab_part_1, R.string.plant_aronstab_part_2, R.string.plant_aronstab_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN, PlantBodySystem.RESPIRATORY),
-            symptoms = listOf("Brennen im Mund", "Schwellung im Rachen", "Erbrechen", "Atemnot"),
-            identificationFeatures = listOf("Pfeilförmige Blätter", "Blütenkolben", "Rote Beeren"),
+            symptomsRes = listOf(R.string.plant_aronstab_symptom_1, R.string.plant_aronstab_symptom_2, R.string.plant_aronstab_symptom_3, R.string.plant_aronstab_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_aronstab_feature_1, R.string.plant_aronstab_feature_2, R.string.plant_aronstab_feature_3),
             bloomMonths = listOf(4, 5, 8, 9, 10),
-            habitat = listOf("Laubwald", "Hecke", "Park"),
-            firstAidSteps = listOf("Mund spülen", "Tierarzt bei Schwellung"),
+            habitatRes = listOf(R.string.plant_aronstab_habitat_1, R.string.plant_aronstab_habitat_2, R.string.plant_aronstab_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_aronstab_firstaid_1, R.string.plant_aronstab_firstaid_2),
             mustCallVet = true
         ),
 
         ToxicPlant(
             id = "adlerfarn",
-            name = "Adlerfarn",
+            nameRes = R.string.plant_adlerfarn_name,
             latinName = "Pteridium aquilinum",
-            alternativeNames = listOf("Farn"),
+            alternativeNamesRes = listOf(R.string.plant_adlerfarn_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders junge Wedel"),
+            toxicPartsRes = listOf(R.string.plant_adlerfarn_part_1, R.string.plant_adlerfarn_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS, PlantBodySystem.BLOOD),
-            symptoms = listOf("Erbrechen", "Durchfall", "Thiaminmangel", "neurologische Störungen"),
-            identificationFeatures = listOf("Großer Farn", "Eingekringelte junge Wedel"),
+            symptomsRes = listOf(R.string.plant_adlerfarn_symptom_1, R.string.plant_adlerfarn_symptom_2, R.string.plant_adlerfarn_symptom_3, R.string.plant_adlerfarn_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_adlerfarn_feature_1, R.string.plant_adlerfarn_feature_2),
             bloomMonths = listOf(5, 6, 7, 8, 9),
-            habitat = listOf("Wald", "Heide", "Garten"),
-            firstAidSteps = listOf("Aktivkohle", "Thiamin-Supplementation (Vet)"),
+            habitatRes = listOf(R.string.plant_adlerfarn_habitat_1, R.string.plant_adlerfarn_habitat_2, R.string.plant_adlerfarn_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_adlerfarn_firstaid_1, R.string.plant_adlerfarn_firstaid_2),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "rainfarn",
-            name = "Rainfarn",
+            nameRes = R.string.plant_rainfarn_name,
             latinName = "Tanacetum vulgare",
-            alternativeNames = listOf("Wurmkraut"),
+            alternativeNamesRes = listOf(R.string.plant_rainfarn_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Blüten", "Blätter", "Stängel"),
+            toxicPartsRes = listOf(R.string.plant_rainfarn_part_1, R.string.plant_rainfarn_part_2, R.string.plant_rainfarn_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Erbrechen", "Entzündung Magen/Darm", "Krämpfe", "Herzrhythmusstörungen"),
-            identificationFeatures = listOf("Gelbe knopfartige Blüten", "Fiederige Blätter"),
+            symptomsRes = listOf(R.string.plant_rainfarn_symptom_1, R.string.plant_rainfarn_symptom_2, R.string.plant_rainfarn_symptom_3, R.string.plant_rainfarn_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_rainfarn_feature_1, R.string.plant_rainfarn_feature_2),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Wegrand", "Wiese", "Brachland"),
-            firstAidSteps = listOf("Tierarzt bei Symptomen"),
+            habitatRes = listOf(R.string.plant_rainfarn_habitat_1, R.string.plant_rainfarn_habitat_2, R.string.plant_rainfarn_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_rainfarn_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "pfaffenhuetchen",
-            name = "Pfaffenhütchen",
+            nameRes = R.string.plant_pfaffenhuetchen_name,
             latinName = "Euonymus europaeus",
-            alternativeNames = listOf("Spindelstrauch"),
+            alternativeNamesRes = listOf(R.string.plant_pfaffenhuetchen_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Samen", "Früchte"),
+            toxicPartsRes = listOf(R.string.plant_pfaffenhuetchen_part_1, R.string.plant_pfaffenhuetchen_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Bauchschmerzen", "Übelkeit", "Erbrechen", "herztoxische Effekte"),
-            identificationFeatures = listOf("Rosa-rote vierlappige Früchte", "Orange Samen"),
+            symptomsRes = listOf(R.string.plant_pfaffenhuetchen_symptom_1, R.string.plant_pfaffenhuetchen_symptom_2, R.string.plant_pfaffenhuetchen_symptom_3, R.string.plant_pfaffenhuetchen_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_pfaffenhuetchen_feature_1, R.string.plant_pfaffenhuetchen_feature_2),
             bloomMonths = listOf(5, 6, 9, 10),
-            habitat = listOf("Wald", "Hecke", "Garten"),
-            firstAidSteps = listOf("Tierarzt bei größeren Mengen"),
+            habitatRes = listOf(R.string.plant_pfaffenhuetchen_habitat_1, R.string.plant_pfaffenhuetchen_habitat_2, R.string.plant_pfaffenhuetchen_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_pfaffenhuetchen_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "nachtschatten",
-            name = "Bittersüßer Nachtschatten",
+            nameRes = R.string.plant_nachtschatten_name,
             latinName = "Solanum dulcamara",
-            alternativeNames = listOf("Nachtschatten"),
+            alternativeNamesRes = listOf(R.string.plant_nachtschatten_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders unreife Früchte"),
+            toxicPartsRes = listOf(R.string.plant_nachtschatten_part_1, R.string.plant_nachtschatten_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "Lähmungen bei großen Mengen"),
-            identificationFeatures = listOf("Violette Blüten", "Rote Beeren", "Herzförmige Blätter"),
+            symptomsRes = listOf(R.string.plant_nachtschatten_symptom_1, R.string.plant_nachtschatten_symptom_2, R.string.plant_nachtschatten_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_nachtschatten_feature_1, R.string.plant_nachtschatten_feature_2, R.string.plant_nachtschatten_feature_3),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Wald", "Ufer", "Garten"),
-            firstAidSteps = listOf("Tierarzt bei Symptomen"),
+            habitatRes = listOf(R.string.plant_nachtschatten_habitat_1, R.string.plant_nachtschatten_habitat_2, R.string.plant_nachtschatten_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_nachtschatten_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "hortensie",
-            name = "Hortensie",
+            nameRes = R.string.plant_hortensie_name,
             latinName = "Hydrangea macrophylla",
-            alternativeNames = listOf("Gartenhortensie"),
+            alternativeNamesRes = listOf(R.string.plant_hortensie_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Blätter", "Blüten"),
+            toxicPartsRes = listOf(R.string.plant_hortensie_part_1, R.string.plant_hortensie_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "Krämpfe bei großen Mengen"),
-            identificationFeatures = listOf("Große Blütenballen", "Gezackte Blätter"),
+            symptomsRes = listOf(R.string.plant_hortensie_symptom_1, R.string.plant_hortensie_symptom_2, R.string.plant_hortensie_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_hortensie_feature_1, R.string.plant_hortensie_feature_2),
             bloomMonths = listOf(6, 7, 8, 9),
-            habitat = listOf("Garten", "Kübelpflanze"),
-            firstAidSteps = listOf("Tierarzt bei Symptomen"),
+            habitatRes = listOf(R.string.plant_hortensie_habitat_1, R.string.plant_hortensie_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_hortensie_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "hyazinthe",
-            name = "Hyazinthe",
+            nameRes = R.string.plant_hyazinthe_name,
             latinName = "Hyacinthus orientalis",
-            alternativeNames = listOf("Gartenhyazinthe"),
+            alternativeNamesRes = listOf(R.string.plant_hyazinthe_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Zwiebeln (besonders)"),
+            toxicPartsRes = listOf(R.string.plant_hyazinthe_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "blutiger Durchfall bei großen Mengen"),
-            identificationFeatures = listOf("Dichte Blütentrauben", "Starker Duft"),
+            symptomsRes = listOf(R.string.plant_hyazinthe_symptom_1, R.string.plant_hyazinthe_symptom_2),
+            identificationFeaturesRes = listOf(R.string.plant_hyazinthe_feature_1, R.string.plant_hyazinthe_feature_2),
             bloomMonths = listOf(3, 4, 5),
-            habitat = listOf("Garten", "Topfpflanze"),
-            firstAidSteps = listOf("Tierarzt bei Zwiebelaufnahme"),
+            habitatRes = listOf(R.string.plant_hyazinthe_habitat_1, R.string.plant_hyazinthe_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_hyazinthe_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "alpenveilchen",
-            name = "Alpenveilchen",
+            nameRes = R.string.plant_alpenveilchen_name,
             latinName = "Cyclamen persicum",
-            alternativeNames = listOf("Zyklame"),
+            alternativeNamesRes = listOf(R.string.plant_alpenveilchen_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Knolle", "Blätter", "Blüten"),
+            toxicPartsRes = listOf(R.string.plant_alpenveilchen_part_1, R.string.plant_alpenveilchen_part_2, R.string.plant_alpenveilchen_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Erbrechen", "Durchfall", "Speichelfluss", "Herzprobleme"),
-            identificationFeatures = listOf("Herzförmige gemusterte Blätter", "Zurückgeschlagene Blütenblätter"),
+            symptomsRes = listOf(R.string.plant_alpenveilchen_symptom_1, R.string.plant_alpenveilchen_symptom_2, R.string.plant_alpenveilchen_symptom_3, R.string.plant_alpenveilchen_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_alpenveilchen_feature_1, R.string.plant_alpenveilchen_feature_2),
             bloomMonths = listOf(9, 10, 11, 12, 1, 2, 3),
-            habitat = listOf("Zimmerpflanze", "Garten"),
-            firstAidSteps = listOf("Tierarzt"),
+            habitatRes = listOf(R.string.plant_alpenveilchen_habitat_1, R.string.plant_alpenveilchen_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_alpenveilchen_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "amaryllis",
-            name = "Amaryllis",
+            nameRes = R.string.plant_amaryllis_name,
             latinName = "Hippeastrum spp.",
-            alternativeNames = listOf("Ritterstern"),
+            alternativeNamesRes = listOf(R.string.plant_amaryllis_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Zwiebeln (besonders)"),
+            toxicPartsRes = listOf(R.string.plant_amaryllis_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.CARDIOVASCULAR),
-            symptoms = listOf("Erbrechen", "Durchfall", "Herzrhythmusstörungen"),
-            identificationFeatures = listOf("Große trichterförmige Blüten", "Dicker hohler Stängel"),
+            symptomsRes = listOf(R.string.plant_amaryllis_symptom_1, R.string.plant_amaryllis_symptom_2, R.string.plant_amaryllis_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_amaryllis_feature_1, R.string.plant_amaryllis_feature_2),
             bloomMonths = listOf(11, 12, 1, 2),
-            habitat = listOf("Zimmerpflanze", "Schnittblume"),
-            firstAidSteps = listOf("Tierarzt bei Zwiebelaufnahme"),
+            habitatRes = listOf(R.string.plant_amaryllis_habitat_1, R.string.plant_amaryllis_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_amaryllis_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "clivia",
-            name = "Clivia",
+            nameRes = R.string.plant_clivia_name,
             latinName = "Clivia miniata",
-            alternativeNames = listOf("Riemenblatt"),
+            alternativeNamesRes = listOf(R.string.plant_clivia_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Alle Teile", "besonders Wurzelstock"),
+            toxicPartsRes = listOf(R.string.plant_clivia_part_1, R.string.plant_clivia_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Schweißausbrüche", "neurologische Störungen"),
-            identificationFeatures = listOf("Riemenförmige Blätter", "Orange Blütendolden"),
+            symptomsRes = listOf(R.string.plant_clivia_symptom_1, R.string.plant_clivia_symptom_2, R.string.plant_clivia_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_clivia_feature_1, R.string.plant_clivia_feature_2),
             bloomMonths = listOf(2, 3, 4, 5),
-            habitat = listOf("Zimmerpflanze"),
-            firstAidSteps = listOf("Tierarzt"),
+            habitatRes = listOf(R.string.plant_clivia_habitat_1),
+            firstAidStepsRes = listOf(R.string.plant_clivia_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "philodendron",
-            name = "Philodendron",
+            nameRes = R.string.plant_philodendron_name,
             latinName = "Philodendron spp.",
-            alternativeNames = listOf("Baumfreund"),
+            alternativeNamesRes = listOf(R.string.plant_philodendron_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Blätter", "Stängel", "Saft"),
+            toxicPartsRes = listOf(R.string.plant_philodendron_part_1, R.string.plant_philodendron_part_2, R.string.plant_philodendron_part_3),
             affectedSystems = listOf(PlantBodySystem.SKIN, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Brennen", "Speichelfluss", "Erbrechen", "Schluckbeschwerden"),
-            identificationFeatures = listOf("Kletterpflanze", "Oft herzförmige Blätter"),
+            symptomsRes = listOf(R.string.plant_philodendron_symptom_1, R.string.plant_philodendron_symptom_2, R.string.plant_philodendron_symptom_3, R.string.plant_philodendron_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_philodendron_feature_1, R.string.plant_philodendron_feature_2),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Zimmerpflanze"),
-            firstAidSteps = listOf("Mund spülen", "Tierarzt bei starken Symptomen"),
+            habitatRes = listOf(R.string.plant_philodendron_habitat_1),
+            firstAidStepsRes = listOf(R.string.plant_philodendron_firstaid_1, R.string.plant_philodendron_firstaid_2),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "chrysantheme",
-            name = "Chrysantheme",
+            nameRes = R.string.plant_chrysantheme_name,
             latinName = "Chrysanthemum spp.",
-            alternativeNames = listOf("Winteraster"),
+            alternativeNamesRes = listOf(R.string.plant_chrysantheme_alt_1),
             toxicityLevel = PlantToxicityLevel.MODERATELY_TOXIC,
-            toxicParts = listOf("Blüten", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_chrysantheme_part_1, R.string.plant_chrysantheme_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Durchfall", "Atemnot", "Gleichgewichtsstörungen", "Hautreizung"),
-            identificationFeatures = listOf("Dichte Blütenköpfe", "Typischer Herbstblüher"),
+            symptomsRes = listOf(R.string.plant_chrysantheme_symptom_1, R.string.plant_chrysantheme_symptom_2, R.string.plant_chrysantheme_symptom_3, R.string.plant_chrysantheme_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_chrysantheme_feature_1, R.string.plant_chrysantheme_feature_2),
             bloomMonths = listOf(8, 9, 10, 11),
-            habitat = listOf("Garten", "Park", "Balkon"),
-            firstAidSteps = listOf("Tierarzt bei größeren Mengen"),
+            habitatRes = listOf(R.string.plant_chrysantheme_habitat_1, R.string.plant_chrysantheme_habitat_2, R.string.plant_chrysantheme_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_chrysantheme_firstaid_1),
             mustCallVet = false
         ),
 
-        // ── LEICHT GIFTIG (SLIGHTLY TOXIC) ───────────────────────
-
         ToxicPlant(
             id = "thuja",
-            name = "Thuja",
+            nameRes = R.string.plant_thuja_name,
             latinName = "Thuja occidentalis",
-            alternativeNames = listOf("Lebensbaum"),
+            alternativeNamesRes = listOf(R.string.plant_thuja_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Alle Teile", "ätherische Öle"),
+            toxicPartsRes = listOf(R.string.plant_thuja_part_1, R.string.plant_thuja_part_2),
             affectedSystems = listOf(PlantBodySystem.KIDNEYS, PlantBodySystem.DIGESTIVE, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "Nierenschäden bei Daueraufnahme"),
-            identificationFeatures = listOf("Immergrün", "Schuppenartige Blätter"),
+            symptomsRes = listOf(R.string.plant_thuja_symptom_1, R.string.plant_thuja_symptom_2, R.string.plant_thuja_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_thuja_feature_1, R.string.plant_thuja_feature_2),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Hecke", "Garten"),
-            firstAidSteps = listOf("Maul ausspülen", "Tierarzt bei größeren Mengen"),
+            habitatRes = listOf(R.string.plant_thuja_habitat_1, R.string.plant_thuja_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_thuja_firstaid_1, R.string.plant_thuja_firstaid_2),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "primel",
-            name = "Primel",
+            nameRes = R.string.plant_primel_name,
             latinName = "Primula obconica",
-            alternativeNames = listOf("Giftprimel"),
+            alternativeNamesRes = listOf(R.string.plant_primel_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Blätter", "Stängelsaft"),
+            toxicPartsRes = listOf(R.string.plant_primel_part_1, R.string.plant_primel_part_2),
             affectedSystems = listOf(PlantBodySystem.SKIN, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Hautreizung", "Juckreiz", "Erbrechen bei Aufnahme"),
-            identificationFeatures = listOf("Runzlige behaarte Blätter", "Bunte Blüten"),
+            symptomsRes = listOf(R.string.plant_primel_symptom_1, R.string.plant_primel_symptom_2, R.string.plant_primel_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_primel_feature_1, R.string.plant_primel_feature_2),
             bloomMonths = listOf(2, 3, 4, 5),
-            habitat = listOf("Balkon", "Garten", "Zimmer"),
-            firstAidSteps = listOf("Haut abwaschen"),
+            habitatRes = listOf(R.string.plant_primel_habitat_1, R.string.plant_primel_habitat_2, R.string.plant_primel_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_primel_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "liguster",
-            name = "Liguster",
+            nameRes = R.string.plant_liguster_name,
             latinName = "Ligustrum vulgare",
-            alternativeNames = listOf("Hartriegel"),
+            alternativeNamesRes = listOf(R.string.plant_liguster_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Beeren", "Blätter"),
+            toxicPartsRes = listOf(R.string.plant_liguster_part_1, R.string.plant_liguster_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Durchfall"),
-            identificationFeatures = listOf("Heckenstrauch", "Schwarze Beeren im Herbst"),
+            symptomsRes = listOf(R.string.plant_liguster_symptom_1, R.string.plant_liguster_symptom_2),
+            identificationFeaturesRes = listOf(R.string.plant_liguster_feature_1, R.string.plant_liguster_feature_2),
             bloomMonths = listOf(6, 7, 9, 10, 11),
-            habitat = listOf("Hecke", "Garten", "Park"),
-            firstAidSteps = listOf("Viel Wasser anbieten"),
+            habitatRes = listOf(R.string.plant_liguster_habitat_1, R.string.plant_liguster_habitat_2, R.string.plant_liguster_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_liguster_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "ficus",
-            name = "Ficus / Gummibaum",
+            nameRes = R.string.plant_ficus_name,
             latinName = "Ficus elastica / benjamina",
-            alternativeNames = listOf("Birkenfeige"),
+            alternativeNamesRes = listOf(R.string.plant_ficus_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Milchsaft"),
+            toxicPartsRes = listOf(R.string.plant_ficus_part_1),
             affectedSystems = listOf(PlantBodySystem.SKIN, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Reizung", "Erbrechen", "Durchfall", "Hautreizung"),
-            identificationFeatures = listOf("Glänzende Blätter", "Milchiger Saft"),
+            symptomsRes = listOf(R.string.plant_ficus_symptom_1, R.string.plant_ficus_symptom_2, R.string.plant_ficus_symptom_3, R.string.plant_ficus_symptom_4),
+            identificationFeaturesRes = listOf(R.string.plant_ficus_feature_1, R.string.plant_ficus_feature_2),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Zimmerpflanze"),
-            firstAidSteps = listOf("Spülen", "Waschen"),
+            habitatRes = listOf(R.string.plant_ficus_habitat_1),
+            firstAidStepsRes = listOf(R.string.plant_ficus_firstaid_1, R.string.plant_ficus_firstaid_2),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "weihnachtsstern",
-            name = "Weihnachtsstern",
+            nameRes = R.string.plant_weihnachtsstern_name,
             latinName = "Euphorbia pulcherrima",
-            alternativeNames = listOf("Adventsstern"),
+            alternativeNamesRes = listOf(R.string.plant_weihnachtsstern_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Milchsaft"),
+            toxicPartsRes = listOf(R.string.plant_weihnachtsstern_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN, PlantBodySystem.NERVOUS),
-            symptoms = listOf("Erbrechen", "Durchfall", "neurologische Störungen bei großen Mengen"),
-            identificationFeatures = listOf("Rote Hochblätter im Winter"),
+            symptomsRes = listOf(R.string.plant_weihnachtsstern_symptom_1, R.string.plant_weihnachtsstern_symptom_2, R.string.plant_weihnachtsstern_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_weihnachtsstern_feature_1),
             bloomMonths = listOf(11, 12, 1),
-            habitat = listOf("Zimmerpflanze"),
-            firstAidSteps = listOf("Tierarzt bei Symptomen"),
+            habitatRes = listOf(R.string.plant_weihnachtsstern_habitat_1),
+            firstAidStepsRes = listOf(R.string.plant_weihnachtsstern_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "aloevera",
-            name = "Aloe Vera",
+            nameRes = R.string.plant_aloevera_name,
             latinName = "Aloe vera",
-            alternativeNames = listOf("Wüstenlilie"),
+            alternativeNamesRes = listOf(R.string.plant_aloevera_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Blattsaft (Aloin)"),
+            toxicPartsRes = listOf(R.string.plant_aloevera_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Erbrechen", "Durchfall", "Koliken"),
-            identificationFeatures = listOf("Fleischige gezackte Blätter"),
+            symptomsRes = listOf(R.string.plant_aloevera_symptom_1, R.string.plant_aloevera_symptom_2, R.string.plant_aloevera_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_aloevera_feature_1),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Zimmerpflanze", "Heilpflanze"),
-            firstAidSteps = listOf("Tierarzt bei größeren Mengen"),
+            habitatRes = listOf(R.string.plant_aloevera_habitat_1, R.string.plant_aloevera_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_aloevera_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "geranie",
-            name = "Geranie",
+            nameRes = R.string.plant_geranie_name,
             latinName = "Pelargonium spp.",
-            alternativeNames = listOf("Pelargonie"),
+            alternativeNamesRes = listOf(R.string.plant_geranie_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Blätter", "Stängel", "Blüten"),
+            toxicPartsRes = listOf(R.string.plant_geranie_part_1, R.string.plant_geranie_part_2, R.string.plant_geranie_part_3),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN),
-            symptoms = listOf("Leichte Magen-Darm-Beschwerden", "Hautreizung"),
-            identificationFeatures = listOf("Balkonblume", "Behaarte Blätter"),
+            symptomsRes = listOf(R.string.plant_geranie_symptom_1, R.string.plant_geranie_symptom_2),
+            identificationFeaturesRes = listOf(R.string.plant_geranie_feature_1, R.string.plant_geranie_feature_2),
             bloomMonths = listOf(5, 6, 7, 8, 9, 10),
-            habitat = listOf("Balkon", "Garten"),
-            firstAidSteps = listOf("Maul spülen"),
+            habitatRes = listOf(R.string.plant_geranie_habitat_1, R.string.plant_geranie_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_geranie_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "agave",
-            name = "Agave",
+            nameRes = R.string.plant_agave_name,
             latinName = "Agave spp.",
-            alternativeNames = listOf("Hundertjährige Agave"),
+            alternativeNamesRes = listOf(R.string.plant_agave_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Blattsaft"),
+            toxicPartsRes = listOf(R.string.plant_agave_part_1),
             affectedSystems = listOf(PlantBodySystem.SKIN, PlantBodySystem.DIGESTIVE),
-            symptoms = listOf("Reizung", "Erbrechen"),
-            identificationFeatures = listOf("Große Rosetten", "Spitze fleischige Blätter"),
+            symptomsRes = listOf(R.string.plant_agave_symptom_1, R.string.plant_agave_symptom_2),
+            identificationFeaturesRes = listOf(R.string.plant_agave_feature_1, R.string.plant_agave_feature_2),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Garten", "Topfpflanze"),
-            firstAidSteps = listOf("Spülen"),
+            habitatRes = listOf(R.string.plant_agave_habitat_1, R.string.plant_agave_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_agave_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "begonie",
-            name = "Begonie",
+            nameRes = R.string.plant_begonie_name,
             latinName = "Begonia spp.",
-            alternativeNames = listOf("Schiefblatt"),
+            alternativeNamesRes = listOf(R.string.plant_begonie_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Alle Teile"),
+            toxicPartsRes = listOf(R.string.plant_begonie_part_1),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.SKIN),
-            symptoms = listOf("Leichte Reizung", "Erbrechen", "Durchfall"),
-            identificationFeatures = listOf("Asymmetrische Blätter", "Fleischige Stängel"),
+            symptomsRes = listOf(R.string.plant_begonie_symptom_1, R.string.plant_begonie_symptom_2, R.string.plant_begonie_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_begonie_feature_1, R.string.plant_begonie_feature_2),
             bloomMonths = listOf(5, 6, 7, 8, 9, 10),
-            habitat = listOf("Garten", "Zimmer"),
-            firstAidSteps = listOf("Maul spülen"),
+            habitatRes = listOf(R.string.plant_begonie_habitat_1, R.string.plant_begonie_habitat_2),
+            firstAidStepsRes = listOf(R.string.plant_begonie_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "wacholder",
-            name = "Wacholder",
+            nameRes = R.string.plant_wacholder_name,
             latinName = "Juniperus communis",
-            alternativeNames = listOf("Feuerbaum"),
+            alternativeNamesRes = listOf(R.string.plant_wacholder_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Beeren", "Nadeln"),
+            toxicPartsRes = listOf(R.string.plant_wacholder_part_1, R.string.plant_wacholder_part_2),
             affectedSystems = listOf(PlantBodySystem.DIGESTIVE, PlantBodySystem.KIDNEYS),
-            symptoms = listOf("Leichte Magen-Darm-Beschwerden", "Nierenreizung bei großen Mengen"),
-            identificationFeatures = listOf("Immergrüner Nadelstrauch", "Blaue Scheinbeeren"),
+            symptomsRes = listOf(R.string.plant_wacholder_symptom_1, R.string.plant_wacholder_symptom_2),
+            identificationFeaturesRes = listOf(R.string.plant_wacholder_feature_1, R.string.plant_wacholder_feature_2),
             bloomMonths = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-            habitat = listOf("Heide", "Wald", "Garten"),
-            firstAidSteps = listOf("Viel Wasser"),
+            habitatRes = listOf(R.string.plant_wacholder_habitat_1, R.string.plant_wacholder_habitat_2, R.string.plant_wacholder_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_wacholder_firstaid_1),
             mustCallVet = false
         ),
 
         ToxicPlant(
             id = "riesenbaerenklau",
-            name = "Riesenbärenklau",
+            nameRes = R.string.plant_riesenbaerenklau_name,
             latinName = "Heracleum mantegazzianum",
-            alternativeNames = listOf("Herkulesstaude"),
+            alternativeNamesRes = listOf(R.string.plant_riesenbaerenklau_alt_1),
             toxicityLevel = PlantToxicityLevel.SLIGHTLY_TOXIC,
-            toxicParts = listOf("Saft der Blätter und Stängel"),
+            toxicPartsRes = listOf(R.string.plant_riesenbaerenklau_part_1),
             affectedSystems = listOf(PlantBodySystem.SKIN),
-            symptoms = listOf("Phototoxische Verbrennungen", "Rötung", "Blasen bei Sonnenlicht"),
-            identificationFeatures = listOf("Sehr große Staude (bis 3-4m)", "Große weiße Dolden"),
+            symptomsRes = listOf(R.string.plant_riesenbaerenklau_symptom_1, R.string.plant_riesenbaerenklau_symptom_2, R.string.plant_riesenbaerenklau_symptom_3),
+            identificationFeaturesRes = listOf(R.string.plant_riesenbaerenklau_feature_1, R.string.plant_riesenbaerenklau_feature_2),
             bloomMonths = listOf(6, 7, 8),
-            habitat = listOf("Wegrand", "Ufer", "Waldrand"),
-            firstAidSteps = listOf("Sofort mit Wasser und Seife waschen", "Vor Sonne schützen"),
+            habitatRes = listOf(R.string.plant_riesenbaerenklau_habitat_1, R.string.plant_riesenbaerenklau_habitat_2, R.string.plant_riesenbaerenklau_habitat_3),
+            firstAidStepsRes = listOf(R.string.plant_riesenbaerenklau_firstaid_1, R.string.plant_riesenbaerenklau_firstaid_2),
             mustCallVet = true,
-            note = "Dermatotoxisch. Kontakt mit Saft + UV-Licht führt zu schweren Verbrennungen."
+            noteRes = R.string.plant_riesenbaerenklau_note
         )
     )
 
     // ── Suchfunktionen ───────────────────────────────────────────
 
-    fun search(query: String): List<ToxicPlant> {
+    fun search(context: android.content.Context, query: String): List<ToxicPlant> {
         if (query.length < 2) return plants
         val q = query.lowercase().trim()
-        return plants.filter { it.allSearchNames().contains(q) }
+        return plants.filter { it.allSearchNames(context).contains(q) }
     }
 
     fun getBySeason(): List<ToxicPlant> {
@@ -1001,17 +1006,21 @@ object ToxicPlantDatabase {
             .sortedByDescending { it.toxicityLevel.ordinal }
     }
 
-    fun getByToxicity(level: PlantToxicityLevel): List<ToxicPlant> =
+    fun getByToxicity(context: android.content.Context, level: PlantToxicityLevel): List<ToxicPlant> =
         plants.filter { it.toxicityLevel == level }
-            .sortedBy { it.name }
+            .sortedBy { it.name(context) }
 
     fun getById(id: String): ToxicPlant? =
         plants.firstOrNull { it.id == id }
 
-    fun currentMonth(): String {
-        val months = arrayOf("Januar", "Februar", "März", "April", "Mai", "Juni",
-                             "Juli", "August", "September", "Oktober", "November", "Dezember")
-        return months[Calendar.getInstance().get(Calendar.MONTH)]
+    fun currentMonth(context: android.content.Context): String {
+        val months = arrayOf(
+            R.string.month_january, R.string.month_february, R.string.month_march,
+            R.string.month_april, R.string.month_may, R.string.month_june,
+            R.string.month_july, R.string.month_august, R.string.month_september,
+            R.string.month_october, R.string.month_november, R.string.month_december
+        )
+        return context.getString(months[Calendar.getInstance().get(Calendar.MONTH)])
     }
 
     fun currentMonthInt(): Int =

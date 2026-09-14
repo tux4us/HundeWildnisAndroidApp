@@ -76,8 +76,8 @@ class FirstAidWizardActivity : SecureBaseActivity() {
     private fun showSubCategories(mainCategory: EmergencyMainCategory) {
         currentStep = WizardStep.SUB_CATEGORY
 
-        binding.tvStepTitle.text = mainCategory.displayName
-        binding.tvStepSubtitle.text = "Welche Art von ${mainCategory.displayName.lowercase()}?"
+        binding.tvStepTitle.text = mainCategory.displayName(this)
+        binding.tvStepSubtitle.text = getString(R.string.first_aid_wizard_subcategory_question, mainCategory.displayName(this).lowercase())
 
         binding.btnBack.visibility = View.VISIBLE
 
@@ -117,19 +117,20 @@ class FirstAidWizardActivity : SecureBaseActivity() {
             return
         }
 
-        val questions = FirstAidInstructions.getSymptomChecks(emergencyType)
+        val questions = FirstAidInstructions.getSymptomChecks(this, emergencyType)
         if (questions.isEmpty()) {
             showInstructions(emergencyType)
             return
         }
 
-        binding.tvStepTitle.text = "SCHNELL-CHECK"
-        binding.tvStepSubtitle.text = instruction.title
+        binding.tvStepTitle.text = getString(R.string.first_aid_wizard_quick_check)
+        binding.tvStepSubtitle.text = instruction.title(this)
         binding.btnBack.visibility = View.VISIBLE
 
         binding.rvOptions.layoutManager = LinearLayoutManager(this)
 
         val adapter = SymptomCheckAdapter(
+            context = this,
             questions = questions,
             onAllAnswered = { results ->
                 symptomCheckResults.clear()
@@ -145,7 +146,7 @@ class FirstAidWizardActivity : SecureBaseActivity() {
 
         val instruction = FirstAidInstructions.getAll()[emergencyType]
         if (instruction == null) {
-            Toast.makeText(this, "Anleitung nicht gefunden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.first_aid_instruction_not_found), Toast.LENGTH_SHORT).show()
             finish()
             return
         }

@@ -37,17 +37,18 @@ class PlantListAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val plant = items[position]
 
-        holder.tvName.text    = plant.name
+        val ctx = holder.itemView.context
+        holder.tvName.text    = plant.name(ctx)
         holder.tvLatin.text   = plant.latinName
-        holder.tvToxicity.text = "${plant.toxicityLevel.icon} ${plant.toxicityLevel.displayName}"
+        holder.tvToxicity.text = "${plant.toxicityLevel.icon} ${plant.toxicityLevel.displayName(ctx)}"
         holder.tvSystems.text = plant.affectedSystems.take(2)
-            .joinToString(", ") { it.displayName } +
-            if (plant.affectedSystems.size > 2) " +" else ""
+            .joinToString(", ") { it.displayName(ctx) } +
+                if (plant.affectedSystems.size > 2) " +" else ""
 
         // Saisonaler Indikator
         if (plant.isCurrentlySeasonal()) {
             holder.tvSeasonal.visibility = View.VISIBLE
-            holder.tvSeasonal.text = "⚠️ Aktuell"
+            holder.tvSeasonal.text = ctx.getString(R.string.plant_list_currently_seasonal)
         } else {
             holder.tvSeasonal.visibility = View.GONE
         }

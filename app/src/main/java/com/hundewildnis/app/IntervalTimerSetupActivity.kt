@@ -131,12 +131,12 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
 
     private fun setupQuickProfiles() {
         val profiles = listOf(
-            "Standard (45s / 30s / 6 Runden)"      to IntervalTimerConfig(),
-            "Welpe – sanft (20s / 40s / 4 Runden)" to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.PUPPY),
-            "Senior – ruhig (30s / 60s / 5 Runden)" to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.SENIOR),
-            "Energiegeladen (60s / 30s / 8 Runden)" to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.ENERGETIC),
-            "Arbeitshund (90s / 30s / 8 Runden)"    to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.WORKING_DOG),
-            "Tierschutzhund (20s / 50s / 4 Runden)" to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.RESCUE_DOG),
+            getString(R.string.interval_timer_preset_standard)    to IntervalTimerConfig(),
+            getString(R.string.interval_timer_preset_puppy)       to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.PUPPY),
+            getString(R.string.interval_timer_preset_senior)      to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.SENIOR),
+            getString(R.string.interval_timer_preset_energetic)   to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.ENERGETIC),
+            getString(R.string.interval_timer_preset_working_dog) to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.WORKING_DOG),
+            getString(R.string.interval_timer_preset_rescue_dog)  to IntervalTimerConfig.fromQuickProfile(QuickCharacterProfile.RESCUE_DOG),
         )
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, profiles.map { it.first })

@@ -190,7 +190,7 @@ class PlantDetailActivity : SecureBaseActivity() {
 
     private fun savePhotoToSlot(sourceUri: Uri) {
         if (activeSlot == -1) return
-        
+
         val success = PlantPhotoManager.savePhotoAtSlot(this, plant.id, activeSlot, sourceUri)
         if (success) renderPhotoSlots()
         else Toast.makeText(this, "Foto konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show()
@@ -199,7 +199,7 @@ class PlantDetailActivity : SecureBaseActivity() {
     private fun deletePhotoAtSlot(slotIndex: Int) {
         val photos = PlantPhotoManager.getPhotos(this, plant.id)
         val path = photos.getOrNull(slotIndex) ?: return
-        
+
         AlertDialog.Builder(this)
             .setTitle("Foto löschen?")
             .setMessage("Das Foto wird dauerhaft gelöscht.")
@@ -221,7 +221,7 @@ class PlantDetailActivity : SecureBaseActivity() {
 
     private fun setupToolbar(plant: ToxicPlant) {
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply { title = plant.name; setDisplayHomeAsUpEnabled(true) }
+        supportActionBar?.apply { title = plant.name(this@PlantDetailActivity); setDisplayHomeAsUpEnabled(true) }
         val bgColor = when (plant.toxicityLevel) {
             PlantToxicityLevel.DEADLY           -> "#7B0000"
             PlantToxicityLevel.HIGHLY_TOXIC     -> "#C62828"
@@ -232,35 +232,35 @@ class PlantDetailActivity : SecureBaseActivity() {
     }
 
     private fun renderHeader(plant: ToxicPlant) {
-        binding.tvPlantName.text     = plant.name
+        binding.tvPlantName.text     = plant.name(this)
         binding.tvLatinName.text     = plant.latinName
         binding.tvToxicityIcon.text  = plant.toxicityLevel.icon
-        binding.tvToxicityLabel.text = plant.toxicityLevel.displayName
+        binding.tvToxicityLabel.text = plant.toxicityLevel.displayName(this)
         binding.cardToxicity.setCardBackgroundColor(Color.parseColor(plant.toxicityLevel.color))
         binding.tvAltNames.visibility =
-            if (plant.alternativeNames.isNotEmpty()) View.VISIBLE else View.GONE
+            if (plant.alternativeNames(this).isNotEmpty()) View.VISIBLE else View.GONE
         binding.tvAltNames.text =
-            "Auch bekannt als: ${plant.alternativeNames.joinToString(", ")}"
-        binding.tvToxicParts.text  = "☠️ Giftige Teile: ${plant.toxicParts.joinToString(", ")}"
-        binding.tvBodySystems.text = "🫀 Betroffen: ${plant.affectedSystems.joinToString(", ") { it.displayName }}"
+            getString(R.string.plant_detail_also_known_as, plant.alternativeNames(this).joinToString(", "))
+        binding.tvToxicParts.text  = getString(R.string.plant_detail_toxic_parts, plant.toxicParts(this).joinToString(", "))
+        binding.tvBodySystems.text = getString(R.string.plant_detail_affected_systems, plant.affectedSystems.joinToString(", ") { it.displayName(this) })
         binding.cardSeasonHint.visibility =
             if (plant.isCurrentlySeasonal()) View.VISIBLE else View.GONE
-        binding.tvSeasonHint.text = "⚠️ Aktuell relevant – ${ToxicPlantDatabase.currentMonth()}"
+        binding.tvSeasonHint.text = getString(R.string.plant_detail_currently_relevant, ToxicPlantDatabase.currentMonth(this))
     }
 
     private fun renderIdentification(plant: ToxicPlant) {
-        addBulletList(binding.layoutIdentification, plant.identificationFeatures, "#4CAF50", "?android:attr/textColorPrimary")
-        binding.tvHabitat.text = "📍 Vorkommen: ${plant.habitat.joinToString(", ")}"
+        addBulletList(binding.layoutIdentification, plant.identificationFeatures(this), "#4CAF50", "?android:attr/textColorPrimary")
+        binding.tvHabitat.text = getString(R.string.plant_detail_habitat, plant.habitat(this).joinToString(", "))
     }
 
     private fun renderSymptoms(plant: ToxicPlant) {
-        addBulletList(binding.layoutSymptoms, plant.symptoms,
+        addBulletList(binding.layoutSymptoms, plant.symptoms(this),
             String.format("#%06X", 0xFFFFFF and Color.parseColor(plant.toxicityLevel.color)), "#FFCDD2")
     }
 
     private fun renderFirstAid(plant: ToxicPlant) {
         binding.layoutFirstAid.removeAllViews()
-        plant.firstAidSteps.forEachIndexed { idx, step ->
+        plant.firstAidSteps(this).forEachIndexed { idx, step ->
             binding.layoutFirstAid.addView(TextView(this).apply {
                 text = "${idx + 1}. $step"; textSize = 14f
                 setTextColor(Color.parseColor("#C8E6C9")); setPadding(0, 8, 0, 8)
@@ -270,13 +270,13 @@ class PlantDetailActivity : SecureBaseActivity() {
     }
 
     private fun renderAdditionalInfo(plant: ToxicPlant) {
-        plant.confusionRisk?.let {
+        plant.confusionRisk(this)?.let {
             binding.cardConfusion.visibility = View.VISIBLE
-            binding.tvConfusionRisk.text = "⚠️ Verwechslungsgefahr: $it"
+            binding.tvConfusionRisk.text = getString(R.string.plant_detail_confusion_risk, it)
         } ?: run { binding.cardConfusion.visibility = View.GONE }
-        plant.note?.let {
+        plant.note(this)?.let {
             binding.cardNote.visibility = View.VISIBLE
-            binding.tvNote.text = "ℹ️ $it"
+            binding.tvNote.text = getString(R.string.plant_detail_note, it)
         } ?: run { binding.cardNote.visibility = View.GONE }
     }
 
@@ -284,14 +284,14 @@ class PlantDetailActivity : SecureBaseActivity() {
         val colors = StartGroupColors.forGroup(this, 3) // Braun/Ocker (ignoriert bei isDanger)
         binding.gridOpenEmergency.layoutManager = GridLayoutManager(this, 1)
         binding.gridOpenEmergency.adapter = StartTileAdapter(
-            tiles = listOf(StartTile("open_emergency", R.drawable.ic_emergency, "🚨 Notfall-Assistent öffnen", isDanger = true)),
+            tiles = listOf(StartTile("open_emergency", R.drawable.ic_emergency, getString(R.string.plant_detail_open_emergency), isDanger = true)),
             chipColorRes = colors.chipColorRes,
             accentColorRes = colors.accentColorRes,
             onTileClick = {
                 startActivity(Intent(this, FirstAidWizardActivity::class.java).apply {
                     putExtra("preselect_main", "ACCIDENT")
                     putExtra("preselect_sub", "POISONING_KNOWN")
-                    putExtra("poison_name", plant.name)
+                    putExtra("poison_name", plant.name(this@PlantDetailActivity))
                 })
             }
         )

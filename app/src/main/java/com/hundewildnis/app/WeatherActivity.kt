@@ -185,7 +185,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
             }
         } catch (e: Exception) {}
-        
+
         try {
             if (locationManager.allProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE, this)
@@ -225,7 +225,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             setSingleLine()
             setPadding(48, 32, 48, 32)
         }
-        
+
         AlertDialog.Builder(this)
             .setTitle("🌍 Ort suchen")
             .setView(input)
@@ -243,20 +243,20 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         currentLat = latitude
         currentLon = longitude
         currentCityName = cityName
-        
+
         binding.progressBar.visibility = View.VISIBLE
         updateFavoriteIcon()
-        
+
         val displayLoc = cityName ?: String.format(Locale.GERMAN, "%.4f°, %.4f°", latitude, longitude)
         binding.locationText.text = "📍 $displayLoc"
-        
+
         lifecycleScope.launch {
             try {
                 // Falls cityName null ist, versuchen wir ihn via Reverse-Geocoding zu finden
                 val nameToUse = cityName ?: withContext(Dispatchers.IO) {
                     reverseGeocode(latitude, longitude)
                 }
-                
+
                 if (nameToUse != null) {
                     currentCityName = nameToUse
                     binding.locationText.text = "📍 $nameToUse"
@@ -906,23 +906,23 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
     private fun setupRainRadar(lat: Double, lon: Double) {
         binding.radarWebView.settings.apply {
-                javaScriptEnabled = true
-                domStorageEnabled = true
-                databaseEnabled = true
-                allowFileAccess = true
-                allowContentAccess = true
-                mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-            }
-            binding.radarWebView.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    if (url.contains("leafletjs.com") || url.contains("openstreetmap.org") || url.contains("rainviewer.com")) {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                        return true
-                    }
-                    return false
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            databaseEnabled = true
+            allowFileAccess = true
+            allowContentAccess = true
+            mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        }
+        binding.radarWebView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                if (url.contains("leafletjs.com") || url.contains("openstreetmap.org") || url.contains("rainviewer.com")) {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    return true
                 }
+                return false
             }
-            val html = """<!DOCTYPE html>
+        }
+        val html = """<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -949,7 +949,7 @@ function pauseAnimation(){ isPlaying=false; document.getElementById('playBtn').i
 function stopAnimation(){ pauseAnimation(); if(radarLayers.length>0){ radarLayers[currentFrame].remove(); currentFrame=radarLayers.length-1; radarLayers[currentFrame].addTo(map); updateTimestamp(); } }
 function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(timestamps[currentFrame].time*1000); document.getElementById('timestamp').textContent='📡 Radar: '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr'; } }
 </script></body></html>"""
-            binding.radarWebView.loadDataWithBaseURL("https://hundewildnis.com", html, "text/html", "UTF-8", null)
+        binding.radarWebView.loadDataWithBaseURL("https://hundewildnis.com", html, "text/html", "UTF-8", null)
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -1966,12 +1966,12 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     // ── UV-Hilfsfunktionen ────────────────────────────────────────────────────
 
     private fun uvIndexLabel(uv: Double): String = when {
-        uv < 1  -> "Minimal"
-        uv < 3  -> "Gering"
-        uv < 6  -> "Mittel"
-        uv < 8  -> "Hoch"
-        uv < 11 -> "Sehr hoch"
-        else    -> "Extrem"
+        uv < 1  -> getString(R.string.uv_index_minimal)
+        uv < 3  -> getString(R.string.uv_index_low)
+        uv < 6  -> getString(R.string.uv_index_medium)
+        uv < 8  -> getString(R.string.uv_index_high)
+        uv < 11 -> getString(R.string.uv_index_very_high)
+        else    -> getString(R.string.uv_index_extreme)
     }
 
     private fun uvIndexColor(uv: Double): Int = when {
@@ -1986,34 +1986,26 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     private fun buildUvProtectionText(peakUv: Double): String {
         if (peakUv < 3.0) return ""
         return buildString {
-            append("🔆 UV-Schutzempfehlung (Tages-Maximum: ${String.format(Locale.GERMAN, "%.1f", peakUv)}):\n\n")
+            append(getString(R.string.uv_protection_header, String.format(Locale.getDefault(), "%.1f", peakUv))).append("\n\n")
             when {
                 peakUv < 6 -> {
-                    append("👤 Mensch: Sonnenschutz empfohlen bei längeren Aufenthalten draussen.\n\n")
-                    append("🐕 Hund: Helle oder dünn behaarte Hunde" +
-                            "sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen.")
+                    append(getString(R.string.uv_protection_human_moderate)).append("\n\n")
+                    append(getString(R.string.uv_protection_dog_moderate))
                 }
                 peakUv < 8 -> {
-                    append("👤 Mensch: Sonnenschutz, gegebenenfalls Kopfbedeckung und Sonnenbrille empfohlen. " +
-                            "Mittagssonne meiden.\n\n")
-                    append("🐕 Hund: Trainingseinheiten vor 10 oder nach 16 Uhr legen. " +
-                            "Tagsüber Schatten bevorzugen.")
+                    append(getString(R.string.uv_protection_human_high)).append("\n\n")
+                    append(getString(R.string.uv_protection_dog_high))
                 }
                 peakUv < 11 -> {
-                    append("👤 Mensch: Sonnenschutz beachten, Schatten bevorzugen, zwischen 11 und 16 Uhr dauerhaften Aufenthalt in der Sonne vermeiden.\n\n")
-                    append("🐕 Hund: Training auf frühe Morgen- oder Abendstunden verschieben. " +
-                            "Ausreichend Wasser mitführen." +
-                            "Asphaltstrassen vermeiden" +
-                            "Im schattigen Umfeld bewegen")
+                    append(getString(R.string.uv_protection_human_very_high)).append("\n\n")
+                    append(getString(R.string.uv_protection_dog_very_high))
                 }
                 else -> {
-                    append("⚠️ Extrem-UV! Mensch: Aufenthalt im Freien so kurz wie möglich.\n\n")
-                    append("🐕 Hund: Training heute meiden. Bei notwendigen Runden: " +
-                            "schattige Routen wählen, sonnige Exposition minimieren. " +
-                            "Trinkwasser mitführen. Hund regelmäßig auf der Bauchseite anfeuchten.")
+                    append(getString(R.string.uv_protection_human_extreme)).append("\n\n")
+                    append(getString(R.string.uv_protection_dog_extreme))
                 }
             }
-            append("\n\n⚕️ Kein Ersatz für tierärztliche Beratung.")
+            append("\n\n").append(getString(R.string.uv_protection_vet_disclaimer))
         }
     }
 
@@ -2272,6 +2264,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
             // ── Biowetter-Bewertung ────────────────────────────────────────
             val result = BiowetterEngine.evaluate(
+                context        = this,
                 pressureHourly = recentPressures,
                 tempC          = tempC,
                 relHumidityPct = humidity,
@@ -2282,7 +2275,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             )
 
             // ── Gesamtampel ────────────────────────────────────────────────
-            binding.biowetterOverallBadge.text = "● ${result.overallLevel.label}"
+            binding.biowetterOverallBadge.text = "● ${result.overallLevel.label(this)}"
             binding.biowetterOverallBadge.setTextColor(result.overallLevel.color)
             binding.biowetterSummaryText.text  = result.overallSummary
             binding.biowetterAdviceText.text   = result.trainingAdvice
@@ -2316,7 +2309,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                     )
                 }
                 val levelDot = android.widget.TextView(this).apply {
-                    text = "● ${indicator.level.label}"
+                    text = "● ${indicator.level.label(this@WeatherActivity)}"
                     textSize = 12f
                     setTextColor(indicator.level.color)
                 }
@@ -2385,13 +2378,13 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
         val message = buildString {
             append("${indicator.valueText}\n\n")
-            append("👤 Auswirkung Mensch:\n${indicator.humanEffect}\n\n")
-            append("🐕 Hund & Training:\n${indicator.dogEffect}\n\n")
-            append("⚕️ Kein Ersatz für medizinische oder tierärztliche Beratung.")
+            append(getString(R.string.biowetter_dialog_human_effect, indicator.humanEffect)).append("\n\n")
+            append(getString(R.string.biowetter_dialog_dog_effect, indicator.dogEffect)).append("\n\n")
+            append(getString(R.string.biowetter_dialog_disclaimer))
         }
 
         AlertDialog.Builder(this)
-            .setTitle("${indicator.emoji} ${indicator.name} – ${indicator.level.label}")
+            .setTitle("${indicator.emoji} ${indicator.name} – ${indicator.level.label(this)}")
             .setMessage(message)
             .setPositiveButton("OK", null)
             .create().apply {

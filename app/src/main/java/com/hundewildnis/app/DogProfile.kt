@@ -1,5 +1,6 @@
 package com.hundewildnis.app
 
+import android.content.Context
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -256,8 +257,6 @@ data class DogProfile(
 // ════════════════════════════════════════════════════════════════
 
 enum class QuickCharacterProfile(
-    val displayName: String,
-    val description: String,
     val temperament: Int,
     val confidence: Int,
     val social: Int,
@@ -266,71 +265,77 @@ enum class QuickCharacterProfile(
     val frustration: Int
 ) {
     BALANCED(
-        displayName = "Ausgeglichen",
-        description = "Normales, ausgeglichenes Wesen ohne besondere Auffälligkeiten",
         temperament = 3, confidence = 3, social = 3,
         excitability = 3, learning = 3, frustration = 3
     ),
     ENERGETIC(
-        displayName = "Energiegeladen",
-        description = "Sehr aktiv, lebhaft, immer in Bewegung, braucht viel Auslastung",
         temperament = 5, confidence = 4, social = 4,
         excitability = 5, learning = 4, frustration = 3
     ),
     CALM(
-        displayName = "Sehr ruhig",
-        description = "Gelassen, entspannt, wenig Bewegungsdrang, genießt Ruhe",
         temperament = 1, confidence = 3, social = 3,
         excitability = 1, learning = 2, frustration = 4
     ),
     ANXIOUS(
-        displayName = "Unsicher",
-        description = "Ängstlich, zurückhaltend, braucht viel Sicherheit und Geduld",
         temperament = 2, confidence = 1, social = 2,
         excitability = 4, learning = 3, frustration = 2
     ),
     CONFIDENT(
-        displayName = "Sehr selbstbewusst",
-        description = "Selbstsicher, mutig, geht neue Situationen aktiv an",
         temperament = 4, confidence = 5, social = 4,
         excitability = 3, learning = 4, frustration = 4
     ),
     PUPPY(
-        displayName = "Welpe (4-8 Monate)",
-        description = "Verspielt, neugierig, leicht ablenkbar, lernt schnell aber unkonzentriert",
         temperament = 4, confidence = 3, social = 4,
         excitability = 5, learning = 4, frustration = 2
     ),
     SENIOR(
-        displayName = "Senior (8+ Jahre)",
-        description = "Ruhiger, bedächtiger, braucht längere Lernphasen und Ruhepausen",
         temperament = 2, confidence = 3, social = 3,
         excitability = 2, learning = 2, frustration = 4
     ),
     WORKING_DOG(
-        displayName = "Arbeitshund",
-        description = "Fokussiert, ausdauernd, braucht klare Aufgaben und Struktur",
         temperament = 4, confidence = 4, social = 3,
         excitability = 3, learning = 5, frustration = 4
     ),
     SOCIAL_BUTTERFLY(
-        displayName = "Sehr sozial",
-        description = "Liebt andere Hunde und Menschen, sehr kontaktfreudig",
         temperament = 4, confidence = 4, social = 5,
         excitability = 4, learning = 3, frustration = 3
     ),
     INDEPENDENT(
-        displayName = "Eigenständig",
-        description = "Selbstständig, braucht weniger Führung, arbeitet gerne allein",
         temperament = 3, confidence = 4, social = 2,
         excitability = 2, learning = 3, frustration = 4
     ),
     RESCUE_DOG(
-        displayName = "Tierschutzhund",
-        description = "Vorsichtig, braucht Zeit zum Vertrauen aufbauen, sensibel",
         temperament = 2, confidence = 2, social = 2,
         excitability = 3, learning = 3, frustration = 2
     );
+
+    fun displayName(context: Context): String = when (this) {
+        BALANCED -> context.getString(R.string.character_profile_balanced)
+        ENERGETIC -> context.getString(R.string.character_profile_energetic)
+        CALM -> context.getString(R.string.character_profile_calm)
+        ANXIOUS -> context.getString(R.string.character_profile_anxious)
+        CONFIDENT -> context.getString(R.string.character_profile_confident)
+        PUPPY -> context.getString(R.string.character_profile_puppy)
+        SENIOR -> context.getString(R.string.character_profile_senior)
+        WORKING_DOG -> context.getString(R.string.character_profile_working_dog)
+        SOCIAL_BUTTERFLY -> context.getString(R.string.character_profile_social_butterfly)
+        INDEPENDENT -> context.getString(R.string.character_profile_independent)
+        RESCUE_DOG -> context.getString(R.string.character_profile_rescue_dog)
+    }
+
+    fun description(context: Context): String = when (this) {
+        BALANCED -> context.getString(R.string.character_profile_balanced_desc)
+        ENERGETIC -> context.getString(R.string.character_profile_energetic_desc)
+        CALM -> context.getString(R.string.character_profile_calm_desc)
+        ANXIOUS -> context.getString(R.string.character_profile_anxious_desc)
+        CONFIDENT -> context.getString(R.string.character_profile_confident_desc)
+        PUPPY -> context.getString(R.string.character_profile_puppy_desc)
+        SENIOR -> context.getString(R.string.character_profile_senior_desc)
+        WORKING_DOG -> context.getString(R.string.character_profile_working_dog_desc)
+        SOCIAL_BUTTERFLY -> context.getString(R.string.character_profile_social_butterfly_desc)
+        INDEPENDENT -> context.getString(R.string.character_profile_independent_desc)
+        RESCUE_DOG -> context.getString(R.string.character_profile_rescue_dog_desc)
+    }
 
     fun toCharacter(): DogCharacter {
         return DogCharacter(

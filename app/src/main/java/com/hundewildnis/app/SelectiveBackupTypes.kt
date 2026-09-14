@@ -5,103 +5,60 @@ package com.hundewildnis.app
 // Neue Datei: SelectiveBackupTypes.kt
 // ════════════════════════════════════════════════════════════════
 
-enum class BackupDataType(
-    val displayName: String,
-    val description: String
-) {
-    PROFILES(
-        "Hunde-Profile",
-        "Name, Geburtsdatum, Chip-Nr, Foto, etc."
-    ),
+enum class BackupDataType {
+    PROFILES, DIARY, WALKING_SPEED, NOTES, VOICE, EMERGENCY, NASENARBEIT,
+    FAVORITES, APP_SETTINGS, WEATHER_FAVORITES, VITAL_RECORDS, INTERVAL_TIMER,
+    PLANT_PHOTOS, PLANNED_SESSIONS;
 
-    DIARY(
-        "Trainingstagebuch",
-        "Trainingseinheiten, Fortschritt, Meilensteine"
-    ),
+    fun displayName(context: android.content.Context): String = when (this) {
+        PROFILES -> context.getString(R.string.backup_type_profiles)
+        DIARY -> context.getString(R.string.backup_type_diary)
+        WALKING_SPEED -> context.getString(R.string.backup_type_walking_speed)
+        NOTES -> context.getString(R.string.backup_type_notes)
+        VOICE -> context.getString(R.string.backup_type_voice)
+        EMERGENCY -> context.getString(R.string.backup_type_emergency)
+        NASENARBEIT -> context.getString(R.string.backup_type_nasenarbeit)
+        FAVORITES -> context.getString(R.string.backup_type_favorites)
+        APP_SETTINGS -> context.getString(R.string.backup_type_app_settings)
+        WEATHER_FAVORITES -> context.getString(R.string.backup_type_weather_favorites)
+        VITAL_RECORDS -> context.getString(R.string.backup_type_vital_records)
+        INTERVAL_TIMER -> context.getString(R.string.backup_type_interval_timer)
+        PLANT_PHOTOS -> context.getString(R.string.backup_type_plant_photos)
+        PLANNED_SESSIONS -> context.getString(R.string.backup_type_planned_sessions)
+    }
 
-    WALKING_SPEED(
-        "Tempo-Messungen",
-        "Walking Speed Aufzeichnungen"
-    ),
-
-    NOTES(
-        "Notizen",
-        "Alle Notizen mit Fotos"
-    ),
-
-    VOICE(
-        "Sprachaufnahmen",
-        "Kommunikations-Sessions"
-    ),
-
-    EMERGENCY(
-        "Notfall-Meldungen",
-        "Notfallberichte mit Fotos"
-    ),
-
-    NASENARBEIT(
-        "Nasenarbeit",
-        "Alle Nasenarbeit-Sessions und Fortschritte"
-    ),
-
-    FAVORITES(
-        "Favoriten",
-        "Markierte Orte auf der Karte"
-    ),
-
-    APP_SETTINGS(
-        "App-Einstellungen",
-        "Theme, Benachrichtigungen, etc."
-    ),
-
-    WEATHER_FAVORITES(
-        "Wetter-Favoriten",
-        "Gespeicherte Orte für die Wettervorhersage"
-    ),
-
-    VITAL_RECORDS(
-        "Vitalwerte",
-        "Alle Puls- und Vitalwert-Messungen"
-    ),
-
-    // ✅ NEU
-    INTERVAL_TIMER(
-        "Intervall-Timer",
-        "Alle Timer-Sessions"
-    ),
-
-    // ✅ NEU
-    PLANT_PHOTOS(
-        "Pflanzen-Fotos",
-        "Eigene Fotos zu Gefahrenpflanzen"
-    ),
-
-    PLANNED_SESSIONS(
-    "Trainingsplanung",
-    "Geplante Trainingseinheiten im Aktivitätskalender"
-    )
-
-
+    fun description(context: android.content.Context): String = when (this) {
+        PROFILES -> context.getString(R.string.backup_type_profiles_desc)
+        DIARY -> context.getString(R.string.backup_type_diary_desc)
+        WALKING_SPEED -> context.getString(R.string.backup_type_walking_speed_desc)
+        NOTES -> context.getString(R.string.backup_type_notes_desc)
+        VOICE -> context.getString(R.string.backup_type_voice_desc)
+        EMERGENCY -> context.getString(R.string.backup_type_emergency_desc)
+        NASENARBEIT -> context.getString(R.string.backup_type_nasenarbeit_desc)
+        FAVORITES -> context.getString(R.string.backup_type_favorites_desc)
+        APP_SETTINGS -> context.getString(R.string.backup_type_app_settings_desc)
+        WEATHER_FAVORITES -> context.getString(R.string.backup_type_weather_favorites_desc)
+        VITAL_RECORDS -> context.getString(R.string.backup_type_vital_records_desc)
+        INTERVAL_TIMER -> context.getString(R.string.backup_type_interval_timer_desc)
+        PLANT_PHOTOS -> context.getString(R.string.backup_type_plant_photos_desc)
+        PLANNED_SESSIONS -> context.getString(R.string.backup_type_planned_sessions_desc)
+    }
 }
 
-enum class MergeMode(
-    val displayName: String,
-    val description: String
-) {
-    ADD_NEW(
-        "Hinzufügen",
-        "Neue Daten hinzufügen, vorhandene behalten"
-    ),
+enum class MergeMode {
+    ADD_NEW, REPLACE_ALL, MERGE_BY_TIMESTAMP;
 
-    REPLACE_ALL(
-        "Ersetzen",
-        "Alle vorhandenen Daten löschen und durch Backup ersetzen"
-    ),
+    fun displayName(context: android.content.Context): String = when (this) {
+        ADD_NEW -> context.getString(R.string.merge_mode_add_new)
+        REPLACE_ALL -> context.getString(R.string.merge_mode_replace_all)
+        MERGE_BY_TIMESTAMP -> context.getString(R.string.merge_mode_merge_by_timestamp)
+    }
 
-    MERGE_BY_TIMESTAMP(
-        "Zusammenführen",
-        "Neueste Version jedes Eintrags behalten"
-    )
+    fun description(context: android.content.Context): String = when (this) {
+        ADD_NEW -> context.getString(R.string.merge_mode_add_new_desc)
+        REPLACE_ALL -> context.getString(R.string.merge_mode_replace_all_desc)
+        MERGE_BY_TIMESTAMP -> context.getString(R.string.merge_mode_merge_by_timestamp_desc)
+    }
 }
 
 data class BackupContainer(

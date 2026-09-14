@@ -23,7 +23,7 @@ class MainCategoryAdapter(
     private val onCategoryClick: (EmergencyMainCategory) -> Unit
 ) : RecyclerView.Adapter<MainCategoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemEmergencyCategoryBinding) : 
+    inner class ViewHolder(val binding: ItemEmergencyCategoryBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,10 +35,10 @@ class MainCategoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = categories[position]
-        
+
         holder.binding.tvCategoryIcon.text = category.icon
-        holder.binding.tvCategoryName.text = category.displayName
-        
+        holder.binding.tvCategoryName.text = category.displayName(holder.itemView.context)
+
         holder.binding.root.setOnClickListener {
             onCategoryClick(category)
         }
@@ -55,7 +55,7 @@ class AccidentTypeAdapter(
     private val onTypeClick: (AccidentType) -> Unit
 ) : RecyclerView.Adapter<AccidentTypeAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemEmergencySubcategoryBinding) : 
+    inner class ViewHolder(val binding: ItemEmergencySubcategoryBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -67,14 +67,14 @@ class AccidentTypeAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val type = types[position]
-        
+
         holder.binding.tvIcon.text = type.icon
-        holder.binding.tvName.text = type.displayName
-        holder.binding.tvUrgency.text = type.urgency.displayName
-        
+        holder.binding.tvName.text = type.displayName(holder.itemView.context)
+        holder.binding.tvUrgency.text = type.urgency.displayName(holder.itemView.context)
+
         val urgencyColor = Color.parseColor(type.urgency.color)
         holder.binding.viewUrgencyIndicator.setBackgroundColor(urgencyColor)
-        
+
         holder.binding.root.setOnClickListener {
             onTypeClick(type)
         }
@@ -91,7 +91,7 @@ class IllnessTypeAdapter(
     private val onTypeClick: (IllnessType) -> Unit
 ) : RecyclerView.Adapter<IllnessTypeAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemEmergencySubcategoryBinding) : 
+    inner class ViewHolder(val binding: ItemEmergencySubcategoryBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -103,14 +103,14 @@ class IllnessTypeAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val type = types[position]
-        
+
         holder.binding.tvIcon.text = type.icon
-        holder.binding.tvName.text = type.displayName
-        holder.binding.tvUrgency.text = type.urgency.displayName
-        
+        holder.binding.tvName.text = type.displayName(holder.itemView.context)
+        holder.binding.tvUrgency.text = type.urgency.displayName(holder.itemView.context)
+
         val urgencyColor = Color.parseColor(type.urgency.color)
         holder.binding.viewUrgencyIndicator.setBackgroundColor(urgencyColor)
-        
+
         holder.binding.root.setOnClickListener {
             onTypeClick(type)
         }
@@ -125,6 +125,7 @@ class IllnessTypeAdapter(
 // ════════════════════════════════════════════════════════════════
 
 class SymptomCheckAdapter(
+    private val context: android.content.Context,
     private val questions: List<SymptomCheckQuestion>,
     private val onAllAnswered: (Map<String, Boolean>) -> Unit
 ) : RecyclerView.Adapter<SymptomCheckAdapter.ViewHolder>() {
@@ -144,7 +145,7 @@ class SymptomCheckAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question = questions[position]
 
-        holder.binding.tvQuestion.text = question.question
+        holder.binding.tvQuestion.text = question.question(holder.binding.root.context)
 
         // ✅ Dark Mode Detection
         val context = holder.binding.root.context
@@ -241,7 +242,7 @@ class SymptomCheckAdapter(
         if (answers.size == questions.size) {
             // Alle Fragen beantwortet
             val results = questions.mapIndexed { index, question ->
-                question.question to (answers[index] ?: false)
+                question.question(context) to (answers[index] ?: false)
             }.toMap()
 
             onAllAnswered(results)

@@ -124,6 +124,7 @@ object NasenarbeitScorer {
     // ════════════════════════════════════════════════════════════
 
     fun calculate(
+        context: android.content.Context,
         param: NasenarbeitParameter,
         fortschritt: NasenarbeitFortschritt
     ): ScoringResult {
@@ -135,16 +136,16 @@ object NasenarbeitScorer {
 
         // ── STUFE 1: HARTE AUSSCHLÜSSE ────────────────────────
         if (param.temperaturCelsius > 30.0) {
-            return hardExclude("Temperatur über 30°C – Training nicht möglich")
+            return hardExclude(context.getString(R.string.nasenarbeit_exclusion_too_hot))
         }
         if (param.temperaturCelsius < -10.0) {
-            return hardExclude("Temperatur unter −10°C – Training nicht möglich")
+            return hardExclude(context.getString(R.string.nasenarbeit_exclusion_too_cold))
         }
         if (param.wmoCode in listOf(95, 96, 99)) {
-            return hardExclude("Gewitter – Training nicht möglich")
+            return hardExclude(context.getString(R.string.nasenarbeit_exclusion_thunderstorm))
         }
         if (param.beaufort >= 9) {
-            return hardExclude("Sturm/Orkan (Beaufort ${param.beaufort}) – Training nicht möglich")
+            return hardExclude(context.getString(R.string.nasenarbeit_exclusion_storm, param.beaufort))
         }
 
         // ── STUFE 2: BASIS-EIGNUNG ─────────────────────────────
@@ -204,7 +205,7 @@ object NasenarbeitScorer {
         }
         val primaer = empfohlen.firstOrNull() ?: NasenarbeitDisziplin.VERLORENSUCHE
 
-        val begruendung = buildBegruendung(primaer, param, firstZustand)
+        val begruendung = buildBegruendung(context, primaer, param, firstZustand)
 
         return ScoringResult(
             scores = finalScore,
@@ -317,17 +318,16 @@ object NasenarbeitScorer {
         hardExclusionReason = reason
     )
 
-    private fun buildBegruendung(diz: NasenarbeitDisziplin, param: NasenarbeitParameter, zustand: String): String {
+    private fun buildBegruendung(context: android.content.Context, diz: NasenarbeitDisziplin, param: NasenarbeitParameter, zustand: String): String {
         val sb = StringBuilder()
-        sb.append(diz.displayName)
-        sb.append(" ist heute optimal. ")
+        sb.append(context.getString(R.string.nasenarbeit_begruendung_optimal, diz.displayName(context)))
         when {
             zustand in listOf("feucht","nass","stehend","matschig") && diz == NasenarbeitDisziplin.VERLORENSUCHE ->
-                sb.append("Feuchter Boden begünstigt die Spurhaltung.")
+                sb.append(context.getString(R.string.nasenarbeit_begruendung_wet_ground))
             zustand == "trocken" && diz == NasenarbeitDisziplin.PERSONENSUCHE ->
-                sb.append("Trockener Boden eignet sich gut für Personensuche.")
+                sb.append(context.getString(R.string.nasenarbeit_begruendung_dry_ground))
             param.beaufort in 6..8 && diz == NasenarbeitDisziplin.FREISUCHE ->
-                sb.append("Starker Wind begünstigt die Freisuche.")
+                sb.append(context.getString(R.string.nasenarbeit_begruendung_strong_wind))
         }
         return sb.toString()
     }

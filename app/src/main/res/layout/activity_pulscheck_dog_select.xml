@@ -17,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:titleTextColor="?attr/colorOnPrimary"
-            app:title="❤️ Pulscheck – Hund wählen" />
+            app:title="@string/pulscheck_dog_select_toolbar_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Für welchen Hund möchtest Du Vitalwerte messen?"
+                android:text="@string/pulscheck_dog_select_question"
                 android:textSize="15sp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
@@ -58,7 +58,7 @@
                 android:id="@+id/tvNoDogs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kein Hund angelegt.\n\nBitte lege zuerst einen Hund in den Stammdaten an."
+                android:text="@string/pulscheck_dog_select_no_dogs"
                 android:textSize="15sp"
                 android:textAlignment="center"
                 android:padding="32dp"

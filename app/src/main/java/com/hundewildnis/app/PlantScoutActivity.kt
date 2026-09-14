@@ -70,7 +70,7 @@ class PlantScoutActivity : SecureBaseActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "🌿 Gefahrenpflanzen-Scout"
+            title = getString(R.string.plant_scout_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
         // Hamburger-Icon durch Filter-Icon ersetzen (weist besser auf Optionen hin)
@@ -78,21 +78,21 @@ class PlantScoutActivity : SecureBaseActivity() {
     }
 
     private fun setupSeasonBanner() {
-        val month = ToxicPlantDatabase.currentMonth()
+        val month = ToxicPlantDatabase.currentMonth(this)
         val seasonal = ToxicPlantDatabase.getBySeason()
 
         if (seasonal.isNotEmpty()) {
             binding.cardSeasonBanner.visibility = View.VISIBLE
-            binding.tvSeasonTitle.text = "⚠️ Aktuell im ${month} besonders relevant"
+            binding.tvSeasonTitle.text = getString(R.string.plant_scout_season_title, month)
             val highRisk = seasonal.filter {
                 it.toxicityLevel == PlantToxicityLevel.DEADLY ||
-                it.toxicityLevel == PlantToxicityLevel.HIGHLY_TOXIC
+                        it.toxicityLevel == PlantToxicityLevel.HIGHLY_TOXIC
             }
-            val names = highRisk.take(3).joinToString(", ") { it.name }
+            val names = highRisk.take(3).joinToString(", ") { it.name(this) }
             binding.tvSeasonPlants.text = if (highRisk.isNotEmpty())
-                "Achtung: $names${if (highRisk.size > 3) " +" else ""}"
+                getString(R.string.plant_scout_season_warning, names) + (if (highRisk.size > 3) " +" else "")
             else
-                "${seasonal.size} Pflanzen in dieser Jahreszeit relevant"
+                getString(R.string.plant_scout_season_count, seasonal.size)
 
             binding.cardSeasonBanner.setOnClickListener {
                 showOnlySeasonal = true
@@ -160,7 +160,7 @@ class PlantScoutActivity : SecureBaseActivity() {
 
     private fun applyFilter() {
         var list = if (currentQuery.length >= 2)
-            ToxicPlantDatabase.search(currentQuery)
+            ToxicPlantDatabase.search(this, currentQuery)
         else
             ToxicPlantDatabase.plants
 
@@ -179,7 +179,7 @@ class PlantScoutActivity : SecureBaseActivity() {
         adapter.updateList(list)
 
         binding.tvResultCount.text = "${list.size} Pflanze(n)" +
-            if (showOnlySeasonal) " · Aktuelle Jahreszeit" else ""
+                if (showOnlySeasonal) " · Aktuelle Jahreszeit" else ""
 
         binding.tvEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }

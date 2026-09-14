@@ -29,7 +29,7 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
 
         val instructionData = FirstAidInstructions.getAll()[emergencyType]
         if (instructionData == null) {
-            Toast.makeText(this, "Anleitung nicht gefunden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.first_aid_instruction_not_found), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -43,7 +43,7 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "🚨 Erste Hilfe"
+            title = getString(R.string.first_aid_instruction_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -54,33 +54,34 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
 
     private fun displayInstruction() {
         // Header
-        binding.tvTitle.text = instruction.title
-        binding.tvUrgency.text = instruction.urgency.displayName
+        binding.tvTitle.text = instruction.title(this)
+        binding.tvUrgency.text = instruction.urgency.displayName(this)
 
         val urgencyColor = android.graphics.Color.parseColor(instruction.urgency.color)
         binding.cardUrgency.setCardBackgroundColor(urgencyColor)
 
         // Symptome
-        binding.tvSymptoms.text = instruction.symptoms.joinToString("\n") { "• $it" }
+        binding.tvSymptoms.text = instruction.symptoms(this).joinToString("\n") { "• $it" }
         binding.tvSymptoms.setTextColor(android.graphics.Color.parseColor("#B71C1C"))
 
         // Sofortmaßnahmen
-        binding.tvImmediateActions.text = instruction.immediateActions.joinToString("\n")
+        binding.tvImmediateActions.text = instruction.immediateActions(this).joinToString("\n")
         binding.tvImmediateActions.setTextColor(android.graphics.Color.parseColor("#1B5E20"))
 
         // Was TUN
-        binding.tvDoList.text = instruction.doList.joinToString("\n")
+        binding.tvDoList.text = instruction.doList(this).joinToString("\n")
 
         // Was NICHT tun
-        binding.tvDontList.text = instruction.dontList.joinToString("\n")
+        binding.tvDontList.text = instruction.dontList(this).joinToString("\n")
 
         // Transport
-        binding.tvTransportInfo.text = instruction.transportInfo
+        binding.tvTransportInfo.text = instruction.transportInfo(this)
 
         // Spezielle Hinweise
-        if (!instruction.specialNotes.isNullOrEmpty()) {
+        val specialNotesText = instruction.specialNotes(this)
+        if (!specialNotesText.isNullOrEmpty()) {
             binding.cardSpecialNotes.visibility = View.VISIBLE
-            binding.tvSpecialNotes.text = instruction.specialNotes
+            binding.tvSpecialNotes.text = specialNotesText
         } else {
             binding.cardSpecialNotes.visibility = View.GONE
         }
@@ -95,7 +96,7 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
         // Timer Button
         if (instruction.needsTimer) {
             binding.btnTimer.visibility = View.VISIBLE
-            binding.btnTimer.text = "⏱️ Timer: ${instruction.timerMinutes} Min"
+            binding.btnTimer.text = getString(R.string.first_aid_instruction_timer_button, instruction.timerMinutes)
         } else {
             binding.btnTimer.visibility = View.GONE
         }
@@ -103,14 +104,14 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
 
     private fun openEmergencyReport() {
         if (profile == null) {
-            Toast.makeText(this, "Kein Hundeprofil ausgewählt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.first_aid_instruction_no_profile_selected), Toast.LENGTH_SHORT).show()
             return
         }
 
         // Öffne bestehende EmergencyActivity mit vorausgefüllten Daten
         val intent = Intent(this, EmergencyActivity::class.java)
         intent.putExtra("profile", profile)
-        intent.putExtra("prefill_symptom", instruction.title)
+        intent.putExtra("prefill_symptom", instruction.title(this))
         intent.putExtra("prefill_notes", buildEmergencyNotes())
         intent.putExtra("emergency_type", emergencyType)
         intent.putExtra("first_aid_instructions", buildInstructionText())
@@ -119,35 +120,36 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
 
     private fun buildEmergencyNotes(): String {
         return buildString {
-            append("NOTFALL: ${instruction.title}\n")
-            append("Dringlichkeit: ${instruction.urgency.displayName}\n\n")
-            append("SYMPTOME:\n")
-            instruction.symptoms.take(3).forEach { append("• $it\n") }
+            append(getString(R.string.first_aid_instruction_notes_emergency, instruction.title(this@FirstAidInstructionActivity))).append("\n")
+            append(getString(R.string.first_aid_instruction_notes_urgency, instruction.urgency.displayName(this@FirstAidInstructionActivity))).append("\n\n")
+            append(getString(R.string.first_aid_instruction_notes_symptoms)).append("\n")
+            instruction.symptoms(this@FirstAidInstructionActivity).take(3).forEach { append("• $it\n") }
         }
     }
 
     private fun buildInstructionText(): String {
         return buildString {
-            append("═══ ERSTE-HILFE ANLEITUNG ═══\n\n")
-            append("${instruction.title}\n")
-            append("${instruction.urgency.displayName}\n\n")
+            append(getString(R.string.first_aid_instruction_text_header)).append("\n\n")
+            append(instruction.title(this@FirstAidInstructionActivity)).append("\n")
+            append(instruction.urgency.displayName(this@FirstAidInstructionActivity)).append("\n\n")
 
-            append("SOFORTMASSNAHMEN:\n")
-            instruction.immediateActions.forEach { append("$it\n") }
+            append(getString(R.string.first_aid_instruction_text_immediate_actions)).append("\n")
+            instruction.immediateActions(this@FirstAidInstructionActivity).forEach { append("$it\n") }
             append("\n")
 
-            append("WAS TUN:\n")
-            instruction.doList.forEach { append("$it\n") }
+            append(getString(R.string.first_aid_instruction_text_do_list)).append("\n")
+            instruction.doList(this@FirstAidInstructionActivity).forEach { append("$it\n") }
             append("\n")
 
-            append("WAS NICHT TUN:\n")
-            instruction.dontList.forEach { append("$it\n") }
+            append(getString(R.string.first_aid_instruction_text_dont_list)).append("\n")
+            instruction.dontList(this@FirstAidInstructionActivity).forEach { append("$it\n") }
             append("\n")
 
-            append("TRANSPORT:\n${instruction.transportInfo}\n")
+            append(getString(R.string.first_aid_instruction_text_transport, instruction.transportInfo(this@FirstAidInstructionActivity))).append("\n")
 
-            if (!instruction.specialNotes.isNullOrEmpty()) {
-                append("\nWICHTIG:\n${instruction.specialNotes}")
+            val specialNotesText = instruction.specialNotes(this@FirstAidInstructionActivity)
+            if (!specialNotesText.isNullOrEmpty()) {
+                append("\n").append(getString(R.string.first_aid_instruction_text_important, specialNotesText))
             }
         }
     }
@@ -161,7 +163,7 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
         // Öffne einfachen Timer
         val intent = Intent(this, SimpleTimerActivity::class.java)
         intent.putExtra("minutes", instruction.timerMinutes)
-        intent.putExtra("title", instruction.title)
+        intent.putExtra("title", instruction.title(this))
         startActivity(intent)
     }
 

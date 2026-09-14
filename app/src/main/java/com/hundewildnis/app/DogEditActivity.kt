@@ -128,18 +128,18 @@ class DogEditActivity : SecureBaseActivity() {
 
     private fun showQuickProfileDialog() {
         val profiles = QuickCharacterProfile.values()
-        val profileNames = profiles.map { "${it.displayName}\n${it.description}" }.toTypedArray()
+        val profileNames = profiles.map { "${it.displayName(this)}\n${it.description(this)}" }.toTypedArray()
 
         val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
                 android.content.res.Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("📋 Wesens-Profil wählen")
+            .setTitle(getString(R.string.dog_edit_quick_profile_dialog_title))
             .setItems(profileNames) { _, which ->
                 applyQuickProfile(profiles[which])
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -157,7 +157,7 @@ class DogEditActivity : SecureBaseActivity() {
 
         android.widget.Toast.makeText(
             this,
-            "✅ Profil '${profile.displayName}' angewendet",
+            getString(R.string.dog_edit_quick_profile_applied, profile.displayName(this)),
             android.widget.Toast.LENGTH_SHORT
         ).show()
     }

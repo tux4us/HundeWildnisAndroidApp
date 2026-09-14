@@ -8,74 +8,114 @@ package com.hundewildnis.app
 /**
  * Hauptkategorien
  */
-enum class EmergencyMainCategory(val displayName: String, val icon: String) {
-    ACCIDENT("Unfall", "⚠\uFE0F"),
-    ILLNESS("Erkrankung", "\uD83D\uDC89")
+enum class EmergencyMainCategory(val icon: String) {
+    ACCIDENT("⚠️"),
+    ILLNESS("💉");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        ACCIDENT -> context.getString(R.string.emergency_main_category_accident)
+        ILLNESS -> context.getString(R.string.emergency_main_category_illness)
+    }
 }
 
 /**
  * Unfall-Unterkategorien
  */
 enum class AccidentType(
-    val displayName: String,
     val icon: String,
     val urgency: UrgencyLevel
 ) {
-    TRAFFIC_ACCIDENT("Verkehrsunfall", "💥", UrgencyLevel.CRITICAL),
-    BLEEDING("Blutungen / Wunden", "🩸", UrgencyLevel.CRITICAL),
-    BONE_FRACTURE("Knochenbruch / Lahmheit", "🦴", UrgencyLevel.URGENT),
-    EYE_INJURY("Augenverletzung", "👁️", UrgencyLevel.URGENT),
-    DROWNING("Ertrinken / Wasserunfall", "💧", UrgencyLevel.CRITICAL),
-    HYPOTHERMIA("Unterkühlung / Eis", "🥶", UrgencyLevel.URGENT),
-    HEAT_STROKE("Hitzschlag", "🌡️", UrgencyLevel.CRITICAL),
-    FOREIGN_OBJECT("Fremdkörper verschluckt", "🍽️", UrgencyLevel.URGENT),
-    POISONING_KNOWN("Vergiftung (Substanz bekannt)", "🧪", UrgencyLevel.CRITICAL)
+    TRAFFIC_ACCIDENT("💥", UrgencyLevel.CRITICAL),
+    BLEEDING("🩸", UrgencyLevel.CRITICAL),
+    BONE_FRACTURE("🦴", UrgencyLevel.URGENT),
+    EYE_INJURY("👁️", UrgencyLevel.URGENT),
+    DROWNING("💧", UrgencyLevel.CRITICAL),
+    HYPOTHERMIA("🥶", UrgencyLevel.URGENT),
+    HEAT_STROKE("🌡️", UrgencyLevel.CRITICAL),
+    FOREIGN_OBJECT("🍽️", UrgencyLevel.URGENT),
+    POISONING_KNOWN("🧪", UrgencyLevel.CRITICAL);
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        TRAFFIC_ACCIDENT -> context.getString(R.string.accident_type_traffic_accident)
+        BLEEDING -> context.getString(R.string.accident_type_bleeding)
+        BONE_FRACTURE -> context.getString(R.string.accident_type_bone_fracture)
+        EYE_INJURY -> context.getString(R.string.accident_type_eye_injury)
+        DROWNING -> context.getString(R.string.accident_type_drowning)
+        HYPOTHERMIA -> context.getString(R.string.accident_type_hypothermia)
+        HEAT_STROKE -> context.getString(R.string.accident_type_heat_stroke)
+        FOREIGN_OBJECT -> context.getString(R.string.accident_type_foreign_object)
+        POISONING_KNOWN -> context.getString(R.string.accident_type_poisoning_known)
+    }
 }
 
 /**
  * Erkrankungs-Unterkategorien
  */
 enum class IllnessType(
-    val displayName: String,
     val icon: String,
     val urgency: UrgencyLevel
 ) {
-    UNCONSCIOUSNESS("Bewusstlosigkeit / Kollaps", "💫", UrgencyLevel.CRITICAL),
-    SEIZURE("Krampfanfall", "⚡", UrgencyLevel.CRITICAL),
-    GASTRIC_TORSION("Magendrehung", "🌀", UrgencyLevel.CRITICAL),
-    BREATHING_DIFFICULTY("Atemnot", "🫁", UrgencyLevel.CRITICAL),
-    BLEEDING_NO_ACCIDENT("Blutungen (ohne Unfall)", "🩸", UrgencyLevel.CRITICAL),
-    VOMITING("Erbrechen / Durchfall", "🤮", UrgencyLevel.URGENT),
-    POISONING_UNKNOWN("Vergiftung (unbekannt)", "☠️", UrgencyLevel.CRITICAL),
-    ALLERGIC_REACTION("Allergische Reaktion", "💊", UrgencyLevel.URGENT)
+    UNCONSCIOUSNESS("💫", UrgencyLevel.CRITICAL),
+    SEIZURE("⚡", UrgencyLevel.CRITICAL),
+    GASTRIC_TORSION("🌀", UrgencyLevel.CRITICAL),
+    BREATHING_DIFFICULTY("🫁", UrgencyLevel.CRITICAL),
+    BLEEDING_NO_ACCIDENT("🩸", UrgencyLevel.CRITICAL),
+    VOMITING("🤮", UrgencyLevel.URGENT),
+    POISONING_UNKNOWN("☠️", UrgencyLevel.CRITICAL),
+    ALLERGIC_REACTION("💊", UrgencyLevel.URGENT);
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        UNCONSCIOUSNESS -> context.getString(R.string.illness_type_unconsciousness)
+        SEIZURE -> context.getString(R.string.illness_type_seizure)
+        GASTRIC_TORSION -> context.getString(R.string.illness_type_gastric_torsion)
+        BREATHING_DIFFICULTY -> context.getString(R.string.illness_type_breathing_difficulty)
+        BLEEDING_NO_ACCIDENT -> context.getString(R.string.illness_type_bleeding_no_accident)
+        VOMITING -> context.getString(R.string.illness_type_vomiting)
+        POISONING_UNKNOWN -> context.getString(R.string.illness_type_poisoning_unknown)
+        ALLERGIC_REACTION -> context.getString(R.string.illness_type_allergic_reaction)
+    }
 }
 
 /**
  * Dringlichkeitsstufen
  */
-enum class UrgencyLevel(val displayName: String, val color: String) {
-    CRITICAL("🔴 LEBENSBEDROHLICH", "#d32f2f"),
-    URGENT("🟡 DRINGEND", "#f57c00"),
-    MODERATE("🟢 BEOBACHTEN", "#388e3c")
+enum class UrgencyLevel(val color: String) {
+    CRITICAL("#d32f2f"),
+    URGENT("#f57c00"),
+    MODERATE("#388e3c");
+
+    fun displayName(context: android.content.Context): String = when (this) {
+        CRITICAL -> context.getString(R.string.urgency_level_critical)
+        URGENT -> context.getString(R.string.urgency_level_urgent)
+        MODERATE -> context.getString(R.string.urgency_level_moderate)
+    }
 }
 
 /**
  * Erste-Hilfe Anleitung
  */
 data class FirstAidInstruction(
-    val type: String,  // z.B. "UNCONSCIOUSNESS"
-    val title: String,
+    val type: String,  // z.B. "UNCONSCIOUSNESS" — stabiler, sprachneutraler Schlüssel
+    @androidx.annotation.StringRes val titleRes: Int,
     val urgency: UrgencyLevel,
-    val symptoms: List<String>,
-    val immediateActions: List<String>,
-    val doList: List<String>,
-    val dontList: List<String>,
-    val transportInfo: String,
-    val specialNotes: String? = null,
+    @androidx.annotation.StringRes val symptomsRes: List<Int>,
+    @androidx.annotation.StringRes val immediateActionsRes: List<Int>,
+    @androidx.annotation.StringRes val doListRes: List<Int>,
+    @androidx.annotation.StringRes val dontListRes: List<Int>,
+    @androidx.annotation.StringRes val transportInfoRes: Int,
+    @androidx.annotation.StringRes val specialNotesRes: Int? = null,
     val needsHLW: Boolean = false,
     val needsTimer: Boolean = false,
     val timerMinutes: Int = 0
-)
+) {
+    fun title(context: android.content.Context): String = context.getString(titleRes)
+    fun symptoms(context: android.content.Context): List<String> = symptomsRes.map { context.getString(it) }
+    fun immediateActions(context: android.content.Context): List<String> = immediateActionsRes.map { context.getString(it) }
+    fun doList(context: android.content.Context): List<String> = doListRes.map { context.getString(it) }
+    fun dontList(context: android.content.Context): List<String> = dontListRes.map { context.getString(it) }
+    fun transportInfo(context: android.content.Context): String = context.getString(transportInfoRes)
+    fun specialNotes(context: android.content.Context): String? = specialNotesRes?.let { context.getString(it) }
+}
 
 /**
  * HLW (Herz-Lungen-Wiederbelebung) Daten
@@ -83,18 +123,22 @@ data class FirstAidInstruction(
 data class HLWData(
     val compressionRate: Int = 120,  // pro Minute
     val ventilationRate: Int = 2,     // nach 30 Kompressionen
-    val compressionDepth: String = "1/3 bis 1/2 der Brusttiefe",
+    @androidx.annotation.StringRes val compressionDepthRes: Int = R.string.hlw_compression_depth_default,
     val checkPulseEveryMinutes: Int = 2
-)
+) {
+    fun compressionDepth(context: android.content.Context): String = context.getString(compressionDepthRes)
+}
 
 /**
  * Symptom-Check Frage
  */
 data class SymptomCheckQuestion(
-    val question: String,
+    @androidx.annotation.StringRes val questionRes: Int,
     val criticalIfNo: Boolean = false,  // Wenn "Nein" → KRITISCH
     val criticalIfYes: Boolean = false   // Wenn "Ja" → KRITISCH
-)
+) {
+    fun question(context: android.content.Context): String = context.getString(questionRes)
+}
 
 /**
  * Vitalwerte Normalbereich
@@ -119,7 +163,7 @@ data class EmergencyReportExtended(
     val timestamp: Long,
     val dogId: String,
     val dogName: String,
-    
+
     // Bestehende Felder
     val symptom: String,
     val notes: String,
@@ -128,7 +172,7 @@ data class EmergencyReportExtended(
     val photoUris: List<String>,
     val pdfPath: String,
     val contentUri: String? = null,
-    
+
     // ✅ NEUE Felder für Erste-Hilfe
     val wasFirstAidUsed: Boolean = false,
     val emergencyType: String? = null,  // z.B. "UNCONSCIOUSNESS"

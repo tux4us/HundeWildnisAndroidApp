@@ -3,20 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_language"
+        android:title="@string/menu_main_language"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_refresh"
-        android:title="🔁 Aktualisieren"
+        android:title="@string/menu_main_refresh"
         android:icon="@android:drawable/ic_menu_rotate"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_theme"
-        android:title="🌞🌒Theme wechseln"
+        android:title="@string/menu_main_theme"
         android:icon="@android:drawable/ic_menu_day"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
-        android:title="⚙️ Einstellungen"
+        android:title="@string/menu_main_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         app:showAsAction="never" />
 
@@ -30,14 +35,14 @@
     <!-- ✅ NEU: BACKUP ERSTELLEN -->
     <item
         android:id="@+id/action_backup_create"
-        android:title="📦 Backup erstellen"
+        android:title="@string/menu_main_backup_create"
         android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="never" />
 
     <!-- ✅ NEU: BACKUP IMPORTIEREN -->
     <item
         android:id="@+id/action_backup_restore"
-        android:title="📥 Backup importieren"
+        android:title="@string/menu_main_backup_restore"
         android:icon="@android:drawable/ic_menu_revert"
         app:showAsAction="never" />
 
@@ -50,31 +55,31 @@
 
     <item
         android:id="@+id/action_instructions"
-        android:title="📖 Anleitung zur Nutzung"
+        android:title="@string/menu_main_instructions"
         android:icon="@android:drawable/ic_menu_help"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_permissions"
-        android:title="🛡️ Berechtigungen der App"
+        android:title="@string/menu_main_permissions"
         android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_privacy"
-        android:title="📜 Datenschutzerklärung"
+        android:title="@string/menu_main_privacy"
         android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_imprint"
-        android:title="📎 Impressum"
+        android:title="@string/menu_main_imprint"
         android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_about"
-        android:title="ℹ️ Über die App"
+        android:title="@string/menu_main_about"
         android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="never" />
 

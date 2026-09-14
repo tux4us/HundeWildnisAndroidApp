@@ -47,7 +47,7 @@
             <!-- Scores -->
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Scoring" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_scoring" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvScores" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:fontFamily="monospace"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -55,7 +55,7 @@
             <!-- Ergebnisse -->
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trainingsergebnisse" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_results" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvErgebnisse" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -63,7 +63,7 @@
             <!-- Wetter -->
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wetterbedingungen" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_weather" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvWetter" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -71,7 +71,7 @@
             <!-- Level -->
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trainingslevel" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_level" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvLevel" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -79,7 +79,7 @@
             <!-- Notizen -->
             <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                    <TextView android:id="@+id/tvNotizenLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notizen" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvNotizenLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_notes" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvNotizen" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

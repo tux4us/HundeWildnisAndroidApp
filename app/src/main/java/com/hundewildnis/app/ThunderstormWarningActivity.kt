@@ -143,18 +143,17 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
                     String.format(Locale.GERMAN, "= %.1f s × %.0f m/s", seconds, SPEED_OF_SOUND_MPS) +
                     String.format(Locale.GERMAN, " = %.0f m", seconds * SPEED_OF_SOUND_MPS)
 
-        binding.tvStepResult.text = String.format(Locale.GERMAN, "≈ %.1f km entfernt", distanceKm)
+        binding.tvStepResult.text = getString(R.string.thunderstorm_distance_result, distanceKm)
         binding.tvStepResult.setTextColor(Color.parseColor(level.color))
 
-        binding.tvStepRuleOfThumb.text =
-            String.format(Locale.GERMAN, "Faustregel: %.1f s ÷ 3 ≈ %.1f km", seconds, seconds / 3.0)
+        binding.tvStepRuleOfThumb.text = getString(R.string.thunderstorm_rule_of_thumb, seconds, seconds / 3.0)
 
-        binding.tvProximityLevel.text = "${level.icon} ${level.displayName}"
+        binding.tvProximityLevel.text = "${level.icon} ${level.displayName(this)}"
         binding.tvProximityLevel.setTextColor(Color.parseColor(level.color))
 
         showRecommendationBanner(level)
 
-        binding.tvMeasureStatus.text = "Messung gespeichert. Bei erneutem Blitz kannst Du direkt weitermessen, um den Trend zu sehen."
+        binding.tvMeasureStatus.text = getString(R.string.thunderstorm_measure_saved_status)
     }
 
     /**
@@ -178,14 +177,14 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             StormProximityLevel.DANGER -> "🔴"
         }
 
-        binding.tvRecommendation.text = LightningCalculator.recommendationFor(level)
+        binding.tvRecommendation.text = LightningCalculator.recommendationFor(this, level)
         binding.tvRecommendation.setTextColor(levelColor)
     }
 
     private fun updateTrendDisplay() {
         if (measurements.isEmpty()) {
             binding.tvTrendResult.text = ""
-            binding.tvMeasurementCount.text = "Noch keine Messung"
+            binding.tvMeasurementCount.text = getString(R.string.thunderstorm_no_measurement_yet)
             binding.tvApproachPlaceholder.visibility = View.VISIBLE
             binding.approachMetricsContainer.visibility = View.GONE
             binding.tvApproachFormula.visibility = View.GONE
@@ -194,8 +193,8 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         }
 
         val trend = LightningCalculator.determineTrend(measurements)
-        binding.tvTrendResult.text = "${trend.icon} ${trend.displayName}"
-        binding.tvMeasurementCount.text = "${measurements.size} Messung(en) in dieser Serie"
+        binding.tvTrendResult.text = "${trend.icon} ${trend.displayName(this)}"
+        binding.tvMeasurementCount.text = getString(R.string.thunderstorm_measurement_count, measurements.size)
 
         showApproachEstimate()
     }
@@ -383,8 +382,10 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         // Pfeil zeigt jeweils in die Himmelsrichtung, aus der der Wind kommt
         // (Bildschirm-Ausrichtung: oben=Norden, rechts=Osten)
         val directions = listOf(
-            "Norden" to "⬆️", "Nordosten" to "↗️", "Osten" to "➡️", "Südosten" to "↘️",
-            "Süden" to "⬇️", "Südwesten" to "↙️", "Westen" to "⬅️", "Nordwesten" to "↖️"
+            getString(R.string.wind_direction_north) to "⬆️", getString(R.string.wind_direction_northeast) to "↗️",
+            getString(R.string.wind_direction_east) to "➡️", getString(R.string.wind_direction_southeast) to "↘️",
+            getString(R.string.wind_direction_south) to "⬇️", getString(R.string.wind_direction_southwest) to "↙️",
+            getString(R.string.wind_direction_west) to "⬅️", getString(R.string.wind_direction_northwest) to "↖️"
         )
         val index = (((degrees % 360) + 22) / 45) % 8
         return directions[index]
@@ -406,6 +407,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         var worstHourDirectionLabel: String? = null
         var worstHourDirectionArrow: String? = null
         val sb = StringBuilder()
+        val unknownDirection = getString(R.string.wind_direction_unknown)
 
         for (i in 0 until times.length()) {
             val timeLabel = try {
@@ -422,7 +424,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             val (directionLabel, directionArrow) = if (windDegrees in 0..360) {
                 windDirectionLabel(windDegrees)
             } else {
-                "unbekannt" to ""
+                unknownDirection to ""
             }
 
             if (level.ordinal > worstLevel.ordinal) {
@@ -432,19 +434,19 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
                 worstHourDirectionArrow = directionArrow
             }
 
-            val directionSuffix = if (directionLabel != "unbekannt") ", Richtung $directionArrow $directionLabel" else ""
-            sb.append(String.format(Locale.GERMAN, "%s Uhr: %s %s (CAPE %.0f J/kg, Niederschlag %d%%, %s%s)\n",
-                timeLabel, level.icon, level.displayName, cape, precipProb, weatherCodeLabel(code), directionSuffix))
+            val directionSuffix = if (directionLabel != unknownDirection) getString(R.string.thunderstorm_forecast_direction_suffix, directionArrow, directionLabel) else ""
+            sb.append(getString(R.string.thunderstorm_forecast_line,
+                timeLabel, level.icon, level.displayName(this), cape, precipProb, weatherCodeLabel(code), directionSuffix)).append("\n")
         }
 
         binding.forecastResultContainer.visibility = View.VISIBLE
         binding.tvForecastSummary.text = if (worstHourLabel != null && worstLevel != ThunderstormForecastLevel.LOW) {
-            val directionText = if (worstHourDirectionLabel != null && worstHourDirectionLabel != "unbekannt") {
-                "\naus $worstHourDirectionArrow $worstHourDirectionLabel"
+            val directionText = if (worstHourDirectionLabel != null && worstHourDirectionLabel != unknownDirection) {
+                getString(R.string.thunderstorm_forecast_from_direction, worstHourDirectionArrow, worstHourDirectionLabel)
             } else ""
-            "${worstLevel.icon} Höchstes Gewitterrisiko: ${worstLevel.displayName}\ngegen $worstHourLabel Uhr erwartet$directionText"
+            getString(R.string.thunderstorm_forecast_summary_risk, worstLevel.icon, worstLevel.displayName(this), worstHourLabel, directionText)
         } else {
-            "🟢 Kein erhöhtes Gewitterrisiko\nin den nächsten 12 Stunden erkennbar"
+            getString(R.string.thunderstorm_forecast_summary_no_risk)
         }
 
         val levelColor = Color.parseColor(worstLevel.color)
@@ -462,24 +464,27 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
      * nachvollziehbar ist, welcher Rohwert eine Einstufung ausgelöst hat –
      * hilfreich zur Fehlersuche bei unerwarteten Einstufungen.
      */
-    private fun weatherCodeLabel(code: Int): String = when (code) {
-        0 -> "Code $code: klar"
-        1, 2, 3 -> "Code $code: bewölkt"
-        45, 48 -> "Code $code: Nebel"
-        51, 53, 55 -> "Code $code: Nieselregen"
-        56, 57 -> "Code $code: gefr. Niesel"
-        61 -> "Code $code: leichter Regen"
-        63 -> "Code $code: mäßiger Regen"
-        65 -> "Code $code: starker Regen"
-        66, 67 -> "Code $code: gefr. Regen"
-        71, 73, 75 -> "Code $code: Schnee"
-        77 -> "Code $code: Schneegriesel"
-        80 -> "Code $code: leichter Schauer"
-        81 -> "Code $code: mäßiger Schauer"
-        82 -> "Code $code: heftiger Schauer"
-        85, 86 -> "Code $code: Schneeschauer"
-        95 -> "Code $code: Gewitter"
-        96, 99 -> "Code $code: Gewitter mit Hagel"
-        else -> "Code $code"
+    private fun weatherCodeLabel(code: Int): String {
+        val label = when (code) {
+            0 -> getString(R.string.weather_code_clear)
+            1, 2, 3 -> getString(R.string.weather_code_cloudy)
+            45, 48 -> getString(R.string.weather_code_fog)
+            51, 53, 55 -> getString(R.string.weather_code_drizzle)
+            56, 57 -> getString(R.string.weather_code_freezing_drizzle)
+            61 -> getString(R.string.weather_code_light_rain)
+            63 -> getString(R.string.weather_code_moderate_rain)
+            65 -> getString(R.string.weather_code_heavy_rain)
+            66, 67 -> getString(R.string.weather_code_freezing_rain)
+            71, 73, 75 -> getString(R.string.weather_code_snow)
+            77 -> getString(R.string.weather_code_snow_grains)
+            80 -> getString(R.string.weather_code_light_shower)
+            81 -> getString(R.string.weather_code_moderate_shower)
+            82 -> getString(R.string.weather_code_heavy_shower)
+            85, 86 -> getString(R.string.weather_code_snow_shower)
+            95 -> getString(R.string.weather_code_thunderstorm)
+            96, 99 -> getString(R.string.weather_code_thunderstorm_hail)
+            else -> null
+        }
+        return if (label != null) getString(R.string.weather_code_prefix, code, label) else "Code $code"
     }
 }

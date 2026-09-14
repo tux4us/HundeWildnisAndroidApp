@@ -5,29 +5,29 @@
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
-    
+        android:title="@string/nav_home" />
+
     <!-- Blog (MainActivity VIEW_BLOG) -->
     <item
         android:id="@+id/nav_blog"
         android:icon="@android:drawable/ic_menu_recent_history"
-        android:title="Blog" />
-    
+        android:title="@string/nav_blog" />
+
     <!-- Seiten (MainActivity VIEW_PAGES) -->
     <item
         android:id="@+id/nav_pages"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Seiten" />
-    
+        android:title="@string/nav_pages" />
+
     <!-- Kurse (MainActivity VIEW_COURSES) -->
     <item
         android:id="@+id/nav_courses"
         android:icon="@android:drawable/ic_menu_agenda"
-        android:title="Kurse" />
-    
+        android:title="@string/nav_courses" />
+
     <!-- Mehr (Dialog mit YouTube, Podcast, X, Signal) -->
     <item
         android:id="@+id/nav_more"
         android:icon="@android:drawable/ic_menu_more"
-        android:title="Mehr" />
+        android:title="@string/nav_more" />
 </menu>
