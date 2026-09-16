@@ -126,7 +126,7 @@ class CommunicationActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Sprach-Trainer"
+            title = getString(R.string.comm_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
         binding.toolbar.navigationIcon?.setTint(Color.WHITE)
@@ -324,7 +324,7 @@ class CommunicationActivity : SecureBaseActivity() {
         binding.tvChartTitle.text = "🎵 Live Frequenz-Verlauf"
 
         isRecording = true
-        binding.btnStartStop.text = "🛑 Messung stoppen"
+        binding.btnStartStop.text = getString(R.string.comm_btn_stop)
         binding.btnStartStop.setBackgroundColor(getColor(android.R.color.holo_red_dark))
 
         // Steuerelemente während der Messung sperren
@@ -370,7 +370,7 @@ class CommunicationActivity : SecureBaseActivity() {
         // Laufenden Shimmer stoppen und Karte zurücksetzen
         cancelShimmer()
 
-        binding.btnStartStop.text = "🎤 Messung starten"
+        binding.btnStartStop.text = getString(R.string.comm_btn_start)
         binding.btnStartStop.setBackgroundColor(Color.parseColor(COLOR_CARD_NORMAL))
 
         // Steuerelemente wieder freigeben
@@ -450,7 +450,7 @@ class CommunicationActivity : SecureBaseActivity() {
                 isCurrentlyVoice = false
                 totalVoiceDuration += System.currentTimeMillis() - lastVoiceTimestamp
             }
-            binding.tvFrequencyStatus.text = "Warte auf Stimme..."
+            binding.tvFrequencyStatus.text = getString(R.string.comm_status_waiting)
             binding.tvCurrentFrequency.text = "--- Hz"
         }
     }
@@ -610,19 +610,16 @@ class CommunicationActivity : SecureBaseActivity() {
             (totalHarmonic.toFloat() / totalVoiceDuration.toFloat() * 100f).toInt()
         } else 0
 
-        binding.tvStats.text = """
-            ⏱️ Dauer: ${String.format("%02d:%02d", min, sec)}
-            🗣️ Sprechzeit: ${totalVoiceDuration / 1000}s
-            
-            🎯 Treffer:
-            108 Hz: $hits108Hz (${time108Hz / 1000}s)
-            216 Hz: $hits216Hz (${time216Hz / 1000}s)
-            324 Hz: $hits324Hz (${time324Hz / 1000}s)
-            432 Hz: $hits432Hz (${time432Hz / 1000}s)
-            648 Hz: $hits648Hz (${time648Hz / 1000}s)
-            
-            📈 Effizienz: $efficiency%
-        """.trimIndent()
+        binding.tvStats.text = getString(
+            R.string.comm_stats_format,
+            min, sec, totalVoiceDuration / 1000,
+            hits108Hz, time108Hz / 1000,
+            hits216Hz, time216Hz / 1000,
+            hits324Hz, time324Hz / 1000,
+            hits432Hz, time432Hz / 1000,
+            hits648Hz, time648Hz / 1000,
+            efficiency
+        )
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -709,31 +706,28 @@ class CommunicationActivity : SecureBaseActivity() {
             val sec = duration % 60
             val efficiency = session.getEfficiency().toInt()
 
-            binding.tvStats.text = """
-                ⏱️ Dauer: ${String.format("%02d:%02d", min, sec)}
-                🗣️ Sprechzeit: ${session.voiceDuration / 1000}s
-                
-                🎯 Treffer:
-                108 Hz: ${session.hits108Hz} (${session.time108Hz / 1000}s)
-                216 Hz: ${session.hits216Hz} (${session.time216Hz / 1000}s)
-                324 Hz: ${session.hits324Hz} (${session.time324Hz / 1000}s)
-                432 Hz: ${session.hits432Hz} (${session.time432Hz / 1000}s)
-                648 Hz: ${session.hits648Hz} (${session.time648Hz / 1000}s)
-                
-                📈 Effizienz: $efficiency%
-                📊 Ø Frequenz: ${session.avgFrequency.toInt()} Hz
-                🔽 Min: ${session.minFrequency.toInt()} Hz
-                🔼 Max: ${session.maxFrequency.toInt()} Hz
-                ⭐ Beste: ${session.getBestFrequency()?.name ?: "Keine Treffer"}
-            """.trimIndent()
+            val bestFreq = session.getBestFrequency()?.name ?: getString(R.string.walking_speed_no_data)
+
+            binding.tvStats.text = getString(
+                R.string.comm_stats_history_format,
+                min, sec, session.voiceDuration / 1000,
+                session.hits108Hz, session.time108Hz / 1000,
+                session.hits216Hz, session.time216Hz / 1000,
+                session.hits324Hz, session.time324Hz / 1000,
+                session.hits432Hz, session.time432Hz / 1000,
+                session.hits648Hz, session.time648Hz / 1000,
+                efficiency, session.avgFrequency.toInt(),
+                session.minFrequency.toInt(), session.maxFrequency.toInt(),
+                bestFreq
+            )
 
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
-            binding.tvChartTitle.text = "🎵 Session vom $dateStr"
+            binding.tvChartTitle.text = getString(R.string.comm_session_title_format, dateStr)
 
             if (session.dataPoints.isNotEmpty()) {
                 val lastPoint = session.dataPoints.last()
                 binding.tvCurrentFrequency.text = "${lastPoint.frequency.toInt()} Hz"
-                binding.tvFrequencyStatus.text = "Session beendet"
+                binding.tvFrequencyStatus.text = getString(R.string.comm_status_finished)
             }
 
             binding.btnExport.isEnabled = true
@@ -757,9 +751,9 @@ class CommunicationActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Messung löschen?")
-            .setMessage("Möchtest Du diese Trainingseinheit dauerhaft löschen?")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.voice_session_delete_title))
+            .setMessage(getString(R.string.voice_session_delete_message))
+            .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                 val index = historyList.indexOf(session)
                 if (index != -1) {
                     historyList.removeAt(index)
@@ -767,7 +761,7 @@ class CommunicationActivity : SecureBaseActivity() {
                     saveHistory()
                 }
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)

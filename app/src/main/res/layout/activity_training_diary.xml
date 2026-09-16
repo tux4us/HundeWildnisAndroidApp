@@ -39,7 +39,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Wählen Sie einen Hund:"
+                    android:text="@string/diary_select_dog"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -62,7 +62,7 @@
                 android:id="@+id/tvNoDogs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Keine Hunde in den Stammdaten angelegt.\n\nBitte legen Sie zuerst mindestens einen Hund an."
+                android:text="@string/diary_no_dogs_layout"
                 android:textAlignment="center"
                 android:textSize="@dimen/text_body_medium"
                 android:padding="32dp"

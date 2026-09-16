@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="📤 Teilen"
+                android:text="@string/interval_finish_btn_share"
                 android:textSize="@dimen/text_label_small" />
 
             <com.google.android.material.button.MaterialButton
@@ -87,7 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🗑 Löschen"
+                android:text="@string/start_delete"
                 android:textColor="#C0392B"
                 app:strokeColor="#C0392B"
                 android:textSize="@dimen/text_label_small" />

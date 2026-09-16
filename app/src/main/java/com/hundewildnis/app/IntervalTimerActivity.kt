@@ -98,15 +98,15 @@ class IntervalTimerActivity : SecureBaseActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "⏱️ Intervall-Timer"
+            title = getString(R.string.interval_setup_title)
             setDisplayHomeAsUpEnabled(true)
         }
         // Zusammenfassung unter Toolbar
         binding.tvConfigSummary.text =
-            "${config.activeDurationSeconds}s aktiv  ·  " +
-            "${config.restDurationSeconds}s Pause  ·  " +
-            "${config.rounds} Runden  ·  " +
-            "Gesamt: ${config.totalDurationLabel}"
+            getString(R.string.interval_unit_s, config.activeDurationSeconds) + " " + getString(R.string.interval_run_label_active_phase) + "  ·  " +
+            getString(R.string.interval_unit_s, config.restDurationSeconds) + " " + getString(R.string.interval_run_label_rest_phase) + "  ·  " +
+            getString(R.string.interval_run_label_round, config.rounds, config.rounds) + "  ·  " +
+            getString(R.string.interval_setup_total_duration, config.getTotalDurationLabel(this))
         binding.tvDogName.text = dogProfile?.name ?: ""
         binding.tvDogName.visibility = if (dogProfile != null) View.VISIBLE else View.GONE
     }
@@ -127,14 +127,14 @@ class IntervalTimerActivity : SecureBaseActivity() {
         val controls = mutableListOf<StartTile>()
         
         // Stop
-        controls.add(StartTile("timer_stop", R.drawable.ic_remove, "⏹️ Stopp", isDanger = true))
+        controls.add(StartTile("timer_stop", R.drawable.ic_remove, getString(R.string.interval_run_btn_stop), isDanger = true))
         
         // Start/Pause
         val startPauseLabel = when {
-            !isRunning && !isPaused -> "▶️ STARTEN"
-            isRunning               -> "⏸ PAUSE"
-            isPaused                -> "▶️ WEITER"
-            else                    -> "▶️ STARTEN"
+            !isRunning && !isPaused -> getString(R.string.interval_run_btn_start)
+            isRunning               -> getString(R.string.interval_run_btn_pause)
+            isPaused                -> getString(R.string.interval_run_btn_resume)
+            else                    -> getString(R.string.interval_run_btn_start)
         }
         controls.add(StartTile("timer_start_pause", R.drawable.ic_stopwatch, startPauseLabel))
 
@@ -163,10 +163,10 @@ class IntervalTimerActivity : SecureBaseActivity() {
         val actions = mutableListOf<StartTile>()
         
         if (dogProfile != null) {
-            actions.add(StartTile("timer_diary", R.drawable.ic_diary, "📋 Tagebuch"))
+            actions.add(StartTile("timer_diary", R.drawable.ic_diary, getString(R.string.interval_finish_btn_diary)))
         }
-        actions.add(StartTile("timer_share", R.drawable.ic_map_pin_share, "📤 Teilen"))
-        actions.add(StartTile("timer_history", R.drawable.ic_notes, "🕒 Verlauf"))
+        actions.add(StartTile("timer_share", R.drawable.ic_map_pin_share, getString(R.string.interval_finish_btn_share)))
+        actions.add(StartTile("timer_history", R.drawable.ic_notes, getString(R.string.interval_finish_btn_history)))
 
         val colors = StartGroupColors.forGroup(this, 3) // Ocker
         binding.gridTimerFinished.layoutManager = GridLayoutManager(this, actions.size)
@@ -210,8 +210,8 @@ class IntervalTimerActivity : SecureBaseActivity() {
         updateControlGrid()
         showPhaseCard(IntervalTimerPhase.PREPARE) // zeigt "Pausiert"-Status
         binding.tvMainTimer.text    = formatMs(remainingMs)
-        binding.tvStatus.text       = "⏸ Pausiert"
-        binding.tvPhaseLabel.text   = "Verbleibend in dieser Phase"
+        binding.tvStatus.text       = getString(R.string.interval_run_status_paused)
+        binding.tvPhaseLabel.text   = getString(R.string.interval_run_label_remaining)
     }
 
     private fun resumeTimer() {
@@ -247,9 +247,9 @@ class IntervalTimerActivity : SecureBaseActivity() {
         currentPhase = IntervalTimerPhase.PREPARE
         remainingMs  = IntervalTimerConfig.PREPARE_SECONDS * 1000L
         showPhaseCard(IntervalTimerPhase.PREPARE)
-        binding.tvStatus.text     = "Mach Dich bereit …"
-        binding.tvPhaseLabel.text = "Start in"
-        binding.tvRoundInfo.text  = "Runde 1 von ${config.rounds}"
+        binding.tvStatus.text     = getString(R.string.interval_run_status_get_ready)
+        binding.tvPhaseLabel.text = getString(R.string.interval_run_label_start_in)
+        binding.tvRoundInfo.text  = getString(R.string.interval_run_label_round, 1, config.rounds)
 
         startPhaseCountdown(remainingMs) { startActivePhase() }
     }
@@ -259,9 +259,9 @@ class IntervalTimerActivity : SecureBaseActivity() {
         currentPhase = IntervalTimerPhase.ACTIVE
         remainingMs  = config.activeDurationSeconds * 1000L
         showPhaseCard(IntervalTimerPhase.ACTIVE)
-        binding.tvStatus.text     = "🟢 Aktiv"
-        binding.tvPhaseLabel.text = "Aktiv-Phase"
-        binding.tvRoundInfo.text  = "Runde $currentRound von ${config.rounds}"
+        binding.tvStatus.text     = getString(R.string.interval_run_status_active)
+        binding.tvPhaseLabel.text = getString(R.string.interval_run_label_active_phase)
+        binding.tvRoundInfo.text  = getString(R.string.interval_run_label_round, currentRound, config.rounds)
         binding.progressRounds.progress = currentRound - 1
 
         playSignal(SignalType.ACTIVE_START)
@@ -286,9 +286,9 @@ class IntervalTimerActivity : SecureBaseActivity() {
         currentPhase = IntervalTimerPhase.REST
         remainingMs  = config.restDurationSeconds * 1000L
         showPhaseCard(IntervalTimerPhase.REST)
-        binding.tvStatus.text     = "🔵 Pause"
-        binding.tvPhaseLabel.text = "Pause"
-        binding.tvRoundInfo.text  = "Nächste: Runde ${currentRound + 1} von ${config.rounds}"
+        binding.tvStatus.text     = getString(R.string.interval_run_status_rest)
+        binding.tvPhaseLabel.text = getString(R.string.interval_run_label_rest_phase)
+        binding.tvRoundInfo.text  = getString(R.string.interval_run_label_next_round, currentRound + 1, config.rounds)
 
         playSignal(SignalType.REST_START)
 
@@ -303,9 +303,9 @@ class IntervalTimerActivity : SecureBaseActivity() {
         currentPhase = IntervalTimerPhase.COOLDOWN
         remainingMs  = config.cooldownSeconds * 1000L
         showPhaseCard(IntervalTimerPhase.COOLDOWN)
-        binding.tvStatus.text     = "❄️ Abkühlen"
-        binding.tvPhaseLabel.text = "Abkühlphase"
-        binding.tvRoundInfo.text  = "Alle Runden abgeschlossen!"
+        binding.tvStatus.text     = getString(R.string.interval_run_status_cooldown)
+        binding.tvPhaseLabel.text = getString(R.string.interval_run_label_cooldown_phase)
+        binding.tvRoundInfo.text  = getString(R.string.interval_run_label_all_rounds_done)
         binding.progressRounds.progress = config.rounds
 
         playSignal(SignalType.COOLDOWN_START)
@@ -350,7 +350,7 @@ class IntervalTimerActivity : SecureBaseActivity() {
         clockTimer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 totalElapsedMs += 1000L
-                binding.tvElapsed.text = "Gesamt: ${formatMs(totalElapsedMs)}"
+                binding.tvElapsed.text = getString(R.string.interval_run_label_total_elapsed, formatMs(totalElapsedMs))
             }
             override fun onFinish() {}
         }.start()
@@ -369,10 +369,10 @@ class IntervalTimerActivity : SecureBaseActivity() {
         currentPhase = IntervalTimerPhase.PREPARE
         showPhaseCard(IntervalTimerPhase.PREPARE)
         binding.tvMainTimer.text    = formatSec(config.activeDurationSeconds)
-        binding.tvStatus.text       = "Bereit"
-        binding.tvPhaseLabel.text   = "Aktiv-Phase"
-        binding.tvRoundInfo.text    = "Runde 1 von ${config.rounds}"
-        binding.tvElapsed.text      = "Gesamt: 0:00"
+        binding.tvStatus.text       = getString(R.string.interval_run_status_ready)
+        binding.tvPhaseLabel.text   = getString(R.string.interval_run_label_active_phase)
+        binding.tvRoundInfo.text    = getString(R.string.interval_run_label_round, 1, config.rounds)
+        binding.tvElapsed.text      = getString(R.string.interval_run_label_total_elapsed, "0:00")
         binding.progressRounds.max  = config.rounds
         binding.progressRounds.progress = 0
         binding.progressPhase.progress  = 0
@@ -410,13 +410,13 @@ class IntervalTimerActivity : SecureBaseActivity() {
         binding.gridTimerControls.visibility = View.GONE
 
         val icon   = if (abortedEarly) "⏹️" else "🏆"
-        val title  = if (abortedEarly) "Timer gestoppt" else "Fertig!"
-        val rounds = if (abortedEarly) "$currentRound/${config.rounds} Runden" else "${config.rounds}/${config.rounds} Runden"
+        val title  = if (abortedEarly) getString(R.string.interval_finish_title_stopped) else getString(R.string.interval_finish_title_done)
+        val rounds = if (abortedEarly) getString(R.string.interval_run_label_round, currentRound, config.rounds) else getString(R.string.interval_run_label_round, config.rounds, config.rounds)
 
         binding.tvFinishedIcon.text    = icon
         binding.tvFinishedTitle.text   = title
         binding.tvFinishedRounds.text  = rounds
-        binding.tvFinishedActive.text  = "Aktive Übungszeit: ${finishedSession?.effectiveActiveMinutes ?: 0} Min"
+        binding.tvFinishedActive.text  = getString(R.string.interval_finish_label_active_time, finishedSession?.effectiveActiveMinutes ?: 0)
 
         updateFinishedGrid()
     }
@@ -494,19 +494,19 @@ class IntervalTimerActivity : SecureBaseActivity() {
     private fun shareResult() {
         val session = finishedSession ?: return
         val text = buildString {
-            appendLine("⏱️ Intervall-Timer – Ergebnis")
+            appendLine(getString(R.string.interval_share_header))
             if (session.dogName.isNotEmpty()) appendLine("🐕 ${session.dogName}")
             appendLine("📅 ${session.formattedDate()}")
             appendLine()
-            appendLine("✅ ${session.completedRounds}/${session.config.rounds} Runden abgeschlossen")
-            appendLine("⚡ ${session.config.activeDurationSeconds}s aktiv / ${session.config.restDurationSeconds}s Pause")
-            appendLine("💪 Effektive Aktivzeit: ${session.effectiveActiveMinutes} Min")
+            appendLine("✅ " + getString(R.string.interval_share_rounds, session.completedRounds, session.config.rounds))
+            appendLine("⚡ " + getString(R.string.interval_share_config, session.config.activeDurationSeconds, session.config.restDurationSeconds))
+            appendLine("💪 " + getString(R.string.interval_share_effective_time, session.effectiveActiveMinutes))
         }
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        startActivity(Intent.createChooser(intent, "Ergebnis teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.interval_share_title)))
     }
 
     private fun openHistory() {
@@ -525,10 +525,10 @@ class IntervalTimerActivity : SecureBaseActivity() {
 
     private fun confirmStop() {
         AlertDialog.Builder(this)
-            .setTitle("Timer stoppen?")
-            .setMessage("Der aktuelle Fortschritt wird gespeichert ($currentRound/${config.rounds} Runden).")
-            .setPositiveButton("Stoppen") { _, _ -> stopEarly() }
-            .setNegativeButton("Weiter", null)
+            .setTitle(getString(R.string.interval_dialog_stop_title))
+            .setMessage(getString(R.string.interval_dialog_stop_message, currentRound, config.rounds))
+            .setPositiveButton(getString(R.string.interval_run_btn_stop)) { _, _ -> stopEarly() }
+            .setNegativeButton(getString(R.string.interval_dialog_btn_stay), null)
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
@@ -539,10 +539,10 @@ class IntervalTimerActivity : SecureBaseActivity() {
     private fun confirmExit() {
         if (!isRunning && !isPaused) { finish(); return }
         AlertDialog.Builder(this)
-            .setTitle("Timer verlassen?")
-            .setMessage("Der Timer läuft noch. Beim Verlassen wird der aktuelle Fortschritt gespeichert.")
-            .setPositiveButton("Verlassen") { _, _ -> stopEarly(); finish() }
-            .setNegativeButton("Bleiben", null)
+            .setTitle(getString(R.string.interval_dialog_leave_title))
+            .setMessage(getString(R.string.interval_dialog_leave_message))
+            .setPositiveButton(getString(R.string.interval_dialog_btn_leave)) { _, _ -> stopEarly(); finish() }
+            .setNegativeButton(getString(R.string.interval_dialog_btn_stay), null)
             .show()
     }
 

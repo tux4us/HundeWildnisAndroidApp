@@ -157,7 +157,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Trainingssessions"
+                android:text="@string/nasenarbeit_hund_header_sessions"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
@@ -166,7 +166,7 @@
                 android:id="@+id/tvNoSessions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Noch keine Sessions vorhanden.\nStarte dein erstes Training!"
+                android:text="@string/nasenarbeit_hund_no_sessions"
                 android:textAlignment="center"
                 android:padding="24dp"
                 android:visibility="visible"/>

@@ -72,7 +72,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "🌙 Aktivitätskalender"
+            title = getString(R.string.calendar_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
     }
@@ -146,7 +146,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════
 
     private fun renderMonthView() {
-        val monthFmt = SimpleDateFormat("MMMM yyyy", Locale.GERMAN)
+        val monthFmt = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
         binding.tvMonthLabel.text = monthFmt.format(displayedMonth.time).replaceFirstChar { it.uppercase() }
 
         binding.calendarGrid.removeAllViews()
@@ -156,7 +156,15 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         cal.set(Calendar.DAY_OF_MONTH, 1)
 
         // Wochentags-Header (Mo–So)
-        val weekdayLabels = listOf("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
+        val weekdayLabels = listOf(
+            getString(R.string.calendar_weekday_mo),
+            getString(R.string.calendar_weekday_tu),
+            getString(R.string.calendar_weekday_we),
+            getString(R.string.calendar_weekday_th),
+            getString(R.string.calendar_weekday_fr),
+            getString(R.string.calendar_weekday_sa),
+            getString(R.string.calendar_weekday_su)
+        )
         weekdayLabels.forEach { label ->
             binding.calendarGrid.addView(buildWeekdayHeader(label))
         }
@@ -316,7 +324,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         sessions: List<TrainingSession>,
         planned: List<PlannedSession>
     ) {
-        val dateFmt = SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.GERMAN)
+        val dateFmt = SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.getDefault())
         val title = dateFmt.format(Date(dayStart)).replaceFirstChar { it.uppercase() }
 
         val msg = StringBuilder()
@@ -343,10 +351,10 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         val builder = AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(msg.toString())
-            .setNegativeButton("Schließen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
 
         if (isFuture) {
-            builder.setPositiveButton("📅 Session planen") { _, _ ->
+            builder.setPositiveButton(getString(R.string.calendar_btn_plan_session)) { _, _ ->
                 val cal = Calendar.getInstance().apply { timeInMillis = dayStart }
                 showPlanSessionDialog(cal)
             }
@@ -364,7 +372,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
 
     private fun showPlanSessionDialog(targetDay: Calendar) {
         val dog = selectedDog ?: run {
-            Toast.makeText(this, "Bitte zuerst einen Hund anlegen.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.calendar_toast_no_dog), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -376,7 +384,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         val switchReminder   = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchPlanReminder)
         val tvSuggestion     = view.findViewById<TextView>(R.id.tvPlanSuggestion)
 
-        val dateFmt = SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.GERMAN)
+        val dateFmt = SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.getDefault())
         tvDate.text = dateFmt.format(targetDay.time).replaceFirstChar { it.uppercase() }
 
         val categories = TrainingCategory.values().toList()
@@ -401,7 +409,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
             val character = dog.toCharacter()
             val duration = ActivityCalendarEngine.suggestDuration(progress, recentSessions, character)
             etDuration.setText(duration.toString())
-            tvSuggestion.text = "💡 Empfehlung: $duration Min (Fortschritt ${progress.progressPercentage}%)"
+            tvSuggestion.text = getString(R.string.calendar_suggestion_format, duration, progress.progressPercentage)
         }
         updateSuggestion(suggestedCategory)
 
@@ -413,9 +421,9 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         }
 
         AlertDialog.Builder(this)
-            .setTitle("📅 Trainingseinheit planen")
+            .setTitle(getString(R.string.calendar_dialog_plan_title))
             .setView(view)
-            .setPositiveButton("Speichern") { _, _ ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val category = categories.getOrNull(spinnerCategory.selectedItemPosition)
                     ?: TrainingCategory.LEINENARBEIT
                 val duration = etDuration.text.toString().toIntOrNull() ?: 15
@@ -437,10 +445,10 @@ class ActivityCalendarActivity : SecureBaseActivity() {
                     scheduleReminder(planned)
                 }
 
-                Toast.makeText(this, "Trainingseinheit geplant ✓", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.calendar_toast_planned), Toast.LENGTH_SHORT).show()
                 loadAllData()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.parseColor("#8FC357"))
@@ -493,7 +501,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
 
         if (neglected.isEmpty()) {
             binding.tvNeglectedEmpty.visibility = View.VISIBLE
-            binding.tvNeglectedEmpty.text = "✅ Alle Kategorien wurden in den letzten 14 Tagen trainiert."
+            binding.tvNeglectedEmpty.text = getString(R.string.calendar_gap_all_trained)
             return
         }
         binding.tvNeglectedEmpty.visibility = View.GONE
@@ -594,9 +602,17 @@ class ActivityCalendarActivity : SecureBaseActivity() {
         val precP = daily.getJSONArray("precipitation_probability_max")
         val windM = daily.getJSONArray("wind_speed_10m_max")
 
-        val dayNames = listOf("So", "Mo", "Di", "Mi", "Do", "Fr", "Sa")
-        val dateFmt  = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
-        val labelFmt = SimpleDateFormat("dd.MM.", Locale.GERMAN)
+        val dayNames = listOf(
+            getString(R.string.calendar_weekday_su),
+            getString(R.string.calendar_weekday_mo),
+            getString(R.string.calendar_weekday_tu),
+            getString(R.string.calendar_weekday_we),
+            getString(R.string.calendar_weekday_th),
+            getString(R.string.calendar_weekday_fr),
+            getString(R.string.calendar_weekday_sa)
+        )
+        val dateFmt  = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val labelFmt = SimpleDateFormat("dd.MM.", Locale.getDefault())
 
         val items = mutableListOf<CalendarDayForecast>()
         for (i in 0 until times.length()) {

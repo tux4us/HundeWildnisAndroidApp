@@ -63,7 +63,7 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = if (filterDogName != null) "⏱️ Timer – ${filterDogName}" else "⏱️ Timer-Verlauf"
+            title = if (filterDogName != null) getString(R.string.interval_history_title_dog, filterDogName) else getString(R.string.interval_history_title_main)
             setDisplayHomeAsUpEnabled(true)
         }
     }
@@ -83,7 +83,7 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
         binding.gridHistoryActions.adapter = StartTileAdapter(
             tiles = listOf(
                 StartTile("history_csv", R.drawable.ic_notes, "CSV"),
-                StartTile("history_delete", R.drawable.ic_remove, "Löschen", isDanger = true)
+                StartTile("history_delete", R.drawable.ic_remove, getString(R.string.start_delete), isDanger = true)
             ),
             chipColorRes = colors.chipColorRes,
             accentColorRes = colors.accentColorRes,
@@ -113,19 +113,19 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
 
         binding.tvEmpty.visibility =
             if (sessions.isEmpty()) View.VISIBLE else View.GONE
-        binding.tvCount.text = "${sessions.size} Session(s)"
+        binding.tvCount.text = getString(R.string.interval_history_count, sessions.size)
     }
 
     private fun confirmDelete(session: IntervalTimerSession) {
         AlertDialog.Builder(this)
-            .setTitle("Session löschen?")
-            .setMessage("${session.formattedDate()}\n${session.summaryLine()}")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.interval_dialog_stop_title))
+            .setMessage("${session.formattedDate()}\n${session.getSummaryLine(this)}")
+            .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                 IntervalTimerManager.deleteSession(this, session.id)
                 loadSessions()
-                Toast.makeText(this, "Gelöscht.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.interval_history_toast_deleted), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
@@ -136,18 +136,18 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
     private fun confirmDeleteAll() {
         if (sessions.isEmpty()) return
         AlertDialog.Builder(this)
-            .setTitle("Alle Sessions löschen?")
-            .setMessage("${sessions.size} Einträge werden unwiderruflich gelöscht.")
-            .setPositiveButton("Alle löschen") { _, _ ->
+            .setTitle(getString(R.string.interval_history_dialog_delete_all_title))
+            .setMessage(getString(R.string.interval_history_dialog_delete_all_message, sessions.size))
+            .setPositiveButton(getString(R.string.interval_history_btn_delete_all)) { _, _ ->
                 if (filterDogId != null) {
                     IntervalTimerManager.deleteAllForDog(this, filterDogId!!)
                 } else {
                     sessions.forEach { IntervalTimerManager.deleteSession(this, it.id) }
                 }
                 loadSessions()
-                Toast.makeText(this, "Alle Sessions gelöscht.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.interval_history_toast_all_deleted), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
@@ -157,22 +157,22 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
 
     private fun shareSession(session: IntervalTimerSession) {
         val text = buildString {
-            appendLine("⏱️ Intervall-Timer – ${session.formattedDate()}")
+            appendLine("⏱️ " + getString(R.string.interval_setup_title) + " – ${session.formattedDate()}")
             if (session.dogName.isNotEmpty()) appendLine("🐕 ${session.dogName}")
-            appendLine(session.summaryLine())
-            appendLine("💪 Effektive Aktivzeit: ${session.effectiveActiveMinutes} Min")
+            appendLine(session.getSummaryLine(this@IntervalTimerHistoryActivity))
+            appendLine(getString(R.string.interval_history_item_active_time, session.effectiveActiveMinutes))
             if (session.notes.isNotEmpty()) appendLine("📝 ${session.notes}")
         }
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        startActivity(Intent.createChooser(intent, "Session teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.interval_history_share_chooser)))
     }
 
     private fun exportCsv() {
         if (sessions.isEmpty()) {
-            Toast.makeText(this, "Keine Sessions vorhanden.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.interval_history_error_no_data), Toast.LENGTH_SHORT).show()
             return
         }
         try {
@@ -186,9 +186,9 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(intent, "CSV exportieren"))
+            startActivity(Intent.createChooser(intent, getString(R.string.interval_history_export_csv_chooser)))
         } catch (e: Exception) {
-            Toast.makeText(this, "Export fehlgeschlagen: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.interval_history_error_export_failed, e.message ?: ""), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -220,13 +220,13 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
 
         override fun onBindViewHolder(holder: VH, position: Int) {
             val s = items[position]
+            val context = holder.itemView.context
             holder.tvDate.text    = s.formattedDate()
             holder.tvDog.text     = if (s.dogName.isNotEmpty()) "🐕 ${s.dogName}" else ""
             holder.tvDog.visibility = if (s.dogName.isNotEmpty()) View.VISIBLE else View.GONE
-            holder.tvSummary.text = "${s.completedRounds}/${s.config.rounds} Runden  ·  " +
-                                    "${s.config.activeDurationSeconds}s aktiv / ${s.config.restDurationSeconds}s Pause"
-            holder.tvActive.text  = "💪 ${s.effectiveActiveMinutes} Min aktive Übungszeit"
-            holder.tvStatus.text  = if (s.abortedEarly) "⏹️ Abgebrochen" else "✅ Abgeschlossen"
+            holder.tvSummary.text = s.getSummaryLine(context)
+            holder.tvActive.text  = context.getString(R.string.interval_history_item_active_time, s.effectiveActiveMinutes)
+            holder.tvStatus.text  = if (s.abortedEarly) "⏹️ " + context.getString(R.string.interval_history_status_aborted) else "✅ " + context.getString(R.string.interval_history_status_completed)
             holder.tvStatus.setTextColor(
                 if (s.abortedEarly)
                     android.graphics.Color.parseColor("#E57373")

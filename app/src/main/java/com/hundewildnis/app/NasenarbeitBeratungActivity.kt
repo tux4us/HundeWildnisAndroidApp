@@ -6,10 +6,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -152,10 +154,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 buildGelaendeScreen()
 
                 val msg = buildString {
-                    append("✅ Kartendaten übernommen")
-                    if (mapUmgebung.isNotEmpty()) append(" · Umgebung")
-                    if (mapTopo.isNotEmpty())     append(" · Topografie")
-                    if (mapBoden.isNotEmpty())    append(" · Boden")
+                    append(getString(R.string.nasenarbeit_beratung_map_data_applied))
+                    if (mapUmgebung.isNotEmpty()) append(" · " + getString(R.string.nasenarbeit_beratung_map_data_terrain))
+                    if (mapTopo.isNotEmpty())     append(" · " + getString(R.string.nasenarbeit_beratung_map_data_topo))
+                    if (mapBoden.isNotEmpty())    append(" · " + getString(R.string.nasenarbeit_beratung_map_data_ground))
                 }
                 android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show()
             }
@@ -171,7 +173,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) fetchWeather()
-        else Toast.makeText(this, "Standort-Berechtigung erforderlich", Toast.LENGTH_LONG).show()
+        else Toast.makeText(this, getString(R.string.nasenarbeit_map_error_no_gps), Toast.LENGTH_LONG).show()
     }
 
     // ════════════════════════════════════════════════════════════
@@ -190,7 +192,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "${profile.name} – Nasenarbeit Beratung"
+        supportActionBar?.title = profile.name + getString(R.string.nasenarbeit_beratung_title_suffix)
 
         setupScreenNavigation()
         loadLastDates()
@@ -215,13 +217,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             requestLocationAndFetch()
         } else {
             AlertDialog.Builder(this)
-                .setTitle("Nasenarbeit – Trainingsberatung")
-                .setMessage("Für eine optimale Trainingsempfehlung benötigt die App:\n\n📍 GPS-Standort – temporär für Wetterdaten, wird nicht gespeichert\n🌡️ Wetterdaten – automatisch via Open-Meteo API\n\nAlle Daten bleiben auf deinem Gerät.")
-                .setPositiveButton("Verstanden & Weiter") { _, _ ->
+                .setTitle(getString(R.string.nasenarbeit_beratung_consent_title))
+                .setMessage(getString(R.string.nasenarbeit_beratung_consent_message))
+                .setPositiveButton(getString(R.string.nasenarbeit_beratung_consent_btn_continue)) { _, _ ->
                     getSharedPreferences(PREFS_CONSENT, MODE_PRIVATE).edit().putBoolean(KEY_CONSENT, true).apply()
                     requestLocationAndFetch()
                 }
-                .setNegativeButton("Ablehnen") { _, _ -> finish() }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> finish() }
                 .setCancelable(false)
                 .show()
         }
@@ -270,7 +272,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 showScreen(1)
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@NasenarbeitBeratungActivity, "Wetter nicht verfügbar – manuelle Eingabe", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@NasenarbeitBeratungActivity, getString(R.string.nasenarbeit_beratung_weather_not_available), Toast.LENGTH_LONG).show()
                     paramTemp = 15.0; paramBf = 3; paramWmo = 2; paramHumidity = 70
                     buildWetterScreen()
                     showScreen(1)
@@ -294,10 +296,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         if (hardExcl) {
             binding.cardExclusion.visibility = View.VISIBLE
             val reason = when {
-                paramTemp > 30  -> "Temperatur über 30°C"
-                paramTemp < -10 -> "Temperatur unter −10°C"
-                paramBf >= 9    -> "Windstärke Beaufort $paramBf – Sturm"
-                else            -> "Gewitter aktiv"
+                paramTemp > 30  -> getString(R.string.nasenarbeit_beratung_exclusion_too_hot_reason)
+                paramTemp < -10 -> getString(R.string.nasenarbeit_beratung_exclusion_too_cold_reason)
+                paramBf >= 9    -> getString(R.string.nasenarbeit_beratung_exclusion_storm_reason, paramBf)
+                else            -> getString(R.string.nasenarbeit_beratung_exclusion_thunderstorm_reason)
             }
             binding.tvExclusionReason.text = reason
             binding.layoutWetterEignung.visibility = View.GONE
@@ -344,22 +346,12 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("⛈️ Lebensgefahr: Gewitter!")
-            .setMessage(
-                """
-                Ein Training bei aktivem Gewitter ist extrem gefährlich:
-
-                • ⚡ Blitzschlag-Risiko – Dein Hund und du sind im freien Gelände oder am Waldrand extrem exponiert.
-                • 🌳 Umstürzende Bäume – Gewitterböen können Äste oder ganze Bäume zu Fall bringen.
-                • 🐾 Stress für den Hund – Der massive Luftdruckwechsel und Donner können das Suchverhalten negativ beeinflussen.
-
-                Wir raten dringend dazu, das Training auf einen sichereren Zeitpunkt zu verschieben.
-                """.trimIndent()
-            )
-            .setPositiveButton("Ich kenne die Risiken, trotzdem trainieren") { _, _ ->
+            .setTitle(getString(R.string.nasenarbeit_beratung_thunderstorm_dialog_title))
+            .setMessage(getString(R.string.nasenarbeit_beratung_thunderstorm_dialog_message))
+            .setPositiveButton(getString(R.string.nasenarbeit_beratung_thunderstorm_btn_risk)) { _, _ ->
                 openMapActivity()
             }
-            .setNegativeButton("Einverstanden, kein Training") { _, _ ->
+            .setNegativeButton(getString(R.string.nasenarbeit_beratung_thunderstorm_btn_agree)) { _, _ ->
                 finish()
             }
             .setCancelable(false)
@@ -498,7 +490,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private fun renderTopoSel() {
         binding.chipGroupTopoSel.removeAllViews()
         if (topoSequenz.isEmpty()) {
-            binding.chipGroupTopoSel.addView(makeInfoText("Noch nichts gewählt …"))
+            binding.chipGroupTopoSel.addView(makeInfoText(getString(R.string.nasenarbeit_beratung_topo_not_selected)))
         } else {
             topoSequenz.forEachIndexed { idx, v ->
                 binding.chipGroupTopoSel.addView(makeSeqChip("${idx+1}. $v") {
@@ -512,7 +504,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private fun renderUmbSel() {
         binding.chipGroupUmbSel.removeAllViews()
         if (umbSequenz.isEmpty()) {
-            binding.chipGroupUmbSel.addView(makeInfoText("Noch nichts gewählt …"))
+            binding.chipGroupUmbSel.addView(makeInfoText(getString(R.string.nasenarbeit_beratung_topo_not_selected)))
         } else {
             umbSequenz.forEachIndexed { idx, v ->
                 binding.chipGroupUmbSel.addView(makeSeqChip("${idx+1}. $v") {
@@ -528,15 +520,15 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val levV = fortschritt.levelVerlorensuche
         val levFl = fortschritt.levelFreisuche
         val hints = mutableListOf<String>()
-        if (gebietSchritte < levV.maxSchritte_V) hints.add("⚠️ Verlorensuche begrenzt auf $gebietSchritte Schritte")
-        if (gebietSchritte < fortschritt.levelPersonensuche.maxSchritte_P) hints.add("⚠️ Personensuche begrenzt")
-        if (gebietHa < levFl.maxHa_F) hints.add("⚠️ Freisuche begrenzt auf ${String.format("%.1f", gebietHa)} ha")
-        binding.tvGebietHint.text = if (hints.isEmpty()) "✅ Gebiet ausreichend für aktuelles Level" else hints.joinToString(" · ")
+        if (gebietSchritte < levV.maxSchritte_V) hints.add(getString(R.string.nasenarbeit_beratung_area_limit_v, gebietSchritte))
+        if (gebietSchritte < fortschritt.levelPersonensuche.maxSchritte_P) hints.add(getString(R.string.nasenarbeit_beratung_area_limit_p))
+        if (gebietHa < levFl.maxHa_F) hints.add(getString(R.string.nasenarbeit_beratung_area_limit_f, String.format(Locale.US, "%.1f", gebietHa)))
+        binding.tvGebietHint.text = if (hints.isEmpty()) getString(R.string.nasenarbeit_beratung_area_sufficient) else hints.joinToString(" · ")
     }
 
     private fun updateGelaendeEignung() {
-        val TOPO_SUIT = mapOf("Eben" to intArrayOf(0,0,0),"Leichte Steigung" to intArrayOf(0,0,0),"Steiles Gelände" to intArrayOf(1,1,0),"Kuppe" to intArrayOf(0,0,0),"Hanglage" to intArrayOf(0,0,0),"Mulde" to intArrayOf(0,0,0),"Wechselndes Relief" to intArrayOf(0,0,1),"Felsabbrüche / Steilwände" to intArrayOf(1,1,2))
-        val UMB_SUIT  = mapOf("Offenes Gelände" to intArrayOf(0,0,0),"Waldgebiet" to intArrayOf(0,0,0),"Grünland" to intArrayOf(0,0,0),"Urbanes Umfeld" to intArrayOf(0,0,1),"Industriegelände" to intArrayOf(0,0,1),"Dörfliche Bebauung" to intArrayOf(0,0,1),"Parkanlage" to intArrayOf(0,0,0),"Mischgebiet" to intArrayOf(0,0,1))
+        val TOPO_SUIT = mapOf(getString(R.string.nasenarbeit_opt_topo_eben) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_topo_steigung) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_topo_steil) to intArrayOf(1,1,0),getString(R.string.nasenarbeit_opt_topo_kuppe) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_topo_hang) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_topo_mulde) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_topo_relief) to intArrayOf(0,0,1),getString(R.string.nasenarbeit_opt_topo_fels) to intArrayOf(1,1,2))
+        val UMB_SUIT  = mapOf(getString(R.string.nasenarbeit_opt_umb_offen) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_umb_wald) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_umb_gruen) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_umb_urban) to intArrayOf(0,0,1),getString(R.string.nasenarbeit_opt_umb_industrie) to intArrayOf(0,0,1),getString(R.string.nasenarbeit_opt_umb_dorf) to intArrayOf(0,0,1),getString(R.string.nasenarbeit_opt_umb_park) to intArrayOf(0,0,0),getString(R.string.nasenarbeit_opt_umb_misch) to intArrayOf(0,0,1))
         val suit = IntArray(3)
         (topoSequenz + umbSequenz).forEach { item ->
             (TOPO_SUIT[item] ?: UMB_SUIT[item] ?: intArrayOf(0,0,0)).forEachIndexed { i, s -> if (s > suit[i]) suit[i] = s }
@@ -545,7 +537,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         if (topoSequenz.isNotEmpty() || umbSequenz.isNotEmpty()) {
             val card = MaterialCardView(this).apply { radius = 12f * resources.displayMetrics.density; cardElevation = 2f * resources.displayMetrics.density }
             val inner = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(14),dp(14),dp(14),dp(14)) }
-            val title = TextView(this).apply { text = "Geländebewertung"; textSize = 13f; setTypeface(null, android.graphics.Typeface.BOLD); setPadding(0,0,0,dp(10)) }
+            val title = TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_topo_eval_title); textSize = 13f; setTypeface(null, Typeface.BOLD); setPadding(0,0,0,dp(10)) }
             inner.addView(title)
             suit.forEachIndexed { i, s -> inner.addView(makeDizRow(i, s)) }
             card.addView(inner)
@@ -636,7 +628,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         root.addView(hdr)
 
         // Bodentyp Spinner
-        root.addView(TextView(this).apply { text = "Bodentyp"; textSize = 11f; setPadding(0,0,0,dp(4)) })
+        root.addView(TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_ground_type_label); textSize = 11f; setPadding(0,0,0,dp(4)) })
         val spBoden = Spinner(this)
         val btLabels = BODEN_TYPEN.map { it.second }
         spBoden.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, btLabels)
@@ -645,7 +637,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         root.addView(spBoden)
 
         // Bodenzustand Spinner
-        root.addView(TextView(this).apply { text = "Bodenzustand"; textSize = 11f; setPadding(0,0,0,dp(4)) })
+        root.addView(TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_ground_condition_label); textSize = 11f; setPadding(0,0,0,dp(4)) })
         val spZustand = Spinner(this)
         val bzLabels = BODEN_ZUSTAND.map { it.second }
         val zustandAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, bzLabels)
@@ -657,18 +649,18 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         // Schritte
         val colSchr = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; val lp2 = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f); lp2.marginEnd = dp(8); layoutParams = lp2 }
-        colSchr.addView(TextView(this).apply { text = "Schritte · Verloren + Person"; textSize = 10f; setPadding(0,0,0,dp(4)) })
-        val etSchr = EditText(this).apply { hint = "z.B. 200"; inputType = android.text.InputType.TYPE_CLASS_NUMBER; textSize = 12f }
+        colSchr.addView(TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_ground_steps_label); textSize = 10f; setPadding(0,0,0,dp(4)) })
+        val etSchr = EditText(this).apply { hint = "z.B. 200"; inputType = InputType.TYPE_CLASS_NUMBER; textSize = 12f }
         colSchr.addView(etSchr)
-        val cbSchr = CheckBox(this).apply { text = "Keine Angabe"; textSize = 11f }
+        val cbSchr = CheckBox(this).apply { text = getString(R.string.nasenarbeit_beratung_topo_not_selected); textSize = 11f }
         colSchr.addView(cbSchr)
         row.addView(colSchr)
         // Prozent
         val colPct = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; val lp2 = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f); layoutParams = lp2 }
-        colPct.addView(TextView(this).apply { text = "Flächenanteil % · Freisuche"; textSize = 10f; setPadding(0,0,0,dp(4)) })
-        val etPct = EditText(this).apply { hint = "z.B. 30"; inputType = android.text.InputType.TYPE_CLASS_NUMBER; textSize = 12f }
+        colPct.addView(TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_ground_area_pct_label); textSize = 10f; setPadding(0,0,0,dp(4)) })
+        val etPct = EditText(this).apply { hint = "z.B. 30"; inputType = InputType.TYPE_CLASS_NUMBER; textSize = 12f }
         colPct.addView(etPct)
-        val cbPct = CheckBox(this).apply { text = "Keine Angabe"; textSize = 11f }
+        val cbPct = CheckBox(this).apply { text = getString(R.string.nasenarbeit_beratung_topo_not_selected); textSize = 11f }
         colPct.addView(cbPct)
         row.addView(colPct)
         val lpRow = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); lpRow.bottomMargin = dp(10); row.layoutParams = lpRow
@@ -706,7 +698,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 entry.bodenTyp = BODEN_TYPEN[pos].first
                 // Disable matschig if needed
                 val noMatsch = NO_MATSCHIG.contains(entry.bodenTyp)
-                val allZustand = BODEN_ZUSTAND.map { if (noMatsch && it.first == "matschig") "– nicht verfügbar –" else it.second }
+                val allZustand = BODEN_ZUSTAND.map { if (noMatsch && it.first == "matschig") getString(R.string.nasenarbeit_beratung_ground_not_available) else it.second }
                 spZustand.adapter = ArrayAdapter(this@NasenarbeitBeratungActivity, android.R.layout.simple_spinner_dropdown_item, allZustand)
                 if (noMatsch && entry.bodenZustand == "matschig") { entry.bodenZustand = ""; spZustand.setSelection(0) }
                 updateBodenEignung(idx, tvEignung); checkBodenComplete()
@@ -759,20 +751,20 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         // Letzte Einheit
         binding.rgLetzte.setOnCheckedChangeListener { _, id ->
             letzteEinheit = when(id) {
-                R.id.rbHeute      -> "Heute"
-                R.id.rb7Tage      -> "Innerhalb 7 Tage"
-                R.id.rb14Tage     -> "Innerhalb 14 Tage"
-                R.id.rbNochKeine  -> "Noch keine Trainingseinheit"
-                else              -> "Gestern"
+                R.id.rbHeute      -> getString(R.string.today)
+                R.id.rb7Tage      -> getString(R.string.nasenarbeit_beratung_last_7days)
+                R.id.rb14Tage     -> getString(R.string.nasenarbeit_beratung_last_14days)
+                R.id.rbNochKeine  -> getString(R.string.nasenarbeit_beratung_last_none)
+                else              -> getString(R.string.yesterday)
             }
             // Leistungsdaten auf 0 setzen wenn noch kein Training stattgefunden hat
-            if (letzteEinheit == "Noch keine Trainingseinheit") {
+            if (id == R.id.rbNochKeine) {
                 perfV = 0; perfP = 0; perfFl = 0.0
                 binding.sbPerfV.progress  = 0
                 binding.sbPerfP.progress  = 0
                 binding.sbPerfFl.progress = 0
-                binding.tvPerfV.text  = "0 Schritte"
-                binding.tvPerfP.text  = "0 Schritte"
+                binding.tvPerfV.text  = "0 " + getString(R.string.nasenarbeit_map_result_steps_unit)
+                binding.tvPerfP.text  = "0 " + getString(R.string.nasenarbeit_map_result_steps_unit)
                 binding.tvPerfFl.text = "0.0 ha"
                 binding.sbPerfV.isEnabled  = false
                 binding.sbPerfP.isEnabled  = false
@@ -786,21 +778,21 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         // Tagesverfassung
         binding.rgVerfassung.setOnCheckedChangeListener { _, id ->
             verfassung = when(id) {
-                R.id.rbSehr   -> "Sehr motiviert"
-                R.id.rbExtrem -> "Extrem motiviert"
-                else          -> "Normal motiviert"
+                R.id.rbSehr   -> getString(R.string.nasenarbeit_beratung_condition_very)
+                R.id.rbExtrem -> getString(R.string.nasenarbeit_beratung_condition_extreme)
+                else          -> getString(R.string.nasenarbeit_beratung_condition_normal)
             }
         }
 
         // Perf sliders – Schritte 0..200 * 10 = 0..2000
-        binding.sbPerfV.setOnSeekBarChangeListener(seekListener { perfV = it * 10; binding.tvPerfV.text = "$perfV Schritte" })
-        binding.sbPerfP.setOnSeekBarChangeListener(seekListener { perfP = it * 10; binding.tvPerfP.text = "$perfP Schritte" })
-        binding.sbPerfFl.setOnSeekBarChangeListener(seekListener { perfFl = it * 0.1; binding.tvPerfFl.text = String.format(Locale.GERMAN,"%.1f ha", perfFl) })
+        binding.sbPerfV.setOnSeekBarChangeListener(seekListener { perfV = it * 10; binding.tvPerfV.text = "$perfV " + getString(R.string.nasenarbeit_map_result_steps_unit) })
+        binding.sbPerfP.setOnSeekBarChangeListener(seekListener { perfP = it * 10; binding.tvPerfP.text = "$perfP " + getString(R.string.nasenarbeit_map_result_steps_unit) })
+        binding.sbPerfFl.setOnSeekBarChangeListener(seekListener { perfFl = it * 0.1; binding.tvPerfFl.text = String.format(Locale.US,"%.1f ha", perfFl) })
 
         // Auto-select "Noch keine" if no sessions exist yet → Leistungsdaten sperren
         if (fortschritt.gesamtSessions == 0) {
             binding.rgLetzte.check(R.id.rbNochKeine)
-            letzteEinheit = "Noch keine Trainingseinheit"
+            letzteEinheit = getString(R.string.nasenarbeit_beratung_last_none)
             perfV = 0; perfP = 0; perfFl = 0.0
             binding.sbPerfV.isEnabled  = false
             binding.sbPerfP.isEnabled  = false
@@ -965,14 +957,14 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val recP  = (baseP  * mult).toInt().coerceAtMost(gebietSchritte)
         val recFl = (baseFl * mult).coerceAtMost(gebietHa)
 
-        val isFirstSession = letzteEinheit == "Noch keine Trainingseinheit" ||
+        val isFirstSession = letzteEinheit == getString(R.string.nasenarbeit_beratung_last_none) ||
                 (perfV <= 0 && perfP <= 0 && perfFl <= 0)
         val starterHint = if (isFirstSession) " (Startwert)" else ""
 
         val recStr = when (result.primaer) {
-            NasenarbeitDisziplin.VERLORENSUCHE -> "$recV Schritte$starterHint"
-            NasenarbeitDisziplin.PERSONENSUCHE -> "$recP Schritte$starterHint"
-            NasenarbeitDisziplin.FREISUCHE     -> String.format(Locale.GERMAN, "%.2f ha", recFl) + starterHint
+            NasenarbeitDisziplin.VERLORENSUCHE -> "$recV " + getString(R.string.nasenarbeit_map_result_steps_unit) + starterHint
+            NasenarbeitDisziplin.PERSONENSUCHE -> "$recP " + getString(R.string.nasenarbeit_map_result_steps_unit) + starterHint
+            NasenarbeitDisziplin.FREISUCHE     -> String.format(Locale.US, "%.2f ha", recFl) + starterHint
         }
 
         val spuralter = calcSpuralter(lev.ordinal, param.beaufort, param.gelaendeAbschnitte.firstOrNull()?.bodenZustand ?: "")
@@ -990,17 +982,17 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private fun buildBlock3(param: NasenarbeitParameter) {
         binding.layoutVorbereitung.removeAllViews()
         listOf(
-            "Leine, Geschirr und Suchleine prüfen",
-            "Ausreichend Trinkwasser für den Hund",
-            "Belohnungsmittel vorbereiten"
+            getString(R.string.nasenarbeit_beratung_prep_check_gear),
+            getString(R.string.nasenarbeit_beratung_prep_water),
+            getString(R.string.nasenarbeit_beratung_prep_rewards)
         ).forEach { binding.layoutVorbereitung.addView(makeBullet("✅", it)) }
         val zustand = param.gelaendeAbschnitte.firstOrNull()?.bodenZustand ?: ""
         if (zustand in listOf("gefroren","schnee_l","schnee_m","schnee_h"))
-            binding.layoutVorbereitung.addView(makeBullet("⚠️", "Pfotenschutz prüfen – Untergrund gefroren/Schnee"))
+            binding.layoutVorbereitung.addView(makeBullet("⚠️", getString(R.string.nasenarbeit_beratung_prep_paws)))
         if (param.beaufort >= 6)
-            binding.layoutVorbereitung.addView(makeBullet("⚠️", "Starker Wind – Windrichtung für Spurlegung beachten"))
+            binding.layoutVorbereitung.addView(makeBullet("⚠️", getString(R.string.nasenarbeit_beratung_prep_wind)))
         if (param.temperaturCelsius > 25)
-            binding.layoutVorbereitung.addView(makeBullet("⚠️", "Hitze – Trinkpausen planen, schattige Bereiche bevorzugen"))
+            binding.layoutVorbereitung.addView(makeBullet("⚠️", getString(R.string.nasenarbeit_beratung_prep_heat)))
     }
 
     private fun buildBlock5(result: NasenarbeitScorer.ScoringResult, param: NasenarbeitParameter) {
@@ -1059,9 +1051,9 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val best = result.primaer.ordinal
         val lev  = listOf(fortschritt.levelVerlorensuche, fortschritt.levelPersonensuche, fortschritt.levelFreisuche)[best]
         listOf(
-            "Ergebnisse im Tagebuch erfassen: Länge, Funde, Dauer",
-            "War die Einheit zu einfach? → Nächste Session +${(lev.steigerung * 100).toInt()}%",
-            "Schwierigkeiten? → Steigerung pausieren"
+            getString(R.string.nasenarbeit_beratung_after_diary),
+            getString(R.string.nasenarbeit_beratung_after_easy, (lev.steigerung * 100).toInt()),
+            getString(R.string.nasenarbeit_beratung_after_hard)
         ).forEach { binding.layoutNachTraining.addView(makeBullet("📊", it)) }
     }
 
@@ -1086,13 +1078,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         screens.forEachIndexed { i, v -> v.visibility = if (i == idx) View.VISIBLE else View.GONE }
         binding.progressBar.progress = idx + 1
         supportActionBar?.title = when(idx) {
-            0 -> "${profile.name} – Nasenarbeit"
-            1 -> "Daten zum Wetter"
-            2 -> "Daten zum Gelände"
-            3 -> "Daten zum Boden"
-            4 -> "Daten zum Trainingsstand"
-            5 -> "Trainingsempfehlung"
-            else -> "Nasenarbeit"
+            0 -> "${profile.name} – " + getString(R.string.training_category_nasenarbeit)
+            1 -> getString(R.string.nasenarbeit_beratung_tab_weather)
+            2 -> getString(R.string.nasenarbeit_beratung_tab_gelaende)
+            3 -> getString(R.string.nasenarbeit_beratung_tab_boden)
+            4 -> getString(R.string.nasenarbeit_beratung_tab_training)
+            5 -> getString(R.string.nasenarbeit_beratung_tab_empfehlung)
+            else -> getString(R.string.training_category_nasenarbeit)
         }
     }
 
@@ -1151,24 +1143,51 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun wmoToIcon(c: Int) = when(c) { 0->"☀️"; 1,2,3->"⛅"; 45,48->"🌫️"; in 51..57->"🌦️"; in 61..67->"🌧️"; in 71..77->"🌨️"; in 80..82->"🌦️"; 85,86->"🌨️"; 95,96,99->"⛈️"; else->"🌤️" }
-    private fun wmoToLabel(c: Int) = when(c) { 0->"Klarer Himmel"; 1->"Überwiegend klar"; 2->"Leicht bewölkt"; 3->"Bewölkt"; 45->"Nebel"; 48->"Gefrierender Nebel"; in 51..55->"Nieselregen"; in 61..65->"Regen"; in 71..75->"Schneefall"; 95->"Gewitter"; 96,99->"Gewitter m.Hagel"; else->"Wechselhaft" }
+    private fun wmoToLabel(c: Int) = when(c) {
+        0->getString(R.string.nasenarbeit_beratung_wmo_0)
+        1->getString(R.string.nasenarbeit_beratung_wmo_1)
+        2->getString(R.string.nasenarbeit_beratung_wmo_2)
+        3->getString(R.string.nasenarbeit_beratung_wmo_3)
+        45->getString(R.string.nasenarbeit_beratung_wmo_45)
+        48->getString(R.string.nasenarbeit_beratung_wmo_48)
+        in 51..55->getString(R.string.nasenarbeit_beratung_wmo_51)
+        in 61..65->getString(R.string.nasenarbeit_beratung_wmo_61)
+        in 71..75->getString(R.string.nasenarbeit_beratung_wmo_71)
+        95->getString(R.string.nasenarbeit_beratung_wmo_95)
+        96,99->getString(R.string.nasenarbeit_beratung_wmo_96)
+        else->getString(R.string.nasenarbeit_beratung_wmo_fallback)
+    }
 
     private fun calcSpuralter(lev: Int, bf: Int, zustand: String): String {
         val isFeucht = zustand in listOf("feucht","nass","stehend","matschig","schnee_l","schnee_m","schnee_h")
         val isStrong = bf >= 6
         return when(lev) {
-            0 -> "2–10 Min."
-            1 -> "10–30 Min."
-            2 -> if (isFeucht && !isStrong) "30–120 Min." else "30–90 Min."
-            else -> if (isStrong) "90 Min.–12h" else if (isFeucht) "2h–24h" else "2h–18h"
+            0 -> "2–10 " + getString(R.string.nasenarbeit_session_detail_duration_unit)
+            1 -> "10–30 " + getString(R.string.nasenarbeit_session_detail_duration_unit)
+            2 -> if (isFeucht && !isStrong) "30–120 " + getString(R.string.nasenarbeit_session_detail_duration_unit) else "30–90 " + getString(R.string.nasenarbeit_session_detail_duration_unit)
+            else -> if (isStrong) "90 " + getString(R.string.nasenarbeit_session_detail_duration_unit) + "–12h" else if (isFeucht) "2h–24h" else "2h–18h"
         }
     }
 
-    private fun fmt1(d: Double) = if (d > -999) String.format(Locale.GERMAN,"%.1f", d) else "❌"
     private fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
+    private fun fmt1(d: Double) = if (d > -999) String.format(Locale.US,"%.1f", d) else "❌"
 
     private val SUIT_SHORT = arrayOf("✅","⚠️","❌")
-    private val BF_LABELS  = arrayOf("Windstille","Leiser Zug","Leichte Brise","Schwache Brise","Mäßige Brise","Frische Brise","Starker Wind","Steifer Wind","Stürmischer Wind","Sturm","Schwerer Sturm","Orkanartiger Sturm","Orkan")
+    private val BF_LABELS by lazy { arrayOf(
+        getString(R.string.nasenarbeit_beratung_bf_0),
+        getString(R.string.nasenarbeit_beratung_bf_1),
+        getString(R.string.nasenarbeit_beratung_bf_2),
+        getString(R.string.nasenarbeit_beratung_bf_3),
+        getString(R.string.nasenarbeit_beratung_bf_4),
+        getString(R.string.nasenarbeit_beratung_bf_5),
+        getString(R.string.nasenarbeit_beratung_bf_6),
+        getString(R.string.nasenarbeit_beratung_bf_7),
+        getString(R.string.nasenarbeit_beratung_bf_8),
+        getString(R.string.nasenarbeit_beratung_bf_9),
+        getString(R.string.nasenarbeit_beratung_bf_10),
+        getString(R.string.nasenarbeit_beratung_bf_11),
+        getString(R.string.nasenarbeit_beratung_bf_12)
+    ) }
     private val WMO_SUIT   = mapOf(0 to intArrayOf(0,0,0),1 to intArrayOf(0,0,0),2 to intArrayOf(0,0,0),3 to intArrayOf(0,0,0),45 to intArrayOf(0,0,2),48 to intArrayOf(0,0,2),65 to intArrayOf(2,0,0),75 to intArrayOf(2,0,0),86 to intArrayOf(2,1,0),95 to intArrayOf(2,2,2),96 to intArrayOf(2,2,2),99 to intArrayOf(2,2,2))
 
     // View factory helpers
@@ -1176,7 +1195,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL; val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); lp.bottomMargin = dp(4); layoutParams = lp }
         row.addView(TextView(this).apply { text = "${DIZ_ICONS[diz]} ${DIZ_NAMES[diz]}"; textSize = 13f; val lp2 = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f); layoutParams = lp2 })
         row.addView(TextView(this).apply {
-            text = when(suit){ 0->"✅ Geeignet"; 1->"⚠️ Eingeschränkt"; else->"❌ Nicht geeignet" }
+            text = when(suit){ 0->getString(R.string.nasenarbeit_beratung_suit_suitable); 1->getString(R.string.nasenarbeit_beratung_suit_limited); else->getString(R.string.nasenarbeit_beratung_suit_not_suitable) }
             textSize = 12f
             setTextColor(when(suit){ 0->0xFF4ade80.toInt(); 1->0xFFfbbf24.toInt(); else->0xFFf87171.toInt() })
         })

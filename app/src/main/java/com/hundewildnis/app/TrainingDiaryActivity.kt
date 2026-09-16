@@ -27,7 +27,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "🦮🗓 Trainingstagebuch"
+        supportActionBar?.title = getString(R.string.diary_toolbar_title)
     }
 
     private fun loadProfiles() {
@@ -57,14 +57,14 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Keine Hunde angelegt")
-            .setMessage("Bitte legen Sie zuerst mindestens einen Hund in den Stammdaten an, um das Trainingstagebuch nutzen zu können.")
-            .setPositiveButton("Zu Stammdaten") { _, _ ->
+            .setTitle(getString(R.string.diary_no_dog_dialog_title))
+            .setMessage(getString(R.string.diary_no_dog_dialog_message))
+            .setPositiveButton(getString(R.string.diary_no_dog_dialog_btn_master_data)) { _, _ ->
                 val intent = Intent(this, DogProfileActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            .setNegativeButton("Zurück") { _, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 finish()
             }
             .setCancelable(false)
@@ -116,11 +116,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         val manager = TrainingManager(this)
         val weeklyStats = manager.getWeeklyStats(profile.id)
 
-        cardBinding.tvDogInfo.text = buildString {
-            append("Diese Woche:\n")
-            append("${weeklyStats.totalSessions} Trainingseinheiten\n")
-            append("${weeklyStats.totalMinutes} Minuten")
-        }
+        cardBinding.tvDogInfo.text = getString(R.string.diary_stats_this_week, weeklyStats.totalSessions, weeklyStats.totalMinutes)
 
         // ✅ FIX: Button-Farben für Dark Mode
         val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
@@ -165,10 +161,10 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         )
 
         if (file != null) {
-            Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.diary_export_pdf_success), Toast.LENGTH_LONG).show()
             TrainingExportManager.shareFile(this, file)
         } else {
-            Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.diary_export_error), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -180,10 +176,10 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         )
 
         if (file != null) {
-            Toast.makeText(this, "✅ CSV gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.diary_export_csv_success), Toast.LENGTH_LONG).show()
             TrainingExportManager.shareFile(this, file)
         } else {
-            Toast.makeText(this, "❌ Fehler beim Export", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.diary_export_error), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -198,17 +194,12 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("⚠️ Alle Trainingsdaten löschen?")
-            .setMessage("Möchtest du ALLE Trainingsdaten von ${profile.name} löschen?\n\n" +
-                    "❌ Alle Sessions werden gelöscht\n" +
-                    "❌ Alle Fortschritte werden gelöscht\n" +
-                    "❌ Alle Meilensteine werden gelöscht\n\n" +
-                    "⚠️ Diese Aktion kann NICHT rückgängig gemacht werden!\n\n" +
-                    "✅ Die Stammdaten (Name, Rasse, etc.) bleiben erhalten.")
-            .setPositiveButton("ALLES LÖSCHEN") { _, _ ->
+            .setTitle(getString(R.string.diary_delete_dialog_title))
+            .setMessage(getString(R.string.diary_delete_dialog_message, profile.name))
+            .setPositiveButton(getString(R.string.diary_delete_btn_all)) { _, _ ->
                 deleteAllTrainingData(profile)
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -222,10 +213,10 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         val success = manager.deleteDogTrainingData(this, profile.id)
 
         if (success) {
-            Toast.makeText(this, "✅ Alle Trainingsdaten von ${profile.name} gelöscht", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.diary_delete_success, profile.name), Toast.LENGTH_LONG).show()
             loadProfiles()
         } else {
-            Toast.makeText(this, "❌ Fehler beim Löschen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.diary_delete_error), Toast.LENGTH_SHORT).show()
         }
     }
 

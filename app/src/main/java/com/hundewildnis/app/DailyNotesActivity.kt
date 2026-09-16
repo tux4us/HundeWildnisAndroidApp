@@ -100,13 +100,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     // Permission Launcher
     private val cameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) openCamera() else Toast.makeText(this, "⚠️ Kamera-Berechtigung erforderlich", Toast.LENGTH_SHORT).show()
+        if (granted) openCamera() else Toast.makeText(this, getString(R.string.start_camera_permission_required), Toast.LENGTH_SHORT).show()
     }
 
     private val locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
             requestLocationUpdates()
-            Toast.makeText(this, "📍 Standort-Zugriff erlaubt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "📍 " + getString(R.string.location_access_allowed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -148,7 +148,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply { title = "Tagesnotizen"; setDisplayHomeAsUpEnabled(true) }
+        supportActionBar?.apply { title = getString(R.string.notes_toolbar_title); setDisplayHomeAsUpEnabled(true) }
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -167,8 +167,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     private fun setupGrids() {
         // Bedingungen (Wetter/GPS)
         val conditionTiles = listOf(
-            StartTile("note_weather", R.drawable.ic_weather, "Wetter"),
-            StartTile("note_gps", R.drawable.ic_navigation, "GPS-Ort")
+            StartTile("note_weather", R.drawable.ic_weather, getString(R.string.notes_tile_weather)),
+            StartTile("note_gps", R.drawable.ic_navigation, getString(R.string.notes_tile_gps))
         )
         val colorsConditions = StartGroupColors.forGroup(this, 3) // Ocker
         binding.gridNoteConditions.layoutManager = GridLayoutManager(this, 2)
@@ -178,8 +178,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
         // Fotos
         val photoTiles = listOf(
-            StartTile("note_camera", R.drawable.ic_microphone, "Kamera"), // microphone icon used as placeholder for camera if ic_camera is missing
-            StartTile("note_gallery", R.drawable.ic_pages, "Galerie")
+            StartTile("note_camera", R.drawable.ic_microphone, getString(R.string.notes_tile_camera)), // microphone icon used as placeholder for camera if ic_camera is missing
+            StartTile("note_gallery", R.drawable.ic_pages, getString(R.string.notes_tile_gallery))
         )
         val colorsPhotos = StartGroupColors.forGroup(this, 4) // Blau
         binding.gridNotePhotos.layoutManager = GridLayoutManager(this, 2)
@@ -189,7 +189,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
         // Speichern
         val saveTiles = listOf(
-            StartTile("note_save", R.drawable.ic_notes, "💾 Notiz sichern & Neu 📝")
+            StartTile("note_save", R.drawable.ic_notes, getString(R.string.notes_tile_save))
         )
         val colorsSave = StartGroupColors.forGroup(this, 2) // Grün
         binding.gridNoteSave.layoutManager = GridLayoutManager(this, 1)
@@ -199,8 +199,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val actionTiles = listOf(
             StartTile("note_pdf", R.drawable.ic_notes, "PDF"),
             StartTile("note_gpx", R.drawable.ic_navigation, "GPX"),
-            StartTile("note_share", R.drawable.ic_map_pin_share, "Teilen"),
-            StartTile("note_clear", R.drawable.ic_remove, "Löschen", isDanger = true)
+            StartTile("note_share", R.drawable.ic_map_pin_share, getString(R.string.walking_speed_share_log)),
+            StartTile("note_clear", R.drawable.ic_remove, getString(R.string.notes_tile_delete), isDanger = true)
         )
         val colorsActions = StartGroupColors.forGroup(this, 1) // Gelb
         binding.gridNoteActions.layoutManager = GridLayoutManager(this, 4)
@@ -219,13 +219,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Entwurf löschen?")
-            .setMessage("Möchtest du den aktuellen Entwurf wirklich löschen?")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.notes_confirm_delete_draft_title))
+            .setMessage(getString(R.string.notes_confirm_delete_draft_msg))
+            .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                 photos.forEach { deletePhotoFile(it) }
                 startNewNote()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show().apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
                 getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
@@ -250,23 +250,12 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📍 Standortzugriff für Notfallmeldung")
-            .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
-                    "• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
-                    "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n" +
-                    "• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n" +
-                    "• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n" +
-                    "• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n" +
-                    "• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n" +
-                    "• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n" +
-                    "• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n" +
-                    "• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\n" +
-                    "WICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
-                    "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden")
-            .setPositiveButton("AKTIVIEREN") { _, _ ->
+            .setTitle(getString(R.string.notes_location_disclosure_title))
+            .setMessage(getString(R.string.notes_location_disclosure_msg))
+            .setPositiveButton(getString(R.string.start_notification_disclosure_accept)) { _, _ ->
                 locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
             }
-            .setNegativeButton("ABLEHNEN", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -286,18 +275,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📷 Zugriff auf Kamera")
-            .setMessage("HundeWildnis benötigt Zugriff auf Deine Kamera für folgende Zwecke:\n\n" +
-                    "• TAGESNOTIZEN:\nDamit Du aktuelle Fotos von Deinem Training oder besonderen Momenten direkt aufnehmen und in Deinen Notizen dokumentieren kannst.\n\n" +
-                    "DATENSCHUTZ:\n• Deine Fotos werden NUR lokal in der App verwendet.\n" +
-                    "• Es erfolgt KEINE Übermittlung an unsere Server oder Dritte.\n" +
-                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auslösung der Kamera.\n\n" +
-                    "Möchtest Du den Zugriff jetzt aktivieren?")
-            .setPositiveButton("AKTIVIEREN") { _, _ ->
+            .setTitle(getString(R.string.notes_camera_disclosure_title))
+            .setMessage(getString(R.string.notes_camera_disclosure_msg))
+            .setPositiveButton(getString(R.string.start_notification_disclosure_accept)) { _, _ ->
                 prefs.edit().putBoolean("camera_disclosure_shown", true).apply()
                 checkCameraPermissionAndOpen()
             }
-            .setNegativeButton("ABLEHNEN", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -315,7 +299,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         pendingWeatherRequest = false
         hasExplicitLocation = true
         requestLocationUpdates()
-        Toast.makeText(this, "📍 Standort wird abgerufen...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.notes_location_fetching), Toast.LENGTH_SHORT).show()
     }
 
     private fun addWeatherToNote() {
@@ -328,7 +312,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             pendingWeatherRequest = true
             hasExplicitLocation = false        // Wichtig: Kein expliziter GPS-Eintrag
             requestLocationUpdates()
-            Toast.makeText(this, "📍 Standort wird temporär für Wetter abgerufen...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.notes_location_fetching_weather), Toast.LENGTH_SHORT).show()
             return
         }
     }
@@ -365,7 +349,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null)
 
         } catch (e: SecurityException) {
-            Toast.makeText(this, "Standort-Berechtigung fehlt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.walking_speed_location_permission_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -405,7 +389,11 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 val desc = getWeatherDescription(code)
                 val windDirStr = getWindDirection(windDir)
 
-                "🌡️ ${String.format(Locale.GERMAN, "%.1f", temp)}°C, $desc\n💨 ${String.format(Locale.GERMAN, "%.1f", windSpeed)} km/h ($windDirStr), 💧 $hum%, 🌧️ ${String.format(Locale.GERMAN, "%.1f", precip)}mm"
+                val tempStr = String.format(Locale.US, "%.1f", temp)
+                val windStr = String.format(Locale.US, "%.1f", windSpeed)
+                val precipStr = String.format(Locale.US, "%.1f", precip)
+
+                getString(R.string.notes_weather_format, tempStr, desc, windStr, windDirStr, hum, precipStr)
             }
 
             withContext(Dispatchers.Main) {
@@ -419,11 +407,11 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
                 saveToHistory(false)
 
-                Toast.makeText(this@DailyNotesActivity, "🌤️ Wetterdaten hinzugefügt", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DailyNotesActivity, getString(R.string.notes_weather_added), Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@DailyNotesActivity, "⚠️ Fehler beim Wetter-Abruf", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DailyNotesActivity, getString(R.string.notes_weather_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -445,7 +433,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun updateDateDisplay(timestamp: Long) {
-        val dateText = SimpleDateFormat("EEEE, dd. MMMM yyyy HH:mm", Locale.GERMAN).format(Date(timestamp))
+        val dateText = SimpleDateFormat("EEEE, dd. MMMM yyyy HH:mm", Locale.getDefault()).format(Date(timestamp))
         val locText = if (currentLatitude != null) "\n📍 ${String.format(Locale.US, "%.4f", currentLatitude)}, ${String.format(Locale.US, "%.4f", currentLongitude)}" else ""
         binding.tvDate.text = dateText + locText
     }
@@ -457,10 +445,15 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private fun getWeatherDescription(code: Int): String {
         return when (code) {
-            0 -> "Klarer Himmel"; 1, 2, 3 -> "Leicht bewölkt"; 45, 48 -> "Nebel"
-            51, 53, 55 -> "Nieselregen"; 61, 63, 65 -> "Regen"; 71, 73, 75 -> "Schneefall"
-            80, 81, 82 -> "Regenschauer"; 95 -> "Gewitter"
-            else -> "Wechselhaft"
+            0 -> getString(R.string.notes_weather_clear_sky)
+            1, 2, 3 -> getString(R.string.notes_weather_partly_cloudy)
+            45, 48 -> getString(R.string.notes_weather_fog)
+            51, 53, 55 -> getString(R.string.notes_weather_drizzle)
+            61, 63, 65 -> getString(R.string.notes_weather_rain)
+            71, 73, 75 -> getString(R.string.notes_weather_snow)
+            80, 81, 82 -> getString(R.string.notes_weather_showers)
+            95 -> getString(R.string.notes_weather_thunderstorm)
+            else -> getString(R.string.notes_weather_changeable)
         }
     }
 
@@ -535,9 +528,9 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
-            .setTitle("Notiz löschen?")
-            .setMessage("Möchtest Du diese Notiz dauerhaft entfernen?")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.notes_confirm_delete_history_title))
+            .setMessage(getString(R.string.notes_confirm_delete_history_msg))
+            .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                 val index = historyList.indexOfFirst { it.id == session.id }
                 if (index != -1) {
                     historyList.removeAt(index)
@@ -546,7 +539,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                     if (currentSessionId == session.id) startNewNote()
                 }
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show().apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
                 getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
@@ -601,16 +594,16 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         historyAdapter.notifyDataSetChanged()
         if (isManualNew) {
             startNewNote()
-            Toast.makeText(this, "✅ Notiz gesichert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.notes_saved_success), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun exportAsPdf(share: Boolean) {
-        val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
+        val title = binding.etTitle.text.toString().ifEmpty { getString(R.string.notes_default_pdf_title) }
         val notes = binding.etNotes.text.toString()
         val timestamp = System.currentTimeMillis()
-        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(timestamp))
-        val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(timestamp))}.pdf"
+        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date(timestamp))
+        val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.US).format(Date(timestamp))}.pdf"
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -624,15 +617,15 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 // ═══════════════════════════════════════════════════════
                 // HEADER
                 // ═══════════════════════════════════════════════════════
-                document.add(Paragraph("📝 TAGESNOTIZ - HundeWildnis")
+                document.add(Paragraph(getString(R.string.notes_pdf_header))
                     .setFontSize(20f)
                     .setBold()
                     .setTextAlignment(TextAlignment.CENTER))
 
-                document.add(Paragraph("Erstellt am: $dateStr")
+                document.add(Paragraph(getString(R.string.notes_pdf_created_at, dateStr))
                     .setTextAlignment(TextAlignment.CENTER))
 
-                document.add(Paragraph("Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de")
+                document.add(Paragraph(getString(R.string.notes_pdf_footer))
                     .setFontSize(10f)
                     .setTextAlignment(TextAlignment.CENTER))
 
@@ -642,7 +635,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 // TITEL
                 // ═══════════════════════════════════════════════════════
                 if (title.isNotEmpty()) {
-                    document.add(Paragraph("Titel: $title").setBold().setFontSize(16f))
+                    document.add(Paragraph(getString(R.string.notes_pdf_label_title, title)).setBold().setFontSize(16f))
                 }
 
                 // ═══════════════════════════════════════════════════════
@@ -650,8 +643,10 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 // ═══════════════════════════════════════════════════════
                 if (currentLatitude != null && currentLongitude != null) {
                     val osmUrl = "https://www.openstreetmap.org/?mlat=$currentLatitude&mlon=$currentLongitude#map=18/$currentLatitude/$currentLongitude"
-                    document.add(Paragraph("📍 Standort (GPS): $currentLatitude, $currentLongitude").setBold())
-                    document.add(Paragraph("Karte (OpenStreetMap): $osmUrl")
+                    val latStr = String.format(Locale.US, "%.5f", currentLatitude)
+                    val lonStr = String.format(Locale.US, "%.5f", currentLongitude)
+                    document.add(Paragraph(getString(R.string.notes_pdf_label_location, latStr, lonStr)).setBold())
+                    document.add(Paragraph(getString(R.string.notes_pdf_label_map, osmUrl))
                         .setFontColor(DeviceRgb(0, 0, 255))
                         .setFontSize(10f))
                 }
@@ -660,13 +655,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 // WETTER
                 // ═══════════════════════════════════════════════════════
                 if (currentWeatherInfo != null) {
-                    document.add(Paragraph("🌤️ Wetter:\n$currentWeatherInfo"))
+                    document.add(Paragraph(getString(R.string.notes_pdf_label_weather, currentWeatherInfo)))
                 }
 
                 // ═══════════════════════════════════════════════════════
                 // NOTIZEN
                 // ═══════════════════════════════════════════════════════
-                document.add(Paragraph("\nNotizen:").setBold())
+                document.add(Paragraph("\n" + getString(R.string.notes_pdf_label_notes)).setBold())
                 document.add(Paragraph(notes))
 
                 // ═══════════════════════════════════════════════════════
@@ -686,7 +681,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                         document.add(AreaBreak())
                     }
 
-                    document.add(Paragraph("\n📸 FOTOS:").setBold().setFontSize(14f))
+                    document.add(Paragraph("\n" + getString(R.string.notes_pdf_label_photos)).setBold().setFontSize(14f))
 
                     // ✅ Fotos in 3-Spalten-Tabelle
                     val photoTable = Table(UnitValue.createPercentArray(floatArrayOf(33f, 33f, 33f)))
@@ -753,7 +748,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                     } else {
                         Toast.makeText(
                             this@DailyNotesActivity,
-                            "✅ PDF gespeichert nach Documents/HundeWildnis: ${file.name}",
+                            getString(R.string.notes_pdf_saved_success, file.name),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -763,7 +758,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@DailyNotesActivity,
-                        "❌ Fehler beim Erstellen der PDF: ${e.message}",
+                        getString(R.string.notes_pdf_error, e.message ?: ""),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -773,17 +768,17 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     private fun exportAsGpx() {
         if (currentLatitude == null || currentLongitude == null) {
-            Toast.makeText(this, "Keine Standortdaten für GPX vorhanden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.notes_gpx_error_no_location), Toast.LENGTH_SHORT).show()
             return
         }
 
-        val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
+        val title = binding.etTitle.text.toString().ifEmpty { getString(R.string.notes_default_pdf_title) }
         val timestamp = System.currentTimeMillis()
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
         sdf.timeZone = TimeZone.getTimeZone("UTC")
         val timeStr = sdf.format(Date(timestamp))
 
-        val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.GERMAN).format(Date(timestamp))}.gpx"
+        val fileName = "Notiz_${SimpleDateFormat("yyyyMMdd_HHmm", Locale.US).format(Date(timestamp))}.gpx"
 
         val gpx = """
             <?xml version="1.0" encoding="UTF-8"?>
@@ -807,43 +802,43 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
                 withContext(Dispatchers.Main) {
                     MediaScannerConnection.scanFile(this@DailyNotesActivity, arrayOf(file.absolutePath), arrayOf("application/gpx+xml"), null)
-                    Toast.makeText(this@DailyNotesActivity, "✅ GPX gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@DailyNotesActivity, getString(R.string.notes_gpx_saved_success), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@DailyNotesActivity, "Fehler beim Speichern: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DailyNotesActivity, getString(R.string.walking_speed_export_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun shareNotes() {
-        val title = binding.etTitle.text.toString().ifEmpty { "Tagesnotiz" }
+        val title = binding.etTitle.text.toString().ifEmpty { getString(R.string.notes_default_pdf_title) }
         val notes = binding.etNotes.text.toString()
-        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())
+        val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())
 
         // ✅ VERBESSERTE FORMATIERUNG mit Leerzeilen zwischen Abschnitten
         val shareText = StringBuilder().apply {
-            append("📝 HundeWildnis - Tagesnotiz\n")
-            append("Datum: $dateStr\n\n")
+            append("📝 HundeWildnis - " + getString(R.string.notes_default_pdf_title) + "\n")
+            append(getString(R.string.notes_date_label) + ": $dateStr\n\n")
 
             if (title.isNotEmpty()) {
-                append("Titel: $title\n\n")
+                append(getString(R.string.notes_title_label) + ": $title\n\n")
             }
 
             if (currentWeatherInfo != null) {
-                append("🌤️ Wetter:\n$currentWeatherInfo\n\n")
+                append("🌤️ " + getString(R.string.notes_tile_weather) + ":\n$currentWeatherInfo\n\n")
             }
 
             if (currentLatitude != null && currentLongitude != null) {
                 // ✅ OpenStreetMap-Link hinzugefügt
                 val osmUrl = "https://www.openstreetmap.org/?mlat=$currentLatitude&mlon=$currentLongitude#map=18/$currentLatitude/$currentLongitude"
-                append("📍 Standort (GPS):\n")
-                append("Koordinaten: $currentLatitude, $currentLongitude\n")
-                append("Karte: $osmUrl\n\n")
+                append("📍 " + getString(R.string.notes_pdf_label_location) + ":\n")
+                append(getString(R.string.nasenarbeit_pdf_label_coordinates) + ": $currentLatitude, $currentLongitude\n")
+                append(getString(R.string.nasenarbeit_pdf_label_map) + ": $osmUrl\n\n")
             }
 
-            append("Notizen:\n$notes")
+            append(getString(R.string.notes_pdf_label_notes) + ":\n$notes")
         }.toString()
 
         if (photos.isEmpty()) {
@@ -853,7 +848,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_SUBJECT, title)
             }
-            startActivity(Intent.createChooser(shareIntent, "Notiz teilen"))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.notes_share_chooser_title)))
 
         } else {
             // ✅ MIT BILDERN - Zeige Auswahl-Dialog für User-Kontrolle
@@ -862,20 +857,20 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
-                .setTitle("📤 Notiz teilen")
-                .setMessage("Du hast ${photos.size} Foto(s) in dieser Notiz.\n\nWie möchtest du teilen?")
-                .setPositiveButton("Text + Bilder") { _, _ ->
+                .setTitle(getString(R.string.notes_share_dialog_title))
+                .setMessage(getString(R.string.notes_share_dialog_msg, photos.size))
+                .setPositiveButton(getString(R.string.notes_share_btn_text_photos)) { _, _ ->
                     shareTextAndPhotos(shareText, title)
                 }
-                .setNeutralButton("Nur Text") { _, _ ->
+                .setNeutralButton(getString(R.string.notes_share_btn_text_only)) { _, _ ->
                     val textIntent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
                         putExtra(Intent.EXTRA_TEXT, shareText)
                         putExtra(Intent.EXTRA_SUBJECT, title)
                     }
-                    startActivity(Intent.createChooser(textIntent, "Notiz teilen"))
+                    startActivity(Intent.createChooser(textIntent, getString(R.string.notes_share_chooser_title)))
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .create()
                 .apply {
                     show()
@@ -899,7 +894,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 putExtra(Intent.EXTRA_SUBJECT, title)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(shareIntent, "Notiz mit Foto teilen"))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.notes_share_with_photo_title)))
 
         } else {
             // ✅ MEHRERE BILDER - Zeige DIALOG statt Toast
@@ -908,15 +903,9 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
-                .setTitle("⚠️ Wichtiger Hinweis")
-                .setMessage("Du hast ${photos.size} Fotos ausgewählt.\n\n" +
-                        "WICHTIG:\nViele Apps (WhatsApp, Instagram, Signal etc.) zeigen bei mehreren Bildern " +
-                        "den begleitenden Text NICHT an!\n\n" +
-                        "EMPFEHLUNG:\n" +
-                        "Nutze stattdessen 'PDF exportieren & teilen' um sicherzustellen, " +
-                        "dass alle Informationen (Titel, Notizen, Wetter, GPS und Fotos) vollständig übermittelt werden.\n\n" +
-                        "Trotzdem fortfahren?")
-                .setPositiveButton("Trotzdem teilen") { _, _ ->
+                .setTitle(getString(R.string.notes_share_warning_title))
+                .setMessage(getString(R.string.notes_share_warning_msg, photos.size))
+                .setPositiveButton(getString(R.string.notes_share_warning_btn_continue)) { _, _ ->
                     val shareIntent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
                         type = "image/*"
                         putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(photos))
@@ -924,9 +913,9 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                         putExtra(Intent.EXTRA_SUBJECT, title)
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
-                    startActivity(Intent.createChooser(shareIntent, "Notiz mit ${photos.size} Fotos teilen"))
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.notes_share_multi_photo_title, photos.size)))
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .create()
                 .apply {
                     show()
@@ -950,7 +939,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "PDF teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.notes_share_chooser_title)))
     }
 
     override fun onLocationChanged(locations: MutableList<Location>) {}
@@ -970,8 +959,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         }
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val session = sessions[position]
-            holder.binding.tvNoteDate.text = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Date(session.date))
-            holder.binding.tvNoteSnippet.text = if (session.title.isNotEmpty()) session.title else "Kein Titel"
+            holder.binding.tvNoteDate.text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(session.date))
+            holder.binding.tvNoteSnippet.text = if (session.title.isNotEmpty()) session.title else getString(R.string.notes_no_title)
 
             if (session.latitude != null && session.longitude != null) {
                 holder.binding.tvNoteLocation.text = String.format(Locale.US, "📍 %.4f, %.4f", session.latitude, session.longitude)

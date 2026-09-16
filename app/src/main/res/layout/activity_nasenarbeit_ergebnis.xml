@@ -63,7 +63,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Durchgeführte Disziplin:"
+                android:text="@string/nasenarbeit_ergebnis_header_discipline"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
@@ -121,11 +121,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Durchgeführte Schritte:" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_steps" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Schritte angeben"
+                    android:hint="@string/nasenarbeit_ergebnis_hint_steps"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etSchritte"
@@ -143,11 +143,11 @@
                 android:orientation="vertical"
                 android:layout_marginBottom="12dp"
                 android:visibility="gone">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Durchgeführte Fläche (m²):" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_area" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="m² eingeben"
+                    android:hint="@string/nasenarbeit_ergebnis_hint_area"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etHa"
@@ -158,11 +158,11 @@
             </LinearLayout>
 
             <!-- Dauer -->
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suchdauer (Minuten):" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_duration" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Suchdauer eingeben"
+                android:hint="@string/nasenarbeit_ergebnis_hint_duration"
                 android:layout_marginBottom="12dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -180,13 +180,13 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="12dp">
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gefunden:" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_found" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                     <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                         <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGegenstaende" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamt gelegt:" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_total_laid" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                     <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                         <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGegenstaendeGesamt" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -210,12 +210,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Zielperson erfolgreich gefunden"
+                    android:text="@string/nasenarbeit_ergebnis_person_found"
                     android:textSize="13sp"/>
             </LinearLayout>
 
             <!-- Bewertung -->
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Erfolgsbewertung:" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_header_rating" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -230,13 +230,13 @@
 
             <!-- Notizen -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Notizen" android:textSize="14sp" android:textStyle="bold"
+                android:text="@string/nasenarbeit_ergebnis_header_notes" android:textSize="14sp" android:textStyle="bold"
                 android:layout_marginBottom="6dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Titel (optional)"
+                android:hint="@string/nasenarbeit_ergebnis_hint_notes_title"
                 android:layout_marginBottom="8dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -250,7 +250,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Beobachtungen, Besonderheiten …"
+                android:hint="@string/nasenarbeit_ergebnis_hint_notes_desc"
                 android:layout_marginBottom="16dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -263,7 +263,7 @@
 
             <!-- Fotos -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Fotos" android:textSize="14sp" android:textStyle="bold"
+                android:text="@string/nasenarbeit_ergebnis_header_photos" android:textSize="14sp" android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
             <LinearLayout
@@ -276,7 +276,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="📷 Galerie"
+                    android:text="@string/nasenarbeit_ergebnis_btn_gallery"
                     android:textColor="?attr/colorOnSurface"
                     android:layout_marginEnd="6dp"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -286,7 +286,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="📸 Kamera"
+                    android:text="@string/nasenarbeit_ergebnis_btn_camera"
                     android:textColor="?attr/colorOnSurface"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     app:cornerRadius="8dp"/>
@@ -304,7 +304,7 @@
                 android:id="@+id/tvFotoHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Noch keine Fotos • Lang drücken zum Entfernen"
+                android:text="@string/nasenarbeit_ergebnis_photo_hint"
                 android:textSize="11sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginBottom="16dp"/>
@@ -314,7 +314,7 @@
                 android:id="@+id/btnSpeichern"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="✅ Session speichern"
+                android:text="@string/nasenarbeit_ergebnis_btn_save"
                 android:textSize="15sp"
                 android:textColor="#FFFFFF"
                 android:minHeight="56dp"
@@ -325,7 +325,7 @@
                 android:id="@+id/btnAbbrechen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Abbrechen"
+                android:text="@string/cancel"
                 android:textSize="14sp"
                 android:textColor="?attr/colorOnSurface"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"

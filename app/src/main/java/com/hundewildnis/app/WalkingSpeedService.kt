@@ -56,7 +56,7 @@ class WalkingSpeedService : Service(), LocationListener {
 
     private var previousLocation: Location? = null
     private var totalDistance = 0f
-    
+
     // Session Daten
     private val speedDataPoints = mutableListOf<SpeedDataPoint>()
     private var sessionStartTime = 0L
@@ -94,10 +94,10 @@ class WalkingSpeedService : Service(), LocationListener {
 
         // ✅ FIX: Nur starten, wenn nicht bereits getrackt wird (verhindert Datenverlust beim Wiederöffnen)
         if (!isTracking) {
-            startForeground(NOTIFICATION_ID, createNotification("Tracking gestartet", false))
+            startForeground(NOTIFICATION_ID, createNotification(getString(R.string.walking_speed_service_tracking_started), false))
             startTracking()
         }
-        
+
         isServiceRunning = true
         return START_STICKY
     }
@@ -179,7 +179,7 @@ class WalkingSpeedService : Service(), LocationListener {
 
         // Notification aktualisieren (Wichtig für Sperrbildschirm)
         val notification = createNotification(
-            "⚠️ Zu schnell! ${String.format("%.1f", currentSpeed)} km/h (Limit: ${String.format("%.1f", speedLimit)} km/h)",
+            getString(R.string.walking_speed_service_too_fast, String.format("%.1f", currentSpeed), String.format("%.1f", speedLimit)),
             true
         )
         notificationManager.notify(NOTIFICATION_ID, notification)
@@ -193,7 +193,7 @@ class WalkingSpeedService : Service(), LocationListener {
             totalDistance += distance
         }
         previousLocation = location
-        
+
         val dataPoint = SpeedDataPoint(
             timestamp = System.currentTimeMillis(),
             speed = currentSpeed,
@@ -201,7 +201,7 @@ class WalkingSpeedService : Service(), LocationListener {
             longitude = location.longitude
         )
         speedDataPoints.add(dataPoint)
-        
+
         if (currentSpeed > speedLimit) {
             exceedCount++
         }
@@ -217,10 +217,10 @@ class WalkingSpeedService : Service(), LocationListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Trainingstempo Überwachung",
+                getString(R.string.walking_speed_service_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Status der Geschwindigkeitsüberwachung"
+                description = getString(R.string.walking_speed_service_channel_description)
                 setSound(null, null)
                 enableVibration(false)
             }
@@ -230,7 +230,7 @@ class WalkingSpeedService : Service(), LocationListener {
 
     private fun createNotification(text: String, isWarning: Boolean) =
         NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(if (isWarning) "⚠️ Zu schnell!" else "🚶 Trainingstempo")
+            .setContentTitle(if (isWarning) getString(R.string.walking_speed_service_too_fast_title) else getString(R.string.walking_speed_service_notification_title))
             .setContentText(text)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)

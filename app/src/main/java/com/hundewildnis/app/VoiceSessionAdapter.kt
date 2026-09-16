@@ -31,9 +31,10 @@ class VoiceSessionAdapter(
         val duration = session.totalDuration / 1000
         val min = duration / 60
         val sec = duration % 60
+        val durationStr = String.format("%d:%02d", min, sec)
         
         holder.binding.tvSessionSummary.text = 
-            "Effizienz: $efficiency% • ${String.format("%d:%02d", min, sec)} Min"
+            holder.itemView.context.getString(R.string.voice_session_efficiency, efficiency, durationStr)
         
         holder.binding.sessionClickArea.setOnClickListener { onItemClick(session) }
         holder.binding.btnDeleteSession.setOnClickListener { onDeleteClick(session) }

@@ -31,7 +31,7 @@ class NasenarbeitActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "🐾 Nasenarbeit"
+        supportActionBar?.title = getString(R.string.nasenarbeit_toolbar_title)
     }
 
     private fun setupRecyclerView() {
@@ -79,15 +79,9 @@ class NasenarbeitActivity : SecureBaseActivity() {
         val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Info: Nasenarbeit")
-            .setMessage(
-                "Nasenarbeit ist eine der natürlichsten Auslastungsformen für Hunde.\n\n" +
-                "🐾 Verlorensuche:\nDer Hund folgt einer Geruchsspur, die durch Bodenverletzung und Eigengeruch entsteht. Er sucht nach 'verlorenen' Gegenständen des Halters.\n\n" +
-                "🧑 Personensuche:\nDer Hund sucht eine bestimmte Zielperson anhand ihres Individualgeruchs. Dies erfordert eine Hilfsperson.\n\n" +
-                "🔍 Freisuche:\nDer Hund sucht in einem zugewiesenen Gebiet frei nach Gegenständen oder Personen.\n\n" +
-                "📊 Das Scoring:\nDie App berechnet Trainingsempfehlungen basierend auf deinem Fortschritt, dem Wetter (Temperatur/Feuchtigkeit) und der Bodenbeschaffenheit. Bei hoher Hitze oder starkem Wind wird die Schwierigkeit automatisch angepasst."
-            )
-            .setPositiveButton("Verstanden", null)
+            .setTitle(getString(R.string.nasenarbeit_info_dialog_title))
+            .setMessage(getString(R.string.nasenarbeit_info_dialog_message))
+            .setPositiveButton(getString(R.string.start_understood), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(colorNormal)
@@ -97,7 +91,7 @@ class NasenarbeitActivity : SecureBaseActivity() {
     private fun exportPdf(profile: DogProfile) {
         val sessions = NasenarbeitManager.loadSessionsForDog(this, profile.id)
         if (sessions.isEmpty()) {
-            Toast.makeText(this, "Keine Sessions vorhanden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_no_sessions_error), Toast.LENGTH_SHORT).show()
             return
         }
         val fortschritt = NasenarbeitManager.loadFortschrittForDog(this, profile.id)
@@ -105,28 +99,28 @@ class NasenarbeitActivity : SecureBaseActivity() {
             // Speichern mit "shareAfterExport" Option (ähnlich wie in anderen Activities)
             val file = NasenarbeitPDFGenerator.generateGesamtPDF(this, sessions, fortschritt, profile, saveToPublic = true)
             if (file != null) {
-                Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_export_pdf_success), Toast.LENGTH_LONG).show()
                 shareFile(file, "application/pdf")
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_generic_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun exportCsv(profile: DogProfile) {
         val sessions = NasenarbeitManager.loadSessionsForDog(this, profile.id)
         if (sessions.isEmpty()) {
-            Toast.makeText(this, "Keine Sessions vorhanden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_no_sessions_error), Toast.LENGTH_SHORT).show()
             return
         }
         try {
             val file = NasenarbeitCSVGenerator.exportSessions(this, profile, sessions)
             if (file != null) {
-                Toast.makeText(this, "✅ CSV gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_export_csv_success), Toast.LENGTH_LONG).show()
                 shareFile(file, "text/csv")
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_generic_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -137,7 +131,7 @@ class NasenarbeitActivity : SecureBaseActivity() {
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "Teilen..."))
+        startActivity(Intent.createChooser(intent, getString(R.string.walking_speed_share_log)))
     }
 
     private fun confirmDeleteData(profile: DogProfile) {
@@ -147,14 +141,14 @@ class NasenarbeitActivity : SecureBaseActivity() {
         val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("⚠️ Trainingsdaten löschen?")
-            .setMessage("Möchtest du ALLE Nasenarbeit-Trainingsdaten von ${profile.name} löschen?\n\nDie Stammdaten des Hundes bleiben erhalten.")
-            .setPositiveButton("LÖSCHEN") { _, _ ->
+            .setTitle(getString(R.string.nasenarbeit_delete_data_title))
+            .setMessage(getString(R.string.nasenarbeit_delete_data_message, profile.name))
+            .setPositiveButton(getString(R.string.nasenarbeit_btn_delete_all)) { _, _ ->
                 NasenarbeitManager.deleteAllDataForDog(this, profile.id)
-                Toast.makeText(this, "Trainingsdaten gelöscht", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_delete_data_success), Toast.LENGTH_SHORT).show()
                 loadProfiles()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)

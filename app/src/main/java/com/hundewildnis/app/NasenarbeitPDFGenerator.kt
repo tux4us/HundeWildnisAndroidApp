@@ -81,79 +81,79 @@ object NasenarbeitPDFGenerator {
         profile: DogProfile
     ) {
         // ── Titel ─────────────────────────────────────────────
-        doc.add(Paragraph("🐾 NASENARBEIT – TRAININGSAUSWERTUNG")
+        doc.add(Paragraph(context.getString(R.string.nasenarbeit_pdf_title))
             .setBold().setFontSize(18f).setFontColor(GREEN))
         doc.add(Paragraph("${profile.name}  ·  ${profile.breed}  ·  ${profile.gender}")
             .setFontSize(12f).setFontColor(GRAY))
         doc.add(Paragraph(" "))
 
         // ── Session Info ──────────────────────────────────────
-        addSectionTitle(doc, "Session")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_session))
         val tbl = twoColTable()
-        tbl.addCell(labelCell("Datum"))
+        tbl.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_date)))
         tbl.addCell(valueCell(df.format(Date(session.datum))))
-        tbl.addCell(labelCell("Disziplin"))
+        tbl.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_discipline)))
         tbl.addCell(valueCell("${session.durchgefuehrteDisziplin.icon} ${session.durchgefuehrteDisziplin.displayName(context)}"))
-        tbl.addCell(labelCell("Empfohlen"))
+        tbl.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_recommended)))
         tbl.addCell(valueCell("${session.empfohleneDisziplin.icon} ${session.empfohleneDisziplin.displayName(context)}"))
-        tbl.addCell(labelCell("Bewertung"))
+        tbl.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_rating)))
         tbl.addCell(valueCell("⭐".repeat(session.erfolgsbewertung)))
         doc.add(tbl)
         doc.add(Paragraph(" "))
 
         // ── Ergebnisse ────────────────────────────────────────
-        addSectionTitle(doc, "Trainingsergebnisse")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_results))
         val res = twoColTable()
-        session.durchgefuehrteSchritte?.let { res.addCell(labelCell("Strecke")); res.addCell(valueCell("$it Schritte")) }
-        session.durchgefuehrteHa?.let { res.addCell(labelCell("Fläche")); res.addCell(valueCell("${String.format("%.1f", it)} ha")) }
-        session.suchdauerMinuten?.let { res.addCell(labelCell("Suchdauer")); res.addCell(valueCell("$it Min.")) }
+        session.durchgefuehrteSchritte?.let { res.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_route))); res.addCell(valueCell("$it " + context.getString(R.string.nasenarbeit_map_result_steps_unit))) }
+        session.durchgefuehrteHa?.let { res.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_area))); res.addCell(valueCell("${String.format(Locale.US, "%.1f", it)} ha")) }
+        session.suchdauerMinuten?.let { res.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_duration))); res.addCell(valueCell("$it " + context.getString(R.string.nasenarbeit_session_detail_duration_unit))) }
         session.gefundeneGegenstaende?.let { g ->
             session.gegenstaendeGesamt?.let { ges ->
-                res.addCell(labelCell("Gegenstände")); res.addCell(valueCell("$g von $ges gefunden"))
+                res.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_items))); res.addCell(valueCell(context.getString(R.string.nasenarbeit_session_detail_items_found, g, ges)))
             }
         }
         session.personenfundErfolgreich?.let {
-            res.addCell(labelCell("Personenfund"))
-            res.addCell(valueCell(if (it) "✅ Erfolgreich" else "❌ Nicht gefunden"))
+            res.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_person_found)))
+            res.addCell(valueCell(if (it) "✅ " + context.getString(R.string.nasenarbeit_session_detail_person_found_success) else "❌ " + context.getString(R.string.nasenarbeit_session_detail_person_found_failure)))
         }
         doc.add(res)
         doc.add(Paragraph(" "))
 
         // ── Scoring ───────────────────────────────────────────
-        addSectionTitle(doc, "Scoring")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_scoring))
         val sc = twoColTable()
-        sc.addCell(labelCell("🐾 Verlorensuche"))
-        sc.addCell(valueCell(fmtScore(session.scoreVerlorensuche)))
-        sc.addCell(labelCell("🧑 Personensuche"))
-        sc.addCell(valueCell(fmtScore(session.scorePersonensuche)))
-        sc.addCell(labelCell("🔍 Freisuche"))
-        sc.addCell(valueCell(fmtScore(session.scoreFreisuche)))
+        sc.addCell(labelCell(NasenarbeitDisziplin.VERLORENSUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_verlorensuche)))
+        sc.addCell(valueCell(fmtScore(session.scoreVerlorensuche, context)))
+        sc.addCell(labelCell(NasenarbeitDisziplin.PERSONENSUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_personensuche)))
+        sc.addCell(valueCell(fmtScore(session.scorePersonensuche, context)))
+        sc.addCell(labelCell(NasenarbeitDisziplin.FREISUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_freisuche)))
+        sc.addCell(valueCell(fmtScore(session.scoreFreisuche, context)))
         doc.add(sc)
         doc.add(Paragraph(" "))
 
         // ── Wetter ───────────────────────────────────────────
-        addSectionTitle(doc, "Wetterbedingungen")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_weather))
         val p = session.parameter
         val wx = twoColTable()
-        wx.addCell(labelCell("Temperatur")); wx.addCell(valueCell("${p.temperaturCelsius}°C"))
-        wx.addCell(labelCell("Beaufort"));   wx.addCell(valueCell("Bf ${p.beaufort}"))
-        wx.addCell(labelCell("Luftfeuchte")); wx.addCell(valueCell("${p.luftfeuchtigkeit}%"))
-        wx.addCell(labelCell("Windrichtung")); wx.addCell(valueCell(listOf("Rückenwind","Seitenwind","Gegenwind")[p.windrichtung]))
+        wx.addCell(labelCell(context.getString(R.string.nasenarbeit_beratung_wetter_temp))); wx.addCell(valueCell("${p.temperaturCelsius}°C"))
+        wx.addCell(labelCell(context.getString(R.string.nasenarbeit_beratung_wetter_beaufort)));   wx.addCell(valueCell("Bf ${p.beaufort}"))
+        wx.addCell(labelCell(context.getString(R.string.nasenarbeit_beratung_wetter_humidity))); wx.addCell(valueCell("${p.luftfeuchtigkeit}%"))
+        wx.addCell(labelCell(context.getString(R.string.nasenarbeit_session_detail_wind_label))); wx.addCell(valueCell(listOf(context.getString(R.string.nasenarbeit_session_detail_wind_tailwind),context.getString(R.string.nasenarbeit_session_detail_wind_crosswind),context.getString(R.string.nasenarbeit_session_detail_wind_headwind))[p.windrichtung]))
         doc.add(wx)
         doc.add(Paragraph(" "))
 
         // ── Trainingslevel ───────────────────────────────────
-        addSectionTitle(doc, "Trainingslevel")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_level))
         val lv = twoColTable()
-        lv.addCell(labelCell("🐾 Verlorensuche")); lv.addCell(valueCell(session.levelVerlorensuche))
-        lv.addCell(labelCell("🧑 Personensuche")); lv.addCell(valueCell(session.levelPersonensuche))
-        lv.addCell(labelCell("🔍 Freisuche"));     lv.addCell(valueCell(session.levelFreisuche))
+        lv.addCell(labelCell(NasenarbeitDisziplin.VERLORENSUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_verlorensuche))); lv.addCell(valueCell(session.levelVerlorensuche))
+        lv.addCell(labelCell(NasenarbeitDisziplin.PERSONENSUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_personensuche))); lv.addCell(valueCell(session.levelPersonensuche))
+        lv.addCell(labelCell(NasenarbeitDisziplin.FREISUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_freisuche)));     lv.addCell(valueCell(session.levelFreisuche))
         doc.add(lv)
         doc.add(Paragraph(" "))
 
         // ── Notizen ───────────────────────────────────────────
         if (session.notizenTitel.isNotEmpty() || session.notizen.isNotEmpty()) {
-            addSectionTitle(doc, "Notizen")
+            addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_notes))
             if (session.notizenTitel.isNotEmpty()) {
                 doc.add(Paragraph(session.notizenTitel).setBold().setFontSize(13f))
             }
@@ -165,11 +165,11 @@ object NasenarbeitPDFGenerator {
 
         // ── GPS + Karte ───────────────────────────────────────
         if (session.gpsLat != 0.0 && session.gpsLon != 0.0) {
-            addSectionTitle(doc, "Trainingsstandort")
+            addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_location))
             val gps = twoColTable()
-            gps.addCell(labelCell("Koordinaten"))
+            gps.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_coordinates)))
             gps.addCell(valueCell("${String.format("%.5f", session.gpsLat)}, ${String.format("%.5f", session.gpsLon)}"))
-            gps.addCell(labelCell("Karte"))
+            gps.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_map)))
             val osmUrl = "https://www.openstreetmap.org/?mlat=${session.gpsLat}&mlon=${session.gpsLon}#map=16/${session.gpsLat}/${session.gpsLon}"
             gps.addCell(valueCell(osmUrl))
             doc.add(gps)
@@ -188,7 +188,7 @@ object NasenarbeitPDFGenerator {
                     .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
                 mapBitmap.recycle()
             } else {
-                doc.add(Paragraph("Kartenkachel: $osmUrl")
+                doc.add(Paragraph(context.getString(R.string.nasenarbeit_pdf_label_map_tile) + ": $osmUrl")
                     .setFontSize(10f).setFontColor(BLUE))
             }
             doc.add(Paragraph(" "))
@@ -197,14 +197,14 @@ object NasenarbeitPDFGenerator {
         // ── Fotos ─────────────────────────────────────────────
         if (session.fotoUris.isNotEmpty()) {
             doc.add(AreaBreak())
-            addSectionTitle(doc, "Fotos (${session.fotoUris.size})")
+            addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_photos, session.fotoUris.size))
             doc.add(Paragraph(" "))
             addPhotosGrid(context, doc, session.fotoUris)
         }
 
         // ── Footer ───────────────────────────────────────────
         doc.add(Paragraph(" "))
-        doc.add(Paragraph("HundeWildnis App · Nasenarbeit · ${dfDate.format(Date())}")
+        doc.add(Paragraph("HundeWildnis App · " + context.getString(R.string.training_category_nasenarbeit) + " · ${dfDate.format(Date())}")
             .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
     }
 
@@ -254,45 +254,45 @@ object NasenarbeitPDFGenerator {
         profile: DogProfile
     ) {
         // ── Titel ─────────────────────────────────────────────
-        doc.add(Paragraph("🐾 NASENARBEIT – GESAMTAUSWERTUNG")
+        doc.add(Paragraph(context.getString(R.string.nasenarbeit_pdf_total_title))
             .setBold().setFontSize(18f).setFontColor(GREEN))
         doc.add(Paragraph("${profile.name}  ·  ${profile.breed}")
             .setFontSize(12f).setFontColor(GRAY))
         doc.add(Paragraph(" "))
 
         // ── Übersicht ─────────────────────────────────────────
-        addSectionTitle(doc, "Übersicht")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_overview))
         val ov = twoColTable()
-        ov.addCell(labelCell("🐾 Verlorensuche"))
-        ov.addCell(valueCell("${fortschritt.sessionsVerlorensuche} Sessions – ${fortschritt.levelVerlorensuche.displayName(context)}"))
-        ov.addCell(labelCell("🧑 Personensuche"))
-        ov.addCell(valueCell("${fortschritt.sessionsPersonensuche} Sessions – ${fortschritt.levelPersonensuche.displayName(context)}"))
-        ov.addCell(labelCell("🔍 Freisuche"))
-        ov.addCell(valueCell("${fortschritt.sessionsFreisuche} Sessions – ${fortschritt.levelFreisuche.displayName(context)}"))
-        ov.addCell(labelCell("Gesamt"))
-        ov.addCell(valueCell("${fortschritt.gesamtSessions} Sessions"))
+        ov.addCell(labelCell(NasenarbeitDisziplin.VERLORENSUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_verlorensuche)))
+        ov.addCell(valueCell(context.getString(R.string.nasenarbeit_pdf_summary_line, fortschritt.sessionsVerlorensuche, fortschritt.levelVerlorensuche.displayName(context))))
+        ov.addCell(labelCell(NasenarbeitDisziplin.PERSONENSUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_personensuche)))
+        ov.addCell(valueCell(context.getString(R.string.nasenarbeit_pdf_summary_line, fortschritt.sessionsPersonensuche, fortschritt.levelPersonensuche.displayName(context))))
+        ov.addCell(labelCell(NasenarbeitDisziplin.FREISUCHE.icon + " " + context.getString(R.string.nasenarbeit_disziplin_freisuche)))
+        ov.addCell(valueCell(context.getString(R.string.nasenarbeit_pdf_summary_line, fortschritt.sessionsFreisuche, fortschritt.levelFreisuche.displayName(context))))
+        ov.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_total)))
+        ov.addCell(valueCell(context.getString(R.string.nasenarbeit_dog_adapter_sessions_count, fortschritt.gesamtSessions)))
         if (fortschritt.maxSchritte > 0) {
-            ov.addCell(labelCell("Max. Strecke")); ov.addCell(valueCell("${fortschritt.maxSchritte} Schritte"))
+            ov.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_max_route))); ov.addCell(valueCell("${fortschritt.maxSchritte} " + context.getString(R.string.nasenarbeit_map_result_steps_unit)))
         }
         if (fortschritt.maxHa > 0.0) {
-            ov.addCell(labelCell("Max. Fläche")); ov.addCell(valueCell("${String.format("%.1f", fortschritt.maxHa)} ha"))
+            ov.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_max_area))); ov.addCell(valueCell("${String.format(Locale.US, "%.1f", fortschritt.maxHa)} ha"))
         }
         if (fortschritt.letzteSession > 0) {
-            ov.addCell(labelCell("Letzte Session")); ov.addCell(valueCell(dfDate.format(Date(fortschritt.letzteSession))))
+            ov.addCell(labelCell(context.getString(R.string.nasenarbeit_pdf_label_last_session))); ov.addCell(valueCell(dfDate.format(Date(fortschritt.letzteSession))))
         }
         doc.add(ov)
         doc.add(Paragraph(" "))
 
         // ── Sessionliste ──────────────────────────────────────
-        addSectionTitle(doc, "Alle Sessions (${sessions.size})")
+        addSectionTitle(doc, context.getString(R.string.nasenarbeit_pdf_section_all_sessions, sessions.size))
         doc.add(Paragraph(" "))
 
         sessions.forEach { s ->
             val line = Paragraph().apply {
                 add(Text(df.format(Date(s.datum))).setFontSize(10f))
                 add(Text("  ${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName(context)}").setFontSize(10f).setBold())
-                s.durchgefuehrteSchritte?.let { add(Text("  $it Schr.").setFontSize(10f)) }
-                s.durchgefuehrteHa?.let { add(Text("  ${String.format("%.1f",it)} ha").setFontSize(10f)) }
+                s.durchgefuehrteSchritte?.let { add(Text("  $it " + context.getString(R.string.nasenarbeit_map_result_steps_unit)).setFontSize(10f)) }
+                s.durchgefuehrteHa?.let { add(Text("  ${String.format(Locale.US, "%.1f",it)} ha").setFontSize(10f)) }
                 add(Text("  ${"⭐".repeat(s.erfolgsbewertung)}").setFontSize(10f))
             }
             doc.add(line)
@@ -300,7 +300,7 @@ object NasenarbeitPDFGenerator {
 
         // ── Footer ───────────────────────────────────────────
         doc.add(Paragraph(" "))
-        doc.add(Paragraph("HundeWildnis App · Nasenarbeit Gesamtauswertung · ${dfDate.format(Date())}")
+        doc.add(Paragraph("HundeWildnis App · " + context.getString(R.string.nasenarbeit_pdf_total_title) + " · ${dfDate.format(Date())}")
             .setFontSize(8f).setFontColor(GRAY).setTextAlignment(TextAlignment.CENTER))
     }
 
@@ -474,8 +474,8 @@ object NasenarbeitPDFGenerator {
     // HELPERS
     // ════════════════════════════════════════════════════════════
 
-    private fun fmtScore(d: Double) =
-        if (d > -999.0) String.format("%.1f Punkte", d) else "Nicht geeignet"
+    private fun fmtScore(d: Double, context: Context) =
+        if (d > -999.0) String.format(Locale.US, "%.1f " + context.getString(R.string.nasenarbeit_pdf_points_unit), d) else context.getString(R.string.nasenarbeit_suit_not_suitable_label)
 
     private fun addSectionTitle(doc: Document, title: String) {
         doc.add(Paragraph(title).setBold().setFontSize(13f).setFontColor(GREEN)

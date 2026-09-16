@@ -59,8 +59,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
             val suggestedConfig = IntervalTimerConfig.fromCharacter(dog.toCharacter())
             applyConfig(suggestedConfig)
             binding.tvCharacterHint.visibility = View.VISIBLE
-            binding.tvCharacterHint.text =
-                "💡 Vorschlag basierend auf ${dog.name}s Wesensmerkmalen – Du kannst ihn frei anpassen."
+            binding.tvCharacterHint.text = getString(R.string.interval_setup_dog_suggestion, dog.name)
         }
     }
 
@@ -94,7 +93,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "⏱️ Intervall-Timer"
+            title = getString(R.string.interval_setup_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -158,7 +157,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 val value = ACTIVE_RANGE.first + progress
                 selectedConfig = selectedConfig.copy(activeDurationSeconds = value)
-                binding.tvActiveValue.text = "${value}s"
+                binding.tvActiveValue.text = getString(R.string.interval_unit_s, value)
                 updateTotalDuration()
             }
             override fun onStartTrackingTouch(sb: SeekBar?) {}
@@ -171,7 +170,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 val value = REST_RANGE.first + progress
                 selectedConfig = selectedConfig.copy(restDurationSeconds = value)
-                binding.tvRestValue.text = "${value}s"
+                binding.tvRestValue.text = getString(R.string.interval_unit_s, value)
                 updateTotalDuration()
             }
             override fun onStartTrackingTouch(sb: SeekBar?) {}
@@ -196,7 +195,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
         binding.seekBarCooldown.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 selectedConfig = selectedConfig.copy(cooldownSeconds = progress)
-                binding.tvCooldownValue.text = if (progress == 0) "Aus" else "${progress}s"
+                binding.tvCooldownValue.text = if (progress == 0) getString(R.string.interval_setup_off) else getString(R.string.interval_unit_s, progress)
                 updateTotalDuration()
             }
             override fun onStartTrackingTouch(sb: SeekBar?) {}
@@ -217,7 +216,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
         val colors = StartGroupColors.forGroup(this, 2) // Grün
         binding.gridStartTimer.layoutManager = GridLayoutManager(this, 1)
         binding.gridStartTimer.adapter = StartTileAdapter(
-            tiles = listOf(StartTile("timer_start", R.drawable.ic_stopwatch, "▶️ Timer starten")),
+            tiles = listOf(StartTile("timer_start", R.drawable.ic_stopwatch, getString(R.string.interval_setup_btn_start))),
             chipColorRes = colors.chipColorRes,
             accentColorRes = colors.accentColorRes,
             onTileClick = { startTimer() }
@@ -226,7 +225,7 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
 
     private fun startTimer() {
         if (selectedConfig.rounds < 1) {
-            Toast.makeText(this, "Bitte mindestens 1 Runde wählen.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.interval_setup_toast_min_rounds), Toast.LENGTH_SHORT).show()
             return
         }
         val intent = Intent(this, IntervalTimerActivity::class.java).apply {
@@ -251,10 +250,10 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
         binding.seekBarCooldown.progress = config.cooldownSeconds
 
         // Labels
-        binding.tvActiveValue.text    = "${config.activeDurationSeconds}s"
-        binding.tvRestValue.text      = "${config.restDurationSeconds}s"
+        binding.tvActiveValue.text    = getString(R.string.interval_unit_s, config.activeDurationSeconds)
+        binding.tvRestValue.text      = getString(R.string.interval_unit_s, config.restDurationSeconds)
         binding.tvRoundsValue.text    = "${config.rounds}"
-        binding.tvCooldownValue.text  = if (config.cooldownSeconds == 0) "Aus" else "${config.cooldownSeconds}s"
+        binding.tvCooldownValue.text  = if (config.cooldownSeconds == 0) getString(R.string.interval_setup_off) else getString(R.string.interval_unit_s, config.cooldownSeconds)
 
         // Toggles
         binding.switchSound.isChecked     = config.soundEnabled
@@ -264,6 +263,6 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
     }
 
     private fun updateTotalDuration() {
-        binding.tvTotalDuration.text = "Gesamtdauer: ${selectedConfig.totalDurationLabel}"
+        binding.tvTotalDuration.text = getString(R.string.interval_setup_total_duration, selectedConfig.getTotalDurationLabel(this))
     }
 }

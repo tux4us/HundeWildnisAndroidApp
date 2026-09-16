@@ -72,7 +72,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "🐾 Training erfassen"
+        supportActionBar?.title = getString(R.string.training_category_nasenarbeit)
 
         setupEmpfehlung()
         setupDisziplinWahl()
@@ -85,7 +85,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
 
     private fun setupEmpfehlung() {
         binding.tvEmpfohlen.text = getString(R.string.nasenarbeit_session_detail_recommended, primaerDisziplin.icon, primaerDisziplin.displayName(this))
-        binding.tvScores.text    = "Score: 🐾 ${fmt(scoreV)}  🧑 ${fmt(scoreP)}  🔍 ${fmt(scoreF)}"
+        binding.tvScores.text    = "Score: ${NasenarbeitDisziplin.VERLORENSUCHE.icon} ${fmt(scoreV)}  ${NasenarbeitDisziplin.PERSONENSUCHE.icon} ${fmt(scoreP)}  ${NasenarbeitDisziplin.FREISUCHE.icon} ${fmt(scoreF)}"
         selectedDisziplin = primaerDisziplin
     }
 
@@ -164,7 +164,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         if (requestCode == 200 && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
             openCamera()
         } else if (requestCode == 200) {
-            Toast.makeText(this, "Kamera-Berechtigung erforderlich", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.start_camera_permission_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -216,7 +216,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
 
     private fun saveSession() {
         val diz = selectedDisziplin ?: run {
-            Toast.makeText(this, "Bitte Disziplin wählen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_ergebnis_header_discipline), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -278,9 +278,9 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
             val file = NasenarbeitPDFGenerator.generateSessionPDF(this@NasenarbeitErgebnisActivity, session, profile, saveToPublic = true)
             withContext(Dispatchers.Main) {
                 if (file != null) {
-                    Toast.makeText(this@NasenarbeitErgebnisActivity, "✅ Session gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@NasenarbeitErgebnisActivity, getString(R.string.nasenarbeit_export_pdf_success), Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(this@NasenarbeitErgebnisActivity, "✅ Session gespeichert", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@NasenarbeitErgebnisActivity, getString(R.string.nasenarbeit_session_detail_pdf_saved), Toast.LENGTH_SHORT).show()
                 }
                 finish()
             }

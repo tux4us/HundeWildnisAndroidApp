@@ -50,7 +50,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔈 Lautstärke-Trainer"
+                        android:text="@string/sound_header_title"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -59,7 +59,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Schätzt die Lautstärke Deiner Stimme und ordnet sie einer Sprechweise-Stufe zu (A1 leise bis A4 scharf/rufend). Ein Smartphone ist kein Präzisionsmessgerät – die Werte dienen nur der eigenen Vergleichbarkeit über mehrere Sessions."
+                        android:text="@string/sound_desc_main"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary" />
 
@@ -86,7 +86,7 @@
                         android:id="@+id/tvCalibrationStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔈 Kalibrierung: nicht kalibriert"
+                        android:text="@string/sound_calib_not_done"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -96,7 +96,7 @@
                         android:id="@+id/btnCalibrate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🎚️ Pegel kalibrieren"
+                        android:text="@string/sound_btn_calib"
                         app:backgroundTint="?attr/colorSecondary"
                         android:textColor="?attr/colorOnSecondary" />
 
@@ -125,7 +125,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔈 AKTUELLER PEGEL"
+                        android:text="@string/sound_current_level_header"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?attr/colorOnSecondary"
                         android:alpha="0.7"
@@ -141,7 +141,7 @@
                         android:id="@+id/tvLevelDisclaimer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Geschätzter Wert, kein Präzisionsmessgerät – abhängig von Gerät und Abstand."
+                        android:text="@string/sound_disclaimer_main"
                         android:textSize="@dimen/text_body_small"
                         android:textColor="?attr/colorOnSecondary"
                         android:alpha="0.7"
@@ -165,7 +165,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="🎤 Messung starten"
+                    android:text="@string/sound_btn_start"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:backgroundTint="?attr/colorSecondary"
@@ -192,7 +192,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Aktuelle Statistik"
+                        android:text="@string/sound_header_stats"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -202,7 +202,7 @@
                         android:id="@+id/tvStats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Starte eine Messung..."
+                        android:text="@string/sound_stats_initial"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:lineSpacingExtra="4dp" />
@@ -235,7 +235,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="📤 Teilen"
+                    android:text="@string/sound_btn_share"
                     android:backgroundTint="?attr/colorSecondary"
                     android:textColor="?attr/colorOnSecondary"
                     android:enabled="false" />
@@ -248,7 +248,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📚 Bisherige Messungen"
+                android:text="@string/sound_header_history"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"

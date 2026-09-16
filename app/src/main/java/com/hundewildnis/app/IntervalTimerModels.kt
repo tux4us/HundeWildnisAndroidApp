@@ -1,5 +1,6 @@
 package com.hundewildnis.app
 
+import android.content.Context
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
@@ -38,6 +39,17 @@ data class IntervalTimerConfig(
                 (if (cooldownSeconds > 0) cooldownSeconds else 0)
 
     /** Gesamtdauer als formatierter String "X Min Y Sek" */
+    fun getTotalDurationLabel(context: Context): String {
+        val min = totalDurationSeconds / 60
+        val sec = totalDurationSeconds % 60
+        return when {
+            min == 0 -> context.getString(R.string.interval_unit_seconds, sec)
+            sec == 0 -> context.getString(R.string.interval_unit_minutes, min)
+            else     -> context.getString(R.string.interval_unit_min_sec, min, sec)
+        }
+    }
+
+    /** Legacy property for background services or non-UI usage */
     val totalDurationLabel: String
         get() {
             val min = totalDurationSeconds / 60
@@ -128,14 +140,19 @@ data class IntervalTimerSession(
 ) : Parcelable {
 
     fun formattedDate(): String =
-        SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY).format(Date(timestamp))
+        SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date(timestamp))
 
     fun formattedDateShort(): String =
-        SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY).format(Date(timestamp))
+        SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(timestamp))
 
     /** Effektiv absolvierte Aktivzeit in Minuten (für Trainingstagebuch) */
     val effectiveActiveMinutes: Int
         get() = (completedRounds * config.activeDurationSeconds) / 60
+
+    fun getSummaryLine(context: Context): String {
+        val status = if (abortedEarly) context.getString(R.string.interval_history_status_aborted) else context.getString(R.string.interval_history_status_completed)
+        return context.getString(R.string.interval_history_summary_format, completedRounds, config.rounds, status, config.activeDurationSeconds, config.restDurationSeconds)
+    }
 
     fun summaryLine(): String {
         val status = if (abortedEarly) "Abgebrochen" else "Abgeschlossen"

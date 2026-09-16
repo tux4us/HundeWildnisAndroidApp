@@ -49,7 +49,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⚙️ Trainingsmodus"
+                        android:text="@string/comm_header_mode"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -65,14 +65,14 @@
                             android:id="@+id/radioModeFree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🔆 Ganzheitliches Training"
+                            android:text="@string/comm_mode_free"
                             android:checked="true" />
 
                         <RadioButton
                             android:id="@+id/radioModeFocus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🧿 Fokus-Training" />
+                            android:text="@string/comm_mode_focus" />
 
                     </RadioGroup>
 
@@ -88,7 +88,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Wähle Zielfrequenz:"
+                            android:text="@string/comm_select_frequency"
                             android:textSize="@dimen/text_body_medium"
                             android:textColor="?android:attr/textColorSecondary"
                             android:layout_marginBottom="8dp" />
@@ -103,7 +103,7 @@
                                 android:id="@+id/radioFreq108"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="108 Hz - Tiefenentspannung - Geländetraining - Stressbewältigung"
+                                android:text="@string/comm_freq_108"
                                 android:checked="true"
                                 android:layout_marginBottom="12dp" />
 
@@ -111,28 +111,28 @@
                                 android:id="@+id/radioFreq216"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="216 Hz - Beruhigung - Vertrauensaufbau - Leinentraining, Freifolge, Freiarbeit"
+                                android:text="@string/comm_freq_216"
                                 android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq324"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="324 Hz - Konzentration - Unterbrechungstraining - AntiJagdTraining - Steh, Sitz, Platz - Suche"
+                                android:text="@string/comm_freq_324"
                                 android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq432"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="432 Hz - Harmonie - Alltagstraining - Zusammenführung aller Elemente"
+                                android:text="@string/comm_freq_432"
                                 android:layout_marginBottom="12dp" />
 
                             <RadioButton
                                 android:id="@+id/radioFreq648"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="648 Hz - Motivation - Ausdauer - Heranrufen - Spiel"
+                                android:text="@string/comm_freq_648"
                                 android:layout_marginBottom="12dp" />
 
                         </RadioGroup>
@@ -161,7 +161,7 @@
                         android:id="@+id/tvChartTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🎵 Live Frequenz-Verlauf (5 Zielfrequenzen)"
+                        android:text="@string/comm_header_chart"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -197,7 +197,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🎤 AKTUELLE FREQUENZ"
+                        android:text="@string/comm_current_freq_title"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?attr/colorOnSecondary"
                         android:alpha="0.7"
@@ -249,7 +249,7 @@
                         android:id="@+id/tvFrequencyStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Warte auf Stimme..."
+                        android:text="@string/comm_status_waiting"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?attr/colorOnSecondary" />
 
@@ -271,7 +271,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="🎤 Messung starten"
+                    android:text="@string/comm_btn_start"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:backgroundTint="?attr/colorSecondary"
@@ -298,7 +298,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔔 Feedback-Einstellungen"
+                        android:text="@string/comm_header_feedback"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -308,14 +308,14 @@
                         android:id="@+id/switchVibration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📳 Vibration bei Treffer"
+                        android:text="@string/comm_switch_vibration"
                         android:checked="true" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchSound"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔊 Ton bei Treffer"
+                        android:text="@string/comm_switch_sound"
                         android:checked="false" />
 
                 </LinearLayout>
@@ -340,7 +340,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Aktuelle Statistik"
+                        android:text="@string/comm_header_stats"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -350,7 +350,7 @@
                         android:id="@+id/tvStats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Starte eine Messung..."
+                        android:text="@string/comm_stats_initial"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="?android:attr/textColorSecondary"
                         android:lineSpacingExtra="4dp" />
@@ -383,7 +383,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="📤 Teilen"
+                    android:text="@string/comm_btn_share"
                     android:backgroundTint="?attr/colorSecondary"
                     android:textColor="?attr/colorOnSecondary"
                     android:enabled="false" />
@@ -396,7 +396,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📚 Bisherige Messungen"
+                android:text="@string/comm_header_history"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"

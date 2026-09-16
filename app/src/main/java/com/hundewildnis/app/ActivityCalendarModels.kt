@@ -35,7 +35,7 @@ data class PlannedSession(
         TrainingCategory.fromId(categoryId) ?: TrainingCategory.LEINENARBEIT
 
     fun formattedDate(): String =
-        SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY).format(Date(plannedDateMillis))
+        SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(plannedDateMillis))
 
     fun isToday(): Boolean = isSameDay(plannedDateMillis, System.currentTimeMillis())
     fun isPast(): Boolean  = plannedDateMillis < startOfDay(System.currentTimeMillis())

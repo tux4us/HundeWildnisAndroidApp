@@ -47,11 +47,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Wetter" android:textSize="9sp" android:textAlignment="center"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gelände" android:textSize="9sp" android:textAlignment="center"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Boden" android:textSize="9sp" android:textAlignment="center"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Training" android:textSize="9sp" android:textAlignment="center"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Empfehlung" android:textSize="9sp" android:textAlignment="center"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_tab_wetter" android:textSize="9sp" android:textAlignment="center"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_tab_gelaende" android:textSize="9sp" android:textAlignment="center"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_tab_boden" android:textSize="9sp" android:textAlignment="center"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_tab_training" android:textSize="9sp" android:textAlignment="center"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_tab_empfehlung" android:textSize="9sp" android:textAlignment="center"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -76,14 +76,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="GPS &amp; Wetterdaten werden abgerufen"
+                    android:text="@string/nasenarbeit_beratung_loading_title"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Open-Meteo API · Automatisch"
+                    android:text="@string/nasenarbeit_beratung_loading_desc"
                     android:textSize="12sp"/>
             </LinearLayout>
 
@@ -100,7 +100,7 @@
                     android:padding="16dp">
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Schicht 1 · Wetterbedingungen"
+                        android:text="@string/nasenarbeit_beratung_wetter_header"
                         android:textSize="10sp" android:textAllCaps="true" android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
 
@@ -111,7 +111,7 @@
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="16dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="Aktuelle Wetterdaten" android:textSize="13sp" android:textStyle="bold"
+                                android:text="@string/nasenarbeit_beratung_wetter_current" android:textSize="13sp" android:textStyle="bold"
                                 android:layout_marginBottom="12dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
@@ -120,15 +120,15 @@
                                 </LinearLayout>
                                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2" android:orientation="vertical">
                                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="6dp">
-                                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Temperatur" android:textSize="12sp"/>
+                                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_wetter_temp" android:textSize="12sp"/>
                                         <TextView android:id="@+id/tvTemp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold"/>
                                     </LinearLayout>
                                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="6dp">
-                                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Beaufort" android:textSize="12sp"/>
+                                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_wetter_beaufort" android:textSize="12sp"/>
                                         <TextView android:id="@+id/tvBeaufort" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold"/>
                                     </LinearLayout>
                                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Luftfeuchte" android:textSize="12sp"/>
+                                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_wetter_humidity" android:textSize="12sp"/>
                                         <TextView android:id="@+id/tvHumidity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold"/>
                                     </LinearLayout>
                                 </LinearLayout>
@@ -144,7 +144,7 @@
                         app:strokeColor="#f87171" app:strokeWidth="2dp" android:visibility="gone">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="16dp" android:gravity="center">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Training heute nicht möglich" android:textSize="15sp" android:textStyle="bold" android:textColor="#f87171" android:layout_marginBottom="6dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_exclusion_title" android:textSize="15sp" android:textStyle="bold" android:textColor="#f87171" android:layout_marginBottom="6dp"/>
                             <TextView android:id="@+id/tvExclusionReason" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="13sp" android:textAlignment="center"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -160,7 +160,7 @@
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                                 android:orientation="vertical" android:padding="14dp">
                                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                    android:text="Disziplin-Eignung Wetter" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
+                                    android:text="@string/nasenarbeit_beratung_suitability_header" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
                                 <LinearLayout android:id="@+id/layoutWetterBadges" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
@@ -175,20 +175,20 @@
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="Windrichtung in Bodennähe (bis 1m)"
+                                android:text="@string/nasenarbeit_beratung_wind_title"
                                 android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                                android:text="Vorherrschende Richtung in Bezug auf das Gelände ab Startpunkt:"
+                                android:text="@string/nasenarbeit_beratung_wind_desc"
                                 android:textSize="12sp" android:layout_marginBottom="10dp"/>
                             <RadioGroup android:id="@+id/rgWindDir" android:layout_width="match_parent" android:layout_height="wrap_content">
                                 <RadioButton android:id="@+id/rbWindHinten" android:layout_width="match_parent" android:layout_height="wrap_content"
-                                    android:text="Rückenwind – Fährte: alle Level · Personensuche + Freisuche: ab Fortgeschritten"
+                                    android:text="@string/nasenarbeit_beratung_wind_tailwind"
                                     android:textSize="12sp" android:padding="8dp" android:checked="true"/>
                                 <RadioButton android:id="@+id/rbWindSeite" android:layout_width="match_parent" android:layout_height="wrap_content"
-                                    android:text="Seitenwind – Alle Disziplinen: ab Fortgeschritten"
+                                    android:text="@string/nasenarbeit_beratung_wind_crosswind"
                                     android:textSize="12sp" android:padding="8dp"/>
                                 <RadioButton android:id="@+id/rbWindVorn" android:layout_width="match_parent" android:layout_height="wrap_content"
-                                    android:text="Gegenwind – Verlorensuche: ab Erfahren · Personensuche + Freisuche: ab Anfänger"
+                                    android:text="@string/nasenarbeit_beratung_wind_headwind"
                                     android:textSize="12sp" android:padding="8dp"/>
                             </RadioGroup>
                             <LinearLayout android:id="@+id/layoutWindDirBadges" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="8dp"/>
@@ -198,7 +198,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnWetterWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="Weiter zu Geländemerkmalen →"
+                        android:text="@string/nasenarbeit_beratung_btn_wetter_next"
                         android:minHeight="52dp" app:cornerRadius="10dp" android:enabled="false"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
@@ -212,15 +212,15 @@
                     android:orientation="vertical" android:padding="16dp">
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Schicht 2 · Geländemerkmale"
+                        android:text="@string/nasenarbeit_beratung_gelaende_header"
                         android:textSize="10sp" android:textAllCaps="true" android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Topografie -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Topografie – Routenreihenfolge" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tippe in der Reihenfolge, wie das Gelände auf der Route vorkommt" android:textSize="11sp" android:layout_marginBottom="8dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_topo_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_topo_desc" android:textSize="11sp" android:layout_marginBottom="8dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupTopoSel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" app:chipSpacingVertical="4dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupTopoOpts" android:layout_width="match_parent" android:layout_height="wrap_content" app:chipSpacingVertical="4dp"/>
                         </LinearLayout>
@@ -229,8 +229,8 @@
                     <!-- Umgebung -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Umgebung – Routenreihenfolge" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tippe in der Reihenfolge, wie die Umgebung auf der Route vorkommt" android:textSize="11sp" android:layout_marginBottom="8dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_umb_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_umb_desc" android:textSize="11sp" android:layout_marginBottom="8dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupUmbSel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" app:chipSpacingVertical="4dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupUmbOpts" android:layout_width="match_parent" android:layout_height="wrap_content" app:chipSpacingVertical="4dp"/>
                         </LinearLayout>
@@ -239,14 +239,14 @@
                     <!-- Trainingsgebiet -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Verfügbares Trainingsgebiet" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="12dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_gebiet_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="12dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Max. Schritte (Verloren- + Personensuche)" android:textSize="12sp"/>
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_gebiet_steps_label" android:textSize="12sp"/>
                                 <TextView android:id="@+id/tvGebietSchritte" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="500" android:textSize="14sp" android:textStyle="bold"/>
                             </LinearLayout>
                             <SeekBar android:id="@+id/sbGebietSchritte" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="59" android:progress="9" android:layout_marginBottom="12dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Verfügbare Fläche (Freisuche)" android:textSize="12sp"/>
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_gebiet_area_label" android:textSize="12sp"/>
                                 <TextView android:id="@+id/tvGebietHa" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.5 ha" android:textSize="14sp" android:textStyle="bold"/>
                             </LinearLayout>
                             <SeekBar android:id="@+id/sbGebietHa" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="99" android:progress="4" android:layout_marginBottom="8dp"/>
@@ -259,7 +259,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnGelaendeWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="Weiter zu Bodenbedingungen →"
+                        android:text="@string/nasenarbeit_beratung_btn_gelaende_next"
                         android:minHeight="52dp" app:cornerRadius="10dp"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
@@ -273,13 +273,13 @@
                     android:orientation="vertical" android:padding="16dp">
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Schicht 3 · Bodenbedingungen"
+                        android:text="@string/nasenarbeit_beratung_boden_header"
                         android:textSize="10sp" android:textAllCaps="true" android:textStyle="bold"
                         android:layout_marginBottom="8dp"/>
 
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:text="Basierend auf deiner Geländesequenz – wähle pro Abschnitt Bodentyp und Zustand.\nScoring: Schwellwert 33% · Mehrheitswert gewichtet · Proportional nach Länge"
+                            android:text="@string/nasenarbeit_beratung_boden_desc"
                             android:textSize="12sp" android:padding="12dp"/>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -291,7 +291,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnBodenWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="Weiter zum Trainingsstand →"
+                        android:text="@string/nasenarbeit_beratung_btn_boden_next"
                         android:minHeight="52dp" app:cornerRadius="10dp"
                         android:enabled="false" android:layout_marginTop="8dp"/>
                 </LinearLayout>
@@ -306,14 +306,14 @@
                     android:orientation="vertical" android:padding="16dp">
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Schicht 4 · Trainingsstand"
+                        android:text="@string/nasenarbeit_beratung_training_header"
                         android:textSize="10sp" android:textAllCaps="true" android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Level -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trainingslevel – automatisch aus Tagebuch" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_level_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
                             <LinearLayout android:id="@+id/layoutLevelDisplay" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -321,13 +321,13 @@
                     <!-- Letzte Einheit -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Letzte Trainingseinheit" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_session_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
                             <RadioGroup android:id="@+id/rgLetzte" android:layout_width="match_parent" android:layout_height="wrap_content">
-                                <RadioButton android:id="@+id/rbGestern" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gestern  (Normwert +)" android:textSize="13sp" android:padding="6dp" android:checked="true"/>
-                                <RadioButton android:id="@+id/rbHeute" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Heute  (Kürzer)" android:textSize="13sp" android:padding="6dp"/>
-                                <RadioButton android:id="@+id/rb7Tage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Innerhalb 7 Tage  (Normwert)" android:textSize="13sp" android:padding="6dp"/>
-                                <RadioButton android:id="@+id/rb14Tage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Innerhalb 14 Tage  (Aufwärm)" android:textSize="13sp" android:padding="6dp"/>
-                                <RadioButton android:id="@+id/rbNochKeine" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Noch keine Trainingseinheit  (Startwerte)" android:textSize="13sp" android:padding="6dp"/>
+                                <RadioButton android:id="@+id/rbGestern" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_yesterday" android:textSize="13sp" android:padding="6dp" android:checked="true"/>
+                                <RadioButton android:id="@+id/rbHeute" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_today" android:textSize="13sp" android:padding="6dp"/>
+                                <RadioButton android:id="@+id/rb7Tage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_7days" android:textSize="13sp" android:padding="6dp"/>
+                                <RadioButton android:id="@+id/rb14Tage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_14days" android:textSize="13sp" android:padding="6dp"/>
+                                <RadioButton android:id="@+id/rbNochKeine" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_none" android:textSize="13sp" android:padding="6dp"/>
                             </RadioGroup>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -335,11 +335,11 @@
                     <!-- Tagesverfassung -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tagesverfassung Hund" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_condition_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
                             <RadioGroup android:id="@+id/rgVerfassung" android:layout_width="match_parent" android:layout_height="wrap_content">
-                                <RadioButton android:id="@+id/rbNormal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Normal motiviert  (Normwert +)" android:textSize="13sp" android:padding="6dp" android:checked="true"/>
-                                <RadioButton android:id="@+id/rbSehr" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sehr motiviert  (+1 Stufe)" android:textSize="13sp" android:padding="6dp"/>
-                                <RadioButton android:id="@+id/rbExtrem" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Extrem motiviert  (+ Länge)" android:textSize="13sp" android:padding="6dp"/>
+                                <RadioButton android:id="@+id/rbNormal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_condition_normal" android:textSize="13sp" android:padding="6dp" android:checked="true"/>
+                                <RadioButton android:id="@+id/rbSehr" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_condition_very" android:textSize="13sp" android:padding="6dp"/>
+                                <RadioButton android:id="@+id/rbExtrem" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_condition_extreme" android:textSize="13sp" android:padding="6dp"/>
                             </RadioGroup>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -347,19 +347,19 @@
                     <!-- Leistungsdaten -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Letzte Leistungsdaten" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_performance_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Verlorensuche (Schritte)" android:textSize="12sp"/>
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_perf_v_label" android:textSize="12sp"/>
                                 <TextView android:id="@+id/tvPerfV" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="13sp" android:textStyle="bold"/>
                             </LinearLayout>
                             <SeekBar android:id="@+id/sbPerfV" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="200" android:progress="31" android:layout_marginBottom="10dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Personensuche (Schritte)" android:textSize="12sp"/>
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_perf_p_label" android:textSize="12sp"/>
                                 <TextView android:id="@+id/tvPerfP" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="13sp" android:textStyle="bold"/>
                             </LinearLayout>
                             <SeekBar android:id="@+id/sbPerfP" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="200" android:progress="28" android:layout_marginBottom="10dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Freisuche (ha)" android:textSize="12sp"/>
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/nasenarbeit_beratung_perf_f_label" android:textSize="12sp"/>
                                 <TextView android:id="@+id/tvPerfFl" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="13sp" android:textStyle="bold"/>
                             </LinearLayout>
                             <SeekBar android:id="@+id/sbPerfFl" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="50" android:progress="4"/>
@@ -369,7 +369,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnTrainingWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="Trainingsempfehlung erstellen →"
+                        android:text="@string/nasenarbeit_beratung_btn_training_next"
                         android:minHeight="52dp" app:cornerRadius="10dp"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
@@ -383,14 +383,14 @@
                     android:orientation="vertical" android:padding="16dp">
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Trainingsanleitung für heute"
+                        android:text="@string/nasenarbeit_beratung_empfehlung_header"
                         android:textSize="10sp" android:textAllCaps="true" android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Block 1: Empfehlung -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Block 1 · Empfehlung" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block1_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                                 <TextView android:id="@+id/tvEmpfehlungDiz" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                                 <TextView android:id="@+id/tvEmpfehlungAlt" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:layout_marginBottom="6dp" android:visibility="gone"/>
@@ -403,7 +403,7 @@
                     <!-- Block 2: Parameter -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Block 2 · Heutige Trainingsparameter" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block2_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
                             <LinearLayout android:id="@+id/layoutParamGrid" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -411,7 +411,7 @@
                     <!-- Block 3: Vorbereitung -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Block 3 · Vorbereitung" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block3_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
                             <LinearLayout android:id="@+id/layoutVorbereitung" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -419,7 +419,7 @@
                     <!-- Block 5: Während -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Block 5 · Während des Trainings" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block5_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                                 <!-- Tab Buttons -->
                                 <com.google.android.material.tabs.TabLayout
@@ -437,22 +437,22 @@
                                     <com.google.android.material.tabs.TabItem
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Erfolg"
+                                        android:text="@string/nasenarbeit_beratung_tab_success"
                                         android:icon="@drawable/ic_check_circle"/>
                                     <com.google.android.material.tabs.TabItem
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Warn."
+                                        android:text="@string/nasenarbeit_beratung_tab_warnings"
                                         android:icon="@drawable/ic_signal"/>
                                     <com.google.android.material.tabs.TabItem
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Abbruch"
+                                        android:text="@string/nasenarbeit_beratung_tab_abort"
                                         android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
                                     <com.google.android.material.tabs.TabItem
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Wetter"
+                                        android:text="@string/nasenarbeit_beratung_tab_weather"
                                         android:icon="@drawable/ic_refresh"/>
                                 </com.google.android.material.tabs.TabLayout>
                                 <LinearLayout android:id="@+id/layoutB5Content" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
@@ -463,7 +463,7 @@
                     <!-- Block 6: Nach dem Training -->
                     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Block 6 · Nach dem Training" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block6_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
                             <LinearLayout android:id="@+id/layoutNachTraining" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -471,13 +471,13 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnTrainingStarten"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="Training starten &amp; Ergebnis erfassen"
+                        android:text="@string/nasenarbeit_beratung_btn_start_training"
                         android:minHeight="56dp" app:cornerRadius="10dp" android:layout_marginBottom="8dp"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNeueBeratung"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="Neue Beratung starten"
+                        android:text="@string/nasenarbeit_beratung_btn_new_beratung"
                         android:minHeight="48dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         app:cornerRadius="10dp"/>
 

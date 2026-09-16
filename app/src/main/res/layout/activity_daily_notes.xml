@@ -38,7 +38,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Datum"
+                android:text="@string/notes_date_label"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Titel der Notiz"
+                android:hint="@string/notes_title_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTitle"
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Deine Notizen hier eingeben..."
+                android:hint="@string/notes_text_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotes"
@@ -146,7 +146,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🕒 Historie (Bisherige Notizen)"
+                android:text="@string/notes_history_header"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"

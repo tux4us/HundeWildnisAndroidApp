@@ -39,7 +39,7 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "🐾 ${profile.name} – Nasenarbeit"
+        supportActionBar?.title = getString(R.string.nasenarbeit_hund_toolbar_title, profile.name)
 
         // Foto
         if (profile.photoUri.isNotEmpty()) {
@@ -58,7 +58,7 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
         val colorsNew = StartGroupColors.forGroup(this, 2) // Grün
         binding.gridNasenarbeitNew.layoutManager = GridLayoutManager(this, 1)
         binding.gridNasenarbeitNew.adapter = StartTileAdapter(
-            tiles = listOf(StartTile("nasenarbeit_new", R.drawable.ic_nose_work, "🐾 Neues Training starten")),
+            tiles = listOf(StartTile("nasenarbeit_new", R.drawable.ic_nose_work, getString(R.string.nasenarbeit_hund_btn_new))),
             chipColorRes = colorsNew.chipColorRes,
             accentColorRes = colorsNew.accentColorRes,
             onTileClick = {
@@ -127,16 +127,16 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
     }
 
     private fun confirmDeleteSession(session: NasenarbeitSession) {
-        val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+        val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         AlertDialog.Builder(this)
-            .setTitle("Session löschen?")
-            .setMessage("Session vom ${df.format(Date(session.datum))} wirklich löschen?")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.nasenarbeit_hund_delete_session_title))
+            .setMessage(getString(R.string.nasenarbeit_hund_delete_session_message, df.format(Date(session.datum))))
+            .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                 NasenarbeitManager.deleteSession(this, session.id)
                 loadData()
-                Toast.makeText(this, "Session gelöscht", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_hund_delete_session_success), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -144,11 +144,11 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
         try {
             val file = NasenarbeitPDFGenerator.generateSessionPDF(this, session, profile, saveToPublic = true)
             if (file != null) {
-                Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_export_pdf_success), Toast.LENGTH_LONG).show()
                 sharePDF(file)
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "PDF-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_session_detail_pdf_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -157,11 +157,11 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
             val fortschritt = NasenarbeitManager.loadFortschrittForDog(this, profile.id)
             val file = NasenarbeitPDFGenerator.generateGesamtPDF(this, sessions, fortschritt, profile, saveToPublic = true)
             if (file != null) {
-                Toast.makeText(this, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_export_pdf_success), Toast.LENGTH_LONG).show()
                 sharePDF(file)
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "PDF-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_session_detail_pdf_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -169,17 +169,17 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
         try {
             val file = NasenarbeitCSVGenerator.exportSessions(this, profile, sessions)
             if (file != null) {
-                Toast.makeText(this, "✅ CSV gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.nasenarbeit_export_csv_success), Toast.LENGTH_LONG).show()
                 val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/csv"
                     putExtra(Intent.EXTRA_STREAM, uri)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                startActivity(Intent.createChooser(intent, "CSV teilen"))
+                startActivity(Intent.createChooser(intent, getString(R.string.nasenarbeit_hund_csv_share_title)))
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "CSV-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_generic_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -190,7 +190,7 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "PDF teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.nasenarbeit_hund_pdf_share_title)))
     }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
@@ -208,7 +208,7 @@ class NasenarbeitSessionAdapter(
     private val onShareClick: (NasenarbeitSession) -> Unit
 ) : RecyclerView.Adapter<NasenarbeitSessionAdapter.VH>() {
 
-    private val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
+    private val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val tvDate: TextView = view.findViewById(R.id.tvSessionDate)
@@ -232,9 +232,9 @@ class NasenarbeitSessionAdapter(
         holder.tvDiz.text = "${s.durchgefuehrteDisziplin.icon} ${s.durchgefuehrteDisziplin.displayName(holder.itemView.context)}"
         holder.tvScore.text = "⭐".repeat(s.erfolgsbewertung)
         holder.tvInfo.text = buildString {
-            s.durchgefuehrteSchritte?.let { append("$it Schritte  ") }
-            s.durchgefuehrteHa?.let { append("${String.format("%.1f",it)} ha  ") }
-            s.suchdauerMinuten?.let { append("${it} Min") }
+            s.durchgefuehrteSchritte?.let { append("$it " + holder.itemView.context.getString(R.string.nasenarbeit_map_result_steps_unit) + "  ") }
+            s.durchgefuehrteHa?.let { append("${String.format(Locale.US, "%.1f",it)} ha  ") }
+            s.suchdauerMinuten?.let { append("${it} " + holder.itemView.context.getString(R.string.nasenarbeit_session_detail_duration_unit)) }
         }
         holder.itemView.setOnClickListener { onViewClick(s) }
         holder.btnDetail.setOnClickListener { onViewClick(s) }

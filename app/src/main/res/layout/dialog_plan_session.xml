@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trainingskategorie"
+            android:text="@string/calendar_plan_category"
             android:textSize="@dimen/text_body_small"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="4dp" />
@@ -51,7 +51,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Geplante Dauer (Minuten)"
+            android:text="@string/calendar_plan_duration"
             android:textSize="@dimen/text_body_small"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="4dp" />
@@ -70,7 +70,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notiz (optional)"
+            android:text="@string/calendar_plan_note"
             android:textSize="@dimen/text_body_small"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="4dp" />
@@ -91,7 +91,7 @@
             android:id="@+id/switchPlanReminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🔔 Erinnerung am Morgen (8:30 Uhr)"
+            android:text="@string/calendar_plan_reminder"
             android:checked="true" />
 
     </LinearLayout>

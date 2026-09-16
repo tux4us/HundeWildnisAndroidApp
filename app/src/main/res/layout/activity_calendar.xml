@@ -26,7 +26,7 @@
         android:id="@+id/tvNoProfiles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bitte lege zuerst ein Hundeprofil an, um den Aktivitätskalender zu nutzen."
+        android:text="@string/calendar_no_profiles_hint"
         android:gravity="center"
         android:padding="@dimen/padding_xlarge"
         android:textSize="@dimen/text_body_medium"
@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🐕 Für:"
+                    android:text="@string/calendar_label_for_dog"
                     android:textSize="@dimen/text_body_small"
                     android:layout_marginEnd="8dp" />
 
@@ -90,7 +90,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌦️ Trainings-Eignung – nächste 7 Tage"
+                        android:text="@string/calendar_header_forecast"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp" />
@@ -128,7 +128,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔍 Lückenanalyse – länger nicht trainiert"
+                        android:text="@string/calendar_header_gaps"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
@@ -178,7 +178,7 @@
                             android:layout_height="40dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ic_arrow_back_white"
-                            android:contentDescription="Vorheriger Monat" />
+                            android:contentDescription="@string/calendar_content_desc_prev" />
 
                         <TextView
                             android:id="@+id/tvMonthLabel"
@@ -196,7 +196,7 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ic_arrow_back_white"
                             android:rotation="180"
-                            android:contentDescription="Nächster Monat" />
+                            android:contentDescription="@string/calendar_content_desc_next" />
 
                     </LinearLayout>
 
@@ -212,7 +212,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Punkte = trainierte Kategorien · 📅 = geplant · ⚠️ = überfällig"
+                        android:text="@string/calendar_legend"
                         android:textSize="@dimen/text_body_very_small"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginTop="10dp"
@@ -231,7 +231,7 @@
         android:layout_height="@dimen/button_height_large"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:text="📅  Neue Trainingseinheit planen"
+        android:text="@string/calendar_btn_plan"
         android:textSize="@dimen/text_button_small"
         app:backgroundTint="@color/green_primary" />
 

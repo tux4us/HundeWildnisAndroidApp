@@ -36,6 +36,7 @@ import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import java.util.Locale
 import kotlin.math.*
 
 /**
@@ -207,8 +208,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
     private fun updateHint() {
         binding.tvMapHint.text = when (mode) {
-            Mode.LINIE   -> "Tippe Wegpunkte · Pro Abschnitt: Weg oder Gelände wählen"
-            Mode.POLYGON -> "Tippe ≥ 3 Punkte für die Suchfläche"
+            Mode.LINIE   -> getString(R.string.nasenarbeit_map_hint_line)
+            Mode.POLYGON -> getString(R.string.nasenarbeit_map_hint_poly)
         }
         binding.tvResult.text = ""
         binding.btnConfirm.isEnabled = false
@@ -261,22 +262,16 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
     private fun askSnapOrDirect(from: GeoPoint, to: GeoPoint) {
         val distM = haversine(from.latitude, from.longitude, to.latitude, to.longitude)
-        val distStr = if (distM >= 1000) String.format("%.1f km", distM / 1000)
+        val distStr = if (distM >= 1000) String.format(Locale.US, "%.1f km", distM / 1000)
         else "${distM.toInt()} m"
 
         AlertDialog.Builder(this)
-            .setTitle("Abschnitt ${segments.size + 1} · $distStr")
-            .setMessage(
-                "Wie verläuft dieser Abschnitt?\n\n" +
-                        "🛤️  Auf dem Weg\n" +
-                        "Wird auf den nächstliegenden Fuß-/Wanderweg eingerastet.\n\n" +
-                        "🌿  Quer durch das Gelände\n" +
-                        "Direkte Linie, unabhängig von Wegen."
-            )
-            .setPositiveButton("🛤️ Auf dem Weg") { _, _ ->
+            .setTitle(getString(R.string.nasenarbeit_map_dialog_section_title, segments.size + 1, distStr))
+            .setMessage(getString(R.string.nasenarbeit_map_dialog_section_message))
+            .setPositiveButton(getString(R.string.nasenarbeit_map_btn_on_way)) { _, _ ->
                 snapSegmentToRoute(from, to)
             }
-            .setNegativeButton("🌿 Durch Gelände") { _, _ ->
+            .setNegativeButton(getString(R.string.nasenarbeit_map_btn_through_terrain)) { _, _ ->
                 addDirectSegment(from, to)
             }
             .setCancelable(false)
@@ -292,9 +287,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     private fun snapSegmentToRoute(from: GeoPoint, to: GeoPoint) {
         val appSettings = AppSettings(this)
         if (!appSettings.hasCustomOrsKey()) {
-            Toast.makeText(this, "ℹ️ Für präzises Routing bitte ORS-Key in den Einstellungen (Zahnrad oben) hinterlegen.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_map_ors_key_hint), Toast.LENGTH_LONG).show()
         }
-        binding.tvResult.text = "⏳ Route wird berechnet …"
+        binding.tvResult.text = getString(R.string.nasenarbeit_map_routing_progress)
         lifecycleScope.launch {
             try {
                 val routePoints = withContext(Dispatchers.IO) {
@@ -310,7 +305,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             this@NasenarbeitMapActivity,
-                            "⚠️ Kein Weg gefunden – direkte Linie verwendet",
+                            getString(R.string.nasenarbeit_map_error_no_way),
                             Toast.LENGTH_SHORT
                         ).show()
                         addDirectSegment(from, to)
@@ -320,7 +315,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@NasenarbeitMapActivity,
-                        "Routing-Fehler – direkte Linie verwendet",
+                        getString(R.string.nasenarbeit_map_error_routing),
                         Toast.LENGTH_SHORT
                     ).show()
                     addDirectSegment(from, to)
@@ -467,9 +462,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 if (allPts.size >= 2) {
                     val distM = calcPolylineDistanceM(allPts)
                     calculatedSchritte = (distM / 0.75).toInt()
-                    val distStr = if (distM >= 1000) String.format("%.1f km", distM / 1000)
+                    val distStr = if (distM >= 1000) String.format(Locale.US, "%.1f km", distM / 1000)
                     else "${distM.toInt()} m"
-                    binding.tvResult.text = "📏 $distStr  ·  ~$calculatedSchritte Schritte"
+                    binding.tvResult.text = getString(R.string.nasenarbeit_map_result_line, distStr, calculatedSchritte)
                     binding.btnConfirm.isEnabled = true
                 }
             }
@@ -477,8 +472,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 if (polyPoints.size >= 3) {
                     val areaM2 = calcPolygonAreaM2(polyPoints)
                     calculatedHa = areaM2 / 10_000.0
-                    binding.tvResult.text = "📐 ${String.format("%.2f ha", calculatedHa)}  " +
-                            "(${areaM2.toInt()} m²)"
+                    binding.tvResult.text = getString(R.string.nasenarbeit_map_result_poly, calculatedHa, areaM2.toInt())
                     binding.btnConfirm.isEnabled = true
                 }
             }
@@ -529,7 +523,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         val segList = if (mode == Mode.LINIE) segments else listOf(polyPoints)
         if (segList.isEmpty()) return
 
-        binding.tvResult.text = "🗺️ Geländedaten werden abgerufen …"
+        binding.tvResult.text = getString(R.string.nasenarbeit_map_fetching_terrain)
         binding.btnConfirm.isEnabled = false
 
         lifecycleScope.launch {
@@ -569,13 +563,13 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                                     bodenOrdered.add(bodVal)
                                     weightsOrdered.add(1.0)
                                 } else {
-                                    umgebungOrdered.add(umgebungOrdered.lastOrNull() ?: "Offenes Gelände")
+                                    umgebungOrdered.add(umgebungOrdered.lastOrNull() ?: getString(R.string.nasenarbeit_opt_umb_offen))
                                     bodenOrdered.add(bodenOrdered.lastOrNull() ?: "")
                                     weightsOrdered.add(1.0)
                                 }
                             } else {
                                 // POLYGON: Alle gefundenen Geländetypen übernehmen
-                                val (umb, bod, w) = result ?: Triple(listOf("Offenes Gelände"), listOf(""), listOf(1.0))
+                                val (umb, bod, w) = result ?: Triple(listOf(getString(R.string.nasenarbeit_opt_umb_offen)), listOf(""), listOf(1.0))
                                 umb.forEachIndexed { i, u ->
                                     umgebungOrdered.add(u)
                                     bodenOrdered.add(bod[i])
@@ -592,7 +586,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                             android.util.Log.w("NasenarbeitMap", "Seg $segIdx Overpass-Fehler: ${e.message}")
                             // Segment überspringen – kein Absturz
                             if (umgebungOrdered.isEmpty()) {
-                                umgebungOrdered.add("Offenes Gelände")
+                                umgebungOrdered.add(getString(R.string.nasenarbeit_opt_umb_offen))
                                 bodenOrdered.add("")
                                 weightsOrdered.add(1.0)
                             }
@@ -622,7 +616,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                     val topoStr = if (detectedTopo.isEmpty()) "–"
                     else detectedTopo.joinToString(" → ")
                     Toast.makeText(this@NasenarbeitMapActivity,
-                        "✅ Gelände erkannt · Topo: $topoStr",
+                        getString(R.string.nasenarbeit_map_terrain_recognized, topoStr),
                         Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
@@ -631,7 +625,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                     updateResult()
                     binding.btnConfirm.isEnabled = true
                     Toast.makeText(this@NasenarbeitMapActivity,
-                        "⚠️ Geländedaten nicht verfügbar", Toast.LENGTH_SHORT).show()
+                        getString(R.string.nasenarbeit_map_terrain_unavailable), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -759,14 +753,14 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
     /** Leitet aus dem Umgebungstyp einen plausiblen Boden-Fallback ab */
     private fun umbToBodenFallback(umgebung: String): String = when (umgebung) {
-        "Waldgebiet"        -> "wb_misch"
-        "Grünland"          -> "gl_kurz"
-        "Offenes Gelände"   -> "mg_erdig"
-        "Urbanes Umfeld"    -> "asphalt"
-        "Industriegelände"  -> "asphalt"
-        "Dörfliche Bebauung"-> "asphalt"
-        "Parkanlage"        -> "gl_kurz"
-        "Mischgebiet"       -> "asphalt"
+        getString(R.string.nasenarbeit_opt_umb_wald)        -> "wb_misch"
+        getString(R.string.nasenarbeit_opt_umb_gruen)          -> "gl_kurz"
+        getString(R.string.nasenarbeit_opt_umb_offen)   -> "mg_erdig"
+        getString(R.string.nasenarbeit_opt_umb_urban)    -> "asphalt"
+        getString(R.string.nasenarbeit_opt_umb_industrie)  -> "asphalt"
+        getString(R.string.nasenarbeit_opt_umb_dorf)-> "asphalt"
+        getString(R.string.nasenarbeit_opt_umb_park)        -> "gl_kurz"
+        getString(R.string.nasenarbeit_opt_umb_misch)       -> "asphalt"
         else -> ""
     }
 
@@ -783,25 +777,25 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
     /** Leitet aus einem OSM-highway-Tag die passende Umgebungskategorie ab */
     private fun mapHighwayToUmgebung(highway: String): String = when (highway) {
         "motorway","trunk","primary","secondary","tertiary",
-        "residential","living_street","pedestrian","service" -> "Urbanes Umfeld"
-        "unclassified"                                        -> "Mischgebiet"
+        "residential","living_street","pedestrian","service" -> getString(R.string.nasenarbeit_opt_umb_urban)
+        "unclassified"                                        -> getString(R.string.nasenarbeit_opt_umb_misch)
         "track","path","bridleway","cycleway","footway"       -> ""   // kein eigener Umgebungstyp
-        "steps"                                               -> "Steiles Gelände" // Topo, nicht Umgebung
+        "steps"                                               -> getString(R.string.nasenarbeit_opt_topo_steil) // Topo, nicht Umgebung
         else                                                  -> ""
     }
 
     private fun mapToUmgebung(landuse: String, natural: String): String = when {
-        natural in listOf("wood","scrub")           -> "Waldgebiet"
-        natural in listOf("grassland","heath")      -> "Grünland"
-        natural in listOf("sand","beach","dune")    -> "Offenes Gelände"
-        landuse in listOf("forest")                 -> "Waldgebiet"
-        landuse in listOf("grass","meadow","greenfield") -> "Grünland"
-        landuse in listOf("farmland","farmyard","orchard") -> "Offenes Gelände"
-        landuse in listOf("residential","commercial","retail") -> "Urbanes Umfeld"
-        landuse in listOf("industrial","quarry")    -> "Industriegelände"
-        landuse == "village_green"                  -> "Dörfliche Bebauung"
-        landuse == "recreation_ground"              -> "Parkanlage"
-        natural in listOf("fell","bare_rock","scree") -> "Offenes Gelände"
+        natural in listOf("wood","scrub")           -> getString(R.string.nasenarbeit_opt_umb_wald)
+        natural in listOf("grassland","heath")      -> getString(R.string.nasenarbeit_opt_umb_gruen)
+        natural in listOf("sand","beach","dune")    -> getString(R.string.nasenarbeit_opt_umb_offen)
+        landuse in listOf("forest")                 -> getString(R.string.nasenarbeit_opt_umb_wald)
+        landuse in listOf("grass","meadow","greenfield") -> getString(R.string.nasenarbeit_opt_umb_gruen)
+        landuse in listOf("farmland","farmyard","orchard") -> getString(R.string.nasenarbeit_opt_umb_offen)
+        landuse in listOf("residential","commercial","retail") -> getString(R.string.nasenarbeit_opt_umb_urban)
+        landuse in listOf("industrial","quarry")    -> getString(R.string.nasenarbeit_opt_umb_industrie)
+        landuse == "village_green"                  -> getString(R.string.nasenarbeit_opt_umb_dorf)
+        landuse == "recreation_ground"              -> getString(R.string.nasenarbeit_opt_umb_park)
+        natural in listOf("fell","bare_rock","scree") -> getString(R.string.nasenarbeit_opt_umb_offen)
         else -> ""
     }
 
@@ -930,15 +924,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
     private fun showLocationRationaleDialog() {
         AlertDialog.Builder(this)
-            .setTitle("📍 Standort-Berechtigung")
-            .setMessage(
-                "Die HundeWildnis-App verwendet deinen GPS-Standort für:\n\n" +
-                        "• 🗺️ Karte zentrieren – automatisch auf deinen Standort\n" +
-                        "• 🌡️ Wetterdaten – lokale Bedingungen abrufen\n" +
-                        "• 📍 Trainingsort – Marker im PDF speichern\n\n" +
-                        "Der Standort wird nicht übertragen. Alle Daten bleiben auf deinem Gerät."
-            )
-            .setPositiveButton("Berechtigung erteilen") { _, _ ->
+            .setTitle(getString(R.string.nasenarbeit_map_location_rationale_title))
+            .setMessage(getString(R.string.nasenarbeit_map_location_rationale_message))
+            .setPositiveButton(getString(R.string.nasenarbeit_map_btn_grant_permission)) { _, _ ->
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
@@ -946,7 +934,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                     REQ_LOCATION
                 )
             }
-            .setNegativeButton("Ohne Standort") { _, _ ->
+            .setNegativeButton(getString(R.string.nasenarbeit_map_btn_no_location)) { _, _ ->
                 // Fallback: Deutschland-Mitte
                 binding.mapView.controller.setCenter(GeoPoint(51.163375, 10.447683))
                 binding.mapView.controller.setZoom(6.0)
@@ -978,7 +966,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             )
             isRequestingUpdates = true
         } catch (e: SecurityException) {
-            Toast.makeText(this, "GPS-Berechtigung fehlt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.nasenarbeit_map_error_no_gps), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1104,9 +1092,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 Math.toDegrees(atan(elevDiff / distM)) else 0.0
 
             val cat = when {
-                slopeDeg >= 5.0  -> "Steiles Gelände"
-                slopeDeg >= 1.2  -> "Leichte Steigung"
-                else             -> "Eben"
+                slopeDeg >= 5.0  -> getString(R.string.nasenarbeit_opt_topo_steil)
+                slopeDeg >= 1.2  -> getString(R.string.nasenarbeit_opt_topo_steigung)
+                else             -> getString(R.string.nasenarbeit_opt_topo_eben)
             }
             slopeCounts[cat] = (slopeCounts[cat] ?: 0) + 1
             prevElev = elevations[i]
@@ -1121,33 +1109,33 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         val gainDeg  = Math.toDegrees(atan(gainPerM))
 
         if (gainDeg >= 5.0) {
-            slopeCounts["Steiles Gelände"] = (slopeCounts["Steiles Gelände"] ?: 0) + 3
+            slopeCounts[getString(R.string.nasenarbeit_opt_topo_steil)] = (slopeCounts[getString(R.string.nasenarbeit_opt_topo_steil)] ?: 0) + 3
         } else if (gainDeg >= 1.2 || maxElevDiff >= 6.0) {
-            slopeCounts["Leichte Steigung"] = (slopeCounts["Leichte Steigung"] ?: 0) + 3
+            slopeCounts[getString(R.string.nasenarbeit_opt_topo_steigung)] = (slopeCounts[getString(R.string.nasenarbeit_opt_topo_steigung)] ?: 0) + 3
         }
 
         // Spezial-Erkennung
         val midElev  = elevations[elevations.size / 2]
         val startEnd = (elevations.first() + elevations.last()) / 2.0
         if (midElev < startEnd - 4.5)
-            slopeCounts["Mulde"] = (slopeCounts["Mulde"] ?: 0) + 2
+            slopeCounts[getString(R.string.nasenarbeit_opt_topo_mulde)] = (slopeCounts[getString(R.string.nasenarbeit_opt_topo_mulde)] ?: 0) + 2
         if (midElev > startEnd + 4.5)
-            slopeCounts["Kuppe"] = (slopeCounts["Kuppe"] ?: 0) + 2
+            slopeCounts[getString(R.string.nasenarbeit_opt_topo_kuppe)] = (slopeCounts[getString(R.string.nasenarbeit_opt_topo_kuppe)] ?: 0) + 2
 
         val ascents  = elevations.zipWithNext().count { (a,b) -> b > a + 0.5 }
         val descents = elevations.zipWithNext().count { (a,b) -> b < a - 0.5 }
         val total    = elevations.size - 1
         if (total > 0) {
-            if (ascents  > total * 0.70) slopeCounts["Hanglage"] = (slopeCounts["Hanglage"] ?: 0) + 2
-            if (descents > total * 0.70) slopeCounts["Hanglage"] = (slopeCounts["Hanglage"] ?: 0) + 2
+            if (ascents  > total * 0.70) slopeCounts[getString(R.string.nasenarbeit_opt_topo_hang)] = (slopeCounts[getString(R.string.nasenarbeit_opt_topo_hang)] ?: 0) + 2
+            if (descents > total * 0.70) slopeCounts[getString(R.string.nasenarbeit_opt_topo_hang)] = (slopeCounts[getString(R.string.nasenarbeit_opt_topo_hang)] ?: 0) + 2
         }
 
         return slopeCounts.entries
             .sortedByDescending { it.value }
             .map { it.key }
-            .filter { it != "Eben" || slopeCounts.size == 1 }
+            .filter { it != getString(R.string.nasenarbeit_opt_topo_eben) || slopeCounts.size == 1 }
             .take(3)
-            .ifEmpty { listOf("Eben") }
+            .ifEmpty { listOf(getString(R.string.nasenarbeit_opt_topo_eben)) }
     }
 
     private suspend fun fetchOverpassTopoFeatures(bb: BoundingBox): List<String> {
@@ -1172,12 +1160,12 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 val nat  = tags.optString("natural", "")
                 val hw   = tags.optString("highway", "")
                 val mapped = when {
-                    nat == "cliff" || nat == "rock"   -> "Felsabbrüche / Steilwände"
-                    nat == "peak"  || nat == "ridge"  -> "Kuppe"
-                    nat == "saddle"                   -> "Hanglage"
-                    nat == "valley"|| nat == "depression" -> "Mulde"
-                    nat == "scree"                    -> "Steiles Gelände"
-                    hw == "steps"                     -> "Steiles Gelände"
+                    nat == "cliff" || nat == "rock"   -> getString(R.string.nasenarbeit_opt_topo_fels)
+                    nat == "peak"  || nat == "ridge"  -> getString(R.string.nasenarbeit_opt_topo_kuppe)
+                    nat == "saddle"                   -> getString(R.string.nasenarbeit_opt_topo_hang)
+                    nat == "valley"|| nat == "depression" -> getString(R.string.nasenarbeit_opt_topo_mulde)
+                    nat == "scree"                    -> getString(R.string.nasenarbeit_opt_topo_steil)
+                    hw == "steps"                     -> getString(R.string.nasenarbeit_opt_topo_steil)
                     else -> ""
                 }
                 if (mapped.isNotEmpty() && !features.contains(mapped)) features.add(mapped)
@@ -1192,7 +1180,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         slopeTopoPerSeg: List<String>,
         overpassFeatures: List<String>
     ): List<String> {
-        if (slopeTopoPerSeg.isEmpty()) return if (overpassFeatures.isNotEmpty()) overpassFeatures else listOf("Eben")
+        if (slopeTopoPerSeg.isEmpty()) return if (overpassFeatures.isNotEmpty()) overpassFeatures else listOf(getString(R.string.nasenarbeit_opt_topo_eben))
         val result = slopeTopoPerSeg.toMutableList()
         overpassFeatures.forEach { f -> if (!result.contains(f)) result.add(f) }
         return result.take(8)
@@ -1233,14 +1221,14 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
         btnClearOrs.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("🗑️ Key löschen?")
-                .setMessage("Möchtest Du den gespeicherten API-Key wirklich entfernen?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.start_delete_key_title))
+                .setMessage(getString(R.string.start_delete_key_message))
+                .setPositiveButton(getString(R.string.start_delete)) { _, _ ->
                     appSettings.clearOrsApiKey()
                     orsEdit.setText("")
-                    Toast.makeText(this, "Key gelöscht", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.walking_speed_entry_removed), Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
 
@@ -1263,9 +1251,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("⚙️ Einstellungen")
+            .setTitle(getString(R.string.menu_main_settings))
             .setView(view)
-            .setPositiveButton("Fertig") { _, _ ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val newKey = orsEdit.text?.toString() ?: ""
                 if (newKey.isNotBlank() && newKey != "********") {
                     appSettings.saveOrsApiKey(newKey)
@@ -1279,14 +1267,9 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
-            .setTitle("ORS API Key")
-            .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
-                    "Anleitung:\n" +
-                    "1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n" +
-                    "2. Erstelle unter 'Tokens' einen neuen API-Key.\n" +
-                    "3. Kopiere diesen Key und füge ihn hier ein.\n\n" +
-                    "Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie angezeigt werden.")
-            .setPositiveButton("OK", null)
+            .setTitle(getString(R.string.nasenarbeit_map_ors_key_dialog_title))
+            .setMessage(getString(R.string.nasenarbeit_map_ors_key_dialog_message))
+            .setPositiveButton(getString(R.string.ok), null)
             .create()
             .apply {
                 show()

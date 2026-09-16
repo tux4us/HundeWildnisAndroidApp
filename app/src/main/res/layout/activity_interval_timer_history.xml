@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="0 Session(s)"
+                android:text="@string/interval_history_count"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
             android:id="@+id/tvEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Noch keine Timer-Sessions aufgezeichnet."
+            android:text="@string/interval_history_empty"
             android:textSize="@dimen/text_body_medium"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:gravity="center"

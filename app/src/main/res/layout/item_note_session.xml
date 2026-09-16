@@ -68,7 +68,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             app:tint="@android:color/holo_red_dark"
-            android:contentDescription="Löschen" />
+            android:contentDescription="@string/start_delete" />
 
         <TextView
             android:layout_width="wrap_content"

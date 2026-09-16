@@ -34,7 +34,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:scaleType="centerCrop"
-                android:contentDescription="Hundefoto" />
+                android:contentDescription="@string/instr_dog_profiles_title" />
 
             <LinearLayout
                 android:layout_width="0dp"

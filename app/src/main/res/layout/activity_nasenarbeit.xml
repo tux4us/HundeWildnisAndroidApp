@@ -37,7 +37,7 @@
             android:id="@+id/tvNoDogs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bitte zuerst einen Hund in den Stammdaten anlegen."
+            android:text="@string/nasenarbeit_no_dogs"
             android:textSize="14sp"
             android:visibility="gone"
             android:textAlignment="center"

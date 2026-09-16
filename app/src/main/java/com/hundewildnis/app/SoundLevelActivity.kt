@@ -90,7 +90,7 @@ class SoundLevelActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Lautstärke-Trainer"
+            title = getString(R.string.sound_header_title)
             setDisplayHomeAsUpEnabled(true)
         }
         binding.toolbar.navigationIcon?.setTint(Color.WHITE)
@@ -152,12 +152,12 @@ class SoundLevelActivity : SecureBaseActivity() {
 
     private fun updateCalibrationStatusUI() {
         if (calibrationOffsetDb != null) {
-            binding.tvCalibrationStatus.text = "✅ Kalibrierung: aktiv"
-            binding.btnCalibrate.text = "🎚️ Neu kalibrieren"
+            binding.tvCalibrationStatus.text = getString(R.string.sound_calib_active)
+            binding.btnCalibrate.text = getString(R.string.sound_btn_calib_new)
             binding.meterView.setValue(null, calibrated = true)
         } else {
-            binding.tvCalibrationStatus.text = "🔈 Kalibrierung: nicht kalibriert"
-            binding.btnCalibrate.text = "🎚️ Pegel kalibrieren"
+            binding.tvCalibrationStatus.text = getString(R.string.sound_calib_not_done)
+            binding.btnCalibrate.text = getString(R.string.sound_btn_calib)
             binding.meterView.setValue(null, calibrated = false)
         }
     }
@@ -219,7 +219,7 @@ class SoundLevelActivity : SecureBaseActivity() {
 
         binding.btnCalibrate.isEnabled = false
         binding.btnStartStop.isEnabled = false
-        binding.tvCalibrationStatus.text = "🎙️ Kalibrierung läuft – bitte jetzt sprechen…"
+        binding.tvCalibrationStatus.text = getString(R.string.sound_calib_running)
 
         try {
             calibrationDetector = SimplePitchDetector()
@@ -326,7 +326,7 @@ class SoundLevelActivity : SecureBaseActivity() {
         currentDisplayedSession = null
 
         isRecording = true
-        binding.btnStartStop.text = "🛑 Messung stoppen"
+        binding.btnStartStop.text = getString(R.string.sound_btn_stop)
         binding.btnStartStop.setBackgroundColor(getColor(android.R.color.holo_red_dark))
         binding.btnCalibrate.isEnabled = false
 
@@ -354,7 +354,7 @@ class SoundLevelActivity : SecureBaseActivity() {
         pitchDetector?.stopRecording()
         pitchDetector = null
 
-        binding.btnStartStop.text = "🎤 Messung starten"
+        binding.btnStartStop.text = getString(R.string.sound_btn_start)
         binding.btnStartStop.setBackgroundColor(Color.parseColor("#2d5016"))
         binding.btnCalibrate.isEnabled = true
 
