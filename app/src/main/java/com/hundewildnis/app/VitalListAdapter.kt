@@ -35,14 +35,17 @@ class VitalListAdapter(
         b.tvDate.text = record.formattedDate()
 
         // Belastungsszenario
-        b.tvScenario.text = "⚡ ${record.loadScenario}"
+        b.tvScenario.text = context.getString(
+            R.string.vital_item_scenario_format,
+            LoadScenarioCode.displayName(context, record.loadScenario)
+        )
 
         // Vitalwerte-Zusammenfassung
-        b.tvSummary.text = record.summaryLine()
+        b.tvSummary.text = record.summaryLine(context)
 
         // Notizen (nur wenn vorhanden)
         if (record.notes.isNotBlank()) {
-            b.tvNotes.text = "📝 ${record.notes}"
+            b.tvNotes.text = context.getString(R.string.vital_item_notes_format, record.notes)
             b.tvNotes.visibility = View.VISIBLE
         } else {
             b.tvNotes.visibility = View.GONE
@@ -52,17 +55,17 @@ class VitalListAdapter(
         val status = record.pulseStatus(shoulderHeightCm)
         when (status) {
             PulseStatus.NORMAL -> {
-                b.tvPulseStatus.text = "✓ Normal"
+                b.tvPulseStatus.text = context.getString(R.string.vital_item_status_normal)
                 b.tvPulseStatus.setBackgroundColor(Color.parseColor("#2d5016"))
                 b.tvPulseStatus.visibility = View.VISIBLE
             }
             PulseStatus.HIGH -> {
-                b.tvPulseStatus.text = "↑ Erhöht"
+                b.tvPulseStatus.text = context.getString(R.string.vital_item_status_high)
                 b.tvPulseStatus.setBackgroundColor(Color.parseColor("#B00020"))
                 b.tvPulseStatus.visibility = View.VISIBLE
             }
             PulseStatus.LOW -> {
-                b.tvPulseStatus.text = "↓ Niedrig"
+                b.tvPulseStatus.text = context.getString(R.string.vital_item_status_low)
                 b.tvPulseStatus.setBackgroundColor(Color.parseColor("#E65100"))
                 b.tvPulseStatus.visibility = View.VISIBLE
             }

@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="-- m"
+                android:text="@string/altitude_placeholder"
                 android:textColor="@color/rd_overlay_accent"
                 android:textSize="48sp"
                 android:textStyle="bold" />
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="Höhe über NN"
+                android:text="@string/altimeter_altitude_over_sea_level"
                 android:textColor="#999999"
                 android:textSize="@dimen/text_body_large" />
 
@@ -77,7 +77,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📍 GPS-Höhe"
+                        android:text="@string/altimeter_gps_altitude_label"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
@@ -87,7 +87,7 @@
                         android:id="@+id/gpsAltitudeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-- m"
+                        android:text="@string/altitude_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold" />
@@ -96,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Basiert auf GPS-Daten"
+                        android:text="@string/altimeter_based_on_gps_data"
                         android:textColor="#999999"
                         android:textSize="@dimen/text_body_large" />
                 </LinearLayout>
@@ -121,7 +121,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌡️ Barometer-Höhe"
+                        android:text="@string/altimeter_barometer_altitude_label"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
@@ -131,7 +131,7 @@
                         android:id="@+id/barometerAltitudeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-- m"
+                        android:text="@string/altitude_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold" />
@@ -140,7 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Basiert auf Luftdruck"
+                        android:text="@string/altimeter_based_on_air_pressure"
                         android:textColor="#999999"
                         android:textSize="@dimen/text_body_large" />
                 </LinearLayout>
@@ -165,7 +165,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Luftdruck"
+                        android:text="@string/altimeter_air_pressure_label"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold"
@@ -175,7 +175,7 @@
                         android:id="@+id/pressureText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-- hPa"
+                        android:text="@string/pressure_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/text_body_large" />
                 </LinearLayout>
@@ -186,7 +186,7 @@
                 android:id="@+id/accuracyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Genauigkeit: ± -- m"
+                android:text="@string/altimeter_accuracy_placeholder"
                 android:textColor="#999999"
                 android:textSize="@dimen/text_body_large"
                 android:layout_marginBottom="16dp" />
@@ -196,7 +196,7 @@
                 android:id="@+id/statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Höhe wird ermittelt..."
+                android:text="@string/altimeter_determining_altitude"
                 android:textAlignment="center"
                 android:textColor="@color/rd_overlay_accent"
                 android:textSize="@dimen/text_body_large"
@@ -221,7 +221,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Messhinweise &amp; Bedingungen"
+                        android:text="@string/altimeter_measurement_notes_title"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -230,7 +230,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="• GPS-Höhe: Erfordert freie Sicht zum Himmel. In Gebäuden oder tiefen Tälern oft sehr ungenau.\n\n• Barometer-Höhe: Sehr präzise bei relativen Änderungen (Treppen, Berge). Für absolute Höhe über NN wird automatisch ein Referenzwert (QNH) via Internet von Wetterstationen geladen.\n\n• Geoid-Korrektur: Die App korrigiert den GPS-Fehler (WGS84 vs. MSL) automatisch für genauere Meereshöhen-Angaben.\n\n• Kalibrierung: Ohne Internet wird die GPS-Höhe als Referenz für das Barometer genutzt, sobald die GPS-Genauigkeit ausreichend ist."
+                        android:text="@string/altimeter_measurement_notes_body"
                         android:textColor="#CCCCCC"
                         android:textSize="12sp"
                         android:lineSpacingExtra="2dp" />

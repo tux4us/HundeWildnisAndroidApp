@@ -104,7 +104,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            title = "🔍 Zeckenlupe"
+            title = getString(R.string.tick_loupe_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -214,7 +214,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
             manager.getCameraCharacteristics(id)
                 .get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_BACK
         } ?: run {
-            Toast.makeText(this, "Keine Rückkamera gefunden.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.tick_loupe_error_no_back_camera), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -237,7 +237,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
                 camera.close(); cameraDevice = null
                 runOnUiThread {
                     Toast.makeText(this@TickLoupeActivity,
-                        "Kamerafehler ($error)", Toast.LENGTH_SHORT).show()
+                        getString(R.string.tick_loupe_error_camera_format, error), Toast.LENGTH_SHORT).show()
                 }
             }
         }, cameraHandler)
@@ -267,7 +267,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
                 override fun onConfigureFailed(session: CameraCaptureSession) {
                     runOnUiThread {
                         Toast.makeText(this@TickLoupeActivity,
-                            "Kamera-Vorschau fehlgeschlagen.", Toast.LENGTH_SHORT).show()
+                            getString(R.string.tick_loupe_error_preview_failed), Toast.LENGTH_SHORT).show()
                     }
                 }
             }, cameraHandler
@@ -541,14 +541,14 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
     private fun updateActionGrid() {
         val actions = mutableListOf<StartTile>()
 
-        actions.add(StartTile("tick_filter", R.drawable.ic_magnifier, "Filter"))
+        actions.add(StartTile("tick_filter", R.drawable.ic_magnifier, getString(R.string.tick_loupe_tile_filter)))
 
-        val freezeLabel = if (isFrozen) "▶ Weiter" else "⏸ Einfrieren"
+        val freezeLabel = if (isFrozen) getString(R.string.tick_loupe_tile_resume) else getString(R.string.tick_loupe_tile_freeze)
         val freezeIcon = if (isFrozen) R.drawable.ic_stopwatch else R.drawable.ic_remove
         actions.add(StartTile("tick_freeze", freezeIcon, freezeLabel))
 
         if (isFrozen) {
-            actions.add(StartTile("tick_save", R.drawable.ic_notes, "Speichern"))
+            actions.add(StartTile("tick_save", R.drawable.ic_notes, getString(R.string.tick_loupe_tile_save)))
         }
 
         val colors = StartGroupColors.forGroup(this, 1) // Ocker/Gelb
@@ -602,7 +602,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
 
     private fun saveImage() {
         val bmp = frozenBitmap ?: run {
-            Toast.makeText(this, "Kein eingefrorenes Bild vorhanden.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.tick_loupe_toast_no_frozen_image), Toast.LENGTH_SHORT).show()
             return
         }
         val ts       = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
@@ -627,9 +627,9 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
                 FileOutputStream(File(dir, fileName))
             }
             stream?.use { bmp.compress(Bitmap.CompressFormat.JPEG, 95, it) }
-            Toast.makeText(this, "Gespeichert: $fileName", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.tick_loupe_toast_saved_format, fileName), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Toast.makeText(this, "Fehler beim Speichern: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.tick_loupe_toast_save_error, e.message), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -646,7 +646,7 @@ class TickLoupeActivity : SecureBaseActivity(), SurfaceHolder.Callback {
             grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (surfaceHolder.surface.isValid) openCamera()
         } else {
-            Toast.makeText(this, "Kamerazugriff wird benötigt.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.tick_loupe_toast_permission_required), Toast.LENGTH_LONG).show()
             finish()
         }
     }

@@ -44,7 +44,7 @@ class FirstAidWizardActivity : SecureBaseActivity() {
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "🚨 Erste Hilfe"
+            title = getString(R.string.first_aid_wizard_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -54,8 +54,8 @@ class FirstAidWizardActivity : SecureBaseActivity() {
     private fun showMainCategories() {
         currentStep = WizardStep.MAIN_CATEGORY
 
-        binding.tvStepTitle.text = "WAS IST PASSIERT?"
-        binding.tvStepSubtitle.text = "Wähle die Hauptkategorie"
+        binding.tvStepTitle.text = getString(R.string.first_aid_wizard_step_main_category_title)
+        binding.tvStepSubtitle.text = getString(R.string.first_aid_wizard_step_main_category_subtitle)
 
         binding.btnBack.visibility = View.GONE
         binding.cardContent.visibility = View.VISIBLE

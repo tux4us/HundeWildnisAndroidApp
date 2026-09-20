@@ -31,12 +31,20 @@ object VitalManager {
     fun getAll(context: Context): List<VitalRecord> {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val json = prefs.getString(KEY_RECORDS, "[]") ?: "[]"
-        return try {
+        val records = try {
             val type = object : TypeToken<List<VitalRecord>>() {}.type
-            gson.fromJson(json, type) ?: emptyList()
+            gson.fromJson<List<VitalRecord>>(json, type) ?: emptyList()
         } catch (e: Exception) {
             Log.e(TAG, "Fehler beim Laden: ${e.message}")
             emptyList()
+        }
+        // Migration alter, direkt gespeicherter deutscher Werte auf stabile Codes
+        return records.map { r ->
+            r.copy(
+                loadScenario = LoadScenarioCode.migrate(r.loadScenario),
+                mucousMembraneColor = MucousColorCode.migrate(r.mucousMembraneColor),
+                consciousnessLevel = ConsciousnessCode.migrate(r.consciousnessLevel)
+            )
         }
     }
 
@@ -104,14 +112,22 @@ object VitalManager {
         records: List<VitalRecord>,
         mergeMode: Boolean = false
     ) {
+        // Migration alter, direkt gespeicherter deutscher Werte auf stabile Codes
+        val migratedRecords = records.map { r ->
+            r.copy(
+                loadScenario = LoadScenarioCode.migrate(r.loadScenario),
+                mucousMembraneColor = MucousColorCode.migrate(r.mucousMembraneColor),
+                consciousnessLevel = ConsciousnessCode.migrate(r.consciousnessLevel)
+            )
+        }
         if (mergeMode) {
             val existing = getAll(context)
             val existingIds = existing.map { it.id }.toSet()
-            val merged = (existing + records.filter { it.id !in existingIds })
+            val merged = (existing + migratedRecords.filter { it.id !in existingIds })
                 .sortedByDescending { it.timestamp }
             persist(context, merged)
         } else {
-            persist(context, records.sortedByDescending { it.timestamp })
+            persist(context, migratedRecords.sortedByDescending { it.timestamp })
         }
         syncAllDogProfiles(context, getAll(context))
     }
@@ -127,8 +143,8 @@ object VitalManager {
     fun toCsvString(context: Context, dogId: String): String {
         val records = getForDog(context, dogId)
         val sb = StringBuilder()
-        sb.appendLine(VitalRecord.CSV_HEADER)
-        records.forEach { sb.appendLine(it.toCsvRow()) }
+        sb.appendLine(VitalRecord.csvHeader(context))
+        records.forEach { sb.appendLine(it.toCsvRow(context)) }
         return sb.toString()
     }
 
@@ -138,8 +154,8 @@ object VitalManager {
     fun toCsvStringAll(context: Context): String {
         val records = getAll(context).sortedByDescending { it.timestamp }
         val sb = StringBuilder()
-        sb.appendLine(VitalRecord.CSV_HEADER)
-        records.forEach { sb.appendLine(it.toCsvRow()) }
+        sb.appendLine(VitalRecord.csvHeader(context))
+        records.forEach { sb.appendLine(it.toCsvRow(context)) }
         return sb.toString()
     }
 

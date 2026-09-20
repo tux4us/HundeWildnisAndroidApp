@@ -2,7 +2,7 @@
 <!-- ════════════════════════════════════════════════════════════════
      item_symptom_check.xml - Ja/Nein Fragen
      ════════════════════════════════════════════════════════════════ -->
-<com.google.android.material.card.MaterialCardView 
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:id="@+id/tvQuestion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reagiert der Hund auf Ansprache?"
+            android:text="@string/first_aid_symptom_check_placeholder_question"
             android:textSize="@dimen/text_body_medium"
             android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="✅ JA"
+                android:text="@string/first_aid_symptom_check_yes"
                 android:textSize="@dimen/text_body_medium" />
 
             <com.google.android.material.button.MaterialButton
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="❌ NEIN"
+                android:text="@string/first_aid_symptom_check_no"
                 android:textSize="@dimen/text_body_medium" />
 
         </LinearLayout>

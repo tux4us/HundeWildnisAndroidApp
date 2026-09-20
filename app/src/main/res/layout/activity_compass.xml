@@ -82,7 +82,7 @@
                 android:layout_below="@id/compassContainer"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
-                android:text="Nord"
+                android:text="@string/compass_direction_default_placeholder"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/text_body_large"
                 android:textStyle="bold"/>
@@ -108,7 +108,7 @@
                         android:id="@+id/sunInfoText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="☀ Sonne: wird berechnet …"
+                        android:text="@string/compass_sun_calculating_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/text_body_large"
                         android:layout_marginBottom="8dp" />
@@ -117,7 +117,7 @@
                         android:id="@+id/moonInfoText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="☾ Mond: wird berechnet …"
+                        android:text="@string/compass_moon_calculating_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/text_body_large"
                         android:layout_marginBottom="8dp" />
@@ -126,7 +126,7 @@
                         android:id="@+id/polarisInfoText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="★ Polaris: wird berechnet …"
+                        android:text="@string/compass_polaris_calculating_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/text_body_large" />
 

@@ -36,7 +36,7 @@
                 android:layout_height="300dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_dog_placeholder"
-                android:contentDescription="Hundefoto"
+                android:contentDescription="@string/dog_photo_content_description"
                 android:layout_marginBottom="16dp" />
 
             <!-- BASIS-DATEN -->
@@ -56,7 +56,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📋 BASIS-DATEN"
+                        android:text="@string/dog_view_section_basic_data"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -65,7 +65,7 @@
                         android:id="@+id/tvName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bello"
+                        android:text="@string/dog_view_name_placeholder"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
@@ -74,7 +74,7 @@
                         android:id="@+id/tvBreed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Labrador"
+                        android:text="@string/dog_view_breed_placeholder"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -82,7 +82,7 @@
                         android:id="@+id/tvGender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rüde"
+                        android:text="@string/dog_view_gender_placeholder"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -90,7 +90,7 @@
                         android:id="@+id/tvNeutered"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kastriert: Ja"
+                        android:text="@string/dog_view_neutered_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -98,7 +98,7 @@
                         android:id="@+id/tvBirthDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Geboren: 01.01.2020"
+                        android:text="@string/dog_view_birth_date_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -106,7 +106,7 @@
                         android:id="@+id/tvOriginCountry"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Herkunft: -"
+                        android:text="@string/dog_view_origin_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -114,7 +114,7 @@
                         android:id="@+id/tvColor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Farbe: Schwarz"
+                        android:text="@string/dog_view_color_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -136,7 +136,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔖 IDENTIFIKATION"
+                        android:text="@string/dog_view_section_identification"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -145,7 +145,7 @@
                         android:id="@+id/tvChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Chip: 123456789"
+                        android:text="@string/dog_view_chip_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -153,7 +153,7 @@
                         android:id="@+id/tvTax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Steuernummer: -"
+                        android:text="@string/dog_view_tax_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -161,7 +161,7 @@
                         android:id="@+id/tvTasso"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TASSO: -"
+                        android:text="@string/dog_view_tasso_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -169,7 +169,7 @@
                         android:id="@+id/tvPetPassport"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Heimtierausweis: -"
+                        android:text="@string/dog_view_pet_passport_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -191,7 +191,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💉 GESUNDHEIT"
+                        android:text="@string/dog_view_section_health"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -200,7 +200,7 @@
                         android:id="@+id/tvVaccination"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Impfstatus: -"
+                        android:text="@string/dog_view_vaccination_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -208,7 +208,7 @@
                         android:id="@+id/tvAdditionalVaccination"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Weitere Impfungen: -"
+                        android:text="@string/dog_view_additional_vaccination_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -216,7 +216,7 @@
                         android:id="@+id/tvDeworming"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Entwurmung: -"
+                        android:text="@string/dog_view_deworming_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -224,7 +224,7 @@
                         android:id="@+id/tvFleaTick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Floh/Zecke: -"
+                        android:text="@string/dog_view_flea_tick_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -232,7 +232,7 @@
                         android:id="@+id/tvWeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gewicht: -"
+                        android:text="@string/dog_view_weight_empty"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -240,7 +240,7 @@
                         android:id="@+id/tvShoulderHeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Schulterhöhe: -"
+                        android:text="@string/dog_view_shoulder_height_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -248,7 +248,7 @@
                         android:id="@+id/tvBodyLength"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Körperlänge: -"
+                        android:text="@string/dog_view_body_length_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -256,7 +256,7 @@
                         android:id="@+id/tvMedical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hinweise: -"
+                        android:text="@string/dog_view_medical_notes_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -278,7 +278,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👨‍⚕️ KONTAKTE"
+                        android:text="@string/dog_view_section_contacts"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -287,7 +287,7 @@
                         android:id="@+id/tvVet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tierarzt: -"
+                        android:text="@string/dog_view_vet_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -295,7 +295,7 @@
                         android:id="@+id/tvInsurance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Haftpflicht: -"
+                        android:text="@string/dog_view_liability_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -303,7 +303,7 @@
                         android:id="@+id/tvHealthInsurance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Krankenvers.: -"
+                        android:text="@string/dog_view_health_insurance_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -311,7 +311,7 @@
                         android:id="@+id/tvOwner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Besitzer: -"
+                        android:text="@string/dog_view_owner_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -319,7 +319,7 @@
                         android:id="@+id/tvEmergency"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Notfall: -"
+                        android:text="@string/dog_view_emergency_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -341,7 +341,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🍖 FUTTER und VERHALTEN"
+                        android:text="@string/dog_view_section_food_behavior"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -350,7 +350,7 @@
                         android:id="@+id/tvFood"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Futter: -"
+                        android:text="@string/dog_view_food_format"
                         android:textSize="@dimen/text_body_medium"
                         android:layout_marginBottom="4dp" />
 
@@ -358,7 +358,7 @@
                         android:id="@+id/tvBehavior"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Verhalten: -"
+                        android:text="@string/dog_view_behavior_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -381,7 +381,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="❤️ Vitalwerte"
+                    android:text="@string/dog_view_vitals_header"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp" />
@@ -399,7 +399,7 @@
                     android:id="@+id/tvVitalEmpty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Noch keine Vitalwerte gemessen."
+                    android:text="@string/dog_view_vitals_empty_hint"
                     android:textSize="13sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginBottom="8dp"
@@ -418,7 +418,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="❤️ Messen"
+                        android:text="@string/dog_view_btn_measure_pulse"
                         android:layout_marginEnd="6dp" />
 
                     <Button
@@ -427,7 +427,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="📋 Alle Messungen" />
+                        android:text="@string/dog_view_btn_all_measurements" />
 
                 </LinearLayout>
 
@@ -453,7 +453,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🌸 Läufigkeit"
+                    android:text="@string/dog_view_heat_section_header"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp" />
@@ -477,7 +477,7 @@
                             android:id="@+id/tvHeatAvg"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ø Zykluslänge: —"
+                            android:text="@string/dog_view_heat_avg_placeholder"
                             android:textSize="13sp"
                             android:layout_marginBottom="4dp" />
 
@@ -485,7 +485,7 @@
                             android:id="@+id/tvHeatNextDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nächste Läufigkeit: —"
+                            android:text="@string/dog_view_heat_next_placeholder"
                             android:textSize="13sp"
                             android:layout_marginBottom="4dp" />
 
@@ -514,7 +514,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🌸 Neue Läufigkeit eintragen"
+                    android:text="@string/dog_view_btn_add_heat_cycle"
                     android:layout_marginBottom="16dp" />
 
             </LinearLayout>

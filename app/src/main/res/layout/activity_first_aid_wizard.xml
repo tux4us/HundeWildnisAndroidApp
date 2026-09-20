@@ -2,7 +2,7 @@
 <!-- ════════════════════════════════════════════════════════════════
      activity_first_aid_wizard.xml
      ════════════════════════════════════════════════════════════════ -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout 
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:id="@+id/tvStepTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="WAS IST PASSIERT?"
+                android:text="@string/first_aid_wizard_step_main_category_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:gravity="center" />
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Wähle die Hauptkategorie"
+                android:text="@string/first_aid_wizard_step_main_category_subtitle"
                 android:textSize="@dimen/text_body_medium"
                 android:gravity="center" />
 
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="← Zurück"
+                android:text="@string/first_aid_wizard_back_button"
                 android:visibility="gone" />
 
             <!-- Content Card -->

@@ -46,7 +46,7 @@ class QRCodeActivity : SecureBaseActivity() {
                 displayQRCode(it, selectedFields)
             } else {
                 // Legacy: Alle Felder
-                displayQRCode(it, it.getAllFields().keys)
+                displayQRCode(it, it.getAllFields(this).keys)
             }
         }
     }
@@ -58,7 +58,7 @@ class QRCodeActivity : SecureBaseActivity() {
         binding.gridQrActions.visibility = View.GONE
 
         // QR-Code generieren (asynchron wäre besser, aber für kleine Codes OK)
-        val qrText = profile.toFilteredString(selectedFields)
+        val qrText = profile.toFilteredString(this, selectedFields)
         val qrBitmap = QRCodeGenerator.generateQRCode(qrText, 512)
 
         if (qrBitmap != null) {

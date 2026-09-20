@@ -63,7 +63,7 @@ class HLWTimerActivity : SecureBaseActivity() {
 
         } catch (e: Exception) {
             Log.e(TAG, "onCreate: Error", e)
-            Toast.makeText(this, "Fehler beim Start: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.hlw_timer_toast_start_error, e.message), Toast.LENGTH_LONG).show()
             finish()
         }
     }
@@ -72,7 +72,7 @@ class HLWTimerActivity : SecureBaseActivity() {
         try {
             setSupportActionBar(binding.toolbar)
             supportActionBar?.apply {
-                title = "🚨 HLW Timer"
+                title = getString(R.string.hlw_timer_toolbar_title)
                 setDisplayHomeAsUpEnabled(true)
             }
 
@@ -113,7 +113,7 @@ class HLWTimerActivity : SecureBaseActivity() {
             Log.d(TAG, "ToneGenerator initialized")
         } catch (e: Exception) {
             Log.e(TAG, "ToneGenerator init failed", e)
-            Toast.makeText(this, "⚠️ Audio nicht verfügbar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.hlw_timer_toast_audio_unavailable), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -131,7 +131,7 @@ class HLWTimerActivity : SecureBaseActivity() {
             Log.d(TAG, "startHLW: Starting")
 
             isRunning = true
-            binding.btnStart.text = "⏸ PAUSE"
+            binding.btnStart.text = getString(R.string.hlw_timer_button_pause)
 
             startClock()
             startCompressionPhase()
@@ -140,7 +140,7 @@ class HLWTimerActivity : SecureBaseActivity() {
 
         } catch (e: Exception) {
             Log.e(TAG, "startHLW: Error", e)
-            Toast.makeText(this, "Fehler beim Start: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.hlw_timer_toast_start_error, e.message), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -149,13 +149,13 @@ class HLWTimerActivity : SecureBaseActivity() {
             Log.d(TAG, "pauseHLW: Pausing")
 
             isRunning = false
-            binding.btnStart.text = "▶️ FORTSETZEN"
+            binding.btnStart.text = getString(R.string.hlw_timer_button_resume)
 
             stopMetronome()
             stopPhaseTimer()
             stopClock()
 
-            binding.tvInstructions.text = "⏸ PAUSIERT\n\nPuls prüfen!"
+            binding.tvInstructions.text = getString(R.string.hlw_timer_paused_instruction)
             binding.tvPhase.text = ""
 
         } catch (e: Exception) {
@@ -180,16 +180,16 @@ class HLWTimerActivity : SecureBaseActivity() {
             compressionCount = 0
 
             // ✅ Button
-            binding.btnStart.text = "▶️ HLW STARTEN"
+            binding.btnStart.text = getString(R.string.hlw_timer_button_start)
 
             // ✅ WICHTIG: Zeitanzeigen zurücksetzen
-            binding.tvElapsedTime.text = "00:00"
-            binding.tvCycleCount.text = "Zyklen: 0"
-            binding.tvNextPulseCheck.text = "Puls-Check in: 02:00"
+            binding.tvElapsedTime.text = getString(R.string.hlw_timer_placeholder_elapsed_time)
+            binding.tvCycleCount.text = getString(R.string.hlw_timer_cycle_count_format, 0)
+            binding.tvNextPulseCheck.text = getString(R.string.hlw_timer_placeholder_pulse_check_countdown)
 
             // ✅ Phase-Anzeigen
-            binding.tvInstructions.text = "💓 KOMPRESSIONEN"
-            binding.tvPhase.text = "30 Kompressionen im Takt\n120 BPM (2 pro Sekunde)"
+            binding.tvInstructions.text = getString(R.string.hlw_timer_compressions_instruction)
+            binding.tvPhase.text = getString(R.string.hlw_timer_compressions_phase_detail)
 
             // ✅ Cards
             binding.cardCompressionPhase.visibility = View.VISIBLE
@@ -197,12 +197,12 @@ class HLWTimerActivity : SecureBaseActivity() {
             binding.cardPulseCheck.visibility = View.GONE
 
             // ✅ Kompressions-Counter
-            binding.tvCompressionCount.text = "0 / 30"
-            binding.tvPhaseTime.text = "15 Sek"
+            binding.tvCompressionCount.text = getString(R.string.hlw_timer_compression_count_format, 0)
+            binding.tvPhaseTime.text = getString(R.string.hlw_timer_placeholder_phase_time_compression)
             binding.progressPhase.progress = 0
 
             // ✅ Beatmung
-            binding.tvVentilationTime.text = "5 Sek"
+            binding.tvVentilationTime.text = getString(R.string.hlw_timer_placeholder_phase_time_ventilation)
 
             // ✅ Herz-Icon
             binding.tvHeartBeat.alpha = 1.0f
@@ -211,7 +211,7 @@ class HLWTimerActivity : SecureBaseActivity() {
 
         } catch (e: Exception) {
             Log.e(TAG, "resetHLW: Error", e)
-            Toast.makeText(this, "Fehler beim Zurücksetzen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.hlw_timer_toast_reset_error), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -222,8 +222,8 @@ class HLWTimerActivity : SecureBaseActivity() {
             currentPhase = Phase.COMPRESSION
             compressionCount = 0
 
-            binding.tvInstructions.text = "💓 KOMPRESSIONEN"
-            binding.tvPhase.text = "30 Kompressionen im Takt\n120 BPM (2 pro Sekunde)"
+            binding.tvInstructions.text = getString(R.string.hlw_timer_compressions_instruction)
+            binding.tvPhase.text = getString(R.string.hlw_timer_compressions_phase_detail)
             binding.cardCompressionPhase.visibility = View.VISIBLE
             binding.cardVentilationPhase.visibility = View.GONE
 
@@ -234,12 +234,12 @@ class HLWTimerActivity : SecureBaseActivity() {
             phaseTimer = object : CountDownTimer(COMPRESSION_DURATION_MS, 100) {
                 override fun onTick(millisUntilFinished: Long) {
                     val secondsLeft = (millisUntilFinished / 1000).toInt()
-                    binding.tvPhaseTime.text = "$secondsLeft Sek"
+                    binding.tvPhaseTime.text = getString(R.string.hlw_timer_seconds_format, secondsLeft)
 
                     // Berechne Kompressions-Count (ca.)
                     val elapsed = (COMPRESSION_DURATION_MS - millisUntilFinished) / 1000.0
                     compressionCount = (elapsed * 2).toInt().coerceAtMost(30)
-                    binding.tvCompressionCount.text = "$compressionCount / 30"
+                    binding.tvCompressionCount.text = getString(R.string.hlw_timer_compression_count_format, compressionCount)
                     binding.progressPhase.progress = compressionCount
                 }
 
@@ -263,8 +263,8 @@ class HLWTimerActivity : SecureBaseActivity() {
             currentPhase = Phase.VENTILATION
             cycleCount++
 
-            binding.tvInstructions.text = "🫁 BEATMUNG"
-            binding.tvPhase.text = "2x über die Nase beatmen\nMaul geschlossen halten"
+            binding.tvInstructions.text = getString(R.string.hlw_timer_ventilation_instruction)
+            binding.tvPhase.text = getString(R.string.hlw_timer_ventilation_phase_detail)
             binding.cardCompressionPhase.visibility = View.GONE
             binding.cardVentilationPhase.visibility = View.VISIBLE
 
@@ -287,7 +287,7 @@ class HLWTimerActivity : SecureBaseActivity() {
             phaseTimer = object : CountDownTimer(VENTILATION_DURATION_MS, 100) {
                 override fun onTick(millisUntilFinished: Long) {
                     val secondsLeft = (millisUntilFinished / 1000).toInt() + 1
-                    binding.tvVentilationTime.text = "$secondsLeft Sek"
+                    binding.tvVentilationTime.text = getString(R.string.hlw_timer_seconds_format, secondsLeft)
                 }
 
                 override fun onFinish() {
@@ -383,8 +383,8 @@ class HLWTimerActivity : SecureBaseActivity() {
         try {
             pauseHLW()
 
-            binding.tvInstructions.text = "⏱️ PULS-CHECK!"
-            binding.tvPhase.text = "Oberschenkelinnenseite fühlen\n15 Sekunden prüfen"
+            binding.tvInstructions.text = getString(R.string.hlw_timer_pulse_check_instruction)
+            binding.tvPhase.text = getString(R.string.hlw_timer_pulse_check_phase_detail)
 
             binding.cardPulseCheck.visibility = View.VISIBLE
 
@@ -410,7 +410,7 @@ class HLWTimerActivity : SecureBaseActivity() {
     private fun updateUI() {
         try {
             // Zyklen
-            binding.tvCycleCount.text = "Zyklen: $cycleCount"
+            binding.tvCycleCount.text = getString(R.string.hlw_timer_cycle_count_format, cycleCount)
 
             // Gesamt-Zeit
             val minutes = totalElapsedSeconds / 60
@@ -422,8 +422,8 @@ class HLWTimerActivity : SecureBaseActivity() {
                     (totalElapsedSeconds % (CHECK_PULSE_EVERY_MINUTES * 60))
             val checkMinutes = secondsUntilCheck / 60
             val checkSeconds = secondsUntilCheck % 60
-            binding.tvNextPulseCheck.text = String.format(
-                "Puls-Check in: %02d:%02d",
+            binding.tvNextPulseCheck.text = getString(
+                R.string.hlw_timer_next_pulse_check_format,
                 checkMinutes,
                 checkSeconds
             )

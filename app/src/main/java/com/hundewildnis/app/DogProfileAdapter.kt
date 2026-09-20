@@ -41,7 +41,11 @@ class DogProfileAdapter(
 
             binding.tvName.text = profile.name
             binding.tvBreed.text = profile.breed
-            binding.tvInfo.text = "${profile.gender} • ${profile.birthDate}"
+            binding.tvInfo.text = context.getString(
+                R.string.dog_info_gender_birthdate_format,
+                GenderCode.displayName(context, profile.gender),
+                profile.birthDate
+            )
 
             if (profile.photoUri.isNotEmpty()) {
                 try {
@@ -58,15 +62,15 @@ class DogProfileAdapter(
 
         private fun setupActionGrids(profile: DogProfile) {
             val context = binding.root.context
-            
+
             // Standard Aktionen
             val actionTiles = listOf(
-                StartTile("dog_view", R.drawable.ic_info, "Anzeigen"),
-                StartTile("dog_edit", R.drawable.ic_notes, "Bearbeiten"),
-                StartTile("dog_qr", R.drawable.ic_signal, "QR-Code"),
-                StartTile("dog_pdf", R.drawable.ic_notes, "PDF"),
-                StartTile("dog_share", R.drawable.ic_map_pin_share, "Teilen"),
-                StartTile("dog_delete", R.drawable.ic_remove, "Löschen")
+                StartTile("dog_view", R.drawable.ic_info, context.getString(R.string.dog_tile_view)),
+                StartTile("dog_edit", R.drawable.ic_notes, context.getString(R.string.dog_tile_edit)),
+                StartTile("dog_qr", R.drawable.ic_signal, context.getString(R.string.dog_tile_qr)),
+                StartTile("dog_pdf", R.drawable.ic_notes, context.getString(R.string.dog_tile_pdf)),
+                StartTile("dog_share", R.drawable.ic_map_pin_share, context.getString(R.string.dog_tile_share)),
+                StartTile("dog_delete", R.drawable.ic_remove, context.getString(R.string.dog_tile_delete))
             )
 
             val colorsActions = StartGroupColors.forGroup(context, 1) // Ocker/Gelb
@@ -79,9 +83,9 @@ class DogProfileAdapter(
                     when(id) {
                         "dog_view" -> onView(profile)
                         "dog_edit" -> onEdit(profile)
-                        "dog_qr" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, "📱 QR-Code Datenauswahl") { onQR(profile, it) }
-                        "dog_pdf" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, "📄 PDF Datenauswahl") { onPDF(profile, it) }
-                        "dog_share" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, "📤 Teilen Datenauswahl") { onShare(profile, it) }
+                        "dog_qr" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, context.getString(R.string.dog_qr_field_selection_title)) { onQR(profile, it) }
+                        "dog_pdf" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, context.getString(R.string.dog_pdf_field_selection_title)) { onPDF(profile, it) }
+                        "dog_share" -> PrivacyDialogHelper.showFieldSelectionDialog(context, profile, context.getString(R.string.dog_share_field_selection_title)) { onShare(profile, it) }
                         "dog_delete" -> onDelete(profile)
                     }
                 }
@@ -89,7 +93,7 @@ class DogProfileAdapter(
 
             // Notfall
             val emergencyTiles = listOf(
-                StartTile("dog_emergency", R.drawable.ic_emergency, "🚨 NOTFALL", isDanger = true)
+                StartTile("dog_emergency", R.drawable.ic_emergency, context.getString(R.string.dog_tile_emergency), isDanger = true)
             )
 
             val colorsEmergency = StartGroupColors.forGroup(context, 4) // Blau (wird vom Adapter bei isDanger ignoriert)

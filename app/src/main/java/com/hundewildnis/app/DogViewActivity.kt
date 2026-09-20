@@ -46,7 +46,7 @@ class DogViewActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "🐕 ${profile?.name ?: "Hund"}"
+            title = "🐕 ${profile?.name ?: getString(R.string.dog_view_title_fallback)}"
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -82,45 +82,50 @@ class DogViewActivity : SecureBaseActivity() {
             binding.ivPhoto.setImageResource(R.drawable.ic_dog_placeholder)
         }
 
+        val dash = getString(R.string.dog_view_dash_placeholder)
+
         // Basis-Daten
         binding.tvName.text = p.name
         binding.tvBreed.text = p.breed
-        binding.tvGender.text = p.gender
-        binding.tvNeutered.text = "Kastriert: ${p.neutered}"
-        binding.tvBirthDate.text = "Geboren: ${p.birthDate}"
-        binding.tvOriginCountry.text = "Herkunft: ${p.originCountry.ifEmpty { "-" }}"
-        binding.tvColor.text = "Farbe: ${p.color}"
+        binding.tvGender.text = GenderCode.displayName(this, p.gender)
+        binding.tvNeutered.text = getString(R.string.dog_view_neutered_format, NeuteredCode.displayName(this, p.neutered))
+        binding.tvBirthDate.text = getString(R.string.dog_view_birth_date_format, p.birthDate)
+        binding.tvOriginCountry.text = getString(R.string.dog_view_origin_format, p.originCountry.ifEmpty { dash })
+        binding.tvColor.text = getString(R.string.dog_view_color_format, p.color)
 
         // Identifikation
-        binding.tvChip.text = "Chip: ${p.chipNumber.ifEmpty { "-" }}"
-        binding.tvTax.text = "Steuernummer: ${p.taxNumber.ifEmpty { "-" }}"
-        binding.tvTasso.text = "TASSO: ${p.tassoNumber.ifEmpty { "-" }}"
-        binding.tvPetPassport.text = "Heimtierausweis: ${p.petPassportCountry} ${p.petPassportNumber}".trim().ifEmpty { "-" }
+        binding.tvChip.text = getString(R.string.dog_view_chip_format, p.chipNumber.ifEmpty { dash })
+        binding.tvTax.text = getString(R.string.dog_view_tax_format, p.taxNumber.ifEmpty { dash })
+        binding.tvTasso.text = getString(R.string.dog_view_tasso_format, p.tassoNumber.ifEmpty { dash })
+        binding.tvPetPassport.text = getString(
+            R.string.dog_view_pet_passport_format,
+            "${p.petPassportCountry} ${p.petPassportNumber}".trim().ifEmpty { dash }
+        )
 
         // Gesundheit
-        binding.tvVaccination.text = "Impfstatus: ${p.vaccinationStatus.ifEmpty { "-" }}"
-        binding.tvAdditionalVaccination.text = "Weitere Impfungen: ${p.additionalVaccination.ifEmpty { "-" }}"
-        binding.tvDeworming.text = "Entwurmung: ${p.lastDeworming.ifEmpty { "-" }}"
-        binding.tvFleaTick.text = "Floh/Zecke: ${p.lastFleaTick.ifEmpty { "-" }}"
+        binding.tvVaccination.text = getString(R.string.dog_view_vaccination_format, p.vaccinationStatus.ifEmpty { dash })
+        binding.tvAdditionalVaccination.text = getString(R.string.dog_view_additional_vaccination_format, p.additionalVaccination.ifEmpty { dash })
+        binding.tvDeworming.text = getString(R.string.dog_view_deworming_format, p.lastDeworming.ifEmpty { dash })
+        binding.tvFleaTick.text = getString(R.string.dog_view_flea_tick_format, p.lastFleaTick.ifEmpty { dash })
         binding.tvWeight.text = if (p.weight.isNotEmpty()) {
-            "Gewicht: ${p.weight} kg (${p.weightDate})"
+            getString(R.string.dog_view_weight_with_date_format, p.weight, p.weightDate)
         } else {
-            "Gewicht: -"
+            getString(R.string.dog_view_weight_empty)
         }
-        binding.tvShoulderHeight.text = "Schulterhöhe: ${p.shoulderHeight.ifEmpty { "-" }} cm"
-        binding.tvBodyLength.text = "Körperlänge: ${p.bodyLength.ifEmpty { "-" }} cm"
-        binding.tvMedical.text = "Hinweise: ${p.medicalNotes.ifEmpty { "-" }}"
+        binding.tvShoulderHeight.text = getString(R.string.dog_view_shoulder_height_format, p.shoulderHeight.ifEmpty { dash })
+        binding.tvBodyLength.text = getString(R.string.dog_view_body_length_format, p.bodyLength.ifEmpty { dash })
+        binding.tvMedical.text = getString(R.string.dog_view_medical_notes_format, p.medicalNotes.ifEmpty { dash })
 
         // Kontakte
-        binding.tvVet.text = "Tierarzt: ${p.veterinarian.ifEmpty { "-" }}"
-        binding.tvInsurance.text = "Haftpflicht: ${p.liabilityInsurance.ifEmpty { "-" }}"
-        binding.tvHealthInsurance.text = "Krankenvers.: ${p.healthInsurance.ifEmpty { "-" }}"
-        binding.tvOwner.text = "Besitzer: ${p.owner.ifEmpty { "-" }}"
-        binding.tvEmergency.text = "Notfall: ${p.additionalEmergencyContact.ifEmpty { "-" }}"
+        binding.tvVet.text = getString(R.string.dog_view_vet_format, p.veterinarian.ifEmpty { dash })
+        binding.tvInsurance.text = getString(R.string.dog_view_liability_format, p.liabilityInsurance.ifEmpty { dash })
+        binding.tvHealthInsurance.text = getString(R.string.dog_view_health_insurance_format, p.healthInsurance.ifEmpty { dash })
+        binding.tvOwner.text = getString(R.string.dog_view_owner_format, p.owner.ifEmpty { dash })
+        binding.tvEmergency.text = getString(R.string.dog_view_emergency_format, p.additionalEmergencyContact.ifEmpty { dash })
 
         // Futter & Verhalten
-        binding.tvFood.text = "Futter: ${p.food.ifEmpty { "-" }}"
-        binding.tvBehavior.text = "Verhalten: ${p.behavior.ifEmpty { "-" }}"
+        binding.tvFood.text = getString(R.string.dog_view_food_format, p.food.ifEmpty { dash })
+        binding.tvBehavior.text = getString(R.string.dog_view_behavior_format, p.behavior.ifEmpty { dash })
 
         // Vitalwerte
         displayVitalSection(p)
@@ -150,9 +155,17 @@ class DogViewActivity : SecureBaseActivity() {
             // Tabellen-Header
             addVitalTableRow(
                 binding.llVitalTable,
-                listOf("Datum", "Puls", "Atem", "Temp.", "Status"),
+                listOf(
+                    getString(R.string.dog_vital_table_header_date),
+                    getString(R.string.dog_vital_table_header_pulse),
+                    getString(R.string.dog_vital_table_header_respiration),
+                    getString(R.string.dog_vital_table_header_temp),
+                    getString(R.string.dog_vital_table_header_status)
+                ),
                 isHeader = true
             )
+
+            val emDash = getString(R.string.dog_vital_em_dash)
 
             // Max. 10 Einträge anzeigen
             records.take(10).forEach { r ->
@@ -160,7 +173,7 @@ class DogViewActivity : SecureBaseActivity() {
                     PulseStatus.NORMAL  -> "✓"
                     PulseStatus.HIGH    -> "↑"
                     PulseStatus.LOW     -> "↓"
-                    PulseStatus.UNKNOWN -> "–"
+                    PulseStatus.UNKNOWN -> emDash
                 }
                 val statusColor = when (r.pulseStatus(shoulderCm)) {
                     PulseStatus.NORMAL  -> Color.parseColor("#2d5016")
@@ -172,9 +185,9 @@ class DogViewActivity : SecureBaseActivity() {
                     binding.llVitalTable,
                     listOf(
                         r.formattedDateShort(),
-                        "${r.pulse}/min",
-                        r.respiration?.let { "$it/min" } ?: "–",
-                        r.temperature?.let { "${"%.1f".format(it)}°C" } ?: "–",
+                        getString(R.string.dog_vital_per_minute, r.pulse),
+                        r.respiration?.let { getString(R.string.dog_vital_per_minute, it) } ?: emDash,
+                        r.temperature?.let { getString(R.string.dog_vital_temp_format, "%.1f".format(it)) } ?: emDash,
                         status
                     ),
                     isHeader = false,
@@ -183,7 +196,7 @@ class DogViewActivity : SecureBaseActivity() {
             }
 
             if (records.size > 10) {
-                val hint = buildVitalInfoText("… und ${records.size - 10} weitere Messungen")
+                val hint = buildVitalInfoText(getString(R.string.dog_vital_more_measurements, records.size - 10))
                 binding.llVitalTable.addView(hint)
             }
         }
@@ -259,7 +272,7 @@ class DogViewActivity : SecureBaseActivity() {
 
     private fun displayHeatCycleSection(p: DogProfile) {
         // Nur für intakte Hündinnen anzeigen
-        if (p.gender != "Hündin" || p.neutered == "Ja") {
+        if (p.gender != GenderCode.FEMALE || p.neutered == NeuteredCode.YES) {
             binding.llHeatCycleSection.visibility = View.GONE
             return
         }
@@ -284,7 +297,7 @@ class DogViewActivity : SecureBaseActivity() {
         binding.llCycleList.removeAllViews()
 
         if (cycles.isEmpty()) {
-            val hint = buildCycleInfoText("Noch keine Läufigkeit eingetragen.")
+            val hint = buildCycleInfoText(getString(R.string.dog_heat_no_entry_yet))
             binding.llCycleList.addView(hint)
         } else {
             cycles.sortedByDescending { it.startDate }.forEach { entry ->
@@ -345,7 +358,7 @@ class DogViewActivity : SecureBaseActivity() {
 
         // Zeile 1: Zyklusnummer + Intensität-Badge
         val header = buildRowText(
-            text      = "Läufigkeit #${entry.cycleNumber}  ·  ${entry.intensity}",
+            text      = getString(R.string.dog_heat_cycle_number_format, entry.cycleNumber, entry.intensity),
             bold      = true,
             textSizeSp = 14f
         )
@@ -353,18 +366,18 @@ class DogViewActivity : SecureBaseActivity() {
 
         // Zeile 2: Zeitraum
         val zeitraum = if (entry.endDate.isNotEmpty()) {
-            "${entry.startDate} – ${entry.endDate}  (${entry.durationLabel})"
+            getString(R.string.dog_heat_period_format, entry.startDate, entry.endDate, entry.durationLabel)
         } else if (entry.startDate.isNotEmpty()) {
-            "Seit ${entry.startDate}  ·  noch aktiv"
+            getString(R.string.dog_heat_since_format, entry.startDate)
         } else {
-            "Kein Datum eingetragen"
+            getString(R.string.dog_heat_no_date)
         }
         container.addView(buildRowText(zeitraum, textSizeSp = 13f))
 
         // Zeile 3: Verhalten (nur wenn vorhanden)
         if (entry.behaviorSigns.isNotEmpty()) {
             container.addView(buildRowText(
-                "Verhalten: ${entry.behaviorSigns.joinToString(", ")}",
+                getString(R.string.dog_heat_behavior_format, entry.behaviorSigns.joinToString(", ")),
                 textSizeSp = 12f,
                 alpha = 0.75f
             ))
@@ -373,9 +386,9 @@ class DogViewActivity : SecureBaseActivity() {
         // Zeile 4: Scheinträchtigkeit (nur wenn vorhanden)
         if (entry.hasPseudoPregnancy) {
             val pseudoText = if (entry.pseudoPregnancySigns.isNotEmpty()) {
-                "🐾 Scheinträchtigkeit: ${entry.pseudoPregnancySigns.joinToString(", ")}"
+                getString(R.string.dog_heat_pseudo_pregnancy_with_signs, entry.pseudoPregnancySigns.joinToString(", "))
             } else {
-                "🐾 Scheinträchtigkeit beobachtet"
+                getString(R.string.dog_heat_pseudo_pregnancy_observed)
             }
             container.addView(buildRowText(pseudoText, textSizeSp = 12f, alpha = 0.75f))
         }

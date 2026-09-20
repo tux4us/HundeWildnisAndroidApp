@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:text="Blitz-Donner-Distanzrechner"
+                android:text="@string/thunderstorm_layout_calculator_title"
                 android:textColor="@color/rd_overlay_accent"
                 android:textSize="@dimen/text_body_large"
                 android:textStyle="bold" />
@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="Tippe im Moment des Blitzes auf BLITZ. Sobald Du den Donner hörst, tippe auf DONNER. Aus der gemessenen Zeit berechnet die App die ungefähre Entfernung des Gewitters."
+                    android:text="@string/thunderstorm_layout_instructions"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="14sp"
                     android:lineSpacingExtra="2dp" />
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:text="⚡ BLITZ"
+                    android:text="@string/thunderstorm_layout_btn_flash"
                     android:textColor="@android:color/white"
                     app:backgroundTint="#F5A623" />
 
@@ -91,7 +91,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:enabled="false"
-                    android:text="🔊 DONNER"
+                    android:text="@string/thunderstorm_layout_btn_thunder"
                     android:textColor="@android:color/white"
                     app:backgroundTint="#5A6B7A" />
             </LinearLayout>
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:gravity="center"
-                android:text="Bereit für die Messung."
+                android:text="@string/thunderstorm_layout_ready_for_measurement"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp" />
 
@@ -129,7 +129,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="📐 Rechenweg"
+                        android:text="@string/thunderstorm_layout_calculation_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold" />
@@ -230,7 +230,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Verlauf dieser Messreihe"
+                        android:text="@string/thunderstorm_layout_series_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -239,7 +239,7 @@
                         android:id="@+id/tvMeasurementCount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Noch keine Messung"
+                        android:text="@string/thunderstorm_layout_no_measurement_yet"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="13sp" />
 
@@ -262,7 +262,7 @@
                         android:id="@+id/tvApproachPlaceholder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🚗💨 Näherungsgeschwindigkeit &amp; Ankunftszeit erscheinen ab der 2. Messung."
+                        android:text="@string/thunderstorm_layout_approach_placeholder"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="13sp"
                         android:lineSpacingExtra="2dp" />
@@ -289,7 +289,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="💨 GESCHWINDIGKEIT"
+                                android:text="@string/thunderstorm_layout_speed_label"
                                 android:textColor="?android:attr/textColorSecondary"
                                 android:textSize="11sp"
                                 android:textStyle="bold"
@@ -320,7 +320,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="⏱️ ANKUNFT IN"
+                                android:text="@string/thunderstorm_layout_arrival_in_label"
                                 android:textColor="?android:attr/textColorSecondary"
                                 android:textSize="11sp"
                                 android:textStyle="bold"
@@ -372,7 +372,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Unter 1 km Entfernung – keine Ankunftszeit-Schätzung mehr sinnvoll: SOFORT Schutz suchen!"
+                            android:text="@string/thunderstorm_layout_acute_danger_text"
                             android:textColor="@color/rd_danger_text"
                             android:textSize="13sp"
                             android:textStyle="bold"
@@ -387,7 +387,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="Messreihe zurücksetzen"
+                android:text="@string/thunderstorm_layout_reset_series"
                 android:textColor="@color/rd_overlay_accent"
                 app:strokeColor="@color/rd_overlay_accent" />
 
@@ -403,7 +403,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="🌩️ Gewitterrisiko-Vorhersage"
+                android:text="@string/thunderstorm_layout_forecast_title"
                 android:textColor="@color/rd_overlay_accent"
                 android:textSize="@dimen/text_body_large"
                 android:textStyle="bold" />
@@ -412,7 +412,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Zeigt die Gewittergefahr für die nächsten 12 Stunden an Deinem Standort, basierend auf dem CAPE-Wert (Energie für Gewitterbildung) von Open-Meteo, inklusive der wahrscheinlichen Richtung, aus der ein Gewitter herannaht."
+                android:text="@string/thunderstorm_layout_forecast_explanation"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:lineSpacingExtra="2dp" />
@@ -422,7 +422,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Vorhersage für aktuellen Standort laden"
+                android:text="@string/thunderstorm_layout_load_forecast_button"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/rd_overlay_accent" />
 
@@ -501,7 +501,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="⚠️ Wichtiger Hinweis"
+                        android:text="@string/thunderstorm_layout_important_note_title"
                         android:textColor="#CCCCCC"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -509,7 +509,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Alle Angaben in diesem Werkzeug sind rein rechnerische Näherungswerte auf Basis Deiner eigenen Messungen (Zeitpunkt von Blitz und Donner) bzw. einer Wettervorhersage. Reaktionszeit beim Tippen, Wind, Gelände und sich schnell ändernde Wetterbedingungen können zu erheblichen Abweichungen von Distanz, Geschwindigkeit, Ankunftszeit und Zugrichtung führen – Gewitter können ihre Richtung ändern oder neu entstehen. Die angezeigten Gebäude/Hütten in der Revier-Navigation sind aus OpenStreetMap-Daten ermittelt; ob sie vor Ort tatsächlich als geschlossener Blitzschutz geeignet sind, muss selbst geprüft werden. Die Werte ersetzen keine amtliche Unwetterwarnung und keine eigene Einschätzung der Lage vor Ort. Die Nutzung erfolgt auf eigene Verantwortung; für Schäden, die aus dem Vertrauen auf diese Berechnungen entstehen, wird keine Haftung übernommen."
+                        android:text="@string/thunderstorm_layout_disclaimer"
                         android:textColor="#CCCCCC"
                         android:textSize="12sp"
                         android:lineSpacingExtra="3dp" />

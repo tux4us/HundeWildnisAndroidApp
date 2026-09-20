@@ -13,8 +13,8 @@ data class DogProfile(
     // ═══════════════════════════════════════════════════════════
     var name: String = "",
     var breed: String = "",
-    var gender: String = "", // "Rüde" / "Hündin"
-    var neutered: String = "", // "Ja" / "Nein" / "Unbekannt"
+    var gender: String = "", // Stabiler interner Code: "male" / "female" (siehe GenderCode)
+    var neutered: String = "", // Stabiler interner Code: "yes" / "no" / "unknown" (siehe NeuteredCode)
     var birthDate: String = "",
     var originCountry: String = "",
     var color: String = "",
@@ -123,64 +123,64 @@ data class DogProfile(
     /**
      * Gibt ALLE Felder als Map zurück (für Datenschutz-Auswahl)
      */
-    fun getAllFields(): Map<String, Pair<String, String>> {
+    fun getAllFields(context: Context): Map<String, Pair<String, String>> {
         return mapOf(
             // BASIS-DATEN
-            "name" to Pair("Name", name),
-            "breed" to Pair("Rasse", breed),
-            "gender" to Pair("Geschlecht", gender),
-            "neutered" to Pair("Kastrationsstatus", neutered),
-            "birthDate" to Pair("Geburtsdatum", birthDate),
-            "originCountry" to Pair("Herkunftsort/-land", originCountry),
-            "color" to Pair("Farbe/Fellzeichnung", color),
+            "name" to Pair(context.getString(R.string.dog_field_name), name),
+            "breed" to Pair(context.getString(R.string.dog_field_breed), breed),
+            "gender" to Pair(context.getString(R.string.dog_field_gender), GenderCode.displayName(context, gender)),
+            "neutered" to Pair(context.getString(R.string.dog_field_neutered), NeuteredCode.displayName(context, neutered)),
+            "birthDate" to Pair(context.getString(R.string.dog_field_birth_date), birthDate),
+            "originCountry" to Pair(context.getString(R.string.dog_field_origin_country), originCountry),
+            "color" to Pair(context.getString(R.string.dog_field_color), color),
 
             // IDENTIFIKATION
-            "chipNumber" to Pair("Chip-Nummer", chipNumber),
-            "taxNumber" to Pair("Steuernummer", taxNumber),
-            "tassoNumber" to Pair("TASSO Nummer", tassoNumber),
-            "petPassportCountry" to Pair("Heimtierausweis Land", petPassportCountry),
-            "petPassportNumber" to Pair("Heimtierausweis Nummer", petPassportNumber),
+            "chipNumber" to Pair(context.getString(R.string.dog_field_chip_number), chipNumber),
+            "taxNumber" to Pair(context.getString(R.string.dog_field_tax_number), taxNumber),
+            "tassoNumber" to Pair(context.getString(R.string.dog_field_tasso_number), tassoNumber),
+            "petPassportCountry" to Pair(context.getString(R.string.dog_field_pet_passport_country), petPassportCountry),
+            "petPassportNumber" to Pair(context.getString(R.string.dog_field_pet_passport_number), petPassportNumber),
 
             // GESUNDHEIT
-            "vaccinationStatus" to Pair("Impfstatus", vaccinationStatus),
-            "additionalVaccination" to Pair("Weitere Impfung", additionalVaccination),
-            "lastDeworming" to Pair("Letzte Entwurmung", lastDeworming),
-            "lastFleaTick" to Pair("Letzte Floh-/Zeckenprophylaxe", lastFleaTick),
-            "weight" to Pair("Gewicht", weight),
-            "weightDate" to Pair("Gewicht Datum", weightDate),
-            "shoulderHeight" to Pair("Schulterhöhe (cm)", shoulderHeight),
-            "bodyLength" to Pair("Körperlänge (cm)", bodyLength),
-            "medicalNotes" to Pair("Medizinische Hinweise", medicalNotes),
+            "vaccinationStatus" to Pair(context.getString(R.string.dog_field_vaccination_status), vaccinationStatus),
+            "additionalVaccination" to Pair(context.getString(R.string.dog_field_additional_vaccination), additionalVaccination),
+            "lastDeworming" to Pair(context.getString(R.string.dog_field_last_deworming), lastDeworming),
+            "lastFleaTick" to Pair(context.getString(R.string.dog_field_last_flea_tick), lastFleaTick),
+            "weight" to Pair(context.getString(R.string.dog_field_weight), weight),
+            "weightDate" to Pair(context.getString(R.string.dog_field_weight_date), weightDate),
+            "shoulderHeight" to Pair(context.getString(R.string.dog_field_shoulder_height), shoulderHeight),
+            "bodyLength" to Pair(context.getString(R.string.dog_field_body_length), bodyLength),
+            "medicalNotes" to Pair(context.getString(R.string.dog_field_medical_notes), medicalNotes),
 
             // KONTAKTE
-            "veterinarian" to Pair("Tierarzt", veterinarian),
-            "liabilityInsurance" to Pair("Hundehaftpflichtversicherung", liabilityInsurance),
-            "healthInsurance" to Pair("Hundekranken-/OP-Versicherung", healthInsurance),
-            "owner" to Pair("Besitzer", owner),
-            "additionalEmergencyContact" to Pair("Zusätzlicher Notfallkontakt", additionalEmergencyContact),
+            "veterinarian" to Pair(context.getString(R.string.dog_field_veterinarian), veterinarian),
+            "liabilityInsurance" to Pair(context.getString(R.string.dog_field_liability_insurance), liabilityInsurance),
+            "healthInsurance" to Pair(context.getString(R.string.dog_field_health_insurance), healthInsurance),
+            "owner" to Pair(context.getString(R.string.dog_field_owner), owner),
+            "additionalEmergencyContact" to Pair(context.getString(R.string.dog_field_additional_emergency_contact), additionalEmergencyContact),
 
             // SONSTIGES
-            "food" to Pair("Futter", food),
-            "behavior" to Pair("Verhalten", behavior),
-            "photoUri" to Pair("Foto", photoUri)
+            "food" to Pair(context.getString(R.string.dog_field_food), food),
+            "behavior" to Pair(context.getString(R.string.dog_field_behavior), behavior),
+            "photoUri" to Pair(context.getString(R.string.dog_field_photo), photoUri)
         )
     }
 
     /**
      * Erstellt QR/PDF/Share-String mit ausgewählten Feldern
      */
-    fun toFilteredString(selectedFields: Set<String>): String {
-        val allFields = getAllFields()
+    fun toFilteredString(context: Context, selectedFields: Set<String>): String {
+        val allFields = getAllFields(context)
         val sections = mutableListOf<String>()
 
-        sections.add("🐕 HUNDE-STAMMDATEN")
+        sections.add(context.getString(R.string.dog_export_title))
         sections.add("")
 
         // BASIS-DATEN
         val basisFields = listOf("name", "breed", "gender", "neutered", "birthDate", "originCountry", "color")
         val basisSelected = basisFields.filter { selectedFields.contains(it) }
         if (basisSelected.isNotEmpty()) {
-            sections.add("📋 BASIS-DATEN")
+            sections.add(context.getString(R.string.dog_export_section_basis))
             basisSelected.forEach { key ->
                 allFields[key]?.let { (label, value) ->
                     if (value.isNotEmpty()) sections.add("$label: $value")
@@ -193,7 +193,7 @@ data class DogProfile(
         val idFields = listOf("chipNumber", "taxNumber", "tassoNumber", "petPassportCountry", "petPassportNumber")
         val idSelected = idFields.filter { selectedFields.contains(it) }
         if (idSelected.isNotEmpty()) {
-            sections.add("🔖 IDENTIFIKATION")
+            sections.add(context.getString(R.string.dog_export_section_identification))
             idSelected.forEach { key ->
                 allFields[key]?.let { (label, value) ->
                     if (value.isNotEmpty()) sections.add("$label: $value")
@@ -207,7 +207,7 @@ data class DogProfile(
             "weight", "weightDate", "shoulderHeight", "bodyLength", "medicalNotes")
         val healthSelected = healthFields.filter { selectedFields.contains(it) }
         if (healthSelected.isNotEmpty()) {
-            sections.add("💉 GESUNDHEIT")
+            sections.add(context.getString(R.string.dog_export_section_health))
             healthSelected.forEach { key ->
                 allFields[key]?.let { (label, value) ->
                     if (value.isNotEmpty()) sections.add("$label: $value")
@@ -220,7 +220,7 @@ data class DogProfile(
         val contactFields = listOf("veterinarian", "liabilityInsurance", "healthInsurance", "owner", "additionalEmergencyContact")
         val contactSelected = contactFields.filter { selectedFields.contains(it) }
         if (contactSelected.isNotEmpty()) {
-            sections.add("👨‍⚕️ KONTAKTE")
+            sections.add(context.getString(R.string.dog_export_section_contacts))
             contactSelected.forEach { key ->
                 allFields[key]?.let { (label, value) ->
                     if (value.isNotEmpty()) sections.add("$label: $value")
@@ -233,7 +233,7 @@ data class DogProfile(
         val miscFields = listOf("food", "behavior")
         val miscSelected = miscFields.filter { selectedFields.contains(it) }
         if (miscSelected.isNotEmpty()) {
-            sections.add("🍖 FUTTER & VERHALTEN")
+            sections.add(context.getString(R.string.dog_export_section_food_behavior))
             miscSelected.forEach { key ->
                 allFields[key]?.let { (label, value) ->
                     if (value.isNotEmpty()) sections.add("$label: $value")
@@ -247,8 +247,53 @@ data class DogProfile(
     /**
      * Legacy-Funktion für Abwärtskompatibilität
      */
-    fun toQRString(): String {
-        return toFilteredString(getAllFields().keys)
+    fun toQRString(context: Context): String {
+        return toFilteredString(context, getAllFields(context).keys)
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// STABILE CODES für Geschlecht / Kastrationsstatus
+// Werden intern (Vergleiche, Spinner-Zuordnung, Datenmodell) verwendet,
+// damit die App-Logik unabhängig von der UI-Sprache funktioniert.
+// Die Anzeige läuft ausschließlich über displayName(context).
+// ════════════════════════════════════════════════════════════════
+object GenderCode {
+    const val MALE = "male"
+    const val FEMALE = "female"
+
+    fun displayName(context: Context, code: String): String = when (code) {
+        MALE -> context.getString(R.string.dog_gender_male)
+        FEMALE -> context.getString(R.string.dog_gender_female)
+        else -> ""
+    }
+
+    /** Migriert alte, direkt als deutscher Anzeigetext gespeicherte Werte auf den stabilen Code. */
+    fun migrate(value: String): String = when (value) {
+        "Rüde", MALE -> MALE
+        "Hündin", FEMALE -> FEMALE
+        else -> value
+    }
+}
+
+object NeuteredCode {
+    const val YES = "yes"
+    const val NO = "no"
+    const val UNKNOWN = "unknown"
+
+    fun displayName(context: Context, code: String): String = when (code) {
+        YES -> context.getString(R.string.dog_neutered_yes)
+        NO -> context.getString(R.string.dog_neutered_no)
+        UNKNOWN -> context.getString(R.string.dog_neutered_unknown)
+        else -> ""
+    }
+
+    /** Migriert alte, direkt als deutscher Anzeigetext gespeicherte Werte auf den stabilen Code. */
+    fun migrate(value: String): String = when (value) {
+        "Ja", YES -> YES
+        "Nein", NO -> NO
+        "Unbekannt", UNKNOWN -> UNKNOWN
+        else -> value
     }
 }
 

@@ -157,17 +157,17 @@ class CompassRoseView @JvmOverloads constructor(
         }
 
         // 4. Himmelsrichtungen (N, O, S, W)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "N", 0)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "O", 90)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "S", 180)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "W", 270)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_n), 0)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_o), 90)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_s), 180)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_w), 270)
 
         // 4b. Zwischen-Himmelsrichtungen (kleiner)
         cardinalPaint.textSize = 34f
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "NO", 45)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "SO", 135)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "SW", 225)
-        drawCardinal(canvas, cx, cy, radius * 0.70f, "NW", 315)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_no), 45)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_so), 135)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_sw), 225)
+        drawCardinal(canvas, cx, cy, radius * 0.70f, context.getString(R.string.compass_rose_nw), 315)
         cardinalPaint.textSize = 58f
 
         // 5. Himmelskörper (Sonne, Mond, Polaris + Großer Wagen) — zwischen Ring und Nadel
@@ -186,7 +186,7 @@ class CompassRoseView @JvmOverloads constructor(
         val tx = cx + cos(angle).toFloat() * r
         val ty = cy + sin(angle).toFloat() * r + (cardinalPaint.textSize / 3f)
 
-        cardinalPaint.color = if (text == "N") Color.RED else accentColor
+        cardinalPaint.color = if (degrees == 0) Color.RED else accentColor
         canvas.drawText(text, tx, ty, cardinalPaint)
     }
 
@@ -243,7 +243,7 @@ class CompassRoseView @JvmOverloads constructor(
         canvas.drawCircle(ix, iy, iconRadius, skyIconStrokePaint)
         skyIconStrokePaint.color = sunColor
 
-        drawLabelChip(canvas, ix, iy + iconRadius * 2.8f, "Sonne", alpha)
+        drawLabelChip(canvas, ix, iy + iconRadius * 2.8f, context.getString(R.string.compass_rose_sun_label), alpha)
     }
 
     /**
@@ -299,7 +299,7 @@ class CompassRoseView @JvmOverloads constructor(
         skyIconStrokePaint.alpha = alpha
         canvas.drawCircle(ix, iy, iconRadius, skyIconStrokePaint)
 
-        drawLabelChip(canvas, ix, iy + iconRadius * 2.8f, "Mond", alpha)
+        drawLabelChip(canvas, ix, iy + iconRadius * 2.8f, context.getString(R.string.compass_rose_moon_label), alpha)
     }
 
     /** Zeichnet einen abgerundeten dunklen Beschriftungs-Chip unter einem Icon. */
@@ -383,7 +383,7 @@ class CompassRoseView @JvmOverloads constructor(
         drawSparkleStar(canvas, starIx, iy, sharedR * 0.7f, sharedR * 0.2f, skyIconPaint)
 
         // Label weiter nach unten verschoben, um Überlappung mit dem Stern zu vermeiden
-        drawLabelChip(canvas, starIx, iy + sharedR * 3.2f, "Polaris", alpha)
+        drawLabelChip(canvas, starIx, iy + sharedR * 3.2f, context.getString(R.string.compass_rose_polaris_label), alpha)
 
         // 2. Großer-Wagen-Uhrzeiger (rechts daneben)
         val clockR = sharedR
@@ -403,7 +403,11 @@ class CompassRoseView @JvmOverloads constructor(
         skyLabelPaint.color = Color.parseColor("#CCE0FF")
         skyLabelPaint.alpha = alpha
         canvas.drawText(
-            "Gr.Wag. ${polarisResult.greatBearClockPosition}h",
+            String.format(
+                java.util.Locale.getDefault(),
+                context.getString(R.string.compass_rose_great_bear_clock_format),
+                polarisResult.greatBearClockPosition
+            ),
             clockCx,
             clockCy + clockR + 24f,
             skyLabelPaint

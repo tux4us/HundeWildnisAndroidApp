@@ -65,7 +65,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Wetterinformationen"
+            title = getString(R.string.weather_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
         binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
@@ -105,27 +105,16 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this)
-                .setTitle("📍 Standortdienste aktivieren")
-                .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
-                        "• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
-                        "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n" +
-                        "• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n" +
-                        "• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n" +
-                        "• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n" +
-                        "• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n" +
-                        "• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n" +
-                        "• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n" +
-                        "• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\n" +
-                        "WICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
-                        "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden")
-                .setPositiveButton("AKTIVIEREN") { _, _ ->
+                .setTitle(getString(R.string.weather_location_services_title))
+                .setMessage(getString(R.string.weather_location_services_message))
+                .setPositiveButton(getString(R.string.start_notification_disclosure_accept)) { _, _ ->
                     ActivityCompat.requestPermissions(
                         this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                         LOCATION_PERMISSION_REQUEST_CODE
                     )
                 }
-                .setNegativeButton("ABLEHNEN", null)
+                .setNegativeButton(getString(R.string.start_notification_disclosure_decline), null)
                 .create()
                 .apply {
                     show()
@@ -144,9 +133,9 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLocation()
                 } else {
-                    binding.descriptionText.text = "Standortberechtigung benötigt"
+                    binding.descriptionText.text = getString(R.string.weather_location_permission_required)
                     binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this, "Standortberechtigung wurde verweigert", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.weather_location_permission_denied), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -155,7 +144,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private fun getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
         binding.progressBar.visibility = View.VISIBLE
-        binding.descriptionText.text = "Standort wird ermittelt..."
+        binding.descriptionText.text = getString(R.string.weather_determining_location)
         var bestLocation: Location? = null
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             bestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
@@ -221,21 +210,21 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
     private fun showSearchDialog() {
         val input = android.widget.EditText(this).apply {
-            hint = "Stadt oder Ort eingeben..."
+            hint = getString(R.string.weather_search_hint)
             setSingleLine()
             setPadding(48, 32, 48, 32)
         }
 
         AlertDialog.Builder(this)
-            .setTitle("🌍 Ort suchen")
+            .setTitle(getString(R.string.weather_search_title))
             .setView(input)
-            .setPositiveButton("Suchen") { _, _ ->
+            .setPositiveButton(getString(R.string.search)) { _, _ ->
                 val query = input.text.toString()
                 if (query.isNotEmpty()) {
                     performSearch(query)
                 }
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -247,8 +236,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         binding.progressBar.visibility = View.VISIBLE
         updateFavoriteIcon()
 
-        val displayLoc = cityName ?: String.format(Locale.GERMAN, "%.4f°, %.4f°", latitude, longitude)
-        binding.locationText.text = "📍 $displayLoc"
+        val displayLoc = cityName ?: String.format(Locale.getDefault(), "%.4f°, %.4f°", latitude, longitude)
+        binding.locationText.text = getString(R.string.weather_location_prefix, displayLoc)
 
         lifecycleScope.launch {
             try {
@@ -259,7 +248,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
                 if (nameToUse != null) {
                     currentCityName = nameToUse
-                    binding.locationText.text = "📍 $nameToUse"
+                    binding.locationText.text = getString(R.string.weather_location_prefix, nameToUse)
                 }
 
                 // Beide API-Calls parallel starten
@@ -281,8 +270,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 binding.progressBar.visibility = View.GONE
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                binding.descriptionText.text = "Fehler beim Laden der Wetterdaten"
-                Toast.makeText(this@WeatherActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                binding.descriptionText.text = getString(R.string.weather_load_error)
+                Toast.makeText(this@WeatherActivity, getString(R.string.start_error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -312,13 +301,13 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
                 binding.progressBar.visibility = View.GONE
                 if (results.isEmpty()) {
-                    Toast.makeText(this@WeatherActivity, "Keine Ergebnisse gefunden", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@WeatherActivity, getString(R.string.weather_search_no_results), Toast.LENGTH_SHORT).show()
                 } else {
                     showSearchResultsDialog(results)
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@WeatherActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@WeatherActivity, getString(R.string.weather_error_prefix, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -326,7 +315,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private fun showSearchResultsDialog(results: List<WeatherFavorite>) {
         val names = results.map { it.name }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("Ergebnisse")
+            .setTitle(getString(R.string.weather_results))
             .setItems(names) { _, which ->
                 val selected = results[which]
                 loadWeather(selected.lat, selected.lon, selected.name)
@@ -337,11 +326,11 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private fun toggleFavorite() {
         if (WeatherFavoritesManager.isFavorite(this, currentLat, currentLon)) {
             WeatherFavoritesManager.remove(this, currentLat, currentLon)
-            Toast.makeText(this, "Aus Favoriten entfernt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.weather_removed_from_favorites), Toast.LENGTH_SHORT).show()
         } else {
-            val name = currentCityName ?: String.format(Locale.GERMAN, "%.2f, %.2f", currentLat, currentLon)
+            val name = currentCityName ?: String.format(Locale.getDefault(), "%.2f, %.2f", currentLat, currentLon)
             WeatherFavoritesManager.add(this, WeatherFavorite(name = name, lat = currentLat, lon = currentLon))
-            Toast.makeText(this, "Zu Favoriten hinzugefügt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.weather_added_to_favorites), Toast.LENGTH_SHORT).show()
         }
         updateFavoriteIcon()
     }
@@ -349,19 +338,19 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private fun showFavoritesDialog() {
         val favorites = WeatherFavoritesManager.getAll(this)
         if (favorites.isEmpty()) {
-            Toast.makeText(this, "Noch keine Favoriten gespeichert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.weather_no_favorites_yet), Toast.LENGTH_SHORT).show()
             return
         }
 
         val names = favorites.map { it.name }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("⭐ Wetter Favoriten")
+            .setTitle(getString(R.string.weather_favorites_title))
             .setItems(names) { _, which ->
                 val selected = favorites[which]
                 loadWeather(selected.lat, selected.lon, selected.name)
             }
-            .setNeutralButton("Verwalten") { _, _ -> manageFavorites() }
-            .setPositiveButton("Schließen", null)
+            .setNeutralButton(getString(R.string.weather_manage)) { _, _ -> manageFavorites() }
+            .setPositiveButton(getString(R.string.start_close), null)
             .show()
     }
 
@@ -371,22 +360,23 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val checked = BooleanArray(favorites.size) { false }
 
         AlertDialog.Builder(this)
-            .setTitle("Favoriten löschen")
+            .setTitle(getString(R.string.weather_delete_favorites_title))
             .setMultiChoiceItems(names, checked) { _, which, isChecked ->
                 checked[which] = isChecked
             }
-            .setPositiveButton("Ausgewählte löschen") { _, _ ->
+            .setPositiveButton(getString(R.string.weather_delete_selected)) { _, _ ->
                 val newList = favorites.filterIndexed { index, _ -> !checked[index] }
                 WeatherFavoritesManager.saveAll(this, newList)
                 updateFavoriteIcon()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private suspend fun reverseGeocode(lat: Double, lon: Double): String? {
         return try {
-            val url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json&accept-language=de"
+            val languageTag = LanguageManager.getCurrentLanguage().tag
+            val url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json&accept-language=$languageTag"
             val connection = URL(url).openConnection() as java.net.HttpURLConnection
             connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
             val response = connection.inputStream.bufferedReader().use { it.readText() }
@@ -435,21 +425,21 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
     private fun displayWeatherData(data: JSONObject, airQualityData: JSONObject?, latitude: Double, longitude: Double) {
         val current = data.getJSONObject("current")
-        val temperature  = current.getDouble("temperature_2m")
-        val feelsLike    = current.getDouble("apparent_temperature")
-        val humidity     = current.getInt("relative_humidity_2m")
-        val precipitation = current.getDouble("precipitation")
-        val weatherCode  = current.getInt("weather_code")
-        val pressure     = current.getDouble("surface_pressure")
-        val windSpeed    = current.getDouble("wind_speed_10m")
+        val temperature   = current.getDouble("temperature_2m")
+        val feelsLike     = current.getDouble("apparent_temperature")
+        val weatherCode   = current.getInt("weather_code")
+        val windSpeed     = current.getDouble("wind_speed_10m")
+        val windGusts     = current.getDouble("wind_gusts_10m")
         val windDirection = current.getDouble("wind_direction_10m")
-        val windGusts    = current.getDouble("wind_gusts_10m")
-        val uvIndex      = current.getDouble("uv_index")
+        val humidity      = current.getInt("relative_humidity_2m")
+        val precipitation = current.getDouble("precipitation")
+        val pressure      = current.getDouble("surface_pressure")
+        val uvIndex       = current.getDouble("uv_index")
 
-        binding.temperatureText.text = String.format(Locale.GERMAN, "%.1f°C", temperature)
+        binding.temperatureText.text = getString(R.string.weather_degree_celsius, temperature)
 
         val windchill = calculateWindchill(temperature, windSpeed)
-        binding.feelsLikeText.text = String.format(Locale.GERMAN, "%.1f°C (Windgeschützt: %.1f°C)", feelsLike, windchill)
+        binding.feelsLikeText.text = getString(R.string.weather_feels_like, feelsLike, windchill)
 
         val (description, icon) = getWeatherDescription(weatherCode)
         binding.descriptionText.text = description
@@ -458,13 +448,13 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val windDirectionText = getWindDirection(windDirection)
         val beaufort = getBeaufortScale(windSpeed)
         binding.tvWindSymbol.text = getBeaufortSymbol(beaufort)
-        binding.windText.text = String.format(Locale.GERMAN, "%.1f km/h %s (Bft %d)\nBöen: %.1f km/h", windSpeed, windDirectionText, beaufort, windGusts)
+        binding.windText.text = getString(R.string.weather_wind_display, windSpeed, windDirectionText, beaufort, windGusts)
 
-        binding.humidityText.text = "$humidity%"
-        binding.precipitationText.text = String.format(Locale.GERMAN, "%.1f mm", precipitation)
-        binding.pressureText.text = String.format(Locale.GERMAN, "%.0f hPa", pressure)
-        binding.visibilityText.text = "> 10 km"
-        binding.uvIndexText.text = String.format(Locale.GERMAN, "%.1f", uvIndex)
+        binding.humidityText.text = getString(R.string.weather_percent, humidity)
+        binding.precipitationText.text = getString(R.string.weather_mm, precipitation)
+        binding.pressureText.text = getString(R.string.weather_hpa, pressure)
+        binding.visibilityText.text = getString(R.string.weather_visibility_format)
+        binding.uvIndexText.text = String.format(Locale.getDefault(), "%.1f", uvIndex)
 
         displaySunriseSunset(data)
         display24HourForecast(data)
@@ -495,9 +485,9 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             val moonInfo = calculateMoonPhase()
             binding.moonPhaseView.moonAge        = moonInfo.age
             binding.moonPhaseNameText.text       = moonInfo.phaseName
-            binding.moonIlluminationText.text    = String.format(Locale.GERMAN, "Beleuchtung: %.0f%%", moonInfo.illumination)
+            binding.moonIlluminationText.text    = getString(R.string.weather_moon_illumination, moonInfo.illumination)
             binding.moonIlluminationBar.progress = moonInfo.illumination.toInt()
-            binding.moonAgeText.text             = String.format(Locale.GERMAN, "Mondalter: %.1f von 29,5 Tagen", moonInfo.age)
+            binding.moonAgeText.text             = getString(R.string.weather_moon_age, moonInfo.age)
             binding.moonNextFullText.text        = moonInfo.nextFullMoon
             binding.moonNextNewText.text         = moonInfo.nextNewMoon
             binding.moonZodiacText.text          = moonInfo.zodiacSign
@@ -567,8 +557,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             emoji         = emoji,
             illumination  = illumination,
             age           = moonAge,
-            nextFullMoon  = buildNextEventText("🌕 Vollmond", daysToFull),
-            nextNewMoon   = buildNextEventText("🌑 Neumond",  daysToNew),
+            nextFullMoon  = buildNextEventText(getString(R.string.weather_moon_full_moon_label), daysToFull),
+            nextNewMoon   = buildNextEventText(getString(R.string.weather_moon_new_moon_label),  daysToNew),
             zodiacSign    = getMoonZodiacSign(zodiacIndex),
             astronomyInfo = getMoonAstronomyInfo(phaseIndex, illumination),
             natureInfo    = getMoonNatureInfo(phaseIndex),
@@ -586,75 +576,76 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun buildNextEventText(label: String, days: Double): String = when {
-        days < 0.5 -> "$label: heute!"
-        days < 1.5 -> "$label: morgen"
-        else       -> "$label: in ${days.toInt()} Tagen"
+        days < 0.5 -> getString(R.string.weather_moon_event_today, label)
+        days < 1.5 -> getString(R.string.weather_moon_event_tomorrow, label)
+        else       -> getString(R.string.weather_moon_event_in_days, label, days.toInt())
     }
 
     private fun getMoonPhaseNameAndEmoji(phaseIndex: Int): Pair<String, String> = when (phaseIndex) {
-        0 -> "Neumond"                           to "🌑"
-        1 -> "Zunehmende Sichel (1. Viertel)"    to "🌒"
-        2 -> "Erstes Viertel (Halbmond)"         to "🌓"
-        3 -> "Zunehmender Mond (2. Viertel)"     to "🌔"
-        4 -> "Vollmond"                          to "🌕"
-        5 -> "Abnehmender Mond (3. Viertel)"     to "🌖"
-        6 -> "Letztes Viertel (Halbmond)"        to "🌗"
-        else -> "Abnehmende Sichel (4. Viertel)" to "🌘"
+        0 -> getString(R.string.weather_moon_phase_0) to "🌑"
+        1 -> getString(R.string.weather_moon_phase_1) to "🌒"
+        2 -> getString(R.string.weather_moon_phase_2) to "🌓"
+        3 -> getString(R.string.weather_moon_phase_3) to "🌔"
+        4 -> getString(R.string.weather_moon_phase_4) to "🌕"
+        5 -> getString(R.string.weather_moon_phase_5) to "🌖"
+        6 -> getString(R.string.weather_moon_phase_6) to "🌗"
+        else -> getString(R.string.weather_moon_phase_7) to "🌘"
     }
 
     private fun getMoonAstronomyInfo(phaseIndex: Int, illumination: Double): String {
         val pct = illumination.toInt()
-        return when (phaseIndex) {
-            0 -> "🔭 Astronomie:\nDer Mond steht in Konjunktion zur Sonne – seine beleuchtete Seite zeigt von der Erde weg. Er geht mit der Sonne auf und unter, ist tagsüber unsichtbar und erscheint am Nachthimmel nicht.\nBeleuchtung: ~${pct}%"
-            1 -> "🔭 Astronomie:\nDie schmale Sichel erscheint kurz nach Sonnenuntergang im Westen und folgt der Sonne bald unter den Horizont (sichtbar ca. 1–2 Stunden). Die unbeleuchtete Seite schimmert bläulich (Erdschein).\nBeleuchtung: ~${pct}%"
-            2 -> "🔭 Astronomie:\nErste Quadratur (90°-Winkel Sonne–Erde–Mond). Exakt die rechte Hälfte ist beleuchtet. Aufgang gegen Mittag, Untergang gegen Mitternacht. Der Terminator ist ideal für Teleskopbeobachtungen.\nBeleuchtung: ~${pct}%"
-            3 -> "🔭 Astronomie:\nGibbous-Phase (lat. gibbus = buckelig): Mehr als die Hälfte ist beleuchtet. Der Mond geht am Nachmittag auf und ist auch noch in den frühen Morgenstunden sichtbar.\nBeleuchtung: ~${pct}%"
-            4 -> "🔭 Astronomie:\nOpposition: Erde liegt zwischen Sonne und Mond. Die gesamte sichtbare Mondseite wird beleuchtet. Er geht bei Sonnenuntergang auf und bei Sonnenaufgang unter – die ganze Nacht sichtbar. Entfernung: ~384.400 km.\nBeleuchtung: ~${pct}%"
-            5 -> "🔭 Astronomie:\nDer Mond nimmt ab – er geht zunehmend später auf (nach Mitternacht) und steht morgens noch am Himmel. Die beleuchtete Fläche auf der linken Seite wird von Nacht zu Nacht kleiner.\nBeleuchtung: ~${pct}%"
-            6 -> "🔭 Astronomie:\nZweite Quadratur (270°). Jetzt ist die linke Hälfte beleuchtet. Aufgang gegen Mitternacht, Untergang gegen Mittag. Der Mond steht bei Sonnenaufgang im Süden.\nBeleuchtung: ~${pct}%"
-            else -> "🔭 Astronomie:\nDie abnehmende Sichel ist kurz vor Sonnenaufgang im Osten sichtbar. Der Mond nähert sich wieder der Sonne an. In wenigen Tagen beginnt ein neuer synodischer Zyklus (29 Tage, 12 Std., 44 Min.).\nBeleuchtung: ~${pct}%"
+        val res = when (phaseIndex) {
+            0 -> R.string.weather_moon_astronomy_0
+            1 -> R.string.weather_moon_astronomy_1
+            2 -> R.string.weather_moon_astronomy_2
+            3 -> R.string.weather_moon_astronomy_3
+            4 -> R.string.weather_moon_astronomy_4
+            5 -> R.string.weather_moon_astronomy_5
+            6 -> R.string.weather_moon_astronomy_6
+            else -> R.string.weather_moon_astronomy_7
         }
+        return getString(res, pct)
     }
 
     private fun getMoonNatureInfo(phaseIndex: Int): String = when (phaseIndex) {
-        0 -> "🌿 Natur & Tierwelt:\n• Dunkle Nächte – Eulen, Füchse und Marder jagen besonders effektiv.\n• Rehe, Hasen und Kaninchen meiden offenes Gelände (höhere Fressfeindgefahr).\n• Fische stehen tiefer und sind weniger aktiv an der Oberfläche.\n• Springtide: Wechselspiel von Sonne und Mond erzeugt stärkste Gezeiten.\n• Biodynamisch: Gute Keimkraft, ideale Zeit für Aussaat von Blattgemüse."
-        1 -> "🌿 Natur & Tierwelt:\n• Licht nimmt zu – Nachtaktivität der Wildtiere wächst langsam.\n• Zugvögel orientieren sich bei schwacher Mondbeleuchtung an den Sternen.\n• Fische steigen etwas höher in die Wassersäule.\n• Pflanzensaft steigt nach oben – günstig für Pflanzungen und Transplantationen.\n• Pilze fruchten gut bei zunehmendem Mond und feuchtem Wetter."
-        2 -> "🌿 Natur & Tierwelt:\n• Erste Quadratur: Tiere sind spürbar aktiver – Dämmerungsrunden häufiger.\n• Zugvögel nutzen das zunehmende Mondlicht für Nachtflüge über Gebirge.\n• Süßwasserfische besonders aktiv, stehen hoch in ruhigen Buchten.\n• Traditionell günstig für Pflanzenschnitt; Wunden verheilen besser."
-        3 -> "🌿 Natur & Tierwelt:\n• Mit wachsendem Licht steigen Aktivität und Risikobereitschaft der Wildtiere.\n• Hirsche ziehen weite Distanzen; Bachen mit Frischlingen sind unterwegs.\n• Insekten (Nachtfalter, Mücken) deutlich häufiger aktiv.\n• Achtung: Zeckenaktivität kann auch nächtlich erhöht sein.\n• Meerestiere synchronisieren Laichen mit dem Mondzyklus."
-        4 -> "🌿 Natur & Tierwelt:\n• Vollmond-Maximum: Studien belegen erhöhte Aktivität fast aller Wildtierarten.\n• Wölfe orientieren sich auf die Jagd – Rudelkommunikation per Heulen.\n• Rehe, Wildschweine, Füchse wechseln in offenem Gelände.\n• Hechte und Forellen fressen bevorzugt nachts bei Vollmond.\n• Korallenriffe: viele Arten spawnen synchron in Vollmondnächten.\n• Maximale Wasseraufnahme in Pflanzen – Früchte besonders saftig und aromatisch."
-        5 -> "🌿 Natur & Tierwelt:\n• Wildtiere reduzieren langsam ihre Nachtaktivität, bleiben aber noch aktiv.\n• Gute Beobachtungsphase: Tiere noch unterwegs, Licht noch ausreichend.\n• Fische werden langsam wieder träger an der Oberfläche.\n• Holzeinschlag traditionell empfohlen: Holz trocknet besser, ist haltbarer."
-        6 -> "🌿 Natur & Tierwelt:\n• Tiere kehren zu ruhigeren Tagesrhythmen zurück.\n• Nachts kaum Wildtierbegegnungen auf offenem Gelände.\n• Fischaktivität stark reduziert; Tiere suchen tiefere, ruhige Bereiche.\n• Biodynamisch: Günstig für Beschnitt von Obstbäumen und Wurzelarbeiten."
-        else -> "🌿 Natur & Tierwelt:\n• Ruhigste Phase des Mondzyklus – Wildtiere am zurückgezogensten.\n• Beutetiere meiden offenes Gelände; dichte Deckung bevorzugt.\n• Frühmorgens oft gute Chance zur stillen Wildtierbeobachtung.\n• Biodynamisch: Günstig für Bodenbearbeitung, Kompostierung und Regeneration."
+        0 -> getString(R.string.weather_moon_nature_0)
+        1 -> getString(R.string.weather_moon_nature_1)
+        2 -> getString(R.string.weather_moon_nature_2)
+        3 -> getString(R.string.weather_moon_nature_3)
+        4 -> getString(R.string.weather_moon_nature_4)
+        5 -> getString(R.string.weather_moon_nature_5)
+        6 -> getString(R.string.weather_moon_nature_6)
+        else -> getString(R.string.weather_moon_nature_7)
     }
 
     private fun getMoonDogTips(phaseIndex: Int): String = when (phaseIndex) {
-        0 -> "🐕 Hund & Training:\n• Ruhige, ausgeglichene Phase – ideal für neue Trainingsimpulse.\n• Viele Hunde sind entspannt und lernbereit: Grundkommandos festigen.\n• Dunkle Nächte: Leine und Reflektoren sind Pflicht bei Abendrunden.\n• Wildtiere aktiver → Beuteinstinkt beachten; unzuverlässige Hunde an der Leine führen."
-        1 -> "🐕 Hund & Training:\n• Energie nimmt zu – Hunde werden etwas lebhafter und neugieriger.\n• Gute Phase für aufbauende Übungen und das Einführen neuer Kommandos.\n• Abendrunden mit Blick auf die Abendsichel – ein schöner gemeinsamer Moment.\n• Zeckencheck nach Runden in der Dämmerung nicht vergessen."
-        2 -> "🐕 Hund & Training:\n• Halbmond: Aktivitätsphase im Aufbau – Hunde häufig motivierter als sonst.\n• Sehr gute Zeit für Leinenarbeit, Distanzunterbrechungen und Positionsübungen.\n• Wildtiere nun deutlich aktiver → Begegnungssituationen wahrscheinlicher.\n• Rückruf und verlässliches Sitzenbleiben als Sicherheitsbasis trainieren."
-        3 -> "🐕 Hund & Training:\n• Zunehmende Energie – intensive Trainingseinheiten gut durchführbar.\n• Manche Hunde reagieren sensibler auf Gerüche, Geräusche und Bewegungen.\n• Nasenarbeit besonders spannend: Wildtiergerüche sehr präsent.\n• Hunde mit starkem Jagdtrieb: Leine als kluge Vorsichtsmaßnahme beibehalten."
-        4 -> "🐕 Hund & Training:\n⚠️ Vollmond – besondere Aufmerksamkeit:\n• Wissenschaftliche Studien (BMJ 2007, Anthrozoös 2011) belegen signifikant mehr Tierarztbesuche in Vollmondnächten – v. a. wegen Unfällen und Erregungszuständen.\n• Viele Hunde schlafen schlechter oder zeigen erhöhte Wachsamkeit und Unruhe.\n• Reizschwelle oft niedriger: Hunde reagieren auf schwächste Reize.\n• Wildtiere maximal aktiv → erhöhte Ablenkung und Ablenkungsintensität.\n• Empfehlung: Kurze, ruhige Runden bevorzugen. Vorhersehbare Routinen stärken das Sicherheitsgefühl.\n• Ängstliche Hunde: Ruhe und Gelassenheit als Sicherheitsanker ausstrahlen."
-        5 -> "🐕 Hund & Training:\n• Energie nimmt ab – ideale Phase zum Festigen gelernter Übungen.\n• Hunde kehren zu ruhigeren Verhaltensmustern zurück.\n• Rückblick im Trainingstagebuch: Was klappt gut? Was braucht mehr Wiederholung?\n• Teamwalk und ruhige Geländeläufe jetzt besonders harmonisch."
-        6 -> "🐕 Hund & Training:\n• Ruhigere, beständige Phase – gute Lernbereitschaft für Feinheiten und Präzision.\n• Letztes Viertel: Ideal für Konsolidierungstraining und Reflexion.\n• Welpen und sensible Hunde oft merklich entspannter als rund um den Vollmond.\n• Stresstoleranztraining: Ruhige, kontrollierte Reizeinführung jetzt besonders effektiv."
-        else -> "🐕 Hund & Training:\n• Ruhigste und entspannteste Phase des gesamten Zyklus.\n• Ideal für regeneratives Training: Nasenarbeit, Scouttechniken, ruhige Erkundungstouren.\n• Hunde mit Aufregungsthemen: Gezielte Entspannungs- und Achtsamkeitsübungen einbauen.\n• Energie sammeln vor dem nächsten Neumond – Genuss-Runden ohne Leistungsdruck."
+        0 -> getString(R.string.weather_moon_dogtips_0)
+        1 -> getString(R.string.weather_moon_dogtips_1)
+        2 -> getString(R.string.weather_moon_dogtips_2)
+        3 -> getString(R.string.weather_moon_dogtips_3)
+        4 -> getString(R.string.weather_moon_dogtips_4)
+        5 -> getString(R.string.weather_moon_dogtips_5)
+        6 -> getString(R.string.weather_moon_dogtips_6)
+        else -> getString(R.string.weather_moon_dogtips_7)
     }
 
     private fun getMoonZodiacSign(index: Int): String {
         val signs = listOf(
-            "♈ Widder"     to "Feuerzeichen – aktiv, impulsiv, direkt",
-            "♉ Stier"      to "Erdezeichen – beständig, sinnlich, geerdet",
-            "♊ Zwillinge"  to "Luftzeichen – neugierig, beweglich, kommunikativ",
-            "♋ Krebs"      to "Wasserzeichen – gefühlvoll, instinktiv, schützend",
-            "♌ Löwe"       to "Feuerzeichen – ausdrucksstark, kraftvoll, mutig",
-            "♍ Jungfrau"   to "Erdezeichen – präzise, beobachtend, analytisch",
-            "♎ Waage"      to "Luftzeichen – harmonisch, sozial, ausgleichend",
-            "♏ Skorpion"   to "Wasserzeichen – intensiv, tief, transformativ",
-            "♐ Schütze"    to "Feuerzeichen – freiheitsliebend, weiträumig, optimistisch",
-            "♑ Steinbock"  to "Erdezeichen – ausdauernd, diszipliniert, verlässlich",
-            "♒ Wassermann" to "Luftzeichen – unabhängig, originell, zukunftsorientiert",
-            "♓ Fische"     to "Wasserzeichen – sensibel, intuitiv, anpassungsfähig"
+            R.string.weather_zodiac_0 to R.string.weather_zodiac_0_desc,
+            R.string.weather_zodiac_1 to R.string.weather_zodiac_1_desc,
+            R.string.weather_zodiac_2 to R.string.weather_zodiac_2_desc,
+            R.string.weather_zodiac_3 to R.string.weather_zodiac_3_desc,
+            R.string.weather_zodiac_4 to R.string.weather_zodiac_4_desc,
+            R.string.weather_zodiac_5 to R.string.weather_zodiac_5_desc,
+            R.string.weather_zodiac_6 to R.string.weather_zodiac_6_desc,
+            R.string.weather_zodiac_7 to R.string.weather_zodiac_7_desc,
+            R.string.weather_zodiac_8 to R.string.weather_zodiac_8_desc,
+            R.string.weather_zodiac_9 to R.string.weather_zodiac_9_desc,
+            R.string.weather_zodiac_10 to R.string.weather_zodiac_10_desc,
+            R.string.weather_zodiac_11 to R.string.weather_zodiac_11_desc
         )
-        val (sign, description) = signs[index]
-        return "🔯 Mondzeichen (Näherung): $sign\n$description"
+        val (signRes, descRes) = signs[index]
+        return getString(R.string.weather_moon_zodiac_line, getString(signRes), getString(descRes))
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -683,48 +674,48 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun getBeaufortDescription(beaufort: Int): String = when (beaufort) {
-        0  -> "Windstille"
-        1  -> "Leiser Zug"
-        2  -> "Leichte Brise"
-        3  -> "Schwache Brise"
-        4  -> "Mäßige Brise"
-        5  -> "Frische Brise"
-        6  -> "Starker Wind"
-        7  -> "Steifer Wind"
-        8  -> "Stürmischer Wind"
-        9  -> "Sturm"
-        10 -> "Schwerer Sturm"
-        11 -> "Orkanartiger Sturm"
-        12 -> "Orkan"
-        else -> "Unbekannt"
+        0  -> getString(R.string.weather_beaufort_0)
+        1  -> getString(R.string.weather_beaufort_1)
+        2  -> getString(R.string.weather_beaufort_2)
+        3  -> getString(R.string.weather_beaufort_3)
+        4  -> getString(R.string.weather_beaufort_4)
+        5  -> getString(R.string.weather_beaufort_5)
+        6  -> getString(R.string.weather_beaufort_6)
+        7  -> getString(R.string.weather_beaufort_7)
+        8  -> getString(R.string.weather_beaufort_8)
+        9  -> getString(R.string.weather_beaufort_9)
+        10 -> getString(R.string.weather_beaufort_10)
+        11 -> getString(R.string.weather_beaufort_11)
+        12 -> getString(R.string.weather_beaufort_12)
+        else -> getString(R.string.weather_unknown)
     }
 
     private fun getBeaufortSymbol(bf: Int): String = when (bf) {
-        0  -> "🌿 Windstille – Rauch steigt senkrecht"
-        1  -> "🍃 Leiser Zug – Rauch zeigt Windrichtung"
-        2  -> "🍃💨 Leichte Brise – Blätter rascheln"
-        3  -> "🌿💨 Schwache Brise – Zweige bewegen sich"
-        4  -> "🌾💨 Mäßige Brise – Kleine Äste bewegen sich"
-        5  -> "🌲💨 Frische Brise – Kleine Bäume schwanken"
-        6  -> "🌳💨 Starker Wind – Große Äste schwingen"
-        7  -> "🌳🌬️ Steifer Wind – Ganze Bäume bewegen sich"
-        8  -> "🌬️🌳 Stürmisch – Zweige brechen"
-        9  -> "🌀🌲 Sturm – Äste brechen, leichte Schäden"
-        10 -> "🌪️🌳 Schwerer Sturm – Bäume entwurzelt"
-        11 -> "🌪️💥 Orkanartiger Sturm – Verbreitet Schäden"
-        12 -> "🌀🌪️ Orkan – Verheerende Zerstörung"
+        0  -> getString(R.string.weather_beaufort_symbol_0)
+        1  -> getString(R.string.weather_beaufort_symbol_1)
+        2  -> getString(R.string.weather_beaufort_symbol_2)
+        3  -> getString(R.string.weather_beaufort_symbol_3)
+        4  -> getString(R.string.weather_beaufort_symbol_4)
+        5  -> getString(R.string.weather_beaufort_symbol_5)
+        6  -> getString(R.string.weather_beaufort_symbol_6)
+        7  -> getString(R.string.weather_beaufort_symbol_7)
+        8  -> getString(R.string.weather_beaufort_symbol_8)
+        9  -> getString(R.string.weather_beaufort_symbol_9)
+        10 -> getString(R.string.weather_beaufort_symbol_10)
+        11 -> getString(R.string.weather_beaufort_symbol_11)
+        12 -> getString(R.string.weather_beaufort_symbol_12)
         else -> ""
     }
 
     private fun getWindDirection(degrees: Double): String = when {
-        degrees >= 337.5 || degrees < 22.5  -> "↓ Nord"
-        degrees >= 22.5  && degrees < 67.5  -> "↙ NordOst"
-        degrees >= 67.5  && degrees < 112.5 -> "← Ost"
-        degrees >= 112.5 && degrees < 157.5 -> "↖ SüdOst"
-        degrees >= 157.5 && degrees < 202.5 -> "↑ Süd"
-        degrees >= 202.5 && degrees < 247.5 -> "↗ SüdWest"
-        degrees >= 247.5 && degrees < 292.5 -> "→ West"
-        degrees >= 292.5 && degrees < 337.5 -> "↘ NordWest"
+        degrees >= 337.5 || degrees < 22.5  -> getString(R.string.weather_wind_dir_n)
+        degrees >= 22.5  && degrees < 67.5  -> getString(R.string.weather_wind_dir_ne)
+        degrees >= 67.5  && degrees < 112.5 -> getString(R.string.weather_wind_dir_e)
+        degrees >= 112.5 && degrees < 157.5 -> getString(R.string.weather_wind_dir_se)
+        degrees >= 157.5 && degrees < 202.5 -> getString(R.string.weather_wind_dir_s)
+        degrees >= 202.5 && degrees < 247.5 -> getString(R.string.weather_wind_dir_sw)
+        degrees >= 247.5 && degrees < 292.5 -> getString(R.string.weather_wind_dir_w)
+        degrees >= 292.5 && degrees < 337.5 -> getString(R.string.weather_wind_dir_nw)
         else -> ""
     }
 
@@ -735,37 +726,37 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     private fun getWeatherDescription(code: Int): Pair<String, String> {
         android.util.Log.d("WeatherActivity", "🌤️ Weather Code: $code")
         return when (code) {
-            0    -> "Klar"                              to "☀️"
-            1    -> "Leicht bewölkt"                    to "🌤️"
-            2    -> "Teilweise bewölkt"                 to "⛅"
-            3    -> "Bewölkt"                           to "☁️"
-            45   -> "Nebel"                             to "🌫️"
-            48   -> "Gefrierender Nebel"                to "🌫️"
-            51   -> "Leichter Nieselregen"              to "🌦️"
-            53   -> "Mäßiger Nieselregen"               to "🌦️"
-            55   -> "Starker Nieselregen"               to "🌦️"
-            56   -> "Gefrierender leichter Nieselregen" to "🌧️"
-            57   -> "Gefrierender starker Nieselregen"  to "🌧️"
-            61   -> "Leichter Regen"                    to "🌧️"
-            63   -> "Mäßiger Regen"                     to "🌧️"
-            65   -> "Starker Regen"                     to "🌧️"
-            66   -> "Gefrierender leichter Regen"       to "🌧️"
-            67   -> "Gefrierender starker Regen"        to "🌧️"
-            71   -> "Leichter Schneefall"               to "🌨️"
-            73   -> "Mäßiger Schneefall"                to "🌨️"
-            75   -> "Starker Schneefall"                to "🌨️"
-            77   -> "Schneegriesel"                     to "🌨️"
-            80   -> "Leichte Regenschauer"              to "🌦️"
-            81   -> "Mäßige Regenschauer"               to "🌦️"
-            82   -> "Starke Regenschauer"               to "🌦️"
-            85   -> "Leichte Schneeschauer"             to "🌨️"
-            86   -> "Starke Schneeschauer"              to "🌨️"
-            95   -> "Gewitter"                          to "⛈️"
-            96   -> "Gewitter mit leichtem Hagel"       to "⛈️"
-            99   -> "Gewitter mit starkem Hagel"        to "⛈️"
+            0    -> getString(R.string.weather_desc_clear)                    to "☀️"
+            1    -> getString(R.string.weather_desc_mostly_clear)             to "🌤️"
+            2    -> getString(R.string.weather_desc_partly_cloudy)            to "⛅"
+            3    -> getString(R.string.weather_desc_cloudy)                   to "☁️"
+            45   -> getString(R.string.weather_desc_fog)                      to "🌫️"
+            48   -> getString(R.string.weather_desc_freezing_fog)             to "🌫️"
+            51   -> getString(R.string.weather_desc_light_drizzle)            to "🌦️"
+            53   -> getString(R.string.weather_desc_moderate_drizzle)         to "🌦️"
+            55   -> getString(R.string.weather_desc_heavy_drizzle)            to "🌦️"
+            56   -> getString(R.string.weather_desc_freezing_light_drizzle)   to "🌧️"
+            57   -> getString(R.string.weather_desc_freezing_heavy_drizzle)   to "🌧️"
+            61   -> getString(R.string.weather_desc_light_rain)               to "🌧️"
+            63   -> getString(R.string.weather_desc_moderate_rain)            to "🌧️"
+            65   -> getString(R.string.weather_desc_heavy_rain)               to "🌧️"
+            66   -> getString(R.string.weather_desc_freezing_light_rain)      to "🌧️"
+            67   -> getString(R.string.weather_desc_freezing_heavy_rain)      to "🌧️"
+            71   -> getString(R.string.weather_desc_light_snow)               to "🌨️"
+            73   -> getString(R.string.weather_desc_moderate_snow)            to "🌨️"
+            75   -> getString(R.string.weather_desc_heavy_snow)               to "🌨️"
+            77   -> getString(R.string.weather_desc_snow_grains)              to "🌨️"
+            80   -> getString(R.string.weather_desc_light_showers)            to "🌦️"
+            81   -> getString(R.string.weather_desc_moderate_showers)         to "🌦️"
+            82   -> getString(R.string.weather_desc_heavy_showers)            to "🌦️"
+            85   -> getString(R.string.weather_desc_light_snow_showers)       to "🌨️"
+            86   -> getString(R.string.weather_desc_heavy_snow_showers)       to "🌨️"
+            95   -> getString(R.string.weather_desc_thunderstorm)             to "⛈️"
+            96   -> getString(R.string.weather_desc_thunderstorm_light_hail)  to "⛈️"
+            99   -> getString(R.string.weather_desc_thunderstorm_heavy_hail)  to "⛈️"
             else -> {
                 android.util.Log.w("WeatherActivity", "⚠️ Unbekannter Weather Code: $code")
-                "Wetter-Code $code" to "🌡️"
+                getString(R.string.weather_desc_code_unknown, code) to "🌡️"
             }
         }
     }
@@ -785,13 +776,13 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             val sunriseArray = daily.getJSONArray("sunrise")
             val sunsetArray  = daily.getJSONArray("sunset")
             if (sunriseArray.length() > 1 && sunsetArray.length() > 1) {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-                val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
                 val sunrise = dateFormat.parse(sunriseArray.getString(1))
                 val sunset  = dateFormat.parse(sunsetArray.getString(1))
                 if (sunrise != null && sunset != null) {
-                    binding.sunriseText.text = "🌅 ${timeFormat.format(sunrise)}"
-                    binding.sunsetText.text  = "🌇 ${timeFormat.format(sunset)}"
+                    binding.sunriseText.text = getString(R.string.weather_sunrise_display, timeFormat.format(sunrise))
+                    binding.sunsetText.text  = getString(R.string.weather_sunset_display, timeFormat.format(sunset))
                 }
             }
         } catch (e: Exception) {
@@ -815,7 +806,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 val maxTemp    = maxTemps.getDouble(1)
                 val code       = weatherCodes.getInt(1)
                 val precipProb = precipProbs.getInt(1)
-                binding.dailyMinMaxText.text = String.format(Locale.GERMAN, "Min: %.1f°C • Max: %.1f°C", minTemp, maxTemp)
+                binding.dailyMinMaxText.text = getString(R.string.weather_daily_min_max_display, minTemp, maxTemp)
                 val warningBadge = getWeatherWarningBadge(code, precipProb)
                 binding.warningBadgeText.text = warningBadge
                 binding.warningBadgeText.visibility = View.VISIBLE
@@ -834,16 +825,16 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun getWeatherWarningBadge(code: Int, precipProb: Int): String = when {
-        code >= 95               -> "⚠️ Gewitter"
-        code >= 85               -> "❄️ Schneeschauer"
-        code >= 80               -> "🌦️ Schauer"
-        code >= 71               -> "❄️ Schneefall"
-        code >= 61 && precipProb >= 70 -> "🌧️ Starker Regen"
-        precipProb >= 80         -> "☔ Hohe Regenwahrscheinlichkeit"
-        precipProb >= 50         -> "🌂 Möglicher Regen (${precipProb}%)"
-        code >= 45               -> "🌫️ Nebel"
-        code >= 3                -> "☁️ Bewölkt"
-        else                     -> "✅ Keine Wetterwarnung"
+        code >= 95               -> getString(R.string.weather_badge_thunderstorm)
+        code >= 85               -> getString(R.string.weather_badge_snow_showers)
+        code >= 80               -> getString(R.string.weather_badge_showers)
+        code >= 71               -> getString(R.string.weather_badge_snow)
+        code >= 61 && precipProb >= 70 -> getString(R.string.weather_badge_heavy_rain)
+        precipProb >= 80         -> getString(R.string.weather_badge_high_precip)
+        precipProb >= 50         -> getString(R.string.weather_badge_possible_rain, precipProb)
+        code >= 45               -> getString(R.string.weather_badge_fog)
+        code >= 3                -> getString(R.string.weather_badge_cloudy)
+        else                     -> getString(R.string.weather_badge_none)
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -858,8 +849,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val precipProb   = hourly.getJSONArray("precipitation_probability")
         val feelsLike    = hourly.getJSONArray("apparent_temperature")
         val forecastItems = mutableListOf<ForecastItem>()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         val now = System.currentTimeMillis()
         val oneHour = 3600000L
         var count = 0
@@ -887,13 +878,21 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 
     private fun showForecastDetail(item: ForecastItem) {
         val (description, icon) = getWeatherDescription(item.weatherCode)
-        val message = "Uhrzeit: ${item.time}\n\n$icon $description\n\nTemperatur: ${String.format(Locale.GERMAN, "%.1f°C", item.temperature)}\nGefühlt: ${String.format(Locale.GERMAN, "%.1f°C", item.feelsLike)}\nRegen: ${item.precipitation.toInt()}%"
+        val message = getString(
+            R.string.weather_forecast_item_detail_message,
+            item.time,
+            icon,
+            description,
+            String.format(Locale.getDefault(), "%.1f°C", item.temperature),
+            String.format(Locale.getDefault(), "%.1f°C", item.feelsLike),
+            item.precipitation.toInt()
+        )
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Vorhersage Details")
+            .setTitle(getString(R.string.weather_forecast_item_detail_title))
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
                 getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -922,6 +921,11 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 return false
             }
         }
+        val jsLocale = if (LanguageManager.getCurrentLanguage().tag == "de") "de-DE" else "en-US"
+        val timeSuffix = if (LanguageManager.getCurrentLanguage().tag == "de") " Uhr" else ""
+        val jsLoadingRadar = getString(R.string.weather_radar_loading)
+        val jsYourLocation = getString(R.string.weather_radar_your_location)
+        val jsRadarUnavailable = getString(R.string.weather_radar_unavailable)
         val html = """<!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -933,21 +937,21 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
 <div id="controls">
   <button class="control-btn" id="playBtn" onclick="togglePlay()">▶ Play</button>
   <button class="control-btn" onclick="stopAnimation()">⏹ Stop</button>
-  <div id="timestamp">Lade Radar...</div>
+  <div id="timestamp">$jsLoadingRadar</div>
 </div>
 <script>
 let map, radarLayers=[], timestamps=[], currentFrame=0, isPlaying=false, animationInterval=null;
 map = L.map('map', { center: [$lat, $lon], zoom: 6, zoomControl: true });
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
-L.marker([$lat, $lon]).addTo(map).bindPopup('Dein Standort').openPopup();
+L.marker([$lat, $lon]).addTo(map).bindPopup('$jsYourLocation').openPopup();
 fetch('https://api.rainviewer.com/public/weather-maps.json').then(r=>r.json()).then(apiData=>{
   if(apiData.radar && apiData.radar.past){ timestamps=apiData.radar.past; timestamps.forEach(item=>{ radarLayers.push(L.tileLayer('https://tilecache.rainviewer.com'+item.path+'/256/{z}/{x}/{y}/2/1_1.png',{tileSize:256,opacity:0.9,zIndex:10})); }); if(radarLayers.length>0){ currentFrame=radarLayers.length-1; radarLayers[currentFrame].addTo(map); updateTimestamp(); } }
-}).catch(()=>{ document.getElementById('timestamp').textContent='Radar nicht verfügbar'; });
+}).catch(()=>{ document.getElementById('timestamp').textContent='$jsRadarUnavailable'; });
 function togglePlay(){ isPlaying ? pauseAnimation() : startAnimation(); }
 function startAnimation(){ if(!radarLayers.length) return; isPlaying=true; document.getElementById('playBtn').innerHTML='⏸ Pause'; animationInterval=setInterval(()=>{ radarLayers[currentFrame].remove(); currentFrame=(currentFrame+1)%radarLayers.length; radarLayers[currentFrame].addTo(map); updateTimestamp(); },500); }
 function pauseAnimation(){ isPlaying=false; document.getElementById('playBtn').innerHTML='▶ Play'; if(animationInterval){ clearInterval(animationInterval); animationInterval=null; } }
 function stopAnimation(){ pauseAnimation(); if(radarLayers.length>0){ radarLayers[currentFrame].remove(); currentFrame=radarLayers.length-1; radarLayers[currentFrame].addTo(map); updateTimestamp(); } }
-function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(timestamps[currentFrame].time*1000); document.getElementById('timestamp').textContent='📡 Radar: '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr'; } }
+function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(timestamps[currentFrame].time*1000); document.getElementById('timestamp').textContent='📡 Radar: '+d.toLocaleTimeString('$jsLocale',{hour:'2-digit',minute:'2-digit'})+'$timeSuffix'; } }
 </script></body></html>"""
         binding.radarWebView.loadDataWithBaseURL("https://hundewildnis.com", html, "text/html", "UTF-8", null)
     }
@@ -981,7 +985,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 val times  = hourly.getJSONArray("time")
                 val now = System.currentTimeMillis()
                 val oneHour = 3600000L
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
                 var startIndex = 0
                 for (i in 0 until times.length()) {
                     val date = dateFormat.parse(times.getString(i))
@@ -990,7 +994,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 val endIndex = (startIndex + 24).coerceAtMost(temps.length())
                 val hourlyTemps = (startIndex until endIndex).map { temps.getDouble(it) }
                 val hourlyTimes = (startIndex until endIndex).map {
-                    dateFormat.parse(times.getString(it))?.let { d -> SimpleDateFormat("HH:mm", Locale.GERMAN).format(d) } ?: ""
+                    dateFormat.parse(times.getString(it))?.let { d -> SimpleDateFormat("HH:mm", Locale.getDefault()).format(d) } ?: ""
                 }
                 val recommendations = recommendWalkingTimes(temperature, hourlyTemps, hourlyTimes)
                 binding.walkingTimesText.text = "\n" + recommendations.joinToString("\n")
@@ -1008,20 +1012,20 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val warnings = mutableListOf<String>()
         var severity = PawWeatherSeverity.GOOD
         when {
-            temperature >= 35 -> { warnings.add("🔥 EXTREM: Asphalt und Strassenpflaster bis zu 65°C! Gefahr ernster gesundheitlicher Schäden! Hitzeschockrisiko. Den Hund bitte nicht belasten."); severity = PawWeatherSeverity.CRITICAL }
-            temperature >= 30 -> { warnings.add("⚠️ WARNUNG: Asphalt und Strassenpflaster kann 50-60°C erreichen. Gefahr gesundheitlicher Beeinträchtigungen! Diese Oberflächen bitte meiden."); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
-            temperature >= 25 -> { warnings.add("⚡ VORSICHT: Asphalt wird heiß (45°C+). Erhöhte Belastung für den Hund! Schatten nutzen."); severity = maxOf(severity, PawWeatherSeverity.CAUTION) }
+            temperature >= 35 -> { warnings.add(getString(R.string.weather_paw_hot_extreme)); severity = PawWeatherSeverity.CRITICAL }
+            temperature >= 30 -> { warnings.add(getString(R.string.weather_paw_hot_warning)); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
+            temperature >= 25 -> { warnings.add(getString(R.string.weather_paw_hot_caution)); severity = maxOf(severity, PawWeatherSeverity.CAUTION) }
         }
         when {
-            temperature <= -10 -> { warnings.add("❄️ EXTREM KALT: Gesundheitsgefahr für unangepasste Rassen! Hund in stetiger Bewegung halten."); severity = maxOf(severity, PawWeatherSeverity.CRITICAL) }
-            temperature <= -5  -> { warnings.add("🧊 Sehr kalt: Pfotenschutz empfohlen. Salz auf Wegen beachten! Hund in stetiger Bewegung halten."); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
-            temperature <= 0   -> { warnings.add("🌨️ Frost: Achtung vor Streusalz und Eis. Hund zeitnah abtrocknen und aufwärmen lassen."); severity = maxOf(severity, PawWeatherSeverity.CAUTION) }
+            temperature <= -10 -> { warnings.add(getString(R.string.weather_paw_cold_extreme)); severity = maxOf(severity, PawWeatherSeverity.CRITICAL) }
+            temperature <= -5  -> { warnings.add(getString(R.string.weather_paw_cold_warning)); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
+            temperature <= 0   -> { warnings.add(getString(R.string.weather_paw_cold_caution)); severity = maxOf(severity, PawWeatherSeverity.CAUTION) }
         }
-        if (temperature in 7.0..25.0 && precipitation < 5.0) { warnings.add("🕷️ Erhöhtes Zeckenrisiko. Hund regelmäßig absuchen und Zecken zeitnah entfernen!"); severity = maxOf(severity, PawWeatherSeverity.INFO) }
-        if (uvIndex >= 6.0) { warnings.add("☀️ Hohe UV-Strahlung: Schattige Wege bevorzugen! Keine anstrengenden Aktionen durchführen."); severity = maxOf(severity, PawWeatherSeverity.INFO) }
-        if (weatherCode >= 95) { warnings.add("⛈️ Gewitter: Achte auf Deinen Hund und auf Eure Sicherheit. Ängstliche Hunde nicht ableinen."); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
-        if (precipitation >= 10.0 || weatherCode in 80..82) { warnings.add("🌧️ Starker Regen: Rutschgefahr auf nässenempfindlichen Boden!"); severity = maxOf(severity, PawWeatherSeverity.CAUTION) }
-        if (warnings.isEmpty()) { warnings.add("✅ Sehr gutes Trainingswetter."); severity = PawWeatherSeverity.GOOD }
+        if (temperature in 7.0..25.0 && precipitation < 5.0) { warnings.add(getString(R.string.weather_paw_tick_risk)); severity = maxOf(severity, PawWeatherSeverity.INFO) }
+        if (uvIndex >= 6.0) { warnings.add(getString(R.string.weather_paw_uv_high)); severity = maxOf(severity, PawWeatherSeverity.INFO) }
+        if (weatherCode >= 95) { warnings.add(getString(R.string.weather_paw_thunderstorm)); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
+        if (precipitation >= 10.0 || weatherCode in 80..82) { warnings.add(getString(R.string.weather_paw_heavy_rain)); severity = maxOf(severity, PawWeatherSeverity.CAUTION) }
+        if (warnings.isEmpty()) { warnings.add(getString(R.string.weather_paw_good)); severity = PawWeatherSeverity.GOOD }
         return PawWeatherResult(warnings, severity)
     }
 
@@ -1029,9 +1033,9 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val warnings = result.warnings.toMutableList()
         var severity = result.severity
         when {
-            windGusts >= 75 -> { warnings.add("💨 STURM: Gefahr durch umstürzende Äste! Training verschieben!"); severity = maxOf(severity, PawWeatherSeverity.CRITICAL) }
-            windGusts >= 50 -> { warnings.add("🌪️ Starker Wind: Im Gelände aufmerksam unterwegs sein."); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
-            windSpeed >= 40 -> { warnings.add("💨 Windige Bedingungen: Gerüche über große Entfernungen wahrnehmbar. Unzuverlässige Hunde bitte an der Leine führen."); severity = maxOf(severity, PawWeatherSeverity.INFO) }
+            windGusts >= 75 -> { warnings.add(getString(R.string.weather_paw_storm)); severity = maxOf(severity, PawWeatherSeverity.CRITICAL) }
+            windGusts >= 50 -> { warnings.add(getString(R.string.weather_paw_strong_wind)); severity = maxOf(severity, PawWeatherSeverity.WARNING) }
+            windSpeed >= 40 -> { warnings.add(getString(R.string.weather_paw_windy)); severity = maxOf(severity, PawWeatherSeverity.INFO) }
         }
         return PawWeatherResult(warnings, severity)
     }
@@ -1052,8 +1056,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 .map { hourlyTimes[it.first] }
 
             if (coolestHours.isNotEmpty()) {
-                recommendations.add("🌅 Beste Zeiten bei Hitze (06-22 Uhr):")
-                coolestHours.forEach { recommendations.add("  • $it Uhr (kühlste Phase)") }
+                recommendations.add(getString(R.string.weather_best_times_heat_header))
+                coolestHours.forEach { recommendations.add(getString(R.string.weather_best_times_coolest, it)) }
             }
         }
         if (currentTemp <= 5) {
@@ -1063,8 +1067,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 .map { hourlyTimes[it.first] }
 
             if (warmestHours.isNotEmpty()) {
-                recommendations.add("☀️ Beste Zeiten bei Kälte (06-22 Uhr):")
-                warmestHours.forEach { recommendations.add("  • $it Uhr (wärmste Phase)") }
+                recommendations.add(getString(R.string.weather_best_times_cold_header))
+                warmestHours.forEach { recommendations.add(getString(R.string.weather_best_times_warmest, it)) }
             }
         }
         return recommendations
@@ -1073,10 +1077,10 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     private fun getGroomingTips(weatherCode: Int, precipitation: Double): List<String> {
         val tips = mutableListOf<String>()
         when {
-            weatherCode in 61..67 || weatherCode in 80..82 -> { tips.add("🛁 Nach der Runde: Pfoten und Fell trocknen und dabei auf Zecken achten."); tips.add("🐶 Ohren auf Nässe und Verschmutzungen prüfen") }
-            weatherCode in 71..77 || weatherCode in 85..86 -> { tips.add("❄️ Eisklumpen zwischen Zehen entfernen"); tips.add("🧴 Pfotenbalsam verwenden gegen Risse") }
-            precipitation >= 5.0 -> tips.add("🚿 Matschige Pfoten vor dem Reingehen säubern")
-            precipitation == 0.0 && weatherCode <= 3 -> tips.add("🦮 Hundefreundliches Wetter - bei höheren Temperaturen immer an 💧 Trinkwasser denken und den Hund nicht belasten.")
+            weatherCode in 61..67 || weatherCode in 80..82 -> { tips.add(getString(R.string.weather_grooming_dry_paws)); tips.add(getString(R.string.weather_grooming_check_ears)) }
+            weatherCode in 71..77 || weatherCode in 85..86 -> { tips.add(getString(R.string.weather_grooming_ice_between_toes)); tips.add(getString(R.string.weather_grooming_paw_balm)) }
+            precipitation >= 5.0 -> tips.add(getString(R.string.weather_grooming_muddy_paws))
+            precipitation == 0.0 && weatherCode <= 3 -> tips.add(getString(R.string.weather_grooming_dog_friendly))
         }
         return tips
     }
@@ -1105,8 +1109,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val temperatures = hourly.getJSONArray("temperature_2m")
             val temps  = mutableListOf<Double>()
             val labels = mutableListOf<String>()
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val now = System.currentTimeMillis(); val oneHour = 3600000L
             var startIndex = 0
             for (i in 0 until times.length()) { val date = dateFormat.parse(times.getString(i)); if (date != null && date.time >= now - oneHour) { startIndex = i; break } }
@@ -1130,8 +1134,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val precipitationArray = hourly.getJSONArray("precipitation")
             val precipValues = mutableListOf<Double>()
             val labels       = mutableListOf<String>()
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val now = System.currentTimeMillis(); val oneHour = 3600000L
             var startIndex = 0
             for (i in 0 until times.length()) { val date = dateFormat.parse(times.getString(i)); if (date != null && date.time >= now - oneHour) { startIndex = i; break } }
@@ -1154,8 +1158,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val sunriseArray = daily.getJSONArray("sunrise")
             val sunsetArray  = daily.getJSONArray("sunset")
             if (sunriseArray.length() >= 2 && sunsetArray.length() >= 2) {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-                val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
                 val yesterdaySunrise = dateFormat.parse(sunriseArray.getString(0))
                 val yesterdaySunset  = dateFormat.parse(sunsetArray.getString(0))
                 val sunrise = dateFormat.parse(sunriseArray.getString(1))
@@ -1164,15 +1168,19 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                     val daylightMillis = sunset.time - sunrise.time
                     val hours   = TimeUnit.MILLISECONDS.toHours(daylightMillis)
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(daylightMillis) % 60
-                    binding.daylightDurationText.text = String.format(Locale.GERMAN, "☀️ Tageslänge: %dh %dm", hours, minutes)
+                    binding.daylightDurationText.text = getString(R.string.weather_daylight_duration, hours, minutes)
                     val civilTwilightDuration = 35 * 60 * 1000L
-                    binding.dawnText.text = String.format("🌄 Morgendämmerung: %s Uhr", timeFormat.format(Date(sunrise.time - civilTwilightDuration)))
-                    binding.duskText.text = String.format("🌆 Abenddämmerung: %s Uhr", timeFormat.format(Date(sunset.time + civilTwilightDuration)))
+                    binding.dawnText.text = getString(R.string.weather_dawn, timeFormat.format(Date(sunrise.time - civilTwilightDuration)))
+                    binding.duskText.text = getString(R.string.weather_dusk, timeFormat.format(Date(sunset.time + civilTwilightDuration)))
                     if (yesterdaySunrise != null && yesterdaySunset != null) {
                         val yesterdayDaylight = yesterdaySunset.time - yesterdaySunrise.time
                         val changeMinutes = TimeUnit.MILLISECONDS.toMinutes(daylightMillis - yesterdayDaylight)
-                        val trend = when { changeMinutes > 0 -> "📈 +$changeMinutes Min länger"; changeMinutes < 0 -> "📉 ${-changeMinutes} Min kürzer"; else -> "➡️ Gleich lang" }
-                        binding.daylightTrendText.text = "Tendenz: $trend als gestern"
+                        val trend = when {
+                            changeMinutes > 0 -> getString(R.string.weather_daylight_trend_longer, changeMinutes)
+                            changeMinutes < 0 -> getString(R.string.weather_daylight_trend_shorter, -changeMinutes)
+                            else -> getString(R.string.weather_daylight_trend_same)
+                        }
+                        binding.daylightTrendText.text = getString(R.string.weather_daylight_trend_prefix, trend)
                         binding.daylightTrendText.visibility = View.VISIBLE
                     }
                     displayLightBasedRecommendation(sunrise, sunset)
@@ -1187,13 +1195,13 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val recommendations = mutableListOf<String>()
         if (now.before(sunrise)) {
             val min = TimeUnit.MILLISECONDS.toMinutes(sunrise.time - now.time)
-            recommendations.add(if (min < 60) "🌅 Sonnenaufgang in ${min}Min - Perfekt für Morgenrunde!" else "🌃 Noch dunkel - Achtet auf Eigensicherung und Reflektoren bei gefährlichen Strassensituationen!")
+            recommendations.add(if (min < 60) getString(R.string.weather_light_sunrise_soon, min) else getString(R.string.weather_light_still_dark_morning))
         }
         if (now.before(sunset)) {
             val min = TimeUnit.MILLISECONDS.toMinutes(sunset.time - now.time)
-            if (min < 120) recommendations.add("🌇 Sonnenuntergang in ${min}Min - Ideal für Abendrunde!")
+            if (min < 120) recommendations.add(getString(R.string.weather_light_sunset_soon, min))
         } else {
-            recommendations.add("🌙 Dunkel - Achtet auf Eigensicherung und Lampe nicht vergessen!")
+            recommendations.add(getString(R.string.weather_light_dark_evening))
         }
         if (recommendations.isNotEmpty()) {
             binding.lightRecommendationText.text = recommendations.joinToString("\n")
@@ -1205,8 +1213,12 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
     private fun displayGoldenHour(sunrise: Date, sunset: Date) {
         val goldenHourDuration = 3600000L
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
-        binding.goldenHourText.text = "📸 Goldene Stunde (schönes Licht für Fotos):\nMorgens: ${timeFormat.format(sunrise)} - ${timeFormat.format(Date(sunrise.time + goldenHourDuration))}\nAbends: ${timeFormat.format(Date(sunset.time - goldenHourDuration))} - ${timeFormat.format(sunset)}"
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        binding.goldenHourText.text = getString(
+            R.string.weather_golden_hour,
+            timeFormat.format(sunrise), timeFormat.format(Date(sunrise.time + goldenHourDuration)),
+            timeFormat.format(Date(sunset.time - goldenHourDuration)), timeFormat.format(sunset)
+        )
         binding.goldenHourText.visibility = View.VISIBLE
     }
 
@@ -1247,7 +1259,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     )
 
     data class PollenItem(
-        val name: String,              // z.B. "Birke"
+        val key: String,               // stabiler, sprachneutraler Bezeichner, z.B. "birch_pollen"
+        val name: String,              // Anzeigename, z.B. "Birke" / "Birch"
         val emoji: String,
         val value: Double,             // Grains/m³
         val level: Int,               // 0=keine, 1=niedrig, 2=mittel, 3=hoch, 4=sehr hoch
@@ -1270,12 +1283,12 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     }
 
     private fun aqiLevelLabel(level: Int): String = when (level) {
-        0 -> "Gut"
-        1 -> "Mäßig"
-        2 -> "Sensible gefährdet"
-        3 -> "Ungesund"
-        4 -> "Sehr ungesund"
-        else -> "Gefährlich"
+        0 -> getString(R.string.weather_aqi_good)
+        1 -> getString(R.string.weather_aqi_moderate)
+        2 -> getString(R.string.weather_aqi_unhealthy_sensitive)
+        3 -> getString(R.string.weather_aqi_unhealthy)
+        4 -> getString(R.string.weather_aqi_very_unhealthy)
+        else -> getString(R.string.weather_aqi_hazardous)
     }
 
     private fun aqiLevelColor(level: Int): Int = when (level) {
@@ -1297,11 +1310,11 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     }
 
     private fun pollenLevelLabel(level: Int): String = when (level) {
-        0 -> "Keine"
-        1 -> "Niedrig"
-        2 -> "Mittel"
-        3 -> "Hoch"
-        else -> "Sehr hoch"
+        0 -> getString(R.string.weather_pollen_none)
+        1 -> getString(R.string.weather_pollen_low)
+        2 -> getString(R.string.weather_pollen_medium)
+        3 -> getString(R.string.weather_pollen_high)
+        else -> getString(R.string.weather_pollen_very_high)
     }
 
     private fun pollenLevelColor(level: Int): Int = when (level) {
@@ -1329,9 +1342,12 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val uvMax      = daily.getJSONArray("uv_index_max")
             val sunshine   = daily.getJSONArray("sunshine_duration") // Sekunden
 
-            val dayNames = listOf("So", "Mo", "Di", "Mi", "Do", "Fr", "Sa")
-            val dateFmt  = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
-            val labelFmt = SimpleDateFormat("dd.MM.", Locale.GERMAN)
+            val dayNames = listOf(
+                getString(R.string.day_sun), getString(R.string.day_mon), getString(R.string.day_tue),
+                getString(R.string.day_wed), getString(R.string.day_thu), getString(R.string.day_fri), getString(R.string.day_sat)
+            )
+            val dateFmt  = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val labelFmt = SimpleDateFormat("dd.MM.", Locale.getDefault())
 
             val items = mutableListOf<DailyForecastItem>()
             // Index 0 = gestern (past_days=1) → überspringen; Index 1 = heute
@@ -1380,13 +1396,11 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val message = buildString {
             append("${item.dayLabel}, ${item.dateLabel}\n\n")
             append("$icon $description\n\n")
-            append("🌡️ Max: ${String.format(Locale.GERMAN, "%.1f°C", item.tempMax)}  " +
-                    "Min: ${String.format(Locale.GERMAN, "%.1f°C", item.tempMin)}\n")
-            append("💧 Regenwahrscheinlichkeit: ${item.precipProbability}%\n")
-            append("💨 Wind max: ${String.format(Locale.GERMAN, "%.0f km/h", item.windSpeedMax)} " +
-                    "(Bft $beaufort)  Böen: ${String.format(Locale.GERMAN, "%.0f km/h", item.windGustsMax)}\n")
-            append("☀️ Sonnenschein: ${sunshineh}h ${sunshinem}m\n")
-            append("🔆 UV-Index max: ${String.format(Locale.GERMAN, "%.1f", item.uvIndexMax)}\n")
+            append(getString(R.string.weather_forecast_temp_range, item.tempMax, item.tempMin)).append("\n")
+            append(getString(R.string.weather_forecast_precip_prob, item.precipProbability)).append("\n")
+            append(getString(R.string.weather_forecast_wind_max, item.windSpeedMax, beaufort, item.windGustsMax)).append("\n")
+            append(getString(R.string.weather_forecast_sunshine, sunshineh, sunshinem)).append("\n")
+            append(getString(R.string.weather_forecast_uv_max, item.uvIndexMax)).append("\n")
             append("$uvWarning")
         }
 
@@ -1396,9 +1410,9 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📅 Tagesvorhersage")
+            .setTitle(getString(R.string.weather_daily_forecast_title))
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -1412,10 +1426,9 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("🔆 UV-Index ${item.time} Uhr – " +
-                    "${String.format(Locale.GERMAN, "%.1f", item.uvIndex)} (${item.label})")
+            .setTitle(getString(R.string.weather_uv_hourly_dialog_title, item.time, String.format(Locale.getDefault(), "%.1f", item.uvIndex), item.label))
             .setMessage(buildUvHourlyTip(item))
-            .setPositiveButton("OK", null)
+            .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
@@ -1434,95 +1447,58 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
             // ── Kein relevanter UV ──────────────────────────────────────────
             if (uv < 1.0) {
-                append("UV-Index unter 1 – keine relevante UV-Belastung.\n\n")
-                append("👤 Mensch: Kein Sonnenschutz erforderlich.\n\n")
-                append("🐕 Hund: Keine besonderen Maßnahmen nötig.")
+                append(getString(R.string.weather_uv_level_0_desc)).append("\n\n")
+                append(getString(R.string.weather_uv_level_0_human)).append("\n\n")
+                append(getString(R.string.weather_uv_level_0_dog))
                 return@buildString
             }
 
+            val uvStr = String.format(Locale.getDefault(), "%.1f", uv)
+
             // ── Einordnung ──────────────────────────────────────────────────
             append(when {
-                uv < 3  -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Gering\n" +
-                        "Kein zwingender Sonnenschutz, bei längeren Aufenthalten empfohlen.\n\n"
-                uv < 6  -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Mittel\n" +
-                        "Sonnenschutz für längere Aufenthalte im Freien empfohlen.\n\n"
-                uv < 8  -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Hoch\n" +
-                        "Sonnenschutz notwendig. Mittagszeit meiden.\n\n"
-                uv < 11 -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Sehr hoch\n" +
-                        "Umfassender Sonnenschutz erforderlich. Schatten bevorzugen.\n\n"
-                else    -> "UV-Index ${String.format(Locale.GERMAN, "%.1f", uv)} – Extrem ⚠️\n" +
-                        "Aufenthalt im Freien so kurz wie möglich halten.\n\n"
+                uv < 3  -> getString(R.string.weather_uv_level_1_desc, uvStr)
+                uv < 6  -> getString(R.string.weather_uv_level_2_desc, uvStr)
+                uv < 8  -> getString(R.string.weather_uv_level_3_desc, uvStr)
+                uv < 11 -> getString(R.string.weather_uv_level_4_desc, uvStr)
+                else    -> getString(R.string.weather_uv_level_5_desc, uvStr)
             })
 
             // ── Mensch ──────────────────────────────────────────────────────
-            append("👤 Mensch:\n")
+            append(getString(R.string.weather_uv_human_header)).append("\n")
             append(when {
-                uv < 3  -> "• Kein zwingender Sonnenschutz; bei heller Haut oder Reflexionsflächen " +
-                        "(Schnee, Wasser) Sonnencreme sinnvoll.\n" +
-                        "• Sonnenbrille bei Bedarf empfohlen."
-                uv < 6  -> "• Sonnenschutz auf unbedeckten Hautstellen empfohlen.\n" +
-                        "• Kopfbedeckung bei längerem Aufenthalt empfohlen.\n" +
-                        "• Zwischen 11 und 15 Uhr Aufenthalt in der Sonne begrenzen."
-                uv < 8  -> "• Sonnenschutz empfohlen.\n" +
-                        "• Sonnenbrille und Kopfbedeckung empfohlen.\n" +
-                        "• Zwischen 11 und 15 Uhr Schatten bevorzugen."
-                uv < 11 -> "• Sonnenschutz dringend empfohlen.\n" +
-                        "• Lange Kleidung, Sonnenbrille, Hut.\n" +
-                        "• Direkte Sonne zwischen 10 und 16 Uhr meiden.\n" +
-                        "• Ausreichend trinken."
-                else    -> "• Sonnenschutz dringend empfohlen.\n" +
-                        "• Nur im Schatten aufhalten oder drinnen bleiben.\n" +
-                        "• Schützende Kleidung empfohlen.\n" +
-                        "• Kinder und ältere Menschen besonders schützen."
+                uv < 3  -> getString(R.string.weather_uv_level_1_human)
+                uv < 6  -> getString(R.string.weather_uv_level_2_human)
+                uv < 8  -> getString(R.string.weather_uv_level_3_human)
+                uv < 11 -> getString(R.string.weather_uv_level_4_human)
+                else    -> getString(R.string.weather_uv_level_5_human)
             })
 
             append("\n\n")
 
             // ── Hund ────────────────────────────────────────────────────────
-            append("🐕 Hund:\n")
+            append(getString(R.string.weather_uv_dog_header)).append("\n")
             append(when {
-                uv < 3  -> "• Keine besonderen Maßnahmen nötig.\n" +
-                        "• Frisches Trinkwasser bereitstellen."
-                uv < 6  -> "• Hund: Helle oder dünn behaarte Hunde" +
-                        "sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen."
-                uv < 8  -> "• Training vor 10 oder nach 16 Uhr legen.\n" +
-                        "• Tagsüber Schatten bevorzugen.\n" +
-                        "• Asphalt und dunkle Oberflächen meiden – können Pfoten verbrennen.\n" +
-                        "• Ausreichend Wasser mitführen."
-                uv < 11 -> "• Training auf Morgen- oder Abendstunden verschieben.\n" +
-                        "• Hund: Training auf frühe Morgen- oder Abendstunden verschieben. " +
-                        "• Asphalt und Steinboden meiden – kann Pfoten überhitzen.\n" +
-                        "• Anhaltende UV-Exposition erhöht bei anfälligen Rassen langfristig " +
-                        "das Risiko für Erkrankungen.\n" +
-                        "• Viel Trinkwasser, Pausen im Schatten."
-                else    -> "• Training heute möglichst ganz vermeiden.\n" +
-                        "• Notwendige Runden auf schattige Routen beschränken.\n" +
-                        "• Hund regelmäßig auf der Bauchseite anfeuchten.\n" +
-                        "• Überhitzungszeichen beobachten: starkes Hecheln, Speichelfluss, " +
-                        "Koordinationsstörungen → sofort kühlen, Tierarzt aufsuchen.\n" +
-                        "• Trinkwasser in ausreichender Menge mitführen."
+                uv < 3  -> getString(R.string.weather_uv_level_1_dog)
+                uv < 6  -> getString(R.string.weather_uv_level_2_dog)
+                uv < 8  -> getString(R.string.weather_uv_level_3_dog)
+                uv < 11 -> getString(R.string.weather_uv_level_4_dog)
+                else    -> getString(R.string.weather_uv_level_5_dog)
             })
 
             append("\n\n")
 
             // ── Schutzmaßnahmen-Zusammenfassung ────────────────────────────
-            append("🛡️ Schutzmaßnahmen ${item.time} Uhr:\n")
+            append(getString(R.string.weather_uv_protection_summary_header, item.time)).append("\n")
             append(when {
-                uv < 3  -> "Sonnenschutz nach Bedarf  •  Schatten: optional  •  " +
-                        "Kopfbedeckung: optional  •  Sonnenbrille: empfohlen"
-                uv < 6  -> "Sonnenschutz empfohlen  •  Schatten: bei längerem Aufenthalt  •  " +
-                        "Kopfbedeckung: empfohlen  •  Sonnenbrille: empfohlen"
-                uv < 8  -> "Sonnenschutz empfohlen  •  Schatten: bevorzugen  •  " +
-                        "Kopfbedeckung: notwendig  •  Sonnenbrille: notwendig"
-                uv < 11 -> "Sonnenschutz empfohlen  •  Schatten: zwingend  •  " +
-                        "Kopfbedeckung: zwingend  •  Sonnenbrille: zwingend  •  " +
-                        "Lange Kleidung: empfohlen"
-                else    -> "Sonnenschutz empfohlen  •  Aufenthalt im Freien minimieren  •  " +
-                        "Vollständiger Schutz: Kleidung, Hut, Brille  •  " +
-                        "Kinder & Hunde: drinnen lassen"
+                uv < 3  -> getString(R.string.weather_uv_level_1_summary)
+                uv < 6  -> getString(R.string.weather_uv_level_2_summary)
+                uv < 8  -> getString(R.string.weather_uv_level_3_summary)
+                uv < 11 -> getString(R.string.weather_uv_level_4_summary)
+                else    -> getString(R.string.weather_uv_level_5_summary)
             })
 
-            append("\n\n⚕️ Kein Ersatz für tierärztliche oder medizinische Beratung.")
+            append("\n\n").append(getString(R.string.weather_uv_hourly_vet_disclaimer))
         }
     }
 
@@ -1536,8 +1512,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val gusts     = hourly.getJSONArray("wind_gusts_10m")
             val degrees   = hourly.getJSONArray("wind_direction_10m")
 
-            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-            val timeFmt = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+            val timeFmt = SimpleDateFormat("HH:mm", Locale.getDefault())
             val now     = System.currentTimeMillis()
             val oneHour = 3600000L
 
@@ -1575,8 +1551,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val sunsetArr  = daily.getJSONArray("sunset")
             val sunshine   = daily.getJSONArray("sunshine_duration") // Sekunden
 
-            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-            val timeFmt = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+            val timeFmt = SimpleDateFormat("HH:mm", Locale.getDefault())
 
             // Index 1 = heute (Index 0 = gestern durch past_days=1)
             val todaySunrise = dateFmt.parse(sunriseArr.getString(1)) ?: return
@@ -1589,17 +1565,23 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
             // Offset vom reinen Ost-Punkt (90°) bzw. West-Punkt (270°)
             val riseOffsetDeg  = Math.abs(sunriseAzimuth - 90.0)
-            val riseDirection  = if (sunriseAzimuth < 90.0) "Nord von Ost" else "Süd von Ost"
+            val riseDirection  = if (sunriseAzimuth < 90.0) getString(R.string.weather_azimuth_north_of_east) else getString(R.string.weather_azimuth_south_of_east)
             val setOffsetDeg   = Math.abs(sunsetAzimuth - 270.0)
-            val setDirection   = if (sunsetAzimuth > 270.0) "Nord von West" else "Süd von West"
+            val setDirection   = if (sunsetAzimuth > 270.0) getString(R.string.weather_azimuth_north_of_west) else getString(R.string.weather_azimuth_south_of_west)
 
-            binding.sunriseAzimuthText.text =
-                "🌅 Aufgang\n${timeFmt.format(todaySunrise)} Uhr\n" +
-                        "${String.format(Locale.GERMAN, "%.1f", riseOffsetDeg)}° $riseDirection"
+            binding.sunriseAzimuthText.text = getString(
+                R.string.weather_sunrise_azimuth,
+                timeFmt.format(todaySunrise),
+                String.format(Locale.getDefault(), "%.1f", riseOffsetDeg),
+                riseDirection
+            )
 
-            binding.sunsetAzimuthText.text =
-                "🌇 Untergang\n${timeFmt.format(todaySunset)} Uhr\n" +
-                        "${String.format(Locale.GERMAN, "%.1f", setOffsetDeg)}° $setDirection"
+            binding.sunsetAzimuthText.text = getString(
+                R.string.weather_sunset_azimuth,
+                timeFmt.format(todaySunset),
+                String.format(Locale.getDefault(), "%.1f", setOffsetDeg),
+                setDirection
+            )
 
             // ── Aktueller Sonnenstand (Elevation + Azimut) ────────────────────
             val nowCal = Calendar.getInstance()
@@ -1618,15 +1600,13 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
             val azimuthCardinal = azimuthToCardinal(azimuth)
             val elevDesc = when {
-                elevation < 0  -> "unter dem Horizont"
-                elevation < 10 -> "sehr flach – lange Schatten"
-                elevation < 30 -> "niedrig"
-                elevation < 50 -> "mittel"
-                else           -> "hoch"
+                elevation < 0  -> getString(R.string.weather_sun_elevation_below_horizon)
+                elevation < 10 -> getString(R.string.weather_sun_elevation_very_flat)
+                elevation < 30 -> getString(R.string.weather_sun_elevation_low)
+                elevation < 50 -> getString(R.string.weather_sun_elevation_medium)
+                else           -> getString(R.string.weather_sun_elevation_high)
             }
-            binding.sunElevationText.text =
-                "📐 Sonnenstand: ${String.format(Locale.GERMAN, "%.1f", elevation)}° ($elevDesc)\n" +
-                        "🧭 Azimut: ${String.format(Locale.GERMAN, "%.1f", azimuth)}° – $azimuthCardinal"
+            binding.sunElevationText.text = getString(R.string.weather_sun_elevation_azimuth_display, elevation, elevDesc, azimuth, azimuthCardinal)
 
             // ── Schattenlänge ──────────────────────────────────────────────────
             val prefs = getSharedPreferences("sun_shadow_prefs", android.content.Context.MODE_PRIVATE)
@@ -1640,15 +1620,12 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 val shadowDog    = heightDog    / tanEl
                 val shadowObject = heightObject / tanEl
                 buildString {
-                    append("👤 Person (${String.format(Locale.GERMAN, "%.2f", heightPerson)}m): " +
-                            "${String.format(Locale.GERMAN, "%.2f", shadowPerson)}m  ")
-                    append("🐕 Hund (${String.format(Locale.GERMAN, "%.2f", heightDog)}m): " +
-                            "${String.format(Locale.GERMAN, "%.2f", shadowDog)}m  ")
-                    append("📦 Objekt (${String.format(Locale.GERMAN, "%.2f", heightObject)}m): " +
-                            "${String.format(Locale.GERMAN, "%.2f", shadowObject)}m")
+                    append(getString(R.string.weather_shadow_person, String.format(Locale.getDefault(), "%.2f", heightPerson), String.format(Locale.getDefault(), "%.2f", shadowPerson))).append("  ")
+                    append(getString(R.string.weather_shadow_dog, String.format(Locale.getDefault(), "%.2f", heightDog), String.format(Locale.getDefault(), "%.2f", shadowDog))).append("  ")
+                    append(getString(R.string.weather_shadow_object, String.format(Locale.getDefault(), "%.2f", heightObject), String.format(Locale.getDefault(), "%.2f", shadowObject)))
                 }
             } else {
-                "Keine Schattenlänge – Sonne unter dem Horizont"
+                getString(R.string.weather_no_shadow_below_horizon)
             }
             binding.shadowLengthText.text = shadowText
 
@@ -1661,11 +1638,14 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val todaySunshineSec = sunshine.getDouble(1)
             val shH = (todaySunshineSec / 3600).toInt()
             val shM = ((todaySunshineSec % 3600) / 60).toInt()
-            binding.sunshineTodayText.text = "Heute: ${shH}h ${shM}m"
+            binding.sunshineTodayText.text = getString(R.string.weather_sunshine_today_format, shH, shM)
 
             // ── 7-Tage Sonnenschein-Balken (inline LinearLayout) ──────────────
-            val dayNames = listOf("So", "Mo", "Di", "Mi", "Do", "Fr", "Sa")
-            val dateFmtShort = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
+            val dayNames = listOf(
+                getString(R.string.day_sun), getString(R.string.day_mon), getString(R.string.day_tue),
+                getString(R.string.day_wed), getString(R.string.day_thu), getString(R.string.day_fri), getString(R.string.day_sat)
+            )
+            val dateFmtShort = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             val startIdx = 1
             val endIdx   = times.length().coerceAtMost(startIdx + 7)
 
@@ -1865,23 +1845,23 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     /** Azimut in Grad → Himmelsrichtung + Klartext */
     private fun azimuthToCardinal(az: Double): String {
         val directions = listOf(
-            0.0   to "N – Sonne im Norden",
-            22.5  to "NNO",
-            45.0  to "NO – Sonne im Nordosten",
-            67.5  to "ONO",
-            90.0  to "O – Sonne im Osten",
-            112.5 to "OSO",
-            135.0 to "SO – Sonne im Südosten",
-            157.5 to "SSO",
-            180.0 to "S – Sonne im Süden",
-            202.5 to "SSW",
-            225.0 to "SW – Sonne im Südwesten",
-            247.5 to "WSW",
-            270.0 to "W – Sonne im Westen",
-            292.5 to "WNW",
-            315.0 to "NW – Sonne im Nordwesten",
-            337.5 to "NNW",
-            360.0 to "N – Sonne im Norden"
+            0.0   to getString(R.string.weather_sun_dir_n),
+            22.5  to getString(R.string.weather_sun_dir_nno),
+            45.0  to getString(R.string.weather_sun_dir_ne),
+            67.5  to getString(R.string.weather_sun_dir_ono),
+            90.0  to getString(R.string.weather_sun_dir_e),
+            112.5 to getString(R.string.weather_sun_dir_oso),
+            135.0 to getString(R.string.weather_sun_dir_se),
+            157.5 to getString(R.string.weather_sun_dir_sso),
+            180.0 to getString(R.string.weather_sun_dir_s),
+            202.5 to getString(R.string.weather_sun_dir_ssw),
+            225.0 to getString(R.string.weather_sun_dir_sw),
+            247.5 to getString(R.string.weather_sun_dir_wsw),
+            270.0 to getString(R.string.weather_sun_dir_w),
+            292.5 to getString(R.string.weather_sun_dir_wnw),
+            315.0 to getString(R.string.weather_sun_dir_nw),
+            337.5 to getString(R.string.weather_sun_dir_nnw),
+            360.0 to getString(R.string.weather_sun_dir_n)
         )
         return directions.minByOrNull { Math.abs(it.first - az) }?.second ?: "–"
     }
@@ -1915,10 +1895,10 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val et = android.widget.EditText(this).apply {
                 inputType = android.text.InputType.TYPE_CLASS_NUMBER or
                         android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
-                setText(String.format(Locale.GERMAN, "%.2f", defaultVal))
+                setText(String.format(Locale.getDefault(), "%.2f", defaultVal))
                 setTextColor(Color.WHITE)
                 setHintTextColor(Color.parseColor("#888888"))
-                hint = "Meter (z.B. 1.75)"
+                hint = getString(R.string.weather_meter_hint)
             }
             container.addView(tv)
             container.addView(et)
@@ -1926,22 +1906,22 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         }
 
         val etPerson = makeField(
-            "👤 Größe Person (m)",
+            getString(R.string.weather_shadow_height_person),
             prefs.getFloat("height_person", 1.75f)
         )
         val etDog = makeField(
-            "🐕 Widerristhöhe Hund (m)",
+            getString(R.string.weather_shadow_height_dog),
             prefs.getFloat("height_dog", 0.55f)
         )
         val etObject = makeField(
-            "📦 Höhe Objekt (m)",
+            getString(R.string.weather_shadow_height_object),
             prefs.getFloat("height_object", 1.00f)
         )
 
         AlertDialog.Builder(this)
-            .setTitle("📏 Höhen für Schattenlänge")
+            .setTitle(getString(R.string.weather_shadow_dialog_title))
             .setView(container)
-            .setPositiveButton("Speichern") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 val person = etPerson.text.toString()
                     .replace(",", ".").toFloatOrNull() ?: 1.75f
                 val dog = etDog.text.toString()
@@ -1955,7 +1935,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                     .apply()
                 onDone()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
@@ -2018,8 +1998,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val no2arr  = hourly.getJSONArray("nitrogen_dioxide")
             val o3arr   = hourly.getJSONArray("ozone")
 
-            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-            val timeFmt = SimpleDateFormat("HH:mm", Locale.GERMAN)
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+            val timeFmt = SimpleDateFormat("HH:mm", Locale.getDefault())
             val now     = System.currentTimeMillis()
             val oneHour = 3600000L
 
@@ -2055,12 +2035,13 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val current = items.first()
             binding.currentAqiText.text = "${current.aqi} – ${current.aqiLabel}"
             binding.currentAqiText.setTextColor(current.aqiColor)
-            binding.currentPollutantsText.text = buildString {
-                append("PM2.5: ${String.format(Locale.GERMAN, "%.1f", current.pm25)} µg/m³  ")
-                append("PM10: ${String.format(Locale.GERMAN, "%.1f", current.pm10)} µg/m³\n")
-                append("NO₂: ${String.format(Locale.GERMAN, "%.1f", current.no2)} µg/m³  ")
-                append("O₃: ${String.format(Locale.GERMAN, "%.1f", current.o3)} µg/m³")
-            }
+            binding.currentPollutantsText.text = getString(
+                R.string.weather_pollutants_format,
+                String.format(Locale.getDefault(), "%.1f", current.pm25),
+                String.format(Locale.getDefault(), "%.1f", current.pm10),
+                String.format(Locale.getDefault(), "%.1f", current.no2),
+                String.format(Locale.getDefault(), "%.1f", current.o3)
+            )
 
             binding.airQualityRecyclerView.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -2078,19 +2059,19 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val hourly = airQualityData.getJSONObject("hourly")
             val times  = hourly.getJSONArray("time")
 
-            // Pollenarten mit deutschen Namen und Emoji
+            // Pollenarten mit Namen und Emoji
             data class PollenSource(val key: String, val name: String, val emoji: String)
             val sources = listOf(
-                PollenSource("birch_pollen",   "Birke",     "🌳"),
-                PollenSource("grass_pollen",   "Gräser",    "🌾"),
-                PollenSource("alder_pollen",   "Erle",      "🌿"),
-                PollenSource("mugwort_pollen", "Beifuß",    "🌿"),
-                PollenSource("olive_pollen",   "Olive",     "🫒"),
-                PollenSource("ragweed_pollen", "Ambrosia",  "🌻")
+                PollenSource("birch_pollen",   getString(R.string.weather_pollen_birch),   "🌳"),
+                PollenSource("grass_pollen",   getString(R.string.weather_pollen_grass),   "🌾"),
+                PollenSource("alder_pollen",   getString(R.string.weather_pollen_alder),   "🌿"),
+                PollenSource("mugwort_pollen", getString(R.string.weather_pollen_mugwort), "🌿"),
+                PollenSource("olive_pollen",   getString(R.string.weather_pollen_olive),   "🫒"),
+                PollenSource("ragweed_pollen", getString(R.string.weather_pollen_ragweed), "🌻")
             )
 
             // Erstes gültiges Stunden-Fenster (= aktuell) ermitteln
-            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
+            val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
             val now = System.currentTimeMillis()
             val oneHour = 3600000L
             var currentIdx = -1
@@ -2113,6 +2094,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 if (level > highestLevel) highestLevel = level
                 if (level > 0) {  // Nur anzeigen wenn messbar
                     activeItems.add(PollenItem(
+                        key        = src.key,
                         name       = src.name,
                         emoji      = src.emoji,
                         value      = value,
@@ -2125,11 +2107,10 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
             // Anzeigetext aufbauen
             val displayText = if (activeItems.isEmpty()) {
-                "✅ Derzeit keine nennenswerte Pollenbelastung gemessen."
+                getString(R.string.weather_pollen_none_measured)
             } else {
                 activeItems.sortedByDescending { it.level }.joinToString("\n") { item ->
-                    "${item.emoji} ${item.name}: ${item.levelLabel} " +
-                            "(${String.format(Locale.GERMAN, "%.1f", item.value)} Gr./m³)"
+                    getString(R.string.weather_pollen_item_line, item.emoji, item.name, item.levelLabel, String.format(Locale.getDefault(), "%.1f", item.value))
                 }
             }
             binding.pollenTodayText.text = displayText
@@ -2153,49 +2134,34 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     private fun getPollenDogTips(items: List<PollenItem>, highestLevel: Int): String {
         if (highestLevel == 0) return ""
 
-        val sb = StringBuilder("🐕 Hund & Pollen:\n\n")
+        val sb = StringBuilder(getString(R.string.weather_pollen_dog_header)).append("\n\n")
 
         // Allgemeine Hinweise je Belastungsstufe
         when (highestLevel) {
-            1 -> sb.append("Die aktuelle Pollenbelastung ist niedrig. Für die meisten Hunde sind " +
-                    "keine besonderen Maßnahmen erforderlich.\n\n")
-            2 -> sb.append("Mittlere Pollenbelastung. Beobachte Deinen Hund nach Aufenthalten im " +
-                    "Freien auf mögliche Reaktionen – besonders empfindliche Hunde können " +
-                    "Beschwerden zeigen.\n\n")
-            3 -> sb.append("Hohe Pollenbelastung. Hunde können ähnlich wie Menschen unter " +
-                    "Pollenallergien leiden – häufig als atopische Dermatitis (Hautjucken, " +
-                    "Schütteln des Kopfes, Pfoten lecken).\n\n")
-            4 -> sb.append("Sehr hohe Pollenbelastung. Bei bekannt allergischen Hunden unbedingt " +
-                    "Rücksprache mit dem Tierarzt halten. Trainingseinheiten ggf. in die frühen " +
-                    "Morgenstunden oder nach Regenfällen verlegen.\n\n")
+            1 -> sb.append(getString(R.string.weather_pollen_dog_level_1)).append("\n\n")
+            2 -> sb.append(getString(R.string.weather_pollen_dog_level_2)).append("\n\n")
+            3 -> sb.append(getString(R.string.weather_pollen_dog_level_3)).append("\n\n")
+            4 -> sb.append(getString(R.string.weather_pollen_dog_level_4)).append("\n\n")
         }
 
         // Pollenspezifische Hinweise
         val highItems = items.filter { it.level >= 2 }
-        if (highItems.any { it.name == "Birke" || it.name == "Erle" }) {
-            sb.append("🌳 Baumpollen (Birke/Erle): Kreuzreaktionen mit bestimmten Proteinen in " +
-                    "Hundefutter sind möglich. Bei unklaren Verdauungsproblemen ggf. Tierarzt konsultieren.\n\n")
+        if (highItems.any { it.key == "birch_pollen" || it.key == "alder_pollen" }) {
+            sb.append(getString(R.string.weather_pollen_dog_tree)).append("\n\n")
         }
-        if (highItems.any { it.name == "Gräser" }) {
-            sb.append("🌾 Gräserpollen: Häufigste Pollenallergieauslöser bei Hunden. Symptome: " +
-                    "Juckreiz an Pfoten, Bauch und Ohren. Pfoten nach Spaziergängen im Gras " +
-                    "abspülen kann helfen.\n\n")
+        if (highItems.any { it.key == "grass_pollen" }) {
+            sb.append(getString(R.string.weather_pollen_dog_grass)).append("\n\n")
         }
-        if (highItems.any { it.name == "Beifuß" || it.name == "Ambrosia" }) {
-            sb.append("🌿 Beifuß/Ambrosia: Kräuterpollen – Kreuzreaktionen mit Lebensmittelallergenen " +
-                    "möglich. Hunde mit bekannten Futtermittelallergien können empfindlicher reagieren.\n\n")
+        if (highItems.any { it.key == "mugwort_pollen" || it.key == "ragweed_pollen" }) {
+            sb.append(getString(R.string.weather_pollen_dog_herb)).append("\n\n")
         }
 
         // Allgemeine Pflegetipps bei erhöhter Belastung
         if (highestLevel >= 2) {
-            sb.append("💡 Tipps bei erhöhter Belastung:\n" +
-                    "• Nach Freilandrunden Fell und Pfoten abwischen\n" +
-                    "• Augen und Nase beobachten (Ausfluss, Rötungen)\n" +
-                    "• Häufiges Lecken der Pfoten kann auf Pollenreiz hinweisen\n" +
-                    "• Schütteln und Kratzen am Kopf beobachten")
+            sb.append(getString(R.string.weather_pollen_dog_general_tips))
         }
 
-        sb.append("\n\n⚕️ Kein Ersatz für tierärztliche Beratung.")
+        sb.append("\n\n").append(getString(R.string.uv_protection_vet_disclaimer))
         return sb.toString()
     }
 
@@ -2222,7 +2188,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val windSpeed   = current.getDouble("wind_speed_10m")
             val weatherCode = current.getInt("weather_code")
 
-            val dateFmt  = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm", java.util.Locale.GERMAN)
+            val dateFmt  = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
             val timeFmt  = hourly.getJSONArray("time")
             val now      = System.currentTimeMillis()
             val sixHours = 6 * 3600_000L
@@ -2329,7 +2295,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
 
                 // Tipp-Hinweis
                 val tapHint = android.widget.TextView(this).apply {
-                    text = "👆 Tippe für Details"
+                    text = getString(R.string.weather_tap_for_details)
                     textSize = 11f
                     setTextColor(android.graphics.Color.parseColor("#666666"))
                     layoutParams = android.widget.LinearLayout.LayoutParams(
@@ -2362,9 +2328,9 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         } catch (e: Exception) {
             // Fehler sichtbar machen statt stumm scheitern
             android.util.Log.e("WeatherActivity", "Fehler bei Biowetter-Card: ${e.message}", e)
-            binding.biowetterOverallBadge.text = "● Daten nicht verfügbar"
+            binding.biowetterOverallBadge.text = getString(R.string.weather_biowetter_data_unavailable)
             binding.biowetterOverallBadge.setTextColor(android.graphics.Color.parseColor("#999999"))
-            binding.biowetterSummaryText.text  = "Biowetter-Daten konnten nicht berechnet werden."
+            binding.biowetterSummaryText.text  = getString(R.string.weather_biowetter_calc_failed)
             binding.biowetterAdviceText.text   = ""
         }
     }
@@ -2386,7 +2352,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         AlertDialog.Builder(this)
             .setTitle("${indicator.emoji} ${indicator.name} – ${indicator.level.label(this)}")
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)

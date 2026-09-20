@@ -30,14 +30,14 @@ class VitalListActivity : SecureBaseActivity() {
         setContentView(binding.root)
 
         dogId = intent.getStringExtra("dogId") ?: ""
-        dogName = intent.getStringExtra("dogName") ?: "Hund"
+        dogName = intent.getStringExtra("dogName") ?: getString(R.string.dog_view_title_fallback)
 
         // Schulterhöhe für Puls-Bewertung laden
         val profile = DogProfileManager.getProfile(this, dogId)
         shoulderHeightCm = profile?.shoulderHeight?.trim()?.toIntOrNull()
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "❤️ Vitalwerte – $dogName"
+        supportActionBar?.title = getString(R.string.vital_list_toolbar_title_format, dogName)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
@@ -65,8 +65,8 @@ class VitalListActivity : SecureBaseActivity() {
 
     private fun setupButtons() {
         val actions = listOf(
-            StartTile("vital_csv", R.drawable.ic_notes, "CSV Export"),
-            StartTile("vital_share", R.drawable.ic_map_pin_share, "Liste teilen")
+            StartTile("vital_csv", R.drawable.ic_notes, getString(R.string.vital_list_tile_csv_export)),
+            StartTile("vital_share", R.drawable.ic_map_pin_share, getString(R.string.vital_list_tile_share_list))
         )
         val colors = StartGroupColors.forGroup(this, 3) // Ocker/Braun
         binding.gridVitalActions.layoutManager = GridLayoutManager(this, 2)
@@ -107,13 +107,13 @@ class VitalListActivity : SecureBaseActivity() {
         val avgPulse = records.map { it.pulse }.average().toInt()
 
         val sb = StringBuilder()
-        sb.appendLine("Gesamt: $count Messung${if (count != 1) "en" else ""}")
-        sb.appendLine("Letzte Messung: ${latest.formattedDate()}")
-        sb.appendLine("Letzter Puls: ${latest.pulse} /min")
-        sb.append("Ø Puls: $avgPulse /min")
+        sb.appendLine(resources.getQuantityString(R.plurals.vital_list_stats_total, count, count))
+        sb.appendLine(getString(R.string.vital_list_stats_last_measurement, latest.formattedDate()))
+        sb.appendLine(getString(R.string.vital_list_stats_last_pulse, latest.pulse))
+        sb.append(getString(R.string.vital_list_stats_avg_pulse, avgPulse))
 
-        latest.respiration?.let { sb.appendLine().append("Letzter Atem: $it /min") }
-        latest.temperature?.let { sb.appendLine().append("Letzte Temp.: ${"%.1f".format(it)} °C") }
+        latest.respiration?.let { sb.appendLine().append(getString(R.string.vital_list_stats_last_respiration, it)) }
+        latest.temperature?.let { sb.appendLine().append(getString(R.string.vital_list_stats_last_temperature, "%.1f".format(it))) }
 
         binding.tvStatsContent.text = sb.toString()
     }
@@ -133,10 +133,10 @@ class VitalListActivity : SecureBaseActivity() {
     private fun shareRecord(record: VitalRecord) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Vitalwerte ${record.dogName} – ${record.formattedDate()}")
-            putExtra(Intent.EXTRA_TEXT, record.toShareText())
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.vital_detail_share_subject_format, record.dogName, record.formattedDate()))
+            putExtra(Intent.EXTRA_TEXT, record.toShareText(this@VitalListActivity))
         }
-        startActivity(Intent.createChooser(intent, "Messung teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.vital_detail_share_chooser_title)))
     }
 
     private fun confirmDelete(record: VitalRecord) {
@@ -144,16 +144,16 @@ class VitalListActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#B00020")
 
         AlertDialog.Builder(this)
-            .setTitle("🗑️ Messung löschen?")
-            .setMessage("Messung vom ${record.formattedDate()} wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.vital_list_delete_dialog_title))
+            .setMessage(getString(R.string.vital_list_delete_dialog_message, record.formattedDate()))
+            .setPositiveButton(getString(R.string.vital_list_delete_dialog_confirm)) { _, _ ->
                 VitalManager.delete(this, record.id)
                 adapter.removeRecord(record)
-                Toast.makeText(this, "Messung gelöscht", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.vital_list_toast_deleted), Toast.LENGTH_SHORT).show()
                 if (records.isEmpty()) loadRecords()
                 else updateStats()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -165,7 +165,7 @@ class VitalListActivity : SecureBaseActivity() {
     private fun exportCsv() {
         try {
             val csv = VitalManager.toCsvString(this, dogId)
-            val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(Date())
+            val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val fileName = "Vitalwerte_${dogName}_$dateStr.csv"
             val file = File(cacheDir, fileName)
             // UTF-8 BOM für Excel
@@ -176,33 +176,33 @@ class VitalListActivity : SecureBaseActivity() {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/csv"
                 putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_SUBJECT, "Vitalwerte $dogName – $dateStr")
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.vital_list_csv_share_subject, dogName, dateStr))
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(intent, "CSV exportieren"))
+            startActivity(Intent.createChooser(intent, getString(R.string.vital_list_csv_chooser_title)))
         } catch (e: Exception) {
-            Toast.makeText(this, "Fehler beim Export: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.vital_list_toast_export_error, e.message), Toast.LENGTH_LONG).show()
         }
     }
 
     private fun shareAll() {
         if (records.isEmpty()) return
         val text = buildString {
-            appendLine("❤️ Vitalwerte: $dogName")
-            appendLine("📅 Exportiert: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY).format(Date())}")
-            appendLine("Anzahl Messungen: ${records.size}")
+            appendLine(getString(R.string.vital_list_share_all_header, dogName))
+            appendLine(getString(R.string.vital_list_share_all_exported, SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())))
+            appendLine(getString(R.string.vital_list_share_all_count, records.size))
             appendLine()
             records.forEach { record ->
                 appendLine("──────────────────")
-                appendLine(record.toShareText())
+                appendLine(record.toShareText(this@VitalListActivity))
             }
         }
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Vitalwerte $dogName")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.vital_list_share_all_subject, dogName))
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        startActivity(Intent.createChooser(intent, "Liste teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.vital_list_share_all_chooser_title)))
     }
 
     // ════════════════════════════════════════════════════════════════

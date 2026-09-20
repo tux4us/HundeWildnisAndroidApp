@@ -49,7 +49,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📋 Anleitung Pulsmessung"
+                        android:text="@string/pulscheck_instructions_title"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"
@@ -58,7 +58,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1. Lege Zeige- und Mittelfinger an die Innenseite des Oberschenkels (A. femoralis) oder hinter das linke Ellbogengelenk auf die Brustwand.\n\n2. Starte den 15-Sekunden-Timer.\n\n3. Zähle die Herzschläge. Das Ergebnis × 4 = Herzfrequenz pro Minute.\n\n4. Atemfrequenz: Hebe- und Senkbewegungen des Brustkorbs zählen – ebenfalls 15 Sekunden, dann × 4."
+                        android:text="@string/pulscheck_instructions_body"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📊 Normalwerte im Überblick"
+                        android:text="@string/pulscheck_reference_title"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp"
@@ -96,7 +96,7 @@
                         android:id="@+id/tvPulseReference"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="❤️ Herzfrequenz: wird geladen …"
+                        android:text="@string/pulscheck_reference_loading"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:textColor="?attr/colorSecondary"
@@ -105,7 +105,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="❤️ Herzfrequenz nach Größe:\n  • Kleinhund (&lt; 30 cm): 100–160 /min\n  • Mittelhund (30–50 cm): 70–120 /min\n  • Großhund (&gt; 50 cm): 60–100 /min\n  • Welpen (&lt; 1 Jahr): bis 220 /min\n\n🫁 Atemfrequenz (Ruhe): 15–30 /min\n  • Welpen: bis 40 /min\n  • Bei Hitze/Aufregung: Hecheln normal\n\n🌡️ Körpertemperatur: 37,5–39,0 °C\n  • &gt; 39,5 °C: erhöht, beobachten\n  • &gt; 40,0 °C: Fieber → Tierarzt\n  • &lt; 37,0 °C: Unterkühlung → Tierarzt\n\n💉 Kapillarfüllzeit (KFZ): &lt; 2 Sekunden\n  • Finger auf Zahnfleisch drücken, loslassen\n  • Farbe sollte in &lt; 2 Sek. zurückkehren\n\n👁️ Schleimhäute: rosa, feucht\n🧠 Bewusstsein: alert, reaktiv"
+                        android:text="@string/pulscheck_reference_body"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.3"
                         android:textColor="?android:attr/textColorSecondary" />
@@ -132,7 +132,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⚡ Belastungsszenario"
+                        android:text="@string/pulscheck_card_load_scenario"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"
@@ -167,7 +167,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="❤️ Herzfrequenz messen"
+                        android:text="@string/pulscheck_card_measure_pulse"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"
@@ -188,7 +188,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Sekunden"
+                        android:text="@string/pulscheck_timer_seconds_label"
                         android:textSize="13sp"
                         android:textAlignment="center"
                         android:textColor="?android:attr/textColorSecondary"
@@ -198,7 +198,7 @@
                         android:id="@+id/btnStartPulseTimer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="▶ Timer starten"
+                        android:text="@string/pulscheck_btn_start_timer"
                         android:textColor="?attr/colorOnSecondary"
                         app:backgroundTint="?attr/colorSecondary"
                         app:cornerRadius="8dp"
@@ -208,7 +208,7 @@
                         android:id="@+id/tvPulseTimerHint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Gezählte Schläge eingeben → × 4 = Herzfrequenz/min"
+                        android:text="@string/pulscheck_pulse_timer_hint_result"
                         android:textSize="12sp"
                         android:textAlignment="center"
                         android:textColor="?android:attr/textColorSecondary"
@@ -226,7 +226,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="Schläge gezählt"
+                            android:hint="@string/pulscheck_hint_beats_counted"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPulseBeats"
@@ -239,7 +239,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="  × 4 = "
+                            android:text="@string/pulscheck_times_four_label"
                             android:textSize="16sp"
                             android:textColor="?android:attr/textColorSecondary" />
 
@@ -247,7 +247,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="Puls /min"
+                            android:hint="@string/pulscheck_hint_pulse_per_min"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPulseResult"
@@ -292,7 +292,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🫁 Atemfrequenz (optional)"
+                        android:text="@string/pulscheck_card_respiration"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp"
@@ -314,7 +314,7 @@
                         android:id="@+id/btnStartRespTimer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="▶ Timer starten"
+                        android:text="@string/pulscheck_btn_start_timer"
                         android:textColor="#FFFFFF"
                         app:backgroundTint="#4a6135"
                         app:cornerRadius="8dp"
@@ -330,7 +330,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="Atemzüge gezählt"
+                            android:hint="@string/pulscheck_hint_breaths_counted"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etRespBeats"
@@ -343,7 +343,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="  × 4 = "
+                            android:text="@string/pulscheck_times_four_label"
                             android:textSize="16sp"
                             android:textColor="?android:attr/textColorSecondary" />
 
@@ -351,7 +351,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="Atemfq. /min"
+                            android:hint="@string/pulscheck_hint_resp_per_min"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etRespResult"
@@ -384,7 +384,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌡️ Körpertemperatur (optional)"
+                        android:text="@string/pulscheck_card_temperature"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"
@@ -393,7 +393,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Temperatur in °C (z.B. 38.5)"
+                        android:hint="@string/pulscheck_hint_temperature"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:suffixText="°C">
                         <com.google.android.material.textfield.TextInputEditText
@@ -426,7 +426,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💉 Kapillarfüllzeit (optional)"
+                        android:text="@string/pulscheck_card_crt"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"
@@ -435,7 +435,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Finger auf Zahnfleisch drücken, loslassen – Sekunden bis Farbe zurückkommt"
+                        android:text="@string/pulscheck_crt_hint"
                         android:textSize="12sp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="10dp" />
@@ -525,7 +525,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="👁️ Schleimhautfarbe (optional)"
+                        android:text="@string/pulscheck_card_mucous_color"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"
@@ -560,7 +560,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🧠 Bewusstseinszustand (optional)"
+                        android:text="@string/pulscheck_card_consciousness"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"
@@ -595,7 +595,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📝 Notizen / Beobachtungen"
+                        android:text="@string/pulscheck_card_notes"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"
@@ -604,7 +604,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Aktuelle Bedingungen, Beobachtungen, Auffälligkeiten …"
+                        android:hint="@string/pulscheck_hint_notes"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etNotes"

@@ -64,7 +64,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Höhenmesser"
+            title = getString(R.string.tile_altimeter)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -80,9 +80,9 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
         if (pressureSensor == null) {
             binding.barometerCard.visibility = View.GONE
             binding.pressureCard.visibility = View.GONE
-            binding.statusText.text = "⚠️ Barometer nicht verfügbar\nNur GPS-Höhe (ungenau)"
+            binding.statusText.text = getString(R.string.altimeter_barometer_unavailable_status)
         } else {
-            binding.statusText.text = "📡 GPS-Höhe ist sehr ungenau!\n🌡️ Barometer wird für Genauigkeit genutzt"
+            binding.statusText.text = getString(R.string.altimeter_gps_inaccurate_status)
         }
 
         checkLocationPermission()
@@ -134,11 +134,11 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getAltitude()
                 } else {
-                    binding.statusText.text = "❌ Standortberechtigung benötigt"
+                    binding.statusText.text = getString(R.string.altimeter_location_permission_needed_status)
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(
                         this,
-                        "Standortberechtigung wurde verweigert",
+                        getString(R.string.altimeter_location_permission_denied_toast),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -228,7 +228,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
         } else {
             location.altitude
         }
-        
+
         // Fetch QNH if not done yet
         if (dynamicSeaLevelPressure == 1013.25) {
             fetchQnh(location.latitude, location.longitude)
@@ -245,7 +245,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                     val connection = url.openConnection() as HttpURLConnection
                     connection.requestMethod = "GET"
                     connection.connect()
-                    
+
                     if (connection.responseCode == 200) {
                         val response = connection.inputStream.bufferedReader().readText()
                         val json = JsonParser.parseString(response).asJsonObject
@@ -259,8 +259,8 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                     dynamicSeaLevelPressure = it
                     isQnhFetched = true
                     binding.statusText.text = String.format(
-                        Locale.GERMAN,
-                        "🌤️ Referenzdruck (QNH) aktualisiert: %.1f hPa\n🎯 Barometer-Genauigkeit verbessert",
+                        Locale.getDefault(),
+                        getString(R.string.altimeter_qnh_updated_status),
                         it
                     )
                     // Trigger redraw of barometer altitude
@@ -268,8 +268,8 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                         if (referenceAltitude == null) {
                             barometerAltitude = calculateAltitudeFromPressure(p)
                             binding.barometerAltitudeText.text = String.format(
-                                Locale.GERMAN,
-                                "%.1f m (QNH-basiert)",
+                                Locale.getDefault(),
+                                getString(R.string.altimeter_qnh_based_format),
                                 barometerAltitude
                             )
                         }
@@ -293,19 +293,19 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
         val accuracyInfo = if (location.hasAccuracy()) {
             val acc = location.accuracy
             when {
-                acc < 10 -> "sehr gut"
-                acc < 50 -> "gut"
-                acc < 100 -> "mittel"
-                acc < 200 -> "schlecht"
-                else -> "sehr schlecht"
+                acc < 10 -> getString(R.string.altimeter_accuracy_very_good)
+                acc < 50 -> getString(R.string.altimeter_accuracy_good)
+                acc < 100 -> getString(R.string.altimeter_accuracy_medium)
+                acc < 200 -> getString(R.string.altimeter_accuracy_poor)
+                else -> getString(R.string.altimeter_accuracy_very_poor)
             }
         } else {
-            "unbekannt"
+            getString(R.string.altimeter_accuracy_unknown)
         }
 
         binding.gpsAltitudeText.text = String.format(
-            Locale.GERMAN,
-            "%.0f m",
+            Locale.getDefault(),
+            getString(R.string.altimeter_meters_format),
             gpsAltitude
         )
 
@@ -313,8 +313,8 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
         if (location.hasAccuracy()) {
             val acc = location.accuracy
             binding.accuracyText.text = String.format(
-                Locale.GERMAN,
-                "GPS-Genauigkeit: ± %.0f m (%s)\n⚠️ GPS-Höhe ist oft ungenau!",
+                Locale.getDefault(),
+                getString(R.string.altimeter_gps_accuracy_format),
                 acc,
                 accuracyInfo
             )
@@ -323,7 +323,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                 else android.graphics.Color.parseColor("#999999")
             )
         } else {
-            binding.accuracyText.text = "GPS-Genauigkeit: unbekannt\n⚠️ GPS-Höhe ist oft ungenau!"
+            binding.accuracyText.text = getString(R.string.altimeter_gps_accuracy_unknown)
             binding.accuracyText.setTextColor(android.graphics.Color.parseColor("#ff6b6b"))
         }
 
@@ -337,10 +337,10 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
 
         if (pressureSensor != null) {
             if (referenceAltitude != null) {
-                binding.statusText.text = "✅ Barometer kalibriert\n🎯 Nutze Barometer für genaue Höhe"
+                binding.statusText.text = getString(R.string.altimeter_barometer_calibrated_status)
             }
         } else {
-            binding.statusText.text = "⚠️ Nur GPS verfügbar"
+            binding.statusText.text = getString(R.string.altimeter_gps_only_status)
         }
     }
 
@@ -351,8 +351,8 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
             currentPressure = event.values[0]
 
             binding.pressureText.text = String.format(
-                Locale.GERMAN,
-                "%.1f hPa",
+                Locale.getDefault(),
+                getString(R.string.altimeter_pressure_format),
                 currentPressure
             )
 
@@ -360,17 +360,17 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                 barometerAltitude = calculateCalibratedAltitude(currentPressure!!)
 
                 binding.barometerAltitudeText.text = String.format(
-                    Locale.GERMAN,
-                    "%.1f m (kalibriert)",
+                    Locale.getDefault(),
+                    getString(R.string.altimeter_calibrated_format),
                     barometerAltitude
                 )
             } else {
                 barometerAltitude = calculateAltitudeFromPressure(currentPressure!!)
 
-                val label = if (isQnhFetched) "QNH-basiert" else "nicht kalibriert"
+                val label = if (isQnhFetched) getString(R.string.altimeter_qnh_based_label) else getString(R.string.altimeter_not_calibrated_label)
                 binding.barometerAltitudeText.text = String.format(
-                    Locale.GERMAN,
-                    "%.1f m (%s)",
+                    Locale.getDefault(),
+                    getString(R.string.altimeter_uncalibrated_format),
                     barometerAltitude,
                     label
                 )
@@ -388,7 +388,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
 
         Toast.makeText(
             this,
-            "✅ Barometer kalibriert auf ${altitude.toInt()}m",
+            String.format(Locale.getDefault(), getString(R.string.altimeter_calibrated_toast), altitude.toInt()),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -413,8 +413,8 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
 
         altitude?.let {
             binding.altitudeText.text = String.format(
-                Locale.GERMAN,
-                "%.0f m",
+                Locale.getDefault(),
+                getString(R.string.altimeter_meters_format),
                 it
             )
         }

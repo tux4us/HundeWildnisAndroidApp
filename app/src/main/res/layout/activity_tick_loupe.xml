@@ -49,7 +49,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"
-                android:text="🌡️ Wärmebild" />
+                android:text="@string/tick_loupe_filter_thermal" />
 
             <FrameLayout
                 android:id="@+id/cameraContainer"
@@ -76,7 +76,7 @@
                     android:background="#CCBD0000"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
-                    android:text="⏸ EINGEFROREN"
+                    android:text="@string/tick_loupe_frozen_overlay_label"
                     android:visibility="gone" />
             </FrameLayout>
 
@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Kamera langsam über das Fell führen. Zecken erscheinen im Wärmebild als dunkle Punkte."
+                android:text="@string/tick_loupe_hint_text"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="12sp"
                 android:textAlignment="center"

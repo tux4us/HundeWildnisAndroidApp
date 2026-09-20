@@ -140,7 +140,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Navigation und Orte"
+            title = getString(R.string.location_activity_title)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -171,8 +171,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         navBottomSheet.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED  -> binding.tvNavExpandHint.text = "▼  Details ausblenden"
-                    BottomSheetBehavior.STATE_COLLAPSED -> binding.tvNavExpandHint.text = "▲  Details anzeigen"
+                    BottomSheetBehavior.STATE_EXPANDED  -> binding.tvNavExpandHint.text = getString(R.string.nav_details_hide)
+                    BottomSheetBehavior.STATE_COLLAPSED -> binding.tvNavExpandHint.text = getString(R.string.nav_details_show)
                     else -> {}
                 }
             }
@@ -599,8 +599,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         if (routeData.elevationPoints.isNotEmpty()) {
             binding.tvAscentValue.text       = "+${routeData.totalAscent.toInt()} m"
             binding.tvDescentValue.text      = "−${routeData.totalDescent.toInt()} m"
-            binding.tvMinElevationValue.text = "${routeData.minElevation.toInt()} m ü.NN"
-            binding.tvMaxElevationValue.text = "${routeData.maxElevation.toInt()} m ü.NN"
+            binding.tvMinElevationValue.text = getString(R.string.elevation_above_sea_level, routeData.minElevation.toInt())
+            binding.tvMaxElevationValue.text = getString(R.string.elevation_above_sea_level, routeData.maxElevation.toInt())
         } else {
             binding.tvAscentValue.text       = "—"
             binding.tvDescentValue.text      = "—"
@@ -657,7 +657,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.wayTypeInfoContainer.removeAllViews()
 
         if (surfaces.isEmpty()) {
-            addPlaceholderText(binding.surfaceInfoContainer, "Keine Daten von Routing-Service")
+            addPlaceholderText(binding.surfaceInfoContainer, getString(R.string.no_data_from_routing_service))
         } else {
             surfaces.sortedByDescending { it.percentage }.take(5).forEach { s ->
                 addSurfaceRow(binding.surfaceInfoContainer, s.emoji, s.name, s.percentage, s.distance,
@@ -666,7 +666,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         }
 
         if (wayTypes.isEmpty()) {
-            addPlaceholderText(binding.wayTypeInfoContainer, "Keine Daten von Routing-Service")
+            addPlaceholderText(binding.wayTypeInfoContainer, getString(R.string.no_data_from_routing_service))
         } else {
             wayTypes.sortedByDescending { it.percentage }.take(4).forEach { w ->
                 addSurfaceRow(binding.wayTypeInfoContainer, w.emoji, w.name, w.percentage, w.distance,
@@ -748,7 +748,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private fun drawRouteOSRM(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
         val appSettings = AppSettings(this)
         if (!appSettings.hasCustomOrsKey()) {
-            Toast.makeText(this, "ℹ️ Für präzises Routing bitte ORS-Key in den Einstellungen (Zahnrad oben) hinterlegen.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.ors_key_hint_toast), Toast.LENGTH_LONG).show()
         }
         isRerouting = true
         lifecycleScope.launch {
@@ -818,7 +818,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     put("waytype")   // ← Singular! Nicht "waytypes" oder "way_types"
                 })
             }
-            put("language", "de")
+            put("language", LanguageManager.getCurrentLanguage().tag)
         }
 
         val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
@@ -893,7 +893,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     val item = arr.getJSONObject(i)
                     val code = item.getInt("value")
                     surfaceSummary.add(SurfaceSummary(
-                        code = code, name = RouteInfoHelper.getSurfaceName(code),
+                        code = code, name = RouteInfoHelper.getSurfaceName(this, code),
                         emoji = RouteInfoHelper.getSurfaceEmoji(code),
                         distance = item.getDouble("distance"), percentage = item.getDouble("amount")
                     ))
@@ -906,7 +906,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     val item = arr.getJSONObject(i)
                     val code = item.getInt("value")
                     wayTypeSummary.add(SurfaceSummary(
-                        code = code, name = RouteInfoHelper.getWayTypeName(code),
+                        code = code, name = RouteInfoHelper.getWayTypeName(this, code),
                         emoji = RouteInfoHelper.getWayTypeEmoji(code),
                         distance = item.getDouble("distance"), percentage = item.getDouble("amount")
                     ))
@@ -1017,16 +1017,16 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val tiles = mutableListOf<StartTile>()
 
         // Favoriten
-        tiles.add(StartTile("poi_fav", label = "Favoriten", emoji = "⭐"))
+        tiles.add(StartTile("poi_fav", label = getString(R.string.poi_favorites), emoji = "⭐"))
 
         // Gewitterschutz direkt danach – prominente Position, da sicherheitsrelevant
-        val thunderstormCategory = POICategories.ALL_CATEGORIES.find { it.name == "Gewitterschutz" }
-        thunderstormCategory?.let { tiles.add(StartTile(it.name, label = it.name, emoji = it.icon)) }
+        val thunderstormCategory = POICategories.ALL_CATEGORIES.find { it.key == POICategories.KEY_THUNDERSTORM_SHELTER }
+        thunderstormCategory?.let { tiles.add(StartTile(it.key, label = it.displayName(this), emoji = it.icon)) }
 
         // Restliche Kategorien (Gewitterschutz hier auslassen, da schon oben platziert)
         POICategories.ALL_CATEGORIES.forEach { category ->
-            if (category.name != "Gewitterschutz") {
-                tiles.add(StartTile(category.name, label = category.name, emoji = category.icon))
+            if (category.key != POICategories.KEY_THUNDERSTORM_SHELTER) {
+                tiles.add(StartTile(category.key, label = category.displayName(this), emoji = category.icon))
             }
         }
 
@@ -1040,10 +1040,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 if (id == "poi_fav") {
                     loadFavorites()
                 } else {
-                    val cat = POICategories.ALL_CATEGORIES.find { it.name == id }
+                    val cat = POICategories.ALL_CATEGORIES.find { it.key == id }
                     cat?.let {
                         selectedCategory = it
-                        if (it.name == "Gewitterschutz") {
+                        if (it.key == POICategories.KEY_THUNDERSTORM_SHELTER) {
                             loadPOIsForCategory(it, radiusMeters = 5000)
                             showThunderstormShelterHint()
                         } else {
@@ -1069,13 +1069,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("⛈️ Gewitterschutz")
-            .setMessage(
-                "Angezeigt werden feste, geschlossene Gebäude in der Nähe (Hütten, Gasthäuser, Supermärkte u. ä.).\n\n" +
-                        "Vor Ort prüfen: Nur Gebäude mit durchgehenden Wänden und Dach bieten Schutz. Offene Schutzhütten oder Pavillons zählen NICHT dazu.\n\n" +
-                        "Brücken (🌉): Die 5 nächstgelegenen werden ANGEZEIGT, aber NICHT geprüft. Ob eine Brücke tatsächlich Schutz bietet, hängt stark vom Einzelfall ab – Geländeform, umliegende Hänge/Bäume, Nähe zu Gewässern. Diese Einschätzung musst Du vor Ort selbst treffen. Unterführungen sind bewusst nicht enthalten, da der DWD sie als Überflutungs-Gefahrenbereich nennt."
-            )
-            .setPositiveButton("Verstanden") { dialog, _ -> dialog.dismiss() }
+            .setTitle(getString(R.string.thunderstorm_shelter_dialog_title))
+            .setMessage(getString(R.string.thunderstorm_shelter_dialog_message))
+            .setPositiveButton(getString(R.string.thunderstorm_shelter_dialog_positive)) { dialog, _ -> dialog.dismiss() }
             .create()
             .apply {
                 show()
@@ -1088,7 +1084,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             binding.poiProgressBar.visibility = View.VISIBLE
             binding.categoryView.visibility = View.GONE
             binding.poiListView.visibility = View.VISIBLE
-            binding.categoryTitleText.text = "${category.icon} ${category.name}"
+            binding.categoryTitleText.text = "${category.icon} ${category.displayName(this)}"
 
             lifecycleScope.launch {
                 try {
@@ -1101,7 +1097,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     // Kommentar) – jede Brücke bekommt stattdessen einen deutlichen
                     // Warnhinweis, da Eignung stark vom Einzelfall abhängt. Fehler hier
                     // dürfen die restliche, bereits geladene POI-Liste nicht blockieren.
-                    if (category.name == "Gewitterschutz") {
+                    if (category.key == POICategories.KEY_THUNDERSTORM_SHELTER) {
                         try {
                             val bridges = withContext(Dispatchers.IO) {
                                 BridgeExposureFilter.fetchNearbyBridges(location.latitude, location.longitude, radiusMeters)
@@ -1113,7 +1109,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                                     POI(
                                         id = "bridge_${bridge.id}",
                                         name = "🌉 ${bridge.name}",
-                                        category = category.name,
+                                        category = category.displayName(this@LocationActivity),
+                                        categoryKey = category.key,
                                         categoryIcon = "🌉",
                                         lat = bridge.centerLat,
                                         lon = bridge.centerLon,
@@ -1121,7 +1118,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                                         bearing = bearing,
                                         direction = DirectionUtils.bearingToDirection(bearing),
                                         directionArrow = DirectionUtils.bearingToArrow(bearing),
-                                        description = "⚠️ UNGEPRÜFT: Diese Brücke wurde NICHT auf Eignung als Gewitterschutz geprüft. Vor Ort einschätzen: Liegt die Fahrbahn tiefer als die nähere Umgebung (Berge/Bäume ringsum, kein exponierter Hochpunkt)? Besteht Überflutungsgefahr durch angrenzendes Gewässer bei Starkregen? Im Zweifel meiden und festes Gebäude aufsuchen."
+                                        description = getString(R.string.bridge_unchecked_warning)
                                     )
                                 )
                             }
@@ -1134,17 +1131,17 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     poiList.clear(); poiList.addAll(sorted)
                     binding.poiRecyclerView.adapter = POIAdapter(poiList) { poi -> showPointInfoDialog(poi.lat, poi.lon, poi) }
                     val radiusKm = radiusMeters / 1000
-                    binding.poiCountText.text = "${pois.size} POI in $radiusKm km"
+                    binding.poiCountText.text = getString(R.string.poi_count_in_radius, pois.size, radiusKm)
                     binding.poiProgressBar.visibility = View.GONE
                     binding.emptyPoiText.visibility = if (pois.isEmpty()) View.VISIBLE else View.GONE
-                    if (pois.isEmpty()) binding.emptyPoiText.text = "Keine ${category.name} im Umkreis von $radiusKm km gefunden"
+                    if (pois.isEmpty()) binding.emptyPoiText.text = getString(R.string.poi_none_found_in_radius, category.displayName(this@LocationActivity), radiusKm)
                     showPOIsOnMap(sorted, category)
                 } catch (e: Exception) {
                     binding.poiProgressBar.visibility = View.GONE
-                    Toast.makeText(this@LocationActivity, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LocationActivity, getString(R.string.error_generic, e.message), Toast.LENGTH_LONG).show()
                 }
             }
-        } ?: Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
+        } ?: Toast.makeText(this, getString(R.string.location_not_yet_available), Toast.LENGTH_SHORT).show()
     }
 
     private fun showCategoryView() {
@@ -1289,7 +1286,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             out body; >; out skel qt;
         """.trimIndent()
 
-        val json     = OverpassHelper.queryWithRetry(overpassQuery) ?: throw Exception("Overpass API nicht erreichbar")
+        val json     = OverpassHelper.queryWithRetry(overpassQuery) ?: throw Exception(getString(R.string.overpass_api_unreachable))
         val elements = json.getJSONArray("elements")
         val pois     = mutableListOf<POI>()
 
@@ -1334,11 +1331,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val poiLon = element.getDouble("lon")
         val tags   = parseTags(element)
         val subtype = deriveSubtype(tags)
-        val name   = tags["name"] ?: tags["ref"] ?: subtype ?: category.name
+        val name   = tags["name"] ?: tags["ref"] ?: subtype ?: category.displayName(this)
         val dist   = calculateDistance(userLat, userLon, poiLat, poiLon)
         val bearing = DirectionUtils.calculateBearing(userLat, userLon, poiLat, poiLon)
         return POI(
-            id = element.getString("id"), name = name, category = category.name, categoryIcon = category.icon,
+            id = element.getString("id"), name = name, category = category.displayName(this), categoryKey = category.key, categoryIcon = category.icon,
             subtype = subtype,
             lat = poiLat, lon = poiLon, distance = dist, tags = tags,
             bearing = bearing, direction = DirectionUtils.bearingToDirection(bearing),
@@ -1390,11 +1387,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val centerLat = sumLat / count; val centerLon = sumLon / count
         val tags      = parseTags(element)
         val subtype   = deriveSubtype(tags)
-        val name      = tags["name"] ?: tags["ref"] ?: subtype ?: category.name
+        val name      = tags["name"] ?: tags["ref"] ?: subtype ?: category.displayName(this)
         val dist      = calculateDistance(userLat, userLon, centerLat, centerLon)
         val bearing   = DirectionUtils.calculateBearing(userLat, userLon, centerLat, centerLon)
         return POI(
-            id = element.getString("id"), name = name, category = category.name, categoryIcon = category.icon,
+            id = element.getString("id"), name = name, category = category.displayName(this), categoryKey = category.key, categoryIcon = category.icon,
             subtype = subtype,
             lat = centerLat, lon = centerLon, distance = dist, tags = tags,
             bearing = bearing, direction = DirectionUtils.bearingToDirection(bearing),
@@ -1432,36 +1429,36 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private fun deriveSubtype(tags: Map<String, String>): String? {
         tags["emergency"]?.let { value ->
             return when (value) {
-                "defibrillator"      -> "Defibrillator (AED)"
-                "ambulance_station"  -> "Rettungswache"
-                "mountain_rescue"    -> "Bergrettung"
-                "access_point"       -> "Rettungspunkt"
-                "first_aid_kit"      -> "Erste-Hilfe-Kasten"
-                "lifeguard"          -> "Rettungsschwimmer"
-                "phone"              -> "Notruftelefon"
-                "fire_hydrant"       -> "Hydrant"
-                "assembly_point"     -> "Sammelplatz"
-                "water_rescue"       -> "Wasserrettung"
+                "defibrillator"      -> getString(R.string.subtype_defibrillator)
+                "ambulance_station"  -> getString(R.string.subtype_ambulance_station)
+                "mountain_rescue"    -> getString(R.string.subtype_mountain_rescue)
+                "access_point"       -> getString(R.string.subtype_access_point)
+                "first_aid_kit"      -> getString(R.string.subtype_first_aid_kit)
+                "lifeguard"          -> getString(R.string.subtype_lifeguard)
+                "phone"              -> getString(R.string.subtype_emergency_phone)
+                "fire_hydrant"       -> getString(R.string.subtype_fire_hydrant)
+                "assembly_point"     -> getString(R.string.subtype_assembly_point)
+                "water_rescue"       -> getString(R.string.subtype_water_rescue)
                 else                 -> value.replace('_', ' ').replaceFirstChar { it.uppercase() }
             }
         }
         tags["healthcare"]?.let { value ->
             return when (value) {
-                "hospital"  -> "Krankenhaus"
-                "clinic"    -> "Klinik"
-                "pharmacy"  -> "Apotheke"
-                "dentist"   -> "Zahnarzt"
-                "doctor"    -> "Arztpraxis"
+                "hospital"  -> getString(R.string.subtype_hospital)
+                "clinic"    -> getString(R.string.subtype_clinic)
+                "pharmacy"  -> getString(R.string.subtype_pharmacy)
+                "dentist"   -> getString(R.string.subtype_dentist)
+                "doctor"    -> getString(R.string.subtype_doctor_practice)
                 else        -> value.replace('_', ' ').replaceFirstChar { it.uppercase() }
             }
         }
         tags["amenity"]?.let { value ->
             when (value) {
-                "rescue_station" -> return "Rettungsstation"
-                "hospital"       -> return "Krankenhaus"
-                "doctors"        -> return "Arztpraxis"
-                "pharmacy"       -> return "Apotheke"
-                "veterinary"     -> return "Tierarzt"
+                "rescue_station" -> return getString(R.string.subtype_rescue_station)
+                "hospital"       -> return getString(R.string.subtype_hospital)
+                "doctors"        -> return getString(R.string.subtype_doctor_practice)
+                "pharmacy"       -> return getString(R.string.subtype_pharmacy)
+                "veterinary"     -> return getString(R.string.subtype_veterinarian)
             }
         }
         return null
@@ -1518,7 +1515,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             }
 
         if (searchLoc == null) {
-            Toast.makeText(this, "Standort wird noch ermittelt...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.location_still_determining), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -1532,14 +1529,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 }
                 binding.progressSearch.visibility = View.GONE
                 if (results.isEmpty()) {
-                    Toast.makeText(this@LocationActivity, "Keine Ergebnisse für '$query' in der Nähe gefunden", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LocationActivity, getString(R.string.search_no_results_nearby, query), Toast.LENGTH_SHORT).show()
                 } else {
                     displaySearchResults(results)
-                    Toast.makeText(this@LocationActivity, "${results.size} Ergebnis(se) gefunden", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LocationActivity, getString(R.string.search_results_found, results.size), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 binding.progressSearch.visibility = View.GONE
-                Toast.makeText(this@LocationActivity, "Suche fehlgeschlagen: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LocationActivity, getString(R.string.search_failed, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -1627,7 +1624,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 else             -> continue
             }
             val tags     = el.optJSONObject("tags") ?: JSONObject()
-            val name     = tags.optString("name").ifEmpty { tags.optString("brand").ifEmpty { tags.optString("operator").ifEmpty { "Unbenannt" } } }
+            val name     = tags.optString("name").ifEmpty { tags.optString("brand").ifEmpty { tags.optString("operator").ifEmpty { getString(R.string.poi_unnamed) } } }
             val icon     = when {
                 tags.optString("shop") == "supermarket" -> "🛒"
                 tags.optString("shop") == "bakery"      -> "🥖"
@@ -1637,7 +1634,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 tags.has("shop")                        -> "🏪"
                 else                                    -> "🔍"
             }
-            results.add(POI(id = el.optLong("id", 0).toString(), name = name, category = "Suchergebnis", categoryIcon = icon,
+            results.add(POI(id = el.optLong("id", 0).toString(), name = name, category = getString(R.string.poi_cat_search_result), categoryKey = "search_result", categoryIcon = icon,
                 lat = pLat, lon = pLon, distance = userGeo.distanceToAsDouble(GeoPoint(pLat, pLon))))
         }
         return results.sortedBy { it.distance }
@@ -1653,8 +1650,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             val pLon  = item.optString("lon").toDoubleOrNull() ?: continue
             val dist  = userGeo.distanceToAsDouble(GeoPoint(pLat, pLon))
             if (dist > radius) continue
-            val name  = item.optString("display_name", "").split(",").firstOrNull()?.trim() ?: "Unbenannt"
-            results.add(POI(id = item.optString("place_id", i.toString()), name = name, category = "Suchergebnis", categoryIcon = "🔍",
+            val name  = item.optString("display_name", "").split(",").firstOrNull()?.trim() ?: getString(R.string.poi_unnamed)
+            results.add(POI(id = item.optString("place_id", i.toString()), name = name, category = getString(R.string.poi_cat_search_result), categoryKey = "search_result", categoryIcon = "🔍",
                 lat = pLat, lon = pLon, distance = dist, address = item.optString("display_name")))
         }
         return results.sortedBy { it.distance }
@@ -1667,7 +1664,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             val marker = Marker(binding.mapView).apply {
                 position = GeoPoint(poi.lat, poi.lon)
                 title   = "${poi.categoryIcon} ${poi.name}"
-                snippet = "📍 ${"%.0f".format(poi.distance)}m entfernt\n${poi.address ?: ""}"
+                snippet = getString(R.string.poi_distance_away_with_address, "%.0f".format(poi.distance), poi.address ?: "")
                 icon    = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
                 setOnMarkerClickListener { _, _ -> showPointInfoDialog(poi.lat, poi.lon, poi); true }
             }
@@ -1681,8 +1678,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         poiList.clear()
         poiList.addAll(resultsCopy)
         binding.poiRecyclerView.adapter?.notifyDataSetChanged()
-        binding.categoryTitleText.text = "🔍 Suchergebnisse"
-        binding.poiCountText.text      = "${resultsCopy.size} Ergebnis(se) in 20 km"
+        binding.categoryTitleText.text = getString(R.string.search_results_title)
+        binding.poiCountText.text      = getString(R.string.search_results_count_in_radius, resultsCopy.size)
         binding.emptyPoiText.visibility = View.GONE
         binding.categoryView.visibility = View.GONE
         binding.poiListView.visibility  = View.VISIBLE
@@ -1709,7 +1706,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun showNavigationDialog(poi: POI) {
         val myLoc = myLocationOverlay.myLocation ?: run {
-            Toast.makeText(this, "Standort nicht verfügbar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.location_not_available), Toast.LENGTH_SHORT).show()
             return
         }
         val isDark      = (resources.configuration.uiMode and
@@ -1723,13 +1720,13 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val dialog = AlertDialog.Builder(this)
             .setTitle("${poi.categoryIcon} ${poi.name}")
             .setMessage(
-                "📍 ${"%.0f".format(distance)}m entfernt\n\n" +
-                        "${poi.address?.let { "📬 $it\n\n" } ?: ""}" +
-                        "Navigation starten?"
+                getString(R.string.poi_distance_away_short, "%.0f".format(distance)) + "\n\n" +
+                        "${poi.address?.let { getString(R.string.poi_address_line, it) + "\n\n" } ?: ""}" +
+                        getString(R.string.start_navigation_question)
             )
-            .setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(poi) }
-            .setNeutralButton(if (alreadyFav) "✓ In Favoriten" else "⭐ Favorit") { _, _ -> }
-            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton(getString(R.string.start_navigation_button)) { _, _ -> startNavigationToPOI(poi) }
+            .setNeutralButton(if (alreadyFav) getString(R.string.in_favorites_checked) else getString(R.string.favorite_button)) { _, _ -> }
+            .setNegativeButton(getString(R.string.cancel_button), null)
             .create()
 
         dialog.show()
@@ -1747,10 +1744,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     this,
                     buildFavoritePOI(poi.lat, poi.lon, poi.name, poi.categoryIcon, poi.address)
                 )
-                neutralBtn.text = "✓ In Favoriten"
+                neutralBtn.text = getString(R.string.in_favorites_checked)
                 neutralBtn.setTextColor(android.graphics.Color.parseColor("#8FC357"))
                 neutralBtn.isEnabled = false
-                Toast.makeText(this, "⭐ Als Favorit gespeichert", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.saved_as_favorite_toast), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -1781,15 +1778,16 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     private fun shareLocation() {
         currentLocation?.let {
-            val text = "Mein aktueller Standort:\nhttps://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=15/${it.latitude}/${it.longitude}"
-            startActivity(Intent.createChooser(Intent().apply { action = Intent.ACTION_SEND; putExtra(Intent.EXTRA_TEXT, text); type = "text/plain" }, "Standort teilen über"))
-        } ?: Toast.makeText(this, "Standort noch nicht verfügbar", Toast.LENGTH_SHORT).show()
+            val mapUrl = "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=15/${it.latitude}/${it.longitude}"
+            val text = getString(R.string.my_current_location_share_text, mapUrl)
+            startActivity(Intent.createChooser(Intent().apply { action = Intent.ACTION_SEND; putExtra(Intent.EXTRA_TEXT, text); type = "text/plain" }, getString(R.string.share_location_via)))
+        } ?: Toast.makeText(this, getString(R.string.location_not_yet_available), Toast.LENGTH_SHORT).show()
     }
 
     private fun setupOSMCopyright() {
         binding.osmCopyrightText.setOnClickListener {
             val webView = WebView(this).apply { settings.javaScriptEnabled = true; webViewClient = WebViewClient(); loadUrl("https://www.openstreetmap.org/copyright") }
-            AlertDialog.Builder(this).setTitle("OpenStreetMap Lizenz").setView(webView).setPositiveButton("Schließen", null).show()
+            AlertDialog.Builder(this).setTitle(getString(R.string.osm_license_title)).setView(webView).setPositiveButton(getString(R.string.close), null).show()
         }
     }
 
@@ -1801,12 +1799,12 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val isDark       = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val buttonColor  = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            AlertDialog.Builder(this).setTitle("📍 Standortdienste aktivieren")
-                .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für Navigation, Wetteranzeige und weitere Funktionen.\n\nDeine Daten werden nur lokal verarbeitet und nicht an Dritte übermittelt.")
-                .setPositiveButton("AKTIVIEREN") { _, _ ->
+            AlertDialog.Builder(this).setTitle(getString(R.string.location_services_enable_title))
+                .setMessage(getString(R.string.location_services_enable_message))
+                .setPositiveButton(getString(R.string.enable_button)) { _, _ ->
                     ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
                 }
-                .setNegativeButton("ABLEHNEN", null)
+                .setNegativeButton(getString(R.string.decline_button), null)
                 .create().apply {
                     show()
                     getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
@@ -1832,7 +1830,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE &&
             grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocation()
-        else Toast.makeText(this, "Standortberechtigung benötigt", Toast.LENGTH_LONG).show()
+        else Toast.makeText(this, getString(R.string.location_permission_required), Toast.LENGTH_LONG).show()
     }
 
     private fun getLocation() {
@@ -1872,7 +1870,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val bgColor = if (isDark) Color.parseColor("#5a8038") else Color.parseColor("#2d5016")
         val heightPx = (56 * resources.displayMetrics.density).toInt()
         binding.btnBackToCategories.apply {
-            text = "← Zurück"; textSize = 16f
+            text = getString(R.string.back_arrow); textSize = 16f
             setTextColor(Color.WHITE); setBackgroundColor(bgColor)
             layoutParams = layoutParams.apply { width = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT; height = heightPx }
             setPadding(24, 12, 24, 12)
@@ -1912,7 +1910,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 POI(
                     id           = "nav_restored",
                     name         = NavigationForegroundService.destinationName,
-                    category     = "Navigation",
+                    category     = getString(R.string.poi_cat_navigation),
+                    categoryKey  = "navigation",
                     categoryIcon = "🧭",
                     lat          = NavigationForegroundService.savedDestLat,
                     lon          = NavigationForegroundService.savedDestLon,
@@ -1962,14 +1961,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         btnClearOrs.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("🗑️ Key löschen?")
-                .setMessage("Möchtest Du den gespeicherten API-Key wirklich entfernen?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.ors_key_delete_title))
+                .setMessage(getString(R.string.ors_key_delete_message))
+                .setPositiveButton(getString(R.string.delete_button)) { _, _ ->
                     appSettings.clearOrsApiKey()
                     orsEdit.setText("")
-                    Toast.makeText(this, "Key gelöscht", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.ors_key_deleted_toast), Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel_button), null)
                 .show()
         }
 
@@ -1992,9 +1991,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("⚙️ Einstellungen")
+            .setTitle(getString(R.string.settings_title))
             .setView(view)
-            .setPositiveButton("Fertig") { _, _ ->
+            .setPositiveButton(getString(R.string.done_button)) { _, _ ->
                 val newKey = orsEdit.text?.toString() ?: ""
                 if (newKey.isNotBlank() && newKey != "********") {
                     appSettings.saveOrsApiKey(newKey)
@@ -2008,14 +2007,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
-            .setTitle("ORS API Key")
-            .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
-                    "Anleitung:\n" +
-                    "1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n" +
-                    "2. Erstelle unter 'Tokens' einen neuen API-Key.\n" +
-                    "3. Kopiere diesen Key und füge ihn hier ein.\n\n" +
-                    "Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie angezeigt werden.")
-            .setPositiveButton("OK", null)
+            .setTitle(getString(R.string.ors_api_key_title))
+            .setMessage(getString(R.string.ors_api_key_info_message))
+            .setPositiveButton(getString(R.string.ok_button), null)
             .create()
             .apply {
                 show()
@@ -2070,30 +2064,30 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             }
 
             val (desc, icon) = when (code) {
-                0            -> "Klar"               to "☀️"
-                1            -> "Leicht bewölkt"     to "🌤️"
-                2            -> "Teilw. bewölkt"     to "⛅"
-                3            -> "Bewölkt"            to "☁️"
-                45, 48       -> "Nebel"              to "🌫️"
-                in 51..57    -> "Nieselregen"        to "🌦️"
-                in 61..67    -> "Regen"              to "🌧️"
-                in 71..77    -> "Schneefall"         to "🌨️"
-                in 80..82    -> "Regenschauer"       to "🌦️"
-                in 85..86    -> "Schneeschauer"      to "🌨️"
-                in 95..99    -> "Gewitter"           to "⛈️"
-                else         -> "Wetter $code"       to "🌡️"
+                0            -> getString(R.string.weather_desc_clear)               to "☀️"
+                1            -> getString(R.string.weather_desc_mostly_clear)        to "🌤️"
+                2            -> getString(R.string.weather_desc_partly_cloudy)       to "⛅"
+                3            -> getString(R.string.weather_desc_cloudy)              to "☁️"
+                45, 48       -> getString(R.string.weather_desc_fog)                 to "🌫️"
+                in 51..57    -> getString(R.string.weather_desc_light_drizzle)       to "🌦️"
+                in 61..67    -> getString(R.string.weather_desc_moderate_rain)       to "🌧️"
+                in 71..77    -> getString(R.string.weather_desc_moderate_snow)       to "🌨️"
+                in 80..82    -> getString(R.string.weather_desc_moderate_showers)    to "🌦️"
+                in 85..86    -> getString(R.string.weather_desc_light_snow_showers)  to "🌨️"
+                in 95..99    -> getString(R.string.weather_desc_thunderstorm)        to "⛈️"
+                else         -> getString(R.string.weather_desc_code_unknown, code)  to "🌡️"
             }
 
             // Ankunftszeit formatieren
-            val arrivalTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.GERMAN)
+            val arrivalTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
                 .format(java.util.Date(arrivalTimeMs))
 
             binding.tvWeatherIcon.text         = icon
             binding.tvWeatherDesc.text         = desc
-            binding.tvWeatherArrivalLabel.text = "Ankunft ~$arrivalTime Uhr"
+            binding.tvWeatherArrivalLabel.text = getString(R.string.weather_arrival_label, arrivalTime)
             binding.tvWeatherTemp.text         = "${"%.1f".format(temp)}°C"
             binding.tvWeatherPrecip.text       = "$precip%"
-            binding.tvWeatherWind.text         = "${"%.0f".format(windKmh)} km/h\nBft $beaufort"
+            binding.tvWeatherWind.text         = getString(R.string.weather_wind_beaufort, "%.0f".format(windKmh), beaufort)
             binding.tvWeatherHumidity.text     = "$hum%"
 
             // ── NEU: Wetter-Snapshot für Geländeanalyse merken + Card aktualisieren ──
@@ -2103,7 +2097,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             // Sonnenauf-/untergang
             // NEU — alle verfügbaren Tage auslesen:
             val daily   = data.getJSONObject("daily")
-            val timeFmt = java.text.SimpleDateFormat("HH:mm", java.util.Locale.GERMAN)
+            val timeFmt = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
             val dateFmt = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm", java.util.Locale.GERMAN)
 
             val sunriseArr = daily.getJSONArray("sunrise")
@@ -2122,8 +2116,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 // Card-Anzeige: nächster Sonnenauf-/-untergang ab jetzt
             val displaySunriseMs = sunriseTimes.firstOrNull { it > now } ?: sunriseTimes.firstOrNull()
             val displaySunsetMs  = sunsetTimes.firstOrNull  { it > now } ?: sunsetTimes.firstOrNull()
-            displaySunriseMs?.let { binding.tvWeatherSunrise.text = "🌅 ${timeFmt.format(java.util.Date(it))} Uhr" }
-            displaySunsetMs?.let  { binding.tvWeatherSunset.text  = "🌇 ${timeFmt.format(java.util.Date(it))} Uhr" }
+            displaySunriseMs?.let { binding.tvWeatherSunrise.text = getString(R.string.weather_sunrise_time, timeFmt.format(java.util.Date(it))) }
+            displaySunsetMs?.let  { binding.tvWeatherSunset.text  = getString(R.string.weather_sunset_time, timeFmt.format(java.util.Date(it))) }
 
 // Licht-Situation bei Ankunft:
 // Welcher Sonnenauf-/-untergang liegt zuletzt VOR der Ankunftszeit?
@@ -2146,30 +2140,30 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 when {
                     nextSunriseAfterNow != null &&
                             arrivalTimeMs in nextSunriseAfterNow..(nextSunriseAfterNow + 30 * 60000L) -> {
-                        safetyText  = "🌅 Ankunft kurz nach Sonnenaufgang"
+                        safetyText  = getString(R.string.weather_arrival_shortly_after_sunrise)
                         safetyColor = Color.parseColor("#FFA726")
                     }
                     nextSunsetAfterNow != null &&
                             arrivalTimeMs in (nextSunsetAfterNow - 30 * 60000L)..nextSunsetAfterNow -> {
-                        safetyText  = "🌇 Ankunft kurz vor Sonnenuntergang"
+                        safetyText  = getString(R.string.weather_arrival_shortly_before_sunset)
                         safetyColor = Color.parseColor("#FFA726")
                     }
                     else -> {
-                        safetyText  = "☀️ Ankunft bei Tageslicht"
+                        safetyText  = getString(R.string.weather_arrival_in_daylight)
                         safetyColor = Color.parseColor("#8FC357")
                     }
                 }
             } else {
                 if (nextSunriseAfterNow != null && nextSunriseAfterNow > arrivalTimeMs) {
                     val diff = ((nextSunriseAfterNow - arrivalTimeMs) / 60000).toInt()
-                    safetyText  = "🌙 Ankunft $diff Min vor Sonnenaufgang — Dunkel!"
+                    safetyText  = getString(R.string.weather_arrival_before_sunrise_dark, diff)
                     safetyColor = Color.parseColor("#FF7043")
                 } else if (lastSunsetBeforeArrival != null) {
                     val diff = ((arrivalTimeMs - lastSunsetBeforeArrival) / 60000).toInt()
-                    safetyText  = "🌙 Ankunft $diff Min nach Sonnenuntergang — Dunkel!"
+                    safetyText  = getString(R.string.weather_arrival_after_sunset_dark, diff)
                     safetyColor = Color.parseColor("#FF7043")
                 } else {
-                    safetyText  = "🌙 Ankunft im Dunkeln"
+                    safetyText  = getString(R.string.weather_arrival_in_the_dark)
                     safetyColor = Color.parseColor("#FF7043")
                 }
             }
@@ -2279,21 +2273,22 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             poi.openingHours?.let { msg.append("🕐 $it\n") }
             poi.description?.let  { msg.append("\nℹ️ $it\n") }
             msg.append("\n📍 ${"%.5f".format(tapLat)}, ${"%.5f".format(tapLon)}")
-            msg.append("\n📏 ${formatDistance(poi.distance)} entfernt")
+            msg.append(getString(R.string.poi_distance_away, formatDistance(poi.distance)))
         } else {
-            title = "📍 Gewählter Punkt"
-            msg.append("Kein benannter Ort in 50 m gefunden.\n\n")
+            title = getString(R.string.selected_point_title)
+            msg.append(getString(R.string.no_named_place_found_in_50m)).append("\n\n")
             msg.append("📍 ${"%.5f".format(tapLat)}, ${"%.5f".format(tapLon)}")
             val dist = currentLocation?.let {
                 calculateDistance(it.latitude, it.longitude, tapLat, tapLon)
             } ?: 0.0
-            msg.append("\n📏 ${formatDistance(dist)} entfernt")
+            msg.append(getString(R.string.poi_distance_away, formatDistance(dist)))
         }
 
         val navTarget = POI(
             id = "tap_${System.currentTimeMillis()}",
-            name = poi?.name ?: "Gewählter Punkt",
-            category = poi?.category ?: "Kartenpunkt",
+            name = poi?.name ?: getString(R.string.selected_point_title_plain),
+            category = poi?.category ?: getString(R.string.map_point_category),
+            categoryKey = poi?.categoryKey ?: "map_point",
             categoryIcon = poi?.categoryIcon ?: "📍",
             lat = tapLat, lon = tapLon,
             distance = currentLocation?.let {
@@ -2309,23 +2304,23 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         if (isNavigating) {
             // Drei-Button-Lösung für Navigation:
-            builder.setPositiveButton("🏁 Neues Ziel") { _, _ ->
+            builder.setPositiveButton(getString(R.string.new_destination_button)) { _, _ ->
                 stopNavigation()
                 startNavigationToPOI(navTarget)
             }
-            builder.setNeutralButton("🧭 Zwischenziel") { _, _ ->
+            builder.setNeutralButton(getString(R.string.waypoint_button)) { _, _ ->
                 addWaypointToNavigation(navTarget)
             }
-            builder.setNegativeButton("Abbrechen", null)
+            builder.setNegativeButton(getString(R.string.cancel_button), null)
         } else {
-            builder.setPositiveButton("Navigation starten") { _, _ -> startNavigationToPOI(navTarget) }
-            builder.setNeutralButton(if (alreadyFav) "✓ In Favoriten" else "⭐ Favorit") { _, _ ->
+            builder.setPositiveButton(getString(R.string.start_navigation_button)) { _, _ -> startNavigationToPOI(navTarget) }
+            builder.setNeutralButton(if (alreadyFav) getString(R.string.in_favorites_checked) else getString(R.string.favorite_button)) { _, _ ->
                 if (!alreadyFav) {
                     FavoritesManager.add(this, buildFavoritePOI(tapLat, tapLon, navTarget.name, navTarget.categoryIcon, poi?.address))
-                    Toast.makeText(this, "⭐ Als Favorit gespeichert", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.saved_as_favorite_toast), Toast.LENGTH_SHORT).show()
                 }
             }
-            builder.setNegativeButton("Abbrechen", null)
+            builder.setNegativeButton(getString(R.string.cancel_button), null)
         }
 
         val dialog = builder.create()
@@ -2409,7 +2404,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         for (i in 0 until elements.length()) {
             val el   = elements.getJSONObject(i)
             val tags = parseTags(el)
-            val (icon, catName) = getRoutePOIInfo(tags) ?: continue
+            val (icon, catKey) = getRoutePOIInfo(tags) ?: continue
+            val catName = RoutePOITypes.displayName(this, catKey)
 
             val elLat: Double; val elLon: Double
             when (el.getString("type")) {
@@ -2422,7 +2418,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             }
 
             val name = tags["name"] ?: catName
-            val key  = "${"%.4f".format(elLat)},${"%.4f".format(elLon)},$catName"
+            val key  = "${"%.4f".format(elLat)},${"%.4f".format(elLon)},$catKey"
             if (key in seen) continue
             seen.add(key)
 
@@ -2434,6 +2430,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 id           = el.optString("id", "$i"),
                 name         = name,
                 category     = catName,
+                categoryKey  = catKey,
                 categoryIcon = icon,
                 lat          = elLat, lon = elLon,
                 distance     = distToUser,
@@ -2448,27 +2445,29 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         return result.sortedBy { it.distance }
     }
 
+    // Liefert (Icon, stabiler Key) statt übersetzbarem Text. Anzeige erfolgt
+    // über RoutePOITypes.displayName(context, key).
     private fun getRoutePOIInfo(tags: Map<String, String>): Pair<String, String>? = when {
-        tags["amenity"] == "bench"           -> "🪑" to "Sitzbank"
-        tags["amenity"] == "drinking_water"  -> "💧" to "Trinkwasser"
-        tags["natural"] == "spring"          -> "💧" to "Quelle"
-        tags["amenity"] == "toilets"         -> "🚻" to "Toilette"
-        tags["amenity"] == "dog_toilet"      -> "🗑️" to "Hundetoilette"
-        tags["amenity"] == "dog_waste_bin"   -> "🗑️" to "Hundetoilette"
-        tags["waste"] == "dog_excrement"     -> "🗑️" to "Hundetoilette"
-        tags["amenity"] == "animal_training" || tags["animal_training"] == "dog" -> "🐩" to "Hundetraining"
-        tags["dog"] == "no"                  -> "🚫" to "Hundeverbot"
-        tags["dog"] == "leashed" || tags["dog"] == "leash" -> "🦮" to "Leinenzwang"
-        tags["amenity"] == "waste_basket"    -> "🗑️" to "Mülleimer"
-        tags["leisure"] == "firepit"         -> "🔥" to "Feuerstelle"
-        tags["amenity"] == "bbq"             -> "🔥" to "Grillplatz"
-        tags["tourism"] == "viewpoint"       -> "🏔️" to "Aussichtspunkt"
-        tags["natural"] == "peak"            -> "🏔️" to "Gipfel"
-        tags["amenity"] == "shelter"         -> "⛺" to "Schutzhütte"
-        tags["leisure"] == "picnic_site"     -> "🧺" to "Picknickplatz"
-        tags["emergency"] != null            -> "🆘" to "Notfall"
-        tags["leisure"] == "nature_reserve"  -> "🌲" to "Naturschutzgebiet"
-        tags["boundary"] == "national_park"  -> "🏞️" to "Nationalpark"
+        tags["amenity"] == "bench"           -> "🪑" to "bench"
+        tags["amenity"] == "drinking_water"  -> "💧" to "drinking_water"
+        tags["natural"] == "spring"          -> "💧" to "spring"
+        tags["amenity"] == "toilets"         -> "🚻" to "toilet"
+        tags["amenity"] == "dog_toilet"      -> "🗑️" to "dog_toilet"
+        tags["amenity"] == "dog_waste_bin"   -> "🗑️" to "dog_toilet"
+        tags["waste"] == "dog_excrement"     -> "🗑️" to "dog_toilet"
+        tags["amenity"] == "animal_training" || tags["animal_training"] == "dog" -> "🐩" to "dog_training"
+        tags["dog"] == "no"                  -> "🚫" to RoutePOITypes.KEY_DOG_BAN
+        tags["dog"] == "leashed" || tags["dog"] == "leash" -> "🦮" to RoutePOITypes.KEY_LEASH_REQUIRED
+        tags["amenity"] == "waste_basket"    -> "🗑️" to "waste_basket"
+        tags["leisure"] == "firepit"         -> "🔥" to "firepit"
+        tags["amenity"] == "bbq"             -> "🔥" to "bbq"
+        tags["tourism"] == "viewpoint"       -> "🏔️" to "viewpoint"
+        tags["natural"] == "peak"            -> "🏔️" to "peak"
+        tags["amenity"] == "shelter"         -> "⛺" to "shelter"
+        tags["leisure"] == "picnic_site"     -> "🧺" to "picnic_site"
+        tags["emergency"] != null            -> "🆘" to "emergency"
+        tags["leisure"] == "nature_reserve"  -> "🌲" to "nature_reserve"
+        tags["boundary"] == "national_park"  -> "🏞️" to "national_park"
         else -> null
     }
 
@@ -2478,14 +2477,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         if (pois.isEmpty()) {
             binding.tvRoutePOIsStatus.visibility = View.VISIBLE
-            binding.tvRoutePOIsStatus.text = "Keine POIs in den nächsten 5 km"
+            binding.tvRoutePOIsStatus.text = getString(R.string.no_pois_in_next_5km)
             return
         }
 
 // Hinweis-Text oben in der Liste einfügen:
         val dp = resources.displayMetrics.density
         binding.routePOIsContainer.addView(TextView(this).apply {
-            text      = "📍 Nächste 5 km ab Standort • aktualisiert alle 1 km"
+            text      = getString(R.string.next_5km_updated_hint)
             textSize  = 9.5f
             setTextColor(Color.parseColor("#666666"))
             layoutParams = LinearLayout.LayoutParams(
@@ -2496,7 +2495,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         pois.forEach { poi ->
             val dp = resources.displayMetrics.density
-            val isRestricted = poi.category == "Hundeverbot" || poi.category == "Leinenzwang"
+            val isRestricted = poi.categoryKey == RoutePOITypes.KEY_DOG_BAN || poi.categoryKey == RoutePOITypes.KEY_LEASH_REQUIRED
 
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -2511,7 +2510,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 isFocusable  = true
 
                 if (isRestricted) {
-                    val bgColor = if (poi.category == "Hundeverbot")
+                    val bgColor = if (poi.categoryKey == RoutePOITypes.KEY_DOG_BAN)
                         Color.argb(40, 255, 0, 0) else Color.argb(40, 255, 152, 0)
                     val bg = android.graphics.drawable.GradientDrawable().apply {
                         setColor(bgColor)
@@ -2574,7 +2573,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         val msg = StringBuilder()
         msg.append("📂 ${poi.category}\n")
-        msg.append("📏 ${formatDistance(poi.distance)} von Dir entfernt\n")
+        msg.append(getString(R.string.poi_distance_away_from_you, formatDistance(poi.distance))).append("\n")
         poi.address?.let      { msg.append("📬 $it\n") }
         poi.phone?.let        { msg.append("📞 $it\n") }
         poi.openingHours?.let { msg.append("🕐 $it\n") }
@@ -2584,10 +2583,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val dialog = AlertDialog.Builder(this)
             .setTitle("${poi.categoryIcon} ${poi.name}")
             .setMessage(msg.toString())
-            .setPositiveButton("🧭 Als Zwischenziel") { _, _ ->
+            .setPositiveButton(getString(R.string.waypoint_button)) { _, _ ->
                 addWaypointToNavigation(poi)
             }
-            .setNegativeButton("Schließen", null)
+            .setNegativeButton(getString(R.string.close), null)
             .create()
 
         dialog.show()
@@ -2606,7 +2605,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val marker = Marker(binding.mapView).apply {
             position = GeoPoint(waypoint.lat, waypoint.lon)
             title    = "${waypoint.categoryIcon} ${waypoint.name}"
-            snippet  = "Zwischenziel $num"
+            snippet  = getString(R.string.waypoint_number, num)
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             icon = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
                 ?.mutate()?.also { it.setTint(Color.parseColor("#9C27B0")) }
@@ -2623,14 +2622,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 }
                 applyNewRoute(routeData, dest)
                 Toast.makeText(this@LocationActivity,
-                    "Zwischenziel $num: ${waypoint.name} hinzugefügt ✓", Toast.LENGTH_SHORT).show()
+                    getString(R.string.waypoint_added_toast, num, waypoint.name), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 // Marker wieder entfernen bei Fehler
                 waypointQueue.removeLast()
                 binding.mapView.overlays.remove(waypointMarkers.removeAt(waypointMarkers.lastIndex))
                 binding.mapView.invalidate()
                 Toast.makeText(this@LocationActivity,
-                    "Zwischenziel konnte nicht hinzugefügt werden", Toast.LENGTH_SHORT).show()
+                    getString(R.string.waypoint_add_failed_toast), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -2640,15 +2639,15 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         val nextInfo = when {
-            waypointQueue.size > 1 -> "Nächstes Zwischenziel: ${waypointQueue.elementAt(1).name}"
-            waypointQueue.size == 1 -> "Weiter zum Ziel"
-            else -> "Weiter zum Ziel"
+            waypointQueue.size > 1 -> getString(R.string.next_waypoint_info, waypointQueue.elementAt(1).name)
+            waypointQueue.size == 1 -> getString(R.string.continue_to_destination)
+            else -> getString(R.string.continue_to_destination)
         }
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("${waypoint.categoryIcon} Zwischenziel erreicht!")
-            .setMessage("Du hast ${waypoint.name} erreicht.\n\nNavigation pausiert.\n$nextInfo")
-            .setPositiveButton("▶️ Weiter") { _, _ -> continueNavigation() }
+            .setTitle(getString(R.string.waypoint_reached_title, waypoint.categoryIcon))
+            .setMessage(getString(R.string.waypoint_reached_message, waypoint.name, nextInfo))
+            .setPositiveButton(getString(R.string.continue_button)) { _, _ -> continueNavigation() }
             .setCancelable(false)
             .create()
 
@@ -2703,7 +2702,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             put("coordinates", coords)
             put("elevation", true)
             put("extra_info", JSONArray().apply { put("surface"); put("waytype") })
-            put("language", "de")
+            put("language", LanguageManager.getCurrentLanguage().tag)
         }
 
         val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
@@ -2766,7 +2765,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     val item = arr.getJSONObject(i)
                     val code = item.getInt("value")
                     surfaceSummary.add(SurfaceSummary(
-                        code = code, name = RouteInfoHelper.getSurfaceName(code),
+                        code = code, name = RouteInfoHelper.getSurfaceName(this, code),
                         emoji = RouteInfoHelper.getSurfaceEmoji(code),
                         distance = item.getDouble("distance"), percentage = item.getDouble("amount")
                     ))
@@ -2778,7 +2777,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     val item = arr.getJSONObject(i)
                     val code = item.getInt("value")
                     wayTypeSummary.add(SurfaceSummary(
-                        code = code, name = RouteInfoHelper.getWayTypeName(code),
+                        code = code, name = RouteInfoHelper.getWayTypeName(this, code),
                         emoji = RouteInfoHelper.getWayTypeEmoji(code),
                         distance = item.getDouble("distance"), percentage = item.getDouble("amount")
                     ))
@@ -2854,7 +2853,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     private fun refreshRoutePOIs(routePoints: List<GeoPoint>, currentLoc: Location) {
         val segment = getNextRouteSegment(routePoints, currentLoc, 5000.0)
         binding.tvRoutePOIsStatus.visibility = View.VISIBLE
-        binding.tvRoutePOIsStatus.text       = "Aktualisiere…"
+        binding.tvRoutePOIsStatus.text       = getString(R.string.updating_ellipsis)
         binding.routePOIsContainer.removeAllViews()
 
         lifecycleScope.launch {
@@ -2863,7 +2862,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 updateRoutePOIsCard(pois)
             } catch (e: Exception) {
                 Log.w("LocationActivity", "Route-POI Refresh fehlgeschlagen: ${e.message}")
-                binding.tvRoutePOIsStatus.text = "Nicht verfügbar"
+                binding.tvRoutePOIsStatus.text = getString(R.string.not_available)
             }
         }
     }
@@ -3014,7 +3013,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         binding.categoryView.visibility       = View.GONE
         binding.poiListView.visibility        = View.VISIBLE
-        binding.categoryTitleText.text        = "⭐  Favoriten"
+        binding.categoryTitleText.text        = getString(R.string.poi_favorites)
         binding.btnManageFavorites.visibility = View.VISIBLE  // Verwalten-Button einblenden
 
         val favs = FavoritesManager.getAll(this)
@@ -3030,7 +3029,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 POI(
                     id           = fav.id,
                     name         = fav.displayName,
-                    category     = "Favoriten",
+                    category     = getString(R.string.poi_favorites),
+                    categoryKey  = "favorites",
                     categoryIcon = fav.categoryIcon,
                     lat          = fav.lat,
                     lon          = fav.lon,
@@ -3045,12 +3045,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             showPointInfoDialog(poi.lat, poi.lon, poi)
         }
 
-        binding.poiCountText.text = "${favs.size} gespeicherte Favoriten"
+        binding.poiCountText.text = getString(R.string.favorites_saved_count, favs.size)
         binding.emptyPoiText.visibility =
             if (favs.isEmpty()) View.VISIBLE else View.GONE
         if (favs.isEmpty()) {
-            binding.emptyPoiText.text =
-                "Noch keine Favoriten.\nNavigationsziele über ⭐ speichern."
+            binding.emptyPoiText.text = getString(R.string.no_favorites_yet_hint)
         }
 
         // Marker auf Karte
@@ -3176,20 +3175,20 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
         // Vergleich Routendistanz vs. Empfehlung
         val isCar = (routingProfile == "driving-car")
-        val dogName = selectedDog?.name ?: "Deinen Hund"
+        val dogName = selectedDog?.name ?: getString(R.string.terrain_your_dog_fallback)
 
         if (routeData.distance > recommendedM * 1.10) {
             val overPercent = ((routeData.distance / recommendedM - 1.0) * 100).toInt()
-            val baseText = "⚠️ Diese Route ist ca. $overPercent% länger als die Empfehlung für $dogName."
-            val suitabilityText = "Diese Strecke ist für $dogName am Stück nicht geeignet."
-            val carText = if (isCar) "\n\nℹ️ Diese Analyse ist rein theoretisch, da die Anreise per Auto geplant wird." else ""
+            val baseText = getString(R.string.terrain_route_too_long_warning, overPercent, dogName)
+            val suitabilityText = getString(R.string.terrain_route_not_suitable, dogName)
+            val carText = if (isCar) "\n\n" + getString(R.string.terrain_car_analysis_theoretical) else ""
 
             binding.tvDistanceComparison.visibility = View.VISIBLE
             binding.tvDistanceComparison.text = "$baseText\n$suitabilityText$carText"
         } else {
             if (isCar) {
                 binding.tvDistanceComparison.visibility = View.VISIBLE
-                binding.tvDistanceComparison.text = "ℹ️ Diese Analyse ist rein theoretisch, da die Anreise per Auto geplant wird."
+                binding.tvDistanceComparison.text = getString(R.string.terrain_car_analysis_theoretical)
             } else {
                 binding.tvDistanceComparison.visibility = View.GONE
             }

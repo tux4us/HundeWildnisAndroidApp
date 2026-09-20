@@ -1,5 +1,6 @@
 package com.hundewildnis.app
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import com.google.zxing.BarcodeFormat
@@ -41,7 +42,7 @@ object QRCodeGenerator {
     /**
      * Legacy-Funktion für DogProfile (alle Felder)
      */
-    fun generateDogProfileQR(profile: DogProfile, size: Int): Bitmap? {
-        return generateQRCode(profile.toQRString(), size)
+    fun generateDogProfileQR(context: Context, profile: DogProfile, size: Int): Bitmap? {
+        return generateQRCode(profile.toQRString(context), size)
     }
 }

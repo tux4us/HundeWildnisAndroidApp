@@ -33,7 +33,7 @@ object PrivacyDialogHelper {
         val textColor = if (isDark) Color.WHITE else Color.BLACK
         val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
-        val allFields = profile.getAllFields()
+        val allFields = profile.getAllFields(context)
         val checkBoxes = mutableMapOf<String, CheckBox>()
         
         // Layout erstellen

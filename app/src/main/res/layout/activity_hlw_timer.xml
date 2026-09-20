@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Puls-Check in: 02:00"
+                android:text="@string/hlw_timer_placeholder_pulse_check_countdown"
                 android:textSize="@dimen/text_body_medium"
                 android:textColor="#FFFFFF" />
 
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Zyklen: 0"
+                android:text="@string/hlw_timer_placeholder_cycle_count"
                 android:textSize="@dimen/text_body_medium"
                 android:textColor="#FFFFFF" />
 
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Bereit zum Start"
+                android:text="@string/hlw_timer_placeholder_ready"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
@@ -120,7 +120,7 @@
                         android:id="@+id/tvPhaseTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="15 Sek"
+                        android:text="@string/hlw_timer_placeholder_phase_time_compression"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
@@ -150,7 +150,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Folge dem Metronom-Takt!\n2 pro Sekunde"
+                        android:text="@string/hlw_timer_follow_metronome_hint"
                         android:textSize="@dimen/text_body_medium"
                         android:textColor="#AAAAAA"
                         android:gravity="center" />
@@ -180,7 +180,7 @@
                         android:id="@+id/tvVentilationTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="5 Sek"
+                        android:text="@string/hlw_timer_placeholder_phase_time_ventilation"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
@@ -190,7 +190,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="🫁 JETZT BEATMEN!\n\n2x über die Nase\nMaul geschlossen halten"
+                        android:text="@string/hlw_timer_ventilate_now_instruction"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
@@ -215,7 +215,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="24dp"
-                    android:text="⏱️ PULS PRÜFEN!\n\nOberschenkelinnenseite\n15 Sekunden fühlen"
+                    android:text="@string/hlw_timer_check_pulse_instruction"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
@@ -236,7 +236,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="💓 30 Kompressionen (15 Sek im Takt) → 🫁 2 Beatmungen (5 Sek)\n⏱️ Alle 2 Min: Puls prüfen"
+                    android:text="@string/hlw_timer_permanent_instruction"
                     android:textSize="@dimen/text_body_medium"
                     android:textColor="#FACE7E"
                     android:gravity="center"
@@ -264,7 +264,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="🔄 RESET"
+            android:text="@string/hlw_timer_button_reset"
             android:textColor="#FFFFFF"
             app:strokeColor="#FFFFFF" />
 
@@ -274,7 +274,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="▶️ HLW STARTEN"
+            android:text="@string/hlw_timer_button_start"
             android:backgroundTint="#4CAF50" />
 
     </LinearLayout>

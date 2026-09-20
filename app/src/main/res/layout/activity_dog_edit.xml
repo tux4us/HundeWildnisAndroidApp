@@ -50,7 +50,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📷 FOTO"
+                        android:text="@string/dog_edit_photo_header"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -61,7 +61,7 @@
                         android:layout_height="200dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_dog_placeholder"
-                        android:contentDescription="Hundefoto" />
+                        android:contentDescription="@string/dog_photo_content_description" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📷 Foto hinzufügen"
+                            android:text="@string/dog_edit_add_photo_button"
                             android:layout_marginEnd="4dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -83,7 +83,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🗑 Entfernen"
+                            android:text="@string/dog_edit_remove_photo_button"
                             android:layout_marginStart="4dp"
                             android:visibility="gone" />
                     </LinearLayout>
@@ -94,7 +94,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📋 BASIS-DATEN"
+                android:text="@string/dog_edit_basis_header"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
@@ -102,7 +102,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name *"
+                android:hint="@string/dog_edit_hint_name"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
@@ -114,7 +114,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Rasse"
+                android:hint="@string/dog_edit_hint_breed"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBreed"
@@ -126,7 +126,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Geschlecht"
+                android:hint="@string/dog_edit_hint_gender"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_marginBottom="12dp">
                 <AutoCompleteTextView
@@ -140,7 +140,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Kastrationsstatus"
+                android:hint="@string/dog_edit_hint_neutered"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_marginBottom="12dp">
                 <AutoCompleteTextView
@@ -155,7 +155,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Präzision Geburtsdatum"
+                android:hint="@string/dog_edit_hint_birthdate_precision"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_marginBottom="8dp">
                 <AutoCompleteTextView
@@ -163,16 +163,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:text="Datum bekannt" />
+                    android:text="@string/dog_edit_birthdate_type_known" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilBirthDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Geburtsdatum"
+                android:hint="@string/dog_edit_hint_birthdate"
                 android:layout_marginBottom="12dp"
-                app:placeholderText="Tag.Monat.Jahr wählen">
+                app:placeholderText="@string/dog_edit_birthdate_placeholder_full">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBirthDate"
                     android:layout_width="match_parent"
@@ -186,7 +186,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Herkunftsort / -land"
+                android:hint="@string/dog_edit_hint_origin_country"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etOriginCountry"
@@ -198,7 +198,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Farbe / Fellzeichnung"
+                android:hint="@string/dog_edit_hint_color"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etColor"
@@ -211,7 +211,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🔖 IDENTIFIKATION"
+                android:text="@string/dog_edit_identification_header"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
@@ -220,7 +220,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Chip-Nummer"
+                android:hint="@string/dog_edit_hint_chip_number"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etChipNumber"
@@ -232,7 +232,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Steuernummer der Gemeinde"
+                android:hint="@string/dog_edit_hint_tax_number"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTaxNumber"
@@ -244,7 +244,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="TASSO Registriernummer"
+                android:hint="@string/dog_edit_hint_tasso_number"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTassoNumber"
@@ -256,7 +256,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Heimtierausweis Land"
+                android:hint="@string/dog_edit_hint_pet_passport_country"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPetPassportCountry"
@@ -268,7 +268,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ausweis-Nummer"
+                android:hint="@string/dog_edit_hint_pet_passport_number"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPetPassportNumber"
@@ -281,7 +281,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💉 GESUNDHEIT"
+                android:text="@string/dog_edit_health_header"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
@@ -290,7 +290,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Impfstatus / Letzte Impfung"
+                android:hint="@string/dog_edit_hint_vaccination"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etVaccination"
@@ -303,7 +303,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Weitere Impfungen"
+                android:hint="@string/dog_edit_hint_additional_vaccination"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAdditionalVaccination"
@@ -316,7 +316,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Letzte Entwurmung"
+                android:hint="@string/dog_edit_hint_deworming"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDeworming"
@@ -328,7 +328,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Letzte Floh-/Zeckenprophylaxe"
+                android:hint="@string/dog_edit_hint_flea_tick"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFleaTick"
@@ -347,7 +347,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Gewicht (kg)"
+                    android:hint="@string/dog_edit_hint_weight"
                     android:layout_marginEnd="8dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etWeight"
@@ -360,7 +360,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Datum"
+                    android:hint="@string/dog_edit_hint_date"
                     android:layout_marginStart="8dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etWeightDate"
@@ -381,7 +381,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Schulterhöhe (cm)"
+                    android:hint="@string/dog_edit_hint_shoulder_height"
                     android:layout_marginEnd="8dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etShoulderHeight"
@@ -394,7 +394,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Körperlänge (cm)"
+                    android:hint="@string/dog_edit_hint_body_length"
                     android:layout_marginStart="8dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etBodyLength"
@@ -407,7 +407,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Medizinische Hinweise / Vorerkrankungen"
+                android:hint="@string/dog_edit_hint_medical_notes"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMedicalNotes"
@@ -421,7 +421,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="👨‍⚕️ KONTAKTE"
+                android:text="@string/dog_edit_contacts_header"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
@@ -430,7 +430,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tierarzt / Tierarztpraxis"
+                android:hint="@string/dog_edit_hint_veterinarian"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etVeterinarian"
@@ -443,7 +443,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Hundehaftpflichtversicherung"
+                android:hint="@string/dog_edit_hint_liability_insurance"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLiabilityInsurance"
@@ -456,7 +456,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Hundekranken-/OP-Versicherung"
+                android:hint="@string/dog_edit_hint_health_insurance"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etHealthInsurance"
@@ -469,7 +469,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Besitzer (Name, Adresse, Kontakt)"
+                android:hint="@string/dog_edit_hint_owner"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etOwner"
@@ -482,7 +482,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Zusätzlicher Notfallkontakt"
+                android:hint="@string/dog_edit_hint_additional_emergency"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAdditionalEmergency"
@@ -496,7 +496,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🍖 FUTTER und VERHALTEN"
+                android:text="@string/dog_edit_food_behavior_header"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
@@ -505,7 +505,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Futter (Marke, Sorte, Menge)"
+                android:hint="@string/dog_edit_hint_food"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFood"
@@ -518,7 +518,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Besondere Verhaltensweisen / Informationen"
+                android:hint="@string/dog_edit_hint_behavior"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBehavior"
@@ -540,7 +540,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🧠 WESENSMERKMALE"
+                android:text="@string/dog_edit_character_header"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface"
@@ -549,7 +549,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Für personalisierte Trainingsempfehlungen im Trainingstagebuch"
+                android:text="@string/dog_edit_character_subtitle"
                 android:textSize="@dimen/text_body_medium"
                 android:alpha="0.7"
                 android:layout_marginBottom="16dp" />
@@ -559,7 +559,7 @@
                 android:id="@+id/btnQuickProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📋 Schnellauswahl: Profil wählen"
+                android:text="@string/dog_edit_quick_profile_button"
                 android:textSize="@dimen/text_body_medium"
                 style="@style/Widget.App.Button.Outlined"
                 android:layout_marginBottom="24dp" />
@@ -568,7 +568,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Grundtemperament"
+                android:text="@string/dog_edit_slider_temperament_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
@@ -583,7 +583,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nruhig"
+                    android:text="@string/dog_edit_slider_temperament_low"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -603,7 +603,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nlebhaft"
+                    android:text="@string/dog_edit_slider_temperament_high"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -614,7 +614,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Selbstbewusstsein"
+                android:text="@string/dog_edit_slider_confidence_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
@@ -629,7 +629,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nängstlich"
+                    android:text="@string/dog_edit_slider_confidence_low"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -649,7 +649,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nselbstsicher"
+                    android:text="@string/dog_edit_slider_confidence_high"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -660,7 +660,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sozialverhalten"
+                android:text="@string/dog_edit_slider_social_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
@@ -675,7 +675,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Zurück-\nhaltend"
+                    android:text="@string/dog_edit_slider_social_low"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -695,7 +695,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nkontaktfreudig"
+                    android:text="@string/dog_edit_slider_social_high"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -706,7 +706,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Erregbarkeit"
+                android:text="@string/dog_edit_slider_excitability_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
@@ -721,7 +721,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\ngelassen"
+                    android:text="@string/dog_edit_slider_excitability_low"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -741,7 +741,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Leicht\nerregbar"
+                    android:text="@string/dog_edit_slider_excitability_high"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -752,7 +752,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lerngeschwindigkeit"
+                android:text="@string/dog_edit_slider_learning_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
@@ -767,7 +767,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nlangsam"
+                    android:text="@string/dog_edit_slider_learning_low"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -787,7 +787,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nschnell"
+                    android:text="@string/dog_edit_slider_learning_high"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -798,7 +798,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Frustrationstoleranz"
+                android:text="@string/dog_edit_slider_frustration_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp" />
@@ -813,7 +813,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nniedrig"
+                    android:text="@string/dog_edit_slider_frustration_low"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -833,7 +833,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sehr\nhoch"
+                    android:text="@string/dog_edit_slider_frustration_high"
                     android:textSize="@dimen/text_body_medium"
                     android:alpha="0.7"
                     android:gravity="center"
@@ -844,7 +844,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Besonderheiten im Wesen (optional)"
+                android:hint="@string/dog_edit_hint_character_notes"
                 style="@style/Widget.App.TextInputLayout"
                 android:layout_marginBottom="24dp">
 
@@ -872,7 +872,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Abbrechen"
+                    android:text="@string/cancel"
                     android:layout_marginEnd="8dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -880,7 +880,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="💾 Speichern"
+                    android:text="@string/dog_edit_save_button"
                     app:backgroundTint="?attr/colorSecondary"
                     android:layout_marginStart="8dp" />
             </LinearLayout>

@@ -25,10 +25,11 @@ class AirQualityAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        val context = holder.itemView.context
         holder.timeText.text  = item.time
         holder.aqiText.text   = "${item.aqi}"
         holder.labelText.text = item.aqiLabel
-        holder.pm25Text.text  = "PM2.5: ${String.format("%.0f", item.pm25)} µg"
+        holder.pm25Text.text  = context.getString(R.string.weather_pm25_label, item.pm25)
 
         holder.aqiText.setTextColor(item.aqiColor)
         holder.labelText.setTextColor(item.aqiColor)

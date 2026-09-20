@@ -103,7 +103,7 @@ object PDFGenerator {
             }
         }
 
-        val allFields = profile.getAllFields()
+        val allFields = profile.getAllFields(context)
 
         // Kategorien und Felder
         val sections = listOf(
@@ -189,6 +189,6 @@ object PDFGenerator {
     }
 
     fun generateDogProfilePDF(context: Context, profile: DogProfile, qrBitmap: Bitmap): File {
-        return generateFilteredDogProfilePDF(context, profile, profile.getAllFields().keys, qrBitmap)
+        return generateFilteredDogProfilePDF(context, profile, profile.getAllFields(context).keys, qrBitmap)
     }
 }

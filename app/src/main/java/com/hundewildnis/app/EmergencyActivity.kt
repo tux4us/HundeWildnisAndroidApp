@@ -111,7 +111,7 @@ class EmergencyActivity : SecureBaseActivity() {
             requestLocation()
         } else {
             binding.switchGps.isChecked = false
-            Toast.makeText(this, "Standortberechtigung erforderlich für GPS-Daten", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.emergency_toast_location_permission_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -138,7 +138,7 @@ class EmergencyActivity : SecureBaseActivity() {
             ?: intentProfile  // Fallback falls ID nicht auffindbar
 
         if (profile == null) {
-            Toast.makeText(this, "Fehler: Kein Profil gefunden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.emergency_toast_no_profile_found), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -156,7 +156,7 @@ class EmergencyActivity : SecureBaseActivity() {
 
         profile?.let { p ->
             binding.tvDogName.text = p.name
-            binding.tvDogBreed.text = "${p.breed}, ${p.gender}, ${p.weight}kg"
+            binding.tvDogBreed.text = getString(R.string.emergency_dog_breed_format, p.breed, p.gender, p.weight)
             if (p.photoUri.isNotEmpty()) {
                 binding.ivDogThumb.setImageURI(Uri.parse(p.photoUri))
             }
@@ -201,8 +201,8 @@ class EmergencyActivity : SecureBaseActivity() {
     private fun setupGrids() {
         // Fotos
         val photoTiles = listOf(
-            StartTile("emergency_camera", R.drawable.ic_microphone, "Kamera"), // Placeholder
-            StartTile("emergency_gallery", R.drawable.ic_pages, "Galerie")
+            StartTile("emergency_camera", R.drawable.ic_microphone, getString(R.string.emergency_tile_camera)), // Placeholder
+            StartTile("emergency_gallery", R.drawable.ic_pages, getString(R.string.emergency_tile_gallery))
         )
         val colorsPhotos = StartGroupColors.forGroup(this, 4) // Blau
         binding.gridEmergencyPhotos.layoutManager = GridLayoutManager(this, 2)
@@ -212,8 +212,8 @@ class EmergencyActivity : SecureBaseActivity() {
 
         // Aktionen
         val actionTiles = listOf(
-            StartTile("emergency_send", R.drawable.ic_emergency, "🚀 NOTFALLMELDUNG SENDEN", isDanger = true),
-            StartTile("emergency_reset", R.drawable.ic_remove, "🔄 Eingaben zurücksetzen")
+            StartTile("emergency_send", R.drawable.ic_emergency, getString(R.string.emergency_tile_send), isDanger = true),
+            StartTile("emergency_reset", R.drawable.ic_remove, getString(R.string.emergency_tile_reset))
         )
         val colorsActions = StartGroupColors.forGroup(this, 2) // Grün
         binding.gridEmergencyActions.layoutManager = GridLayoutManager(this, 1)
@@ -297,14 +297,14 @@ class EmergencyActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Meldung löschen?")
-            .setMessage("Möchtest Du diese Notfallmeldung dauerhaft löschen?")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.emergency_delete_report_title))
+            .setMessage(getString(R.string.emergency_delete_report_message))
+            .setPositiveButton(getString(R.string.emergency_delete_report_confirm)) { _, _ ->
                 historyList.remove(report)
                 historyAdapter.notifyDataSetChanged()
                 saveHistory()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -317,21 +317,10 @@ class EmergencyActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📍 Standortzugriff für Notfallmeldung")
-            .setMessage("HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n" +
-                    "• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\n" +
-                    "Dies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n" +
-                    "• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n" +
-                    "• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n" +
-                    "• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n" +
-                    "• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n" +
-                    "• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n" +
-                    "• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n" +
-                    "• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\n" +
-                    "WICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\n" +
-                    "Ohne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden")
-            .setPositiveButton("AKTIVIEREN") { _, _ -> requestLocation() }
-            .setNegativeButton("ABLEHNEN") { _, _ -> binding.switchGps.isChecked = false }
+            .setTitle(getString(R.string.emergency_location_disclosure_title))
+            .setMessage(getString(R.string.emergency_location_disclosure_message))
+            .setPositiveButton(getString(R.string.emergency_disclosure_activate)) { _, _ -> requestLocation() }
+            .setNegativeButton(getString(R.string.emergency_disclosure_decline)) { _, _ -> binding.switchGps.isChecked = false }
             .setOnCancelListener { binding.switchGps.isChecked = false }
             .create().apply {
                 show()
@@ -352,20 +341,13 @@ class EmergencyActivity : SecureBaseActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("📸 Zugriff auf Kamera")
-            .setMessage("HundeWildnis benötigt Zugriff auf Deine Kamera für folgende Zwecke:\n\n" +
-                    "• NOTFALL-DOKUMENTATION:\n\nDamit Du aktuelle Fotos vom Zustand Deines Hundes oder der Verletzung direkt in die Notfallmeldung (PDF) einfügen kannst.\n\n" +
-                    "Dies hilft Tierärzten, die Situation vorab besser einzuschätzen.\n\n" +
-                    "DATENSCHUTZ:\n• Deine Fotos werden NUR lokal in das PDF-Dokument eingebunden.\n" +
-                    "• Es erfolgt KEINE Übermittlung an andere Server.\n" +
-                    "• Nur Du allein entscheidest im Sendevorgang über das Teilen der Notfalldaten incl. beigefügter Fotos.\n" +
-                    "• Der Zugriff erfolgt NUR nach Deiner expliziten Auslösung.\n\n" +
-                    "Möchtest Du den Zugriff auf die Kamera jetzt aktivieren?")
-            .setPositiveButton("AKTIVIEREN") { _, _ ->
+            .setTitle(getString(R.string.emergency_camera_disclosure_title))
+            .setMessage(getString(R.string.emergency_camera_disclosure_message))
+            .setPositiveButton(getString(R.string.emergency_disclosure_activate)) { _, _ ->
                 prefs.edit().putBoolean("camera_disclosure_shown", true).apply()
                 checkCameraPermissionAndOpen()
             }
-            .setNegativeButton("ABLEHNEN", null)
+            .setNegativeButton(getString(R.string.emergency_disclosure_decline), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -432,13 +414,13 @@ class EmergencyActivity : SecureBaseActivity() {
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
             !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Toast.makeText(this, "Bitte aktiviere GPS in Deinen Einstellungen", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.emergency_toast_enable_gps), Toast.LENGTH_LONG).show()
             binding.switchGps.isChecked = false
             return
         }
 
         binding.tvGpsStatus.visibility = View.VISIBLE
-        binding.tvGpsStatus.text = "⏳ Suche Standort..."
+        binding.tvGpsStatus.text = getString(R.string.emergency_gps_status_searching)
 
         val providers = locationManager.getProviders(true)
         var bestLocation: Location? = null
@@ -468,7 +450,7 @@ class EmergencyActivity : SecureBaseActivity() {
             if (locationManager.allProviders.contains(LocationManager.GPS_PROVIDER))
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 0f, listener)
         } catch (e: Exception) {
-            binding.tvGpsStatus.text = "⚠️ Fehler beim Erfassen des Standorts"
+            binding.tvGpsStatus.text = getString(R.string.emergency_gps_status_error)
         }
     }
 
@@ -476,7 +458,7 @@ class EmergencyActivity : SecureBaseActivity() {
         lastLocation = location
         binding.tvGpsStatus.apply {
             visibility = View.VISIBLE
-            text = "📍 Standort erfasst: ${location.latitude}, ${location.longitude}"
+            text = getString(R.string.emergency_gps_status_captured_format, location.latitude, location.longitude)
         }
     }
 
@@ -491,7 +473,7 @@ class EmergencyActivity : SecureBaseActivity() {
     private fun generateAndSendReport() {
         val symptom = binding.spinnerSymptoms.text.toString()
         if (symptom.isEmpty() || symptom == resources.getStringArray(R.array.emergency_symptoms)[0]) {
-            Toast.makeText(this, "Bitte wählen Sie ein Symptom aus!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.emergency_toast_select_symptom), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -518,7 +500,7 @@ class EmergencyActivity : SecureBaseActivity() {
                     saveHistory()
 
                     if (contentUri != null || pdfFile != null) {
-                        Toast.makeText(this@EmergencyActivity, "✅ PDF gespeichert in Documents/HundeWildnis", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@EmergencyActivity, getString(R.string.emergency_toast_pdf_saved), Toast.LENGTH_LONG).show()
                     }
 
                     if (contentUri != null) shareReportViaUri(contentUri)
@@ -529,14 +511,14 @@ class EmergencyActivity : SecureBaseActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@EmergencyActivity, "Fehler beim Erstellen der PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@EmergencyActivity, getString(R.string.emergency_toast_pdf_creation_error, e.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
     private fun createEmergencyPdf(): Pair<File?, Uri?> {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(Date())
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val fileName = "NOTFALL_${profile?.name}_$timestamp.pdf"
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -596,80 +578,80 @@ class EmergencyActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════════
 
     private fun writePdfContent(document: Document) {
-        document.add(Paragraph("🚨 NOTFALLMELDUNG - HUND")
+        document.add(Paragraph(getString(R.string.emergency_pdf_header_title))
             .setFontSize(22f)
             .setFontColor(DeviceRgb(176, 0, 32))
             .setTextAlignment(TextAlignment.CENTER))
 
-        document.add(Paragraph("Erstellt am: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())}")
+        document.add(Paragraph(getString(R.string.emergency_pdf_created_at_format, SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())))
             .setTextAlignment(TextAlignment.CENTER))
 
-        document.add(Paragraph("Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de")
+        document.add(Paragraph(getString(R.string.emergency_pdf_footer_app_credit))
             .setFontSize(10f)
             .setTextAlignment(TextAlignment.CENTER))
 
         document.add(Paragraph("\n"))
 
-        document.add(Paragraph("MEDIZINISCHER NOTFALL:")
+        document.add(Paragraph(getString(R.string.emergency_pdf_medical_emergency_header))
             .setBold().setFontSize(16f))
-        document.add(Paragraph("Symptom: ${binding.spinnerSymptoms.text}").setFontSize(14f))
-        document.add(Paragraph("Zusatz-Info: ${binding.etNotes.text}").setFontSize(12f))
+        document.add(Paragraph(getString(R.string.emergency_pdf_symptom_format, binding.spinnerSymptoms.text)).setFontSize(14f))
+        document.add(Paragraph(getString(R.string.emergency_pdf_additional_info_format, binding.etNotes.text)).setFontSize(12f))
 
         lastLocation?.let {
             val osmUrl = "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}"
-            document.add(Paragraph("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}").setBold())
-            document.add(Paragraph("Karte (OpenStreetMap): $osmUrl").setFontColor(DeviceRgb(0, 0, 255)))
+            document.add(Paragraph(getString(R.string.emergency_pdf_location_format, it.latitude, it.longitude)).setBold())
+            document.add(Paragraph(getString(R.string.emergency_pdf_map_link_format, osmUrl)).setFontColor(DeviceRgb(0, 0, 255)))
         }
 
         document.add(Paragraph("\n"))
 
         // ── STAMMDATEN ───────────────────────────────────────────────
-        document.add(Paragraph("STAMMDATEN DES PATIENTEN:")
+        document.add(Paragraph(getString(R.string.emergency_pdf_patient_data_header))
             .setBold().setFontSize(16f))
 
         val table = Table(UnitValue.createPercentArray(floatArrayOf(30f, 70f))).useAllAvailableWidth()
 
         profile?.let { p ->
-            table.addCell(Cell().add(Paragraph("Name:")))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_name))))
             table.addCell(Cell().add(Paragraph(p.name)))
 
-            table.addCell(Cell().add(Paragraph("Rasse:")))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_breed))))
             table.addCell(Cell().add(Paragraph(p.breed)))
 
-            table.addCell(Cell().add(Paragraph("Geburtsdatum:")))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_birthdate))))
             table.addCell(Cell().add(Paragraph(p.birthDate)))
 
-            table.addCell(Cell().add(Paragraph("Geschlecht:")))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_gender))))
             table.addCell(Cell().add(Paragraph(p.gender)))
 
-            table.addCell(Cell().add(Paragraph("Kastriert:")))
-            table.addCell(Cell().add(Paragraph(p.neutered.ifEmpty { "Unbekannt" })))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_neutered))))
+            table.addCell(Cell().add(Paragraph(p.neutered.ifEmpty { getString(R.string.emergency_pdf_value_unknown) })))
 
-            table.addCell(Cell().add(Paragraph("Gewicht:")))
-            table.addCell(Cell().add(Paragraph("${p.weight} kg")))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_weight))))
+            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_value_kg_format, p.weight))))
 
             if (p.shoulderHeight.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph("Schulterhöhe:")))
-                table.addCell(Cell().add(Paragraph("${p.shoulderHeight} cm")))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_shoulder_height))))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_value_cm_format, p.shoulderHeight))))
             }
             if (p.bodyLength.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph("Körperlänge:")))
-                table.addCell(Cell().add(Paragraph("${p.bodyLength} cm")))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_body_length))))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_value_cm_format, p.bodyLength))))
             }
             if (p.chipNumber.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph("Chip-Nr:")))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_chip_number))))
                 table.addCell(Cell().add(Paragraph(p.chipNumber)))
             }
             if (p.vaccinationStatus.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph("Impfstatus:")))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_vaccination_status))))
                 table.addCell(Cell().add(Paragraph(p.vaccinationStatus)))
             }
             if (p.medicalNotes.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph("Vorerkrankungen:")))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_medical_notes))))
                 table.addCell(Cell().add(Paragraph(p.medicalNotes)))
             }
             if (p.owner.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph("Besitzer:")))
+                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_owner))))
                 table.addCell(Cell().add(Paragraph(p.owner)))
             }
         }
@@ -687,7 +669,7 @@ class EmergencyActivity : SecureBaseActivity() {
         // ── FOTOS ────────────────────────────────────────────────────
         if (attachedPhotos.isNotEmpty()) {
             document.add(AreaBreak())
-            document.add(Paragraph("FOTOS VOM NOTFALL / PATIENTEN:")
+            document.add(Paragraph(getString(R.string.emergency_pdf_photos_header))
                 .setBold().setFontSize(16f))
             document.add(Paragraph("\n"))
 
@@ -748,7 +730,7 @@ class EmergencyActivity : SecureBaseActivity() {
     private fun writeHeatCyclePdfSection(document: Document, p: DogProfile) {
         val cycles = p.heatCycles
 
-        document.add(Paragraph("LÄUFIGKEIT / REPRODUKTIONSSTATUS:")
+        document.add(Paragraph(getString(R.string.emergency_pdf_heat_cycle_header))
             .setBold().setFontSize(16f))
 
         val heatTable = Table(UnitValue.createPercentArray(floatArrayOf(40f, 60f))).useAllAvailableWidth()
@@ -756,11 +738,11 @@ class EmergencyActivity : SecureBaseActivity() {
         // ── Aktueller Status ─────────────────────────────────────────
         val activeCycle = cycles.firstOrNull { it.isActive }
         val statusText = when {
-            activeCycle != null -> "⚠️ AKTUELL LÄUFIG (seit ${activeCycle.startDate})"
-            cycles.isEmpty()    -> "Keine Daten erfasst"
-            else                -> "Nicht läufig"
+            activeCycle != null -> getString(R.string.emergency_pdf_heat_status_active_format, activeCycle.startDate)
+            cycles.isEmpty()    -> getString(R.string.emergency_pdf_heat_status_no_data)
+            else                -> getString(R.string.emergency_pdf_heat_status_not_active)
         }
-        heatTable.addCell(Cell().add(Paragraph("Aktueller Status:").setBold()))
+        heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_heat_current_status_label)).setBold()))
         heatTable.addCell(Cell().add(Paragraph(statusText)))
 
         // ── Letzte Läufigkeit ────────────────────────────────────────
@@ -769,13 +751,13 @@ class EmergencyActivity : SecureBaseActivity() {
             val lastInfo = buildString {
                 append("${lastCycle.startDate}")
                 if (lastCycle.endDate.isNotEmpty()) append(" – ${lastCycle.endDate} (${lastCycle.durationLabel})")
-                append(" · Intensität: ${lastCycle.intensity}")
+                append(getString(R.string.emergency_pdf_heat_intensity_suffix_format, lastCycle.intensity))
             }
-            heatTable.addCell(Cell().add(Paragraph("Letzte Läufigkeit:").setBold()))
+            heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_heat_last_cycle_label)).setBold()))
             heatTable.addCell(Cell().add(Paragraph(lastInfo)))
 
             if (lastCycle.behaviorSigns.isNotEmpty()) {
-                heatTable.addCell(Cell().add(Paragraph("Verhaltensänderungen:").setBold()))
+                heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_heat_behavior_changes_label)).setBold()))
                 heatTable.addCell(Cell().add(Paragraph(lastCycle.behaviorSigns.joinToString(", "))))
             }
             if (lastCycle.symptoms.isNotEmpty()) {
@@ -821,34 +803,35 @@ class EmergencyActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════════
 
     private fun buildShareText(): String = buildString {
-        append("🚨 NOTFALLMELDUNG 🚨\n")
-        append("Hund: ${profile?.name}\n")
-        append("Symptom: ${binding.spinnerSymptoms.text}\n")
-        append("Info: ${binding.etNotes.text}\n")
+        append(getString(R.string.emergency_share_text_header)).append("\n")
+        append(getString(R.string.emergency_share_text_dog_format, profile?.name)).append("\n")
+        append(getString(R.string.emergency_share_text_symptom_format, binding.spinnerSymptoms.text)).append("\n")
+        append(getString(R.string.emergency_share_text_info_format, binding.etNotes.text)).append("\n")
 
         lastLocation?.let {
-            append("Standort (GPS): Lat ${it.latitude}, Lon ${it.longitude}\n")
-            append("Karte (OSM): https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}\n")
+            append(getString(R.string.emergency_share_text_location_format, it.latitude, it.longitude)).append("\n")
+            append(getString(R.string.emergency_share_text_map_format,
+                "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}")).append("\n")
         }
 
         // Läufigkeit — nur für intakte Hündinnen, nur wenn Daten vorhanden
         profile?.let { p ->
             if (p.gender == "Hündin" && p.neutered != "Ja" && p.heatCycles.isNotEmpty()) {
-                append("\n🌸 LÄUFIGKEIT:\n")
+                append("\n").append(getString(R.string.emergency_share_text_heat_cycle_header)).append("\n")
                 val activeCycle = p.heatCycles.firstOrNull { it.isActive }
                 if (activeCycle != null) {
-                    append("⚠️ Aktuell läufig seit ${activeCycle.startDate}\n")
+                    append(getString(R.string.emergency_share_text_heat_cycle_active_format, activeCycle.startDate)).append("\n")
                 } else {
                     val last = p.heatCycles.filter { !it.isActive }.maxByOrNull { it.startDate }
-                    last?.let { append("Letzte Läufigkeit: ${it.startDate}" +
+                    last?.let { append(getString(R.string.emergency_share_text_heat_cycle_last_format, it.startDate) +
                             (if (it.endDate.isNotEmpty()) " – ${it.endDate}" else "") + "\n") }
                 }
                 HeatCycleManager.averageCycleLengthDays(p.heatCycles)
-                    ?.let { append("Ø Zyklus: $it Tage\n") }
+                    ?.let { append(getString(R.string.emergency_share_text_heat_cycle_average_format, it)).append("\n") }
             }
         }
 
-        append("\nMedizinische Daten im PDF-Anhang.")
+        append("\n").append(getString(R.string.emergency_share_text_footer))
     }
 
     private fun shareReport(file: File) {
@@ -857,10 +840,10 @@ class EmergencyActivity : SecureBaseActivity() {
             type = "application/pdf"
             putExtra(Intent.EXTRA_STREAM, uri)
             putExtra(Intent.EXTRA_TEXT, buildShareText())
-            putExtra(Intent.EXTRA_SUBJECT, "🚨 NOTFALLMELDUNG: ${profile?.name}")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.emergency_share_subject_format, profile?.name))
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "Notfallmeldung teilen via..."))
+        startActivity(Intent.createChooser(intent, getString(R.string.emergency_share_chooser_title)))
     }
 
     private fun shareReportViaUri(uri: Uri) {
@@ -868,10 +851,10 @@ class EmergencyActivity : SecureBaseActivity() {
             type = "application/pdf"
             putExtra(Intent.EXTRA_STREAM, uri)
             putExtra(Intent.EXTRA_TEXT, buildShareText())
-            putExtra(Intent.EXTRA_SUBJECT, "🚨 NOTFALLMELDUNG: ${profile?.name}")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.emergency_share_subject_format, profile?.name))
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "Notfallmeldung teilen via..."))
+        startActivity(Intent.createChooser(intent, getString(R.string.emergency_share_chooser_title)))
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -888,10 +871,10 @@ class EmergencyActivity : SecureBaseActivity() {
                 val file = File(report.pdfPath)
                 if (file.exists()) { openPdfViaUri(FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)); return }
             }
-            Toast.makeText(this, "PDF nicht gefunden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.emergency_toast_pdf_not_found), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.emergency_toast_generic_error, e.message), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -906,7 +889,7 @@ class EmergencyActivity : SecureBaseActivity() {
             grantUriPermission(resolveInfo.activityInfo.packageName, uri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "PDF öffnen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.emergency_pdf_open_chooser_title)))
     }
 
     override fun onPause() {
@@ -936,9 +919,9 @@ class EmergencyActivity : SecureBaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val report = reports[position]
-            val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(report.timestamp))
+            val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date(report.timestamp))
             holder.binding.tvReportDate.text = date
-            holder.binding.tvReportSummary.text = "Symptom: ${report.symptom}"
+            holder.binding.tvReportSummary.text = getString(R.string.emergency_report_symptom_format, report.symptom)
             holder.binding.reportClickArea.setOnClickListener { onItemClick(report) }
             holder.binding.btnDeleteReport.setOnClickListener { onDeleteClick(report) }
         }

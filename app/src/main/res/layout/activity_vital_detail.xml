@@ -17,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:titleTextColor="?attr/colorOnPrimary"
-            app:title="❤️ Vitalwerte-Detail" />
+            app:title="@string/vital_detail_toolbar_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -89,7 +89,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Vitalwerte"
+                        android:text="@string/vital_detail_section_vitals"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -99,7 +99,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="❤️ Herzfrequenz (/min) *"
+                        android:hint="@string/vital_detail_hint_pulse"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
@@ -114,7 +114,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="🫁 Atemfrequenz (/min)"
+                        android:hint="@string/vital_detail_hint_respiration"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
@@ -129,7 +129,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="🌡️ Temperatur (°C)"
+                        android:hint="@string/vital_detail_hint_temperature"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:suffixText="°C"
                         android:layout_marginBottom="10dp">
@@ -145,7 +145,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="💉 Kapillarfüllzeit (Sekunden)"
+                        android:hint="@string/vital_detail_hint_crt"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
@@ -160,7 +160,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="👁️ Schleimhautfarbe"
+                        android:text="@string/pulscheck_card_mucous_color"
                         android:textSize="13sp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="4dp" />
@@ -176,7 +176,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🧠 Bewusstseinszustand"
+                        android:text="@string/pulscheck_card_consciousness"
                         android:textSize="13sp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="4dp" />
@@ -192,7 +192,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⚡ Belastungsszenario"
+                        android:text="@string/pulscheck_card_load_scenario"
                         android:textSize="13sp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="4dp" />
@@ -224,7 +224,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📝 Notizen"
+                        android:text="@string/pulscheck_card_notes"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -233,7 +233,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Beobachtungen und Kontext"
+                        android:hint="@string/vital_detail_hint_notes"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDetailNotes"
@@ -254,7 +254,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="52dp"
-                android:text="💾 Änderungen speichern"
+                android:text="@string/vital_detail_btn_save"
                 android:textSize="15sp"
                 android:textColor="#FFFFFF"
                 app:backgroundTint="?attr/colorSecondary"
@@ -266,7 +266,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="📤 Messung teilen"
+                android:text="@string/vital_detail_btn_share"
                 android:textSize="14sp"
                 android:textColor="@color/rd_overlay_accent"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -279,7 +279,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="📄 Als Text teilen"
+                android:text="@string/vital_detail_btn_share_as_text"
                 android:textSize="14sp"
                 android:textColor="@color/rd_overlay_accent"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"

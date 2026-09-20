@@ -29,7 +29,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:scaleType="centerCrop"
-                android:contentDescription="Hundefoto"
+                android:contentDescription="@string/dog_photo_content_description"
                 android:background="@drawable/ic_dog_placeholder" />
 
             <!-- Name & Info -->
@@ -45,7 +45,7 @@
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:text="@string/dog_item_name_placeholder"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary" />
@@ -54,7 +54,7 @@
                     android:id="@+id/tvBreed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rasse"
+                    android:text="@string/dog_item_breed_placeholder"
                     android:textSize="13sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="2dp" />
@@ -63,7 +63,7 @@
                     android:id="@+id/tvInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Info"
+                    android:text="@string/dog_item_info_placeholder"
                     android:textSize="12sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="2dp" />

@@ -77,7 +77,7 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener, LocationListe
         // Toolbar Setup
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
-            title = "Kompass"
+            title = getString(R.string.compass_title)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -143,7 +143,7 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener, LocationListe
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            polarisInfoText.text = "Standortberechtigung fehlt – Himmelsberechnung nicht möglich"
+            polarisInfoText.text = getString(R.string.compass_location_permission_missing)
             sunInfoText.text = ""
             moonInfoText.text = ""
             return
@@ -207,30 +207,32 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener, LocationListe
 
     private fun updateSkyPositions() {
         val location = lastKnownLocation ?: run {
-            sunInfoText.text = "☀ Sonne: Standort wird ermittelt …"
-            moonInfoText.text = "☾ Mond: Standort wird ermittelt …"
-            polarisInfoText.text = "★ Polaris: Standort wird ermittelt …"
+            sunInfoText.text = getString(R.string.compass_sun_determining_location)
+            moonInfoText.text = getString(R.string.compass_moon_determining_location)
+            polarisInfoText.text = getString(R.string.compass_polaris_determining_location)
             return
         }
 
         val sky = SkyCalculator.calculate(location.latitude, location.longitude)
 
         // Text-Panel aktualisieren
-        sunInfoText.text = formatSkyLine("☀ Sonne", sky.sun)
-        moonInfoText.text = formatSkyLine("☾ Mond", sky.moon) +
-                String.format(Locale.GERMAN, " · Beleuchtung: %.0f%%", sky.moonIlluminationPercent)
-        val polarisLine = formatSkyLine("★ Polaris", sky.polarisResult.polaris)
-        polarisInfoText.text = "$polarisLine · Großer Wagen: ${sky.polarisResult.greatBearClockPosition} Uhr (zu Polaris)"
+        sunInfoText.text = formatSkyLine(getString(R.string.compass_sun_label), sky.sun)
+        moonInfoText.text = formatSkyLine(getString(R.string.compass_moon_label), sky.moon) +
+                String.format(Locale.getDefault(), getString(R.string.compass_moon_illumination_suffix), sky.moonIlluminationPercent)
+        val polarisLine = formatSkyLine(getString(R.string.compass_polaris_label), sky.polarisResult.polaris)
+        polarisInfoText.text = polarisLine + String.format(
+            Locale.getDefault(), getString(R.string.compass_polaris_great_bear_suffix), sky.polarisResult.greatBearClockPosition
+        )
 
         // Positionen an die Kompassrose übergeben (zeichnet Icons am Ring)
         compassRoseView.updateSkyData(sky)
     }
 
     private fun formatSkyLine(label: String, pos: SkyCalculator.SkyPosition): String {
-        val visibility = if (pos.isVisible) "" else " (unter Horizont)"
+        val visibility = if (pos.isVisible) "" else getString(R.string.compass_below_horizon)
         return String.format(
-            Locale.GERMAN,
-            "%s: %.0f° %s, Höhe %.0f°%s",
+            Locale.getDefault(),
+            getString(R.string.compass_sky_line_format),
             label, pos.azimuth, getDirectionName(pos.azimuth.toInt()), pos.altitude, visibility
         )
     }
@@ -301,9 +303,9 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener, LocationListe
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         if (accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
-            findViewById<TextView>(R.id.infoText)?.text = "⚠️ Kompass ungenau! Bitte bewege dein Gerät in einer 8er-Form, um den Sensor zu kalibrieren."
+            findViewById<TextView>(R.id.infoText)?.text = getString(R.string.compass_uncalibrated_warning)
         } else {
-            findViewById<TextView>(R.id.infoText)?.text = "Bewege Dein Phone großräumig und mehrmals in Form einer Acht, um den Kompass zu kalibrieren. Halte Dein Phone von magnetischen Quellen fern!"
+            findViewById<TextView>(R.id.infoText)?.text = getString(R.string.compass_hinweis)
         }
     }
 
@@ -339,15 +341,15 @@ class CompassActivity : SecureBaseActivity(), SensorEventListener, LocationListe
 
     private fun getDirectionName(azimuth: Int): String {
         return when {
-            azimuth in 0..22 || azimuth in 338..360 -> "Nord"
-            azimuth in 23..67 -> "Nordost"
-            azimuth in 68..112 -> "Ost"
-            azimuth in 113..157 -> "Südost"
-            azimuth in 158..202 -> "Süd"
-            azimuth in 203..247 -> "Südwest"
-            azimuth in 248..292 -> "West"
-            azimuth in 293..337 -> "Nordwest"
-            else -> "Nord"
+            azimuth in 0..22 || azimuth in 338..360 -> getString(R.string.compass_dir_north)
+            azimuth in 23..67 -> getString(R.string.compass_dir_northeast)
+            azimuth in 68..112 -> getString(R.string.compass_dir_east)
+            azimuth in 113..157 -> getString(R.string.compass_dir_southeast)
+            azimuth in 158..202 -> getString(R.string.compass_dir_south)
+            azimuth in 203..247 -> getString(R.string.compass_dir_southwest)
+            azimuth in 248..292 -> getString(R.string.compass_dir_west)
+            azimuth in 293..337 -> getString(R.string.compass_dir_northwest)
+            else -> getString(R.string.compass_dir_north)
         }
     }
 

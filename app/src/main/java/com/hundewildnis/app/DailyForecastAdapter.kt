@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.util.Locale
+
 
 class DailyForecastAdapter(
     private val items: List<WeatherActivity.DailyForecastItem>,
@@ -34,11 +34,12 @@ class DailyForecastAdapter(
         holder.dayText.text  = item.dayLabel
         holder.dateText.text = item.dateLabel
         holder.iconText.text = getWeatherIcon(item.weatherCode)
-        holder.maxTempText.text = String.format(Locale.GERMAN, "%.0f°", item.tempMax)
-        holder.minTempText.text = String.format(Locale.GERMAN, "%.0f°", item.tempMin)
-        holder.rainText.text = "💧 ${item.precipProbability}%"
+        val context = holder.itemView.context
+        holder.maxTempText.text = context.getString(R.string.weather_temp_degree, item.tempMax)
+        holder.minTempText.text = context.getString(R.string.weather_temp_degree, item.tempMin)
+        holder.rainText.text = context.getString(R.string.weather_rain_percent, item.precipProbability)
         val beaufort = getBeaufortScale(item.windSpeedMax)
-        holder.windText.text = "💨 Bft $beaufort"
+        holder.windText.text = context.getString(R.string.weather_wind_bft, beaufort)
 
         holder.itemView.setOnClickListener { onItemClick(item) }
         holder.itemView.isClickable = true

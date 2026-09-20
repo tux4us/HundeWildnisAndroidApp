@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.util.Locale
+
 
 class WindForecastAdapter(
     private val items: List<WeatherActivity.WindForecastItem>
@@ -29,9 +29,10 @@ class WindForecastAdapter(
         val item = items[position]
         holder.timeText.text     = item.time
         holder.arrowText.text    = degreeToArrow(item.windDegree)
-        holder.speedText.text    = String.format(Locale.GERMAN, "%.0f km/h", item.windSpeed)
-        holder.gustText.text     = String.format(Locale.GERMAN, "Böen: %.0f", item.windGusts)
-        holder.beaufortText.text = "Bft ${item.beaufort}"
+        val context = holder.itemView.context
+        holder.speedText.text    = context.getString(R.string.weather_wind_speed_unit, item.windSpeed)
+        holder.gustText.text     = context.getString(R.string.weather_wind_gusts_label, item.windGusts)
+        holder.beaufortText.text = context.getString(R.string.weather_beaufort_label, item.beaufort)
 
         // Beaufort-Farbkodierung
         val color = beaufortColor(item.beaufort)

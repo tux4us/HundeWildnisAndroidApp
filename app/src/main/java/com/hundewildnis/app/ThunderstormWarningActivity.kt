@@ -56,7 +56,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Gewitterwarner"
+            title = getString(R.string.thunderstorm_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
         binding.toolbar.navigationIcon?.setTint(Color.WHITE)
@@ -83,14 +83,14 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             flashElapsedMillis = SystemClock.elapsedRealtime()
             binding.btnThunder.isEnabled = true
             binding.btnFlash.isEnabled = false
-            binding.tvMeasureStatus.text = "⚡ Blitz erfasst – jetzt auf DONNER tippen, sobald Du ihn hörst …"
+            binding.tvMeasureStatus.text = getString(R.string.thunderstorm_flash_captured_status)
             binding.cardCalculation.visibility = View.GONE
         }
 
         binding.btnThunder.setOnClickListener {
             val startTime = flashElapsedMillis
             if (startTime == null) {
-                Toast.makeText(this, "Bitte zuerst BLITZ beim Aufleuchten antippen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.thunderstorm_tap_flash_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val elapsedSeconds = (SystemClock.elapsedRealtime() - startTime) / 1000.0
@@ -105,7 +105,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             measurements.clear()
             updateTrendDisplay()
             binding.cardCalculation.visibility = View.GONE
-            binding.tvMeasureStatus.text = "Bereit für die nächste Messung."
+            binding.tvMeasureStatus.text = getString(R.string.thunderstorm_ready_for_next_measurement)
         }
     }
 
@@ -135,13 +135,13 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
     private fun showCalculationSteps(seconds: Double, distanceKm: Double, level: StormProximityLevel) {
         binding.cardCalculation.visibility = View.VISIBLE
 
-        binding.tvStepTime.text = String.format(Locale.GERMAN, "Gemessene Zeit: %.1f Sekunden", seconds)
+        binding.tvStepTime.text = getString(R.string.thunderstorm_step_measured_time, seconds)
 
         binding.tvStepFormula.text =
-            "Rechenweg:\n" +
-                    "Entfernung = Zeit × Schallgeschwindigkeit\n" +
-                    String.format(Locale.GERMAN, "= %.1f s × %.0f m/s", seconds, SPEED_OF_SOUND_MPS) +
-                    String.format(Locale.GERMAN, " = %.0f m", seconds * SPEED_OF_SOUND_MPS)
+            getString(R.string.thunderstorm_step_formula_header) + "\n" +
+                    getString(R.string.thunderstorm_step_formula_line) + "\n" +
+                    getString(R.string.thunderstorm_step_formula_calc1, seconds, SPEED_OF_SOUND_MPS) +
+                    getString(R.string.thunderstorm_step_formula_calc2, seconds * SPEED_OF_SOUND_MPS)
 
         binding.tvStepResult.text = getString(R.string.thunderstorm_distance_result, distanceKm)
         binding.tvStepResult.setTextColor(Color.parseColor(level.color))
@@ -221,13 +221,13 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         binding.tvApproachPlaceholder.visibility = View.GONE
         binding.approachMetricsContainer.visibility = View.VISIBLE
 
-        binding.tvSpeedValue.text = String.format(Locale.GERMAN, "%.0f km/h", estimate.speedKmh)
+        binding.tvSpeedValue.text = getString(R.string.thunderstorm_speed_value_kmh, estimate.speedKmh)
 
         val etaMinutes = estimate.etaMinutes
         val isAcuteDanger = estimate.currentDistanceKm <= LightningCalculator.ETA_MIN_DISTANCE_KM
 
         if (etaMinutes != null) {
-            binding.tvEtaValue.text = String.format(Locale.GERMAN, "%.0f min", etaMinutes)
+            binding.tvEtaValue.text = getString(R.string.thunderstorm_eta_value_min, etaMinutes)
             // Dringlichkeits-Färbung: je kürzer die ETA, desto alarmierender die Farbe
             val etaColor = when {
                 etaMinutes <= 10.0 -> "#E64A19"
@@ -246,13 +246,12 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         binding.tvApproachFormula.visibility = View.VISIBLE
         binding.tvApproachFormula.text = if (etaMinutes != null) {
             val remainingKm = estimate.currentDistanceKm - LightningCalculator.ETA_MIN_DISTANCE_KM
-            String.format(
-                Locale.GERMAN,
-                "📐 Geschwindigkeit ≈ %.0f km/h  •  Restweg (%.1f km − 1,0 km) ÷ %.0f km/h ≈ %.0f min",
+            getString(
+                R.string.thunderstorm_approach_formula_with_eta,
                 estimate.speedKmh, estimate.currentDistanceKm, estimate.speedKmh, remainingKm / estimate.speedKmh * 60.0
             )
         } else {
-            String.format(Locale.GERMAN, "📐 Geschwindigkeit = Distanzänderung ÷ vergangene Zeit ≈ %.0f km/h", estimate.speedKmh)
+            getString(R.string.thunderstorm_approach_formula_no_eta, estimate.speedKmh)
         }
     }
 
@@ -275,18 +274,16 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
-                .setTitle("📍 Standort für Gewittervorhersage")
-                .setMessage("Um die Gewittergefahr für die nächsten Stunden an Deinem aktuellen Standort abzurufen, " +
-                        "wird Dein Standort anonymisiert an Open-Meteo (freier Wetterdienst) übermittelt. " +
-                        "Es erfolgt keine Übermittlung an HundeWildnis oder Dritte.")
-                .setPositiveButton("AKTIVIEREN") { _, _ ->
+                .setTitle(getString(R.string.thunderstorm_location_dialog_title))
+                .setMessage(getString(R.string.thunderstorm_location_dialog_message))
+                .setPositiveButton(getString(R.string.thunderstorm_activate)) { _, _ ->
                     ActivityCompat.requestPermissions(
                         this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                         LOCATION_PERMISSION_REQUEST_CODE
                     )
                 }
-                .setNegativeButton("ABBRECHEN", null)
+                .setNegativeButton(getString(R.string.thunderstorm_cancel_uppercase), null)
                 .create()
                 .apply {
                     show()
@@ -304,7 +301,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 loadForecast()
             } else {
-                Toast.makeText(this, "Standortberechtigung wurde verweigert", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.thunderstorm_location_permission_denied), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -312,7 +309,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
     private fun loadForecast() {
         val location = getBestKnownLocation()
         if (location == null) {
-            Toast.makeText(this, "Kein Standort verfügbar. GPS aktiviert?", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.thunderstorm_no_location_available), Toast.LENGTH_LONG).show()
             return
         }
 
@@ -326,7 +323,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
                 }
                 displayForecast(json)
             } catch (e: Exception) {
-                Toast.makeText(this@ThunderstormWarningActivity, "Fehler beim Laden: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ThunderstormWarningActivity, getString(R.string.start_error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             } finally {
                 binding.forecastProgressBar.visibility = View.GONE
             }
@@ -399,8 +396,8 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         val weatherCodes = hourly.getJSONArray("weather_code")
         val windDirections = hourly.optJSONArray("wind_direction_10m")
 
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.GERMAN)
-        val outputFormat = SimpleDateFormat("HH:mm", Locale.GERMAN)
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US)
+        val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         var worstLevel = ThunderstormForecastLevel.LOW
         var worstHourLabel: String? = null
@@ -485,6 +482,6 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             96, 99 -> getString(R.string.weather_code_thunderstorm_hail)
             else -> null
         }
-        return if (label != null) getString(R.string.weather_code_prefix, code, label) else "Code $code"
+        return if (label != null) getString(R.string.weather_code_prefix, code, label) else getString(R.string.thunderstorm_weather_code_fallback, code)
     }
 }

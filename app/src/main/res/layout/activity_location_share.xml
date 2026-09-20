@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
-                android:text="Navigation beenden"
+                android:text="@string/location_share_stop_routing_button"
                 android:visibility="gone"
                 android:textSize="12sp"
                 app:backgroundTint="#B71C1C"
@@ -94,14 +94,14 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="📍 Standort freigeben"
+                                    android:text="@string/location_share_card_title"
                                     android:textSize="@dimen/text_body_large"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Sendet GPS alle 30 Sek. an WebDAV."
+                                    android:text="@string/location_share_card_subtitle"
                                     android:textSize="@dimen/text_body_small"
                                     android:textColor="#666666" />
                             </LinearLayout>
@@ -117,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Anzeigename (z.B. Name)">
+                            android:hint="@string/location_share_label_hint">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etLocationLabel"
@@ -131,7 +131,7 @@
                             android:id="@+id/tvShareStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Freigabe inaktiv"
+                            android:text="@string/location_share_own_status_inactive"
                             android:textSize="@dimen/text_body_small"
                             android:textColor="#666666"
                             android:layout_marginTop="8dp" />
@@ -157,7 +157,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="⚠️ WebDAV-Synchronisation fehlt!"
+                            android:text="@string/location_share_webdav_missing_title"
                             android:textColor="#E65100"
                             android:textStyle="bold" />
 
@@ -165,7 +165,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Bitte richte zuerst die WebDAV-Zugangsdaten ein, um die Standortfreigabe zu nutzen."
+                            android:text="@string/location_share_webdav_missing_message"
                             android:textSize="12sp"
                             android:textColor="#BF360C" />
 
@@ -176,7 +176,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_gravity="end"
-                            android:text="Zu den Einstellungen"
+                            android:text="@string/location_share_webdav_missing_button"
                             android:textColor="#E65100" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -205,7 +205,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="🗺️ Karten-Einstellungen"
+                                android:text="@string/location_share_map_settings_title"
                                 android:textStyle="bold" />
 
                             <com.google.android.material.button.MaterialButton
@@ -221,7 +221,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Routen-Profil:"
+                            android:text="@string/location_share_routing_profile_label"
                             android:textSize="12sp"
                             android:textColor="#666666"
                             android:layout_marginTop="8dp"
@@ -241,7 +241,7 @@
                                 style="?attr/materialButtonOutlinedStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
-                                android:text="🥾 Fuß"
+                                android:text="@string/location_share_profile_foot"
                                 android:textSize="12sp"
                                 android:paddingHorizontal="12dp"
                                 app:cornerRadius="8dp" />
@@ -251,7 +251,7 @@
                                 style="?attr/materialButtonOutlinedStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
-                                android:text="🚲 Rad"
+                                android:text="@string/location_share_profile_bike"
                                 android:textSize="12sp"
                                 android:paddingHorizontal="12dp"
                                 app:cornerRadius="8dp" />
@@ -261,7 +261,7 @@
                                 style="?attr/materialButtonOutlinedStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
-                                android:text="🚗 Auto"
+                                android:text="@string/location_share_profile_car"
                                 android:textSize="12sp"
                                 android:paddingHorizontal="12dp"
                                 app:cornerRadius="8dp" />
@@ -271,14 +271,14 @@
                             android:id="@+id/switchZoomActiveOnly"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Nur auf aktive Geräte zoomen"
+                            android:text="@string/location_share_zoom_active_only"
                             android:checked="true" />
 
                         <TextView
                             android:id="@+id/tvMapStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Keine Standortdaten gefunden."
+                            android:text="@string/location_share_map_status_no_data"
                             android:textSize="@dimen/text_body_small"
                             android:textColor="#666666" />
                     </LinearLayout>
@@ -303,7 +303,7 @@
                             android:id="@+id/tvDeviceListHeader"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="GERÄTELISTE (0)"
+                            android:text="@string/location_share_device_list_header_placeholder"
                             android:textColor="@color/rd_overlay_accent"
                             android:textSize="13sp"
                             android:textStyle="bold"

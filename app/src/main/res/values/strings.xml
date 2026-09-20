@@ -1814,6 +1814,16 @@
     <string name="plant_scout_season_title">⚠️ Aktuell im %1$s besonders relevant</string>
     <string name="plant_scout_season_warning">Achtung: %1$s</string>
     <string name="plant_scout_season_count">%1$d Pflanzen in dieser Jahreszeit relevant</string>
+    <string name="plant_scout_menu_show_all">Alle zeigen</string>
+    <string name="plant_scout_menu_seasonal_notable">Saisonal bemerkenswert</string>
+    <string name="plant_scout_filter_toxicity_levels">Giftstufen</string>
+    <string name="plant_scout_filter_deadly">☠️ Tödlich</string>
+    <string name="plant_scout_filter_highly_toxic">🔴 Stark giftig</string>
+    <string name="plant_scout_filter_moderately_toxic">🟠 Giftig</string>
+    <string name="plant_scout_filter_slightly_toxic">🟡 Leicht giftig</string>
+    <string name="plant_scout_result_count_seasonal_suffix"> · Aktuelle Jahreszeit</string>
+    <string name="plant_scout_empty_hint">Keine Pflanze gefunden.</string>
+    <string name="plant_scout_search_hint">🔍 Pflanze suchen …</string>
 
     <!-- PlantDetailActivity -->
     <string name="plant_detail_also_known_as">Auch bekannt als: %1$s</string>
@@ -1824,6 +1834,26 @@
     <string name="plant_detail_confusion_risk">⚠️ Verwechslungsgefahr: %1$s</string>
     <string name="plant_detail_note">ℹ️ %1$s</string>
     <string name="plant_detail_open_emergency">🚨 Notfall-Assistent öffnen</string>
+    <string name="plant_detail_toast_camera_permission_required">Kamera-Berechtigung erforderlich</string>
+    <string name="plant_detail_photo_count_format">%1$d / %2$d eigene Fotos</string>
+    <string name="plant_detail_photo_menu_retake">📷 Neu aufnehmen (ersetzt)</string>
+    <string name="plant_detail_photo_menu_gallery_replace">🖼️ Aus Galerie (ersetzt)</string>
+    <string name="plant_detail_photo_menu_camera">📷 Kamera</string>
+    <string name="plant_detail_photo_menu_gallery">🖼️ Aus Galerie</string>
+    <string name="plant_detail_photo_slot_title">Foto Slot %1$d</string>
+    <string name="plant_detail_toast_save_failed">Foto konnte nicht gespeichert werden.</string>
+    <string name="plant_detail_delete_photo_title">Foto löschen?</string>
+    <string name="plant_detail_delete_photo_message">Das Foto wird dauerhaft gelöscht.</string>
+    <string name="plant_detail_delete_photo_confirm">Löschen</string>
+    <string name="plant_detail_photos_title">📷 Eigene Fotos</string>
+    <string name="plant_detail_photo_slot_content_description_1">Foto Slot 1</string>
+    <string name="plant_detail_photo_slot_content_description_2">Foto Slot 2</string>
+    <string name="plant_detail_photo_slot_content_description_3">Foto Slot 3</string>
+    <string name="plant_detail_photos_hint">Tippe auf einen Slot um ein Foto hinzuzufügen.</string>
+    <string name="plant_detail_identification_title">🔍 Erkennungsmerkmale</string>
+    <string name="plant_detail_symptoms_title">🤢 Symptome nach Aufnahme</string>
+    <string name="plant_detail_firstaid_title">🩺 Sofortmaßnahmen</string>
+    <string name="plant_detail_vet_required_banner">🏥 SOFORT TIERARZT – auch bei kleinen Mengen</string>
 
     <!-- FirstAidInstructions: Bewusstlosigkeit -->
     <string name="firstaid_unconsciousness_title">Bewusstlosigkeit</string>
@@ -3293,4 +3323,1669 @@
     <string name="walking_speed_service_channel_description">Status der Geschwindigkeitsüberwachung</string>
     <string name="walking_speed_service_too_fast_title">⚠️ Zu schnell!</string>
     <string name="walking_speed_service_notification_title">🚶 Trainingstempo</string>
+
+    <!-- WeatherActivity -->
+    <string name="weather_toolbar_title">Wetterinformationen</string>
+    <string name="weather_location_services_title">📍 Standortdienste aktivieren</string>
+    <string name="weather_location_services_message">HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\nDies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\nWICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\nOhne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden</string>
+    <string name="weather_location_permission_required">Standortberechtigung benötigt</string>
+    <string name="weather_location_permission_denied">Standortberechtigung wurde verweigert</string>
+    <string name="weather_determining_location">Standort wird ermittelt...</string>
+
+    <!-- WeatherActivity: Suche & Standort -->
+    <string name="weather_search_hint">Stadt oder Ort eingeben...</string>
+    <string name="weather_search_title">🌍 Ort suchen</string>
+    <string name="weather_location_prefix">📍 %1$s</string>
+
+    <!-- WeatherActivity: Favoriten -->
+    <string name="weather_results">Ergebnisse</string>
+    <string name="weather_removed_from_favorites">Aus Favoriten entfernt</string>
+    <string name="weather_added_to_favorites">Zu Favoriten hinzugefügt</string>
+    <string name="weather_no_favorites_yet">Noch keine Favoriten gespeichert</string>
+    <string name="weather_favorites_title">⭐ Wetter Favoriten</string>
+    <string name="weather_manage">Verwalten</string>
+    <string name="weather_delete_favorites_title">Favoriten löschen</string>
+    <string name="weather_delete_selected">Ausgewählte löschen</string>
+
+    <!-- WeatherActivity: Mondphasen -->
+    <string name="weather_moon_phase_0">Neumond</string>
+    <string name="weather_moon_phase_1">Zunehmende Sichel (1. Viertel)</string>
+    <string name="weather_moon_phase_2">Erstes Viertel (Halbmond)</string>
+    <string name="weather_moon_phase_3">Zunehmender Mond (2. Viertel)</string>
+    <string name="weather_moon_phase_4">Vollmond</string>
+    <string name="weather_moon_phase_5">Abnehmender Mond (3. Viertel)</string>
+    <string name="weather_moon_phase_6">Letztes Viertel (Halbmond)</string>
+    <string name="weather_moon_phase_7">Abnehmende Sichel (4. Viertel)</string>
+    <string name="weather_moon_astronomy_0">🔭 Astronomie:\nDer Mond steht in Konjunktion zur Sonne – seine beleuchtete Seite zeigt von der Erde weg. Er geht mit der Sonne auf und unter, ist tagsüber unsichtbar und erscheint am Nachthimmel nicht.\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_1">🔭 Astronomie:\nDie schmale Sichel erscheint kurz nach Sonnenuntergang im Westen und folgt der Sonne bald unter den Horizont (sichtbar ca. 1–2 Stunden). Die unbeleuchtete Seite schimmert bläulich (Erdschein).\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_2">🔭 Astronomie:\nErste Quadratur (90°-Winkel Sonne–Erde–Mond). Exakt die rechte Hälfte ist beleuchtet. Aufgang gegen Mittag, Untergang gegen Mitternacht. Der Terminator ist ideal für Teleskopbeobachtungen.\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_3">🔭 Astronomie:\nGibbous-Phase (lat. gibbus = buckelig): Mehr als die Hälfte ist beleuchtet. Der Mond geht am Nachmittag auf und ist auch noch in den frühen Morgenstunden sichtbar.\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_4">🔭 Astronomie:\nOpposition: Erde liegt zwischen Sonne und Mond. Die gesamte sichtbare Mondseite wird beleuchtet. Er geht bei Sonnenuntergang auf und bei Sonnenaufgang unter – die ganze Nacht sichtbar. Entfernung: ~384.400 km.\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_5">🔭 Astronomie:\nDer Mond nimmt ab – er geht zunehmend später auf (nach Mitternacht) und steht morgens noch am Himmel. Die beleuchtete Fläche auf der linken Seite wird von Nacht zu Nacht kleiner.\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_6">🔭 Astronomie:\nZweite Quadratur (270°). Jetzt ist die linke Hälfte beleuchtet. Aufgang gegen Mitternacht, Untergang gegen Mittag. Der Mond steht bei Sonnenaufgang im Süden.\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_astronomy_7">🔭 Astronomie:\nDie abnehmende Sichel ist kurz vor Sonnenaufgang im Osten sichtbar. Der Mond nähert sich wieder der Sonne an. In wenigen Tagen beginnt ein neuer synodischer Zyklus (29 Tage, 12 Std., 44 Min.).\nBeleuchtung: ~%1$d%%</string>
+    <string name="weather_moon_nature_0">🌿 Natur &amp; Tierwelt:\n• Dunkle Nächte – Eulen, Füchse und Marder jagen besonders effektiv.\n• Rehe, Hasen und Kaninchen meiden offenes Gelände (höhere Fressfeindgefahr).\n• Fische stehen tiefer und sind weniger aktiv an der Oberfläche.\n• Springtide: Wechselspiel von Sonne und Mond erzeugt stärkste Gezeiten.\n• Biodynamisch: Gute Keimkraft, ideale Zeit für Aussaat von Blattgemüse.</string>
+    <string name="weather_moon_nature_1">🌿 Natur &amp; Tierwelt:\n• Licht nimmt zu – Nachtaktivität der Wildtiere wächst langsam.\n• Zugvögel orientieren sich bei schwacher Mondbeleuchtung an den Sternen.\n• Fische steigen etwas höher in die Wassersäule.\n• Pflanzensaft steigt nach oben – günstig für Pflanzungen und Transplantationen.\n• Pilze fruchten gut bei zunehmendem Mond und feuchtem Wetter.</string>
+    <string name="weather_moon_nature_2">🌿 Natur &amp; Tierwelt:\n• Erste Quadratur: Tiere sind spürbar aktiver – Dämmerungsrunden häufiger.\n• Zugvögel nutzen das zunehmende Mondlicht für Nachtflüge über Gebirge.\n• Süßwasserfische besonders aktiv, stehen hoch in ruhigen Buchten.\n• Traditionell günstig für Pflanzenschnitt; Wunden verheilen besser.</string>
+    <string name="weather_moon_nature_3">🌿 Natur &amp; Tierwelt:\n• Mit wachsendem Licht steigen Aktivität und Risikobereitschaft der Wildtiere.\n• Hirsche ziehen weite Distanzen; Bachen mit Frischlingen sind unterwegs.\n• Insekten (Nachtfalter, Mücken) deutlich häufiger aktiv.\n• Achtung: Zeckenaktivität kann auch nächtlich erhöht sein.\n• Meerestiere synchronisieren Laichen mit dem Mondzyklus.</string>
+    <string name="weather_moon_nature_4">🌿 Natur &amp; Tierwelt:\n• Vollmond-Maximum: Studien belegen erhöhte Aktivität fast aller Wildtierarten.\n• Wölfe orientieren sich auf die Jagd – Rudelkommunikation per Heulen.\n• Rehe, Wildschweine, Füchse wechseln in offenem Gelände.\n• Hechte und Forellen fressen bevorzugt nachts bei Vollmond.\n• Korallenriffe: viele Arten spawnen synchron in Vollmondnächten.\n• Maximale Wasseraufnahme in Pflanzen – Früchte besonders saftig und aromatisch.</string>
+    <string name="weather_moon_nature_5">🌿 Natur &amp; Tierwelt:\n• Wildtiere reduzieren langsam ihre Nachtaktivität, bleiben aber noch aktiv.\n• Gute Beobachtungsphase: Tiere noch unterwegs, Licht noch ausreichend.\n• Fische werden langsam wieder träger an der Oberfläche.\n• Holzeinschlag traditionell empfohlen: Holz trocknet besser, ist haltbarer.</string>
+    <string name="weather_moon_nature_6">🌿 Natur &amp; Tierwelt:\n• Tiere kehren zu ruhigeren Tagesrhythmen zurück.\n• Nachts kaum Wildtierbegegnungen auf offenem Gelände.\n• Fischaktivität stark reduziert; Tiere suchen tiefere, ruhige Bereiche.\n• Biodynamisch: Günstig für Beschnitt von Obstbäumen und Wurzelarbeiten.</string>
+    <string name="weather_moon_nature_7">🌿 Natur &amp; Tierwelt:\n• Ruhigste Phase des Mondzyklus – Wildtiere am zurückgezogensten.\n• Beutetiere meiden offenes Gelände; dichte Deckung bevorzugt.\n• Frühmorgens oft gute Chance zur stillen Wildtierbeobachtung.\n• Biodynamisch: Günstig für Bodenbearbeitung, Kompostierung und Regeneration.</string>
+    <string name="weather_moon_dogtips_0">🐕 Hund &amp; Training:\n• Ruhige, ausgeglichene Phase – ideal für neue Trainingsimpulse.\n• Viele Hunde sind entspannt und lernbereit: Grundkommandos festigen.\n• Dunkle Nächte: Leine und Reflektoren sind Pflicht bei Abendrunden.\n• Wildtiere aktiver → Beuteinstinkt beachten; unzuverlässige Hunde an der Leine führen.</string>
+    <string name="weather_moon_dogtips_1">🐕 Hund &amp; Training:\n• Energie nimmt zu – Hunde werden etwas lebhafter und neugieriger.\n• Gute Phase für aufbauende Übungen und das Einführen neuer Kommandos.\n• Abendrunden mit Blick auf die Abendsichel – ein schöner gemeinsamer Moment.\n• Zeckencheck nach Runden in der Dämmerung nicht vergessen.</string>
+    <string name="weather_moon_dogtips_2">🐕 Hund &amp; Training:\n• Halbmond: Aktivitätsphase im Aufbau – Hunde häufig motivierter als sonst.\n• Sehr gute Zeit für Leinenarbeit, Distanzunterbrechungen und Positionsübungen.\n• Wildtiere nun deutlich aktiver → Begegnungssituationen wahrscheinlicher.\n• Rückruf und verlässliches Sitzenbleiben als Sicherheitsbasis trainieren.</string>
+    <string name="weather_moon_dogtips_3">🐕 Hund &amp; Training:\n• Zunehmende Energie – intensive Trainingseinheiten gut durchführbar.\n• Manche Hunde reagieren sensibler auf Gerüche, Geräusche und Bewegungen.\n• Nasenarbeit besonders spannend: Wildtiergerüche sehr präsent.\n• Hunde mit starkem Jagdtrieb: Leine als kluge Vorsichtsmaßnahme beibehalten.</string>
+    <string name="weather_moon_dogtips_4">🐕 Hund &amp; Training:\n⚠️ Vollmond – besondere Aufmerksamkeit:\n• Wissenschaftliche Studien (BMJ 2007, Anthrozoös 2011) belegen signifikant mehr Tierarztbesuche in Vollmondnächten – v. a. wegen Unfällen und Erregungszuständen.\n• Viele Hunde schlafen schlechter oder zeigen erhöhte Wachsamkeit und Unruhe.\n• Reizschwelle oft niedriger: Hunde reagieren auf schwächste Reize.\n• Wildtiere maximal aktiv → erhöhte Ablenkung und Ablenkungsintensität.\n• Empfehlung: Kurze, ruhige Runden bevorzugen. Vorhersehbare Routinen stärken das Sicherheitsgefühl.\n• Ängstliche Hunde: Ruhe und Gelassenheit als Sicherheitsanker ausstrahlen.</string>
+    <string name="weather_moon_dogtips_5">🐕 Hund &amp; Training:\n• Energie nimmt ab – ideale Phase zum Festigen gelernter Übungen.\n• Hunde kehren zu ruhigeren Verhaltensmustern zurück.\n• Rückblick im Trainingstagebuch: Was klappt gut? Was braucht mehr Wiederholung?\n• Teamwalk und ruhige Geländeläufe jetzt besonders harmonisch.</string>
+    <string name="weather_moon_dogtips_6">🐕 Hund &amp; Training:\n• Ruhigere, beständige Phase – gute Lernbereitschaft für Feinheiten und Präzision.\n• Letztes Viertel: Ideal für Konsolidierungstraining und Reflexion.\n• Welpen und sensible Hunde oft merklich entspannter als rund um den Vollmond.\n• Stresstoleranztraining: Ruhige, kontrollierte Reizeinführung jetzt besonders effektiv.</string>
+    <string name="weather_moon_dogtips_7">🐕 Hund &amp; Training:\n• Ruhigste und entspannteste Phase des gesamten Zyklus.\n• Ideal für regeneratives Training: Nasenarbeit, Scouttechniken, ruhige Erkundungstouren.\n• Hunde mit Aufregungsthemen: Gezielte Entspannungs- und Achtsamkeitsübungen einbauen.\n• Energie sammeln vor dem nächsten Neumond – Genuss-Runden ohne Leistungsdruck.</string>
+    <string name="weather_zodiac_0">♈ Widder</string>
+    <string name="weather_zodiac_0_desc">Feuerzeichen – aktiv, impulsiv, direkt</string>
+    <string name="weather_zodiac_1">♉ Stier</string>
+    <string name="weather_zodiac_1_desc">Erdezeichen – beständig, sinnlich, geerdet</string>
+    <string name="weather_zodiac_2">♊ Zwillinge</string>
+    <string name="weather_zodiac_2_desc">Luftzeichen – neugierig, beweglich, kommunikativ</string>
+    <string name="weather_zodiac_3">♋ Krebs</string>
+    <string name="weather_zodiac_3_desc">Wasserzeichen – gefühlvoll, instinktiv, schützend</string>
+    <string name="weather_zodiac_4">♌ Löwe</string>
+    <string name="weather_zodiac_4_desc">Feuerzeichen – ausdrucksstark, kraftvoll, mutig</string>
+    <string name="weather_zodiac_5">♍ Jungfrau</string>
+    <string name="weather_zodiac_5_desc">Erdezeichen – präzise, beobachtend, analytisch</string>
+    <string name="weather_zodiac_6">♎ Waage</string>
+    <string name="weather_zodiac_6_desc">Luftzeichen – harmonisch, sozial, ausgleichend</string>
+    <string name="weather_zodiac_7">♏ Skorpion</string>
+    <string name="weather_zodiac_7_desc">Wasserzeichen – intensiv, tief, transformativ</string>
+    <string name="weather_zodiac_8">♐ Schütze</string>
+    <string name="weather_zodiac_8_desc">Feuerzeichen – freiheitsliebend, weiträumig, optimistisch</string>
+    <string name="weather_zodiac_9">♑ Steinbock</string>
+    <string name="weather_zodiac_9_desc">Erdezeichen – ausdauernd, diszipliniert, verlässlich</string>
+    <string name="weather_zodiac_10">♒ Wassermann</string>
+    <string name="weather_zodiac_10_desc">Luftzeichen – unabhängig, originell, zukunftsorientiert</string>
+    <string name="weather_zodiac_11">♓ Fische</string>
+    <string name="weather_zodiac_11_desc">Wasserzeichen – sensibel, intuitiv, anpassungsfähig</string>
+    <string name="weather_moon_zodiac_line">🔯 Mondzeichen (Näherung): %1$s\n%2$s</string>
+    <string name="weather_moon_event_today">%1$s: heute!</string>
+    <string name="weather_moon_event_tomorrow">%1$s: morgen</string>
+    <string name="weather_moon_event_in_days">%1$s: in %2$d Tagen</string>
+    <string name="weather_moon_full_moon_label">🌕 Vollmond</string>
+    <string name="weather_moon_new_moon_label">🌑 Neumond</string>
+    <string name="weather_moon_illumination">Beleuchtung: %1$.0f%%</string>
+    <string name="weather_moon_age">Mondalter: %1$.1f von 29,5 Tagen</string>
+
+    <!-- WeatherActivity: Beaufort-Skala -->
+    <string name="weather_beaufort_0">Windstille</string>
+    <string name="weather_beaufort_1">Leiser Zug</string>
+    <string name="weather_beaufort_2">Leichte Brise</string>
+    <string name="weather_beaufort_3">Schwache Brise</string>
+    <string name="weather_beaufort_4">Mäßige Brise</string>
+    <string name="weather_beaufort_5">Frische Brise</string>
+    <string name="weather_beaufort_6">Starker Wind</string>
+    <string name="weather_beaufort_7">Steifer Wind</string>
+    <string name="weather_beaufort_8">Stürmischer Wind</string>
+    <string name="weather_beaufort_9">Sturm</string>
+    <string name="weather_beaufort_10">Schwerer Sturm</string>
+    <string name="weather_beaufort_11">Orkanartiger Sturm</string>
+    <string name="weather_beaufort_12">Orkan</string>
+    <string name="weather_unknown">Unbekannt</string>
+
+    <!-- WeatherActivity: WMO-Wettercodes -->
+    <string name="weather_desc_clear">Klar</string>
+    <string name="weather_desc_mostly_clear">Leicht bewölkt</string>
+    <string name="weather_desc_partly_cloudy">Teilweise bewölkt</string>
+    <string name="weather_desc_cloudy">Bewölkt</string>
+    <string name="weather_desc_fog">Nebel</string>
+    <string name="weather_desc_freezing_fog">Gefrierender Nebel</string>
+    <string name="weather_desc_light_drizzle">Leichter Nieselregen</string>
+    <string name="weather_desc_moderate_drizzle">Mäßiger Nieselregen</string>
+    <string name="weather_desc_heavy_drizzle">Starker Nieselregen</string>
+    <string name="weather_desc_freezing_light_drizzle">Gefrierender leichter Nieselregen</string>
+    <string name="weather_desc_freezing_heavy_drizzle">Gefrierender starker Nieselregen</string>
+    <string name="weather_desc_light_rain">Leichter Regen</string>
+    <string name="weather_desc_moderate_rain">Mäßiger Regen</string>
+    <string name="weather_desc_heavy_rain">Starker Regen</string>
+    <string name="weather_desc_freezing_light_rain">Gefrierender leichter Regen</string>
+    <string name="weather_desc_freezing_heavy_rain">Gefrierender starker Regen</string>
+    <string name="weather_desc_light_snow">Leichter Schneefall</string>
+    <string name="weather_desc_moderate_snow">Mäßiger Schneefall</string>
+    <string name="weather_desc_heavy_snow">Starker Schneefall</string>
+    <string name="weather_desc_snow_grains">Schneegriesel</string>
+    <string name="weather_desc_light_showers">Leichte Regenschauer</string>
+    <string name="weather_desc_moderate_showers">Mäßige Regenschauer</string>
+    <string name="weather_desc_heavy_showers">Starke Regenschauer</string>
+    <string name="weather_desc_light_snow_showers">Leichte Schneeschauer</string>
+    <string name="weather_desc_heavy_snow_showers">Starke Schneeschauer</string>
+    <string name="weather_desc_thunderstorm">Gewitter</string>
+    <string name="weather_desc_thunderstorm_light_hail">Gewitter mit leichtem Hagel</string>
+    <string name="weather_desc_thunderstorm_heavy_hail">Gewitter mit starkem Hagel</string>
+    <string name="weather_desc_code_unknown">Wetter-Code %1$d</string>
+
+    <!-- WeatherActivity: Tageslänge -->
+    <string name="weather_daylight_duration">☀️ Tageslänge: %1$dh %2$dm</string>
+    <string name="weather_dawn">🌄 Morgendämmerung: %1$s Uhr</string>
+    <string name="weather_dusk">🌆 Abenddämmerung: %1$s Uhr</string>
+    <string name="weather_daylight_trend_longer">📈 +%1$d Min länger</string>
+    <string name="weather_daylight_trend_shorter">📉 %1$d Min kürzer</string>
+    <string name="weather_daylight_trend_same">➡️ Gleich lang</string>
+    <string name="weather_daylight_trend_prefix">Tendenz: %1$s als gestern</string>
+
+    <!-- WeatherActivity: Luftqualität (AQI) -->
+    <string name="weather_aqi_good">Gut</string>
+    <string name="weather_aqi_moderate">Mäßig</string>
+    <string name="weather_aqi_unhealthy_sensitive">Sensible gefährdet</string>
+    <string name="weather_aqi_unhealthy">Ungesund</string>
+    <string name="weather_aqi_very_unhealthy">Sehr ungesund</string>
+    <string name="weather_aqi_hazardous">Gefährlich</string>
+
+    <!-- WeatherActivity: Pollen -->
+    <string name="weather_pollen_none">Keine</string>
+    <string name="weather_pollen_low">Niedrig</string>
+    <string name="weather_pollen_medium">Mittel</string>
+    <string name="weather_pollen_high">Hoch</string>
+    <string name="weather_pollen_very_high">Sehr hoch</string>
+
+    <!-- WeatherActivity: Pollen-Quellen -->
+    <string name="weather_pollen_birch">Birke</string>
+    <string name="weather_pollen_grass">Gräser</string>
+    <string name="weather_pollen_alder">Erle</string>
+    <string name="weather_pollen_mugwort">Beifuß</string>
+    <string name="weather_pollen_olive">Olive</string>
+    <string name="weather_pollen_ragweed">Ambrosia</string>
+
+    <!-- WeatherActivity: Schattenlängen-Dialog -->
+    <string name="weather_shadow_height_person">👤 Größe Person (m)</string>
+    <string name="weather_shadow_height_dog">🐕 Widerristhöhe Hund (m)</string>
+    <string name="weather_shadow_height_object">📦 Höhe Objekt (m)</string>
+    <string name="weather_shadow_dialog_title">📏 Höhen für Schattenlänge</string>
+    <string name="save">Speichern</string>
+
+    <!-- WeatherActivity: Pollen & Hund Gesundheitshinweise -->
+    <string name="weather_pollen_dog_header">🐕 Hund &amp; Pollen:</string>
+    <string name="weather_pollen_dog_level_1">Die aktuelle Pollenbelastung ist niedrig. Für die meisten Hunde sind keine besonderen Maßnahmen erforderlich.</string>
+    <string name="weather_pollen_dog_level_2">Mittlere Pollenbelastung. Beobachte Deinen Hund nach Aufenthalten im Freien auf mögliche Reaktionen – besonders empfindliche Hunde können Beschwerden zeigen.</string>
+    <string name="weather_pollen_dog_level_3">Hohe Pollenbelastung. Hunde können ähnlich wie Menschen unter Pollenallergien leiden – häufig als atopische Dermatitis (Hautjucken, Schütteln des Kopfes, Pfoten lecken).</string>
+    <string name="weather_pollen_dog_level_4">Sehr hohe Pollenbelastung. Bei bekannt allergischen Hunden unbedingt Rücksprache mit dem Tierarzt halten. Trainingseinheiten ggf. in die frühen Morgenstunden oder nach Regenfällen verlegen.</string>
+    <string name="weather_pollen_dog_tree">🌳 Baumpollen (Birke/Erle): Kreuzreaktionen mit bestimmten Proteinen in Hundefutter sind möglich. Bei unklaren Verdauungsproblemen ggf. Tierarzt konsultieren.</string>
+    <string name="weather_pollen_dog_grass">🌾 Gräserpollen: Häufigste Pollenallergieauslöser bei Hunden. Symptome: Juckreiz an Pfoten, Bauch und Ohren. Pfoten nach Spaziergängen im Gras abspülen kann helfen.</string>
+    <string name="weather_pollen_dog_herb">🌿 Beifuß/Ambrosia: Kräuterpollen – Kreuzreaktionen mit Lebensmittelallergenen möglich. Hunde mit bekannten Futtermittelallergien können empfindlicher reagieren.</string>
+    <string name="weather_pollen_dog_general_tips">💡 Tipps bei erhöhter Belastung:\n• Nach Freilandrunden Fell und Pfoten abwischen\n• Augen und Nase beobachten (Ausfluss, Rötungen)\n• Häufiges Lecken der Pfoten kann auf Pollenreiz hinweisen\n• Schütteln und Kratzen am Kopf beobachten</string>
+
+    <!-- WeatherActivity: Wetterwarnungs-Badges (fehlten bisher in DE, nur in EN vorhanden) -->
+    <string name="weather_badge_thunderstorm">⚠️ Gewitter</string>
+    <string name="weather_badge_snow_showers">❄️ Schneeschauer</string>
+    <string name="weather_badge_showers">🌦️ Schauer</string>
+    <string name="weather_badge_snow">❄️ Schneefall</string>
+    <string name="weather_badge_heavy_rain">🌧️ Starker Regen</string>
+    <string name="weather_badge_high_precip">☔ Hohe Regenwahrscheinlichkeit</string>
+    <string name="weather_badge_possible_rain">🌂 Möglicher Regen (%1$d%%)</string>
+    <string name="weather_badge_fog">🌫️ Nebel</string>
+    <string name="weather_badge_cloudy">☁️ Bewölkt</string>
+    <string name="weather_badge_none">✅ Keine Wetterwarnung</string>
+
+    <!-- WeatherActivity: Beaufort-Symbole (Naturbeschreibung) -->
+    <string name="weather_beaufort_symbol_0">🌿 Windstille – Rauch steigt senkrecht</string>
+    <string name="weather_beaufort_symbol_1">🍃 Leiser Zug – Rauch zeigt Windrichtung</string>
+    <string name="weather_beaufort_symbol_2">🍃💨 Leichte Brise – Blätter rascheln</string>
+    <string name="weather_beaufort_symbol_3">🌿💨 Schwache Brise – Zweige bewegen sich</string>
+    <string name="weather_beaufort_symbol_4">🌾💨 Mäßige Brise – Kleine Äste bewegen sich</string>
+    <string name="weather_beaufort_symbol_5">🌲💨 Frische Brise – Kleine Bäume schwanken</string>
+    <string name="weather_beaufort_symbol_6">🌳💨 Starker Wind – Große Äste schwingen</string>
+    <string name="weather_beaufort_symbol_7">🌳🌬️ Steifer Wind – Ganze Bäume bewegen sich</string>
+    <string name="weather_beaufort_symbol_8">🌬️🌳 Stürmisch – Zweige brechen</string>
+    <string name="weather_beaufort_symbol_9">🌀🌲 Sturm – Äste brechen, leichte Schäden</string>
+    <string name="weather_beaufort_symbol_10">🌪️🌳 Schwerer Sturm – Bäume entwurzelt</string>
+    <string name="weather_beaufort_symbol_11">🌪️💥 Orkanartiger Sturm – Verbreitet Schäden</string>
+    <string name="weather_beaufort_symbol_12">🌀🌪️ Orkan – Verheerende Zerstörung</string>
+
+    <!-- WeatherActivity: Windrichtungen -->
+    <string name="weather_wind_dir_n">↓ Nord</string>
+    <string name="weather_wind_dir_ne">↙ NordOst</string>
+    <string name="weather_wind_dir_e">← Ost</string>
+    <string name="weather_wind_dir_se">↖ SüdOst</string>
+    <string name="weather_wind_dir_s">↑ Süd</string>
+    <string name="weather_wind_dir_sw">↗ SüdWest</string>
+    <string name="weather_wind_dir_w">→ West</string>
+    <string name="weather_wind_dir_nw">↘ NordWest</string>
+
+    <!-- WeatherActivity: Stündliche UV-Empfehlung -->
+    <string name="weather_uv_level_0_desc">UV-Index unter 1 – keine relevante UV-Belastung.</string>
+    <string name="weather_uv_level_0_human">👤 Mensch: Kein Sonnenschutz erforderlich.</string>
+    <string name="weather_uv_level_0_dog">🐕 Hund: Keine besonderen Maßnahmen nötig.</string>
+    <string name="weather_uv_human_header">👤 Mensch:</string>
+    <string name="weather_uv_dog_header">🐕 Hund:</string>
+    <string name="weather_uv_protection_summary_header">🛡️ Schutzmaßnahmen %1$s Uhr:</string>
+    <string name="weather_uv_hourly_vet_disclaimer">⚕️ Kein Ersatz für tierärztliche oder medizinische Beratung.</string>
+
+    <string name="weather_uv_level_1_desc">UV-Index %1$s – Gering\nKein zwingender Sonnenschutz, bei längeren Aufenthalten empfohlen.\n</string>
+    <string name="weather_uv_level_2_desc">UV-Index %1$s – Mittel\nSonnenschutz für längere Aufenthalte im Freien empfohlen.\n</string>
+    <string name="weather_uv_level_3_desc">UV-Index %1$s – Hoch\nSonnenschutz notwendig. Mittagszeit meiden.\n</string>
+    <string name="weather_uv_level_4_desc">UV-Index %1$s – Sehr hoch\nUmfassender Sonnenschutz erforderlich. Schatten bevorzugen.\n</string>
+    <string name="weather_uv_level_5_desc">UV-Index %1$s – Extrem ⚠️\nAufenthalt im Freien so kurz wie möglich halten.\n</string>
+
+    <string name="weather_uv_level_1_human">• Kein zwingender Sonnenschutz; bei heller Haut oder Reflexionsflächen (Schnee, Wasser) Sonnencreme sinnvoll.\n• Sonnenbrille bei Bedarf empfohlen.</string>
+    <string name="weather_uv_level_2_human">• Sonnenschutz auf unbedeckten Hautstellen empfohlen.\n• Kopfbedeckung bei längerem Aufenthalt empfohlen.\n• Zwischen 11 und 15 Uhr Aufenthalt in der Sonne begrenzen.</string>
+    <string name="weather_uv_level_3_human">• Sonnenschutz empfohlen.\n• Sonnenbrille und Kopfbedeckung empfohlen.\n• Zwischen 11 und 15 Uhr Schatten bevorzugen.</string>
+    <string name="weather_uv_level_4_human">• Sonnenschutz dringend empfohlen.\n• Lange Kleidung, Sonnenbrille, Hut.\n• Direkte Sonne zwischen 10 und 16 Uhr meiden.\n• Ausreichend trinken.</string>
+    <string name="weather_uv_level_5_human">• Sonnenschutz dringend empfohlen.\n• Nur im Schatten aufhalten oder drinnen bleiben.\n• Schützende Kleidung empfohlen.\n• Kinder und ältere Menschen besonders schützen.</string>
+
+    <string name="weather_uv_level_1_dog">• Keine besonderen Maßnahmen nötig.\n• Frisches Trinkwasser bereitstellen.</string>
+    <string name="weather_uv_level_2_dog">• Helle oder dünn behaarte Hunde sind UV-empfindlich. In der Mittagszeit Schatten bevorzugen.</string>
+    <string name="weather_uv_level_3_dog">• Training vor 10 oder nach 16 Uhr legen.\n• Tagsüber Schatten bevorzugen.\n• Asphalt und dunkle Oberflächen meiden – können Pfoten verbrennen.\n• Ausreichend Wasser mitführen.</string>
+    <string name="weather_uv_level_4_dog">• Training auf frühe Morgen- oder Abendstunden verschieben.\n• Asphalt und Steinboden meiden – kann Pfoten überhitzen.\n• Anhaltende UV-Exposition erhöht bei anfälligen Rassen langfristig das Risiko für Erkrankungen.\n• Viel Trinkwasser, Pausen im Schatten.</string>
+    <string name="weather_uv_level_5_dog">• Training heute möglichst ganz vermeiden.\n• Notwendige Runden auf schattige Routen beschränken.\n• Hund regelmäßig auf der Bauchseite anfeuchten.\n• Überhitzungszeichen beobachten: starkes Hecheln, Speichelfluss, Koordinationsstörungen → sofort kühlen, Tierarzt aufsuchen.\n• Trinkwasser in ausreichender Menge mitführen.</string>
+
+    <string name="weather_uv_level_1_summary">Sonnenschutz nach Bedarf  •  Schatten: optional  •  Kopfbedeckung: optional  •  Sonnenbrille: empfohlen</string>
+    <string name="weather_uv_level_2_summary">Sonnenschutz empfohlen  •  Schatten: bei längerem Aufenthalt  •  Kopfbedeckung: empfohlen  •  Sonnenbrille: empfohlen</string>
+    <string name="weather_uv_level_3_summary">Sonnenschutz empfohlen  •  Schatten: bevorzugen  •  Kopfbedeckung: notwendig  •  Sonnenbrille: notwendig</string>
+    <string name="weather_uv_level_4_summary">Sonnenschutz empfohlen  •  Schatten: zwingend  •  Kopfbedeckung: zwingend  •  Sonnenbrille: zwingend  •  Lange Kleidung: empfohlen</string>
+    <string name="weather_uv_level_5_summary">Sonnenschutz empfohlen  •  Aufenthalt im Freien minimieren  •  Vollständiger Schutz: Kleidung, Hut, Brille  •  Kinder &amp; Hunde: drinnen lassen</string>
+
+    <!-- WeatherActivity: Pfoten-Wetter-Index Warnungen -->
+    <string name="weather_paw_hot_extreme">🔥 EXTREM: Asphalt und Strassenpflaster bis zu 65°C! Gefahr ernster gesundheitlicher Schäden! Hitzeschockrisiko. Den Hund bitte nicht belasten.</string>
+    <string name="weather_paw_hot_warning">⚠️ WARNUNG: Asphalt und Strassenpflaster kann 50-60°C erreichen. Gefahr gesundheitlicher Beeinträchtigungen! Diese Oberflächen bitte meiden.</string>
+    <string name="weather_paw_hot_caution">⚡ VORSICHT: Asphalt wird heiß (45°C+). Erhöhte Belastung für den Hund! Schatten nutzen.</string>
+    <string name="weather_paw_cold_extreme">❄️ EXTREM KALT: Gesundheitsgefahr für unangepasste Rassen! Hund in stetiger Bewegung halten.</string>
+    <string name="weather_paw_cold_warning">🧊 Sehr kalt: Pfotenschutz empfohlen. Salz auf Wegen beachten! Hund in stetiger Bewegung halten.</string>
+    <string name="weather_paw_cold_caution">🌨️ Frost: Achtung vor Streusalz und Eis. Hund zeitnah abtrocknen und aufwärmen lassen.</string>
+    <string name="weather_paw_tick_risk">🕷️ Erhöhtes Zeckenrisiko. Hund regelmäßig absuchen und Zecken zeitnah entfernen!</string>
+    <string name="weather_paw_uv_high">☀️ Hohe UV-Strahlung: Schattige Wege bevorzugen! Keine anstrengenden Aktionen durchführen.</string>
+    <string name="weather_paw_thunderstorm">⛈️ Gewitter: Achte auf Deinen Hund und auf Eure Sicherheit. Ängstliche Hunde nicht ableinen.</string>
+    <string name="weather_paw_heavy_rain">🌧️ Starker Regen: Rutschgefahr auf nässenempfindlichen Boden!</string>
+    <string name="weather_paw_good">✅ Sehr gutes Trainingswetter.</string>
+    <string name="weather_paw_storm">💨 STURM: Gefahr durch umstürzende Äste! Training verschieben!</string>
+    <string name="weather_paw_strong_wind">🌪️ Starker Wind: Im Gelände aufmerksam unterwegs sein.</string>
+    <string name="weather_paw_windy">💨 Windige Bedingungen: Gerüche über große Entfernungen wahrnehmbar. Unzuverlässige Hunde bitte an der Leine führen.</string>
+
+    <!-- WeatherActivity: Trainingszeiten-Empfehlung -->
+    <string name="weather_best_times_heat_header">🌅 Beste Zeiten bei Hitze (06-22 Uhr):</string>
+    <string name="weather_best_times_coolest">  • %1$s Uhr (kühlste Phase)</string>
+    <string name="weather_best_times_cold_header">☀️ Beste Zeiten bei Kälte (06-22 Uhr):</string>
+    <string name="weather_best_times_warmest">  • %1$s Uhr (wärmste Phase)</string>
+
+    <!-- WeatherActivity: Fellpflege-Tipps -->
+    <string name="weather_grooming_dry_paws">🛁 Nach der Runde: Pfoten und Fell trocknen und dabei auf Zecken achten.</string>
+    <string name="weather_grooming_check_ears">🐶 Ohren auf Nässe und Verschmutzungen prüfen</string>
+    <string name="weather_grooming_ice_between_toes">❄️ Eisklumpen zwischen Zehen entfernen</string>
+    <string name="weather_grooming_paw_balm">🧴 Pfotenbalsam verwenden gegen Risse</string>
+    <string name="weather_grooming_muddy_paws">🚿 Matschige Pfoten vor dem Reingehen säubern</string>
+    <string name="weather_grooming_dog_friendly">🦮 Hundefreundliches Wetter - bei höheren Temperaturen immer an 💧 Trinkwasser denken und den Hund nicht belasten.</string>
+
+    <!-- WeatherActivity: Sonnenposition -->
+    <string name="weather_sun_dir_n">N – Sonne im Norden</string>
+    <string name="weather_sun_dir_ne">NO – Sonne im Nordosten</string>
+    <string name="weather_sun_dir_e">O – Sonne im Osten</string>
+    <string name="weather_sun_dir_se">SO – Sonne im Südosten</string>
+    <string name="weather_sun_dir_s">S – Sonne im Süden</string>
+    <string name="weather_sun_dir_sw">SW – Sonne im Südwesten</string>
+    <string name="weather_sun_dir_w">W – Sonne im Westen</string>
+    <string name="weather_sun_dir_nw">NW – Sonne im Nordwesten</string>
+
+    <!-- WeatherActivity: Licht-basierte Empfehlungen -->
+    <string name="weather_light_sunrise_soon">🌅 Sonnenaufgang in %1$dMin - Perfekt für Morgenrunde!</string>
+    <string name="weather_light_still_dark_morning">🌃 Noch dunkel - Achtet auf Eigensicherung und Reflektoren bei gefährlichen Strassensituationen!</string>
+    <string name="weather_light_sunset_soon">🌇 Sonnenuntergang in %1$dMin - Ideal für Abendrunde!</string>
+    <string name="weather_light_dark_evening">🌙 Dunkel - Achtet auf Eigensicherung und Lampe nicht vergessen!</string>
+    <string name="weather_golden_hour">📸 Goldene Stunde (schönes Licht für Fotos):\nMorgens: %1$s - %2$s\nAbends: %3$s - %4$s</string>
+
+    <!-- WeatherActivity: Fehlermeldungen & Sonstiges -->
+    <string name="weather_load_error">Fehler beim Laden der Wetterdaten</string>
+    <string name="weather_shadow_person">👤 Person (%1$sm): %2$sm</string>
+    <string name="weather_shadow_dog">🐕 Hund (%1$sm): %2$sm</string>
+    <string name="weather_shadow_object">📦 Objekt (%1$sm): %2$sm</string>
+    <string name="weather_no_shadow_below_horizon">Keine Schattenlänge – Sonne unter dem Horizont</string>
+    <string name="weather_pollen_none_measured">✅ Derzeit keine nennenswerte Pollenbelastung gemessen.</string>
+    <string name="weather_pollen_item_line">%1$s %2$s: %3$s (%4$s Gr./m³)</string>
+    <string name="weather_tap_for_details">👆 Tippe für Details</string>
+    <string name="weather_biowetter_data_unavailable">● Daten nicht verfügbar</string>
+    <string name="weather_biowetter_calc_failed">Biowetter-Daten konnten nicht berechnet werden.</string>
+
+    <!-- WeatherActivity: Haupt-Temperatur/Wind-Anzeige -->
+    <string name="weather_feels_like">%1$.1f°C (Windgeschützt: %2$.1f°C)</string>
+    <string name="weather_wind_display">%1$.1f km/h %2$s (Bft %3$d)\nBöen: %4$.1f km/h</string>
+
+    <!-- WeatherActivity: 7-Tage-Detail-Dialog -->
+    <string name="weather_forecast_temp_range">🌡️ Max: %1$.1f°C  Min: %2$.1f°C</string>
+    <string name="weather_forecast_precip_prob">💧 Regenwahrscheinlichkeit: %1$d%%</string>
+    <string name="weather_forecast_wind_max">💨 Wind max: %1$.0f km/h (Bft %2$d)  Böen: %3$.0f km/h</string>
+    <string name="weather_forecast_sunshine">☀️ Sonnenschein: %1$dh %2$dm</string>
+    <string name="weather_forecast_uv_max">🔆 UV-Index max: %1$.1f</string>
+    <string name="weather_daily_forecast_title">📅 Tagesvorhersage</string>
+    <string name="weather_uv_hourly_dialog_title">🔆 UV-Index %1$s Uhr – %2$s (%3$s)</string>
+    <string name="weather_forecast_item_detail_title">Vorhersage Details</string>
+    <string name="weather_forecast_item_detail_message">Uhrzeit: %1$s\n\n%2$s %3$s\n\nTemperatur: %4$s\nGefühlt: %5$s\nRegen: %6$d%%</string>
+    <string name="weather_azimuth_north_of_east">Nord von Ost</string>
+    <string name="weather_azimuth_south_of_east">Süd von Ost</string>
+    <string name="weather_azimuth_north_of_west">Nord von West</string>
+    <string name="weather_azimuth_south_of_west">Süd von West</string>
+    <string name="weather_sunrise_azimuth">🌅 Aufgang\n%1$s Uhr\n%2$s° %3$s</string>
+    <string name="weather_sunset_azimuth">🌇 Untergang\n%1$s Uhr\n%2$s° %3$s</string>
+    <string name="weather_radar_loading">Lade Radar…</string>
+    <string name="weather_radar_your_location">Dein Standort</string>
+    <string name="weather_radar_unavailable">Radar nicht verfügbar</string>
+    <string name="weather_search_no_results">Keine Ergebnisse gefunden</string>
+    <string name="weather_error_prefix">Fehler: %1$s</string>
+    <string name="weather_daily_min_max_display">Min: %1$.1f°C • Max: %2$.1f°C</string>
+    <string name="weather_sunshine_today_format">Heute: %1$dh %2$dm</string>
+    <string name="weather_pollutants_format">PM2.5: %1$s µg/m³  PM10: %2$s µg/m³\nNO₂: %3$s µg/m³  O₃: %4$s µg/m³</string>
+    <string name="weather_meter_hint">Meter (z.B. 1.75)</string>
+    <string name="weather_sunrise_display">🌅 %1$s</string>
+    <string name="weather_sunset_display">🌇 %1$s</string>
+    <string name="weather_time_uhr"> Uhr</string>
+    <string name="weather_degree_celsius">%1$.1f°C</string>
+    <string name="weather_mm">%1$.1f mm</string>
+    <string name="weather_hpa">%1$.0f hPa</string>
+    <string name="weather_percent">%1$d%%</string>
+
+
+    <!-- WeatherActivity: Sonnenstand Beschreibungen -->
+    <string name="weather_sun_elevation_below_horizon">unter dem Horizont</string>
+    <string name="weather_sun_elevation_very_flat">sehr flach – lange Schatten</string>
+    <string name="weather_sun_elevation_low">niedrig</string>
+    <string name="weather_sun_elevation_medium">mittel</string>
+    <string name="weather_sun_elevation_high">hoch</string>
+    <string name="weather_sun_elevation_azimuth_display">📐 Sonnenstand: %1$.1f° (%2$s)\n🧭 Azimut: %3$.1f° – %4$s</string>
+
+    <!-- WeatherActivity: Azimut Zwischenrichtungen -->
+    <string name="weather_sun_dir_nno">NNO</string>
+    <string name="weather_sun_dir_ono">ONO</string>
+    <string name="weather_sun_dir_oso">OSO</string>
+    <string name="weather_sun_dir_sso">SSO</string>
+    <string name="weather_sun_dir_ssw">SSW</string>
+    <string name="weather_sun_dir_wsw">WSW</string>
+    <string name="weather_sun_dir_wnw">WNW</string>
+    <string name="weather_sun_dir_nnw">NNW</string>
+    <string name="weather_wind_speed_unit">%1$.0f km/h</string>
+    <string name="weather_wind_gusts_label">Böen: %1$.0f</string>
+    <string name="weather_beaufort_label">Bft %1$d</string>
+    <string name="weather_pm25_label">PM2.5: %1$.0f µg</string>
+    <string name="weather_temp_degree">%1$.0f°</string>
+    <string name="weather_rain_percent">💧 %1$d%%</string>
+    <string name="weather_wind_bft">💨 Bft %1$d</string>
+    <string name="weather_loading_placeholder">Lade Wetterdaten...</string>
+    <string name="weather_no_warning_badge">✅ Keine Wetterwarnung</string>
+    <string name="weather_paw_index_title">🐾 Trainingswetter-Index</string>
+    <string name="weather_calculating_placeholder">Wird berechnet...</string>
+    <string name="weather_radar_card_title">2h Niederschlagsradar</string>
+    <string name="weather_radar_live_data_hint">📡 = Aktuelle Daten</string>
+    <string name="weather_daylight_card_title">🌅 Tageslicht und Dämmerung</string>
+    <string name="weather_daylight_duration_placeholder">☀️ Tageslänge: --h --m</string>
+    <string name="weather_dawn_placeholder">🌄 Morgendämmerung: --:--</string>
+    <string name="weather_sunrise_placeholder">🌅 Sonnenaufgang: --:--</string>
+    <string name="weather_sunset_placeholder">🌇 Sonnenuntergang: --:--</string>
+    <string name="weather_dusk_placeholder">🌆 Abenddämmerung: --:--</string>
+    <string name="weather_min_max_placeholder">Minimal: --°C • Maximal: --°C</string>
+    <string name="weather_current_card_title">Aktuelles Wetter</string>
+    <string name="weather_feels_like_label">Gefühlt</string>
+    <string name="weather_humidity_label">Luftfeuchtigkeit</string>
+    <string name="weather_wind_strength_label">Windstärke</string>
+    <string name="weather_wind_direction_label">Wind und Richtung</string>
+    <string name="weather_precipitation_label">Niederschlag</string>
+    <string name="weather_further_details_card_title">Weitere Details</string>
+    <string name="weather_pressure_label">Luftdruck</string>
+    <string name="weather_visibility_label">Sichtweite</string>
+    <string name="weather_uv_index_label">UV-Index</string>
+    <string name="weather_forecast_24h_card_title">24h-Vorhersage (stündlich)</string>
+    <string name="weather_tap_details_scroll_hours_hint">Tippe👆🏼 für Details. Verschiebe 👉🏼 für weitere Stunden</string>
+    <string name="weather_forecast_7day_card_title">📅 7-Tage-Vorhersage</string>
+    <string name="weather_tap_details_scroll_days_hint">Tippe👆🏼 für Details. Verschiebe 👉🏼 für weitere Tage</string>
+    <string name="weather_wind_forecast_card_title">💨 Wind 24h (stündlich)</string>
+    <string name="weather_bft_legend_0_3">🟢 Bft 0–3</string>
+    <string name="weather_bft_legend_4_5">🟡 Bft 4–5</string>
+    <string name="weather_bft_legend_6_7">🟠 Bft 6–7</string>
+    <string name="weather_bft_legend_8plus">🔴 Bft 8+</string>
+    <string name="weather_wind_arrow_hint">Pfeil = Windrichtung  •  Verschiebe 👉🏼 für weitere Stunden</string>
+    <string name="weather_air_quality_card_title">🏭 Luftqualität (24h)</string>
+    <string name="weather_aqi_index_label">Index: </string>
+    <string name="weather_aqi_legend_0_good">0 Gut  </string>
+    <string name="weather_aqi_legend_1_moderate">1 Mäßig  </string>
+    <string name="weather_aqi_legend_2_sensitive">2 Sensibel  </string>
+    <string name="weather_aqi_legend_3plus_unhealthy">3+ Ungesund</string>
+    <string name="weather_aqi_current_label">Aktuell:</string>
+    <string name="weather_aqi_current_placeholder">-- Gut</string>
+    <string name="weather_scroll_hours_hint">Verschiebe 👉🏼 für weitere Stunden</string>
+    <string name="weather_source_air_quality_ugm3">Quelle: Open-Meteo Air Quality API (CAMS/Copernicus). Werte in µg/m³.</string>
+    <string name="weather_temp_chart_card_title">📊 24h-Temperaturverlauf</string>
+    <string name="weather_precip_chart_card_title">🌧️ 24h-Niederschlagsmenge</string>
+    <string name="weather_sun_card_title">☀️ Sonne</string>
+    <string name="weather_sunrise_azimuth_placeholder">🌅 Aufgang\n-- Uhr\n--° von Ost</string>
+    <string name="weather_sunset_azimuth_placeholder">🌇 Untergang\n-- Uhr\n--° von West</string>
+    <string name="weather_sun_position_placeholder">📐 Sonnenstand: --°\n🧭 Azimut: --° –</string>
+    <string name="weather_shadow_lengths_title">📏 Schattenlängen</string>
+    <string name="weather_shadow_edit_heights">✏️ Höhen anpassen</string>
+    <string name="weather_sunshine_duration_title">☀️ Sonnenscheindauer</string>
+    <string name="weather_sunshine_today_placeholder">Heute: --h --m</string>
+    <string name="weather_uv_hourly_title">🔆 UV-Index (stündlich)</string>
+    <string name="weather_uv_legend_0_2_low">0–2 Gering  </string>
+    <string name="weather_uv_legend_3_5_moderate">3–5 Mittel  </string>
+    <string name="weather_uv_legend_6_7_high">6–7 Hoch  </string>
+    <string name="weather_uv_legend_8_10_very_high">8–10 Sehr hoch  </string>
+    <string name="weather_uv_legend_11plus_extreme">11+ Extrem</string>
+    <string name="weather_moon_phase_card_title">🌙 Mondphase</string>
+    <string name="weather_moon_full_placeholder">Vollmond</string>
+    <string name="weather_moon_age_placeholder">Mondalter: -- von 29,5 Tagen</string>
+    <string name="weather_moon_illumination_placeholder">Beleuchtung: --%</string>
+    <string name="weather_moon_next_full_placeholder">🌕 Vollmond: in -- Tagen</string>
+    <string name="weather_moon_next_new_placeholder">🌑 Neumond: in -- Tagen</string>
+    <string name="weather_moon_zodiac_placeholder">🔯 Mondzeichen: --</string>
+    <string name="weather_moon_astronomy_loading">🔭 Astronomie: wird geladen...</string>
+    <string name="weather_moon_nature_loading">🌿 Natur &amp; Tierwelt: wird geladen...</string>
+    <string name="weather_moon_dogtips_loading">🐕 Hund &amp; Training: wird geladen...</string>
+    <string name="weather_pollen_card_title">🌿 Pollen</string>
+    <string name="weather_pollen_disclaimer">⚕️ Hinweis: Die hier angezeigten Polleninformationen dienen ausschließlich der allgemeinen Orientierung. Sie ersetzen keine tierärztliche oder humanmedizinische Beratung. Bei Verdacht auf eine Allergie konsultiere bitte einen Arzt oder Tierarzt.</string>
+    <string name="weather_pollen_loading">Lade Pollendaten...</string>
+    <string name="weather_source_pollen_grainsm3">Quelle: Open-Meteo Air Quality API (CAMS/Copernicus). Werte in Grains/m³.</string>
+    <string name="weather_biowetter_card_title">🌬️ Biowetter</string>
+    <string name="weather_biowetter_explanation">Meteorologische Einflüsse auf Mensch und Hund. Tippe👆🏼 auf einen Indikator für Details.</string>
+    <string name="weather_biowetter_calculating">● Wird berechnet...</string>
+    <string name="weather_biowetter_disclaimer">⚕️ Biowetter dient der allgemeinen Orientierung. Kein Ersatz für medizinische oder tierärztliche Beratung.</string>
+    <string name="weather_location_determining_placeholder">📍 Standort wird ermittelt...</string>
+    <string name="weather_data_source_footer">Daten: © Open-Meteo (CC BY 4.0)</string>
+    <string name="day_sun">So</string>
+    <string name="day_mon">Mo</string>
+    <string name="day_tue">Di</string>
+    <string name="day_wed">Mi</string>
+    <string name="day_thu">Do</string>
+    <string name="day_fri">Fr</string>
+    <string name="day_sat">Sa</string>
+    <string name="weather_visibility_format">Sicht: gut</string>
+    <string name="thunderstorm_toolbar_title">Gewitterwarner</string>
+    <string name="thunderstorm_flash_captured_status">⚡ Blitz erfasst – jetzt auf DONNER tippen, sobald Du ihn hörst …</string>
+    <string name="thunderstorm_tap_flash_first">Bitte zuerst BLITZ beim Aufleuchten antippen</string>
+    <string name="thunderstorm_ready_for_next_measurement">Bereit für die nächste Messung.</string>
+    <string name="thunderstorm_step_measured_time">Gemessene Zeit: %1$.1f Sekunden</string>
+    <string name="thunderstorm_step_formula_header">Rechenweg:</string>
+    <string name="thunderstorm_step_formula_line">Entfernung = Zeit × Schallgeschwindigkeit</string>
+    <string name="thunderstorm_step_formula_calc1">= %1$.1f s × %2$.0f m/s</string>
+    <string name="thunderstorm_step_formula_calc2"> = %1$.0f m</string>
+    <string name="thunderstorm_speed_value_kmh">%1$.0f km/h</string>
+    <string name="thunderstorm_eta_value_min">%1$.0f min</string>
+    <string name="thunderstorm_approach_formula_with_eta">📐 Geschwindigkeit ≈ %1$.0f km/h  •  Restweg (%2$.1f km − 1,0 km) ÷ %3$.0f km/h ≈ %4$.0f min</string>
+    <string name="thunderstorm_approach_formula_no_eta">📐 Geschwindigkeit = Distanzänderung ÷ vergangene Zeit ≈ %1$.0f km/h</string>
+    <string name="thunderstorm_location_dialog_title">📍 Standort für Gewittervorhersage</string>
+    <string name="thunderstorm_location_dialog_message">Um die Gewittergefahr für die nächsten Stunden an Deinem aktuellen Standort abzurufen, wird Dein Standort anonymisiert an Open-Meteo (freier Wetterdienst) übermittelt. Es erfolgt keine Übermittlung an HundeWildnis oder Dritte.</string>
+    <string name="thunderstorm_activate">AKTIVIEREN</string>
+    <string name="thunderstorm_cancel_uppercase">ABBRECHEN</string>
+    <string name="thunderstorm_location_permission_denied">Standortberechtigung wurde verweigert</string>
+    <string name="thunderstorm_no_location_available">Kein Standort verfügbar. GPS aktiviert?</string>
+    <string name="thunderstorm_weather_code_fallback">Code %1$d</string>
+    <string name="thunderstorm_layout_calculator_title">Blitz-Donner-Distanzrechner</string>
+    <string name="thunderstorm_layout_instructions">Tippe im Moment des Blitzes auf BLITZ. Sobald Du den Donner hörst, tippe auf DONNER. Aus der gemessenen Zeit berechnet die App die ungefähre Entfernung des Gewitters.</string>
+    <string name="thunderstorm_layout_btn_flash">⚡ BLITZ</string>
+    <string name="thunderstorm_layout_btn_thunder">🔊 DONNER</string>
+    <string name="thunderstorm_layout_ready_for_measurement">Bereit für die Messung.</string>
+    <string name="thunderstorm_layout_calculation_title">📐 Rechenweg</string>
+    <string name="thunderstorm_layout_series_title">Verlauf dieser Messreihe</string>
+    <string name="thunderstorm_layout_no_measurement_yet">Noch keine Messung</string>
+    <string name="thunderstorm_layout_approach_placeholder">🚗💨 Näherungsgeschwindigkeit &amp; Ankunftszeit erscheinen ab der 2. Messung.</string>
+    <string name="thunderstorm_layout_speed_label">💨 GESCHWINDIGKEIT</string>
+    <string name="thunderstorm_layout_arrival_in_label">⏱️ ANKUNFT IN</string>
+    <string name="thunderstorm_layout_acute_danger_text">Unter 1 km Entfernung – keine Ankunftszeit-Schätzung mehr sinnvoll: SOFORT Schutz suchen!</string>
+    <string name="thunderstorm_layout_reset_series">Messreihe zurücksetzen</string>
+    <string name="thunderstorm_layout_forecast_title">🌩️ Gewitterrisiko-Vorhersage</string>
+    <string name="thunderstorm_layout_forecast_explanation">Zeigt die Gewittergefahr für die nächsten 12 Stunden an Deinem Standort, basierend auf dem CAPE-Wert (Energie für Gewitterbildung) von Open-Meteo, inklusive der wahrscheinlichen Richtung, aus der ein Gewitter herannaht.</string>
+    <string name="thunderstorm_layout_load_forecast_button">Vorhersage für aktuellen Standort laden</string>
+    <string name="thunderstorm_layout_important_note_title">⚠️ Wichtiger Hinweis</string>
+    <string name="thunderstorm_layout_disclaimer">Alle Angaben in diesem Werkzeug sind rein rechnerische Näherungswerte auf Basis Deiner eigenen Messungen (Zeitpunkt von Blitz und Donner) bzw. einer Wettervorhersage. Reaktionszeit beim Tippen, Wind, Gelände und sich schnell ändernde Wetterbedingungen können zu erheblichen Abweichungen von Distanz, Geschwindigkeit, Ankunftszeit und Zugrichtung führen – Gewitter können ihre Richtung ändern oder neu entstehen. Die angezeigten Gebäude/Hütten in der Revier-Navigation sind aus OpenStreetMap-Daten ermittelt; ob sie vor Ort tatsächlich als geschlossener Blitzschutz geeignet sind, muss selbst geprüft werden. Die Werte ersetzen keine amtliche Unwetterwarnung und keine eigene Einschätzung der Lage vor Ort. Die Nutzung erfolgt auf eigene Verantwortung; für Schäden, die aus dem Vertrauen auf diese Berechnungen entstehen, wird keine Haftung übernommen.</string>
+
+    <!-- LocationActivity / RouteData (Revier Navigation) -->
+    <string name="back_arrow">← Zurück</string>
+    <string name="bridge_unchecked_warning">⚠️ UNGEPRÜFT: Diese Brücke wurde NICHT auf Eignung als Gewitterschutz geprüft. Vor Ort einschätzen: Liegt die Fahrbahn tiefer als die nähere Umgebung (Berge/Bäume ringsum, kein exponierter Hochpunkt)? Besteht Überflutungsgefahr durch angrenzendes Gewässer bei Starkregen? Im Zweifel meiden und festes Gebäude aufsuchen.</string>
+    <string name="cancel_button">Abbrechen</string>
+    <string name="continue_button">▶️ Weiter</string>
+    <string name="continue_to_destination">Weiter zum Ziel</string>
+    <string name="decline_button">ABLEHNEN</string>
+    <string name="delete_button">Löschen</string>
+    <string name="done_button">Fertig</string>
+    <string name="enable_button">AKTIVIEREN</string>
+    <string name="error_generic">Fehler: %1$s</string>
+    <string name="favorite_button">⭐ Favorit</string>
+    <string name="favorites_saved_count">%1$d gespeicherte Favoriten</string>
+    <string name="in_favorites_checked">✓ In Favoriten</string>
+    <string name="location_activity_title">Navigation und Orte</string>
+    <string name="location_not_available">Standort nicht verfügbar</string>
+    <string name="location_not_yet_available">Standort noch nicht verfügbar</string>
+    <string name="location_permission_required">Standortberechtigung benötigt</string>
+    <string name="location_services_enable_message">HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für Navigation, Wetteranzeige und weitere Funktionen.
+
+Deine Daten werden nur lokal verarbeitet und nicht an Dritte übermittelt.</string>
+    <string name="location_services_enable_title">📍 Standortdienste aktivieren</string>
+    <string name="location_still_determining">Standort wird noch ermittelt...</string>
+    <string name="map_point_category">Kartenpunkt</string>
+    <string name="my_current_location_share_text">Mein aktueller Standort:
+%1$s</string>
+    <string name="nav_details_hide">▼  Details ausblenden</string>
+    <string name="nav_details_show">▲  Details anzeigen</string>
+    <string name="new_destination_button">🏁 Neues Ziel</string>
+    <string name="next_5km_updated_hint">📍 Nächste 5 km ab Standort • aktualisiert alle 1 km</string>
+    <string name="next_waypoint_info">Nächstes Zwischenziel: %1$s</string>
+    <string name="no_data_from_routing_service">Keine Daten von Routing-Service</string>
+    <string name="no_favorites_yet_hint">Noch keine Favoriten.
+Navigationsziele über ⭐ speichern.</string>
+    <string name="no_named_place_found_in_50m">Kein benannter Ort in 50 m gefunden.</string>
+    <string name="no_pois_in_next_5km">Keine POIs in den nächsten 5 km</string>
+    <string name="not_available">Nicht verfügbar</string>
+    <string name="ok_button">OK</string>
+    <string name="ors_api_key_info_message">Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.
+
+Anleitung:
+1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).
+2. Erstelle unter \'Tokens\' einen neuen API-Key.
+3. Kopiere diesen Key und füge ihn hier ein.
+
+Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie angezeigt werden.</string>
+    <string name="ors_api_key_title">ORS API Key</string>
+    <string name="ors_key_delete_message">Möchtest Du den gespeicherten API-Key wirklich entfernen?</string>
+    <string name="ors_key_delete_title">🗑️ Key löschen?</string>
+    <string name="ors_key_deleted_toast">Key gelöscht</string>
+    <string name="ors_key_hint_toast">ℹ️ Für präzises Routing bitte ORS-Key in den Einstellungen (Zahnrad oben) hinterlegen.</string>
+    <string name="osm_license_title">OpenStreetMap Lizenz</string>
+    <string name="poi_address_line">📬 %1$s</string>
+    <string name="poi_cat_animal_shelter">Tierheim</string>
+    <string name="poi_cat_bakery">Bäckerei</string>
+    <string name="poi_cat_bench">Sitzbank</string>
+    <string name="poi_cat_campsite">Zeltplatz</string>
+    <string name="poi_cat_doctor">Arzt</string>
+    <string name="poi_cat_dog_ban">Hundeverbot</string>
+    <string name="poi_cat_dog_park">Hundepark/-sport</string>
+    <string name="poi_cat_dog_swimming">Hundebadestelle</string>
+    <string name="poi_cat_dog_training">Hundetraining</string>
+    <string name="poi_cat_dog_waste_disposal">Hundekotentsorgung</string>
+    <string name="poi_cat_drinking_water">Trinkwasser</string>
+    <string name="poi_cat_emergency">Notfall</string>
+    <string name="poi_cat_fire_department">Feuerwehr</string>
+    <string name="poi_cat_firepit">Feuerstelle</string>
+    <string name="poi_cat_hiking_trail">Wanderweg</string>
+    <string name="poi_cat_leash_required">Leinenzwang</string>
+    <string name="poi_cat_national_park">Nationalpark</string>
+    <string name="poi_cat_nature_reserve">Naturschutzgebiet</string>
+    <string name="poi_cat_navigation">Navigation</string>
+    <string name="poi_cat_outdoor_shop">Outdoor-Shop</string>
+    <string name="poi_cat_parking">Parkplatz</string>
+    <string name="poi_cat_pet_supplies">Tierbedarf</string>
+    <string name="poi_cat_pharmacy">Apotheke</string>
+    <string name="poi_cat_picnic_site">Picknickplatz</string>
+    <string name="poi_cat_police">Polizei</string>
+    <string name="poi_cat_poop_bag_dispenser">Kotbeutelspender</string>
+    <string name="poi_cat_restaurant">Restaurant</string>
+    <string name="poi_cat_search_result">Suchergebnis</string>
+    <string name="poi_cat_shelter">Schutzhütte</string>
+    <string name="poi_cat_signpost">Wegweiser</string>
+    <string name="poi_cat_summit_cross">Gipfel/Kreuz</string>
+    <string name="poi_cat_supermarket">Supermarkt</string>
+    <string name="poi_cat_thunderstorm_shelter">Gewitterschutz</string>
+    <string name="poi_cat_toilet">Toilette</string>
+    <string name="poi_cat_veterinarian">Tierarzt</string>
+    <string name="poi_cat_viewpoint">Aussichtspunkt</string>
+    <string name="poi_count_in_radius">%1$d POI in %2$d km</string>
+    <string name="poi_distance_away">📏 %1$s entfernt</string>
+    <string name="poi_distance_away_from_you">📏 %1$s von Dir entfernt</string>
+    <string name="poi_distance_away_short">📍 %1$sm entfernt</string>
+    <string name="poi_distance_away_with_address">📍 %1$sm entfernt
+%2$s</string>
+    <string name="poi_favorites">⭐  Favoriten</string>
+    <string name="poi_none_found_in_radius">Keine %1$s im Umkreis von %2$d km gefunden</string>
+    <string name="poi_unnamed">Unbenannt</string>
+    <string name="route_poi_bbq">Grillplatz</string>
+    <string name="route_poi_dog_toilet">Hundetoilette</string>
+    <string name="route_poi_firepit">Feuerstelle</string>
+    <string name="route_poi_peak">Gipfel</string>
+    <string name="route_poi_spring">Quelle</string>
+    <string name="route_poi_waste_basket">Mülleimer</string>
+    <string name="saved_as_favorite_toast">⭐ Als Favorit gespeichert</string>
+    <string name="search_failed">Suche fehlgeschlagen: %1$s</string>
+    <string name="search_no_results_nearby">Keine Ergebnisse für \'%1$s\' in der Nähe gefunden</string>
+    <string name="search_results_count_in_radius">%1$d Ergebnis(se) in 20 km</string>
+    <string name="search_results_found">%1$d Ergebnis(se) gefunden</string>
+    <string name="search_results_title">🔍 Suchergebnisse</string>
+    <string name="selected_point_title">📍 Gewählter Punkt</string>
+    <string name="selected_point_title_plain">Gewählter Punkt</string>
+    <string name="settings_title">⚙️ Einstellungen</string>
+    <string name="share_location_via">Standort teilen über</string>
+    <string name="start_navigation_button">Navigation starten</string>
+    <string name="start_navigation_question">Navigation starten?</string>
+    <string name="subtype_access_point">Rettungspunkt</string>
+    <string name="subtype_ambulance_station">Rettungswache</string>
+    <string name="subtype_assembly_point">Sammelplatz</string>
+    <string name="subtype_clinic">Klinik</string>
+    <string name="subtype_defibrillator">Defibrillator (AED)</string>
+    <string name="subtype_dentist">Zahnarzt</string>
+    <string name="subtype_doctor_practice">Arztpraxis</string>
+    <string name="subtype_emergency_phone">Notruftelefon</string>
+    <string name="subtype_fire_hydrant">Hydrant</string>
+    <string name="subtype_first_aid_kit">Erste-Hilfe-Kasten</string>
+    <string name="subtype_hospital">Krankenhaus</string>
+    <string name="subtype_lifeguard">Rettungsschwimmer</string>
+    <string name="subtype_mountain_rescue">Bergrettung</string>
+    <string name="subtype_pharmacy">Apotheke</string>
+    <string name="subtype_rescue_station">Rettungsstation</string>
+    <string name="subtype_veterinarian">Tierarzt</string>
+    <string name="subtype_water_rescue">Wasserrettung</string>
+    <string name="surface_asphalt">Asphalt</string>
+    <string name="surface_cobblestone">Kopfsteinpflaster</string>
+    <string name="surface_concrete">Beton</string>
+    <string name="surface_dirt">Erde</string>
+    <string name="surface_fine_gravel">Feinschotter</string>
+    <string name="surface_grass">Gras</string>
+    <string name="surface_grass_paver">Rasengitter</string>
+    <string name="surface_gravel">Schotter</string>
+    <string name="surface_gravel_path">Schotterpfad</string>
+    <string name="surface_ground">Untergrund</string>
+    <string name="surface_ice">Eis</string>
+    <string name="surface_metal">Metall</string>
+    <string name="surface_other">Sonstige</string>
+    <string name="surface_paved">Befestigt</string>
+    <string name="surface_paving_stones">Pflastersteine</string>
+    <string name="surface_sand">Sand</string>
+    <string name="surface_unknown">Unbekannt</string>
+    <string name="surface_unpaved">Unbefestigt</string>
+    <string name="surface_wood">Holz</string>
+    <string name="surface_wood_chips">Holzspäne</string>
+    <string name="terrain_car_analysis_theoretical">ℹ️ Diese Analyse ist rein theoretisch, da die Anreise per Auto geplant wird.</string>
+    <string name="terrain_route_not_suitable">Diese Strecke ist für %1$s am Stück nicht geeignet.</string>
+    <string name="terrain_route_too_long_warning">⚠️ Diese Route ist ca. %1$d%% länger als die Empfehlung für %2$s.</string>
+    <string name="terrain_your_dog_fallback">Deinen Hund</string>
+    <string name="thunderstorm_shelter_dialog_message">Angezeigt werden feste, geschlossene Gebäude in der Nähe (Hütten, Gasthäuser, Supermärkte u. ä.).
+
+Vor Ort prüfen: Nur Gebäude mit durchgehenden Wänden und Dach bieten Schutz. Offene Schutzhütten oder Pavillons zählen NICHT dazu.
+
+Brücken (🌉): Die 5 nächstgelegenen werden ANGEZEIGT, aber NICHT geprüft. Ob eine Brücke tatsächlich Schutz bietet, hängt stark vom Einzelfall ab – Geländeform, umliegende Hänge/Bäume, Nähe zu Gewässern. Diese Einschätzung musst Du vor Ort selbst treffen. Unterführungen sind bewusst nicht enthalten, da der DWD sie als Überflutungs-Gefahrenbereich nennt.</string>
+    <string name="thunderstorm_shelter_dialog_positive">Verstanden</string>
+    <string name="thunderstorm_shelter_dialog_title">⛈️ Gewitterschutz</string>
+    <string name="updating_ellipsis">Aktualisiere…</string>
+    <string name="waypoint_add_failed_toast">Zwischenziel konnte nicht hinzugefügt werden</string>
+    <string name="waypoint_added_toast">Zwischenziel %1$d: %2$s hinzugefügt ✓</string>
+    <string name="waypoint_button">🧭 Zwischenziel</string>
+    <string name="waypoint_number">Zwischenziel %1$d</string>
+    <string name="waypoint_reached_message">Du hast %1$s erreicht.
+
+Navigation pausiert.
+%2$s</string>
+    <string name="waypoint_reached_title">%1$s Zwischenziel erreicht!</string>
+    <string name="waytype_construction">Baustelle</string>
+    <string name="waytype_cycleway">Radweg</string>
+    <string name="waytype_ferry">Fähre</string>
+    <string name="waytype_footway">Fußweg</string>
+    <string name="waytype_other">Sonstige</string>
+    <string name="waytype_path">Pfad</string>
+    <string name="waytype_road">Straße</string>
+    <string name="waytype_state_road">Staatsstraße</string>
+    <string name="waytype_steps">Treppen</string>
+    <string name="waytype_track">Wirtschaftsweg</string>
+    <string name="waytype_unknown">Unbekannt</string>
+    <string name="weather_arrival_after_sunset_dark">🌙 Ankunft %1$d Min nach Sonnenuntergang — Dunkel!</string>
+    <string name="weather_arrival_before_sunrise_dark">🌙 Ankunft %1$d Min vor Sonnenaufgang — Dunkel!</string>
+    <string name="weather_arrival_in_daylight">☀️ Ankunft bei Tageslicht</string>
+    <string name="weather_arrival_in_the_dark">🌙 Ankunft im Dunkeln</string>
+    <string name="weather_arrival_label">Ankunft ~%1$s Uhr</string>
+    <string name="weather_arrival_shortly_after_sunrise">🌅 Ankunft kurz nach Sonnenaufgang</string>
+    <string name="weather_arrival_shortly_before_sunset">🌇 Ankunft kurz vor Sonnenuntergang</string>
+    <string name="weather_sunrise_time">🌅 %1$s Uhr</string>
+    <string name="weather_sunset_time">🌇 %1$s Uhr</string>
+    <string name="weather_wind_beaufort">%1$s km/h
+Bft %2$d</string>
+
+    <!-- activity_location.xml Layout-Platzhalter -->
+    <string name="clear_search_content_description">Suche löschen</string>
+    <string name="elevation_ascent_label">⬆️ Bergauf</string>
+    <string name="elevation_descent_label">⬇️ Bergab</string>
+    <string name="elevation_info_header">⛰️  Höheninformationen</string>
+    <string name="elevation_max_label">📈 Max</string>
+    <string name="elevation_min_label">📉 Min</string>
+    <string name="elevation_profile_header">📈  Höhenprofil</string>
+    <string name="loading_ellipsis">Laden…</string>
+    <string name="loading_generic_ellipsis">Wird geladen…</string>
+    <string name="location_determining_placeholder">📍 Standort wird ermittelt...</string>
+    <string name="navigation_active_header">🧭 Navigation aktiv</string>
+    <string name="navigation_info_placeholder">🧭 0.0 km • 0 Min</string>
+    <string name="no_poi_found">Keine POI gefunden</string>
+    <string name="poi_category_title_placeholder">🐕 Hundeauslauf</string>
+    <string name="poi_category_view_header">📍 POI Kategorien wählen</string>
+    <string name="poi_count_placeholder">0 POI in 3 km</string>
+    <string name="poi_search_hint">🔍 Suche</string>
+    <string name="route_pois_header">🗺️  Route-POIs</string>
+    <string name="slope_class_flat_placeholder">🟢 Flach</string>
+    <string name="surface_header">🛤️  Oberfläche</string>
+    <string name="terrain_analysis_header">🧭  Geländeanalyse</string>
+    <string name="terrain_for_dog_label">🐕 Für:</string>
+    <string name="terrain_no_warnings">✅ Keine besonderen Risiken für diese Strecke erkannt.</string>
+    <string name="terrain_recommended_max_distance_label">Empfohlene Maximaldistanz zum Ziel (bei Annahme des ähnlichen Rückwegs) für diesen Hund</string>
+    <string name="waytype_header">🛣️  Wegtyp</string>
+    <string name="weather_at_destination_header">⛅  Wetter am Ziel</string>
+    <string name="weather_label_humidity">💧 Feuchte</string>
+    <string name="weather_label_rain">🌧️ Regen</string>
+    <string name="weather_label_temp">🌡️ Temp</string>
+    <string name="weather_label_wind">💨 Wind</string>
+
+    <!-- Nachtrag: übersehene Strings bei Verifikation -->
+    <string name="elevation_above_sea_level">%1$d m ü.NN</string>
+    <string name="overpass_api_unreachable">Overpass API nicht erreichbar</string>
+    <string name="poi_cat_generic_place">Ort</string>
+
+    <!-- POIAdapter.kt: OSM access-Werte -->
+    <string name="poi_access_yes">Frei zugänglich</string>
+    <string name="poi_access_no">Kein Zugang</string>
+    <string name="poi_access_private">Privat</string>
+    <string name="poi_access_permissive">Bedingt zugänglich</string>
+    <string name="poi_access_leashed">🐕 Nur an der Leine</string>
+
+    <!-- item_poi_extended.xml -->
+    <string name="poi_item_category_placeholder">Hund</string>
+    <string name="poi_item_name_placeholder">Hundeauslauf Stadtpark</string>
+    <string name="poi_item_distance_placeholder">450 m</string>
+    <string name="poi_item_direction_placeholder">↗ NO</string>
+    <string name="poi_item_more_hint">Details ▸</string>
+    <string name="poi_label_address">📍 Adresse:</string>
+    <string name="poi_item_address_placeholder">Musterstraße 123</string>
+    <string name="poi_label_phone">📞 Telefon:</string>
+    <string name="poi_item_phone_placeholder">+49 123 456789</string>
+    <string name="poi_label_website">🌐 Website:</string>
+    <string name="poi_item_website_placeholder">www.example.com</string>
+    <string name="poi_label_hours">🕒 Öffnung:</string>
+    <string name="poi_item_hours_placeholder">Mo-Fr 09:00-18:00</string>
+    <string name="poi_label_info">ℹ️ Info:</string>
+    <string name="poi_item_description_placeholder">Große Wiese für Hunde</string>
+    <string name="poi_label_operator">👤 Betreiber:</string>
+    <string name="poi_item_operator_placeholder">Stadt Frankfurt</string>
+    <string name="poi_label_access">🚪 Zugang:</string>
+    <string name="poi_item_access_placeholder">Frei zugänglich</string>
+
+    <!-- Kompass-Activity (CompassActivity/CompassRoseView/activity_compass) -->
+    <string name="compass_title">Kompass</string>
+    <string name="compass_location_permission_missing">Standortberechtigung fehlt – Himmelsberechnung nicht möglich</string>
+    <string name="compass_sun_determining_location">☀ Sonne: Standort wird ermittelt …</string>
+    <string name="compass_moon_determining_location">☾ Mond: Standort wird ermittelt …</string>
+    <string name="compass_polaris_determining_location">★ Polaris: Standort wird ermittelt …</string>
+    <string name="compass_sun_label">☀ Sonne</string>
+    <string name="compass_moon_label">☾ Mond</string>
+    <string name="compass_polaris_label">★ Polaris</string>
+    <string name="compass_moon_illumination_suffix"> · Beleuchtung: %1$.0f%%</string>
+    <string name="compass_below_horizon"> (unter Horizont)</string>
+    <string name="compass_sky_line_format">%1$s: %2$.0f° %3$s, Höhe %4$.0f°%5$s</string>
+    <string name="compass_polaris_great_bear_suffix"> · Großer Wagen: %1$d Uhr (zu Polaris)</string>
+    <string name="compass_uncalibrated_warning">⚠️ Kompass ungenau! Bitte bewege dein Gerät in einer 8er-Form, um den Sensor zu kalibrieren.</string>
+    <string name="compass_dir_north">Nord</string>
+    <string name="compass_dir_northeast">Nordost</string>
+    <string name="compass_dir_east">Ost</string>
+    <string name="compass_dir_southeast">Südost</string>
+    <string name="compass_dir_south">Süd</string>
+    <string name="compass_dir_southwest">Südwest</string>
+    <string name="compass_dir_west">West</string>
+    <string name="compass_dir_northwest">Nordwest</string>
+    <string name="compass_direction_default_placeholder">Nord</string>
+    <string name="compass_rose_n">N</string>
+    <string name="compass_rose_o">O</string>
+    <string name="compass_rose_s">S</string>
+    <string name="compass_rose_w">W</string>
+    <string name="compass_rose_no">NO</string>
+    <string name="compass_rose_so">SO</string>
+    <string name="compass_rose_sw">SW</string>
+    <string name="compass_rose_nw">NW</string>
+    <string name="compass_rose_sun_label">Sonne</string>
+    <string name="compass_rose_moon_label">Mond</string>
+    <string name="compass_rose_polaris_label">Polaris</string>
+    <string name="compass_rose_great_bear_clock_format">Gr.Wag. %1$dh</string>
+    <string name="compass_sun_calculating_placeholder">☀ Sonne: wird berechnet …</string>
+    <string name="compass_moon_calculating_placeholder">☾ Mond: wird berechnet …</string>
+    <string name="compass_polaris_calculating_placeholder">★ Polaris: wird berechnet …</string>
+
+    <!-- Höhenmesser / AltimeterActivity.kt -->
+    <string name="altimeter_barometer_unavailable_status">⚠️ Barometer nicht verfügbar
+Nur GPS-Höhe (ungenau)</string>
+    <string name="altimeter_gps_inaccurate_status">📡 GPS-Höhe ist sehr ungenau!
+🌡️ Barometer wird für Genauigkeit genutzt</string>
+    <string name="altimeter_location_permission_needed_status">❌ Standortberechtigung benötigt</string>
+    <string name="altimeter_location_permission_denied_toast">Standortberechtigung wurde verweigert</string>
+    <string name="altimeter_qnh_updated_status">🌤️ Referenzdruck (QNH) aktualisiert: %1$.1f hPa
+🎯 Barometer-Genauigkeit verbessert</string>
+    <string name="altimeter_qnh_based_format">%1$.1f m (QNH-basiert)</string>
+    <string name="altimeter_accuracy_very_good">sehr gut</string>
+    <string name="altimeter_accuracy_good">gut</string>
+    <string name="altimeter_accuracy_medium">mittel</string>
+    <string name="altimeter_accuracy_poor">schlecht</string>
+    <string name="altimeter_accuracy_very_poor">sehr schlecht</string>
+    <string name="altimeter_accuracy_unknown">unbekannt</string>
+    <string name="altimeter_meters_format">%1$.0f m</string>
+    <string name="altimeter_gps_accuracy_format">GPS-Genauigkeit: ± %1$.0f m (%2$s)
+⚠️ GPS-Höhe ist oft ungenau!</string>
+    <string name="altimeter_gps_accuracy_unknown">GPS-Genauigkeit: unbekannt
+⚠️ GPS-Höhe ist oft ungenau!</string>
+    <string name="altimeter_barometer_calibrated_status">✅ Barometer kalibriert
+🎯 Nutze Barometer für genaue Höhe</string>
+    <string name="altimeter_gps_only_status">⚠️ Nur GPS verfügbar</string>
+    <string name="altimeter_pressure_format">%1$.1f hPa</string>
+    <string name="altimeter_calibrated_format">%1$.1f m (kalibriert)</string>
+    <string name="altimeter_qnh_based_label">QNH-basiert</string>
+    <string name="altimeter_not_calibrated_label">nicht kalibriert</string>
+    <string name="altimeter_uncalibrated_format">%1$.1f m (%2$s)</string>
+    <string name="altimeter_calibrated_toast">✅ Barometer kalibriert auf %1$dm</string>
+
+    <!-- activity_altimeter.xml -->
+    <string name="altitude_placeholder">-- m</string>
+    <string name="altimeter_altitude_over_sea_level">Höhe über NN</string>
+    <string name="altimeter_gps_altitude_label">📍 GPS-Höhe</string>
+    <string name="altimeter_based_on_gps_data">Basiert auf GPS-Daten</string>
+    <string name="altimeter_barometer_altitude_label">🌡️ Barometer-Höhe</string>
+    <string name="altimeter_based_on_air_pressure">Basiert auf Luftdruck</string>
+    <string name="altimeter_air_pressure_label">Luftdruck</string>
+    <string name="altimeter_accuracy_placeholder">Genauigkeit: ± -- m</string>
+    <string name="altimeter_determining_altitude">Höhe wird ermittelt...</string>
+    <string name="altimeter_measurement_notes_title">Messhinweise &amp;amp; Bedingungen</string>
+    <string name="altimeter_measurement_notes_body">• GPS-Höhe: Erfordert freie Sicht zum Himmel. In Gebäuden oder tiefen Tälern oft sehr ungenau.\n\n• Barometer-Höhe: Sehr präzise bei relativen Änderungen (Treppen, Berge). Für absolute Höhe über NN wird automatisch ein Referenzwert (QNH) via Internet von Wetterstationen geladen.\n\n• Geoid-Korrektur: Die App korrigiert den GPS-Fehler (WGS84 vs. MSL) automatisch für genauere Meereshöhen-Angaben.\n\n• Kalibrierung: Ohne Internet wird die GPS-Höhe als Referenz für das Barometer genutzt, sobald die GPS-Genauigkeit ausreichend ist.</string>
+
+    <!-- DogProfile.kt: Feldlabel, Gender/Neutered-Anzeige, Export -->
+    <string name="dog_gender_male">Rüde</string>
+    <string name="dog_gender_female">Hündin</string>
+    <string name="dog_neutered_yes">Ja</string>
+    <string name="dog_neutered_no">Nein</string>
+    <string name="dog_neutered_unknown">Unbekannt</string>
+    <string name="dog_field_name">Name</string>
+    <string name="dog_field_breed">Rasse</string>
+    <string name="dog_field_gender">Geschlecht</string>
+    <string name="dog_field_neutered">Kastrationsstatus</string>
+    <string name="dog_field_birth_date">Geburtsdatum</string>
+    <string name="dog_field_origin_country">Herkunftsort/-land</string>
+    <string name="dog_field_color">Farbe/Fellzeichnung</string>
+    <string name="dog_field_chip_number">Chip-Nummer</string>
+    <string name="dog_field_tax_number">Steuernummer</string>
+    <string name="dog_field_tasso_number">TASSO Nummer</string>
+    <string name="dog_field_pet_passport_country">Heimtierausweis Land</string>
+    <string name="dog_field_pet_passport_number">Heimtierausweis Nummer</string>
+    <string name="dog_field_vaccination_status">Impfstatus</string>
+    <string name="dog_field_additional_vaccination">Weitere Impfung</string>
+    <string name="dog_field_last_deworming">Letzte Entwurmung</string>
+    <string name="dog_field_last_flea_tick">Letzte Floh-/Zeckenprophylaxe</string>
+    <string name="dog_field_weight">Gewicht</string>
+    <string name="dog_field_weight_date">Gewicht Datum</string>
+    <string name="dog_field_shoulder_height">Schulterhöhe (cm)</string>
+    <string name="dog_field_body_length">Körperlänge (cm)</string>
+    <string name="dog_field_medical_notes">Medizinische Hinweise</string>
+    <string name="dog_field_veterinarian">Tierarzt</string>
+    <string name="dog_field_liability_insurance">Hundehaftpflichtversicherung</string>
+    <string name="dog_field_health_insurance">Hundekranken-/OP-Versicherung</string>
+    <string name="dog_field_owner">Besitzer</string>
+    <string name="dog_field_additional_emergency_contact">Zusätzlicher Notfallkontakt</string>
+    <string name="dog_field_food">Futter</string>
+    <string name="dog_field_behavior">Verhalten</string>
+    <string name="dog_field_photo">Foto</string>
+    <string name="dog_export_title">🐕 HUNDE-STAMMDATEN</string>
+    <string name="dog_export_section_basis">📋 BASIS-DATEN</string>
+    <string name="dog_export_section_identification">🔖 IDENTIFIKATION</string>
+    <string name="dog_export_section_health">💉 GESUNDHEIT</string>
+    <string name="dog_export_section_contacts">👨‍⚕️ KONTAKTE</string>
+    <string name="dog_export_section_food_behavior">🍖 FUTTER &amp; VERHALTEN</string>
+
+    <!-- DogProfileAdapter.kt -->
+    <string name="dog_info_gender_birthdate_format">%1$s • %2$s</string>
+    <string name="dog_tile_view">Anzeigen</string>
+    <string name="dog_tile_edit">Bearbeiten</string>
+    <string name="dog_tile_qr">QR-Code</string>
+    <string name="dog_tile_pdf">PDF</string>
+    <string name="dog_tile_share">Teilen</string>
+    <string name="dog_tile_delete">Löschen</string>
+    <string name="dog_tile_emergency">🚨 NOTFALL</string>
+    <string name="dog_qr_field_selection_title">📱 QR-Code Datenauswahl</string>
+    <string name="dog_pdf_field_selection_title">📄 PDF Datenauswahl</string>
+    <string name="dog_share_field_selection_title">📤 Teilen Datenauswahl</string>
+
+    <!-- DogProfileActivity.kt -->
+    <string name="dog_profile_title">🐕 Stammdaten</string>
+    <string name="dog_add_new_tile">Neuen Hund anlegen</string>
+    <string name="dog_delete_confirm_title">Hund löschen?</string>
+    <string name="dog_delete_confirm_message">Möchtest Du %1$s wirklich unwiderruflich löschen?</string>
+    <string name="dog_delete_button">Löschen</string>
+    <string name="dog_deleted_toast">Gelöscht</string>
+    <string name="dog_share_subject">Hundedaten: %1$s</string>
+    <string name="dog_share_via">Teilen via</string>
+    <string name="dog_pdf_open_chooser">PDF öffnen</string>
+    <string name="dog_pdf_error">Fehler: %1$s</string>
+
+    <!-- DogViewActivity.kt -->
+    <string name="dog_view_neutered_format">Kastriert: %1$s</string>
+    <string name="dog_view_birth_date_format">Geboren: %1$s</string>
+    <string name="dog_view_origin_format">Herkunft: %1$s</string>
+    <string name="dog_view_color_format">Farbe: %1$s</string>
+    <string name="dog_view_chip_format">Chip: %1$s</string>
+    <string name="dog_view_tax_format">Steuernummer: %1$s</string>
+    <string name="dog_view_tasso_format">TASSO: %1$s</string>
+    <string name="dog_view_pet_passport_format">Heimtierausweis: %1$s</string>
+    <string name="dog_view_vaccination_format">Impfstatus: %1$s</string>
+    <string name="dog_view_additional_vaccination_format">Weitere Impfungen: %1$s</string>
+    <string name="dog_view_deworming_format">Entwurmung: %1$s</string>
+    <string name="dog_view_flea_tick_format">Floh/Zecke: %1$s</string>
+    <string name="dog_view_weight_with_date_format">Gewicht: %1$s kg (%2$s)</string>
+    <string name="dog_view_weight_empty">Gewicht: -</string>
+    <string name="dog_view_shoulder_height_format">Schulterhöhe: %1$s cm</string>
+    <string name="dog_view_body_length_format">Körperlänge: %1$s cm</string>
+    <string name="dog_view_medical_notes_format">Hinweise: %1$s</string>
+    <string name="dog_view_vet_format">Tierarzt: %1$s</string>
+    <string name="dog_view_liability_format">Haftpflicht: %1$s</string>
+    <string name="dog_view_health_insurance_format">Krankenvers.: %1$s</string>
+    <string name="dog_view_owner_format">Besitzer: %1$s</string>
+    <string name="dog_view_emergency_format">Notfall: %1$s</string>
+    <string name="dog_view_food_format">Futter: %1$s</string>
+    <string name="dog_view_behavior_format">Verhalten: %1$s</string>
+    <string name="dog_view_dash_placeholder">-</string>
+    <string name="dog_view_title_fallback">Hund</string>
+    <string name="dog_vital_table_header_date">Datum</string>
+    <string name="dog_vital_table_header_pulse">Puls</string>
+    <string name="dog_vital_table_header_respiration">Atem</string>
+    <string name="dog_vital_table_header_temp">Temp.</string>
+    <string name="dog_vital_table_header_status">Status</string>
+    <string name="dog_vital_per_minute">%1$d/min</string>
+    <string name="dog_vital_em_dash">–</string>
+    <string name="dog_vital_temp_format">%1$s°C</string>
+    <string name="dog_vital_more_measurements">… und %1$d weitere Messungen</string>
+    <string name="dog_heat_no_entry_yet">Noch keine Läufigkeit eingetragen.</string>
+    <string name="dog_heat_cycle_number_format">Läufigkeit #%1$d  ·  %2$s</string>
+    <string name="dog_heat_period_format">%1$s – %2$s  (%3$s)</string>
+    <string name="dog_heat_since_format">Seit %1$s  ·  noch aktiv</string>
+    <string name="dog_heat_no_date">Kein Datum eingetragen</string>
+    <string name="dog_heat_behavior_format">Verhalten: %1$s</string>
+    <string name="dog_heat_pseudo_pregnancy_with_signs">🐾 Scheinträchtigkeit: %1$s</string>
+    <string name="dog_heat_pseudo_pregnancy_observed">🐾 Scheinträchtigkeit beobachtet</string>
+
+    <!-- DogEditActivity.kt -->
+    <string name="dog_edit_title_new">🐕 Neuer Hund</string>
+    <string name="dog_edit_title_edit_format">🐕 %1$s bearbeiten</string>
+    <string name="dog_edit_photo_error">Foto-Fehler: %1$s</string>
+    <string name="dog_edit_birthdate_placeholder_full">Tag.Monat.Jahr wählen</string>
+    <string name="dog_edit_birthdate_placeholder_month_year">Monat.Jahr wählen</string>
+    <string name="dog_edit_birthdate_placeholder_year">Jahr wählen</string>
+    <string name="dog_edit_birthdate_unknown">Unbekannt</string>
+    <string name="dog_edit_month_year_dialog_title">Monat und Jahr wählen</string>
+    <string name="dog_edit_ok_button">OK</string>
+    <string name="dog_edit_year_dialog_title">Jahr wählen</string>
+    <string name="dog_edit_name_required_toast">Name erforderlich</string>
+    <string name="dog_edit_saved_toast">✅ %1$s gespeichert</string>
+    <string name="dog_edit_save_error_toast">❌ Fehler beim Speichern</string>
+
+    <!-- activity_dog_profile.xml / item_dog_profile.xml -->
+    <string name="dog_profile_empty_hint">🐕 Noch keine Hunde
+
+Tippe auf ➕ um einen Hund hinzuzufügen</string>
+    <string name="dog_photo_content_description">Hundefoto</string>
+
+    <!-- item_dog_profile.xml Platzhalter -->
+    <string name="dog_item_name_placeholder">Name</string>
+    <string name="dog_item_breed_placeholder">Rasse</string>
+    <string name="dog_item_info_placeholder">Info</string>
+
+    <!-- activity_dog_edit.xml -->
+    <string name="dog_edit_photo_header">📷 FOTO</string>
+    <string name="dog_edit_add_photo_button">📷 Foto hinzufügen</string>
+    <string name="dog_edit_remove_photo_button">🗑 Entfernen</string>
+    <string name="dog_edit_basis_header">📋 BASIS-DATEN</string>
+    <string name="dog_edit_hint_name">Name *</string>
+    <string name="dog_edit_hint_breed">Rasse</string>
+    <string name="dog_edit_hint_gender">Geschlecht</string>
+    <string name="dog_edit_please_choose">Bitte wählen</string>
+    <string name="dog_edit_hint_neutered">Kastrationsstatus</string>
+    <string name="dog_edit_hint_birthdate_precision">Präzision Geburtsdatum</string>
+    <string name="dog_edit_birthdate_type_known">Datum bekannt</string>
+    <string name="dog_edit_hint_birthdate">Geburtsdatum</string>
+    <string name="dog_edit_hint_origin_country">Herkunftsort / -land</string>
+    <string name="dog_edit_hint_color">Farbe / Fellzeichnung</string>
+    <string name="dog_edit_identification_header">🔖 IDENTIFIKATION</string>
+    <string name="dog_edit_hint_chip_number">Chip-Nummer</string>
+    <string name="dog_edit_hint_tax_number">Steuernummer der Gemeinde</string>
+    <string name="dog_edit_hint_tasso_number">TASSO Registriernummer</string>
+    <string name="dog_edit_hint_pet_passport_country">Heimtierausweis Land</string>
+    <string name="dog_edit_hint_pet_passport_number">Ausweis-Nummer</string>
+    <string name="dog_edit_health_header">💉 GESUNDHEIT</string>
+    <string name="dog_edit_hint_vaccination">Impfstatus / Letzte Impfung</string>
+    <string name="dog_edit_hint_additional_vaccination">Weitere Impfungen</string>
+    <string name="dog_edit_hint_deworming">Letzte Entwurmung</string>
+    <string name="dog_edit_hint_flea_tick">Letzte Floh-/Zeckenprophylaxe</string>
+    <string name="dog_edit_hint_weight">Gewicht (kg)</string>
+    <string name="dog_edit_hint_date">Datum</string>
+    <string name="dog_edit_hint_shoulder_height">Schulterhöhe (cm)</string>
+    <string name="dog_edit_hint_body_length">Körperlänge (cm)</string>
+    <string name="dog_edit_hint_medical_notes">Medizinische Hinweise / Vorerkrankungen</string>
+    <string name="dog_edit_contacts_header">👨‍⚕️ KONTAKTE</string>
+    <string name="dog_edit_hint_veterinarian">Tierarzt / Tierarztpraxis</string>
+    <string name="dog_edit_hint_liability_insurance">Hundehaftpflichtversicherung</string>
+    <string name="dog_edit_hint_health_insurance">Hundekranken-/OP-Versicherung</string>
+    <string name="dog_edit_hint_owner">Besitzer (Name, Adresse, Kontakt)</string>
+    <string name="dog_edit_hint_additional_emergency">Zusätzlicher Notfallkontakt</string>
+    <string name="dog_edit_food_behavior_header">🍖 FUTTER und VERHALTEN</string>
+    <string name="dog_edit_hint_food">Futter (Marke, Sorte, Menge)</string>
+    <string name="dog_edit_hint_behavior">Besondere Verhaltensweisen / Informationen</string>
+    <string name="dog_edit_character_header">🧠 WESENSMERKMALE</string>
+    <string name="dog_edit_character_subtitle">Für personalisierte Trainingsempfehlungen im Trainingstagebuch</string>
+    <string name="dog_edit_quick_profile_button">📋 Schnellauswahl: Profil wählen</string>
+    <string name="dog_edit_slider_temperament_title">Grundtemperament</string>
+    <string name="dog_edit_slider_temperament_low">Sehr
+ruhig</string>
+    <string name="dog_edit_slider_temperament_high">Sehr
+lebhaft</string>
+    <string name="dog_edit_slider_confidence_title">Selbstbewusstsein</string>
+    <string name="dog_edit_slider_confidence_low">Sehr
+ängstlich</string>
+    <string name="dog_edit_slider_confidence_high">Sehr
+selbstsicher</string>
+    <string name="dog_edit_slider_social_title">Sozialverhalten</string>
+    <string name="dog_edit_slider_social_low">Zurück-
+haltend</string>
+    <string name="dog_edit_slider_social_high">Sehr
+kontaktfreudig</string>
+    <string name="dog_edit_slider_excitability_title">Erregbarkeit</string>
+    <string name="dog_edit_slider_excitability_low">Sehr
+gelassen</string>
+    <string name="dog_edit_slider_excitability_high">Leicht
+erregbar</string>
+    <string name="dog_edit_slider_learning_title">Lerngeschwindigkeit</string>
+    <string name="dog_edit_slider_learning_low">Sehr
+langsam</string>
+    <string name="dog_edit_slider_learning_high">Sehr
+schnell</string>
+    <string name="dog_edit_slider_frustration_title">Frustrationstoleranz</string>
+    <string name="dog_edit_slider_frustration_low">Sehr
+niedrig</string>
+    <string name="dog_edit_slider_frustration_high">Sehr
+hoch</string>
+    <string name="dog_edit_hint_character_notes">Besonderheiten im Wesen (optional)</string>
+    <string name="dog_edit_save_button">💾 Speichern</string>
+
+    <string name="dog_view_section_basic_data">📋 BASIS-DATEN</string>
+    <string name="dog_view_section_identification">🔖 IDENTIFIKATION</string>
+    <string name="dog_view_section_health">💉 GESUNDHEIT</string>
+    <string name="dog_view_section_contacts">👨‍⚕️ KONTAKTE</string>
+    <string name="dog_view_section_food_behavior">🍖 FUTTER und VERHALTEN</string>
+    <string name="dog_view_vitals_header">❤️ Vitalwerte</string>
+    <string name="dog_view_vitals_empty_hint">Noch keine Vitalwerte gemessen.</string>
+    <string name="dog_view_btn_measure_pulse">❤️ Messen</string>
+    <string name="dog_view_btn_all_measurements">📋 Alle Messungen</string>
+    <string name="dog_view_heat_section_header">🌸 Läufigkeit</string>
+    <string name="dog_view_heat_avg_placeholder">Ø Zykluslänge: —</string>
+    <string name="dog_view_heat_next_placeholder">Nächste Läufigkeit: —</string>
+    <string name="dog_view_btn_add_heat_cycle">🌸 Neue Läufigkeit eintragen</string>
+    <string name="dog_view_name_placeholder">Bello</string>
+    <string name="dog_view_breed_placeholder">Labrador</string>
+    <string name="dog_view_gender_placeholder">Rüde</string>
+
+    <string name="pulscheck_toolbar_title_format">❤️ Pulscheck – %1$s</string>
+    <string name="pulscheck_error_no_profile">Fehler: Kein Profil gefunden</string>
+
+    <string name="pulscheck_instructions_title">📋 Anleitung Pulsmessung</string>
+    <string name="pulscheck_instructions_body">1. Lege Zeige- und Mittelfinger an die Innenseite des Oberschenkels (A. femoralis) oder hinter das linke Ellbogengelenk auf die Brustwand.\n\n2. Starte den 15-Sekunden-Timer.\n\n3. Zähle die Herzschläge. Das Ergebnis × 4 = Herzfrequenz pro Minute.\n\n4. Atemfrequenz: Hebe- und Senkbewegungen des Brustkorbs zählen – ebenfalls 15 Sekunden, dann × 4.</string>
+
+    <string name="pulscheck_reference_title">📊 Normalwerte im Überblick</string>
+    <string name="pulscheck_reference_loading">❤️ Herzfrequenz: wird geladen …</string>
+    <string name="pulscheck_reference_body">❤️ Herzfrequenz nach Größe:\n  • Kleinhund (&lt; 30 cm): 100–160 /min\n  • Mittelhund (30–50 cm): 70–120 /min\n  • Großhund (&gt; 50 cm): 60–100 /min\n  • Welpen (&lt; 1 Jahr): bis 220 /min\n\n🫁 Atemfrequenz (Ruhe): 15–30 /min\n  • Welpen: bis 40 /min\n  • Bei Hitze/Aufregung: Hecheln normal\n\n🌡️ Körpertemperatur: 37,5–39,0 °C\n  • &gt; 39,5 °C: erhöht, beobachten\n  • &gt; 40,0 °C: Fieber → Tierarzt\n  • &lt; 37,0 °C: Unterkühlung → Tierarzt\n\n💉 Kapillarfüllzeit (KFZ): &lt; 2 Sekunden\n  • Finger auf Zahnfleisch drücken, loslassen\n  • Farbe sollte in &lt; 2 Sek. zurückkehren\n\n👁️ Schleimhäute: rosa, feucht\n🧠 Bewusstsein: alert, reaktiv</string>
+
+    <string name="pulscheck_card_load_scenario">⚡ Belastungsszenario</string>
+    <string name="pulscheck_card_measure_pulse">❤️ Herzfrequenz messen</string>
+    <string name="pulscheck_card_respiration">🫁 Atemfrequenz (optional)</string>
+    <string name="pulscheck_card_temperature">🌡️ Körpertemperatur (optional)</string>
+    <string name="pulscheck_card_crt">💉 Kapillarfüllzeit (optional)</string>
+    <string name="pulscheck_card_mucous_color">👁️ Schleimhautfarbe (optional)</string>
+    <string name="pulscheck_card_consciousness">🧠 Bewusstseinszustand (optional)</string>
+    <string name="pulscheck_card_notes">📝 Notizen / Beobachtungen</string>
+
+    <string name="pulscheck_timer_seconds_label">Sekunden</string>
+    <string name="pulscheck_times_four_label">  × 4 = </string>
+    <string name="pulscheck_btn_start_timer">▶ Timer starten</string>
+    <string name="pulscheck_btn_cancel_timer">⏹ Abbrechen</string>
+    <string name="pulscheck_btn_restart_timer">▶ Timer erneut starten</string>
+    <string name="pulscheck_pulse_timer_hint_counting">Jetzt Schläge zählen …</string>
+    <string name="pulscheck_pulse_timer_hint_result">Gezählte Schläge eingeben → × 4 = Herzfrequenz/min</string>
+
+    <string name="pulscheck_hint_beats_counted">Schläge gezählt</string>
+    <string name="pulscheck_hint_pulse_per_min">Puls /min</string>
+    <string name="pulscheck_hint_breaths_counted">Atemzüge gezählt</string>
+    <string name="pulscheck_hint_resp_per_min">Atemfq. /min</string>
+    <string name="pulscheck_hint_temperature">Temperatur in °C (z.B. 38.5)</string>
+    <string name="pulscheck_hint_notes">Aktuelle Bedingungen, Beobachtungen, Auffälligkeiten …</string>
+
+    <string name="pulscheck_crt_hint">Finger auf Zahnfleisch drücken, loslassen – Sekunden bis Farbe zurückkommt</string>
+    <string name="pulscheck_crt_selected_1s">Ausgewählt: 1s — Normal</string>
+    <string name="pulscheck_crt_selected_2s">Ausgewählt: 2s — Normal (Grenzwert)</string>
+    <string name="pulscheck_crt_selected_3s">Ausgewählt: 3s — Verlängert, beobachten</string>
+    <string name="pulscheck_crt_selected_over_3s">Ausgewählt: &gt;3s — Deutlich verlängert → Tierarzt</string>
+
+    <string name="pulscheck_badge_normal">✅ Im Normalbereich</string>
+    <string name="pulscheck_badge_low">⚠️ Unterhalb des Normalbereichs – Tierarzt konsultieren</string>
+    <string name="pulscheck_badge_high">⚠️ Oberhalb des Normalbereichs – Tierarzt konsultieren</string>
+    <string name="pulscheck_badge_unknown">ℹ️ Schulterhöhe in Stammdaten eintragen für Beurteilung</string>
+
+    <string name="pulscheck_spinner_please_choose">– Bitte wählen –</string>
+    <string name="pulscheck_spinner_not_measured">– nicht gemessen –</string>
+    <string name="pulscheck_spinner_not_assessed">– nicht beurteilt –</string>
+
+    <string name="pulscheck_tile_save_measurement">💾 Messung speichern</string>
+    <string name="pulscheck_tile_emergency_report">🚨 Notfallmeldung</string>
+    <string name="pulscheck_tile_show_all_measurements">📋 Alle Messungen anzeigen</string>
+
+    <string name="pulscheck_toast_pulse_required">Bitte mindestens die Herzfrequenz eingeben.</string>
+    <string name="pulscheck_toast_saved">✅ Messung gespeichert</string>
+    <string name="pulscheck_toast_save_first">Bitte zuerst eine Messung speichern.</string>
+
+    <string name="pulscheck_dialog_title_abnormal">⚠️ Auffälliger Puls</string>
+    <string name="pulscheck_dialog_msg_high">Der gemessene Puls von %1$d /min liegt oberhalb des Normalbereichs.\n\nBei anhaltend erhöhter Herzfrequenz, Atemnot oder Erschöpfung bitte einen Tierarzt aufsuchen.</string>
+    <string name="pulscheck_dialog_msg_low">Der gemessene Puls von %1$d /min liegt unterhalb des Normalbereichs.\n\nBei Schwäche, Bewusstseinstrübung oder anderen Auffälligkeiten bitte einen Tierarzt aufsuchen.</string>
+    <string name="pulscheck_dialog_btn_understood">Verstanden</string>
+    <string name="pulscheck_dialog_btn_emergency_report">🚨 Notfallmeldung</string>
+
+    <string name="pulscheck_emergency_header">=== Vitalwerte ===</string>
+    <string name="pulscheck_emergency_pulse_line">Puls: %1$d /min</string>
+    <string name="pulscheck_emergency_respiration_line">Atemfrequenz: %1$d /min</string>
+    <string name="pulscheck_emergency_temperature_line">Temperatur: %1$s °C</string>
+    <string name="pulscheck_emergency_crt_line">Kapillarfüllzeit: %1$ds</string>
+    <string name="pulscheck_emergency_mucous_color_line">Schleimhautfarbe: %1$s</string>
+    <string name="pulscheck_emergency_consciousness_line">Bewusstsein: %1$s</string>
+    <string name="pulscheck_emergency_load_line">Belastung: %1$s</string>
+    <string name="pulscheck_emergency_notes_line">Notizen: %1$s</string>
+
+    <!-- VitalRecord: Belastungsszenario-Anzeigetexte -->
+    <string name="vital_load_rest">Ruhe</string>
+    <string name="vital_load_light_activity">Leichte Aktivität</string>
+    <string name="vital_load_moderate_activity">Moderate Aktivität</string>
+    <string name="vital_load_intense_activity">Intensive Aktivität</string>
+    <string name="vital_load_recovery">Erholung nach Aktivität</string>
+    <string name="vital_load_excitement_stress">Aufregung / Stress / Belastung</string>
+    <string name="vital_load_vet_visit">Tierarztbesuch oder Ähnliches</string>
+    <string name="vital_load_illness">Erkrankung oder Unwohlsein</string>
+
+    <!-- VitalRecord: Schleimhautfarbe-Anzeigetexte -->
+    <string name="vital_mucous_pink">Rosa (normal)</string>
+    <string name="vital_mucous_pale_pink">Blass rosa</string>
+    <string name="vital_mucous_white">Weiß / Sehr blass</string>
+    <string name="vital_mucous_blue_gray">Blau / Grau (Zyanose)</string>
+    <string name="vital_mucous_yellow">Gelb (Ikterus)</string>
+    <string name="vital_mucous_brick_red">Ziegelrot / Dunkelrot</string>
+
+    <!-- VitalRecord: Bewusstseinszustand-Anzeigetexte -->
+    <string name="vital_consciousness_alert">Alert (wach, reaktiv)</string>
+    <string name="vital_consciousness_dampened">Gedämpft (schläfrig, aber ansprechbar)</string>
+    <string name="vital_consciousness_somnolent">Somnolent (schwer weckbar)</string>
+    <string name="vital_consciousness_unconscious">Bewusstlos</string>
+
+    <!-- VitalRecord: Normalwert-Referenztexte -->
+    <string name="vital_pulse_reference_unknown">Normalwert: ca. 60–160 /min (je nach Größe)</string>
+    <string name="vital_pulse_reference_small">Normalwert Kleinhund (&lt; 30 cm): 100–160 /min</string>
+    <string name="vital_pulse_reference_medium">Normalwert Mittelhund (30–50 cm): 70–120 /min</string>
+    <string name="vital_pulse_reference_large">Normalwert Großhund (&gt; 50 cm): 60–100 /min</string>
+
+    <!-- VitalRecord: summaryLine() -->
+    <string name="vital_summary_pulse">Puls: %1$d /min</string>
+    <string name="vital_summary_respiration">Atem: %1$d /min</string>
+    <string name="vital_summary_temperature">Temp: %1$s °C</string>
+    <string name="vital_summary_crt">KFZ: %1$ds</string>
+    <string name="vital_summary_mucous">SH: %1$s</string>
+    <string name="vital_summary_consciousness">BW: %1$s</string>
+
+    <!-- VitalRecord: toShareText() -->
+    <string name="vital_share_dog_line">🐕 Vitalwerte: %1$s</string>
+    <string name="vital_share_date_line">📅 %1$s</string>
+    <string name="vital_share_load_line">⚡ Belastung: %1$s</string>
+    <string name="vital_share_pulse_line">❤️ Herzfrequenz: %1$d /min</string>
+    <string name="vital_share_respiration_line">🫁 Atemfrequenz: %1$d /min</string>
+    <string name="vital_share_temperature_line">🌡️ Temperatur: %1$s °C</string>
+    <string name="vital_share_crt_line">💉 Kapillarfüllzeit: %1$ds</string>
+    <string name="vital_share_mucous_line">👁️ Schleimhautfarbe: %1$s</string>
+    <string name="vital_share_consciousness_line">🧠 Bewusstseinszustand: %1$s</string>
+    <string name="vital_share_notes_line">📝 Notizen: %1$s</string>
+
+    <!-- VitalRecord: CSV-Header -->
+    <string name="vital_csv_header_datetime">Datum/Uhrzeit</string>
+    <string name="vital_csv_header_dog">Hund</string>
+    <string name="vital_csv_header_load">Belastung</string>
+    <string name="vital_csv_header_pulse">Puls (/min)</string>
+    <string name="vital_csv_header_respiration">Atemfrequenz (/min)</string>
+    <string name="vital_csv_header_temperature">Temperatur (°C)</string>
+    <string name="vital_csv_header_crt">Kapillarfüllzeit (s)</string>
+    <string name="vital_csv_header_mucous">Schleimhautfarbe</string>
+    <string name="vital_csv_header_consciousness">Bewusstsein</string>
+    <string name="vital_csv_header_notes">Notizen</string>
+
+    <!-- VitalListAdapter / item_vital_record.xml -->
+    <string name="vital_item_scenario_format">⚡ %1$s</string>
+    <string name="vital_item_notes_format">📝 %1$s</string>
+    <string name="vital_item_status_normal">✓ Normal</string>
+    <string name="vital_item_status_high">↑ Erhöht</string>
+    <string name="vital_item_status_low">↓ Niedrig</string>
+    <string name="vital_item_btn_share">📤 Teilen</string>
+    <string name="vital_item_btn_edit">✏️ Bearbeiten</string>
+
+    <!-- VitalDetailActivity / activity_vital_detail.xml -->
+    <string name="vital_detail_toolbar_title">❤️ Vitalwerte-Detail</string>
+    <string name="vital_detail_toast_not_found">Messung nicht gefunden</string>
+    <string name="vital_detail_dog_format">🐕 %1$s</string>
+    <string name="vital_detail_date_format">📅 %1$s</string>
+    <string name="vital_detail_scenario_format">⚡ %1$s</string>
+    <string name="vital_detail_section_vitals">Vitalwerte</string>
+    <string name="vital_detail_hint_pulse">❤️ Herzfrequenz (/min) *</string>
+    <string name="vital_detail_hint_respiration">🫁 Atemfrequenz (/min)</string>
+    <string name="vital_detail_hint_temperature">🌡️ Temperatur (°C)</string>
+    <string name="vital_detail_hint_crt">💉 Kapillarfüllzeit (Sekunden)</string>
+    <string name="vital_detail_hint_notes">Beobachtungen und Kontext</string>
+    <string name="vital_detail_btn_save">💾 Änderungen speichern</string>
+    <string name="vital_detail_btn_share">📤 Messung teilen</string>
+    <string name="vital_detail_btn_share_as_text">📄 Als Text teilen</string>
+    <string name="vital_detail_toast_invalid_pulse">Bitte eine gültige Herzfrequenz eingeben.</string>
+    <string name="vital_detail_toast_saved">✅ Änderungen gespeichert</string>
+    <string name="vital_detail_share_subject_format">Vitalwerte %1$s – %2$s</string>
+    <string name="vital_detail_share_chooser_title">Messung teilen</string>
+    <string name="vital_detail_share_as_text_chooser_title">Als Text teilen</string>
+    <string name="vital_detail_text_dog_line">🐕 Vitalwerte – %1$s</string>
+    <string name="vital_detail_text_date_line">📅 Datum: %1$s</string>
+    <string name="vital_detail_text_load_line">⚡ Belastung: %1$s</string>
+    <string name="vital_detail_text_pulse_line">❤️  Herzfrequenz: %1$d /min</string>
+    <string name="vital_detail_text_respiration_line">🫁  Atemfrequenz: %1$d /min</string>
+    <string name="vital_detail_text_temperature_line">🌡️  Temperatur: %1$s °C</string>
+    <string name="vital_detail_text_crt_line">💉  Kapillarfüllzeit: %1$ds</string>
+    <string name="vital_detail_text_mucous_line">👁️  Schleimhautfarbe: %1$s</string>
+    <string name="vital_detail_text_consciousness_line">🧠  Bewusstsein: %1$s</string>
+    <string name="vital_detail_text_notes_header">📝 Notizen:</string>
+    <string name="vital_detail_text_share_subject_format">Vitalwerte %1$s</string>
+
+    <!-- VitalListActivity / activity_vital_list.xml -->
+    <string name="vital_list_toolbar_title_format">❤️ Vitalwerte – %1$s</string>
+    <string name="vital_list_stats_title">📊 Letzte Messungen</string>
+    <string name="vital_list_stats_none_yet">Noch keine Messungen vorhanden.</string>
+    <string name="vital_list_empty_hint">Noch keine Messungen für diesen Hund.\n\nStarte eine Messung über ❤️ Pulscheck.</string>
+    <string name="vital_list_tile_csv_export">CSV Export</string>
+    <string name="vital_list_tile_share_list">Liste teilen</string>
+    <string name="vital_list_stats_last_measurement">Letzte Messung: %1$s</string>
+    <string name="vital_list_stats_last_pulse">Letzter Puls: %1$d /min</string>
+    <string name="vital_list_stats_avg_pulse">Ø Puls: %1$d /min</string>
+    <string name="vital_list_stats_last_respiration">Letzter Atem: %1$d /min</string>
+    <string name="vital_list_stats_last_temperature">Letzte Temp.: %1$s °C</string>
+    <string name="vital_list_delete_dialog_title">🗑️ Messung löschen?</string>
+    <string name="vital_list_delete_dialog_message">Messung vom %1$s wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="vital_list_delete_dialog_confirm">Löschen</string>
+    <string name="vital_list_toast_deleted">Messung gelöscht</string>
+    <string name="vital_list_csv_share_subject">Vitalwerte %1$s – %2$s</string>
+    <string name="vital_list_csv_chooser_title">CSV exportieren</string>
+    <string name="vital_list_toast_export_error">Fehler beim Export: %1$s</string>
+    <string name="vital_list_share_all_header">❤️ Vitalwerte: %1$s</string>
+    <string name="vital_list_share_all_exported">📅 Exportiert: %1$s</string>
+    <string name="vital_list_share_all_count">Anzahl Messungen: %1$d</string>
+    <string name="vital_list_share_all_subject">Vitalwerte %1$s</string>
+    <string name="vital_list_share_all_chooser_title">Liste teilen</string>
+
+    <plurals name="vital_list_stats_total">
+        <item quantity="one">Gesamt: %1$d Messung</item>
+        <item quantity="other">Gesamt: %1$d Messungen</item>
+    </plurals>
+
+    <plurals name="plant_scout_result_count">
+        <item quantity="one">%1$d Pflanze</item>
+        <item quantity="other">%1$d Pflanzen</item>
+    </plurals>
+
+    <string name="tick_loupe_toolbar_title">🔍 Zeckenlupe</string>
+    <string name="tick_loupe_error_no_back_camera">Keine Rückkamera gefunden.</string>
+    <string name="tick_loupe_error_camera_format">Kamerafehler (%1$d)</string>
+    <string name="tick_loupe_error_preview_failed">Kamera-Vorschau fehlgeschlagen.</string>
+    <string name="tick_loupe_tile_filter">Filter</string>
+    <string name="tick_loupe_tile_freeze">⏸ Einfrieren</string>
+    <string name="tick_loupe_tile_resume">▶ Weiter</string>
+    <string name="tick_loupe_tile_save">Speichern</string>
+    <string name="tick_loupe_toast_no_frozen_image">Kein eingefrorenes Bild vorhanden.</string>
+    <string name="tick_loupe_toast_saved_format">Gespeichert: %1$s</string>
+    <string name="tick_loupe_toast_save_error">Fehler beim Speichern: %1$s</string>
+    <string name="tick_loupe_toast_permission_required">Kamerazugriff wird benötigt.</string>
+    <string name="tick_loupe_frozen_overlay_label">⏸ EINGEFROREN</string>
+    <string name="tick_loupe_hint_text">Kamera langsam über das Fell führen. Zecken erscheinen im Wärmebild als dunkle Punkte.</string>
+
+    <!-- LocationShareActivity / LocationShareService -->
+    <string name="location_share_toolbar_title">📍 Standortfreigabe</string>
+    <string name="location_share_notification_active">Standortfreigabe aktiv</string>
+    <string name="location_share_notification_updated_format">Standort aktualisiert: %1$s</string>
+    <string name="location_share_notification_channel_name">Standortfreigabe</string>
+    <string name="location_share_notification_channel_description">Zeigt an, dass dein Standort für andere Teilnehmer sichtbar ist.</string>
+    <string name="location_share_toast_permission_required">Standortberechtigung benötigt</string>
+    <string name="location_share_battery_opt_dialog_title">⚡ Akkuoptimierung deaktivieren?</string>
+    <string name="location_share_battery_opt_dialog_message">Damit die Standortfreigabe auch bei gesperrtem Bildschirm zuverlässig funktioniert, empfehlen wir, die Akkuoptimierung für HundeWildnis zu deaktivieren.\n\nAndroid schränkt Hintergrundprozesse sonst nach einiger Zeit ein.\n\nDu oder Dein Gerät könnten somit im Notfall nicht gefunden werden.</string>
+    <string name="location_share_battery_opt_positive">Einstellungen öffnen</string>
+    <string name="location_share_battery_opt_negative">Überspringen</string>
+    <string name="location_share_toast_started">Standortfreigabe gestartet</string>
+    <string name="location_share_own_status_active">✅ Freigabe aktiv – Standort wird alle 30 Sek. gesendet.</string>
+    <string name="location_share_own_status_inactive">Freigabe inaktiv.</string>
+    <string name="location_share_map_status_updating">🔄 Aktualisiere Standortdaten...</string>
+    <string name="location_share_toast_locations_updated">Standorte aktualisiert</string>
+    <string name="location_share_map_status_no_webdav">Keine WebDAV-Zugangsdaten.</string>
+    <string name="location_share_map_status_connection_failed">⚠️ Verbindung fehlgeschlagen.</string>
+    <string name="location_share_debug_folder_empty_format">Der Ordner \'%1$s\' ist absolut leer.</string>
+    <string name="location_share_debug_info_format">Eigene ID: %1$s\nDateien im Ordner: %2$d\nBeispiel-Name: %3$s</string>
+    <string name="location_share_device_list_header_format">Geräteliste (%1$d)</string>
+    <string name="location_share_self_marker_label">ICH</string>
+    <string name="location_share_last_seen_format">Zuletzt: %1$s</string>
+    <string name="location_share_stale_suffix"> (veraltet)</string>
+    <string name="location_share_status_no_devices">Keine Geräte gefunden.</string>
+    <string name="location_share_status_mixed_format">%1$d aktiv, %2$d veraltet.</string>
+    <string name="location_share_delete_dialog_title">Eintrag entfernen?</string>
+    <string name="location_share_delete_dialog_message_format">Möchtest du \'%1$s\' wirklich vom Server löschen?</string>
+    <string name="location_share_delete_confirm">Löschen</string>
+    <string name="location_share_toast_entry_removed">Eintrag entfernt</string>
+    <string name="location_share_toast_delete_error">Fehler beim Löschen</string>
+    <string name="location_share_toast_no_api_key">Routing fehlgeschlagen: Kein API-Key hinterlegt</string>
+    <string name="location_share_toast_routing_failed_straight_line">Routing fehlgeschlagen, zeichne Luftlinie</string>
+    <string name="location_share_toast_waiting_gps">Warte auf GPS-Fix…</string>
+    <string name="location_share_share_text_format">Standort von %1$s: %2$s</string>
+    <string name="location_share_share_chooser_title">Teilen</string>
+    <string name="location_share_stop_routing_button">Navigation beenden</string>
+    <string name="location_share_card_title">📍 Standort freigeben</string>
+    <string name="location_share_card_subtitle">Sendet GPS alle 30 Sek. an WebDAV.</string>
+    <string name="location_share_label_hint">Anzeigename (z.B. Name)</string>
+    <string name="location_share_webdav_missing_title">⚠️ WebDAV-Synchronisation fehlt!</string>
+    <string name="location_share_webdav_missing_message">Bitte richte zuerst die WebDAV-Zugangsdaten ein, um die Standortfreigabe zu nutzen.</string>
+    <string name="location_share_webdav_missing_button">Zu den Einstellungen</string>
+    <string name="location_share_map_settings_title">🗺️ Karten-Einstellungen</string>
+    <string name="location_share_routing_profile_label">Routen-Profil:</string>
+    <string name="location_share_profile_foot">🥾 Fuß</string>
+    <string name="location_share_profile_bike">🚲 Rad</string>
+    <string name="location_share_profile_car">🚗 Auto</string>
+    <string name="location_share_zoom_active_only">Nur auf aktive Geräte zoomen</string>
+    <string name="location_share_map_status_no_data">Keine Standortdaten gefunden.</string>
+    <string name="location_share_device_list_header_placeholder">Geräteliste (0)</string>
+    <string name="location_share_device_placeholder_label">Unbekanntes Gerät</string>
+    <string name="location_share_device_placeholder_status">Vor 2 Min</string>
+    <string name="location_share_item_route_button">🧭 Route</string>
+    <string name="location_share_item_share_button">🔗 Teilen</string>
+
+    <plurals name="location_share_devices_active">
+        <item quantity="one">%1$d Gerät aktiv.</item>
+        <item quantity="other">%1$d Geräte aktiv.</item>
+    </plurals>
+
+    <plurals name="location_share_devices_stale">
+        <item quantity="one">%1$d Gerät veraltet.</item>
+        <item quantity="other">%1$d Geräte veraltet.</item>
+    </plurals>
+
+    <!-- First Aid Wizard -->
+    <string name="first_aid_wizard_toolbar_title">🚨 Erste Hilfe</string>
+    <string name="first_aid_wizard_step_main_category_title">WAS IST PASSIERT?</string>
+    <string name="first_aid_wizard_step_main_category_subtitle">Wähle die Hauptkategorie</string>
+
+    <!-- Emergency: Toasts / simple UI -->
+    <string name="emergency_toast_location_permission_required">Standortberechtigung erforderlich für GPS-Daten</string>
+    <string name="emergency_toast_no_profile_found">Fehler: Kein Profil gefunden</string>
+    <string name="emergency_dog_breed_format">%1$s, %2$s, %3$skg</string>
+
+    <!-- Emergency: tile labels -->
+    <string name="emergency_tile_camera">Kamera</string>
+    <string name="emergency_tile_gallery">Galerie</string>
+    <string name="emergency_tile_send">🚀 NOTFALLMELDUNG SENDEN</string>
+    <string name="emergency_tile_reset">🔄 Eingaben zurücksetzen</string>
+
+    <!-- Emergency: delete report dialog -->
+    <string name="emergency_delete_report_title">Meldung löschen?</string>
+    <string name="emergency_delete_report_message">Möchtest Du diese Notfallmeldung dauerhaft löschen?</string>
+    <string name="emergency_delete_report_confirm">Löschen</string>
+
+    <!-- Emergency: location disclosure dialog -->
+    <string name="emergency_location_disclosure_title">📍 Standortzugriff für Notfallmeldung</string>
+    <string name="emergency_location_disclosure_message">HUNDEWILDNIS - App benötigt Zugriff auf Deinen Standort für folgende Zwecke:\n\n• NOTFALLMELDUNG:\nUm Deine Sicherheit und die Deines Hundes zu erhöhen, kann HundeWildnis Deinen aktuellen GPS-Standort erfassen und in die Notfallmeldung (PDF) einfügen.\nDies ermöglicht es Tierärzten oder Rettungskräften Euch im Ernstfall schneller zu finden.\n• Die Erfassung erfolgt NUR, wenn Du diesen Schalter aktivierst.\n• Die Daten werden NUR lokal in das PDF-Dokument geschrieben und dem Empfänger der Notfallmeldung übermittelt.\n• Es erfolgt KEINE Übermittlung an HundeWildnis oder Dritte.\n\n\n• TEMPO-MESSUNG:\nUm Deine Geh-Geschwindigkeit im Training präzise zu ermitteln und Dir zu Deiner Auswertung zur Verfügung zu stellen.\n\n• NAVIGATION:\nDamit Du Standort auf der Karte, Routenberechnung zum Ziel und Anzeige von relevanten Orten in der Nähe aufrufen und nutzen kannst.\n\n• STANDORT WETTER:\nDamit Du Wetterdaten und Wettervorhersage an Deinem aktuellen Standort aufrufen und nutzen kannst.\n\n• TAGESNOTIZEN:\nDu kannst Deine Tagesnotizen optional mit Wetterdaten und optional mit den GPS-Daten Deines Standortes ergänzen, um später nachvollziehen zu können, unter welchen Bedingungen Du Deine Beobachtungen zum Training gemacht hast.\n\nWICHTIG:\nDamit die Messung auch bei ausgeschaltetem Bildschirm, wenn die App in den Hintergrund geschoben ist oder in der Tasche ist, stabil funktioniert weil Du während des Trainings und bei Aktivität im Gelände die Hände frei haben musst, nutzt die App einen dauerhaften Dienst (Foreground Service). Dieser wird durch die Benachrichtigung in Deiner Statusleiste angezeigt.\n\nOhne Aktivierung der Standortdienste, als technische Voraussetzung, kannst Du die Funktionen nicht wie beschrieben nutzen.\n\nDATENSCHUTZ:\nDeine Daten werden nur lokal verarbeitet, ausschliesslich auf Deinem Gerät gespeichert und nur von Dir allein verwaltet und nur auf deinen Wunsch zum Teilenfunktion freigegeben.\n\nZur Nutzung von Navigation und Standortwetter wird der aktuelle Standort anonymisiert an freie Server mitgeteilt, um die gewünschten Daten abzurufen und Dir zur Verfügung zu stellen.\n\nDu kannst die Berechtigungen für Standort jederzeit überprüfen in den Einstellungen:\n\nDein Gerät - Einstellungen - Apps - HundeWildnis - Berechtigungen - Standort verwalten - Zugriff nur während der Nutzung der App zulassen.\n\nDort kann die Berechtigung zum Standort jederzeit dauerhaft geändert, aktiviert oder deaktiviert werden</string>
+    <string name="emergency_disclosure_activate">AKTIVIEREN</string>
+    <string name="emergency_disclosure_decline">ABLEHNEN</string>
+
+    <!-- Emergency: camera disclosure dialog -->
+    <string name="emergency_camera_disclosure_title">📸 Zugriff auf Kamera</string>
+    <string name="emergency_camera_disclosure_message">HundeWildnis benötigt Zugriff auf Deine Kamera für folgende Zwecke:\n\n• NOTFALL-DOKUMENTATION:\n\nDamit Du aktuelle Fotos vom Zustand Deines Hundes oder der Verletzung direkt in die Notfallmeldung (PDF) einfügen kannst.\n\nDies hilft Tierärzten, die Situation vorab besser einzuschätzen.\n\nDATENSCHUTZ:\n• Deine Fotos werden NUR lokal in das PDF-Dokument eingebunden.\n• Es erfolgt KEINE Übermittlung an andere Server.\n• Nur Du allein entscheidest im Sendevorgang über das Teilen der Notfalldaten incl. beigefügter Fotos.\n• Der Zugriff erfolgt NUR nach Deiner expliziten Auslösung.\n\nMöchtest Du den Zugriff auf die Kamera jetzt aktivieren?</string>
+
+    <!-- Emergency: GPS status -->
+    <string name="emergency_toast_enable_gps">Bitte aktiviere GPS in Deinen Einstellungen</string>
+    <string name="emergency_gps_status_searching">⏳ Suche Standort...</string>
+    <string name="emergency_gps_status_error">⚠️ Fehler beim Erfassen des Standorts</string>
+    <string name="emergency_gps_status_captured_format">📍 Standort erfasst: %1$s, %2$s</string>
+
+    <!-- Emergency: more toasts -->
+    <string name="emergency_toast_select_symptom">Bitte wählen Sie ein Symptom aus!</string>
+    <string name="emergency_toast_pdf_saved">✅ PDF gespeichert in Documents/HundeWildnis</string>
+    <string name="emergency_toast_pdf_creation_error">Fehler beim Erstellen der PDF: %1$s</string>
+    <string name="emergency_toast_pdf_not_found">PDF nicht gefunden</string>
+    <string name="emergency_toast_generic_error">Fehler: %1$s</string>
+    <string name="emergency_report_symptom_format">Symptom: %1$s</string>
+
+    <!-- Emergency: PDF content -->
+    <string name="emergency_pdf_header_title">🚨 NOTFALLMELDUNG - HUND</string>
+    <string name="emergency_pdf_created_at_format">Erstellt am: %1$s</string>
+    <string name="emergency_pdf_footer_app_credit">Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de</string>
+    <string name="emergency_pdf_medical_emergency_header">MEDIZINISCHER NOTFALL:</string>
+    <string name="emergency_pdf_symptom_format">Symptom: %1$s</string>
+    <string name="emergency_pdf_additional_info_format">Zusatz-Info: %1$s</string>
+    <string name="emergency_pdf_location_format">Standort (GPS): Lat %1$s, Lon %2$s</string>
+    <string name="emergency_pdf_map_link_format">Karte (OpenStreetMap): %1$s</string>
+    <string name="emergency_pdf_patient_data_header">STAMMDATEN DES PATIENTEN:</string>
+    <string name="emergency_pdf_field_name">Name:</string>
+    <string name="emergency_pdf_field_breed">Rasse:</string>
+    <string name="emergency_pdf_field_birthdate">Geburtsdatum:</string>
+    <string name="emergency_pdf_field_gender">Geschlecht:</string>
+    <string name="emergency_pdf_field_neutered">Kastriert:</string>
+    <string name="emergency_pdf_value_unknown">Unbekannt</string>
+    <string name="emergency_pdf_field_weight">Gewicht:</string>
+    <string name="emergency_pdf_value_kg_format">%1$s kg</string>
+    <string name="emergency_pdf_field_shoulder_height">Schulterhöhe:</string>
+    <string name="emergency_pdf_value_cm_format">%1$s cm</string>
+    <string name="emergency_pdf_field_body_length">Körperlänge:</string>
+    <string name="emergency_pdf_field_chip_number">Chip-Nr:</string>
+    <string name="emergency_pdf_field_vaccination_status">Impfstatus:</string>
+    <string name="emergency_pdf_field_medical_notes">Vorerkrankungen:</string>
+    <string name="emergency_pdf_field_owner">Besitzer:</string>
+    <string name="emergency_pdf_photos_header">FOTOS VOM NOTFALL / PATIENTEN:</string>
+
+    <!-- Emergency: PDF heat cycle section -->
+    <string name="emergency_pdf_heat_cycle_header">LÄUFIGKEIT / REPRODUKTIONSSTATUS:</string>
+    <string name="emergency_pdf_heat_status_active_format">⚠️ AKTUELL LÄUFIG (seit %1$s)</string>
+    <string name="emergency_pdf_heat_status_no_data">Keine Daten erfasst</string>
+    <string name="emergency_pdf_heat_status_not_active">Nicht läufig</string>
+    <string name="emergency_pdf_heat_current_status_label">Aktueller Status:</string>
+    <string name="emergency_pdf_heat_intensity_suffix_format"> · Intensität: %1$s</string>
+    <string name="emergency_pdf_heat_last_cycle_label">Letzte Läufigkeit:</string>
+    <string name="emergency_pdf_heat_behavior_changes_label">Verhaltensänderungen:</string>
+
+    <!-- Emergency: share text -->
+    <string name="emergency_share_text_header">🚨 NOTFALLMELDUNG 🚨</string>
+    <string name="emergency_share_text_dog_format">Hund: %1$s</string>
+    <string name="emergency_share_text_symptom_format">Symptom: %1$s</string>
+    <string name="emergency_share_text_info_format">Info: %1$s</string>
+    <string name="emergency_share_text_location_format">Standort (GPS): Lat %1$s, Lon %2$s</string>
+    <string name="emergency_share_text_map_format">Karte (OSM): %1$s</string>
+    <string name="emergency_share_text_heat_cycle_header">🌸 LÄUFIGKEIT:</string>
+    <string name="emergency_share_text_heat_cycle_active_format">⚠️ Aktuell läufig seit %1$s</string>
+    <string name="emergency_share_text_heat_cycle_last_format">Letzte Läufigkeit: %1$s</string>
+    <string name="emergency_share_text_heat_cycle_average_format">Ø Zyklus: %1$s Tage</string>
+    <string name="emergency_share_text_footer">Medizinische Daten im PDF-Anhang.</string>
+
+    <!-- Emergency: share/chooser -->
+    <string name="emergency_share_subject_format">🚨 NOTFALLMELDUNG: %1$s</string>
+    <string name="emergency_share_chooser_title">Notfallmeldung teilen via...</string>
+    <string name="emergency_pdf_open_chooser_title">PDF öffnen</string>
+
+    <!-- Emergency: item layout placeholders -->
+    <string name="emergency_placeholder_accident">Unfall</string>
+    <string name="emergency_placeholder_symptom">Symptom: ...</string>
+    <string name="emergency_delete_content_description">Löschen</string>
+    <string name="emergency_placeholder_subcategory_name">Verkehrsunfall</string>
+    <string name="emergency_placeholder_urgency">🔴 LEBENSBEDROHLICH</string>
+
+    <!-- Emergency: activity_emergency_report.xml -->
+    <string name="emergency_report_toolbar_title">🚨 Notfallmeldung</string>
+    <string name="emergency_placeholder_dog_name">Name des Hundes</string>
+    <string name="emergency_placeholder_dog_breed">Rasse, Alter, Gewicht</string>
+    <string name="emergency_symptom_hint">Was ist passiert? (Symptom)</string>
+    <string name="emergency_notes_hint">Zusätzliche Infos / Bemerkungen</string>
+    <string name="emergency_gps_switch_label">GPS-Standort beifügen</string>
+    <string name="emergency_photos_attach_label">Fotos anhängen</string>
+    <string name="emergency_history_section_title">📜 Gesendete Notfallmeldungen</string>
+
+    <!-- First Aid Wizard: back button -->
+    <string name="first_aid_wizard_back_button">← Zurück</string>
+
+    <!-- First Aid: Symptom-Check item -->
+    <string name="first_aid_symptom_check_placeholder_question">Reagiert der Hund auf Ansprache?</string>
+    <string name="first_aid_symptom_check_yes">✅ JA</string>
+    <string name="first_aid_symptom_check_no">❌ NEIN</string>
+
+    <!-- First Aid Instruction: placeholders & section titles -->
+    <string name="first_aid_placeholder_title">Bewusstlosigkeit</string>
+    <string name="first_aid_section_symptoms">🔍 SYMPTOME</string>
+    <string name="first_aid_section_immediate_actions">🚨 SOFORT HANDELN</string>
+    <string name="first_aid_section_do_list">✅ WAS TUN</string>
+    <string name="first_aid_section_dont_list">❌ WAS NICHT TUN</string>
+    <string name="first_aid_section_transport">🚗 TRANSPORT</string>
+    <string name="first_aid_section_important_notes">⚠️ WICHTIG</string>
+    <string name="first_aid_button_hlw_timer_start">💓 HLW-TIMER STARTEN</string>
+    <string name="first_aid_button_timer_start">⏱️ TIMER STARTEN</string>
+    <string name="first_aid_button_emergency_report">📤 NOTFALL JETZT MELDEN</string>
+
+    <!-- HLW Timer -->
+    <string name="hlw_timer_toolbar_title">🚨 HLW Timer</string>
+    <string name="hlw_timer_toast_start_error">Fehler beim Start: %1$s</string>
+    <string name="hlw_timer_toast_audio_unavailable">⚠️ Audio nicht verfügbar</string>
+    <string name="hlw_timer_toast_reset_error">Fehler beim Zurücksetzen</string>
+    <string name="hlw_timer_button_start">▶️ HLW STARTEN</string>
+    <string name="hlw_timer_button_pause">⏸ PAUSE</string>
+    <string name="hlw_timer_button_resume">▶️ FORTSETZEN</string>
+    <string name="hlw_timer_button_reset">🔄 RESET</string>
+    <string name="hlw_timer_paused_instruction">⏸ PAUSIERT\n\nPuls prüfen!</string>
+    <string name="hlw_timer_compressions_instruction">💓 KOMPRESSIONEN</string>
+    <string name="hlw_timer_compressions_phase_detail">30 Kompressionen im Takt\n120 BPM (2 pro Sekunde)</string>
+    <string name="hlw_timer_ventilation_instruction">🫁 BEATMUNG</string>
+    <string name="hlw_timer_ventilation_phase_detail">2x über die Nase beatmen\nMaul geschlossen halten</string>
+    <string name="hlw_timer_ventilate_now_instruction">🫁 JETZT BEATMEN!\n\n2x über die Nase\nMaul geschlossen halten</string>
+    <string name="hlw_timer_pulse_check_instruction">⏱️ PULS-CHECK!</string>
+    <string name="hlw_timer_pulse_check_phase_detail">Oberschenkelinnenseite fühlen\n15 Sekunden prüfen</string>
+    <string name="hlw_timer_check_pulse_instruction">⏱️ PULS PRÜFEN!\n\nOberschenkelinnenseite\n15 Sekunden fühlen</string>
+    <string name="hlw_timer_follow_metronome_hint">Folge dem Metronom-Takt!\n2 pro Sekunde</string>
+    <string name="hlw_timer_permanent_instruction">💓 30 Kompressionen (15 Sek im Takt) → 🫁 2 Beatmungen (5 Sek)\n⏱️ Alle 2 Min: Puls prüfen</string>
+    <string name="hlw_timer_cycle_count_format">Zyklen: %1$d</string>
+    <string name="hlw_timer_compression_count_format">%1$d / 30</string>
+    <string name="hlw_timer_seconds_format">%1$d Sek</string>
+    <string name="hlw_timer_next_pulse_check_format">Puls-Check in: %1$02d:%2$02d</string>
+    <string name="hlw_timer_placeholder_elapsed_time">00:00</string>
+    <string name="hlw_timer_placeholder_pulse_check_countdown">Puls-Check in: 02:00</string>
+    <string name="hlw_timer_placeholder_cycle_count">Zyklen: 0</string>
+    <string name="hlw_timer_placeholder_ready">Bereit zum Start</string>
+    <string name="hlw_timer_placeholder_phase_time_compression">15 Sek</string>
+    <string name="hlw_timer_placeholder_phase_time_ventilation">5 Sek</string>
+
+    <!-- MainActivity: Toolbar-Menüs -->
+    <string name="menu_action_home">Home</string>
+    <string name="menu_action_settings">Einstellungen</string>
+
+    <!-- MainActivity: activity_main.xml -->
+    <string name="main_filter_all_posts">Alle Beiträge</string>
+    <string name="main_filter_categories">📂 Kategorien filtern</string>
+    <string name="main_load_more_posts">Weitere Blogbeiträge laden</string>
+    <string name="main_toolbar_title">HundeWildnis</string>
+    <string name="main_loading_more_posts">Lade weitere Beiträge...</string>
+    <string name="main_loading_content_message">Lade Inhalte...\n\n⏳ Circa 5 Sekunden.\n\nDanach startet die App sofort! 🚀</string>
+    <string name="main_generic_error_format">Fehler: %1$s</string>
+    <string name="main_toast_backup_created_format">Backup erstellt: %1$s</string>
+    <string name="main_toast_categories_loading">Kategorien werden geladen...</string>
+    <string name="main_toast_categories_none_found">Keine Kategorien gefunden.</string>
+    <string name="main_toast_categories_load_error">Fehler beim Laden der Kategorien.</string>
+    <string name="main_category_dialog_title">📁 Kategorie wählen</string>
+    <string name="main_category_selected_format">📂 %1$s</string>
+    <string name="main_button_understood">Verstanden</string>
+    <string name="main_about_version_format">Version %1$s</string>
+    <string name="main_about_email_subject">HundeWildnis App Feedback</string>
+    <string name="main_about_email_chooser_title">E-Mail senden</string>
+    <string name="main_button_close">Schließen</string>
+    <string name="main_ors_key_delete_title">🗑️ Key löschen?</string>
+    <string name="main_ors_key_delete_message">Möchtest Du den gespeicherten API-Key wirklich entfernen?</string>
+    <string name="main_ors_key_delete_confirm">Löschen</string>
+    <string name="main_toast_key_deleted">Key gelöscht</string>
+    <string name="main_settings_dialog_title">⚙️ Einstellungen</string>
+    <string name="main_button_done">Fertig</string>
+    <string name="main_ors_info_title">ORS API Key</string>
+    <string name="main_ors_info_message">Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\nAnleitung:\n1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n2. Erstelle unter \'Tokens\' einen neuen API-Key.\n3. Kopiere diesen Key und füge ihn hier ein.\n\nHinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie zwischen zwei Punkten angezeigt werden.</string>
+    <string name="main_notification_permission_title">🔔 Benachrichtigungen aktivieren?</string>
+    <string name="main_notification_permission_message">Möchtest Du über neue Artikel im Blog informiert werden? \n\nZudem können Dich der Tempo-Trainer und der Sprach-Trainer auch bei ausgeschaltetem Display zuverlässig im Training unterstützen. Benachrichtigungen können jederzeit in den Systemeinstellungen für die App deaktiviert oder lautlos gestellt werden</string>
+    <string name="main_notification_permission_confirm">Ja, aktivieren</string>
+    <string name="main_notification_permission_decline">Nicht jetzt</string>
+
+    <!-- MainActivity: Pages-Grid Titel -->
+    <string name="main_page_title_main">Hunde Wildnis Schule</string>
+    <string name="main_page_title_anti_jagd">Anti-Jagd</string>
+    <string name="main_page_title_assistenzhunde">Assistenzhunde</string>
+    <string name="main_page_title_beratung">Beratung</string>
+    <string name="main_page_title_fahrrad">Fahrradtraining</string>
+    <string name="main_page_title_faehrte">Fährte &amp; Suche</string>
+    <string name="main_page_title_gedanken">Gedanken</string>
+    <string name="main_page_title_grundausbildung">Grundausbildung</string>
+    <string name="main_page_title_hundeleinen">Hundeleinen</string>
+    <string name="main_page_title_lernfoerderung">Lernförderung</string>
+    <string name="main_page_title_problemberatung">Problemberatung</string>
+    <string name="main_page_title_seminare">Seminare</string>
+    <string name="main_page_title_teamsport">Teamsport</string>
+    <string name="main_page_title_tierschutz">Tierschutz</string>
+    <string name="main_page_title_sozialbesuch">Sozialbesuch</string>
+    <string name="main_page_title_wandern">Wandern</string>
+    <string name="main_page_title_welpen">Welpenschule</string>
+    <string name="main_page_title_wildnis_in_uns">Die Wildnis in uns</string>
+    <string name="main_page_title_spuren">Spuren &amp; Zeichen</string>
+    <string name="main_page_title_handwerk">Handwerk</string>
+    <string name="main_page_title_paedagogik">Pädagogik</string>
+    <string name="main_page_title_downloads">Downloads</string>
+    <string name="main_page_title_honorare">Honorare</string>
+    <string name="main_page_title_impressum">Impressum</string>
+    <string name="main_page_title_agb">AGB</string>
+    <string name="main_page_title_datenschutz">Datenschutz</string>
+    <string name="main_page_title_info">Informationen</string>
+    <string name="main_page_title_kontakt">Kontakt</string>
+    <string name="main_page_title_ueber_uns">Über Uns</string>
+
+    <!-- MainActivity: Link-Titel (ausführlicher als Kachel-Titel, für openUrl()-Aufrufe) -->
+    <string name="main_link_title_anti_jagd">Anti-Jagd-Training</string>
+    <string name="main_link_title_assistenzhunde">Ausbildung Assistenzhunde</string>
+    <string name="main_link_title_faehrte">Fährte und Suche</string>
+    <string name="main_link_title_gedanken">Gedanken und Grundlagen</string>
+    <string name="main_link_title_lernfoerderung">Lernförderung an Schulen</string>
+    <string name="main_link_title_tierschutz">Tierschutz Hunde</string>
+    <string name="main_link_title_sozialbesuch">Tiertherapeutischer Service</string>
+    <string name="main_link_title_wandern">Wandern zum guten Zweck</string>
+    <string name="main_link_title_spuren">Spuren und Zeichen</string>
+    <string name="main_link_title_handwerk">Wildnishandwerk für Schulen</string>
+    <string name="main_link_title_paedagogik">Wildnispädagogik für Schulen</string>
+    <string name="main_link_title_datenschutz">Datenschutzerklärung</string>
+    <string name="main_link_title_course_main">Onlinekurse Hundeschule</string>
+
+    <!-- MainActivity: Courses-Grid -->
+    <string name="main_course_title_main">Onlinetrainer Info</string>
+    <string name="main_course_name_01">Grundlagen</string>
+    <string name="main_course_name_02">Motivation</string>
+    <string name="main_course_name_03">Korrektur</string>
+    <string name="main_course_name_04">Harmonie</string>
+    <string name="main_course_name_05">Mentaltraining</string>
+    <string name="main_course_name_06">Körpersprache</string>
+    <string name="main_course_name_07">Sprachkommunikation</string>
+    <string name="main_course_name_08">Sinneswahrnehmung</string>
+    <string name="main_course_name_09">Teamarbeit</string>
+    <string name="main_course_name_10">Routinen</string>
+    <string name="main_course_name_11">Unfallschutz</string>
+    <string name="main_course_name_12">Junghundeprägung</string>
+    <string name="main_course_name_13">Leinenarbeit</string>
+    <string name="main_course_name_14">Unterbrechungen</string>
+    <string name="main_course_name_15">Fuss</string>
+    <string name="main_course_name_16">Sitz</string>
+    <string name="main_course_name_17">Platz</string>
+    <string name="main_course_name_18">Steh</string>
+    <string name="main_course_name_19">Sozialisierungstechniken</string>
+    <string name="main_course_name_20">Langleinentraining</string>
+    <string name="main_course_name_21">Distanzunterbrechungen</string>
+    <string name="main_course_name_22">Freilauf</string>
+    <string name="main_course_name_23">Freifolge</string>
+    <string name="main_course_name_24">Teamwalk</string>
+    <string name="main_course_name_25">Scouttechniken</string>
+    <string name="main_course_name_26">Jagdvermeidung</string>
+    <string name="main_course_name_27">Nasenarbeit</string>
+    <string name="main_course_name_28">Leinenfühigkeit</string>
+    <string name="main_course_name_29">Begegnungssituationen</string>
+    <string name="main_course_name_30">Stresstoleranztraining</string>
+    <string name="main_course_name_31">Strassenroutinen</string>
+    <string name="main_course_name_32">Hundekonflikte</string>
+    <string name="main_course_name_33">Menschenkonflikte</string>
+    <string name="main_course_name_34">Umweltkonflikte</string>
+    <string name="main_course_name_35">Besitzerkonflikte</string>
+    <string name="main_course_name_36">Tierschutzhunde</string>
+    <string name="main_course_name_37">Hunde mit Vorbesitzern</string>
+    <string name="main_course_name_38">Kranke Hunde</string>
+    <string name="main_course_name_39">Traumahunde</string>
+    <string name="main_course_name_40">Erste Hilfe Set</string>
+    <string name="main_course_name_41">Erste Hilfe am Hund</string>
 </resources>

@@ -43,7 +43,7 @@
                     android:id="@+id/tvDeviceLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unbekanntes Gerät"
+                    android:text="@string/location_share_device_placeholder_label"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -52,7 +52,7 @@
                     android:id="@+id/tvDeviceStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vor 2 Min"
+                    android:text="@string/location_share_device_placeholder_status"
                     android:textColor="#999999"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                android:text="🧭 Route"
+                android:text="@string/location_share_item_route_button"
                 android:textSize="12sp"
                 app:icon="@drawable/ic_my_location"
                 app:iconSize="16dp"
@@ -124,7 +124,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:text="🔗 Teilen"
+                android:text="@string/location_share_item_share_button"
                 android:textSize="12sp"
                 app:strokeColor="@color/rd_overlay_accent" />
 

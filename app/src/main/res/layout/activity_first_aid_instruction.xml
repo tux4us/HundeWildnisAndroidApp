@@ -40,7 +40,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bewusstlosigkeit"
+                android:text="@string/first_aid_placeholder_title"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:gravity="center" />
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="🔴 LEBENSBEDROHLICH"
+                    android:text="@string/emergency_placeholder_urgency"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
@@ -83,7 +83,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔍 SYMPTOME"
+                        android:text="@string/first_aid_section_symptoms"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🚨 SOFORT HANDELN"
+                        android:text="@string/first_aid_section_immediate_actions"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
@@ -148,7 +148,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="✅ WAS TUN"
+                        android:text="@string/first_aid_section_do_list"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
@@ -180,7 +180,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="❌ WAS NICHT TUN"
+                        android:text="@string/first_aid_section_dont_list"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
@@ -212,7 +212,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🚗 TRANSPORT"
+                        android:text="@string/first_aid_section_transport"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
@@ -247,7 +247,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⚠️ WICHTIG"
+                        android:text="@string/first_aid_section_important_notes"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold" />
 
@@ -283,7 +283,7 @@
             android:id="@+id/btnHlwTimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="💓 HLW-TIMER STARTEN"
+            android:text="@string/first_aid_button_hlw_timer_start"
             android:backgroundTint="#d32f2f"
             android:visibility="gone" />
 
@@ -293,7 +293,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="⏱️ TIMER STARTEN"
+            android:text="@string/first_aid_button_timer_start"
             android:visibility="gone" />
 
         <!-- Notfall melden -->
@@ -302,7 +302,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="📤 NOTFALL JETZT MELDEN" />
+            android:text="@string/first_aid_button_emergency_report" />
 
     </LinearLayout>
 

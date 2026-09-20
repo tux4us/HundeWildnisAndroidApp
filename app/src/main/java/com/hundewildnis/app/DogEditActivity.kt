@@ -38,7 +38,7 @@ class DogEditActivity : SecureBaseActivity() {
                     binding.btnRemovePhoto.visibility = android.view.View.VISIBLE
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this, "Foto-Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.dog_edit_photo_error, e.message), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -53,7 +53,7 @@ class DogEditActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = if (profile == null) "🐕 Neuer Hund" else "🐕 ${profile?.name} bearbeiten"
+            title = if (profile == null) getString(R.string.dog_edit_title_new) else getString(R.string.dog_edit_title_edit_format, profile?.name)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -170,24 +170,24 @@ class DogEditActivity : SecureBaseActivity() {
             0 -> { // Datum bekannt
                 binding.tilBirthDate.visibility = View.VISIBLE
                 binding.etBirthDate.isEnabled = true
-                binding.tilBirthDate.placeholderText = "Tag.Monat.Jahr wählen"
+                binding.tilBirthDate.placeholderText = getString(R.string.dog_edit_birthdate_placeholder_full)
                 if (binding.etBirthDate.text?.contains(".") == false) binding.etBirthDate.setText("")
             }
             1 -> { // Monat/Jahr bekannt
                 binding.tilBirthDate.visibility = View.VISIBLE
                 binding.etBirthDate.isEnabled = true
-                binding.tilBirthDate.placeholderText = "Monat.Jahr wählen"
+                binding.tilBirthDate.placeholderText = getString(R.string.dog_edit_birthdate_placeholder_month_year)
                 if (!binding.etBirthDate.text.toString().matches(Regex("\\d{2}\\.\\d{4}"))) binding.etBirthDate.setText("")
             }
             2 -> { // Jahr bekannt
                 binding.tilBirthDate.visibility = View.VISIBLE
                 binding.etBirthDate.isEnabled = true
-                binding.tilBirthDate.placeholderText = "Jahr wählen"
+                binding.tilBirthDate.placeholderText = getString(R.string.dog_edit_birthdate_placeholder_year)
                 if (!binding.etBirthDate.text.toString().matches(Regex("\\d{4}"))) binding.etBirthDate.setText("")
             }
             3 -> { // Unbekannt
                 binding.tilBirthDate.visibility = View.GONE
-                binding.etBirthDate.setText("Unbekannt")
+                binding.etBirthDate.setText(getString(R.string.dog_edit_birthdate_unknown))
             }
         }
     }
@@ -197,10 +197,10 @@ class DogEditActivity : SecureBaseActivity() {
             binding.etName.setText(p.name)
             binding.etBreed.setText(p.breed)
 
-            // Spinner setzen
+            // Spinner setzen (Index anhand des stabilen internen Codes, nicht des Anzeigetexts)
             val genderIndex = when(p.gender) {
-                "Rüde" -> 1
-                "Hündin" -> 2
+                GenderCode.MALE -> 1
+                GenderCode.FEMALE -> 2
                 else -> 0
             }
             binding.spinnerGender.setText(
@@ -209,9 +209,9 @@ class DogEditActivity : SecureBaseActivity() {
             )
 
             val neuteredIndex = when(p.neutered) {
-                "Ja" -> 1
-                "Nein" -> 2
-                "Unbekannt" -> 3
+                NeuteredCode.YES -> 1
+                NeuteredCode.NO -> 2
+                NeuteredCode.UNKNOWN -> 3
                 else -> 0
             }
             binding.spinnerNeutered.setText(
@@ -220,9 +220,12 @@ class DogEditActivity : SecureBaseActivity() {
             )
 
             // Geburtsdatum Typ erkennen
+            // Hinweis: "Unbekannt"/"Unknown" werden hier nur erkannt (Altbestand aus beiden
+            // Sprachen), die Anzeige erfolgt anschließend stets über getString(...).
             val birthDate = p.birthDate
             val (typeIndex, displayDate) = when {
-                birthDate == "Unbekannt" || birthDate.isEmpty() -> Pair(3, "Unbekannt")
+                birthDate == "Unbekannt" || birthDate == "Unknown" || birthDate.isEmpty() ->
+                    Pair(3, getString(R.string.dog_edit_birthdate_unknown))
                 birthDate.matches(Regex("\\d{2}\\.\\d{2}\\.\\d{4}")) -> Pair(0, birthDate)
                 birthDate.matches(Regex("\\d{2}\\.\\d{4}")) -> Pair(1, birthDate)
                 birthDate.matches(Regex("\\d{4}")) -> Pair(2, birthDate)
@@ -359,13 +362,13 @@ class DogEditActivity : SecureBaseActivity() {
         val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Monat und Jahr wählen")
+            .setTitle(getString(R.string.dog_edit_month_year_dialog_title))
             .setView(view)
-            .setPositiveButton("OK") { _, _ ->
-                val month = String.format("%02d", monthPicker.value)
+            .setPositiveButton(getString(R.string.dog_edit_ok_button)) { _, _ ->
+                val month = String.format(Locale.getDefault(), "%02d", monthPicker.value)
                 binding.etBirthDate.setText("$month.${yearPicker.value}")
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -386,12 +389,12 @@ class DogEditActivity : SecureBaseActivity() {
         val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
-            .setTitle("Jahr wählen")
+            .setTitle(getString(R.string.dog_edit_year_dialog_title))
             .setView(yearPicker)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.dog_edit_ok_button)) { _, _ ->
                 binding.etBirthDate.setText("${yearPicker.value}")
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
                 getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
@@ -399,18 +402,39 @@ class DogEditActivity : SecureBaseActivity() {
             }
     }
 
+    /** Bildet den angezeigten (ggf. übersetzten) Spinner-Text über seinen Array-Index auf den stabilen Code ab. */
+    private fun genderTextToCode(text: String): String {
+        val options = resources.getStringArray(R.array.gender_options)
+        return when (options.indexOf(text)) {
+            1 -> GenderCode.MALE
+            2 -> GenderCode.FEMALE
+            else -> ""
+        }
+    }
+
+    /** Bildet den angezeigten (ggf. übersetzten) Spinner-Text über seinen Array-Index auf den stabilen Code ab. */
+    private fun neuteredTextToCode(text: String): String {
+        val options = resources.getStringArray(R.array.neutered_options)
+        return when (options.indexOf(text)) {
+            1 -> NeuteredCode.YES
+            2 -> NeuteredCode.NO
+            3 -> NeuteredCode.UNKNOWN
+            else -> ""
+        }
+    }
+
     private fun save() {
         val name = binding.etName.text.toString().trim()
         if (name.isEmpty()) {
-            Toast.makeText(this, "Name erforderlich", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.dog_edit_name_required_toast), Toast.LENGTH_SHORT).show()
             return
         }
 
         val savedProfile = (profile ?: DogProfile()).copy(
             name = name,
             breed = binding.etBreed.text.toString(),
-            gender = binding.spinnerGender.text.toString(),
-            neutered = binding.spinnerNeutered.text.toString(),
+            gender = genderTextToCode(binding.spinnerGender.text.toString()),
+            neutered = neuteredTextToCode(binding.spinnerNeutered.text.toString()),
             birthDate = binding.etBirthDate.text.toString(),
             color = binding.etColor.text.toString(),
             chipNumber = binding.etChipNumber.text.toString(),
@@ -447,11 +471,11 @@ class DogEditActivity : SecureBaseActivity() {
         )
 
         if (DogProfileManager.saveProfile(this, savedProfile)) {
-            Toast.makeText(this, "✅ $name gespeichert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.dog_edit_saved_toast, name), Toast.LENGTH_SHORT).show()
             setResult(RESULT_OK)
             finish()
         } else {
-            Toast.makeText(this, "❌ Fehler beim Speichern", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.dog_edit_save_error_toast), Toast.LENGTH_SHORT).show()
         }
     }
 

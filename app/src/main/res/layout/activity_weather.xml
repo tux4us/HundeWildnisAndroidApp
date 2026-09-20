@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
-                android:text="Lade Wetterdaten..."
+                android:text="@string/weather_loading_placeholder"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -75,7 +75,7 @@
                 android:padding="8dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="✅ Keine Wetterwarnung"
+                android:text="@string/weather_no_warning_badge"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -102,7 +102,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🐾 Trainingswetter-Index"
+                        android:text="@string/weather_paw_index_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -113,7 +113,7 @@
                         android:id="@+id/pawWeatherIndexText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Wird berechnet..."
+                        android:text="@string/weather_calculating_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:lineSpacingMultiplier="1.3"
@@ -161,7 +161,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2h Niederschlagsradar"
+                        android:text="@string/weather_radar_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -182,7 +182,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📡 = Aktuelle Daten"
+                        android:text="@string/weather_radar_live_data_hint"
                         android:textColor="#666666"
                         android:textSize="12sp"
                         android:padding="8dp" />
@@ -210,7 +210,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌅 Tageslicht und Dämmerung"
+                        android:text="@string/weather_daylight_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -221,7 +221,7 @@
                         android:id="@+id/daylightDurationText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="☀️ Tageslänge: --h --m"
+                        android:text="@string/weather_daylight_duration_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -243,7 +243,7 @@
                         android:id="@+id/dawnText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌄 Morgendämmerung: --:--"
+                        android:text="@string/weather_dawn_placeholder"
                         android:textColor="#C8C8C8"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
@@ -253,7 +253,7 @@
                         android:id="@+id/sunriseText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌅 Sonnenaufgang: --:--"
+                        android:text="@string/weather_sunrise_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
@@ -263,7 +263,7 @@
                         android:id="@+id/sunsetText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌇 Sonnenuntergang: --:--"
+                        android:text="@string/weather_sunset_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
@@ -273,7 +273,7 @@
                         android:id="@+id/duskText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌆 Abenddämmerung: --:--"
+                        android:text="@string/weather_dusk_placeholder"
                         android:textColor="#CECDCD"
                         android:textSize="14sp"
                         android:layout_marginBottom="12dp" />
@@ -309,7 +309,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Minimal: --°C • Maximal: --°C"
+                android:text="@string/weather_min_max_placeholder"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:layout_marginBottom="24dp" />
@@ -332,7 +332,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aktuelles Wetter"
+                        android:text="@string/weather_current_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -349,7 +349,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Gefühlt"
+                            android:text="@string/weather_feels_like_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -374,7 +374,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Luftfeuchtigkeit"
+                            android:text="@string/weather_humidity_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -399,7 +399,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Windstärke"
+                            android:text="@string/weather_wind_strength_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -425,7 +425,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Wind und Richtung"
+                            android:text="@string/weather_wind_direction_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -450,7 +450,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Niederschlag"
+                            android:text="@string/weather_precipitation_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -484,7 +484,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Weitere Details"
+                        android:text="@string/weather_further_details_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -501,7 +501,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Luftdruck"
+                            android:text="@string/weather_pressure_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -526,7 +526,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Sichtweite"
+                            android:text="@string/weather_visibility_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -550,7 +550,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="UV-Index"
+                            android:text="@string/weather_uv_index_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -583,7 +583,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="24h-Vorhersage (stündlich)"
+                        android:text="@string/weather_forecast_24h_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -593,7 +593,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tippe👆🏼 für Details. Verschiebe 👉🏼 für weitere Stunden"
+                        android:text="@string/weather_tap_details_scroll_hours_hint"
                         android:textColor="#E9E375"
                         android:textSize="12sp"
                         android:paddingStart="16dp"
@@ -631,7 +631,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📅 7-Tage-Vorhersage"
+                        android:text="@string/weather_forecast_7day_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -641,7 +641,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tippe👆🏼 für Details. Verschiebe 👉🏼 für weitere Tage"
+                        android:text="@string/weather_tap_details_scroll_days_hint"
                         android:textColor="#E9E375"
                         android:textSize="12sp"
                         android:paddingStart="16dp"
@@ -688,7 +688,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="💨 Wind 24h (stündlich)"
+                            android:text="@string/weather_wind_forecast_card_title"
                             android:textColor="@color/rd_overlay_accent"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -703,28 +703,28 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🟢 Bft 0–3"
+                                android:text="@string/weather_bft_legend_0_3"
                                 android:textColor="#4CAF50"
                                 android:textSize="10sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🟡 Bft 4–5"
+                                android:text="@string/weather_bft_legend_4_5"
                                 android:textColor="#FFC107"
                                 android:textSize="10sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🟠 Bft 6–7"
+                                android:text="@string/weather_bft_legend_6_7"
                                 android:textColor="#FF9800"
                                 android:textSize="10sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔴 Bft 8+"
+                                android:text="@string/weather_bft_legend_8plus"
                                 android:textColor="#F44336"
                                 android:textSize="10sp" />
                         </LinearLayout>
@@ -733,7 +733,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pfeil = Windrichtung  •  Verschiebe 👉🏼 für weitere Stunden"
+                        android:text="@string/weather_wind_arrow_hint"
                         android:textColor="#E9E375"
                         android:textSize="12sp"
                         android:paddingStart="16dp"
@@ -773,7 +773,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🏭 Luftqualität (24h)"
+                        android:text="@string/weather_air_quality_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -789,35 +789,35 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Index: "
+                            android:text="@string/weather_aqi_index_label"
                             android:textColor="#999999"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 Gut  "
+                            android:text="@string/weather_aqi_legend_0_good"
                             android:textColor="#4CAF50"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 Mäßig  "
+                            android:text="@string/weather_aqi_legend_1_moderate"
                             android:textColor="#8BC34A"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2 Sensibel  "
+                            android:text="@string/weather_aqi_legend_2_sensitive"
                             android:textColor="#FFC107"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3+ Ungesund"
+                            android:text="@string/weather_aqi_legend_3plus_unhealthy"
                             android:textColor="#FF9800"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -834,7 +834,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Aktuell:"
+                            android:text="@string/weather_aqi_current_label"
                             android:textColor="#999999"
                             android:textSize="14sp" />
 
@@ -842,7 +842,7 @@
                             android:id="@+id/currentAqiText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-- Gut"
+                            android:text="@string/weather_aqi_current_placeholder"
                             android:textColor="#4CAF50"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -862,7 +862,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Verschiebe 👉🏼 für weitere Stunden"
+                        android:text="@string/weather_scroll_hours_hint"
                         android:textColor="#E9E375"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -880,7 +880,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Quelle: Open-Meteo Air Quality API (CAMS/Copernicus). Werte in µg/m³."
+                        android:text="@string/weather_source_air_quality_ugm3"
                         android:textColor="#555555"
                         android:textSize="10sp"
                         android:layout_marginTop="4dp" />
@@ -906,7 +906,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 24h-Temperaturverlauf"
+                        android:text="@string/weather_temp_chart_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -941,7 +941,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌧️ 24h-Niederschlagsmenge"
+                        android:text="@string/weather_precip_chart_card_title"
                         android:textColor="#2196F3"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -980,7 +980,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="☀️ Sonne"
+                        android:text="@string/weather_sun_card_title"
                         android:textColor="#FFD54F"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -998,7 +998,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🌅 Aufgang\n-- Uhr\n--° von Ost"
+                            android:text="@string/weather_sunrise_azimuth_placeholder"
                             android:textColor="#FFCC80"
                             android:textSize="13sp"
                             android:lineSpacingMultiplier="1.4"
@@ -1016,7 +1016,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🌇 Untergang\n-- Uhr\n--° von West"
+                            android:text="@string/weather_sunset_azimuth_placeholder"
                             android:textColor="#FF8A65"
                             android:textSize="13sp"
                             android:lineSpacingMultiplier="1.4"
@@ -1028,7 +1028,7 @@
                         android:id="@+id/sunElevationText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📐 Sonnenstand: --°\n🧭 Azimut: --° –"
+                        android:text="@string/weather_sun_position_placeholder"
                         android:textColor="#CCCCCC"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.5"
@@ -1047,7 +1047,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📏 Schattenlängen"
+                            android:text="@string/weather_shadow_lengths_title"
                             android:textColor="#FFD54F"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -1056,7 +1056,7 @@
                             android:id="@+id/shadowEditButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="✏️ Höhen anpassen"
+                            android:text="@string/weather_shadow_edit_heights"
                             android:textColor="@color/rd_overlay_accent"
                             android:textSize="12sp"
                             android:padding="4dp"
@@ -1085,7 +1085,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="☀️ Sonnenscheindauer"
+                        android:text="@string/weather_sunshine_duration_title"
                         android:textColor="#FFD54F"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -1095,7 +1095,7 @@
                         android:id="@+id/sunshineTodayText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Heute: --h --m"
+                        android:text="@string/weather_sunshine_today_placeholder"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
@@ -1119,7 +1119,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔆 UV-Index (stündlich)"
+                        android:text="@string/weather_uv_hourly_title"
                         android:textColor="#FFD54F"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -1135,35 +1135,35 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0–2 Gering  "
+                            android:text="@string/weather_uv_legend_0_2_low"
                             android:textColor="#4CAF50"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3–5 Mittel  "
+                            android:text="@string/weather_uv_legend_3_5_moderate"
                             android:textColor="#FFC107"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="6–7 Hoch  "
+                            android:text="@string/weather_uv_legend_6_7_high"
                             android:textColor="#FF9800"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="8–10 Sehr hoch  "
+                            android:text="@string/weather_uv_legend_8_10_very_high"
                             android:textColor="#F44336"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="11+ Extrem"
+                            android:text="@string/weather_uv_legend_11plus_extreme"
                             android:textColor="#9C27B0"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -1218,7 +1218,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌙 Mondphase"
+                        android:text="@string/weather_moon_phase_card_title"
                         android:textColor="#C8A8E8"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -1248,7 +1248,7 @@
                                 android:id="@+id/moonPhaseNameText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Vollmond"
+                                android:text="@string/weather_moon_full_placeholder"
                                 android:textColor="#E8D5FF"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -1258,7 +1258,7 @@
                                 android:id="@+id/moonAgeText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Mondalter: -- von 29,5 Tagen"
+                                android:text="@string/weather_moon_age_placeholder"
                                 android:textColor="#E5E5EF"
                                 android:textSize="12sp"
                                 android:layout_marginBottom="6dp" />
@@ -1267,7 +1267,7 @@
                                 android:id="@+id/moonIlluminationText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Beleuchtung: --%"
+                                android:text="@string/weather_moon_illumination_placeholder"
                                 android:textColor="#C8A8E8"
                                 android:textSize="13sp"
                                 android:layout_marginBottom="6dp" />
@@ -1304,7 +1304,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🌕 Vollmond: in -- Tagen"
+                            android:text="@string/weather_moon_next_full_placeholder"
                             android:textColor="#D7D1CC"
                             android:textSize="13sp" />
 
@@ -1313,7 +1313,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🌑 Neumond: in -- Tagen"
+                            android:text="@string/weather_moon_next_new_placeholder"
                             android:textColor="#C8C8D9"
                             android:textSize="13sp"
                             android:gravity="end" />
@@ -1324,7 +1324,7 @@
                         android:id="@+id/moonZodiacText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔯 Mondzeichen: --"
+                        android:text="@string/weather_moon_zodiac_placeholder"
                         android:textColor="#F0F0F8"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.3"
@@ -1343,7 +1343,7 @@
                         android:id="@+id/moonAstronomyText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔭 Astronomie: wird geladen..."
+                        android:text="@string/weather_moon_astronomy_loading"
                         android:textColor="#C8C8DD"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
@@ -1361,7 +1361,7 @@
                         android:id="@+id/moonNatureText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌿 Natur &amp; Tierwelt: wird geladen..."
+                        android:text="@string/weather_moon_nature_loading"
                         android:textColor="#A8CCA8"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
@@ -1379,7 +1379,7 @@
                         android:id="@+id/moonDogTipsText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🐕 Hund &amp; Training: wird geladen..."
+                        android:text="@string/weather_moon_dogtips_loading"
                         android:textColor="#F0C87A"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4" />
@@ -1409,7 +1409,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌿 Pollen"
+                        android:text="@string/weather_pollen_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -1428,7 +1428,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="⚕️ Hinweis: Die hier angezeigten Polleninformationen dienen ausschließlich der allgemeinen Orientierung. Sie ersetzen keine tierärztliche oder humanmedizinische Beratung. Bei Verdacht auf eine Allergie konsultiere bitte einen Arzt oder Tierarzt."
+                            android:text="@string/weather_pollen_disclaimer"
                             android:textColor="@color/rd_overlay_accent"
                             android:textSize="11sp"
                             android:lineSpacingMultiplier="1.3"
@@ -1440,7 +1440,7 @@
                         android:id="@+id/pollenTodayText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Lade Pollendaten..."
+                        android:text="@string/weather_pollen_loading"
                         android:textColor="#FFFFFF"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.5"
@@ -1468,7 +1468,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Quelle: Open-Meteo Air Quality API (CAMS/Copernicus). Werte in Grains/m³."
+                        android:text="@string/weather_source_pollen_grainsm3"
                         android:textColor="#555555"
                         android:textSize="10sp"
                         android:layout_marginTop="8dp" />
@@ -1498,7 +1498,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🌬️ Biowetter"
+                        android:text="@string/weather_biowetter_card_title"
                         android:textColor="@color/rd_overlay_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -1508,7 +1508,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Meteorologische Einflüsse auf Mensch und Hund. Tippe👆🏼 auf einen Indikator für Details."
+                        android:text="@string/weather_biowetter_explanation"
                         android:textColor="#999999"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.3"
@@ -1526,7 +1526,7 @@
                             android:id="@+id/biowetterOverallBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● Wird berechnet..."
+                            android:text="@string/weather_biowetter_calculating"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:layout_marginEnd="8dp" />
@@ -1573,7 +1573,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⚕️ Biowetter dient der allgemeinen Orientierung. Kein Ersatz für medizinische oder tierärztliche Beratung."
+                        android:text="@string/weather_biowetter_disclaimer"
                         android:textColor="#555555"
                         android:textSize="10sp"
                         android:lineSpacingMultiplier="1.3"
@@ -1589,7 +1589,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="📍 Standort wird ermittelt..."
+                android:text="@string/weather_location_determining_placeholder"
                 android:textColor="#FAFAFA"
                 android:textSize="16sp" />
 
@@ -1599,7 +1599,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="Daten: © Open-Meteo (CC BY 4.0)"
+                android:text="@string/weather_data_source_footer"
                 android:textColor="#666666"
                 android:textSize="11sp"
                 android:autoLink="web"

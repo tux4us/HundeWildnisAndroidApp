@@ -150,13 +150,13 @@
                         <TextView android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📷 Eigene Fotos"
+                            android:text="@string/plant_detail_photos_title"
                             android:textSize="@dimen/text_body_medium"
                             android:textStyle="bold" />
                         <TextView android:id="@+id/tvPhotoCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 / 3 eigene Fotos"
+                            android:text="0 / 3"
                             android:textSize="@dimen/text_small"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
@@ -177,7 +177,7 @@
                                 android:layout_height="match_parent"
                                 android:background="#1A1A1A"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="Foto Slot 1" />
+                                android:contentDescription="@string/plant_detail_photo_slot_content_description_1" />
                             <!-- Leerer Zustand -->
                             <TextView android:id="@+id/overlaySlot0"
                                 android:layout_width="match_parent"
@@ -211,7 +211,7 @@
                                 android:layout_height="match_parent"
                                 android:background="#1A1A1A"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="Foto Slot 2" />
+                                android:contentDescription="@string/plant_detail_photo_slot_content_description_2" />
                             <TextView android:id="@+id/overlaySlot1"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -242,7 +242,7 @@
                                 android:layout_height="match_parent"
                                 android:background="#1A1A1A"
                                 android:scaleType="centerCrop"
-                                android:contentDescription="Foto Slot 3" />
+                                android:contentDescription="@string/plant_detail_photo_slot_content_description_3" />
                             <TextView android:id="@+id/overlaySlot2"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -269,7 +269,7 @@
                     <TextView android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Tippe auf einen Slot um ein Foto hinzuzufügen."
+                        android:text="@string/plant_detail_photos_hint"
                         android:textSize="@dimen/text_body_very_small"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -287,7 +287,7 @@
                     android:orientation="vertical" android:padding="16dp">
                     <TextView android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔍 Erkennungsmerkmale"
+                        android:text="@string/plant_detail_identification_title"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp" />
@@ -316,7 +316,7 @@
                     android:orientation="vertical" android:padding="16dp">
                     <TextView android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🤢 Symptome nach Aufnahme"
+                        android:text="@string/plant_detail_symptoms_title"
                         android:textColor="#FFCDD2"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
@@ -340,7 +340,7 @@
                     android:orientation="vertical" android:padding="16dp">
                     <TextView android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🩺 Sofortmaßnahmen"
+                        android:text="@string/plant_detail_firstaid_title"
                         android:textColor="#C8E6C9"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
@@ -364,7 +364,7 @@
                 <TextView android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="14dp"
-                    android:text="🏥 SOFORT TIERARZT – auch bei kleinen Mengen"
+                    android:text="@string/plant_detail_vet_required_banner"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     android:gravity="center"

@@ -77,7 +77,7 @@ class LocationShareActivity : SecureBaseActivity() {
         if (granted) startShareService()
         else {
             binding.switchLocationShare.isChecked = false
-            Toast.makeText(this, "Standortberechtigung benötigt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.location_share_toast_permission_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -89,7 +89,7 @@ class LocationShareActivity : SecureBaseActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "📍 Standortfreigabe"
+            title = getString(R.string.location_share_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -220,7 +220,7 @@ class LocationShareActivity : SecureBaseActivity() {
                     myLocationOverlay.myLocation?.let {
                         proj.toPixels(it, screenPoint)
                         canvas.drawText(
-                            "ICH",
+                            getString(R.string.location_share_self_marker_label),
                             screenPoint.x.toFloat(),
                             screenPoint.y.toFloat() - selfOffsetPx,
                             paint
@@ -311,15 +311,9 @@ class LocationShareActivity : SecureBaseActivity() {
         if (pm.isIgnoringBatteryOptimizations(packageName)) return  // bereits ausgenommen
 
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("⚡ Akkuoptimierung deaktivieren?")
-            .setMessage(
-                "Damit die Standortfreigabe auch bei gesperrtem Bildschirm " +
-                        "zuverlässig funktioniert, empfehlen wir, die Akkuoptimierung " +
-                        "für HundeWildnis zu deaktivieren." +
-                "Android schränkt Hintergrundprozesse sonst nach einiger Zeit ein." +
-                "Du oder Dein Gerät könnten somit im Notfall nicht gefunden werden."
-            )
-            .setPositiveButton("Einstellungen öffnen") { _, _ ->
+            .setTitle(getString(R.string.location_share_battery_opt_dialog_title))
+            .setMessage(getString(R.string.location_share_battery_opt_dialog_message))
+            .setPositiveButton(getString(R.string.location_share_battery_opt_positive)) { _, _ ->
                 try {
                     startActivity(
                         android.content.Intent(
@@ -336,7 +330,7 @@ class LocationShareActivity : SecureBaseActivity() {
                     )
                 }
             }
-            .setNegativeButton("Überspringen", null)
+            .setNegativeButton(getString(R.string.location_share_battery_opt_negative), null)
             .show()
     }
 
@@ -362,7 +356,7 @@ class LocationShareActivity : SecureBaseActivity() {
         LocationShareService.isServiceRunning = true
         ContextCompat.startForegroundService(this, Intent(this, LocationShareService::class.java))
         updateShareStatus()
-        Toast.makeText(this, "Standortfreigabe gestartet", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.location_share_toast_started), Toast.LENGTH_SHORT).show()
     }
 
     private fun stopShareService() {
@@ -376,11 +370,11 @@ class LocationShareActivity : SecureBaseActivity() {
         isUpdatingSwitch = true
         if (LocationShareService.isServiceRunning) {
             binding.switchLocationShare.isChecked = true
-            binding.tvShareStatus.text = "✅ Freigabe aktiv – Standort wird alle 30 Sek. gesendet."
+            binding.tvShareStatus.text = getString(R.string.location_share_own_status_active)
             binding.tvShareStatus.setTextColor(Color.parseColor("#2E7D32"))
         } else {
             binding.switchLocationShare.isChecked = false
-            binding.tvShareStatus.text = "Freigabe inaktiv."
+            binding.tvShareStatus.text = getString(R.string.location_share_own_status_inactive)
             binding.tvShareStatus.setTextColor(Color.parseColor("#666666"))
         }
         isUpdatingSwitch = false
@@ -410,16 +404,16 @@ class LocationShareActivity : SecureBaseActivity() {
     private fun refreshMap() {
         lifecycleScope.launch {
             binding.btnRefreshMap.isEnabled = false
-            binding.tvMapStatus.text = "🔄 Aktualisiere Standortdaten..."
+            binding.tvMapStatus.text = getString(R.string.location_share_map_status_updating)
             fetchAndUpdateMarkers()
             binding.btnRefreshMap.isEnabled = true
-            Toast.makeText(this@LocationShareActivity, "Standorte aktualisiert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@LocationShareActivity, getString(R.string.location_share_toast_locations_updated), Toast.LENGTH_SHORT).show()
         }
     }
 
     private suspend fun fetchAndUpdateMarkers() {
         val config = prefs.loadConfig() ?: run {
-            withContext(Dispatchers.Main) { binding.tvMapStatus.text = "Keine WebDAV-Zugangsdaten." }
+            withContext(Dispatchers.Main) { binding.tvMapStatus.text = getString(R.string.location_share_map_status_no_webdav) }
             return
         }
         val client = WebDavClient(config.serverUrl, config.username, config.password)
@@ -429,7 +423,7 @@ class LocationShareActivity : SecureBaseActivity() {
             val filesResult = client.listFiles(WebDavSyncManager.REMOTE_DIR)
             if (filesResult.isFailure) {
                 withContext(Dispatchers.Main) {
-                    binding.tvMapStatus.text = "⚠️ Verbindung fehlgeschlagen."
+                    binding.tvMapStatus.text = getString(R.string.location_share_map_status_connection_failed)
                 }
                 return@withContext
             }
@@ -447,15 +441,15 @@ class LocationShareActivity : SecureBaseActivity() {
                 withContext(Dispatchers.Main) {
                     val all = filesResult.getOrDefault(emptyList())
                     val firstRaw = all.firstOrNull()
-                        ?: "Der Ordner '${WebDavSyncManager.REMOTE_DIR}' ist absolut leer."
-                    val debugInfo = "Eigene ID: $ownFileName\nDateien im Ordner: ${all.size}\nBeispiel-Name: $firstRaw"
+                        ?: getString(R.string.location_share_debug_folder_empty_format, WebDavSyncManager.REMOTE_DIR)
+                    val debugInfo = getString(R.string.location_share_debug_info_format, ownFileName, all.size, firstRaw)
                     updateMarkersOnMap(emptyList(), debugInfo)
                 }
                 return@withContext
             }
 
             val tempDir = File(cacheDir, "location_share_dl").apply { mkdirs() }
-            
+
             // Parallelisierung der Downloads
             val deferredPayloads = locationFiles.map { fileName ->
                 async {
@@ -475,7 +469,7 @@ class LocationShareActivity : SecureBaseActivity() {
                     }
                 }
             }
-            
+
             val payloads = deferredPayloads.awaitAll().filterNotNull()
             tempDir.deleteRecursively()
 
@@ -521,7 +515,7 @@ class LocationShareActivity : SecureBaseActivity() {
 
         binding.mapView.invalidate()
         deviceAdapter.submitList(payloads)
-        binding.tvDeviceListHeader.text = "Geräteliste (${payloads.size})"
+        binding.tvDeviceListHeader.text = getString(R.string.location_share_device_list_header_format, payloads.size)
 
         if (payloads.isNotEmpty() && !initialZoomDone) {
             zoomToShowAllMarkers(payloads)
@@ -542,7 +536,8 @@ class LocationShareActivity : SecureBaseActivity() {
         if (s) "⏸ ${p.label}" else "📍 ${p.label}"
 
     private fun buildMarkerSnippet(p: LocationPayload, s: Boolean) =
-        "Zuletzt: ${formatTimestamp(p.timestamp)}${if (s) " (veraltet)" else ""}"
+        getString(R.string.location_share_last_seen_format, formatTimestamp(p.timestamp)) +
+                (if (s) getString(R.string.location_share_stale_suffix) else "")
 
     private fun buildMarkerIcon(s: Boolean) =
         ContextCompat.getDrawable(this, org.osmdroid.library.R.drawable.marker_default)
@@ -577,20 +572,20 @@ class LocationShareActivity : SecureBaseActivity() {
     }
 
     private fun buildStatusText(f: Int, s: Int) = when {
-        f == 0 && s == 0 -> "Keine Geräte gefunden."
-        s == 0           -> "$f Gerät(e) aktiv."
-        f == 0           -> "$s Gerät(e) veraltet."
-        else             -> "$f aktiv, $s veraltet."
+        f == 0 && s == 0 -> getString(R.string.location_share_status_no_devices)
+        s == 0           -> resources.getQuantityString(R.plurals.location_share_devices_active, f, f)
+        f == 0           -> resources.getQuantityString(R.plurals.location_share_devices_stale, s, s)
+        else             -> getString(R.string.location_share_status_mixed_format, f, s)
     }
 
     // ── Gerät löschen ──────────────────────────────────────────────────────
 
     private fun confirmAndDeleteDevice(payload: LocationPayload) {
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Eintrag entfernen?")
-            .setMessage("Möchtest du '${payload.label}' wirklich vom Server löschen?")
-            .setPositiveButton("Löschen") { _, _ -> deleteDeviceFromServer(payload) }
-            .setNegativeButton("Abbrechen", null)
+            .setTitle(getString(R.string.location_share_delete_dialog_title))
+            .setMessage(getString(R.string.location_share_delete_dialog_message_format, payload.label))
+            .setPositiveButton(getString(R.string.location_share_delete_confirm)) { _, _ -> deleteDeviceFromServer(payload) }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -605,9 +600,9 @@ class LocationShareActivity : SecureBaseActivity() {
             if (withContext(Dispatchers.IO) {
                     client.deleteFile("${WebDavSyncManager.REMOTE_DIR}/$fileName")
                 }.isSuccess) {
-                Toast.makeText(this@LocationShareActivity, "Eintrag entfernt", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LocationShareActivity, getString(R.string.location_share_toast_entry_removed), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this@LocationShareActivity, "Fehler beim Löschen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LocationShareActivity, getString(R.string.location_share_toast_delete_error), Toast.LENGTH_SHORT).show()
             }
             refreshMap()
         }
@@ -634,9 +629,9 @@ class LocationShareActivity : SecureBaseActivity() {
                     Log.w(TAG, "Keine Route von ORS erhalten, zeichne Luftlinie")
                     val apiKey = AppSettings(this@LocationShareActivity).getOrsApiKey()
                     if (apiKey.isBlank()) {
-                        Toast.makeText(this@LocationShareActivity, "Routing fehlgeschlagen: Kein API-Key hinterlegt", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LocationShareActivity, getString(R.string.location_share_toast_no_api_key), Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(this@LocationShareActivity, "Routing fehlgeschlagen, zeichne Luftlinie", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LocationShareActivity, getString(R.string.location_share_toast_routing_failed_straight_line), Toast.LENGTH_SHORT).show()
                     }
                     drawRouteStraightLine(fLat, fLon, tLat, tLon)
                 }
@@ -710,7 +705,7 @@ class LocationShareActivity : SecureBaseActivity() {
         val json = JSONObject(responseStr)
         val features = json.optJSONArray("features") ?: return RouteData(emptyList(), 0.0, 0.0)
         if (features.length() == 0) return RouteData(emptyList(), 0.0, 0.0)
-        
+
         val feature = features.getJSONObject(0)
         val geometry = feature.optJSONObject("geometry") ?: return RouteData(emptyList(), 0.0, 0.0)
         val coords = geometry.optJSONArray("coordinates") ?: return RouteData(emptyList(), 0.0, 0.0)
@@ -804,7 +799,7 @@ class LocationShareActivity : SecureBaseActivity() {
                 val stale = (System.currentTimeMillis() - p.timestamp) > STALE_THRESHOLD_MS
                 b.tvDeviceLabel.text   = p.label
                 b.tvDeviceIcon.text    = if (stale) "⏸" else "📍"
-                b.tvDeviceStatus.text  = "Zuletzt: ${formatTimestamp(p.timestamp)}"
+                b.tvDeviceStatus.text  = getString(R.string.location_share_last_seen_format, formatTimestamp(p.timestamp))
                 b.tvDeviceCoords.text  = String.format("%.5f, %.5f", p.lat, p.lon)
                 b.tvDeviceBattery.isVisible = p.batteryLevel != null
                 b.tvDeviceBattery.text = "🔋 ${p.batteryLevel}%"
@@ -828,7 +823,7 @@ class LocationShareActivity : SecureBaseActivity() {
                     } else {
                         Toast.makeText(
                             this@LocationShareActivity,
-                            "Warte auf GPS-Fix…",
+                            getString(R.string.location_share_toast_waiting_gps),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -840,10 +835,13 @@ class LocationShareActivity : SecureBaseActivity() {
                             type = "text/plain"
                             putExtra(
                                 Intent.EXTRA_TEXT,
-                                "Standort von ${p.label}: " +
-                                        "https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}"
+                                getString(
+                                    R.string.location_share_share_text_format,
+                                    p.label,
+                                    "https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}"
+                                )
                             )
-                        }, "Teilen"
+                        }, getString(R.string.location_share_share_chooser_title)
                     ))
                 }
 

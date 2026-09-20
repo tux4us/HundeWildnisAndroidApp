@@ -28,7 +28,7 @@ class VitalDetailActivity : SecureBaseActivity() {
         record = VitalManager.getById(this, recordId)
 
         if (record == null) {
-            Toast.makeText(this, "Messung nicht gefunden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.vital_detail_toast_not_found), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -47,17 +47,17 @@ class VitalDetailActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════════
 
     private fun setupSpinners() {
-        val mucousItems = listOf("– nicht gemessen –") + VitalRecord.MUCOUS_MEMBRANE_COLORS
+        val mucousItems = listOf(getString(R.string.pulscheck_spinner_not_measured)) + VitalRecord.mucousMembraneColors(this)
         binding.spinnerDetailMucous.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, mucousItems
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
-        val consciousnessItems = listOf("– nicht beurteilt –") + VitalRecord.CONSCIOUSNESS_LEVELS
+        val consciousnessItems = listOf(getString(R.string.pulscheck_spinner_not_assessed)) + VitalRecord.consciousnessLevels(this)
         binding.spinnerDetailConsciousness.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, consciousnessItems
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
-        val loadItems = listOf("– Bitte wählen –") + VitalRecord.LOAD_SCENARIOS
+        val loadItems = listOf(getString(R.string.pulscheck_spinner_please_choose)) + VitalRecord.loadScenarios(this)
         binding.spinnerDetailLoad.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, loadItems
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
@@ -65,9 +65,12 @@ class VitalDetailActivity : SecureBaseActivity() {
 
     private fun fillFields(r: VitalRecord) {
         // Meta
-        binding.tvDetailDog.text = "🐕 ${r.dogName}"
-        binding.tvDetailDate.text = "📅 ${r.formattedDate()}"
-        binding.tvDetailScenario.text = "⚡ ${r.loadScenario}"
+        binding.tvDetailDog.text = getString(R.string.vital_detail_dog_format, r.dogName)
+        binding.tvDetailDate.text = getString(R.string.vital_detail_date_format, r.formattedDate())
+        binding.tvDetailScenario.text = getString(
+            R.string.vital_detail_scenario_format,
+            LoadScenarioCode.displayName(this, r.loadScenario)
+        )
 
         // Vitalwerte
         binding.etDetailPulse.setText(r.pulse.toString())
@@ -76,19 +79,22 @@ class VitalDetailActivity : SecureBaseActivity() {
         r.capillaryRefillTime?.let { binding.etDetailCrt.setText(it.toString()) }
 
         // Schleimhautfarbe
+        val mucousOptions = MucousColorCode.ALL
         val mucousIdx = r.mucousMembraneColor?.let {
-            VitalRecord.MUCOUS_MEMBRANE_COLORS.indexOf(it) + 1
+            mucousOptions.indexOf(it) + 1
         } ?: 0
         binding.spinnerDetailMucous.setSelection(mucousIdx)
 
         // Bewusstsein
+        val consciousnessOptions = ConsciousnessCode.ALL
         val consciousnessIdx = r.consciousnessLevel?.let {
-            VitalRecord.CONSCIOUSNESS_LEVELS.indexOf(it) + 1
+            consciousnessOptions.indexOf(it) + 1
         } ?: 0
         binding.spinnerDetailConsciousness.setSelection(consciousnessIdx)
 
         // Belastung
-        val loadIdx = VitalRecord.LOAD_SCENARIOS.indexOf(r.loadScenario)
+        val loadOptions = LoadScenarioCode.ALL
+        val loadIdx = loadOptions.indexOf(r.loadScenario)
         binding.spinnerDetailLoad.setSelection(if (loadIdx >= 0) loadIdx + 1 else 1)
 
         // Notizen
@@ -108,7 +114,7 @@ class VitalDetailActivity : SecureBaseActivity() {
     private fun collectUpdated(): VitalRecord? {
         val pulse = binding.etDetailPulse.text?.toString()?.toIntOrNull()
         if (pulse == null || pulse <= 0) {
-            Toast.makeText(this, "Bitte eine gültige Herzfrequenz eingeben.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.vital_detail_toast_invalid_pulse), Toast.LENGTH_SHORT).show()
             return null
         }
 
@@ -117,14 +123,17 @@ class VitalDetailActivity : SecureBaseActivity() {
             ?.replace(",", ".")?.toDoubleOrNull()
         val crt = binding.etDetailCrt.text?.toString()?.toIntOrNull()
 
+        val mucousOptions = MucousColorCode.ALL
         val mucousIdx = binding.spinnerDetailMucous.selectedItemPosition
-        val mucousColor = if (mucousIdx > 0) VitalRecord.MUCOUS_MEMBRANE_COLORS[mucousIdx - 1] else null
+        val mucousColor = if (mucousIdx > 0) mucousOptions[mucousIdx - 1] else null
 
+        val consciousnessOptions = ConsciousnessCode.ALL
         val consciousnessIdx = binding.spinnerDetailConsciousness.selectedItemPosition
-        val consciousness = if (consciousnessIdx > 0) VitalRecord.CONSCIOUSNESS_LEVELS[consciousnessIdx - 1] else null
+        val consciousness = if (consciousnessIdx > 0) consciousnessOptions[consciousnessIdx - 1] else null
 
+        val loadOptions = LoadScenarioCode.ALL
         val loadIdx = binding.spinnerDetailLoad.selectedItemPosition
-        val loadScenario = if (loadIdx > 0) VitalRecord.LOAD_SCENARIOS[loadIdx - 1] else "Ruhe"
+        val loadScenario = if (loadIdx > 0) loadOptions[loadIdx - 1] else LoadScenarioCode.REST
 
         return record!!.copy(
             pulse = pulse,
@@ -144,9 +153,12 @@ class VitalDetailActivity : SecureBaseActivity() {
         record = updated
 
         // Meta-Anzeige aktualisieren
-        binding.tvDetailScenario.text = "⚡ ${updated.loadScenario}"
+        binding.tvDetailScenario.text = getString(
+            R.string.vital_detail_scenario_format,
+            LoadScenarioCode.displayName(this, updated.loadScenario)
+        )
 
-        Toast.makeText(this, "✅ Änderungen gespeichert", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.vital_detail_toast_saved), Toast.LENGTH_SHORT).show()
         setResult(RESULT_OK)
     }
 
@@ -154,38 +166,38 @@ class VitalDetailActivity : SecureBaseActivity() {
         val r = record ?: return
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Vitalwerte ${r.dogName} – ${r.formattedDate()}")
-            putExtra(Intent.EXTRA_TEXT, r.toShareText())
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.vital_detail_share_subject_format, r.dogName, r.formattedDate()))
+            putExtra(Intent.EXTRA_TEXT, r.toShareText(this@VitalDetailActivity))
         }
-        startActivity(Intent.createChooser(intent, "Messung teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.vital_detail_share_chooser_title)))
     }
 
     private fun shareAsText() {
         val r = record ?: return
         // Ausführlichere Textversion
         val text = buildString {
-            appendLine("🐕 Vitalwerte – ${r.dogName}")
-            appendLine("📅 Datum: ${r.formattedDate()}")
-            appendLine("⚡ Belastung: ${r.loadScenario}")
+            appendLine(getString(R.string.vital_detail_text_dog_line, r.dogName))
+            appendLine(getString(R.string.vital_detail_text_date_line, r.formattedDate()))
+            appendLine(getString(R.string.vital_detail_text_load_line, LoadScenarioCode.displayName(this@VitalDetailActivity, r.loadScenario)))
             appendLine()
             appendLine("═══════════════════")
-            appendLine("❤️  Herzfrequenz: ${r.pulse} /min")
-            r.respiration?.let { appendLine("🫁  Atemfrequenz: $it /min") }
-            r.temperature?.let { appendLine("🌡️  Temperatur: ${"%.1f".format(it)} °C") }
-            r.capillaryRefillTime?.let { appendLine("💉  Kapillarfüllzeit: ${it}s") }
-            r.mucousMembraneColor?.let { appendLine("👁️  Schleimhautfarbe: $it") }
-            r.consciousnessLevel?.let { appendLine("🧠  Bewusstsein: $it") }
+            appendLine(getString(R.string.vital_detail_text_pulse_line, r.pulse))
+            r.respiration?.let { appendLine(getString(R.string.vital_detail_text_respiration_line, it)) }
+            r.temperature?.let { appendLine(getString(R.string.vital_detail_text_temperature_line, "%.1f".format(it))) }
+            r.capillaryRefillTime?.let { appendLine(getString(R.string.vital_detail_text_crt_line, it)) }
+            r.mucousMembraneColor?.let { appendLine(getString(R.string.vital_detail_text_mucous_line, MucousColorCode.displayName(this@VitalDetailActivity, it))) }
+            r.consciousnessLevel?.let { appendLine(getString(R.string.vital_detail_text_consciousness_line, ConsciousnessCode.displayName(this@VitalDetailActivity, it))) }
             if (r.notes.isNotBlank()) {
                 appendLine()
-                appendLine("📝 Notizen:")
+                appendLine(getString(R.string.vital_detail_text_notes_header))
                 appendLine(r.notes)
             }
         }
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Vitalwerte ${r.dogName}")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.vital_detail_text_share_subject_format, r.dogName))
             putExtra(Intent.EXTRA_TEXT, text.trim())
         }
-        startActivity(Intent.createChooser(intent, "Als Text teilen"))
+        startActivity(Intent.createChooser(intent, getString(R.string.vital_detail_share_as_text_chooser_title)))
     }
 }

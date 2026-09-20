@@ -104,11 +104,11 @@ class POIAdapter(
             if (!poi.access.isNullOrEmpty()) {
                 binding.accessLayout.visibility = View.VISIBLE
                 binding.poiAccess.text = when (poi.access) {
-                    "yes" -> "Frei zugänglich"
-                    "no" -> "Kein Zugang"
-                    "private" -> "Privat"
-                    "permissive" -> "Bedingt zugänglich"
-                    "leashed" -> "🐕 Nur an der Leine"
+                    "yes" -> context.getString(R.string.poi_access_yes)
+                    "no" -> context.getString(R.string.poi_access_no)
+                    "private" -> context.getString(R.string.poi_access_private)
+                    "permissive" -> context.getString(R.string.poi_access_permissive)
+                    "leashed" -> context.getString(R.string.poi_access_leashed)
                     else -> poi.access
                 }
                 hasDetails = true

@@ -16,7 +16,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/rd_danger_toolbar"
             app:titleTextColor="@color/rd_danger_text"
-            app:title="🚨 Notfallmeldung" />
+            app:title="@string/emergency_report_toolbar_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -60,7 +60,7 @@
                             android:id="@+id/tvDogName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name des Hundes"
+                            android:text="@string/emergency_placeholder_dog_name"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="?android:attr/textColorPrimary" />
@@ -68,7 +68,7 @@
                             android:id="@+id/tvDogBreed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rasse, Alter, Gewicht"
+                            android:text="@string/emergency_placeholder_dog_breed"
                             android:textSize="13sp"
                             android:textColor="?android:attr/textColorSecondary" />
                     </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_marginBottom="16dp"
                 app:hintTextColor="#B00020"
                 app:boxStrokeColor="#B00020"
-                android:hint="Was ist passiert? (Symptom)">
+                android:hint="@string/emergency_symptom_hint">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerSymptoms"
                     android:layout_width="match_parent"
@@ -95,7 +95,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Zusätzliche Infos / Bemerkungen"
+                android:hint="@string/emergency_notes_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="16dp"
                 app:hintTextColor="#B00020"
@@ -123,7 +123,7 @@
                         android:id="@+id/switchGps"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="GPS-Standort beifügen" />
+                        android:text="@string/emergency_gps_switch_label" />
                     <TextView
                         android:id="@+id/tvGpsStatus"
                         android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fotos anhängen"
+                android:text="@string/emergency_photos_attach_label"
                 android:textStyle="bold"
                 android:textSize="13sp"
                 android:textColor="?android:attr/textColorSecondary"
@@ -187,7 +187,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📜 Gesendete Notfallmeldungen"
+                android:text="@string/emergency_history_section_title"
                 android:textStyle="bold"
                 android:textSize="15sp"
                 android:textColor="?android:attr/textColorPrimary"

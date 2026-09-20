@@ -33,7 +33,7 @@ class DogProfileActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "🐕 Stammdaten"
+            title = getString(R.string.dog_profile_title)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
         }
@@ -49,14 +49,14 @@ class DogProfileActivity : SecureBaseActivity() {
 
     private fun loadProfiles() {
         val profiles = DogProfileManager.getAllProfiles(this)
-        
+
         if (profiles.isEmpty()) {
             binding.recyclerView.visibility = View.GONE
             binding.emptyView.visibility = View.VISIBLE
         } else {
             binding.recyclerView.visibility = View.VISIBLE
             binding.emptyView.visibility = View.GONE
-            
+
             adapter = DogProfileAdapter(
                 profiles = profiles,
                 onView = { profile ->
@@ -96,7 +96,7 @@ class DogProfileActivity : SecureBaseActivity() {
 
     private fun setupAddButton() {
         val addTiles = listOf(
-            StartTile("add_dog", R.drawable.ic_add, "Neuen Hund anlegen")
+            StartTile("add_dog", R.drawable.ic_add, getString(R.string.dog_add_new_tile))
         )
         val colors = StartGroupColors.forGroup(this, 1) // Ocker/Gelb
 
@@ -113,33 +113,33 @@ class DogProfileActivity : SecureBaseActivity() {
 
     private fun confirmDelete(profile: DogProfile) {
         AlertDialog.Builder(this)
-            .setTitle("Hund löschen?")
-            .setMessage("Möchtest Du ${profile.name} wirklich unwiderruflich löschen?")
-            .setPositiveButton("Löschen") { _, _ ->
+            .setTitle(getString(R.string.dog_delete_confirm_title))
+            .setMessage(getString(R.string.dog_delete_confirm_message, profile.name))
+            .setPositiveButton(getString(R.string.dog_delete_button)) { _, _ ->
                 DogProfileManager.deleteProfile(this, profile.id)
                 loadProfiles()
-                Toast.makeText(this, "Gelöscht", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.dog_deleted_toast), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun shareProfile(profile: DogProfile, fields: Set<String>) {
-        val text = profile.toFilteredString(fields)
+        val text = profile.toFilteredString(this, fields)
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Hundedaten: ${profile.name}")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.dog_share_subject, profile.name))
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        startActivity(Intent.createChooser(intent, "Teilen via"))
+        startActivity(Intent.createChooser(intent, getString(R.string.dog_share_via)))
     }
 
     private fun generateAndOpenPDF(profile: DogProfile, fields: Set<String>) {
         binding.progressBar.visibility = View.VISIBLE
-        
+
         // QR-Code für das PDF generieren (optional, hier leerer Bitmap wenn nicht gebraucht)
         val qrBitmap = try {
-            QRCodeGenerator.generateQRCode(profile.toQRString(), 300)
+            QRCodeGenerator.generateQRCode(profile.toQRString(this), 300)
         } catch (e: Exception) {
             null
         }
@@ -148,15 +148,15 @@ class DogProfileActivity : SecureBaseActivity() {
             val file = PDFGenerator.generateFilteredDogProfilePDF(
                 this, profile, fields, qrBitmap ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             )
-            
+
             val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, "application/pdf")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(intent, "PDF öffnen"))
+            startActivity(Intent.createChooser(intent, getString(R.string.dog_pdf_open_chooser)))
         } catch (e: Exception) {
-            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.dog_pdf_error, e.message), Toast.LENGTH_LONG).show()
         } finally {
             binding.progressBar.visibility = View.GONE
         }

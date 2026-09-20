@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="🔍 Suche"
+            android:hint="@string/poi_search_hint"
             android:textSize="@dimen/text_body_medium"
             android:paddingStart="12dp"
             android:paddingEnd="10dp"
@@ -62,7 +62,7 @@
             android:layout_marginStart="4dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Suche löschen"
+            android:contentDescription="@string/clear_search_content_description"
             android:visibility="gone"
             android:padding="10dp" />
 
@@ -256,7 +256,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|start"
                 android:layout_margin="16dp"
-                android:text="📍 Standort wird ermittelt..."
+                android:text="@string/location_determining_placeholder"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/text_body_small"
                 android:background="#80000000"
@@ -270,7 +270,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="90dp"
-                android:text="🧭 0.0 km • 0 Min"
+                android:text="@string/navigation_info_placeholder"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
@@ -319,7 +319,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📍 POI Kategorien wählen"
+                        android:text="@string/poi_category_view_header"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
@@ -361,7 +361,7 @@
                             android:id="@+id/btnBackToCategories"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="← Zurück"
+                            android:text="@string/back_arrow"
                             android:textSize="@dimen/text_body_medium"
                             android:textColor="#FFFFFF"
                             android:background="@drawable/poi_button_bg"
@@ -378,7 +378,7 @@
                                 android:id="@+id/categoryTitleText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🐕 Hundeauslauf"
+                                android:text="@string/poi_category_title_placeholder"
                                 android:textColor="@color/rd_overlay_accent"
                                 android:textSize="@dimen/text_body_medium"
                                 android:textStyle="bold" />
@@ -387,7 +387,7 @@
                                 android:id="@+id/poiCountText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0 POI in 3 km"
+                                android:text="@string/poi_count_placeholder"
                                 android:textColor="#999999"
                                 android:textSize="@dimen/text_body_medium" />
                         </LinearLayout>
@@ -434,7 +434,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Keine POI gefunden"
+                            android:text="@string/no_poi_found"
                             android:textColor="#666666"
                             android:textSize="@dimen/text_body_medium"
                             android:textAlignment="center"
@@ -488,7 +488,7 @@
                 android:id="@+id/tvNavExpandHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="▲  Details anzeigen"
+                android:text="@string/nav_details_show"
                 android:textColor="@color/rd_overlay_accent"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -509,7 +509,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🧭 Navigation aktiv"
+                android:text="@string/navigation_active_header"
                 android:textColor="@color/rd_overlay_accent"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -595,7 +595,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="📈  Höhenprofil"
+                            android:text="@string/elevation_profile_header"
                             android:textColor="@color/rd_overlay_accent"
                             android:textStyle="bold"
                             android:textSize="13sp"
@@ -628,7 +628,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="⛰️  Höheninformationen"
+                            android:text="@string/elevation_info_header"
                             android:textColor="@color/rd_overlay_accent"
                             android:textStyle="bold"
                             android:textSize="13sp"
@@ -641,22 +641,22 @@
                             android:layout_marginBottom="12dp">
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬆️ Bergauf" android:textColor="#999999" android:textSize="11sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_ascent_label" android:textColor="#999999" android:textSize="11sp" />
                                 <TextView android:id="@+id/tvAscentValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_overlay_accent" android:textStyle="bold" android:textSize="18sp" />
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬇️ Bergab" android:textColor="#999999" android:textSize="11sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_descent_label" android:textColor="#999999" android:textSize="11sp" />
                                 <TextView android:id="@+id/tvDescentValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FF8A65" android:textStyle="bold" android:textSize="18sp" />
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📉 Min" android:textColor="#999999" android:textSize="11sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_min_label" android:textColor="#999999" android:textSize="11sp" />
                                 <TextView android:id="@+id/tvMinElevationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="15sp" />
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📈 Max" android:textColor="#999999" android:textSize="11sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_max_label" android:textColor="#999999" android:textSize="11sp" />
                                 <TextView android:id="@+id/tvMaxElevationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="15sp" />
                             </LinearLayout>
                         </LinearLayout>
@@ -681,7 +681,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🛤️  Oberfläche"
+                            android:text="@string/surface_header"
                             android:textColor="@color/rd_overlay_accent"
                             android:textStyle="bold"
                             android:textSize="13sp"
@@ -703,7 +703,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🛣️  Wegtyp"
+                            android:text="@string/waytype_header"
                             android:textColor="@color/rd_overlay_accent"
                             android:textStyle="bold"
                             android:textSize="13sp"
@@ -745,7 +745,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="🧭  Geländeanalyse"
+                                android:text="@string/terrain_analysis_header"
                                 android:textColor="@color/rd_overlay_accent"
                                 android:textStyle="bold"
                                 android:textSize="13sp" />
@@ -762,7 +762,7 @@
                                     android:layout_height="wrap_content"
                                     android:paddingHorizontal="12dp"
                                     android:paddingVertical="5dp"
-                                    android:text="🟢 Flach"
+                                    android:text="@string/slope_class_flat_placeholder"
                                     android:textColor="#FFFFFF"
                                     android:textStyle="bold"
                                     android:textSize="11sp" />
@@ -783,7 +783,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🐕 Für:"
+                                android:text="@string/terrain_for_dog_label"
                                 android:textColor="#AAAAAA"
                                 android:textSize="11sp"
                                 android:layout_marginEnd="8dp" />
@@ -812,7 +812,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Empfohlene Maximaldistanz zum Ziel (bei Annahme des ähnlichen Rückwegs) für diesen Hund"
+                                android:text="@string/terrain_recommended_max_distance_label"
                                 android:textColor="#AAAAAA"
                                 android:textSize="11sp" />
 
@@ -848,7 +848,7 @@
                             android:id="@+id/tvNoWarnings"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="✅ Keine besonderen Risiken für diese Strecke erkannt."
+                            android:text="@string/terrain_no_warnings"
                             android:textColor="@color/rd_overlay_accent"
                             android:textSize="12sp"
                             android:visibility="gone" />
@@ -875,7 +875,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="⛅  Wetter am Ziel"
+                            android:text="@string/weather_at_destination_header"
                             android:textColor="@color/rd_overlay_accent"
                             android:textStyle="bold"
                             android:textSize="13sp"
@@ -891,26 +891,26 @@
                             <TextView android:id="@+id/tvWeatherIcon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="…" android:textSize="28sp" android:layout_marginEnd="12dp" />
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:id="@+id/tvWeatherDesc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Laden…" android:textColor="#CCCCCC" android:textSize="13sp" />
+                                <TextView android:id="@+id/tvWeatherDesc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/loading_ellipsis" android:textColor="#CCCCCC" android:textSize="13sp" />
                                 <TextView android:id="@+id/tvWeatherArrivalLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textColor="#777777" android:textSize="11sp" />
                             </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🌡️ Temp" android:textColor="#999999" android:textSize="10sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_temp" android:textColor="#999999" android:textSize="10sp" />
                                 <TextView android:id="@+id/tvWeatherTemp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="16sp" />
                             </LinearLayout>
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🌧️ Regen" android:textColor="#999999" android:textSize="10sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_rain" android:textColor="#999999" android:textSize="10sp" />
                                 <TextView android:id="@+id/tvWeatherPrecip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#64B5F6" android:textStyle="bold" android:textSize="16sp" />
                             </LinearLayout>
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💨 Wind" android:textColor="#999999" android:textSize="10sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_wind" android:textColor="#999999" android:textSize="10sp" />
                                 <TextView android:id="@+id/tvWeatherWind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="12sp" />
                             </LinearLayout>
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💧 Feuchte" android:textColor="#999999" android:textSize="10sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_humidity" android:textColor="#999999" android:textSize="10sp" />
                                 <TextView android:id="@+id/tvWeatherHumidity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
@@ -953,7 +953,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🗺️  Route-POIs"
+                            android:text="@string/route_pois_header"
                             android:textColor="@color/rd_overlay_accent"
                             android:textStyle="bold"
                             android:textSize="13sp"
@@ -963,7 +963,7 @@
                             android:id="@+id/tvRoutePOIsStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Wird geladen…"
+                            android:text="@string/loading_generic_ellipsis"
                             android:textColor="#777777"
                             android:textSize="11sp"
                             android:visibility="visible" />

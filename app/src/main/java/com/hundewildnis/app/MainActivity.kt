@@ -83,7 +83,7 @@ class MainActivity : BaseBottomNavActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "HundeWildnis"
+        supportActionBar?.title = getString(R.string.main_toolbar_title)
         binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)?.apply {
             // Themenkonformes Tinting: das Icon war fest auf Weiß kodiert und dadurch
             // im hellen Modus auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
@@ -133,7 +133,7 @@ class MainActivity : BaseBottomNavActivity() {
 
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
-        
+
         binding.filterScrollView.setBackgroundColor(if (isDark) Color.parseColor("#121212") else Color.parseColor("#F5F5F5"))
         binding.btnFilterAll.setTextColor(accentColor)
         binding.btnFilterCategories.setTextColor(accentColor)
@@ -141,14 +141,14 @@ class MainActivity : BaseBottomNavActivity() {
 
         binding.btnFilterAll.setOnClickListener {
             selectedCategoryId = null
-            binding.btnFilterCategories.text = "📂 Kategorien filtern"
+            binding.btnFilterCategories.text = getString(R.string.main_filter_categories)
             loadContentFromNetwork(silent = false)
         }
 
         binding.btnFilterCategories.setOnClickListener {
             showCategoryFilterDialog()
         }
-        
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             loadContentFromNetwork(silent = false)
         }
@@ -202,7 +202,7 @@ class MainActivity : BaseBottomNavActivity() {
     private fun loadNextPageFromNetwork() {
         if (isLoadingMore || !canLoadMoreFromNetwork) return
         isLoadingMore = true
-        binding.btnLoadMore.text = "Lade weitere Beiträge..."
+        binding.btnLoadMore.text = getString(R.string.main_loading_more_posts)
 
         lifecycleScope.launch {
             try {
@@ -223,7 +223,7 @@ class MainActivity : BaseBottomNavActivity() {
                 canLoadMoreFromNetwork = false
             } finally {
                 isLoadingMore = false
-                binding.btnLoadMore.text = "Weitere Blogbeiträge laden"
+                binding.btnLoadMore.text = getString(R.string.main_load_more_posts)
                 if (!canLoadMoreFromNetwork && blogAdapter.itemCount >= allBlogPosts.size) {
                     binding.btnLoadMore.visibility = View.GONE
                 }
@@ -257,7 +257,7 @@ class MainActivity : BaseBottomNavActivity() {
             recyclerView = findViewById<RecyclerView>(R.id.gridPagesGroup1),
             spanCount = 1,
             groupIndex = 4, // Blau
-            tiles = listOf(StartTile("page_main", R.drawable.ic_home, "Hunde Wildnis Schule"))
+            tiles = listOf(StartTile("page_main", R.drawable.ic_home, getString(R.string.main_page_title_main)))
         )
 
         // Gruppe 2: Hundeschule
@@ -266,22 +266,22 @@ class MainActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 2, // Grün
             tiles = listOf(
-                StartTile("page_anti_jagd", R.drawable.ic_dog, "Anti-Jagd"),
-                StartTile("page_assistenzhunde", R.drawable.ic_dog, "Assistenzhunde"),
-                StartTile("page_beratung", R.drawable.ic_info, "Beratung"),
-                StartTile("page_fahrrad", R.drawable.ic_stopwatch, "Fahrradtraining"),
-                StartTile("page_faehrte", R.drawable.ic_nose_work, "Fährte & Suche"),
-                StartTile("page_gedanken", R.drawable.ic_notes, "Gedanken"),
-                StartTile("page_grundausbildung", R.drawable.ic_exercise, "Grundausbildung"),
-                StartTile("page_hundeleinen", R.drawable.ic_dog, "Hundeleinen"),
-                StartTile("page_lernfoerderung", R.drawable.ic_info, "Lernförderung"),
-                StartTile("page_problemberatung", R.drawable.ic_info, "Problemberatung"),
-                StartTile("page_seminare", R.drawable.ic_calendar_moon, "Seminare"),
-                StartTile("page_teamsport", R.drawable.ic_exercise, "Teamsport"),
-                StartTile("page_tierschutz", R.drawable.ic_dog, "Tierschutz"),
-                StartTile("page_sozialbesuch", R.drawable.ic_heart_support, "Sozialbesuch"),
-                StartTile("page_wandern", R.drawable.ic_navigation, "Wandern"),
-                StartTile("page_welpen", R.drawable.ic_dog, "Welpenschule")
+                StartTile("page_anti_jagd", R.drawable.ic_dog, getString(R.string.main_page_title_anti_jagd)),
+                StartTile("page_assistenzhunde", R.drawable.ic_dog, getString(R.string.main_page_title_assistenzhunde)),
+                StartTile("page_beratung", R.drawable.ic_info, getString(R.string.main_page_title_beratung)),
+                StartTile("page_fahrrad", R.drawable.ic_stopwatch, getString(R.string.main_page_title_fahrrad)),
+                StartTile("page_faehrte", R.drawable.ic_nose_work, getString(R.string.main_page_title_faehrte)),
+                StartTile("page_gedanken", R.drawable.ic_notes, getString(R.string.main_page_title_gedanken)),
+                StartTile("page_grundausbildung", R.drawable.ic_exercise, getString(R.string.main_page_title_grundausbildung)),
+                StartTile("page_hundeleinen", R.drawable.ic_dog, getString(R.string.main_page_title_hundeleinen)),
+                StartTile("page_lernfoerderung", R.drawable.ic_info, getString(R.string.main_page_title_lernfoerderung)),
+                StartTile("page_problemberatung", R.drawable.ic_info, getString(R.string.main_page_title_problemberatung)),
+                StartTile("page_seminare", R.drawable.ic_calendar_moon, getString(R.string.main_page_title_seminare)),
+                StartTile("page_teamsport", R.drawable.ic_exercise, getString(R.string.main_page_title_teamsport)),
+                StartTile("page_tierschutz", R.drawable.ic_dog, getString(R.string.main_page_title_tierschutz)),
+                StartTile("page_sozialbesuch", R.drawable.ic_heart_support, getString(R.string.main_page_title_sozialbesuch)),
+                StartTile("page_wandern", R.drawable.ic_navigation, getString(R.string.main_page_title_wandern)),
+                StartTile("page_welpen", R.drawable.ic_dog, getString(R.string.main_page_title_welpen))
             )
         )
 
@@ -291,10 +291,10 @@ class MainActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 3, // Ocker/Braun
             tiles = listOf(
-                StartTile("page_wildnis_in_uns", R.drawable.ic_info, "Die Wildnis in uns"),
-                StartTile("page_spuren", R.drawable.ic_nose_work, "Spuren & Zeichen"),
-                StartTile("page_handwerk", R.drawable.ic_exercise, "Handwerk"),
-                StartTile("page_paedagogik", R.drawable.ic_info, "Pädagogik")
+                StartTile("page_wildnis_in_uns", R.drawable.ic_info, getString(R.string.main_page_title_wildnis_in_uns)),
+                StartTile("page_spuren", R.drawable.ic_nose_work, getString(R.string.main_page_title_spuren)),
+                StartTile("page_handwerk", R.drawable.ic_exercise, getString(R.string.main_page_title_handwerk)),
+                StartTile("page_paedagogik", R.drawable.ic_info, getString(R.string.main_page_title_paedagogik))
             )
         )
 
@@ -304,14 +304,14 @@ class MainActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 5, // Violett
             tiles = listOf(
-                StartTile("page_downloads", R.drawable.ic_info, "Downloads"),
-                StartTile("page_honorare", R.drawable.ic_info, "Honorare"),
-                StartTile("page_impressum", R.drawable.ic_info, "Impressum"),
-                StartTile("page_agb", R.drawable.ic_info, "AGB"),
-                StartTile("page_datenschutz", R.drawable.ic_info, "Datenschutz"),
-                StartTile("page_info", R.drawable.ic_info, "Informationen"),
-                StartTile("page_kontakt", R.drawable.ic_info, "Kontakt"),
-                StartTile("page_ueber_uns", R.drawable.ic_dog, "Über Uns")
+                StartTile("page_downloads", R.drawable.ic_info, getString(R.string.main_page_title_downloads)),
+                StartTile("page_honorare", R.drawable.ic_info, getString(R.string.main_page_title_honorare)),
+                StartTile("page_impressum", R.drawable.ic_info, getString(R.string.main_page_title_impressum)),
+                StartTile("page_agb", R.drawable.ic_info, getString(R.string.main_page_title_agb)),
+                StartTile("page_datenschutz", R.drawable.ic_info, getString(R.string.main_page_title_datenschutz)),
+                StartTile("page_info", R.drawable.ic_info, getString(R.string.main_page_title_info)),
+                StartTile("page_kontakt", R.drawable.ic_info, getString(R.string.main_page_title_kontakt)),
+                StartTile("page_ueber_uns", R.drawable.ic_dog, getString(R.string.main_page_title_ueber_uns))
             )
         )
     }
@@ -324,7 +324,7 @@ class MainActivity : BaseBottomNavActivity() {
             recyclerView = findViewById<RecyclerView>(R.id.gridCoursesGroup1),
             spanCount = 1,
             groupIndex = 4, // Blau
-            tiles = listOf(StartTile("course_main", R.drawable.ic_courses, "Onlinetrainer Info"))
+            tiles = listOf(StartTile("course_main", R.drawable.ic_courses, getString(R.string.main_course_title_main)))
         )
 
         // Gruppe 2: Kurse 1-41
@@ -361,37 +361,37 @@ class MainActivity : BaseBottomNavActivity() {
 
     private fun handleGridTileClick(tileId: String) {
         when {
-            tileId == "page_main" -> openUrl("https://wildnislehrer.com/", "HundeWildnis Schule")
-            tileId == "page_anti_jagd" -> openUrl("https://wildnislehrer.com/hundeschule/anti-jagd-training/", "Anti-Jagd-Training")
-            tileId == "page_assistenzhunde" -> openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-paedagogischen-assistenzbegleithunden/", "Ausbildung Assistenzhunde")
-            tileId == "page_beratung" -> openUrl("https://wildnislehrer.com/hundeschule/beratung/", "Beratung")
-            tileId == "page_fahrrad" -> openUrl("https://wildnislehrer.com/hundeschule/fahrradtraining/", "Fahrradtraining")
-            tileId == "page_faehrte" -> openUrl("https://wildnislehrer.com/hundeschule/faehrte-und-suche/", "Fährte und Suche")
-            tileId == "page_gedanken" -> openUrl("https://wildnislehrer.com/hundeschule/gedanken-und-grundlagen/", "Gedanken und Grundlagen")
-            tileId == "page_grundausbildung" -> openUrl("https://wildnislehrer.com/hundeschule/grundausbildung/", "Grundausbildung")
-            tileId == "page_hundeleinen" -> openUrl("https://wildnislehrer.com/hundeschule/hundeleinen/", "Hundeleinen")
-            tileId == "page_lernfoerderung" -> openUrl("https://wildnislehrer.com/hundeschule/lernfoerderunganschulen/", "Lernförderung an Schulen")
-            tileId == "page_problemberatung" -> openUrl("https://wildnislehrer.com/hundeschule/problemtherapie/", "Problemberatung")
-            tileId == "page_seminare" -> openUrl("https://wildnislehrer.com/hundeschule/seminare/", "Seminare")
-            tileId == "page_teamsport" -> openUrl("https://wildnislehrer.com/hundeschule/teamsport/", "Teamsport")
-            tileId == "page_tierschutz" -> openUrl("https://wildnislehrer.com/hundeschule/hunde-mit-lebensgeschichte/", "Tierschutz Hunde")
-            tileId == "page_sozialbesuch" -> openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischersozialbesuchshundeservice/", "Tiertherapeutischer Service")
-            tileId == "page_wandern" -> openUrl("https://wildnislehrer.com/hundeschule/trainingswanderungen/", "Wandern zum guten Zweck")
-            tileId == "page_welpen" -> openUrl("https://wildnislehrer.com/hundeschule/welpenschule/", "Welpenschule")
-            tileId == "page_wildnis_in_uns" -> openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns/", "Die Wildnis in uns")
-            tileId == "page_spuren" -> openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen/", "Spuren und Zeichen")
-            tileId == "page_handwerk" -> openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerksschule/", "Wildnishandwerk für Schulen")
-            tileId == "page_paedagogik" -> openUrl("https://wildnislehrer.com/wildnisschule/schulwildnis/", "Wildnispädagogik für Schulen")
-            tileId == "page_downloads" -> openUrl("https://wildnislehrer.com/downloads/", "Downloads")
-            tileId == "page_honorare" -> openUrl("https://wildnislehrer.com/honorare/", "Honorare")
-            tileId == "page_impressum" -> openUrl("https://wildnislehrer.com/impressum/", "Impressum")
-            tileId == "page_agb" -> openUrl("https://wildnislehrer.com/impressum/agb/", "AGB")
-            tileId == "page_datenschutz" -> openUrl("https://wildnislehrer.com/datenschutzerklaerung/", "Datenschutzerklärung")
-            tileId == "page_info" -> openUrl("https://wildnislehrer.com/informationen/", "Informationen")
-            tileId == "page_kontakt" -> openUrl("https://wildnislehrer.com/kontakt/", "Kontakt")
-            tileId == "page_ueber_uns" -> openUrl("https://wildnislehrer.com/ueber-uns/", "Über Uns")
-            
-            tileId == "course_main" -> openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", "Onlinekurse Hundeschule")
+            tileId == "page_main" -> openUrl("https://wildnislehrer.com/", getString(R.string.main_page_title_main))
+            tileId == "page_anti_jagd" -> openUrl("https://wildnislehrer.com/hundeschule/anti-jagd-training/", getString(R.string.main_link_title_anti_jagd))
+            tileId == "page_assistenzhunde" -> openUrl("https://wildnislehrer.com/hundeschule/ausbildung-von-paedagogischen-assistenzbegleithunden/", getString(R.string.main_link_title_assistenzhunde))
+            tileId == "page_beratung" -> openUrl("https://wildnislehrer.com/hundeschule/beratung/", getString(R.string.main_page_title_beratung))
+            tileId == "page_fahrrad" -> openUrl("https://wildnislehrer.com/hundeschule/fahrradtraining/", getString(R.string.main_page_title_fahrrad))
+            tileId == "page_faehrte" -> openUrl("https://wildnislehrer.com/hundeschule/faehrte-und-suche/", getString(R.string.main_link_title_faehrte))
+            tileId == "page_gedanken" -> openUrl("https://wildnislehrer.com/hundeschule/gedanken-und-grundlagen/", getString(R.string.main_link_title_gedanken))
+            tileId == "page_grundausbildung" -> openUrl("https://wildnislehrer.com/hundeschule/grundausbildung/", getString(R.string.main_page_title_grundausbildung))
+            tileId == "page_hundeleinen" -> openUrl("https://wildnislehrer.com/hundeschule/hundeleinen/", getString(R.string.main_page_title_hundeleinen))
+            tileId == "page_lernfoerderung" -> openUrl("https://wildnislehrer.com/hundeschule/lernfoerderunganschulen/", getString(R.string.main_link_title_lernfoerderung))
+            tileId == "page_problemberatung" -> openUrl("https://wildnislehrer.com/hundeschule/problemtherapie/", getString(R.string.main_page_title_problemberatung))
+            tileId == "page_seminare" -> openUrl("https://wildnislehrer.com/hundeschule/seminare/", getString(R.string.main_page_title_seminare))
+            tileId == "page_teamsport" -> openUrl("https://wildnislehrer.com/hundeschule/teamsport/", getString(R.string.main_page_title_teamsport))
+            tileId == "page_tierschutz" -> openUrl("https://wildnislehrer.com/hundeschule/hunde-mit-lebensgeschichte/", getString(R.string.main_link_title_tierschutz))
+            tileId == "page_sozialbesuch" -> openUrl("https://wildnislehrer.com/hundeschule/tiertherapeutischersozialbesuchshundeservice/", getString(R.string.main_link_title_sozialbesuch))
+            tileId == "page_wandern" -> openUrl("https://wildnislehrer.com/hundeschule/trainingswanderungen/", getString(R.string.main_link_title_wandern))
+            tileId == "page_welpen" -> openUrl("https://wildnislehrer.com/hundeschule/welpenschule/", getString(R.string.main_page_title_welpen))
+            tileId == "page_wildnis_in_uns" -> openUrl("https://wildnislehrer.com/wildnisschule/die-wildnis-in-uns/", getString(R.string.main_page_title_wildnis_in_uns))
+            tileId == "page_spuren" -> openUrl("https://wildnislehrer.com/wildnisschule/spuren-und-zeichen/", getString(R.string.main_link_title_spuren))
+            tileId == "page_handwerk" -> openUrl("https://wildnislehrer.com/wildnisschule/wildnishandwerksschule/", getString(R.string.main_link_title_handwerk))
+            tileId == "page_paedagogik" -> openUrl("https://wildnislehrer.com/wildnisschule/schulwildnis/", getString(R.string.main_link_title_paedagogik))
+            tileId == "page_downloads" -> openUrl("https://wildnislehrer.com/downloads/", getString(R.string.main_page_title_downloads))
+            tileId == "page_honorare" -> openUrl("https://wildnislehrer.com/honorare/", getString(R.string.main_page_title_honorare))
+            tileId == "page_impressum" -> openUrl("https://wildnislehrer.com/impressum/", getString(R.string.main_page_title_impressum))
+            tileId == "page_agb" -> openUrl("https://wildnislehrer.com/impressum/agb/", getString(R.string.main_page_title_agb))
+            tileId == "page_datenschutz" -> openUrl("https://wildnislehrer.com/datenschutzerklaerung/", getString(R.string.main_link_title_datenschutz))
+            tileId == "page_info" -> openUrl("https://wildnislehrer.com/informationen/", getString(R.string.main_page_title_info))
+            tileId == "page_kontakt" -> openUrl("https://wildnislehrer.com/kontakt/", getString(R.string.main_page_title_kontakt))
+            tileId == "page_ueber_uns" -> openUrl("https://wildnislehrer.com/ueber-uns/", getString(R.string.main_page_title_ueber_uns))
+
+            tileId == "course_main" -> openUrl("https://wildnislehrer.com/onlinekurse-hundeschule/", getString(R.string.main_link_title_course_main))
             tileId.startsWith("course_") -> {
                 val i = tileId.substringAfter("course_").toInt()
                 val url = when(i) {
@@ -419,8 +419,16 @@ class MainActivity : BaseBottomNavActivity() {
         // Veraltet, wird durch setupCoursesGrid ersetzt
     }
 
+    // Slug: stabiler URL-Bestandteil (nicht übersetzen, verweist auf deutschsprachige Website)
     private fun getCourseSlug(i: Int) = when(i) { 1 -> "grundlagen"; 2 -> "motivation"; 3 -> "korrektur"; 4 -> "harmonie"; 5 -> "mentaltraining"; 6 -> "koerpersprache"; 7 -> "sprachkommunikation"; 8 -> "sinneswahrnehmung"; 9 -> "teamarbeit"; 10 -> "routinen"; 11 -> "unfallschutz"; 13 -> "leinenarbeit"; 14 -> "unterbrechungen"; 15 -> "fuss"; 16 -> "sitz"; 17 -> "platz"; 18 -> "steh"; 19 -> "sozialisierungstechniken"; 20 -> "langleinentraining"; 21 -> "distanzunterbrechungen"; 22 -> "freilauf"; 23 -> "freifolge"; 24 -> "teamwalk"; 25 -> "scouttechniken"; 26 -> "jagdvermeidung"; 27 -> "nasenarbeit"; 28 -> "leinenfuehrigkeit"; 29 -> "begegnungssituationen"; 30 -> "stresstoleranztraining"; 31 -> "strassenroutinen"; 32 -> "hundekonflikte"; 33 -> "menschenkonflikte"; 34 -> "umweltkonflikte"; 35 -> "besitzerkonflikte"; 36 -> "tierschutzhunde"; 37 -> "hunde-mit-vorbesitzern"; 38 -> "kranke-hunde"; 39 -> "traumahunde"; 40 -> "erste-hilfe-set"; 41 -> "erste-hilfe-am-hund"; else -> "" }
-    private fun getCourseName(i: Int) = when(i) { 1 -> "Grundlagen"; 2 -> "Motivation"; 3 -> "Korrektur"; 4 -> "Harmonie"; 5 -> "Mentaltraining"; 6 -> "Körpersprache"; 7 -> "Sprachkommunikation"; 8 -> "Sinneswahrnehmung"; 9 -> "Teamarbeit"; 10 -> "Routinen"; 11 -> "Unfallschutz"; 12 -> "Junghundeprägung"; 13 -> "Leinenarbeit"; 14 -> "Unterbrechungen"; 15 -> "Fuss"; 16 -> "Sitz"; 17 -> "Platz"; 18 -> "Steh"; 19 -> "Sozialisierungstechniken"; 20 -> "Langleinentraining"; 21 -> "Distanzunterbrechungen"; 22 -> "Freilauf"; 23 -> "Freifolge"; 24 -> "Teamwalk"; 25 -> "Scouttechniken"; 26 -> "Jagdvermeidung"; 27 -> "Nasenarbeit"; 28 -> "Leinenfühigkeit"; 29 -> "Begegnungssituationen"; 30 -> "Stresstoleranztraining"; 31 -> "Strassenroutinen"; 32 -> "Hundekonflikte"; 33 -> "Menschenkonflikte"; 34 -> "Umweltkonflikte"; 35 -> "Besitzerkonflikte"; 36 -> "Tierschutzhunde"; 37 -> "Hunde mit Vorbesitzern"; 38 -> "Kranke Hunde"; 39 -> "Traumahunde"; 40 -> "Erste Hilfe Set"; 41 -> "Erste Hilfe am Hund"; else -> "" }
+    // Anzeigename: lokalisiert
+    private fun getCourseName(i: Int) = when(i) {
+        1 -> getString(R.string.main_course_name_01); 2 -> getString(R.string.main_course_name_02); 3 -> getString(R.string.main_course_name_03); 4 -> getString(R.string.main_course_name_04); 5 -> getString(R.string.main_course_name_05); 6 -> getString(R.string.main_course_name_06); 7 -> getString(R.string.main_course_name_07); 8 -> getString(R.string.main_course_name_08); 9 -> getString(R.string.main_course_name_09); 10 -> getString(R.string.main_course_name_10);
+        11 -> getString(R.string.main_course_name_11); 12 -> getString(R.string.main_course_name_12); 13 -> getString(R.string.main_course_name_13); 14 -> getString(R.string.main_course_name_14); 15 -> getString(R.string.main_course_name_15); 16 -> getString(R.string.main_course_name_16); 17 -> getString(R.string.main_course_name_17); 18 -> getString(R.string.main_course_name_18); 19 -> getString(R.string.main_course_name_19); 20 -> getString(R.string.main_course_name_20);
+        21 -> getString(R.string.main_course_name_21); 22 -> getString(R.string.main_course_name_22); 23 -> getString(R.string.main_course_name_23); 24 -> getString(R.string.main_course_name_24); 25 -> getString(R.string.main_course_name_25); 26 -> getString(R.string.main_course_name_26); 27 -> getString(R.string.main_course_name_27); 28 -> getString(R.string.main_course_name_28); 29 -> getString(R.string.main_course_name_29); 30 -> getString(R.string.main_course_name_30);
+        31 -> getString(R.string.main_course_name_31); 32 -> getString(R.string.main_course_name_32); 33 -> getString(R.string.main_course_name_33); 34 -> getString(R.string.main_course_name_34); 35 -> getString(R.string.main_course_name_35); 36 -> getString(R.string.main_course_name_36); 37 -> getString(R.string.main_course_name_37); 38 -> getString(R.string.main_course_name_38); 39 -> getString(R.string.main_course_name_39); 40 -> getString(R.string.main_course_name_40);
+        41 -> getString(R.string.main_course_name_41); else -> ""
+    }
 
     private fun openContent(item: ContentItem) {
         val intent = Intent(this, ContentActivity::class.java).apply {
@@ -451,7 +459,7 @@ class MainActivity : BaseBottomNavActivity() {
             if (contentCache.isCacheExpired()) loadContentFromNetwork(silent = true)
             return
         }
-        binding.progressBar.visibility = View.VISIBLE; binding.errorText.text = "Lade Inhalte...\n\n⏳ Circa 5 Sekunden.\n\nDanach startet die App sofort! 🚀"
+        binding.progressBar.visibility = View.VISIBLE; binding.errorText.text = getString(R.string.main_loading_content_message)
         binding.errorText.visibility = View.VISIBLE
         loadContentFromNetwork(silent = false)
     }
@@ -471,7 +479,7 @@ class MainActivity : BaseBottomNavActivity() {
                     contentCache.saveBlogPosts(result)
                 }
                 blogAdapter.submitList(result.take(20))
-                
+
                 // Scroll to top if this is a refresh
                 if (!silent) {
                     binding.blogRecyclerView.post {
@@ -485,9 +493,9 @@ class MainActivity : BaseBottomNavActivity() {
                     when (currentView) { VIEW_BLOG -> showBlogView(); VIEW_PAGES -> showPagesView(); VIEW_COURSES -> showCoursesView() }
                 }
             } catch (e: Exception) {
-                if (!silent) { 
+                if (!silent) {
                     binding.swipeRefreshLayout.isRefreshing = false
-                    binding.progressBar.visibility = View.GONE; binding.errorText.text = "Fehler: ${e.message}"; binding.errorText.visibility = View.VISIBLE 
+                    binding.progressBar.visibility = View.GONE; binding.errorText.text = getString(R.string.main_generic_error_format, e.message); binding.errorText.visibility = View.VISIBLE
                 }
             }
         }
@@ -520,7 +528,7 @@ class MainActivity : BaseBottomNavActivity() {
             R.id.action_imprint -> { openImprint(); true }
             R.id.action_about -> { showAboutDialog(); true }
             R.id.action_home -> { startActivity(Intent(this, StartActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP }); true }
-            R.id.action_backup_create -> { lifecycleScope.launch { val file = withContext(Dispatchers.IO) { BackupManager.createBackup(this@MainActivity) }; Toast.makeText(this@MainActivity, "Backup erstellt: ${file.name}", Toast.LENGTH_LONG).show() }; true }
+            R.id.action_backup_create -> { lifecycleScope.launch { val file = withContext(Dispatchers.IO) { BackupManager.createBackup(this@MainActivity) }; Toast.makeText(this@MainActivity, getString(R.string.main_toast_backup_created_format, file.name), Toast.LENGTH_LONG).show() }; true }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -528,7 +536,7 @@ class MainActivity : BaseBottomNavActivity() {
     private fun showCategoryFilterDialog() {
         Log.d("MainActivity", "showCategoryFilterDialog called, categories size: ${categories.size}")
         if (categories.isEmpty()) {
-            Toast.makeText(this, "Kategorien werden geladen...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.main_toast_categories_loading), Toast.LENGTH_SHORT).show()
             lifecycleScope.launch {
                 try {
                     val result = wordPressApi.loadCategories()
@@ -537,11 +545,11 @@ class MainActivity : BaseBottomNavActivity() {
                         categories = result
                         showCategoryFilterDialog()
                     } else {
-                        Toast.makeText(this@MainActivity, "Keine Kategorien gefunden.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.main_toast_categories_none_found), Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
                     Log.e("MainActivity", "Error loading categories", e)
-                    Toast.makeText(this@MainActivity, "Fehler beim Laden der Kategorien.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.main_toast_categories_load_error), Toast.LENGTH_SHORT).show()
                 }
             }
             return
@@ -553,14 +561,14 @@ class MainActivity : BaseBottomNavActivity() {
 
         try {
             AlertDialog.Builder(this)
-                .setTitle("📁 Kategorie wählen")
+                .setTitle(getString(R.string.main_category_dialog_title))
                 .setItems(categoryNames) { _, which ->
                     val selected = categories[which]
                     selectedCategoryId = selected.id
-                    binding.btnFilterCategories.text = "📂 ${selected.name}"
+                    binding.btnFilterCategories.text = getString(R.string.main_category_selected_format, selected.name)
                     loadContentFromNetwork(silent = false)
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
                 .apply {
                     getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
@@ -575,7 +583,7 @@ class MainActivity : BaseBottomNavActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
-        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("Verstanden", null).create()
+        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.main_button_understood), null).create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
     }
@@ -584,7 +592,7 @@ class MainActivity : BaseBottomNavActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
-        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton("OK", null).create()
+        val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.ok), null).create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
     }
@@ -592,22 +600,22 @@ class MainActivity : BaseBottomNavActivity() {
     private fun showAboutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_about, null)
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        
+
         val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val linkColor = if (isDark) Color.parseColor("#8fad6f") else Color.parseColor("#2d5016")
-        
+
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
         val tvWeb = dialogView.findViewById<TextView>(R.id.tvAboutWeb)
         val tvEmail = dialogView.findViewById<TextView>(R.id.tvAboutEmail)
         tvWeb.setTextColor(linkColor); tvEmail.setTextColor(linkColor)
-        
-        val versionName = try { packageManager.getPackageInfo(packageName, 0).versionName } catch (e: Exception) { "1.0.0" }
-        dialogView.findViewById<TextView>(R.id.tvAboutVersion).text = "Version $versionName"
-        
-        tvWeb.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.wildnislehrer.com"))) }
-        tvEmail.setOnClickListener { startActivity(Intent.createChooser(Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse("mailto:hundewildnisschuleapp@online.de"); putExtra(Intent.EXTRA_SUBJECT, "HundeWildnis App Feedback") }, "E-Mail senden")) }
 
-        val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton("Schließen", null).create()
+        val versionName = try { packageManager.getPackageInfo(packageName, 0).versionName } catch (e: Exception) { "1.0.0" }
+        dialogView.findViewById<TextView>(R.id.tvAboutVersion).text = getString(R.string.main_about_version_format, versionName)
+
+        tvWeb.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.wildnislehrer.com"))) }
+        tvEmail.setOnClickListener { startActivity(Intent.createChooser(Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse("mailto:hundewildnisschuleapp@online.de"); putExtra(Intent.EXTRA_SUBJECT, getString(R.string.main_about_email_subject)) }, getString(R.string.main_about_email_chooser_title))) }
+
+        val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton(getString(R.string.main_button_close), null).create()
         dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
     }
 
@@ -615,7 +623,7 @@ class MainActivity : BaseBottomNavActivity() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val appSettings = AppSettings(this)
         val view = layoutInflater.inflate(R.layout.dialog_settings, null)
-        
+
         val s1 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
         val s2 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchWifiOnly)
         val s3 = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchNotifications)
@@ -629,21 +637,21 @@ class MainActivity : BaseBottomNavActivity() {
 
         btnClearOrs.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("🗑️ Key löschen?")
-                .setMessage("Möchtest Du den gespeicherten API-Key wirklich entfernen?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.main_ors_key_delete_title))
+                .setMessage(getString(R.string.main_ors_key_delete_message))
+                .setPositiveButton(getString(R.string.main_ors_key_delete_confirm)) { _, _ ->
                     appSettings.clearOrsApiKey()
                     orsEdit.setText("")
-                    Toast.makeText(this, "Key gelöscht", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.main_toast_key_deleted), Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
 
         s1.isChecked = prefs.getBoolean("background_updates_enabled", true)
         s2.isChecked = prefs.getBoolean("background_updates_wifi_only", false)
         s3.isChecked = prefs.getBoolean("notifications_enabled", true)
-        
+
         // Aktuellen Key (falls vorhanden) im Feld anzeigen (verschleiert)
         if (appSettings.hasCustomOrsKey()) {
             orsEdit.setText("********")
@@ -653,16 +661,16 @@ class MainActivity : BaseBottomNavActivity() {
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val csl = android.content.res.ColorStateList.valueOf(color)
         listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
-        
+
         s1.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_enabled", isChecked).apply(); if (isChecked) UpdateHelper.scheduleContentUpdates(this) else WorkManager.getInstance(applicationContext).cancelUniqueWork("content_updates_morning"); s2.isEnabled = isChecked; s3.isEnabled = isChecked }
         s2.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("background_updates_wifi_only", isChecked).apply(); UpdateHelper.scheduleContentUpdates(this) }
         s3.setOnCheckedChangeListener { _, isChecked -> prefs.edit().putBoolean("notifications_enabled", isChecked).apply() }
         s2.isEnabled = s1.isChecked; s3.isEnabled = s1.isChecked
-        
+
         val dialog = AlertDialog.Builder(this)
-            .setTitle("⚙️ Einstellungen")
+            .setTitle(getString(R.string.main_settings_dialog_title))
             .setView(view)
-            .setPositiveButton("Fertig") { _, _ ->
+            .setPositiveButton(getString(R.string.main_button_done)) { _, _ ->
                 val newKey = orsEdit.text?.toString() ?: ""
                 if (newKey.isNotBlank() && newKey != "********") {
                     appSettings.saveOrsApiKey(newKey)
@@ -676,14 +684,9 @@ class MainActivity : BaseBottomNavActivity() {
         val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
-            .setTitle("ORS API Key")
-            .setMessage("Um die Routenberechnung (Routing) nutzen zu können, benötigst Du einen kostenlosen API-Key von OpenRouteService.\n\n" +
-                    "Anleitung:\n" +
-                    "1. Registriere Dich auf https://openrouteservice.org (HeiGIT gGmbH).\n" +
-                    "2. Erstelle unter 'Tokens' einen neuen API-Key.\n" +
-                    "3. Kopiere diesen Key und füge ihn hier ein.\n\n" +
-                    "Hinweis: Ohne gültigen Key kann bei der Navigation nur die direkte Luftlinie zwischen zwei Punkten angezeigt werden.")
-            .setPositiveButton("OK", null)
+            .setTitle(getString(R.string.main_ors_info_title))
+            .setMessage(getString(R.string.main_ors_info_message))
+            .setPositiveButton(getString(R.string.ok), null)
             .create()
             .apply {
                 show()
@@ -691,7 +694,7 @@ class MainActivity : BaseBottomNavActivity() {
             }
     }
 
-    private fun openPrivacyPolicy() { openUrl("https://wildnislehrer.com/datenschutzerklaerung/", "Datenschutzerklärung") }
+    private fun openPrivacyPolicy() { openUrl("https://wildnislehrer.com/datenschutzerklaerung/", getString(R.string.main_link_title_datenschutz)) }
     private fun openImprint() { startActivity(Intent(this, ImprintActivity::class.java)) }
     private fun loadThemePreference() { if (getSharedPreferences("theme_prefs", MODE_PRIVATE).getBoolean("is_dark_mode", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
     private fun toggleTheme() {
@@ -708,15 +711,15 @@ class MainActivity : BaseBottomNavActivity() {
                 val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
                 val dialog = AlertDialog.Builder(this)
-                    .setTitle("🔔 Benachrichtigungen aktivieren?")
-                    .setMessage("Möchtest Du über neue Artikel im Blog informiert werden? \n\nZudem können Dich der Tempo-Trainer und der Sprach-Trainer auch bei ausgeschaltetem Display zuverlässig im Training unterstützen. Benachrichtigungen können jederzeit in den Systemeinstellungen für die App deaktiviert oder lautlos gestellt werden")
-                    .setPositiveButton("Ja, aktivieren") { _, _ -> 
+                    .setTitle(getString(R.string.main_notification_permission_title))
+                    .setMessage(getString(R.string.main_notification_permission_message))
+                    .setPositiveButton(getString(R.string.main_notification_permission_confirm)) { _, _ ->
                         prefs.edit().putBoolean("notification_permission_asked", true).apply()
-                        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001) 
+                        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
                     }
-                    .setNegativeButton("Nicht jetzt") { _, _ -> 
+                    .setNegativeButton(getString(R.string.main_notification_permission_decline)) { _, _ ->
                         prefs.edit().putBoolean("notification_permission_asked", true).apply()
-                        prefs.edit().putBoolean("notifications_enabled", false).apply() 
+                        prefs.edit().putBoolean("notifications_enabled", false).apply()
                     }
                     .create()
                 dialog.show()

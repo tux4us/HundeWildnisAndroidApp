@@ -1,5 +1,6 @@
 package com.hundewildnis.app
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,14 +37,15 @@ class ForecastAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        val context = holder.itemView.context
 
         holder.timeText.text = item.time
-        holder.tempText.text = String.format("%.0f°C", item.temperature)
+        holder.tempText.text = context.getString(R.string.weather_degree_celsius, item.temperature)
 
-        val (_, icon) = getWeatherDescription(item.weatherCode)
+        val (_, icon) = getWeatherDescription(context, item.weatherCode)
         holder.iconText.text = icon
 
-        holder.rainText.text = "💧 ${item.precipitation.toInt()}%"
+        holder.rainText.text = context.getString(R.string.weather_rain_percent, item.precipitation.toInt())
 
         // NEU: Klickbar machen
         holder.itemView.setOnClickListener {
@@ -62,20 +64,35 @@ class ForecastAdapter(
 
     override fun getItemCount() = items.size
 
-    private fun getWeatherDescription(code: Int): Pair<String, String> {
-        return when (code) {
-            0 -> "Klar" to "☀️"
-            1, 2, 3 -> "Bewölkt" to "⛅"
-            45, 48 -> "Nebel" to "🌫️"
-            51, 53, 55 -> "Nieselregen" to "🌦️"
-            61, 63, 65 -> "Regen" to "🌧️"
-            71, 73, 75 -> "Schneefall" to "🌨️"
-            77 -> "Graupel" to "🌨️"
-            80, 81, 82 -> "Regenschauer" to "🌦️"
-            85, 86 -> "Schneeschauer" to "🌨️"
-            95 -> "Gewitter" to "⛈️"
-            96, 99 -> "Gewitter mit Hagel" to "⛈️"
-            else -> "Unbekannt" to "🌡️"
+    private fun getWeatherDescription(context: Context, code: Int): Pair<String, String> {
+        val resId = when (code) {
+            0            -> R.string.weather_desc_clear
+            1, 2, 3      -> R.string.weather_desc_cloudy
+            45, 48       -> R.string.weather_desc_fog
+            51, 53, 55   -> R.string.weather_desc_light_drizzle
+            61, 63, 65   -> R.string.weather_desc_light_rain
+            71, 73, 75   -> R.string.weather_desc_light_snow
+            77           -> R.string.weather_desc_snow_grains
+            80, 81, 82   -> R.string.weather_desc_light_showers
+            85, 86       -> R.string.weather_desc_light_snow_showers
+            95           -> R.string.weather_desc_thunderstorm
+            96, 99       -> R.string.weather_desc_thunderstorm_light_hail
+            else         -> R.string.weather_unknown
         }
+        val icon = when (code) {
+            0            -> "☀️"
+            1, 2, 3      -> "⛅"
+            45, 48       -> "🌫️"
+            51, 53, 55   -> "🌦️"
+            61, 63, 65   -> "🌧️"
+            71, 73, 75   -> "🌨️"
+            77           -> "🌨️"
+            80, 81, 82   -> "🌦️"
+            85, 86       -> "🌨️"
+            95           -> "⛈️"
+            96, 99       -> "⛈️"
+            else         -> "🌡️"
+        }
+        return context.getString(resId) to icon
     }
 }

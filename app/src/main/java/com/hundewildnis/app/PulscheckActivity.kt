@@ -42,13 +42,13 @@ class PulscheckActivity : SecureBaseActivity() {
             ?: intent.getParcelableExtra("profile")
 
         if (profile == null) {
-            Toast.makeText(this, "Fehler: Kein Profil gefunden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pulscheck_error_no_profile), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "❤️ Pulscheck – ${profile!!.name}"
+        supportActionBar?.title = getString(R.string.pulscheck_toolbar_title_format, profile!!.name)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
@@ -67,25 +67,25 @@ class PulscheckActivity : SecureBaseActivity() {
 
     private fun setupPulseReference() {
         val heightCm = profile?.shoulderHeight?.trim()?.toIntOrNull()
-        binding.tvPulseReference.text = VitalRecord.pulseReferenceText(heightCm)
+        binding.tvPulseReference.text = VitalRecord.pulseReferenceText(this, heightCm)
     }
 
     private fun setupSpinners() {
         // Belastungsszenario
-        val scenarioItems = listOf("– Bitte wählen –") + VitalRecord.LOAD_SCENARIOS
+        val scenarioItems = listOf(getString(R.string.pulscheck_spinner_please_choose)) + VitalRecord.loadScenarios(this)
         binding.spinnerLoadScenario.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, scenarioItems
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
         binding.spinnerLoadScenario.setSelection(1) // "Ruhe" als Default
 
         // Schleimhautfarbe
-        val colorItems = listOf("– nicht gemessen –") + VitalRecord.MUCOUS_MEMBRANE_COLORS
+        val colorItems = listOf(getString(R.string.pulscheck_spinner_not_measured)) + VitalRecord.mucousMembraneColors(this)
         binding.spinnerMucousColor.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, colorItems
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
         // Bewusstsein
-        val consciousnessItems = listOf("– nicht beurteilt –") + VitalRecord.CONSCIOUSNESS_LEVELS
+        val consciousnessItems = listOf(getString(R.string.pulscheck_spinner_not_assessed)) + VitalRecord.consciousnessLevels(this)
         binding.spinnerConsciousness.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, consciousnessItems
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
@@ -105,7 +105,7 @@ class PulscheckActivity : SecureBaseActivity() {
             pulseTimer?.cancel()
             pulseTimerRunning = false
             binding.tvPulseTimer.text = "15"
-            binding.btnStartPulseTimer.text = "▶ Timer starten"
+            binding.btnStartPulseTimer.text = getString(R.string.pulscheck_btn_start_timer)
         } else {
             startPulseTimer()
         }
@@ -113,8 +113,8 @@ class PulscheckActivity : SecureBaseActivity() {
 
     private fun startPulseTimer() {
         pulseTimerRunning = true
-        binding.btnStartPulseTimer.text = "⏹ Abbrechen"
-        binding.tvPulseTimerHint.text = "Jetzt Schläge zählen …"
+        binding.btnStartPulseTimer.text = getString(R.string.pulscheck_btn_cancel_timer)
+        binding.tvPulseTimerHint.text = getString(R.string.pulscheck_pulse_timer_hint_counting)
 
         pulseTimer = object : CountDownTimer(15_000, 1_000) {
             override fun onTick(ms: Long) {
@@ -123,8 +123,8 @@ class PulscheckActivity : SecureBaseActivity() {
             override fun onFinish() {
                 pulseTimerRunning = false
                 binding.tvPulseTimer.text = "✓"
-                binding.tvPulseTimerHint.text = "Gezählte Schläge eingeben → × 4 = Herzfrequenz/min"
-                binding.btnStartPulseTimer.text = "▶ Timer erneut starten"
+                binding.tvPulseTimerHint.text = getString(R.string.pulscheck_pulse_timer_hint_result)
+                binding.btnStartPulseTimer.text = getString(R.string.pulscheck_btn_restart_timer)
                 binding.etPulseBeats.requestFocus()
             }
         }.start()
@@ -135,7 +135,7 @@ class PulscheckActivity : SecureBaseActivity() {
             respTimer?.cancel()
             respTimerRunning = false
             binding.tvRespTimer.text = "15"
-            binding.btnStartRespTimer.text = "▶ Timer starten"
+            binding.btnStartRespTimer.text = getString(R.string.pulscheck_btn_start_timer)
         } else {
             startRespTimer()
         }
@@ -143,7 +143,7 @@ class PulscheckActivity : SecureBaseActivity() {
 
     private fun startRespTimer() {
         respTimerRunning = true
-        binding.btnStartRespTimer.text = "⏹ Abbrechen"
+        binding.btnStartRespTimer.text = getString(R.string.pulscheck_btn_cancel_timer)
 
         respTimer = object : CountDownTimer(15_000, 1_000) {
             override fun onTick(ms: Long) {
@@ -152,7 +152,7 @@ class PulscheckActivity : SecureBaseActivity() {
             override fun onFinish() {
                 respTimerRunning = false
                 binding.tvRespTimer.text = "✓"
-                binding.btnStartRespTimer.text = "▶ Timer erneut starten"
+                binding.btnStartRespTimer.text = getString(R.string.pulscheck_btn_restart_timer)
                 binding.etRespBeats.requestFocus()
             }
         }.start()
@@ -200,19 +200,19 @@ class PulscheckActivity : SecureBaseActivity() {
         binding.tvPulseBadge.visibility = View.VISIBLE
         when (status) {
             PulseStatus.NORMAL -> {
-                binding.tvPulseBadge.text = "✅ Im Normalbereich"
+                binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_normal)
                 binding.tvPulseBadge.setTextColor(Color.parseColor("#2d5016"))
             }
             PulseStatus.LOW -> {
-                binding.tvPulseBadge.text = "⚠️ Unterhalb des Normalbereichs – Tierarzt konsultieren"
+                binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_low)
                 binding.tvPulseBadge.setTextColor(Color.parseColor("#E65100"))
             }
             PulseStatus.HIGH -> {
-                binding.tvPulseBadge.text = "⚠️ Oberhalb des Normalbereichs – Tierarzt konsultieren"
+                binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_high)
                 binding.tvPulseBadge.setTextColor(Color.parseColor("#B00020"))
             }
             PulseStatus.UNKNOWN -> {
-                binding.tvPulseBadge.text = "ℹ️ Schulterhöhe in Stammdaten eintragen für Beurteilung"
+                binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_unknown)
                 binding.tvPulseBadge.setTextColor(Color.parseColor("#555555"))
             }
         }
@@ -263,10 +263,10 @@ class PulscheckActivity : SecureBaseActivity() {
                 btn.strokeColor = android.content.res.ColorStateList.valueOf(Color.WHITE)
 
                 val hint = when (value) {
-                    1 -> "Ausgewählt: 1s — Normal"
-                    2 -> "Ausgewählt: 2s — Normal (Grenzwert)"
-                    3 -> "Ausgewählt: 3s — Verlängert, beobachten"
-                    else -> "Ausgewählt: >3s — Deutlich verlängert → Tierarzt"
+                    1 -> getString(R.string.pulscheck_crt_selected_1s)
+                    2 -> getString(R.string.pulscheck_crt_selected_2s)
+                    3 -> getString(R.string.pulscheck_crt_selected_3s)
+                    else -> getString(R.string.pulscheck_crt_selected_over_3s)
                 }
                 binding.tvCrtSelected.text = hint
             }
@@ -279,12 +279,12 @@ class PulscheckActivity : SecureBaseActivity() {
 
     private fun setupActionButtons() {
         updateActionGrids()
-        
+
         // History Grid
         val colorsHistory = StartGroupColors.forGroup(this, 5) // Violett
         binding.gridPulsHistory.layoutManager = GridLayoutManager(this, 1)
         binding.gridPulsHistory.adapter = StartTileAdapter(
-            tiles = listOf(StartTile("puls_history", R.drawable.ic_notes, "📋 Alle Messungen anzeigen")),
+            tiles = listOf(StartTile("puls_history", R.drawable.ic_notes, getString(R.string.pulscheck_tile_show_all_measurements))),
             chipColorRes = colorsHistory.chipColorRes,
             accentColorRes = colorsHistory.accentColorRes,
             onTileClick = { viewHistory() }
@@ -293,10 +293,10 @@ class PulscheckActivity : SecureBaseActivity() {
 
     private fun updateActionGrids() {
         val actions = mutableListOf<StartTile>()
-        actions.add(StartTile("puls_save", R.drawable.ic_notes, "💾 Messung speichern"))
-        
+        actions.add(StartTile("puls_save", R.drawable.ic_notes, getString(R.string.pulscheck_tile_save_measurement)))
+
         if (savedRecord != null) {
-            actions.add(StartTile("puls_emergency", R.drawable.ic_emergency, "🚨 Notfallmeldung", isDanger = true))
+            actions.add(StartTile("puls_emergency", R.drawable.ic_emergency, getString(R.string.pulscheck_tile_emergency_report), isDanger = true))
         }
 
         val colorsActions = StartGroupColors.forGroup(this, 2) // Grün
@@ -326,7 +326,7 @@ class PulscheckActivity : SecureBaseActivity() {
             ?: binding.etPulseBeats.text?.toString()?.toIntOrNull()?.let { it * 4 }
 
         if (pulse == null || pulse <= 0) {
-            Toast.makeText(this, "Bitte mindestens die Herzfrequenz eingeben.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pulscheck_toast_pulse_required), Toast.LENGTH_SHORT).show()
             return null
         }
 
@@ -337,16 +337,19 @@ class PulscheckActivity : SecureBaseActivity() {
             ?.replace(",", ".")?.toDoubleOrNull()
 
         val loadScenarioIndex = binding.spinnerLoadScenario.selectedItemPosition
+        val loadScenarioOptions = VitalRecord.loadScenarios(this)
         val loadScenario = if (loadScenarioIndex > 0)
-            VitalRecord.LOAD_SCENARIOS[loadScenarioIndex - 1] else "Ruhe"
+            loadScenarioOptions[loadScenarioIndex - 1] else VitalRecord.loadScenarioRestKey()
 
         val mucousColorIndex = binding.spinnerMucousColor.selectedItemPosition
+        val mucousColorOptions = VitalRecord.mucousMembraneColors(this)
         val mucousColor = if (mucousColorIndex > 0)
-            VitalRecord.MUCOUS_MEMBRANE_COLORS[mucousColorIndex - 1] else null
+            mucousColorOptions[mucousColorIndex - 1] else null
 
         val consciousnessIndex = binding.spinnerConsciousness.selectedItemPosition
+        val consciousnessOptions = VitalRecord.consciousnessLevels(this)
         val consciousness = if (consciousnessIndex > 0)
-            VitalRecord.CONSCIOUSNESS_LEVELS[consciousnessIndex - 1] else null
+            consciousnessOptions[consciousnessIndex - 1] else null
 
         return VitalRecord(
             dogId = profile!!.id,
@@ -368,7 +371,7 @@ class PulscheckActivity : SecureBaseActivity() {
         VitalManager.save(this, record)
         savedRecord = record
 
-        Toast.makeText(this, "✅ Messung gespeichert", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.pulscheck_toast_saved), Toast.LENGTH_SHORT).show()
 
         // Grids aktualisieren (um Notfall-Button zu zeigen)
         updateActionGrids()
@@ -388,17 +391,17 @@ class PulscheckActivity : SecureBaseActivity() {
 
         val msg = when (status) {
             PulseStatus.HIGH ->
-                "Der gemessene Puls von ${record.pulse} /min liegt oberhalb des Normalbereichs.\n\nBei anhaltend erhöhter Herzfrequenz, Atemnot oder Erschöpfung bitte einen Tierarzt aufsuchen."
+                getString(R.string.pulscheck_dialog_msg_high, record.pulse)
             PulseStatus.LOW ->
-                "Der gemessene Puls von ${record.pulse} /min liegt unterhalb des Normalbereichs.\n\nBei Schwäche, Bewusstseinstrübung oder anderen Auffälligkeiten bitte einen Tierarzt aufsuchen."
+                getString(R.string.pulscheck_dialog_msg_low, record.pulse)
             else -> return
         }
 
         AlertDialog.Builder(this)
-            .setTitle("⚠️ Auffälliger Puls")
+            .setTitle(getString(R.string.pulscheck_dialog_title_abnormal))
             .setMessage(msg)
-            .setPositiveButton("Verstanden", null)
-            .setNeutralButton("🚨 Notfallmeldung") { _, _ -> transferToEmergency() }
+            .setPositiveButton(getString(R.string.pulscheck_dialog_btn_understood), null)
+            .setNeutralButton(getString(R.string.pulscheck_dialog_btn_emergency_report)) { _, _ -> transferToEmergency() }
             .create()
             .apply {
                 show()
@@ -411,23 +414,23 @@ class PulscheckActivity : SecureBaseActivity() {
         val record = savedRecord ?: collectRecord()
 
         if (record == null) {
-            Toast.makeText(this, "Bitte zuerst eine Messung speichern.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pulscheck_toast_save_first), Toast.LENGTH_SHORT).show()
             return
         }
 
         // Notiz mit Vitalwerten vorbauen
         val vitalText = buildString {
-            appendLine("=== Vitalwerte ===")
-            appendLine("Puls: ${record.pulse} /min")
-            record.respiration?.let { appendLine("Atemfrequenz: $it /min") }
-            record.temperature?.let { appendLine("Temperatur: ${"%.1f".format(it)} °C") }
-            record.capillaryRefillTime?.let { appendLine("Kapillarfüllzeit: ${it}s") }
-            record.mucousMembraneColor?.let { appendLine("Schleimhautfarbe: $it") }
-            record.consciousnessLevel?.let { appendLine("Bewusstsein: $it") }
-            appendLine("Belastung: ${record.loadScenario}")
+            appendLine(getString(R.string.pulscheck_emergency_header))
+            appendLine(getString(R.string.pulscheck_emergency_pulse_line, record.pulse))
+            record.respiration?.let { appendLine(getString(R.string.pulscheck_emergency_respiration_line, it)) }
+            record.temperature?.let { appendLine(getString(R.string.pulscheck_emergency_temperature_line, "%.1f".format(it))) }
+            record.capillaryRefillTime?.let { appendLine(getString(R.string.pulscheck_emergency_crt_line, it)) }
+            record.mucousMembraneColor?.let { appendLine(getString(R.string.pulscheck_emergency_mucous_color_line, it)) }
+            record.consciousnessLevel?.let { appendLine(getString(R.string.pulscheck_emergency_consciousness_line, it)) }
+            appendLine(getString(R.string.pulscheck_emergency_load_line, record.loadScenario))
             if (record.notes.isNotBlank()) {
                 appendLine()
-                appendLine("Notizen: ${record.notes}")
+                appendLine(getString(R.string.pulscheck_emergency_notes_line, record.notes))
             }
         }
 

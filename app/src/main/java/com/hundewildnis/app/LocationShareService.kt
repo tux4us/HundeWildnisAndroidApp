@@ -96,11 +96,11 @@ class LocationShareService : Service(), LocationListener {
             ServiceCompat.startForeground(
                 this,
                 NOTIFICATION_ID,
-                buildNotification("Standortfreigabe aktiv"),
+                buildNotification(getString(R.string.location_share_notification_active)),
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
             )
         } else {
-            startForeground(NOTIFICATION_ID, buildNotification("Standortfreigabe aktiv"))
+            startForeground(NOTIFICATION_ID, buildNotification(getString(R.string.location_share_notification_active)))
         }
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -204,7 +204,7 @@ class LocationShareService : Service(), LocationListener {
             while (isActive) {
                 val now = System.currentTimeMillis()
                 val location = lastLocation
-                
+
                 if (location != null) {
                     val lastUploaded = lastUploadedLocation
                     val timeSinceLastUpload = now - lastUploadTime
@@ -230,7 +230,7 @@ class LocationShareService : Service(), LocationListener {
     private suspend fun uploadLocation(location: Location) {
         // Überlappende Uploads vermeiden
         if (!uploadMutex.tryLock()) return
-        
+
         // WakeLock nur für die Dauer des Uploads halten (max 60s)
         acquireWakeLock(60_000L)
 
@@ -272,7 +272,7 @@ class LocationShareService : Service(), LocationListener {
                 lastUploadedLocation = location
                 lastUploadTime = System.currentTimeMillis()
                 Log.d(TAG, "Standort erfolgreich hochgeladen: $remotePath")
-                updateNotification("Standort aktualisiert: ${formatTime(payload.timestamp)}")
+                updateNotification(getString(R.string.location_share_notification_updated_format, formatTime(payload.timestamp)))
             } else {
                 Log.e(TAG, "Upload fehlgeschlagen: ${result.exceptionOrNull()?.message}")
             }
@@ -300,9 +300,9 @@ class LocationShareService : Service(), LocationListener {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                CHANNEL_ID, "Standortfreigabe", NotificationManager.IMPORTANCE_LOW
+                CHANNEL_ID, getString(R.string.location_share_notification_channel_name), NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Zeigt an, dass dein Standort für andere Teilnehmer sichtbar ist."
+                description = getString(R.string.location_share_notification_channel_description)
             }
             notificationManager.createNotificationChannel(channel)
         }
@@ -313,7 +313,7 @@ class LocationShareService : Service(), LocationListener {
             this, 0, Intent(this, LocationShareActivity::class.java), PendingIntent.FLAG_IMMUTABLE
         )
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("📍 Standortfreigabe")
+            .setContentTitle(getString(R.string.location_share_toolbar_title))
             .setContentText(text)
             .setSmallIcon(R.drawable.ic_my_location)
             .setPriority(NotificationCompat.PRIORITY_LOW)

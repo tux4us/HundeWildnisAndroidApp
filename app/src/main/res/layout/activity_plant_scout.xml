@@ -91,7 +91,7 @@
                     android:id="@+id/etSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="🔍 Pflanze suchen …"
+                    android:hint="@string/plant_scout_search_hint"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:singleLine="true" />
@@ -122,7 +122,7 @@
             android:id="@+id/tvEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Keine Pflanze gefunden."
+            android:text="@string/plant_scout_empty_hint"
             android:gravity="center"
             android:padding="@dimen/padding_xlarge"
             android:textSize="@dimen/text_body_medium"
