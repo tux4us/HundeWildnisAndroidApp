@@ -45,11 +45,12 @@ object NasenarbeitManager {
     }
 
     fun deleteSession(context: Context, sessionId: String) {
-        val sessions = loadSessions(context).filter { it.id != sessionId }.toMutableList()
-        saveSessions(context, sessions)
+        val allSessions = loadSessions(context)
+        // dogId VOR dem Filtern ermitteln - danach ist die Session nicht mehr auffindbar
+        val dogId = allSessions.find { it.id == sessionId }?.dogId
+        saveSessions(context, allSessions.filter { it.id != sessionId }.toMutableList())
         // Recalculate fortschritt for affected dog
-        val dogId = loadSessions(context).find { it.id == sessionId }?.dogId ?: return
-        recalcFortschritt(context, dogId)
+        if (dogId != null) recalcFortschritt(context, dogId)
     }
 
     // ── FORTSCHRITT ───────────────────────────────────────────

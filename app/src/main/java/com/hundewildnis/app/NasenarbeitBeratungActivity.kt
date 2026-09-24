@@ -150,6 +150,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 mapWeights = data.getDoubleArrayExtra(
                     NasenarbeitMapActivity.RESULT_WEIGHTS) ?: doubleArrayOf()
 
+                // Bei jedem neuen Kartenergebnis die abgeleiteten Sequenzen zurücksetzen,
+                // damit buildGelaendeScreen() sie garantiert mit den NEUEN Kartendaten
+                // neu befüllt (statt alte Werte von einem vorherigen Kartenaufruf zu behalten).
+                topoSequenz.clear()
+                umbSequenz.clear()
+                bodenEntries.clear()
+
                 showScreen(2)
                 buildGelaendeScreen()
 
@@ -186,7 +193,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         setContentView(binding.root)
 
         @Suppress("DEPRECATION")
-        profile = intent.getParcelableExtra("profile")!!
+        val loadedProfile = intent.getParcelableExtra<DogProfile>("profile")
+        if (loadedProfile == null) {
+            Toast.makeText(this, getString(R.string.pulscheck_error_no_profile), Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        profile = loadedProfile
         fortschritt = NasenarbeitManager.loadFortschrittForDog(this, profile.id)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -394,14 +407,47 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     // SCREEN 2 – GELÄNDE
     // ════════════════════════════════════════════════════════════
 
+    /**
+     * Normalisiert einen von NasenarbeitMapActivity gelieferten Topografie-Wert auf einen
+     * der stabilen deutschen TOPO_OPTIONS-Werte, unabhängig von der aktuellen App-Sprache.
+     * NasenarbeitMapActivity.classifyTopoFromSlope() liefert lokalisierte getString()-Werte
+     * (z.B. Englisch bei values-en) — ein reiner TOPO_OPTIONS.contains()-Abgleich auf die
+     * hartcodierten deutschen Literale schlägt dann fehl und alles würde zu "Eben".
+     */
+    private fun normalizeMapTopoValue(value: String): String {
+        if (TOPO_OPTIONS.contains(value)) return value
+        val localizedKeys = listOf(
+            R.string.nasenarbeit_opt_topo_eben, R.string.nasenarbeit_opt_topo_steigung,
+            R.string.nasenarbeit_opt_topo_steil, R.string.nasenarbeit_opt_topo_kuppe,
+            R.string.nasenarbeit_opt_topo_hang, R.string.nasenarbeit_opt_topo_mulde,
+            R.string.nasenarbeit_opt_topo_relief, R.string.nasenarbeit_opt_topo_fels
+        )
+        val idx = localizedKeys.indexOfFirst { getString(it) == value }
+        return if (idx >= 0) TOPO_OPTIONS[idx] else "Eben"
+    }
+
+    /**
+     * Analog zu normalizeMapTopoValue(), für Umgebungs-Werte aus der Kartenauswahl.
+     */
+    private fun normalizeMapUmgebungValue(value: String): String {
+        if (UMB_OPTIONS.contains(value)) return value
+        val localizedKeys = listOf(
+            R.string.nasenarbeit_opt_umb_offen, R.string.nasenarbeit_opt_umb_wald,
+            R.string.nasenarbeit_opt_umb_gruen, R.string.nasenarbeit_opt_umb_urban,
+            R.string.nasenarbeit_opt_umb_industrie, R.string.nasenarbeit_opt_umb_dorf,
+            R.string.nasenarbeit_opt_umb_park, R.string.nasenarbeit_opt_umb_misch
+        )
+        val idx = localizedKeys.indexOfFirst { getString(it) == value }
+        return if (idx >= 0) UMB_OPTIONS[idx] else "Offenes Gelände"
+    }
+
     private fun buildGelaendeScreen() {
         // ── Karten-Daten ZUERST einfüllen, dann erst rendern ──────
 
         // Phase 3: Topografie aus Karte pre-fill (vor renderTopoSel!)
         if (mapTopo.isNotEmpty() && topoSequenz.isEmpty()) {
             mapTopo.forEach { topo ->
-                val normalized = if (TOPO_OPTIONS.contains(topo)) topo else "Eben"
-                topoSequenz.add(normalized)
+                topoSequenz.add(normalizeMapTopoValue(topo))
             }
             android.widget.Toast.makeText(
                 this,
@@ -415,8 +461,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         // Phase 2: Umgebung aus Karte pre-fill (vor renderUmbSel!)
         if (mapUmgebung.isNotEmpty() && umbSequenz.isEmpty()) {
             mapUmgebung.forEach { umb ->
-                val normalized = if (UMB_OPTIONS.contains(umb)) umb else "Offenes Gelände"
-                umbSequenz.add(normalized)
+                umbSequenz.add(normalizeMapUmgebungValue(umb))
             }
             bodenEntries.clear()
         }
@@ -905,6 +950,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
         // Button listeners
         // Tab listener for Block 5
+        // clearOnTabSelectedListeners() verhindert, dass sich bei mehrfachem Aufruf von
+        // buildAndShowResult() im selben Activity-Objekt (z.B. nach resetAndRestart())
+        // Listener kumulativ aufsummieren und showB5Tab() mehrfach pro Klick feuert.
+        binding.tabLayoutB5.clearOnTabSelectedListeners()
         binding.tabLayoutB5.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab?) {
                 val t = when(tab?.position) {
@@ -957,8 +1006,11 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         val recP  = (baseP  * mult).toInt().coerceAtMost(gebietSchritte)
         val recFl = (baseFl * mult).coerceAtMost(gebietHa)
 
+        // fortschritt.gesamtSessions statt der Slider-Werte (perfV/perfP/perfFl) heranziehen:
+        // die Slider können vom Nutzer manuell auf 0 gestellt werden, auch wenn bereits
+        // Sessions existieren - das darf den "(Startwert)"-Hinweis nicht fälschlich auslösen.
         val isFirstSession = letzteEinheit == getString(R.string.nasenarbeit_beratung_last_none) ||
-                (perfV <= 0 && perfP <= 0 && perfFl <= 0)
+                fortschritt.gesamtSessions == 0
         val starterHint = if (isFirstSession) " (Startwert)" else ""
 
         val recStr = when (result.primaer) {

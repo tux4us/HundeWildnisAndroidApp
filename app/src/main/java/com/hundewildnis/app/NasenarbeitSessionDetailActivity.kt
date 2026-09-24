@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.hundewildnis.app.databinding.ActivityNasenarbeitSessionDetailBinding
 import java.text.SimpleDateFormat
@@ -22,9 +23,16 @@ class NasenarbeitSessionDetailActivity : SecureBaseActivity() {
         setContentView(binding.root)
 
         @Suppress("DEPRECATION")
-        session = intent.getParcelableExtra("session")!!
+        val loadedSession = intent.getParcelableExtra<NasenarbeitSession>("session")
         @Suppress("DEPRECATION")
-        profile = intent.getParcelableExtra("profile")!!
+        val loadedProfile = intent.getParcelableExtra<DogProfile>("profile")
+        if (loadedSession == null || loadedProfile == null) {
+            Toast.makeText(this, getString(R.string.pulscheck_error_no_profile), Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        session = loadedSession
+        profile = loadedProfile
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -60,9 +60,16 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         setContentView(binding.root)
 
         @Suppress("DEPRECATION")
-        profile   = intent.getParcelableExtra("profile")!!
+        val loadedProfile = intent.getParcelableExtra<DogProfile>("profile")
         @Suppress("DEPRECATION")
-        parameter = intent.getParcelableExtra("parameter")!!
+        val loadedParameter = intent.getParcelableExtra<NasenarbeitParameter>("parameter")
+        if (loadedProfile == null || loadedParameter == null) {
+            Toast.makeText(this, getString(R.string.pulscheck_error_no_profile), Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        profile   = loadedProfile
+        parameter = loadedParameter
         scoreV    = intent.getDoubleExtra("scoring_v", 0.0)
         scoreP    = intent.getDoubleExtra("scoring_p", 0.0)
         scoreF    = intent.getDoubleExtra("scoring_f", 0.0)
@@ -274,8 +281,14 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         NasenarbeitManager.addSession(this, session)
 
         // PDF Export in den öffentlichen Dokumenten-Ordner
+        // Session ist bereits gespeichert (addSession() oben) - ein PDF-Fehler darf den
+        // Nutzer nicht auf diesem Screen hängen lassen, daher try/catch um den Export.
         lifecycleScope.launch(Dispatchers.IO) {
-            val file = NasenarbeitPDFGenerator.generateSessionPDF(this@NasenarbeitErgebnisActivity, session, profile, saveToPublic = true)
+            val file = try {
+                NasenarbeitPDFGenerator.generateSessionPDF(this@NasenarbeitErgebnisActivity, session, profile, saveToPublic = true)
+            } catch (e: Exception) {
+                null
+            }
             withContext(Dispatchers.Main) {
                 if (file != null) {
                     Toast.makeText(this@NasenarbeitErgebnisActivity, getString(R.string.nasenarbeit_export_pdf_success), Toast.LENGTH_LONG).show()

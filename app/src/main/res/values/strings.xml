@@ -2979,6 +2979,7 @@
     <!-- Nasenarbeit Hund -->
     <string name="nasenarbeit_hund_toolbar_title">🐾 %1$s – Nasenarbeit</string>
     <string name="nasenarbeit_hund_btn_new">🐾 Neues Training starten</string>
+    <string name="nasenarbeit_hund_btn_trend">📈 Trend-Auswertung</string>
     <string name="nasenarbeit_hund_header_sessions">Trainingssessions</string>
     <string name="nasenarbeit_hund_no_sessions">Noch keine Sessions vorhanden.\nStarte dein erstes Training!</string>
     <string name="nasenarbeit_hund_delete_session_title">Session löschen?</string>
@@ -2986,6 +2987,29 @@
     <string name="nasenarbeit_hund_delete_session_success">Session gelöscht</string>
     <string name="nasenarbeit_hund_pdf_share_title">PDF teilen</string>
     <string name="nasenarbeit_hund_csv_share_title">CSV teilen</string>
+
+    <!-- Nasenarbeit Trend-Auswertung -->
+    <string name="nasenarbeit_trend_toolbar_title">📈 %1$s – Trends</string>
+    <string name="nasenarbeit_trend_not_enough_data">Noch nicht genug Daten für eine Trend-Auswertung.\n%1$d von %2$d benötigten Sessions vorhanden.</string>
+    <string name="nasenarbeit_trend_no_patterns_found">Es wurden bisher keine auffälligen Muster in den gespeicherten Sessions gefunden.</string>
+    <string name="nasenarbeit_trend_boden_korrelation">%1$s %2$s: Bei „%3$s“ liegt die Ø-Bewertung bei %4$s★ (%5$d Sessions), bei „%6$s“ bei %7$s★ (%8$d Sessions).</string>
+    <string name="nasenarbeit_trend_empfehlung_abgleich">Wurde der empfohlenen Disziplin gefolgt, lag die Bewertung in %1$d%% der Fälle bei 3★ oder höher (%2$d Sessions). Bei Abweichung von der Empfehlung: %3$d%% (%4$d Sessions).</string>
+    <string name="nasenarbeit_trend_plateau_aufstieg">%1$s %2$s: Die letzten %3$d Sessions auf Stufe „%4$s“ wurden im Schnitt mit %5$s★ bewertet – ein Stufenaufstieg könnte sinnvoll sein.</string>
+    <string name="nasenarbeit_trend_plateau_ueberforderung">%1$s %2$s: Die letzten %3$d Sessions auf Stufe „%4$s“ wurden im Schnitt nur mit %5$s★ bewertet – eventuell ist die aktuelle Stufe noch zu anspruchsvoll.</string>
+    <string name="nasenarbeit_trend_wind_korrelation">🔍 Freisuche: Bei %1$s Wind liegt die Ø-Bewertung bei %2$s★, bei %3$s Wind bei %4$s★.</string>
+    <string name="nasenarbeit_trend_wind_schwach">schwachem</string>
+    <string name="nasenarbeit_trend_wind_mittel">mittlerem</string>
+    <string name="nasenarbeit_trend_wind_stark">starkem</string>
+
+    <string name="nasenarbeit_boden_zustand_trocken">Trocken</string>
+    <string name="nasenarbeit_boden_zustand_feucht">Feucht</string>
+    <string name="nasenarbeit_boden_zustand_nass">Nass</string>
+    <string name="nasenarbeit_boden_zustand_stehend">Stehende Nässe</string>
+    <string name="nasenarbeit_boden_zustand_matschig">Matschig</string>
+    <string name="nasenarbeit_boden_zustand_gefroren">Gefroren</string>
+    <string name="nasenarbeit_boden_zustand_schnee_l">Schnee leicht (bis 1cm)</string>
+    <string name="nasenarbeit_boden_zustand_schnee_m">Schnee mittel (1–10cm)</string>
+    <string name="nasenarbeit_boden_zustand_schnee_h">Schnee hoch (&gt;10cm)</string>
 
     <!-- Nasenarbeit Beratung -->
     <string name="nasenarbeit_beratung_tab_wetter">Wetter</string>
@@ -3177,7 +3201,7 @@
     <string name="nasenarbeit_beratung_exclusion_storm_reason">Windstärke Beaufort %1$d – Sturm</string>
     <string name="nasenarbeit_beratung_exclusion_thunderstorm_reason">Gewitter aktiv</string>
     <string name="nasenarbeit_beratung_thunderstorm_dialog_title">⛈️ Lebensgefahr: Gewitter!</string>
-    <string name="nasenarbeit_beratung_thunderstorm_dialog_message">Ein Training bei aktivem Gewitter ist extrem gefährlich:\n\n• ⚡ Blitzschlag-Risiko – Dein Hund und du sind im freien Gelände oder am Waldrand extrem exponiert.\n• 🌳 Umstürzende Bäume – Gewitterböen können Äste oder ganze Bäume zu Fall bringen.\n• 🐾 Stress für den Hund – Der massive Luftdruckwechsel und Donner können das Suchverhalten negativ beeinflussen.\n\nWir raten dringend dazu, das Training auf einen sichereren Zeitpunkt zu verschieben.</string>
+    <string name="nasenarbeit_beratung_thunderstorm_dialog_message">Die Wetterdaten für diesen Standort melden ein Gewitter. Da Wettervorhersagen lokal abweichen können, prüfe bitte den tatsächlichen Himmel vor Ort, bevor du fortfährst.\n\nEin Training bei tatsächlich aktivem Gewitter ist extrem gefährlich:\n\n• ⚡ Blitzschlag-Risiko – Dein Hund und du sind im freien Gelände oder am Waldrand extrem exponiert.\n• 🌳 Umstürzende Bäume – Gewitterböen können Äste oder ganze Bäume zu Fall bringen.\n• 🐾 Stress für den Hund – Der massive Luftdruckwechsel und Donner können das Suchverhalten negativ beeinflussen.\n\nIst vor Ort tatsächlich kein Gewitter erkennbar, kannst du fortfahren. Im Zweifel raten wir dringend dazu, das Training auf einen sichereren Zeitpunkt zu verschieben.</string>
     <string name="nasenarbeit_beratung_thunderstorm_btn_risk">Ich kenne die Risiken, trotzdem trainieren</string>
     <string name="nasenarbeit_beratung_thunderstorm_btn_agree">Einverstanden, kein Training</string>
     <string name="nasenarbeit_beratung_map_data_applied">✅ Kartendaten übernommen</string>

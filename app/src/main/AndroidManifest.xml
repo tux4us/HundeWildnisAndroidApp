@@ -386,6 +386,13 @@
             android:parentActivityName="com.hundewildnis.app.NasenarbeitHundActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <activity
+            android:name="com.hundewildnis.app.NasenarbeitTrendActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.NasenarbeitHundActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
         <!-- WorkManager Worker braucht KEINE separate Manifest-Eintragung -->
 
         <!-- ✅ NEU: Nasenarbeit Kartenauswahl (Phase 1 OSM) -->

@@ -296,13 +296,25 @@ object NasenarbeitScorer {
         val levF = fortschritt.levelFreisuche
         val isLinear = param.gebietSchritte > 500 && param.gebietHa < 0.5
         val isWide = param.gebietHa >= 0.5 && param.gebietSchritte < 500
-        val isSmall = param.gebietSchritte < levV.maxSchritte_V || param.gebietHa < levF.maxHa_F
-        val isVerySmall = param.gebietSchritte < levV.maxSchritte_V * 0.5 || param.gebietHa < levF.maxHa_F * 0.5
+
+        // Verlorensuche/Personensuche: Streckenmaßstab (Schritte) — unabhängig von der Flächengröße
+        val isSmallSchritte = param.gebietSchritte < levV.maxSchritte_V
+        val isVerySmallSchritte = param.gebietSchritte < levV.maxSchritte_V * 0.5
+
+        // Freisuche: Flächenmaßstab (Hektar) — unabhängig von der Streckenlänge
+        val isSmallHa = param.gebietHa < levF.maxHa_F
+        val isVerySmallHa = param.gebietHa < levF.maxHa_F * 0.5
+
         val bonus = doubleArrayOf(0.0, 0.0, 0.0)
         if (isLinear) { bonus[0] += 3.0; bonus[1] += 3.0 }
         if (isWide) bonus[2] += 3.0
-        if (isVerySmall) { bonus[0] -= 4.0; bonus[1] -= 4.0; bonus[2] -= 1.0 }
-        else if (isSmall) { bonus[0] -= 2.0; bonus[1] -= 2.0 }
+
+        if (isVerySmallSchritte) { bonus[0] -= 4.0; bonus[1] -= 4.0 }
+        else if (isSmallSchritte) { bonus[0] -= 2.0; bonus[1] -= 2.0 }
+
+        if (isVerySmallHa) bonus[2] -= 1.0
+        else if (isSmallHa) { /* kein zusätzlicher Malus für Freisuche bei knapper, aber ausreichender Fläche */ }
+
         return bonus
     }
 

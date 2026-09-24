@@ -145,6 +145,15 @@
                 app:spanCount="1" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridNasenarbeitTrend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1" />
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/gridNasenarbeitExport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -29,7 +29,13 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
         setContentView(binding.root)
 
         @Suppress("DEPRECATION")
-        profile = intent.getParcelableExtra("profile")!!
+        val loadedProfile = intent.getParcelableExtra<DogProfile>("profile")
+        if (loadedProfile == null) {
+            Toast.makeText(this, getString(R.string.pulscheck_error_no_profile), Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        profile = loadedProfile
 
         setupUI()
         setupRecyclerView()
@@ -63,6 +69,20 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
             accentColorRes = colorsNew.accentColorRes,
             onTileClick = {
                 val intent = Intent(this, NasenarbeitBeratungActivity::class.java)
+                intent.putExtra("profile", profile)
+                startActivity(intent)
+            }
+        )
+
+        // Trend-Auswertung
+        val colorsTrend = StartGroupColors.forGroup(this, 4) // Blau
+        binding.gridNasenarbeitTrend.layoutManager = GridLayoutManager(this, 1)
+        binding.gridNasenarbeitTrend.adapter = StartTileAdapter(
+            tiles = listOf(StartTile("nasenarbeit_trend", R.drawable.ic_notes, getString(R.string.nasenarbeit_hund_btn_trend))),
+            chipColorRes = colorsTrend.chipColorRes,
+            accentColorRes = colorsTrend.accentColorRes,
+            onTileClick = {
+                val intent = Intent(this, NasenarbeitTrendActivity::class.java)
                 intent.putExtra("profile", profile)
                 startActivity(intent)
             }
