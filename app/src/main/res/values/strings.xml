@@ -5012,4 +5012,359 @@ hoch</string>
     <string name="main_course_name_39">Traumahunde</string>
     <string name="main_course_name_40">Erste Hilfe Set</string>
     <string name="main_course_name_41">Erste Hilfe am Hund</string>
+
+    <!-- Outdoor: Nasenarbeit -->
+    <string name="spiel_so_leckerlifaehrte_anfaenger_name">Leckerli-Fährte (Anfänger)</string>
+    <string name="spiel_so_leckerlifaehrte_anfaenger_desc">Auf einer geraden Strecke von etwa 15 bis 30 Schritten wird anfangs bei jedem Schritt, später alle zwei Schritte ein Leckerli gelegt. Der Hund wartet am Start und folgt zusammen mit Dir der Fährte auf ruhiges "Such" bis zum Ende. Vor dem Training nicht füttern, damit die Motivation hoch bleibt.</string>
+
+    <string name="spiel_so_faehrtenarbeit_fortgeschritten_name">Fährtenarbeit (fortgeschritten)</string>
+    <string name="spiel_so_faehrtenarbeit_fortgeschritten_desc">Eine längere Fährte mit Richtungswechseln wird gelegt und vor dem Ablaufen einige Minuten altern gelassen. Am Ende liegt ein Gegenstand zum Anzeigen. Die Schwierigkeit lässt sich über Länge, Winkel und Alter der Fährte steigern.</string>
+
+    <string name="spiel_so_mantrailing_einstieg_name">Mantrailing-Einstieg</string>
+    <string name="spiel_so_mantrailing_einstieg_desc">Anhand eines getragenen Kleidungsstücks erschnüffelt der Hund die individuelle Duftspur einer Person und folgt ihr bis zum Auffinden. Der Einstieg erfolgt über kurze Distanzen mit frischer Spur.</string>
+
+    <string name="spiel_so_futtersuche_gelaende_name">Futtersuche im Gelände</string>
+    <string name="spiel_so_futtersuche_gelaende_desc">Futter oder Leckerlis werden in kleinen Behältern im Gras oder Unterholz versteckt. Der Hund sucht, findet und erhält sie mit unserer Hilfe. Man kann nach und nach die Schwierigkeit der Verstecke steigern.</string>
+
+    <string name="spiel_so_objektsuche_holzstapel_name">Objektsuche am Holzstapel</string>
+    <string name="spiel_so_objektsuche_holzstapel_desc">Leckerlis in kleinen Behältern werden in Astlöchern, Rindenspalten oder Holzstapeln versteckt. Der Hund muss sie gezielt suchen und anzeigen. Mit unserer Hilfe erhält er die Belohnung.</string>
+
+    <string name="spiel_so_zapfensuche_name">Zapfensuche</string>
+    <string name="spiel_so_zapfensuche_desc">Ein von Dir mehrere Sekunden in der Hand gehaltener Tannenzapfen wird unter mehreren gleichartigen ausgeworfen. Der Hund muss anhand des Eigengeruchs genau diesen Zapfen wiederfinden – eine Übung zur Geruchsunterscheidung. Statt Zapfen eignen sich auch andere geeignete Naturmaterialien.</string>
+
+    <string name="spiel_so_entspanntes_schnueffeln_name">Entspanntes Schnüffeln an der Leine</string>
+    <string name="spiel_so_entspanntes_schnueffeln_desc">An lockerer, langer Leine darf der Hund im eigenen Tempo ausgiebig schnüffeln, ohne Ziel- oder Tempovorgabe. Zuvor wurde von Dir eine Dose mit Leckerlie versteckt. Dient der mentalen Entspannung nach anstrengenderen Übungen.</string>
+
+    <string name="spiel_so_versteckspiel_person_name">Versteckspiel mit Person</string>
+    <string name="spiel_so_versteckspiel_person_desc">Eine vertraute Person versteckt sich hinter Bäumen oder Büschen. Der Hund wird losgeschickt und sollte die Person anhand von Geruch finden und von dieser ausgiebig Belobigt und es wird gespielt</string>
+
+    <string name="spiel_so_neue_wege_name">Neue Wege erkunden</string>
+    <string name="spiel_so_neue_wege_desc">Statt der gewohnten Runde wird bewusst ein unbekannter Wegabschnitt gewählt. Dieser Weg wird bewusst und langsam gegangen. Neue Reize und Gerüche erhöhen die mentale Auslastung, ohne dass zusätzliche Übungen nötig sind.</string>
+
+    <!-- Outdoor: Bewegung / Beutespiel -->
+    <string name="spiel_so_apportieren_klassisch_name">Klassisches Beutespiel</string>
+    <string name="spiel_so_apportieren_klassisch_desc">Ball, Dummy oder ein anderes robustes Spielzeug wird geworfen, der Hund darf es holen und wir spielen mit dem Hund. Später: Sitz oder Platz vor dem Wurf dient zusätzlich der Impulskontrolle. Achtung: es soll kein reines Apportieren sein und muss es auch nicht.</string>
+
+    <string name="spiel_so_apportier_gedaechtnis_name">Beutespiel-Gedächtnisspiel</string>
+    <string name="spiel_so_apportier_gedaechtnis_desc">Ein Spielzeug wird auf offener Fläche geworfen, danach geht man mit dem Hund noch ein Stück weiter, bevor er Richtung Wurfort nach aufmunternter Motivation geschickt wird. Er wird sich immer besser Lage und Weg merken und den Gegenstand per Nase zunehmend schneller wiederfinden.</string>
+
+    <string name="spiel_so_frisbee_name">Wurfspielzeug</string>
+    <string name="spiel_so_frisbee_desc">Eine Wurfspielzeug wird flach geworfen, der Hund fängt sie im flachen Sprung oder am Boden. Der Einstieg erfolgt über sehr bodennahe Würfe.</string>
+
+    <string name="spiel_so_dummytraining_name">Beutespieltraining</string>
+    <string name="spiel_so_dummytraining_desc">Mehrere Spielzeuge werden auf verschiedene Distanzen ausgeworfen, der Hund wird zum Beutespiel geschickt. Dann wird er zum nächsten Beutespiel geschickt. Verschiedene Distancen erhöhen die Schwierigkeit durch notwendige Suche nach den Spielzeugen.</string>
+
+    <string name="spiel_so_reizangel_name">Reizangel</string>
+    <string name="spiel_so_reizangel_desc">Ein Beutespielzeug an einem langen Stab mit Seil wird am Boden hin und her bewegt (bei großen Hunden besser nur mit langem Seil ohne Stab), der Hund verfolgt und fängt es. Wir spielen sofort mit dem Hund.</string>
+
+    <string name="spiel_so_zerrspiel_tau_name">Zerrspiel am Zerrspielzeug</string>
+    <string name="spiel_so_zerrspiel_tau_desc">Mit einem robusten Zerrspielzeug wird im Wechsel gezogen. Klarer Wechsel zwischen Zug und Nachgeben strukturieren das Spiel und beugen übermäßigen Aufschaukeln vor.</string>
+
+    <string name="spiel_so_fangspiel_name">Fangspiel Mensch-Hund</string>
+    <string name="spiel_so_fangspiel_desc">Der Halter läuft ein Stück weg, der Hund verfolgt und darf "fangen". Anschließend sofort Spiel mit dem Hund.</string>
+
+    <string name="spiel_so_treibball_grundlagen_name">Treibball-Grundlagen</string>
+    <string name="spiel_so_treibball_grundlagen_desc">Der Hund lernt, einen großen Gymnastikball (alternativ ein normaler Fußball für kleine Hunde) gezielt in eine Richtung oder zu einem Ziel zu schieben. Der Einstieg erfolgt über gezielte Nasenberührung am Ball.</string>
+
+    <string name="spiel_so_freies_spiel_hunde_name">Freies Spiel unter Hunden</string>
+    <string name="spiel_so_freies_spiel_hunde_desc">Unstrukturiertes Spielen mit einem bekannten, verträglichen Spielpartner ohne Kommandos. Regelmäßige Pausen ermöglichen dem Hund, sich selbst zu regulieren.</string>
+
+    <string name="spiel_so_ausdauertrab_name">Ausdauertrab</string>
+    <string name="spiel_so_ausdauertrab_desc">Der Hund läuft über eine längere Strecke im gleichmäßigen Trab neben dem Halter. Tempo und Distanz werden langsam gesteigert, um die Grundkondition aufzubauen. Dabei wird der Hund motiviert und abschliessend wird intensiv gespielt.</string>
+
+    <!-- Outdoor: Gelände / Koordination -->
+    <string name="spiel_so_wald_slalom_baeume_name">Wald-Slalom um Bäume</string>
+    <string name="spiel_so_wald_slalom_baeume_desc">Im Zickzack zwischen eng stehenden Bäumen oder Sträuchern hindurchlaufen, dabei Tempo variieren. Kann als Führigkeitsübung angereichert mit Sitz, Platz, Steh erfolgen.</string>
+
+    <string name="spiel_so_naturmaterial_slalom_name">Naturmaterial-Slalom</string>
+    <string name="spiel_so_naturmaterial_slalom_desc">Aus Ästen, Steinen oder Zapfen wird eine kleine Slalomstrecke am Boden ausgelegt. Der Hund bewältigt den Slalom zuerst mit dem Hundeführer, später bei Trainingsfortschritt auch allein..</string>
+
+    <string name="spiel_so_baumstamm_balancieren_name">Baumstamm-Balancieren</string>
+    <string name="spiel_so_baumstamm_balancieren_desc">Auf einem liegenden, breiten Baumstamm oder umgestürzten Ast wird im Schritttempo entlanggegangen. Der Hund wird ruhig an der Leine geführt (später freies Gehen).</string>
+
+    <string name="spiel_so_klettern_wurzeln_name">Klettern über Wurzeln und Steine</string>
+    <string name="spiel_so_klettern_wurzeln_desc">Über ein unwegsames Wurzelgeflecht oder Steinfeld im Schritt klettern. Fördert Trittsicherheit und Körperwahrnehmung auf unebenem Untergrund.</string>
+
+    <string name="spiel_so_sprung_erhoehung_name">Sprung auf eine Erhöhung</string>
+    <string name="spiel_so_sprung_erhoehung_desc">Kontrollierter Sprung auf einen niedrigen, stabilen Baumstumpf oder eine Mauer, dort kurz Sitz oder Bleib halten und danach kontrolliert wieder absteigen.</string>
+
+    <string name="spiel_so_untertunneln_name">Untertunneln</string>
+    <string name="spiel_so_untertunneln_desc">Unter einer Parkbank oder einem niedrigen Ast hindurchkriechen. Fördert Körperbewusstsein und Beweglichkeit in engen Situationen.</string>
+
+    <string name="spiel_so_agility_selbstbau_name">Selbstgebauter Parcours</string>
+    <string name="spiel_so_agility_selbstbau_desc">Aus Kissen, Hütchen, Reifen und Stangen wird ein einfacher Parcours mit Slalom, Durchkriechtunnel und niedrigen Elementen aufgebaut, den der Hund abläuft.</string>
+
+    <string name="spiel_so_buddelkiste_garten_name">Buddelkiste im Garten</string>
+    <string name="spiel_so_buddelkiste_garten_desc">In einem abgegrenzten SandBereich werden Spielzeuge oder Leckerlis (in Dosen) vergraben. Der Hund darf gezielt an dieser Stelle graben, ohne den restlichen Garten umzupflügen.</string>
+
+    <string name="spiel_so_buddelspiel_freiland_name">Buddelspiel im Freiland</string>
+    <string name="spiel_so_buddelspiel_freiland_desc">An erlaubter Stelle mit lockerem Boden werden Leckerlis (in Dosen) flach eingegraben, die der Hund freibuddeln darf.</string>
+
+    <string name="spiel_so_truemmerfeld_parcours_name">Verstecke-Parcours</string>
+    <string name="spiel_so_truemmerfeld_parcours_desc">Aus Kartons, Eimern, Decken und Röhren wird ein Parcours mit vielen Verstecken für Leckerlis oder Spielzeug aufgebaut, den der Hund frei durchsucht.</string>
+
+    <string name="spiel_so_sortierspiel_name">Sortierspiel</string>
+    <string name="spiel_so_sortierspiel_desc">Mehrere vertraute Spielzeuge werden im Gelände versteckt. Der Hund wird nacheinander in fester Reihenfolge zu den einzelnen Spielzeugen geführt oder geschickt bis er nach Tagen bzw. Wochen selbständig die Reihenfolge einhält.</string>
+
+    <!-- Outdoor: Kontrolle / Ruhe -->
+    <string name="spiel_so_distanz_positionen_name">Positionswechsel auf Distanz</string>
+    <string name="spiel_so_distanz_positionen_desc">Aus zunehmender Entfernung wird per Sicht- oder Hörzeichen zwischen Sitz, Platz und Steh gewechselt, ohne dass der Hund zum Halter läuft.</string>
+
+    <string name="spiel_so_distanz_rueckruf_name">Rückruf mit Ablenkung</string>
+    <string name="spiel_so_distanz_rueckruf_desc">Der Hund wird an langer Leine oder in gesichertem Gelände frei in wachsender Entfernung abgelegt und bei steigender, ungefährlicher Ablenkung zurückgerufen.</string>
+
+    <string name="spiel_so_umweltreiz_spaziergang_name">Umweltreiz-Spaziergang</string>
+    <string name="spiel_so_umweltreiz_spaziergang_desc">Gezielt an kontrollierbaren, ungefährlichen Reizen vorbeigehen und den Hund für ruhiges Verhalten im Anschluss mit Leckerli oder Spielzeug bestärken.</string>
+
+    <string name="spiel_so_ruhe_platz_reizumgebung_name">Ruhe-Training in Reizumgebung</string>
+    <string name="spiel_so_ruhe_platz_reizumgebung_desc">Auf einer abseitigen Stelle im Park mit Publikumsverkehr in der Nähe wird eine längere Ruheposition eingenommen und gehalten.</string>
+
+    <!-- Outdoor: Wasser / Wetter -->
+    <string name="spiel_so_wasserapportieren_name">Wasserapportieren</string>
+    <string name="spiel_so_wasserapportieren_desc">Ein schwimmfähiges Spielzeug wird ins flache Wasser eines Bachs oder Sees geworfen, der Hund watet oder schwimmt hinein und bringt es zurück. Das Wasser entlastet dabei die Gelenke.</string>
+
+    <string name="spiel_so_gartenschlauch_name">Wasserspiel mit dem Gartenschlauch</string>
+    <string name="spiel_so_gartenschlauch_desc">An heißen Tagen mit einem leichten Wasserstrahl aus dem Gartenschlauch spielen; der Hund darf ins Wasser schnappen oder hindurchlaufen.</string>
+
+    <string name="spiel_so_schnee_schnueffelhuegel_name">Schnee-Schnüffelhügel</string>
+    <string name="spiel_so_schnee_schnueffelhuegel_desc">Leckerlis (in Dosen) werden in Höhlen in einem Schneehaufen platziert. Der Hund sucht und bringt sie einzeln heraus.</string>
+
+    <!-- Indoor: Nasenarbeit -->
+    <string name="spiel_si_schnueffelteppich_name">Schnüffelteppich</string>
+    <string name="spiel_si_schnueffelteppich_desc">Futterbrocken werden zwischen den Stoffstreifen eines Schnüffelteppichs versteckt. Der Hund erschnüffelt und wühlt sie einzeln heraus.</string>
+
+    <string name="spiel_si_futtersuche_wohnung_name">Futtersuche in der Wohnung</string>
+    <string name="spiel_si_futtersuche_wohnung_desc">Sein Futter oder einzelne Leckerlis werden in verschiedenen Räumen versteckt. Der Hund sucht selbstständig. Die Schwierigkeit steigt mit mehr Verstecken und größerer zeitlicher Distanz.</string>
+
+    <string name="spiel_si_muffinform_name">Muffinform-Spiel</string>
+    <string name="spiel_si_muffinform_desc">In jede Vertiefung einer Muffinform kommt ein Leckerli, abgedeckt mit Tennisbällen oder oder anderen geeigneten, nicht verschluckbaren Gegenständen. Der Hund muss die Abdeckung verschieben, um an das Futter zu gelangen.</string>
+
+    <string name="spiel_si_kartonbox_name">Karton-Schnüffelbox</string>
+    <string name="spiel_si_kartonbox_desc">Ein Karton oder Wäschekorb wird mit zerknülltem Papier füllen, dazwischen Leckerlis verteilt. Der Hund wühlt und sucht darin.</string>
+
+    <string name="spiel_si_klopapierrollen_name">Klopapierrollen-Suche</string>
+    <string name="spiel_si_klopapierrollen_desc">Leere Papprollen werden in einen Korb gelegt, dazwischen Leckerlis verteilt. Der Hund durchsucht die Rollen einzeln.</string>
+
+    <string name="spiel_si_decken_verstecke_name">Decken-Verstecke</string>
+    <string name="spiel_si_decken_verstecke_desc">Leckerlis werden in eine Decke oder ein Handtuch eingerollt oder in Falten gesteckt. Der Hund muss die Decke aufrollen oder durchwühlen, um sie zu finden.</string>
+
+    <string name="spiel_si_leckerlipaeckchen_name">Leckerli-Päckchen auswickeln</string>
+    <string name="spiel_si_leckerlipaeckchen_desc">Leckerlis werden in unbehandeltes Packpapier eingewickelt, mehrfach gefaltet und optional in eine leere Papprolle gesteckt. Der Hund öffnet das Päckchen selbstständig.</string>
+
+    <string name="spiel_si_futterball_kong_name">Futterball / Kong</string>
+    <string name="spiel_si_futterball_kong_desc">Futter oder Leckerlis werden in einen Kong oder Futterball gefüllt. Der Hund muss ihn rollen, schieben oder knabbern, um an den Inhalt zu gelangen.</string>
+
+    <string name="spiel_si_intelligenzspielzeug_name">Intelligenzspielzeug mit Fächern</string>
+    <string name="spiel_si_intelligenzspielzeug_desc">Ein Kaufspielzeug mit Schubladen oder Klappen, die geöffnet oder verschoben werden müssen, um Leckerlis freizulegen. Der Einstieg erfolgt mit niedrigem Schwierigkeitsgrad.</string>
+
+    <string name="spiel_si_flaschendreh_name">Flaschendreh-Spiel</string>
+    <string name="spiel_si_flaschendreh_desc">Eine leere Plastikflasche wird mit ein paar Löchern versehen und mit Leckerlis befüllt. Der Hund muss sie mit Schnauze oder Pfote rollen, damit Futter herausfällt.</string>
+
+    <string name="spiel_si_spielzeug_verstecken_name">Spielzeug verstecken und suchen lassen</string>
+    <string name="spiel_si_spielzeug_verstecken_desc">Der Hund wartet in Sitz oder Bleib, während das Lieblingsspielzeug in einem anderen Raum versteckt wird. Anschließend sucht und apportiert er es auf Kommando.</string>
+
+    <string name="spiel_si_versteckspiel_person_name">Versteckspiel mit Person</string>
+    <string name="spiel_si_versteckspiel_person_desc">Ein Familienmitglied versteckt sich in einem anderen Raum, der Hund wird nach Signal losgeschickt, um die Person zu finden.</string>
+
+    <!-- Indoor: Bewegung / Koordination -->
+    <string name="spiel_si_apportieren_wohnung_name">Beutespiel in der Wohnung</string>
+    <string name="spiel_si_apportieren_wohnung_desc">Ein Ball oder weiches Spielzeug wird über den Boden gerollt oder kurz geworfen, der Hund bringt es auf Signal zurück oder wir gehen hin, um mit ihm zu spielen. Ruhiges Sitzen vor dem Wurf gehört als feste Regel dazu.</string>
+
+    <string name="spiel_si_zerrspiel_name">Zerrspiel mit Tau oder Zergel</string>
+    <string name="spiel_si_zerrspiel_desc">Gemeinsames Ziehen an einem Tau oder Fleece-Zergel, wobei der Halter oder der Hund abwechselnd gewinnt.</string>
+
+    <string name="spiel_si_indoor_agility_name">Indoor-Parcours</string>
+    <string name="spiel_si_indoor_agility_desc">Aus Stühlen, Decken und einem Besenstiel auf Eimern wird ein kleiner Parcours mit Slalom, Tunnel und niedriger Hürde gebaut, den der Hund auf Kommando durchläuft.</string>
+
+    <string name="spiel_si_cavaletti_name">Cavaletti-Training</string>
+    <string name="spiel_si_cavaletti_desc">Besenstiele werden niedrig zwischen zwei Stützen aufgelegt. Der Hund geht im Schritt bewusst über die Stangen, ohne sie zu berühren – trainiert Koordination und Körperwahrnehmung.</string>
+
+    <string name="spiel_si_slalom_beine_name">Slalom durch die Beine</string>
+    <string name="spiel_si_slalom_beine_desc">Der Halter steht mit gegrätschten Beinen und führt den Hund mit Leckerli abwechselnd durch die Beine hindurch im Wechselschritt.</string>
+
+    <string name="spiel_si_hocker_podest_name">Hocker- und Podest-Übung</string>
+    <string name="spiel_si_hocker_podest_desc">Der Hund lernt, mit Vorder- oder Hinterpfoten auf einem stabilen Hocker oder Kissen zu stehen. Fördert gezielt das Körperbewusstsein.</string>
+
+    <string name="spiel_si_treppentraining_name">Kontrolliertes Treppensteigen</string>
+    <string name="spiel_si_treppentraining_desc">Der Hund lernt, Treppen im Schritt und auf Kommando kontrolliert zu steigen, statt zu hetzen – vor jeder Stufe kurz Sitz, dann Weiter.</string>
+
+    <!-- Indoor: Kopfarbeit / Tricks -->
+    <string name="spiel_si_becherspiel_name">Becherspiel</string>
+    <string name="spiel_si_becherspiel_desc">Zwei bis drei umgedrehte Becher werden aufgestellt, unter einem ein Leckerli versteckt. Der Hund zeigt den richtigen Becher mit Pfote oder Nase an. Die Positionen werden anschließend gemischt.</string>
+
+    <string name="spiel_si_targettraining_name">Zielobjekt-Training</string>
+    <string name="spiel_si_targettraining_desc">Der Hund lernt, die Nase auf ein Handtarget oder einen markierten Gegenstand zu drücken. Grundlage für viele weitere Trickfolgen.</string>
+
+    <string name="spiel_si_pfote_geben_name">Pfote geben</string>
+    <string name="spiel_si_pfote_geben_desc">Der Hund sitzt und gibt auf Signal die Pfote in die Hand – ein klassisches Trickkommando als Basis für weiterführende Tricks.</string>
+
+    <string name="spiel_si_trickfolge_name">Trickfolge: Drehen, Rolle, Rückwärtslaufen</string>
+    <string name="spiel_si_trickfolge_desc">Aufbauend auf dem Grundgehorsam werden Tricks wie Drehen um die eigene Achse, Hinlegen und Rückwärtslaufen mit Leckerli-Führung trainiert.</string>
+
+    <string name="spiel_si_objekte_benennen_name">Objekte benennen</string>
+    <string name="spiel_si_objekte_benennen_desc">Für zwei bis drei bekannte Spielzeuge wird jeweils ein fester Name eingeführt. Der Hund lernt, das benannte Objekt aus mehreren herauszusuchen und zu bringen.</string>
+
+    <string name="spiel_si_spielzeug_aufraeumen_name">Spielzeug aufräumen</string>
+    <string name="spiel_si_spielzeug_aufraeumen_desc">Der Hund lernt, einzelne Spielzeuge aufzunehmen und in eine Kiste oder einen Korb zu legen. Kombiniert Beutespiel mit Zielobjekttraining.</string>
+
+    <string name="spiel_si_alltagshelfer_name">Alltagshelfer-Tricks</string>
+    <string name="spiel_si_alltagshelfer_desc">Der Hund lernt, Türen zuzustoßen oder kleine Gegenstände wie Zeitung oder Hausschuhe zu bringen. Baut auf Zielobjekt- und Apportiertraining auf.</string>
+
+    <string name="spiel_si_trickcapturing_name">Spontanverhalten belohnen</string>
+    <string name="spiel_si_trickcapturing_desc">Natürlich auftretendes Verhalten wie Hinlegen, Drehen im Kreis oder Kopfbewegung wird im Moment des Auftretens markiert und belohnt, um es später auf Signal abrufbar zu machen.</string>
+
+    <!-- Indoor: Ruhe / Impulskontrolle -->
+    <string name="spiel_si_balance_leckerli_name">Leckerli-Balance</string>
+    <string name="spiel_si_balance_leckerli_desc">Der Hund liegt oder sitzt, ein Leckerli wird auf Nase oder Pfote gelegt. Er muss warten, bis das Freigabesignal kommt, statt sofort zu fressen.</string>
+
+    <string name="spiel_si_impuls_faust_name">Impulskontrolle: Leckerli in der Faust</string>
+    <string name="spiel_si_impuls_faust_desc">Ein Leckerli wird in geschlossener Faust angeboten. Der Hund darf nicht schnappen oder kratzen; erst bei Ruhe wird geöffnet und belohnt.</string>
+
+    <string name="spiel_si_impuls_pfote_name">Impulskontrolle: Leckerli vor der Pfote</string>
+    <string name="spiel_si_impuls_pfote_desc">Der Hund hält Sitz oder Platz, ein Leckerli wird vor die Pfoten gelegt und darf erst nach Freigabesignal gefressen werden.</string>
+
+    <string name="spiel_si_deckentraining_name">Deckentraining (Ruhe auf Signal)</string>
+    <string name="spiel_si_deckentraining_desc">Der Hund wird mit Leckerlis auf eine feste Decke gelegt, das Verweilen dort wird aufgebaut und später mit einem Ruhesignal verknüpft. Dauer und Ablenkung werden schrittweise gesteigert.</string>
+
+    <string name="spiel_si_konditionierte_entspannung_name">Konditionierte Entspannung</string>
+    <string name="spiel_si_konditionierte_entspannung_desc">Der Hund liegt ruhig neben dem Halter und wird gestreichelt, während gleichzeitig ruhig gesprochen wird. Über mehrere Wochen entsteht eine automatische Entspannungsreaktion auf das Signal.</string>
+
+    <string name="spiel_si_bleib_ablenkung_name">"Bleib" mit Ablenkung</string>
+    <string name="spiel_si_bleib_ablenkung_desc">Sitz, Platz oder Steh wird kommandiert, der Hund muss die Position halten, während sich der Halter entfernt oder Ablenkungen einbaut, bis zum Auflösesignal.</string>
+
+    <string name="spiel_si_distanzarbeit_kommandos_name">Distanzarbeit mit Kommandos</string>
+    <string name="spiel_si_distanzarbeit_kommandos_desc">Grundkommandos werden über zunehmende Entfernung zwischen Hund und Halter ausgeführt, zunächst per Körpersprache, später rein verbal.</string>
+
+    <string name="spiel_si_freies_spiel_ohne_ziel_name">Freies Spiel ohne Trainingsziel</string>
+    <string name="spiel_si_freies_spiel_ohne_ziel_desc">Der Halter fordert den Hund körpersprachlich zum freien Spielen auf, ohne Kommandos oder Leistungsziel, rein körperlich in entspannter Atmosphäre.</string>
+
+    <!-- Kachel auf der Startseite -->
+    <string name="tile_spiel_spass">Spiel &amp; Spaß</string>
+
+    <!-- SpielOrt -->
+    <string name="spiel_ort_wald">Wald</string>
+    <string name="spiel_ort_gruenland">Grünland / Wiese</string>
+    <string name="spiel_ort_park">Park</string>
+    <string name="spiel_ort_garten">Garten</string>
+    <string name="spiel_ort_haus">Haus</string>
+    <string name="spiel_ort_wohnung">Wohnung</string>
+
+    <!-- SpielZeitbudget -->
+    <string name="spiel_zeit_kurz">bis 10 Minuten</string>
+    <string name="spiel_zeit_mittel">bis 20 Minuten</string>
+    <string name="spiel_zeit_lang">bis 40 Minuten</string>
+    <string name="spiel_zeit_ausgiebig">mehr als 40 Minuten</string>
+
+    <!-- SpielMaterial -->
+    <string name="spiel_material_keins">Kein Material nötig</string>
+    <string name="spiel_material_alltagsgegenstand">Alltagsgegenstände</string>
+    <string name="spiel_material_spielzeug">Spielzeug</string>
+    <string name="spiel_material_futter_dispenser">Futter-Dispenser</string>
+    <string name="spiel_material_leckerli">Leckerlis</string>
+
+    <!-- SpielFokus -->
+    <string name="spiel_fokus_nasenarbeit">Nasenarbeit</string>
+    <string name="spiel_fokus_bewegung">Bewegung</string>
+    <string name="spiel_fokus_ruhe_entspannung">Ruhe &amp; Entspannung</string>
+    <string name="spiel_fokus_kopfarbeit">Kopfarbeit</string>
+    <string name="spiel_fokus_sozialkontakt">Sozialkontakt</string>
+
+    <!-- SpielEignung -->
+    <string name="spiel_eignung_alle">Keine bekannte Einschränkung</string>
+    <string name="spiel_eignung_nicht_welpe">Nicht für Welpen/Junghunde mit offenen Wachstumsfugen</string>
+    <string name="spiel_eignung_senior_geeignet">Schonend, auch für Senioren geeignet</string>
+    <string name="spiel_eignung_nicht_gelenkproblem">Nicht bei Gelenkerkrankungen (z.B. Arthrose)</string>
+
+    <!-- Sicherheits-/Eignungshinweise -->
+    <string name="spiel_hinweis_sprung_stoss">Nicht für Welpen/Junghunde mit offenen Wachstumsfugen geeignet – Sprung- und Stoßbelastung kann Gelenkschäden begünstigen.</string>
+    <string name="spiel_hinweis_richtungswechsel">Abrupte Richtungswechsel belasten Gelenke und Sehnen – nicht für Welpen/Junghunde und Hunde mit Gelenkproblemen geeignet.</string>
+    <string name="spiel_hinweis_zahnwechsel">Während des Zahnwechsels und für Welpen mit offenen Wachstumsfugen nicht geeignet – die Zugbelastung kann Nacken und Gebiss schädigen.</string>
+    <string name="spiel_hinweis_sprungelemente_weglassen">Für Welpen/Junghunde: Sprungelemente weglassen, nur Slalom und Tunnel nutzen.</string>
+    <string name="spiel_hinweis_aufsicht_papier">Nur unter Aufsicht durchführen – Papier oder Pappe darf nicht verschluckt werden.</string>
+
+    <!-- Dauer-Formatierung -->
+    <string name="spiel_dauer_exakt">%1$d Min.</string>
+    <string name="spiel_dauer_bereich">%1$d–%2$d Min.</string>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ACTIVITY: Hundeauswahl (SpielSpassDogSelectActivity)
+         ════════════════════════════════════════════════════════════ -->
+    <string name="spiel_spass_toolbar_title">Spiel &amp; Spaß</string>
+    <string name="spiel_spass_dog_select_subtitle" >Wähle die Karte Deines Hundes aus. Beachte bitte bei allen Vorschlägen dass nur Du in der Lage bist sowohl die mentale als auch körperliche Eignung Deines Hundes zu beurteilen. Versichere Dich auch, dass das Gelände geeignet, zur Nutzung erlaubt und frei von Gefahrenquellen ist.</string>
+    <string name="spiel_spass_no_dogs_title">Kein Hundeprofil vorhanden</string>
+    <string name="spiel_spass_no_dogs_message">Um passende Spiele und Beschäftigungen vorzuschlagen, wird zunächst ein Hundeprofil benötigt.</string>
+    <string name="spiel_spass_no_dogs_to_master_data">Zu den Stammdaten</string>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ACTIVITY: Filter (SpielSpassFilterActivity)
+         ════════════════════════════════════════════════════════════ -->
+    <string name="spiel_spass_filter_toolbar_title">Örtlichkeit &amp; Parameter</string>
+    <string name="spiel_spass_filter_ort_label">Wo haltet ihr euch auf?</string>
+    <string name="spiel_spass_filter_zeit_label">Wie viel Zeit habt ihr?</string>
+    <string name="spiel_spass_filter_material_label">Was steht zur Verfügung?</string>
+    <string name="spiel_spass_filter_fokus_label">Worauf möchtet ihr euch konzentrieren? (optional)</string>
+    <string name="spiel_spass_filter_alter_label">Zu beachten</string>
+    <string name="spiel_spass_filter_welpe">Welpe / Junghund (Wachstumsfugen noch offen)</string>
+    <string name="spiel_spass_filter_senior">Senior oder gesundheitlich eingeschränkt</string>
+    <string name="spiel_spass_filter_gelenkproblem">Bekanntes Gelenkproblem (z.B. Arthrose, HD)</string>
+    <string name="spiel_spass_filter_submit">Vorschläge anzeigen</string>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ACTIVITY: Ergebnisliste (SpielSpassResultActivity)
+         ════════════════════════════════════════════════════════════ -->
+    <string name="spiel_spass_result_toolbar_title">Vorschläge</string>
+    <string name="spiel_spass_result_count">%1$d passende Vorschläge</string>
+    <string name="spiel_spass_result_empty">Für diese Auswahl wurden keine passenden Aktivitäten gefunden. Bitte Filter anpassen.</string>
+    <string name="spiel_spass_result_change_filter">Filter ändern</string>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ACTIVITY: Detail (SpielSpassDetailActivity)
+         ════════════════════════════════════════════════════════════ -->
+    <string name="spiel_spass_detail_toolbar_title">Aktivität</string>
+    <string name="spiel_spass_detail_dauer_label">Dauer</string>
+    <string name="spiel_spass_detail_material_label">Material</string>
+    <string name="spiel_spass_detail_fokus_label">Fokus</string>
+    <string name="spiel_spass_detail_hinweis_label">Hinweis</string>
+    <string name="spiel_spass_detail_log_button">Als durchgeführt protokollieren</string>
+    <string name="spiel_spass_log_dialog_title">Durchführung protokollieren</string>
+    <string name="spiel_spass_log_dauer_hint">Tatsächliche Dauer in Minuten (optional)</string>
+    <string name="spiel_spass_log_notizen_hint">Notizen (optional)</string>
+    <string name="spiel_spass_log_bewertung_label">Wie ist es gelaufen?</string>
+    <string name="spiel_spass_log_save">Speichern</string>
+    <string name="spiel_spass_log_success">Session gespeichert.</string>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ACTIVITY: Verlauf & Statistik (SpielSpassStatsActivity)
+         ════════════════════════════════════════════════════════════ -->
+    <string name="spiel_spass_stats_toolbar_title">Verlauf &amp; Statistik</string>
+    <string name="spiel_spass_stats_total_sessions">Durchgeführte Aktivitäten insgesamt</string>
+    <string name="spiel_spass_stats_by_ort">Nach Örtlichkeit</string>
+    <string name="spiel_spass_stats_by_fokus">Nach Fokus</string>
+    <string name="spiel_spass_stats_top_activities">Am häufigsten durchgeführt</string>
+    <string name="spiel_spass_stats_history">Verlauf</string>
+    <string name="spiel_spass_stats_empty">Noch keine Aktivitäten protokolliert.</string>
+    <string name="spiel_spass_stats_last_session">Letzte Aktivität: %1$s</string>
+    <string name="spiel_spass_stats_avg_rating">Durchschnittliche Bewertung: %1$.1f / 4.0</string>
+    <string name="spiel_spass_stats_delete_session_title">Eintrag löschen?</string>
+    <string name="spiel_spass_stats_delete_session_message">Dieser Verlaufseintrag wird dauerhaft gelöscht.</string>
+    <string name="spiel_spass_stats_export_pdf_success">PDF-Export erfolgreich erstellt.</string>
+    <string name="spiel_spass_stats_export_csv_success">CSV-Export erfolgreich erstellt.</string>
+    <string name="spiel_spass_stats_no_sessions_error">Für diesen Hund liegen noch keine protokollierten Aktivitäten vor.</string>
+    <string name="spiel_spass_stats_generic_error">Fehler: %1$s</string>
+    <string name="spiel_spass_stats_delete_all_title">Alle Daten löschen?</string>
+    <string name="spiel_spass_stats_delete_all_message">Alle protokollierten Spiel-&amp;-Spaß-Aktivitäten von %1$s werden dauerhaft gelöscht.</string>
+
+    <!-- PDF/CSV-Export -->
+    <string name="spiel_spass_pdf_title">Spiel &amp; Spaß – Übersicht</string>
+    <string name="spiel_spass_pdf_section_summary">Zusammenfassung</string>
+    <string name="spiel_spass_pdf_col_date">Datum</string>
+    <string name="spiel_spass_pdf_col_activity">Aktivität</string>
+    <string name="spiel_spass_pdf_col_location">Ort</string>
+    <string name="spiel_spass_pdf_col_rating">Bewertung</string>
+    <string name="spiel_spass_csv_header">Datum;Aktivität;Ort;Fokus;Dauer (Min.);Bewertung;Notizen</string>
+
+    <!-- Backup -->
+    <string name="backup_type_play_fun">Spiel &amp; Spaß</string>
+    <string name="backup_type_play_fun_desc">Protokollierte Spiel- und Beschäftigungs-Sessions je Hund</string>
+
 </resources>

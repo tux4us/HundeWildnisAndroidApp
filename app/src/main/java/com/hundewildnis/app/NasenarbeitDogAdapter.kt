@@ -30,7 +30,7 @@ class NasenarbeitDogAdapter(
         val binding = holder.binding
 
         binding.tvDogName.text = profile.name
-        binding.tvDogBreed.text = "${profile.breed}, ${profile.gender}"
+        binding.tvDogBreed.text = "${profile.breed}, ${GenderCode.displayName(context, profile.gender)}"
 
         if (profile.photoUri.isNotEmpty()) {
             binding.ivDogPhoto.setImageURI(Uri.parse(profile.photoUri))

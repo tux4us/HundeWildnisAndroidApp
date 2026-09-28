@@ -156,7 +156,7 @@ class EmergencyActivity : SecureBaseActivity() {
 
         profile?.let { p ->
             binding.tvDogName.text = p.name
-            binding.tvDogBreed.text = getString(R.string.emergency_dog_breed_format, p.breed, p.gender, p.weight)
+            binding.tvDogBreed.text = getString(R.string.emergency_dog_breed_format, p.breed, GenderCode.displayName(this, p.gender), p.weight)
             if (p.photoUri.isNotEmpty()) {
                 binding.ivDogThumb.setImageURI(Uri.parse(p.photoUri))
             }
@@ -622,7 +622,7 @@ class EmergencyActivity : SecureBaseActivity() {
             table.addCell(Cell().add(Paragraph(p.birthDate)))
 
             table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_gender))))
-            table.addCell(Cell().add(Paragraph(p.gender)))
+            table.addCell(Cell().add(Paragraph(GenderCode.displayName(this, p.gender))))
 
             table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_neutered))))
             table.addCell(Cell().add(Paragraph(p.neutered.ifEmpty { getString(R.string.emergency_pdf_value_unknown) })))
@@ -660,7 +660,7 @@ class EmergencyActivity : SecureBaseActivity() {
 
         // ── LÄUFIGKEIT (nur Hündinnen, nicht kastriert) ──────────────
         profile?.let { p ->
-            if (p.gender == "Hündin" && p.neutered != "Ja") {
+            if ((p.gender == GenderCode.FEMALE || p.gender == "Hündin") && (p.neutered != NeuteredCode.YES && p.neutered != "Ja")) {
                 document.add(Paragraph("\n"))
                 writeHeatCyclePdfSection(document, p)
             }
@@ -816,7 +816,7 @@ class EmergencyActivity : SecureBaseActivity() {
 
         // Läufigkeit — nur für intakte Hündinnen, nur wenn Daten vorhanden
         profile?.let { p ->
-            if (p.gender == "Hündin" && p.neutered != "Ja" && p.heatCycles.isNotEmpty()) {
+            if ((p.gender == GenderCode.FEMALE || p.gender == "Hündin") && (p.neutered != NeuteredCode.YES && p.neutered != "Ja") && p.heatCycles.isNotEmpty()) {
                 append("\n").append(getString(R.string.emergency_share_text_heat_cycle_header)).append("\n")
                 val activeCycle = p.heatCycles.firstOrNull { it.isActive }
                 if (activeCycle != null) {

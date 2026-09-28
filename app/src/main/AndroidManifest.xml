@@ -403,6 +403,58 @@
             android:theme="@style/Theme.HundeWildnis"
             android:parentActivityName="com.hundewildnis.app.NasenarbeitBeratungActivity"/>
 
+        <!-- ════════════════════════════════════════════════════════════════
+     EINFÜGEN in AndroidManifest.xml, innerhalb von <application>...</application>,
+     z.B. direkt nach dem NASENARBEIT-Block.
+     ════════════════════════════════════════════════════════════════ -->
+
+        <!-- ════════════════════════════════════════════════ -->
+        <!-- ✅ SPIEL & SPASS (NEU!)                          -->
+        <!-- ════════════════════════════════════════════════ -->
+
+        <activity
+            android:name="com.hundewildnis.app.SpielSpassDogSelectActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.SpielSpassFilterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.SpielSpassDogSelectActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.SpielSpassResultActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.SpielSpassFilterActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.SpielSpassDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.SpielSpassResultActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.SpielSpassStatsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.SpielSpassDogSelectActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.SpielSpassHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.SpielSpassStatsActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+
 
         <!-- ✅ NEU: WebDAV Synchronistation -->
         <activity

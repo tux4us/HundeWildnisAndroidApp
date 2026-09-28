@@ -57,6 +57,14 @@
 -keep class com.hundewildnis.app.VoiceSession { *; }
 -keep class com.hundewildnis.app.ContentItem { *; }
 -keep class com.hundewildnis.app.DogCharacter { *; }
+-keep class com.hundewildnis.app.SpielSession { *; }
+-keep class com.hundewildnis.app.SpielStatistik { *; }
+-keep class com.hundewildnis.app.SpielAktivitaet { *; }
+-keep enum com.hundewildnis.app.SpielOrt { *; }
+-keep enum com.hundewildnis.app.SpielZeitbudget { *; }
+-keep enum com.hundewildnis.app.SpielMaterial { *; }
+-keep enum com.hundewildnis.app.SpielFokus { *; }
+-keep enum com.hundewildnis.app.SpielEignung { *; }
 -keep class com.hundewildnis.app.GelaendeAbschnitt { *; }
 -keep class com.hundewildnis.app.NasenarbeitParameter { *; }
 -keep class com.hundewildnis.app.BackupContainer { *; }

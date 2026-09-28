@@ -104,7 +104,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
 
     private fun setupDogCard(cardBinding: ItemDogCardBinding, profile: DogProfile) {
         cardBinding.tvDogName.text = profile.name
-        cardBinding.tvDogBreed.text = "${profile.breed}, ${profile.gender}"
+        cardBinding.tvDogBreed.text = "${profile.breed}, ${GenderCode.displayName(this, profile.gender)}"
 
         if (profile.photoUri.isNotEmpty()) {
             cardBinding.ivDogPhoto.setImageURI(Uri.parse(profile.photoUri))

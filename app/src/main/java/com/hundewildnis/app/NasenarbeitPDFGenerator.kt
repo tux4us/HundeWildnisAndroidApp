@@ -83,7 +83,7 @@ object NasenarbeitPDFGenerator {
         // ── Titel ─────────────────────────────────────────────
         doc.add(Paragraph(context.getString(R.string.nasenarbeit_pdf_title))
             .setBold().setFontSize(18f).setFontColor(GREEN))
-        doc.add(Paragraph("${profile.name}  ·  ${profile.breed}  ·  ${profile.gender}")
+        doc.add(Paragraph("${profile.name}  ·  ${profile.breed}  ·  ${GenderCode.displayName(context, profile.gender)}")
             .setFontSize(12f).setFontColor(GRAY))
         doc.add(Paragraph(" "))
 

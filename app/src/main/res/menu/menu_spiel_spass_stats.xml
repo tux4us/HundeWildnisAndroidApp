@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ACHTUNG: Diese Datei nicht nach res/values kopieren, sondern nach
+     res/menu/menu_spiel_spass_stats.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_spiel_spass_stats"
+        android:icon="@drawable/ic_diary"
+        android:title="@string/spiel_spass_stats_toolbar_title"
+        app:showAsAction="always"
+        app:iconTint="@android:color/white" />
+</menu>

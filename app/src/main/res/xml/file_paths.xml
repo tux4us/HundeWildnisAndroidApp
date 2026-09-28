@@ -34,6 +34,10 @@
         name="nasenarbeit_pdfs"
         path="nasenarbeit_pdfs/" />
 
+    <files-path
+        name="spiel_spass_pdfs"
+        path="spiel_spass_pdfs/"/>
+
     <!-- ✅ Cache für PDFs (Communication, WalkingSpeed, DailyNotes) -->
     <cache-path
         name="cache"

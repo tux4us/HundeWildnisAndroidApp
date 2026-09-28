@@ -419,7 +419,8 @@ class StartActivity : BaseBottomNavActivity() {
                 StartTile("interval_timer", R.drawable.ic_interval, getString(R.string.tile_interval_timer)),
                 StartTile("training_diary", R.drawable.ic_diary, getString(R.string.tile_training_diary)),
                 StartTile("activity_calendar", R.drawable.ic_calendar_moon, getString(R.string.tile_activity_calendar)),
-                StartTile("nasenarbeit", R.drawable.ic_nose_work, getString(R.string.tile_nasenarbeit))
+                StartTile("nasenarbeit", R.drawable.ic_nose_work, getString(R.string.tile_nasenarbeit)),
+                StartTile("spiel_spass", R.drawable.ic_spiel_spass, getString(R.string.tile_spiel_spass))
             )
         )
 
@@ -514,6 +515,7 @@ class StartActivity : BaseBottomNavActivity() {
             "training_diary" -> startActivity(Intent(this, TrainingDiaryActivity::class.java))
             "activity_calendar" -> startActivity(Intent(this, ActivityCalendarActivity::class.java))
             "nasenarbeit" -> startActivity(Intent(this, NasenarbeitActivity::class.java))
+            "spiel_spass" -> startActivity(Intent(this, SpielSpassDogSelectActivity::class.java))
             "daily_notes" -> startActivity(Intent(this, DailyNotesActivity::class.java))
             "weather" -> startActivity(Intent(this, WeatherActivity::class.java))
             "thunderstorm" -> startActivity(Intent(this, ThunderstormWarningActivity::class.java))

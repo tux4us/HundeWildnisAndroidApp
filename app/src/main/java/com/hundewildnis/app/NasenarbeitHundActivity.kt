@@ -54,7 +54,7 @@ class NasenarbeitHundActivity : SecureBaseActivity() {
             binding.ivDogPhoto.setImageResource(R.drawable.ic_dog_placeholder)
         }
         binding.tvDogName.text = profile.name
-        binding.tvDogBreed.text = "${profile.breed}, ${profile.gender}"
+        binding.tvDogBreed.text = "${profile.breed}, ${GenderCode.displayName(this, profile.gender)}"
 
         setupGrids()
     }

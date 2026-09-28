@@ -8,7 +8,7 @@ package com.hundewildnis.app
 enum class BackupDataType {
     PROFILES, DIARY, WALKING_SPEED, NOTES, VOICE, EMERGENCY, NASENARBEIT,
     FAVORITES, APP_SETTINGS, WEATHER_FAVORITES, VITAL_RECORDS, INTERVAL_TIMER,
-    PLANT_PHOTOS, PLANNED_SESSIONS;
+    PLANT_PHOTOS, PLANNED_SESSIONS, PLAY_FUN;
 
     fun displayName(context: android.content.Context): String = when (this) {
         PROFILES -> context.getString(R.string.backup_type_profiles)
@@ -25,6 +25,7 @@ enum class BackupDataType {
         INTERVAL_TIMER -> context.getString(R.string.backup_type_interval_timer)
         PLANT_PHOTOS -> context.getString(R.string.backup_type_plant_photos)
         PLANNED_SESSIONS -> context.getString(R.string.backup_type_planned_sessions)
+        PLAY_FUN -> context.getString(R.string.backup_type_play_fun)
     }
 
     fun description(context: android.content.Context): String = when (this) {
@@ -42,6 +43,7 @@ enum class BackupDataType {
         INTERVAL_TIMER -> context.getString(R.string.backup_type_interval_timer_desc)
         PLANT_PHOTOS -> context.getString(R.string.backup_type_plant_photos_desc)
         PLANNED_SESSIONS -> context.getString(R.string.backup_type_planned_sessions_desc)
+        PLAY_FUN -> context.getString(R.string.backup_type_play_fun_desc)
     }
 }
 

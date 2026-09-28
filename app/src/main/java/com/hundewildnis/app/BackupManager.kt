@@ -934,6 +934,10 @@ object BackupManager {
                 data["nasenarbeitFortschritt"] = progress
             }
 
+            if (BackupDataType.PLAY_FUN in selectedTypes) {
+                data["spielSpassSessions"] = SpielSpassManager.getAllSessions(context)
+            }
+
             if (BackupDataType.FAVORITES in selectedTypes) {
                 data["favorites"] = FavoritesManager.getAll(context)
             }
