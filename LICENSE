@@ -1,21 +1,75 @@
-Source Code View License (SCVL)
-Copyright (c) 2026 [tux4us]
+HundeWildnisAndroidApp Read-Only License, Version 1.0
 
-# Dieser Quellcode wird NUR ZU DEMONSTRATIONSZWECKEN bereitgestellt.
+Copyright (c) 2026 tux4us. All rights reserved.
 
-ERLAUBT:
-✓ Code ansehen und studieren
-✓ Screenshots des Codes machen für Lernzwecke
-✓ Issues und Feedback geben
+This is a "source-available" license. The source code in this repository may
+be read. It may not be used, copied, modified or distributed, except as
+expressly stated below.
 
-NICHT ERLAUBT:
-✗ Code verwenden, kopieren, modifizieren
-✗ Forken oder klonen des Repositories
-✗ Eigene Versionen erstellen oder verbreiten
-✗ Code in eigene Projekte integrieren
+1. PERMITTED
+   a) You may view and read the source code, documentation and other files in
+      this repository for personal, non-commercial purposes such as review,
+      learning and security inspection.
+   b) You may install and use the official application binaries published by
+      the copyright holder (for example under "Releases" in this repository)
+      on your own devices for personal use.
+   c) Nothing in this license limits the rights that GitHub's Terms of
+      Service grant to users of GitHub with respect to public repositories
+      (for example viewing and forking within the GitHub platform).
 
-Alle Verstöße gegen diese Lizenz werden rechtlich gewürdigt und können Schadenersatzforderungen nach sich ziehen.
+2. NOT PERMITTED
+   Without prior written permission of the copyright holder you may not:
+   a) copy, reproduce or republish the source code or any part of it, except
+      for the transient copies necessary to view it;
+   b) modify, adapt, translate, decompile or create derivative works;
+   c) compile, build, package or run the source code in order to distribute
+      the result or to use it for any purpose other than private review;
+   d) distribute, publish, sell, rent, sublicense or otherwise make available
+      the source code or any binary built from it, in whole or in part,
+      including in other software, app stores or package repositories;
+   e) use the source code, or any part of it, for commercial purposes or in
+      training datasets for machine-learning models;
+   f) use the name "HundeWildnisAndroidApp", the application icon or other branding of
+      this project for your own products or services.
 
-Alle Rechte vorbehalten. 
+3. THIRD-PARTY COMPONENTS
+   The application uses third-party libraries (for example AndroidX,
+   Material Components, OkHttp, Retrofit, Gson and osmdroid). They are
+   licensed by their respective authors under their own licenses. This
+   license does not apply to them and does not restrict your rights under
+   those licenses. Map data displayed by the application originates from
+   OpenStreetMap contributors (ODbL).
 
-Bei Interesse an einer Nutzungslizenz kontaktieren Sie: [tux4us@online.de]
+4. CONTRIBUTIONS
+   If you submit suggestions, issues or code to this repository, you grant the
+   copyright holder a perpetual, worldwide, royalty-free, irrevocable and
+   non-exclusive right to use, modify and distribute them as part of this
+   project. The copyright holder is not obliged to accept any contribution.
+
+5. TERMINATION
+   Any violation of this license terminates your rights under it
+   automatically. Rights of the copyright holder under applicable law remain
+   unaffected.
+
+6. NO WARRANTY; LIMITATION OF LIABILITY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED. TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE COPYRIGHT HOLDER
+   IS NOT LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE
+   USE OF THE SOFTWARE. Liability that cannot be excluded under mandatory law
+   (for example for intent, gross negligence or injury to life, body or
+   health) remains unaffected.
+
+7. LANGUAGE
+   The English text of this license is authoritative. The German summary
+   below is for information only and has no binding effect.
+
+--------------------------------------------------------------------------
+Zusammenfassung auf Deutsch (unverbindlich)
+
+Der Quellcode darf gelesen und für private, nicht kommerzielle Zwecke
+eingesehen werden. Die offiziell veröffentlichten App-Dateien (Releases)
+dürfen privat installiert und genutzt werden. Kopieren, Verändern,
+Weitergeben, Veröffentlichen, kommerzielle Nutzung, die Verwendung in
+anderer Software sowie die Nutzung von Name und Icon für eigene Angebote
+sind ohne schriftliche Erlaubnis nicht gestattet. Bibliotheken von Dritten
+unterliegen ihren eigenen Lizenzen. Verbindlich ist der englische Text.

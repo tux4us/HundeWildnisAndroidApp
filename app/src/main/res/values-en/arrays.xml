@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ════════════════════════════════════════════════════════════
+         ENGLISCHE ARRAYS
+         Aktueller Stand: schrittweise Migration. Nur hier gelistete
+         Arrays existieren auf Englisch; alle anderen (z. B.
+         gender_options, neutered_options, birthdate_type_options)
+         fallen automatisch auf values/arrays.xml (Deutsch) zurück,
+         solange sie hier fehlen.
+         ════════════════════════════════════════════════════════════ -->
+
+    <!-- Geschlecht -->
+    <string-array name="gender_options">
+        <item>Please choose</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <!-- Kastrationsstatus -->
+    <string-array name="neutered_options">
+        <item>Please choose</item>
+        <item>Yes</item>
+        <item>No</item>
+        <item>Unknown</item>
+    </string-array>
+
+    <!-- Geburtsdatum Typ -->
+    <string-array name="birthdate_type_options">
+        <item>Date known</item>
+        <item>Month/year known</item>
+        <item>Year known</item>
+        <item>Unknown</item>
+    </string-array>
+
+    <!-- NasenarbeitSessionDetailActivity: Windrichtung relativ zur Suchrichtung -->
+    <string-array name="nasenarbeit_wind_directions">
+        <item>Tailwind</item>
+        <item>Crosswind</item>
+        <item>Headwind</item>
+    </string-array>
+</resources>
