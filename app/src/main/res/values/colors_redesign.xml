@@ -8,20 +8,20 @@
 
     <!-- Grundflächen. rd_card ist bewusst opak: Popup-Menüs, Spinner-Listen und
          Auswahlfenster dürfen nicht durchscheinen. -->
-    <color name="rd_bg">#121315</color>
+    <color name="rd_bg">#0D0E10</color>
     <color name="rd_card">#1C2024</color>
     <color name="rd_border">#6B6B6B</color>
     <color name="rd_text_primary">#F0F0EE</color>
     <color name="rd_text_secondary">#B2B2AE</color>
 
     <!-- Notfall: neutrales Glas mit kräftigem roten Rand -->
-    <color name="rd_danger_chip">#1AFFFFFF</color>
+    <color name="rd_danger_chip">#9914181F</color>
     <color name="rd_danger_stroke">#F2F0786C</color>
     <color name="rd_danger_text">#FFE0D8</color>
     <color name="rd_danger_toolbar">#B8161A1E</color>
 
     <!-- Blog-Vorschau — waldiges Grün (Glas) -->
-    <color name="rd_blog_header">#1AFFFFFF</color>
+    <color name="rd_blog_header">#9914181F</color>
 
     <!-- Akzent-Aliase für direkte XML-Verwendung -->
     <color name="rd_overlay_accent">#C9A26A</color>

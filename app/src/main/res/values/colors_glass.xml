@@ -7,19 +7,19 @@
          ═══════════════════════════════════════════════════════════ -->
 
     <!-- Verlaufshintergrund -->
-    <color name="gl_bg_top">#0E1418</color>
-    <color name="gl_bg_mid">#121315</color>
-    <color name="gl_bg_bottom">#18130F</color>
-    <color name="gl_glow_gold">#26C9A26A</color>
-    <color name="gl_glow_green">#1F7FA07A</color>
-    <color name="gl_glow_blue">#177A92B0</color>
+    <color name="gl_bg_top">#0B1015</color>
+    <color name="gl_bg_mid">#0D0E10</color>
+    <color name="gl_bg_bottom">#130F0C</color>
+    <color name="gl_glow_gold">#1CC9A26A</color>
+    <color name="gl_glow_green">#167FA07A</color>
+    <color name="gl_glow_blue">#107A92B0</color>
     <color name="gl_glow_clear">#00000000</color>
 
     <!-- Neutrale Glasflächen -->
-    <color name="gl_fill">#1AFFFFFF</color>
-    <color name="gl_fill_subtle">#14FFFFFF</color>
+    <color name="gl_fill">#9914181F</color>
+    <color name="gl_fill_subtle">#66101419</color>
     <color name="gl_fill_strong">#2EFFFFFF</color>
-    <color name="gl_fill_disabled">#0FFFFFFF</color>
+    <color name="gl_fill_disabled">#4D14181F</color>
     <color name="gl_stroke">#38FFFFFF</color>
     <color name="gl_stroke_subtle">#1FFFFFFF</color>
     <color name="gl_stroke_strong">#66FFFFFF</color>
@@ -37,47 +37,47 @@
 
     <!-- Rollenfarben: accent = Text/Icon/Rand, fill = neutrales Glas (für alle Rollen gleich), stroke = farbiger Rand (90 %), ripple = Druckeffekt -->
     <color name="gl_primary">#C9A26A</color>
-    <color name="gl_primary_fill">#1AFFFFFF</color>
+    <color name="gl_primary_fill">#9914181F</color>
     <color name="gl_primary_stroke">#E6C9A26A</color>
     <color name="gl_primary_ripple">#3DC9A26A</color>
     <color name="gl_success">#6FBF73</color>
-    <color name="gl_success_fill">#1AFFFFFF</color>
+    <color name="gl_success_fill">#9914181F</color>
     <color name="gl_success_stroke">#E66FBF73</color>
     <color name="gl_success_ripple">#3D6FBF73</color>
     <color name="gl_warning">#F2B84B</color>
-    <color name="gl_warning_fill">#1AFFFFFF</color>
+    <color name="gl_warning_fill">#9914181F</color>
     <color name="gl_warning_stroke">#E6F2B84B</color>
     <color name="gl_warning_ripple">#3DF2B84B</color>
     <color name="gl_danger">#F0786C</color>
-    <color name="gl_danger_fill">#1AFFFFFF</color>
+    <color name="gl_danger_fill">#9914181F</color>
     <color name="gl_danger_stroke">#E6F0786C</color>
     <color name="gl_danger_ripple">#3DF0786C</color>
     <color name="gl_info">#64B5F6</color>
-    <color name="gl_info_fill">#1AFFFFFF</color>
+    <color name="gl_info_fill">#9914181F</color>
     <color name="gl_info_stroke">#E664B5F6</color>
     <color name="gl_info_ripple">#3D64B5F6</color>
     <color name="gl_neutral">#FFFFFF</color>
-    <color name="gl_neutral_fill">#1AFFFFFF</color>
+    <color name="gl_neutral_fill">#9914181F</color>
     <color name="gl_neutral_stroke">#40FFFFFF</color>
     <color name="gl_neutral_ripple">#26FFFFFF</color>
 
     <!-- Gruppenfarben der Startseite: accent / fill (Kachel) / stroke (Rand) -->
     <color name="rd_group1_accent">#C9A26A</color>
-    <color name="rd_group1_chip">#1AFFFFFF</color>
+    <color name="rd_group1_chip">#9914181F</color>
     <color name="rd_group1_stroke">#E6C9A26A</color>
     <color name="rd_group2_accent">#B0A25A</color>
-    <color name="rd_group2_chip">#1AFFFFFF</color>
+    <color name="rd_group2_chip">#9914181F</color>
     <color name="rd_group2_stroke">#E6B0A25A</color>
     <color name="rd_group3_accent">#7FA07A</color>
-    <color name="rd_group3_chip">#1AFFFFFF</color>
+    <color name="rd_group3_chip">#9914181F</color>
     <color name="rd_group3_stroke">#E67FA07A</color>
     <color name="rd_group4_accent">#C08A6A</color>
-    <color name="rd_group4_chip">#1AFFFFFF</color>
+    <color name="rd_group4_chip">#9914181F</color>
     <color name="rd_group4_stroke">#E6C08A6A</color>
     <color name="rd_group5_accent">#7A92B0</color>
-    <color name="rd_group5_chip">#1AFFFFFF</color>
+    <color name="rd_group5_chip">#9914181F</color>
     <color name="rd_group5_stroke">#E67A92B0</color>
     <color name="rd_group6_accent">#9A8AB0</color>
-    <color name="rd_group6_chip">#1AFFFFFF</color>
+    <color name="rd_group6_chip">#9914181F</color>
     <color name="rd_group6_stroke">#E69A8AB0</color>
 </resources>
