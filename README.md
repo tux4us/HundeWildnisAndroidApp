@@ -25,7 +25,6 @@
 
 - [Über die App](#-über-die-app)
 - [Datenschutz & Sicherheit](#-datenschutz--sicherheit)
-- [Was ist neu in 20.2](#-was-ist-neu-in-202)
 - [Funktionsübersicht](#-funktionsübersicht)
   - [A · Hamburger-Menü](#a--hamburger-menü)
   - [B · Startseite (6 Kachelgruppen)](#b--startseite-6-kachelgruppen)
@@ -82,7 +81,6 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | Eintrag | Funktion |
 |---|---|
 | 🔁 Aktualisieren | Lädt die Blog-Vorschau bzw. die aktuell sichtbare Liste neu |
-| 🌞🌒 Theme wechseln | Umschalten zwischen dunklem und hellem Erscheinungsbild, gespeichert für künftige Starts |
 | ⚙️ Einstellungen | Öffnet Dialog mit: Hintergrund-Updates ein/aus · Beschränkung auf WLAN · Benachrichtigungen ein/aus · eigener OpenRouteService-API-Key (eingeben/testen/löschen) |
 | 📦 Backup erstellen | Vollständige Sicherungsdatei in `Downloads/HundeWildnis_Backups`, anschließend Teilen-Angebot |
 | 📥 Backup importieren | Dateiauswahl, Prüfung, Abfrage der Merge-Art (Hinzufügen/Ersetzen/Zusammenführen) vor der Wiederherstellung |
@@ -114,6 +112,7 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | 📔 Trainingstagebuch | 18 Trainingskategorien je Hund, Wochenstatistik auf Hundekarte | Session-Erfassung (Dauer/Wiederholungen, Erfolg, Ablenkung, Schwierigkeit, Ort, Wetter, GPS, Notiz) · Fortschritt 0–100 % mit 5 Trainingsständen · Trend/Streak/Konsistenz · automatische Meilensteine · PDF-/CSV-Export gesamt, vollständiges Löschen je Hund |
 | 📅 Aktivitätskalender | Monatskalender mit Trainingstagen | Tagesdetail per Tap · Vorausplanung mit automatischem Dauervorschlag und Erinnerung · 7-Tage-Vorschau mit Wettereignungs-Ampel |
 | 🐾 Nasenarbeit | Regelbasiertes Expertensystem, 3 Disziplinen – **siehe Detailabschnitt unten** | Sechsstufiger Beratungs-Wizard (Wetter → Gelände → Boden → Trainingsstand → Empfehlung) · Vier-Schichten-Analyse · Kartenwerkzeug · Sitzungsdokumentation · Statistik, PDF-/CSV-Export je Hund |
+| 🎾 Spiel und Spaß | Empfehlungssystem für spielerische Aktivitäten | Beratungs-Wizard (Ort → Gelände → Ausrüstung → Spielinhalt → Empfehlung) · Analyse · Vorschlag · Sitzungsdokumentation · Statistik, PDF-/CSV-Export je Hund |
 
 ##### Nasenarbeit im Detail
 
