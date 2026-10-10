@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -49,13 +49,11 @@
                 android:textStyle="bold" />
 
             <!-- Erklärung -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="12dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -65,7 +63,7 @@
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="14sp"
                     android:lineSpacingExtra="2dp" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Buttons -->
             <LinearLayout
@@ -74,17 +72,16 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="12dp">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnFlash"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:text="@string/thunderstorm_layout_btn_flash"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="#F5A623" />
+                    style="@style/Widget.App.Button.Warning" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnThunder"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -92,8 +89,7 @@
                     android:layout_marginStart="8dp"
                     android:enabled="false"
                     android:text="@string/thunderstorm_layout_btn_thunder"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="#5A6B7A" />
+                    style="@style/Widget.App.Button.Info" />
             </LinearLayout>
 
             <TextView
@@ -107,16 +103,14 @@
                 android:textSize="14sp" />
 
             <!-- Rechenweg-Card (Lernfunktion) -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardCalculation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:strokeColor="@color/rd_surface_alt"
+                app:strokeColor="@color/gl_stroke_subtle"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -209,16 +203,14 @@
                             android:lineSpacingExtra="2dp" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Trend-Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -379,17 +371,15 @@
                             android:lineSpacingExtra="1dp" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            <com.hundewildnis.app.GlassButton
+                style="@style/Widget.App.Button.Outlined.Primary"
                 android:id="@+id/btnResetMeasurements"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="@string/thunderstorm_layout_reset_series"
-                android:textColor="@color/rd_overlay_accent"
-                app:strokeColor="@color/rd_overlay_accent" />
+                android:text="@string/thunderstorm_layout_reset_series" />
 
             <!-- Trennlinie zum zweiten Abschnitt -->
             <View
@@ -417,14 +407,13 @@
                 android:textSize="13sp"
                 android:lineSpacingExtra="2dp" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnLoadForecast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/thunderstorm_layout_load_forecast_button"
-                android:textColor="@android:color/white"
-                app:backgroundTint="@color/rd_overlay_accent" />
+                style="@style/Widget.App.Button.Primary" />
 
             <ProgressBar
                 android:id="@+id/forecastProgressBar"
@@ -440,13 +429,11 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    app:cardBackgroundColor="?attr/colorSurface"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardCornerRadius="12dp">
 
                     <TextView
                         android:id="@+id/tvForecastSummary"
@@ -456,15 +443,14 @@
                         android:textSize="17sp"
                         android:textStyle="bold"
                         android:lineSpacingExtra="2dp" />
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    app:cardBackgroundColor="#252525"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="@color/rd_surface_alt"
+                    app:strokeColor="@color/gl_stroke_subtle"
                     app:strokeWidth="1dp">
 
                     <TextView
@@ -473,22 +459,21 @@
                         android:layout_height="wrap_content"
                         android:padding="16dp"
                         android:fontFamily="monospace"
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="12sp"
                         android:lineSpacingExtra="3dp" />
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
             </LinearLayout>
 
             <!-- Haftungshinweis: immer sichtbar, unabhängig davon ob Messung
                  und/oder Vorhersage genutzt wurden -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="#252525"
                 app:cardCornerRadius="12dp"
-                app:strokeColor="@color/rd_surface_alt"
+                app:strokeColor="@color/gl_stroke_subtle"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -502,7 +487,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="@string/thunderstorm_layout_important_note_title"
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -510,11 +495,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/thunderstorm_layout_disclaimer"
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="12sp"
                         android:lineSpacingExtra="3dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
         </LinearLayout>
     </ScrollView>

@@ -1,7 +1,5 @@
 package com.hundewildnis.app
 
-import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -26,18 +24,7 @@ class DogProfileAdapter(
 
         fun bind(profile: DogProfile) {
             val context = binding.root.context
-            val isDarkTheme = (context.resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-
-            val card = binding.root as MaterialCardView
-            if (isDarkTheme) {
-                card.setCardBackgroundColor(Color.parseColor("#2D2D2D"))
-                card.strokeColor = Color.parseColor("#404040")
-                card.strokeWidth = 2
-            } else {
-                card.setCardBackgroundColor(Color.WHITE)
-                card.strokeWidth = 0
-            }
+            // Kartenoptik (Glas) kommt aus dem Theme (Widget.App.Card)
 
             binding.tvName.text = profile.name
             binding.tvBreed.text = profile.breed

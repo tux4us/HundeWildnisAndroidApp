@@ -19,7 +19,7 @@
             android:layout_height="120dp"
             android:scaleType="centerCrop"
             android:contentDescription="Foto"
-            android:background="#333333" />
+            android:background="@color/gl_divider" />
 
         <!-- Löschen-Button -->
         <ImageButton
@@ -30,7 +30,7 @@
             android:layout_margin="4dp"
             android:background="@android:drawable/screen_background_dark_transparent"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:tint="#FFFFFF"
+            android:tint="@color/rd_text_primary"
             android:contentDescription="Foto löschen"
             android:padding="4dp" />
 

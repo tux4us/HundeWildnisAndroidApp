@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="?android:attr/windowBackground"
         android:paddingTop="8dp">
 
         <!-- Drag Handle (kleiner Balken zum Ziehen) -->
@@ -21,7 +20,7 @@
             android:layout_width="40dp"
             android:layout_height="4dp"
             android:layout_gravity="center_horizontal"
-            android:background="#CCCCCC"
+            android:background="@color/gl_stroke_strong"
             android:layout_marginBottom="16dp" />
 
         <!-- Titel -->
@@ -41,8 +40,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="400dp"
-        android:background="?android:attr/windowBackground">
+        android:maxHeight="400dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +80,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#EEEEEE"
+                android:background="@color/gl_divider"
                 android:layout_marginStart="56dp" />
 
             <!-- Podcast -->
@@ -117,7 +115,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#EEEEEE"
+                android:background="@color/gl_divider"
                 android:layout_marginStart="56dp" />
 
             <!-- Spotify -->
@@ -152,7 +150,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#EEEEEE"
+                android:background="@color/gl_divider"
                 android:layout_marginStart="56dp" />
 
             <!-- SIGNAL Manuela -->
@@ -201,7 +199,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#EEEEEE"
+                android:background="@color/gl_divider"
                 android:layout_marginStart="56dp" />
 
             <!-- SIGNAL Jörg -->

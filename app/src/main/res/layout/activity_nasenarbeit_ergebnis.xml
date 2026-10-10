@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,7 +34,7 @@
             android:padding="16dp">
 
             <!-- Empfehlung Info -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Disziplin Wahl -->
             <TextView
@@ -74,7 +74,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp"
                 android:baselineAligned="false">
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnDizV"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -84,10 +84,9 @@
                     android:padding="4dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:textColor="?attr/colorOnSurface"
+                    style="@style/Widget.App.Button.Outlined"
                     app:cornerRadius="8dp"/>
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnDizP"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -97,10 +96,9 @@
                     android:padding="4dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:textColor="?attr/colorOnSurface"
+                    style="@style/Widget.App.Button.Outlined"
                     app:cornerRadius="8dp"/>
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnDizF"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -109,8 +107,7 @@
                     android:padding="4dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:textColor="?attr/colorOnSurface"
+                    style="@style/Widget.App.Button.Outlined"
                     app:cornerRadius="8dp"/>
             </LinearLayout>
 
@@ -126,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/nasenarbeit_ergebnis_hint_steps"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    style="@style/Widget.App.TextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etSchritte"
                         android:layout_width="match_parent"
@@ -148,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/nasenarbeit_ergebnis_hint_area"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    style="@style/Widget.App.TextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etHa"
                         android:layout_width="match_parent"
@@ -164,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/nasenarbeit_ergebnis_hint_duration"
                 android:layout_marginBottom="12dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/Widget.App.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDauer"
                     android:layout_width="match_parent"
@@ -181,13 +178,13 @@
                 android:layout_marginBottom="12dp">
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_found" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
-                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.App.TextInputLayout">
                         <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGegenstaende" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_ergebnis_label_total_laid" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
-                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/Widget.App.TextInputLayout">
                         <com.google.android.material.textfield.TextInputEditText android:id="@+id/etGegenstaendeGesamt" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -238,7 +235,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/nasenarbeit_ergebnis_hint_notes_title"
                 android:layout_marginBottom="8dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/Widget.App.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotizenTitel"
                     android:layout_width="match_parent"
@@ -252,7 +249,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/nasenarbeit_ergebnis_hint_notes_desc"
                 android:layout_marginBottom="16dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/Widget.App.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotizen"
                     android:layout_width="match_parent"
@@ -271,24 +268,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="8dp">
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnFotoGalerie"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/nasenarbeit_ergebnis_btn_gallery"
-                    android:textColor="?attr/colorOnSurface"
                     android:layout_marginEnd="6dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.App.Button.Outlined"
                     app:cornerRadius="8dp"/>
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnFotoKamera"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/nasenarbeit_ergebnis_btn_camera"
-                    android:textColor="?attr/colorOnSurface"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.App.Button.Outlined"
                     app:cornerRadius="8dp"/>
             </LinearLayout>
 
@@ -310,25 +305,24 @@
                 android:layout_marginBottom="16dp"/>
 
             <!-- Speichern -->
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnSpeichern"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/nasenarbeit_ergebnis_btn_save"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
                 android:minHeight="56dp"
                 app:cornerRadius="10dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.App.Button"/>
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnAbbrechen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnSurface"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.App.Button.Outlined"
                 app:cornerRadius="10dp"/>
 
             <!-- Platzhalter für Tastatur -->

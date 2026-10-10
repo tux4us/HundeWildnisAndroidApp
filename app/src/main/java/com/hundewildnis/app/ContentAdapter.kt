@@ -46,15 +46,10 @@ class ContentAdapter(
             val paddingStart = (item.level * 32).coerceAtMost(64)  // ← Reduziert von 128 auf 64
             binding.root.setPadding(paddingStart + 16, 16, 16, 16)
 
-            // Erkenne Dark Mode
-            val nightMode = binding.root.context.resources.configuration.uiMode and
-                    android.content.res.Configuration.UI_MODE_NIGHT_MASK
-            val isDarkMode = nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-            // Grüntöne je nach Theme
-            val darkGreen = if (isDarkMode) "#6b8e4e" else "#2d5016"
-            val mediumGreen = if (isDarkMode) "#8fad6f" else "#4a6135"
-            val lightGreen = if (isDarkMode) "#a3c187" else "#5a7145"
+            // Grüntöne (für dunklen Hintergrund)
+            val darkGreen = "#6b8e4e"
+            val mediumGreen = "#8fad6f"
+            val lightGreen = "#a3c187"
 
             // Icon und Styling basierend auf Typ und Level
             when (item.type) {

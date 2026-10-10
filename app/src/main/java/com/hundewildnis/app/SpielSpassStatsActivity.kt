@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -121,9 +120,6 @@ class SpielSpassStatsActivity : SecureBaseActivity() {
     }
 
     private fun confirmDeleteData(profile: DogProfile) {
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.spiel_spass_stats_delete_all_title))
@@ -135,8 +131,6 @@ class SpielSpassStatsActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(colorNormal)
             }
     }
 

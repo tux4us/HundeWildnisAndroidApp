@@ -80,9 +80,9 @@ enum class IllnessType(
  * Dringlichkeitsstufen
  */
 enum class UrgencyLevel(val color: String) {
-    CRITICAL("#d32f2f"),
-    URGENT("#f57c00"),
-    MODERATE("#388e3c");
+    CRITICAL("#FF6F60"),
+    URGENT("#FFB74D"),
+    MODERATE("#6FBF73");
 
     fun displayName(context: android.content.Context): String = when (this) {
         CRITICAL -> context.getString(R.string.urgency_level_critical)

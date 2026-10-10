@@ -736,7 +736,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         container.addView(TextView(this).apply {
             setText(text)
             textSize = 11f
-            setTextColor(Color.parseColor("#777777"))
+            setTextColor(Color.parseColor("#B2B2AE"))
             setPadding(0, 4, 0, 4)
         })
     }
@@ -1064,9 +1064,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
      * bewusst gelesen wird statt nur kurz aufzublitzen.
      */
     private fun showThunderstormShelterHint() {
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(getString(R.string.thunderstorm_shelter_dialog_title))
@@ -1075,7 +1072,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(color)
             }
     }
 
@@ -1709,11 +1705,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             Toast.makeText(this, getString(R.string.location_not_available), Toast.LENGTH_SHORT).show()
             return
         }
-        val isDark      = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) android.graphics.Color.WHITE
-        else android.graphics.Color.parseColor("#2d5016")
         val distance    = myLoc.distanceToAsDouble(GeoPoint(poi.lat, poi.lon))
         val alreadyFav  = FavoritesManager.isFavorite(this, poi.lat, poi.lon)
 
@@ -1730,8 +1721,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
 
         val neutralBtn = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
         if (alreadyFav) {
@@ -1796,8 +1785,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════
 
     private fun checkLocationPermission() {
-        val isDark       = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor  = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this).setTitle(getString(R.string.location_services_enable_title))
                 .setMessage(getString(R.string.location_services_enable_message))
@@ -1807,8 +1794,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 .setNegativeButton(getString(R.string.decline_button), null)
                 .create().apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
                 }
         } else {
             getLocation()
@@ -1866,8 +1851,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     // ════════════════════════════════════════════════════════
 
     private fun styleBackButton() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val bgColor = if (isDark) Color.parseColor("#5a8038") else Color.parseColor("#2d5016")
+        val bgColor = ContextCompat.getColor(this@LocationActivity, R.color.gl_success_fill)
         val heightPx = (56 * resources.displayMetrics.density).toInt()
         binding.btnBackToCategories.apply {
             text = getString(R.string.back_arrow); textSize = 16f
@@ -1980,8 +1964,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             orsEdit.setText("********")
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = Color.WHITE
         val csl = android.content.res.ColorStateList.valueOf(color)
         listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
 
@@ -2000,12 +1983,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                 }
             }
             .create()
-        dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+        dialog.show()
     }
 
     private fun showOrsInfoDialog() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.ors_api_key_title))
             .setMessage(getString(R.string.ors_api_key_info_message))
@@ -2013,7 +1994,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
             }
     }
 
@@ -2252,11 +2232,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     // 7. Neue Funktion: Infobox anzeigen (für Tap UND für POI-Marker):
     private fun showPointInfoDialog(tapLat: Double, tapLon: Double, poi: POI?) {
-        val isDark      = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) android.graphics.Color.WHITE
-        else android.graphics.Color.parseColor("#2d5016")
 
         val title: String
         val msg = StringBuilder()
@@ -2327,16 +2302,12 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         dialog.show()
 
         // Farben nach dem Anzeigen setzen
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
 
         if (isNavigating) {
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#9C27B0")) // Lila für Zwischenziel
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#CE93D8")) // Lila für Zwischenziel
         } else {
             if (!alreadyFav) {
-                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#FFA000"))
             } else {
-                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#8FC357"))
             }
         }
     }
@@ -2486,7 +2457,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.routePOIsContainer.addView(TextView(this).apply {
             text      = getString(R.string.next_5km_updated_hint)
             textSize  = 9.5f
-            setTextColor(Color.parseColor("#666666"))
+            setTextColor(Color.parseColor("#B2B2AE"))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -2556,7 +2527,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, 1
                     ).also { it.bottomMargin = (4 * dp).toInt() }
-                    setBackgroundColor(Color.parseColor("#484848"))
+                    setBackgroundColor(ContextCompat.getColor(this@LocationActivity, R.color.gl_divider))
                 })
             } else {
                 // Abstand nach hervorgehobenem Element
@@ -2568,8 +2539,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun showRoutePOIDialog(poi: POI) {
-        val isDark      = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         val msg = StringBuilder()
         msg.append("📂 ${poi.category}\n")
@@ -2590,8 +2559,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
     }
 
     private fun addWaypointToNavigation(waypoint: POI) {
@@ -2608,7 +2575,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             snippet  = getString(R.string.waypoint_number, num)
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             icon = ContextCompat.getDrawable(this@LocationActivity, R.drawable.ic_search_result)
-                ?.mutate()?.also { it.setTint(Color.parseColor("#9C27B0")) }
+                ?.mutate()?.also { it.setTint(Color.parseColor("#CE93D8")) }
         }
         waypointMarkers.add(marker)
         binding.mapView.overlays.add(marker)
@@ -2635,8 +2602,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun showWaypointReachedDialog(waypoint: POI) {
-        val isDark      = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         val nextInfo = when {
             waypointQueue.size > 1 -> getString(R.string.next_waypoint_info, waypointQueue.elementAt(1).name)
@@ -2652,7 +2617,6 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
     }
 
     private fun continueNavigation() {
@@ -3144,8 +3108,11 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         // Badge aktualisieren
         binding.tvSlopeClassBadge.text = "${slopeClass.icon} ${slopeClass.displayName(this)}"
         binding.cardSlopeClassBadge.setCardBackgroundColor(
-            Color.parseColor(slopeClass.color)
+            ContextCompat.getColor(this@LocationActivity, R.color.gl_fill)
         )
+        binding.cardSlopeClassBadge.strokeColor = Color.parseColor(slopeClass.color)
+        binding.cardSlopeClassBadge.strokeWidth = (2f * resources.displayMetrics.density).toInt()
+        binding.tvSlopeClassBadge.setTextColor(Color.parseColor(slopeClass.color))
 
         // Asphaltanteil aus surfaceSummary ermitteln (Name-basiert,
         // robust gegen Code-Änderungen im RouteInfoHelper)

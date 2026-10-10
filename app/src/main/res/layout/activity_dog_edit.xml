@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,11 +33,10 @@
             android:padding="16dp">
 
             <!-- FOTO -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -69,15 +68,16 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="12dp">
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnAddPhoto"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/dog_edit_add_photo_button"
-                            android:layout_marginEnd="4dp" />
+                            android:layout_marginEnd="4dp"
+                            style="@style/Widget.App.Button" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnRemovePhoto"
                             style="@style/Widget.App.Button.Outlined"
                             android:layout_width="0dp"
@@ -88,7 +88,7 @@
                             android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- BASIS-DATEN -->
             <TextView
@@ -127,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/dog_edit_hint_gender"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu"
                 android:layout_marginBottom="12dp">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerGender"
@@ -141,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/dog_edit_hint_neutered"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu"
                 android:layout_marginBottom="12dp">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerNeutered"
@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/dog_edit_hint_birthdate_precision"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu"
                 android:layout_marginBottom="8dp">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerBirthDateType"
@@ -532,7 +532,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#E0E0E0"
+                android:background="@color/gl_divider"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp" />
 
@@ -555,7 +555,7 @@
                 android:layout_marginBottom="16dp" />
 
             <!-- Quick-Profil Auswahl -->
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnQuickProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -866,7 +866,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnCancel"
                     style="@style/Widget.App.Button.Outlined"
                     android:layout_width="0dp"
@@ -875,14 +875,14 @@
                     android:text="@string/cancel"
                     android:layout_marginEnd="8dp" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/dog_edit_save_button"
-                    app:backgroundTint="?attr/colorSecondary"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="8dp"
+                    style="@style/Widget.App.Button.Primary" />
             </LinearLayout>
 
             <!-- EXTRA SPACE FOR KEYBOARD: liegt bewusst NACH den Buttons,

@@ -13,10 +13,10 @@ enum class PlantToxicityLevel(
     val icon: String,
     val color: String
 ) {
-    SLIGHTLY_TOXIC("🟡", "#F57C00"),
-    MODERATELY_TOXIC("🟠", "#E64A19"),
-    HIGHLY_TOXIC("🔴", "#C62828"),
-    DEADLY("☠️", "#7B0000");
+    SLIGHTLY_TOXIC("🟡", "#FFE082"),
+    MODERATELY_TOXIC("🟠", "#FFB74D"),
+    HIGHLY_TOXIC("🔴", "#FF8A65"),
+    DEADLY("☠️", "#FF5C7C");
 
     fun displayName(context: android.content.Context): String = when (this) {
         SLIGHTLY_TOXIC -> context.getString(R.string.plant_toxicity_slightly_toxic)

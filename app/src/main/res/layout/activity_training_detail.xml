@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,11 +48,10 @@
                 android:layout_marginBottom="24dp" />
 
             <!-- Fortschritts-Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -184,7 +183,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#E0E0E0"
+                        android:background="@color/gl_divider"
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="12dp" />
 
@@ -220,14 +219,13 @@
                         android:layout_marginTop="8dp"
                         android:alpha="0.7" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Trend-Analyse Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -288,15 +286,14 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Empfehlungs-Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardRecommendation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -331,10 +328,10 @@
                         android:alpha="0.7"
                         android:textStyle="italic" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Button: Neue Einheit -->
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnAddSession"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -342,7 +339,8 @@
                 android:textSize="@dimen/text_body_medium"
                 android:padding="16dp"
                 app:cornerRadius="12dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.App.Button" />
 
             <!-- Session-Historie -->
             <TextView

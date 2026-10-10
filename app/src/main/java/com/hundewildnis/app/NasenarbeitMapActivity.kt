@@ -184,11 +184,13 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         fun highlightActiveButton() {
             dizButtons.forEach { (btn, diz) ->
                 if (diz == disziplin) {
-                    btn.setBackgroundColor(android.graphics.Color.parseColor("#004c6f")) // Blau = aktiv
-                    btn.strokeWidth = 3
+                    btn.setBackgroundColor(androidx.core.content.ContextCompat.getColor(btn.context, R.color.gl_fill))
+                    btn.strokeColor = android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(btn.context, R.color.rd_overlay_accent))
+                    btn.strokeWidth = (3 * btn.resources.displayMetrics.density).toInt()
                 } else {
-                    btn.setBackgroundColor(android.graphics.Color.parseColor("#4C6238")) // dunkel = inaktiv
-                    btn.strokeWidth = 0
+                    btn.setBackgroundColor(androidx.core.content.ContextCompat.getColor(btn.context, R.color.gl_fill))
+                    btn.strokeColor = android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(btn.context, R.color.gl_stroke))
+                    btn.strokeWidth = (1 * btn.resources.displayMetrics.density).toInt()
                 }
             }
         }
@@ -1240,8 +1242,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             orsEdit.setText("********")
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        val color = android.graphics.Color.WHITE
         val csl = android.content.res.ColorStateList.valueOf(color)
         listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
 
@@ -1260,12 +1261,10 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
                 }
             }
             .create()
-        dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+        dialog.show()
     }
 
     private fun showOrsInfoDialog() {
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.nasenarbeit_map_ors_key_dialog_title))
             .setMessage(getString(R.string.nasenarbeit_map_ors_key_dialog_message))
@@ -1273,7 +1272,6 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
             }
     }
 }

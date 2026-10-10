@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -118,18 +118,19 @@
                 app:spanCount="2" />
 
             <!-- Info Karte -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#E3F2FD"
+                app:strokeColor="@color/gl_info_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill"
                 android:layout_marginBottom="16dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💡 TIPP" android:textSize="13sp" android:textStyle="bold" android:textColor="#1976D2" android:layout_marginBottom="8dp" />
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="• Backup-Dateien enden auf .hundebackup\n• Speicherort: Download/HundeWildnis_Backups/" android:textSize="12sp" android:textColor="#1565C0" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💡 TIPP" android:textSize="13sp" android:textStyle="bold" android:textColor="@color/gl_info" android:layout_marginBottom="8dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="• Backup-Dateien enden auf .hundebackup\n• Speicherort: Download/HundeWildnis_Backups/" android:textSize="12sp" android:textColor="@color/gl_info" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Status & Progress -->
             <LinearLayout

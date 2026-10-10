@@ -130,9 +130,6 @@ class DogEditActivity : SecureBaseActivity() {
         val profiles = QuickCharacterProfile.values()
         val profileNames = profiles.map { "${it.displayName(this)}\n${it.description(this)}" }.toTypedArray()
 
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(getString(R.string.dog_edit_quick_profile_dialog_title))
@@ -143,7 +140,6 @@ class DogEditActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -357,9 +353,6 @@ class DogEditActivity : SecureBaseActivity() {
         yearPicker.maxValue = currentYear
         yearPicker.value = currentYear
 
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dog_edit_month_year_dialog_title))
@@ -371,8 +364,6 @@ class DogEditActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -384,9 +375,6 @@ class DogEditActivity : SecureBaseActivity() {
         yearPicker.maxValue = currentYear
         yearPicker.value = currentYear
 
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dog_edit_year_dialog_title))
@@ -397,8 +385,6 @@ class DogEditActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 

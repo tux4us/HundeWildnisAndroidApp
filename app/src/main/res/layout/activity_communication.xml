@@ -2,8 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -14,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,11 +32,10 @@
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- MODUS-AUSWAHL -->
             <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -139,16 +137,15 @@
                     </LinearLayout>
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- CHART CARD -->
             <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -173,17 +170,18 @@
                         android:layout_height="300dp" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- AKTUELLE FREQUENZ ANZEIGE -->
             <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="?attr/colorSecondary"
+                app:strokeColor="@color/gl_primary_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill"
                 android:id="@+id/cardFrequency"
                 android:layout_marginBottom="16dp">
 
@@ -199,7 +197,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/comm_current_freq_title"
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="?attr/colorOnSecondary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:alpha="0.7"
                         android:layout_marginBottom="8dp" />
 
@@ -215,7 +213,7 @@
                             android:text="--- Hz"
                             android:textSize="@dimen/text_body_medium"
                             android:textStyle="bold"
-                            android:textColor="?attr/colorOnSecondary"
+                            android:textColor="?android:attr/textColorPrimary"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -251,10 +249,10 @@
                         android:layout_height="wrap_content"
                         android:text="@string/comm_status_waiting"
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="?attr/colorOnSecondary" />
+                        android:textColor="?android:attr/textColorPrimary" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- STEUERUNG -->
@@ -274,19 +272,17 @@
                     android:text="@string/comm_btn_start"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
-                    android:backgroundTint="?attr/colorSecondary"
-                    android:textColor="?attr/colorOnSecondary" />
+                    style="@style/Widget.App.Button.Primary" />
 
             </LinearLayout>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- EINSTELLUNGEN -->
             <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -319,16 +315,15 @@
                         android:checked="false" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- STATISTIK -->
             <!-- ═══════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -356,7 +351,7 @@
                         android:lineSpacingExtra="4dp" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- EXPORT BUTTONS -->
@@ -373,10 +368,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="📄 PDF"
-                    android:backgroundTint="?attr/colorSecondary"
-                    android:textColor="?attr/colorOnSecondary"
                     android:enabled="false"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"
+                    style="@style/Widget.App.Button.Primary" />
 
                 <Button
                     android:id="@+id/btnShare"
@@ -384,9 +378,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/comm_btn_share"
-                    android:backgroundTint="?attr/colorSecondary"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    style="@style/Widget.App.Button.Primary" />
 
             </LinearLayout>
 

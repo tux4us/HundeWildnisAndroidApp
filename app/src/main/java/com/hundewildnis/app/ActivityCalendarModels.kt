@@ -59,10 +59,10 @@ data class PlannedSession(
 
 // ── Wetter-Eignung pro Tag ────────────────────────────────────────
 enum class DayWeatherSuitability(val icon: String, val color: String) {
-    IDEAL("🟢", "#4CAF50"),
-    CONDITIONAL("🟡", "#FF9800"),
-    NOT_RECOMMENDED("🔴", "#E53935"),
-    UNKNOWN("⚪", "#777777");
+    IDEAL("🟢", "#6FBF73"),
+    CONDITIONAL("🟡", "#F2B84B"),
+    NOT_RECOMMENDED("🔴", "#FF6F60"),
+    UNKNOWN("⚪", "#B2B2AE");
 
     fun label(context: android.content.Context): String = when (this) {
         IDEAL -> context.getString(R.string.day_weather_suitability_ideal)

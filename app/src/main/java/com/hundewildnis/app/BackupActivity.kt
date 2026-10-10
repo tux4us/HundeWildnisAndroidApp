@@ -184,9 +184,7 @@ class BackupActivity : SecureBaseActivity() {
     }
 
     private fun confirmRestore(backupFile: File) {
-        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        val buttonColor = android.graphics.Color.WHITE
 
         val modeDialog = AlertDialog.Builder(this)
             .setTitle("📦 Backup importieren")
@@ -214,9 +212,6 @@ class BackupActivity : SecureBaseActivity() {
             .create()
 
         modeDialog.show()
-        modeDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        modeDialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-        modeDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun confirmReplaceRestore(backupFile: File, buttonColor: Int) {
@@ -242,8 +237,6 @@ class BackupActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.parseColor("#F44336"))
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun confirmMergeRestore(backupFile: File, buttonColor: Int) {
@@ -267,8 +260,6 @@ class BackupActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun restoreBackup(backupFile: File, mergeMode: Boolean = false) {
@@ -301,11 +292,7 @@ class BackupActivity : SecureBaseActivity() {
                     successDialog.show()
 
                     // ✅ Button-Farben für Dark Mode
-                    val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                            android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-                    val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
-                    successDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
                 } else {
                     binding.progressBar.visibility = View.GONE
                     binding.tvStatus.text = "❌ Fehler beim Wiederherstellen"
@@ -352,12 +339,7 @@ class BackupActivity : SecureBaseActivity() {
         dialog.show()
 
         // ✅ Button-Farben für Dark Mode
-        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        val buttonColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 
     private fun shareBackupFile(backupFile: File) {

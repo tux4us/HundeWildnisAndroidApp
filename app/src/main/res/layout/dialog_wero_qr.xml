@@ -39,13 +39,12 @@
         <!-- OPTION 1: Mit Link (1 Gerät) -->
         <!-- ═══════════════════════════════════════════════════════ -->
 
-        <com.google.android.material.card.MaterialCardView
+        <com.hundewildnis.app.GlassCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:strokeColor="#1B5E20"
+            app:strokeColor="@color/gl_success_stroke"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -72,7 +71,7 @@
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginBottom="12dp" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnWeroLink"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -80,11 +79,10 @@
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     app:cornerRadius="8dp"
-                    app:backgroundTint="#1B5E20"
-                    android:textColor="#FFFFFF" />
+                    style="@style/Widget.App.Button.Success" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </com.hundewildnis.app.GlassCardView>
 
         <!-- Trennlinie mit "ODER" -->
         <LinearLayout
@@ -123,12 +121,11 @@
         <!-- OPTION 2: Mit QR-Code (2 Geräte) -->
         <!-- ═══════════════════════════════════════════════════════ -->
 
-        <com.google.android.material.card.MaterialCardView
+        <com.hundewildnis.app.GlassCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -171,7 +168,7 @@
                         android:layout_height="280dp"
                         android:scaleType="fitCenter"
                         android:contentDescription="Wero QR-Code zum Scannen"
-                        android:background="#FFFEF0"
+                        android:background="@color/gl_warning_fill"
                         android:padding="12dp" />
 
                     <TextView
@@ -186,7 +183,7 @@
                 </LinearLayout>
 
                 <!-- QR-Code anzeigen/ausblenden Button -->
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnToggleQR"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -195,7 +192,7 @@
                     style="@style/Widget.App.Button.Outlined" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </com.hundewildnis.app.GlassCardView>
 
         <!-- Info Box -->
         <TextView
@@ -220,13 +217,13 @@
             android:layout_marginBottom="16dp" />
 
         <!-- Schließen-Button -->
-        <com.google.android.material.button.MaterialButton
+        <com.hundewildnis.app.GlassButton
             android:id="@+id/btnCloseDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Schließen"
             app:cornerRadius="8dp"
-            style="@style/Widget.Material3.Button.TextButton" />
+            style="@style/Widget.App.Button.Text" />
 
     </LinearLayout>
 </ScrollView>

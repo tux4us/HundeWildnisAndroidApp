@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<com.hundewildnis.app.GlassCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/rd_surface_alt"
     app:cardCornerRadius="12dp"
     app:strokeWidth="0dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    style="@style/Widget.App.Card.Inner">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/location_share_device_placeholder_label"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/rd_text_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/location_share_device_placeholder_status"
-                    android:textColor="#999999"
+                    android:textColor="@color/rd_text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🔋 --%"
-                    android:textColor="#999999"
+                    android:textColor="@color/rd_text_secondary"
                     android:textSize="10sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lat: --, Lon: --"
-            android:textColor="#BBBBBB"
+            android:textColor="@color/rd_text_secondary"
             android:textSize="11sp"
             android:fontFamily="monospace"
             android:layout_marginBottom="12dp"
@@ -102,9 +102,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnItemRoute"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.App.Button.Primary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -112,33 +112,28 @@
                 android:text="@string/location_share_item_route_button"
                 android:textSize="12sp"
                 app:icon="@drawable/ic_my_location"
-                app:iconSize="16dp"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="?attr/colorSecondary" />
+                app:iconSize="16dp" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnItemShare"
-                style="@style/Widget.App.Button.Outlined"
+                style="@style/Widget.App.Button.Outlined.Primary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:text="@string/location_share_item_share_button"
-                android:textSize="12sp"
-                app:strokeColor="@color/rd_overlay_accent" />
+                android:textSize="12sp" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnItemDelete"
-                style="@style/Widget.App.Button.Outlined"
+                style="@style/Widget.App.Button.Outlined.Danger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🗑️"
                 android:padding="0dp"
-                android:minWidth="48dp"
-                android:textColor="#FF5252"
-                app:strokeColor="#FF5252" />
+                android:minWidth="48dp" />
 
         </LinearLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+</com.hundewildnis.app.GlassCardView>

@@ -1,6 +1,5 @@
 package com.hundewildnis.app
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -83,9 +82,6 @@ class SpielSpassHistoryActivity : SecureBaseActivity() {
     }
 
     private fun confirmDeleteSession(session: SpielSession) {
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.spiel_spass_stats_delete_session_title))
@@ -97,8 +93,6 @@ class SpielSpassHistoryActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 

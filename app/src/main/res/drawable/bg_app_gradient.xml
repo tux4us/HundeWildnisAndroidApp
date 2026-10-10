@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dezenter Verlaufshintergrund der gesamten App: dunkle Basis mit zwei weichen
+     Farbflächen (Gold oben rechts, Grün unten links). Die Glasflächen bekommen
+     dadurch etwas, das durch sie hindurchscheint. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="@color/gl_bg_top"
+                android:centerColor="@color/gl_bg_mid"
+                android:endColor="@color/gl_bg_bottom" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.92"
+                android:centerY="0.08"
+                android:gradientRadius="75%p"
+                android:startColor="@color/gl_glow_gold"
+                android:endColor="@color/gl_glow_clear" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.05"
+                android:centerY="0.95"
+                android:gradientRadius="85%p"
+                android:startColor="@color/gl_glow_green"
+                android:endColor="@color/gl_glow_clear" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.0"
+                android:centerY="0.45"
+                android:gradientRadius="60%p"
+                android:startColor="@color/gl_glow_blue"
+                android:endColor="@color/gl_glow_clear" />
+        </shape>
+    </item>
+</layer-list>

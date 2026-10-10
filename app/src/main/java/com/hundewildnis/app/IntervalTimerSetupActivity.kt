@@ -2,7 +2,6 @@ package com.hundewildnis.app
 
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -99,10 +98,9 @@ class IntervalTimerSetupActivity : SecureBaseActivity() {
 
         // Design-Anpassung (Gruppe 2 = Index 1)
         val colors = StartGroupColors.forGroup(this, 1)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val accentColor = ContextCompat.getColor(this, colors.accentColorRes)
         val chipColor = ContextCompat.getColor(this, colors.chipColorRes)
-        val textColor = ContextCompat.getColor(this, if (isDark) R.color.rd_text_primary_dark else R.color.rd_text_primary_light)
+        val textColor = ContextCompat.getColor(this, R.color.rd_text_primary)
 
         binding.toolbar.navigationIcon?.setTint(textColor)
 

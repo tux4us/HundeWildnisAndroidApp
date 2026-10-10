@@ -211,7 +211,7 @@ class PlantDetailActivity : SecureBaseActivity() {
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
-                    ?.setTextColor(Color.parseColor("#C0392B"))
+                    ?.setTextColor(Color.parseColor("#F0786C"))
             }
     }
 
@@ -222,13 +222,7 @@ class PlantDetailActivity : SecureBaseActivity() {
     private fun setupToolbar(plant: ToxicPlant) {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply { title = plant.name(this@PlantDetailActivity); setDisplayHomeAsUpEnabled(true) }
-        val bgColor = when (plant.toxicityLevel) {
-            PlantToxicityLevel.DEADLY           -> "#7B0000"
-            PlantToxicityLevel.HIGHLY_TOXIC     -> "#C62828"
-            PlantToxicityLevel.MODERATELY_TOXIC -> "#BF360C"
-            PlantToxicityLevel.SLIGHTLY_TOXIC   -> "#E65100"
-        }
-        binding.toolbar.setBackgroundColor(Color.parseColor(bgColor))
+        binding.toolbar.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.gl_bar))
     }
 
     private fun renderHeader(plant: ToxicPlant) {
@@ -236,7 +230,11 @@ class PlantDetailActivity : SecureBaseActivity() {
         binding.tvLatinName.text     = plant.latinName
         binding.tvToxicityIcon.text  = plant.toxicityLevel.icon
         binding.tvToxicityLabel.text = plant.toxicityLevel.displayName(this)
-        binding.cardToxicity.setCardBackgroundColor(Color.parseColor(plant.toxicityLevel.color))
+        val toxColor = Color.parseColor(plant.toxicityLevel.color)
+        binding.cardToxicity.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.gl_fill))
+        binding.cardToxicity.strokeColor = toxColor
+        binding.cardToxicity.strokeWidth = (2.5f * resources.displayMetrics.density).toInt()
+        binding.tvToxicityLabel.setTextColor(toxColor)
         binding.tvAltNames.visibility =
             if (plant.alternativeNames(this).isNotEmpty()) View.VISIBLE else View.GONE
         binding.tvAltNames.text =

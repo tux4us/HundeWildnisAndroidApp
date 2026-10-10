@@ -1,6 +1,7 @@
 package com.hundewildnis.app
 
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -252,12 +253,12 @@ class ActivityCalendarActivity : SecureBaseActivity() {
                 cornerRadius = 6 * dp
                 setColor(
                     when {
-                        isToday -> Color.parseColor("#2d5016")
-                        else -> Color.parseColor("#2A2A2A")
+                        isToday -> ContextCompat.getColor(this@ActivityCalendarActivity, R.color.gl_success_fill)
+                        else -> ContextCompat.getColor(this@ActivityCalendarActivity, R.color.gl_fill)
                     }
                 )
                 if (isToday) {
-                    setStroke((1.5f * dp).toInt(), Color.parseColor("#8FC357"))
+                    setStroke((1.5f * dp).toInt(), ContextCompat.getColor(this@ActivityCalendarActivity, R.color.gl_success))
                 }
             }
             isClickable = true
@@ -362,8 +363,6 @@ class ActivityCalendarActivity : SecureBaseActivity() {
 
         val dialog = builder.create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.parseColor("#8FC357"))
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.parseColor("#8FC357"))
     }
 
     // ════════════════════════════════════════════════════════════
@@ -451,8 +450,6 @@ class ActivityCalendarActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
             .apply {
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.parseColor("#8FC357"))
-                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.parseColor("#8FC357"))
             }
     }
 
@@ -653,8 +650,8 @@ class ActivityCalendarActivity : SecureBaseActivity() {
             ).also { it.marginEnd = (6 * dp).toInt() }
             background = android.graphics.drawable.GradientDrawable().apply {
                 cornerRadius = 8 * dp
-                setColor(Color.parseColor("#2A2A2A"))
-                setStroke((1 * dp).toInt(), Color.parseColor(suitability.color))
+                setColor(Color.parseColor("#1FFFFFFF"))
+                setStroke((2 * dp).toInt(), Color.parseColor(suitability.color))
             }
             isClickable = true
             setOnClickListener {

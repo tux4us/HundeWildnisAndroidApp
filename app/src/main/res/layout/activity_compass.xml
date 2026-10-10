@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="#1a1a1a">
+    android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -58,7 +57,7 @@
                 android:layout_alignTop="@id/compassContainer"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-5dp"
-                android:background="#FF0000" />
+                android:background="@color/gl_danger_fill" />
 
             <!-- Grad-Anzeige (rotiert NICHT mit) -->
             <TextView
@@ -83,20 +82,19 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
                 android:text="@string/compass_direction_default_placeholder"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="@dimen/text_body_large"
                 android:textStyle="bold"/>
 
             <!-- Himmelskörper-Info-Panel -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/skyInfoCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/directionText"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="@color/rd_surface_alt"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                style="@style/Widget.App.Card.Inner">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,7 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/compass_sun_calculating_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="@dimen/text_body_large"
                         android:layout_marginBottom="8dp" />
 
@@ -118,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/compass_moon_calculating_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="@dimen/text_body_large"
                         android:layout_marginBottom="8dp" />
 
@@ -127,12 +125,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/compass_polaris_calculating_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="@dimen/text_body_large" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Abstandshalter, damit der Scroll-Inhalt nicht hinter dem fixen Hinweistext verschwindet -->
             <View
@@ -150,12 +148,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#1a1a1a"
         android:paddingHorizontal="16dp"
         android:paddingVertical="16dp"
         android:text="@string/compass_hinweis"
         android:textAlignment="center"
-        android:textColor="#999999"
+        android:textColor="@color/rd_text_secondary"
         android:textSize="@dimen/text_body_large" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

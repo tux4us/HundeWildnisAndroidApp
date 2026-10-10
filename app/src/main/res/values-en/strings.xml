@@ -2569,7 +2569,6 @@
     <!-- Main Menu (StartActivity Options Menu) -->
     <string name="menu_main_language">🌐 Language / Sprache</string>
     <string name="menu_main_refresh">🔁 Refresh</string>
-    <string name="menu_main_theme">🌞🌒 Change Theme</string>
     <string name="menu_main_settings">⚙️ Settings</string>
     <string name="menu_main_backup_create">📦 Create Backup</string>
     <string name="menu_main_backup_restore">📥 Import Backup</string>

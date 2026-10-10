@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -75,8 +74,6 @@ class NasenarbeitActivity : SecureBaseActivity() {
     }
 
     private fun showInfoDialog() {
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.nasenarbeit_info_dialog_title))
@@ -84,7 +81,6 @@ class NasenarbeitActivity : SecureBaseActivity() {
             .setPositiveButton(getString(R.string.start_understood), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(colorNormal)
             }
     }
 
@@ -135,10 +131,6 @@ class NasenarbeitActivity : SecureBaseActivity() {
     }
 
     private fun confirmDeleteData(profile: DogProfile) {
-        val isDark = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.nasenarbeit_delete_data_title))
@@ -151,8 +143,6 @@ class NasenarbeitActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(colorNormal)
             }
     }
 

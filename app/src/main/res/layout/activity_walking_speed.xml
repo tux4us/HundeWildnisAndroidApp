@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,15 +34,14 @@
             android:padding="12dp">
 
             <!-- Status -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#33000000">
+                app:strokeColor="@color/gl_stroke_subtle">
 
                 <TextView
                     android:id="@+id/tvStatus"
@@ -53,7 +52,7 @@
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:padding="16dp" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Aktuelle Geschwindigkeit -->
             <TextView
@@ -127,30 +126,28 @@
             <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchSound" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/walking_speed_switch_sound" android:textSize="13sp" android:checked="true" android:layout_marginBottom="24dp" />
 
             <!-- Live-Diagramm -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="12dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/walking_speed_header_chart" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp" />
                     <com.github.mikephil.charting.charts.LineChart android:id="@+id/speedChart" android:layout_width="match_parent" android:layout_height="250dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Statistiken -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="12dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/walking_speed_header_stats" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp" />
                     <TextView android:id="@+id/tvStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/walking_speed_initial_stats" android:textSize="12sp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Export Grid -->
             <androidx.recyclerview.widget.RecyclerView

@@ -34,7 +34,7 @@ class PrecipitationChartView @JvmOverloads constructor(
     }
 
     private val gridPaint = Paint().apply {
-        color = Color.parseColor("#333333")
+        color = Color.parseColor("#33FFFFFF")
         strokeWidth = 1f
         style = Paint.Style.STROKE
     }

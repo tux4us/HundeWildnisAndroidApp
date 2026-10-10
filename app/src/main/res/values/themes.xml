@@ -1,49 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Light Theme -->
-    <style name="Base.Theme.HundeWildnis" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Globale Widget Styles -->
+    <!-- ═══════════════════════════════════════════════════════════
+         GLAS-DESIGN — einziges Theme der App (Dark)
+         Flächen: halbtransparentes Glas über dem Verlauf aus
+         drawable/bg_app_gradient. Tokens: values/colors_glass.xml.
+         ═══════════════════════════════════════════════════════════ -->
+    <style name="Base.Theme.HundeWildnis" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Globale Widget-Styles -->
         <item name="materialButtonStyle">@style/Widget.App.Button</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.Outlined</item>
+        <item name="materialCardViewStyle">@style/Widget.App.Card</item>
+        <item name="appBarLayoutStyle">@style/Widget.App.AppBarLayout</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigation</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
         <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
         <item name="radioButtonStyle">@style/Widget.App.RadioButton</item>
         <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
+        <item name="chipStyle">@style/Widget.App.Chip</item>
 
-        <item name="colorPrimary">@color/rd_bg_light</item>
-        <item name="colorOnPrimary">@color/rd_text_primary_light</item>
-        <item name="colorSecondary">@color/rd_group2_accent_light</item>
-        <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="colorSurface">@color/rd_card_light</item>
-        <item name="colorOnSurface">@color/rd_text_primary_light</item>
-        <item name="colorSurfaceVariant">@color/rd_border_light</item>
-        <item name="colorOnBackground">@color/rd_text_primary_light</item>
+        <!-- Farbrollen -->
+        <item name="colorPrimary">@color/rd_bg</item>
+        <item name="colorOnPrimary">@color/rd_text_primary</item>
+        <item name="colorSecondary">@color/rd_overlay_accent</item>
+        <item name="colorOnSecondary">#1A1A1A</item>
+        <item name="colorSurface">@color/rd_card</item>
+        <item name="colorOnSurface">@color/rd_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/rd_text_secondary</item>
+        <item name="colorSurfaceVariant">@color/gl_fill_strong</item>
+        <item name="colorOnBackground">@color/rd_text_primary</item>
+        <item name="colorOutline">@color/gl_stroke_strong</item>
+        <item name="colorOutlineVariant">@color/gl_stroke</item>
         <item name="colorControlActivated">@color/rd_overlay_accent</item>
+        <item name="colorAccent">@color/rd_overlay_accent</item>
         <item name="android:textCursorDrawable">@drawable/text_cursor</item>
-        <item name="android:statusBarColor">@color/rd_bg_light</item>
-        <item name="android:navigationBarColor">@color/rd_bg_light</item>
+
+        <!-- Opake Container-Flächen (Popup-Menüs, Spinner-Listen) ohne M3-Lila-Stich -->
+        <item name="colorSurfaceContainerLowest">#101214</item>
+        <item name="colorSurfaceContainerLow">#181B1F</item>
+        <item name="colorSurfaceContainer">@color/rd_card</item>
+        <item name="colorSurfaceContainerHigh">#22272B</item>
+        <item name="colorSurfaceContainerHighest">#2B3035</item>
+
+        <!-- Text -->
+        <item name="android:textColorPrimary">@color/rd_text_primary</item>
+        <item name="android:textColorSecondary">@color/rd_text_secondary</item>
+
+        <!-- Fenster: Verlauf als Hintergrund, Systemleisten transparent (Edge-to-Edge) -->
+        <item name="android:windowBackground">@drawable/bg_app_gradient</item>
+        <item name="android:colorBackground">@color/rd_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
 
-        <!-- AlertDialog Button Farben (WICHTIG!) -->
-        <item name="colorAccent">@color/rd_group2_accent_light</item>
-        <item name="android:textColorPrimary">@color/rd_text_primary_light</item>
-        <item name="android:textColorSecondary">@color/rd_text_secondary_light</item>
-        <item name="colorOnSurfaceVariant">@color/rd_text_secondary_light</item>
-
-        <!-- Material Button für AlertDialog -->
+        <!-- Dialoge -->
         <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
         <item name="alertDialogTheme">@style/AlertDialogTheme</item>
 
-        <!-- Menü-Farben -->
-        <item name="actionMenuTextColor">@color/rd_text_primary_light</item>
+        <!-- Menüs -->
+        <item name="actionMenuTextColor">@color/rd_text_primary</item>
         <item name="actionOverflowButtonStyle">@style/Widget.App.Overflow</item>
-
-        <!-- Hintergrundfarben für Light Mode -->
-        <item name="android:windowBackground">@color/rd_bg_light</item>
-        <item name="android:colorBackground">@color/rd_bg_light</item>
     </style>
 
     <style name="Theme.HundeWildnis" parent="Base.Theme.HundeWildnis" />
@@ -54,7 +73,6 @@
 
     <style name="Widget.App.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
         <item name="buttonTint">@color/radio_button_tint</item>
-        <!-- Optional: Textfarbe anpassen für besseren Kontrast -->
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
@@ -63,37 +81,33 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <!-- AlertDialog spezielles Theme für Light Mode -->
-    <style name="AlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <!-- Dialog Hintergrund -->
-        <item name="colorSurface">#FFFFFF</item>
+    <!-- ═══════════════ Dialoge ═══════════════ -->
+    <style name="AlertDialogTheme.Base" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowBackground">@drawable/bg_glass_dialog</item>
+        <item name="colorSurface">@color/gl_dialog</item>
+        <item name="colorOnSurface">@color/rd_text_primary</item>
+        <item name="android:textColorPrimary">@color/rd_text_primary</item>
+        <item name="android:textColorSecondary">@color/rd_text_secondary</item>
+        <item name="colorOnSurfaceVariant">@color/rd_text_secondary</item>
+        <item name="colorPrimary">@color/rd_overlay_accent</item>
+        <item name="colorSecondary">@color/rd_overlay_accent</item>
 
-        <!-- Text Farben -->
-        <item name="colorOnSurface">#000000</item>
-        <item name="android:textColorPrimary">#000000</item>
-
-        <!-- Button Styles -->
-        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyle.Light</item>
-        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyle.Light</item>
-        <item name="buttonBarNeutralButtonStyle">@style/DialogButtonStyle.Light</item>
-
-        <!-- Button Bar Style -->
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button.Dialog</item>
         <item name="buttonBarStyle">@style/Widget.App.ButtonBar</item>
-
-        <!-- FORCE BUTTON STYLE FOR APPCOMPAT DIALOGS -->
-        <item name="android:buttonStyle">@style/DialogButtonStyle.Light</item>
+        <item name="android:buttonStyle">@style/Widget.App.Button.Dialog</item>
     </style>
+
+    <style name="AlertDialogTheme" parent="AlertDialogTheme.Base" />
 
     <style name="Widget.App.ButtonBar" parent="Widget.AppCompat.ButtonBar.AlertDialog">
         <item name="android:padding">0dp</item>
     </style>
 
-    <!-- Einheitlicher Button Style für Light Mode Dialoge -->
-    <style name="DialogButtonStyle.Light" parent="Widget.Material3.Button.TextButton.Dialog">
-        <!-- Text Farbe: SEKUNDÄRAKZENT -->
-        <item name="android:textColor">?attr/colorSecondary</item>
-
-        <!-- KORREKTUR: Platzprobleme bei großen Schriften -->
+    <!-- Dialog-Buttons: Textbuttons in Gold; kompakt, damit sie bei großen Schriften Platz haben -->
+    <style name="Widget.App.Button.Dialog" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/rd_overlay_accent</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:maxLines">2</item>
@@ -102,21 +116,35 @@
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMinTextSize">10sp</item>
         <item name="autoSizeMaxTextSize">16sp</item>
-
-        <!-- Reduziere Insets und Padding radikal, um Platz zu sparen -->
         <item name="android:paddingStart">2dp</item>
         <item name="android:paddingEnd">2dp</item>
         <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-
-        <!-- Hintergrund: TRANSPARENT -->
         <item name="backgroundTint">@android:color/transparent</item>
+        <item name="rippleColor">@color/rd_ripple_accent</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
 
-        <!-- Ripple Effekt: Leichter Ocker-Akzent -->
-        <item name="rippleColor">#33A3762F</item>
+    <!-- ═══════════════ Bottom Sheet ═══════════════ -->
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.App.BottomSheet</item>
+    </style>
+
+    <style name="Widget.App.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@color/gl_sheet</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Sheet</item>
+    </style>
+
+    <style name="ShapeAppearance.App.Sheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
 </resources>

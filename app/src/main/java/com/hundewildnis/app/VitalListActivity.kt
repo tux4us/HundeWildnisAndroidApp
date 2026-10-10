@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -140,8 +139,6 @@ class VitalListActivity : SecureBaseActivity() {
     }
 
     private fun confirmDelete(record: VitalRecord) {
-        val isDark = isNightMode()
-        val color = if (isDark) Color.WHITE else Color.parseColor("#B00020")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.vital_list_delete_dialog_title))
@@ -157,8 +154,6 @@ class VitalListActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.parseColor("#B00020"))
-                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
             }
     }
 
@@ -208,12 +203,6 @@ class VitalListActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════════
     // UTILS
     // ════════════════════════════════════════════════════════════════
-
-    private fun isNightMode(): Boolean {
-        return (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-    }
 
     override fun onResume() {
         super.onResume()

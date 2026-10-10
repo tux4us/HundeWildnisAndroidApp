@@ -14,8 +14,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="#FFFFFF" />
+            android:background="@color/gl_bar"
+            app:titleTextColor="@color/rd_text_primary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -102,7 +102,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="?attr/colorSecondary"
                 android:layout_marginBottom="24dp" />
 
             <!-- Erfolgs-Rating -->
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="🎯 Ablenkungslevel"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerDistraction"
                     android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:hint="📊 Schwierigkeitsgrad"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerDifficulty"
                     android:layout_width="match_parent"
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:hint="☀️ Wetter"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerWeather"
                     android:layout_width="match_parent"
@@ -211,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:hint="📍 Ort"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu">
                 <AutoCompleteTextView
                     android:id="@+id/spinnerLocation"
                     android:layout_width="match_parent"
@@ -225,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:hint="📝 Notizen"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/Widget.App.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotes"
                     android:layout_width="match_parent"

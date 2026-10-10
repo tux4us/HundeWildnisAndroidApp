@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -54,24 +54,20 @@
                         android:orientation="horizontal"
                         android:padding="8dp">
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnFilterAll"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            style="@style/Widget.App.Button.Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/main_filter_all_posts"
-                            android:textColor="?attr/colorSecondary"
-                            app:rippleColor="@color/rd_ripple_accent" />
+                            android:text="@string/main_filter_all_posts" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnFilterCategories"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.App.Button.Outlined.Primary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="@string/main_filter_categories"
-                            android:textColor="?attr/colorSecondary"
-                            app:strokeColor="?attr/colorSecondary" />
+                            android:text="@string/main_filter_categories" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -112,11 +108,10 @@
                 android:layout_marginBottom="80dp"
                 android:paddingStart="32dp"
                 android:paddingEnd="32dp"
-                android:backgroundTint="?attr/colorSecondary"
                 android:text="@string/main_load_more_posts"
-                android:textColor="?attr/colorOnSecondary"
                 android:elevation="4dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                style="@style/Widget.App.Button.Primary" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -145,7 +140,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="?attr/colorPrimary"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:itemRippleColor="@color/rd_ripple_accent"
@@ -153,7 +147,6 @@
         app:itemTextAppearanceActive="@style/TextAppearance.App.BottomNav.Active"
         app:itemTextAppearanceInactive="@style/TextAppearance.App.BottomNav.Inactive"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_bottom_navigation"
-        app:elevation="16dp" />
+        app:menu="@menu/menu_bottom_navigation" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,13 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-
-    <!-- Kräftiges Grün mit leichter Transparenz -->
-    <solid android:color="#BE253E0B" />
-
-    <!-- Optional: Rand für bessere Sichtbarkeit -->
+    <solid android:color="@color/rd_map_overlay" />
     <stroke
-        android:width="4dp"
-        android:color="#172803" />
-
+        android:width="1dp"
+        android:color="@color/gl_stroke_strong" />
 </shape>

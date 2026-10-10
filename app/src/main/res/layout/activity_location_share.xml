@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnStopRouting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,9 +47,9 @@
                 android:text="@string/location_share_stop_routing_button"
                 android:visibility="gone"
                 android:textSize="12sp"
-                app:backgroundTint="#B71C1C"
                 app:icon="@android:drawable/ic_menu_close_clear_cancel"
-                app:iconSize="16dp" />
+                app:iconSize="16dp"
+                style="@style/Widget.App.Button.Danger" />
         </FrameLayout>
 
         <!-- ── Alle Funktionen & Geräteliste (scrollbar) ── -->
@@ -66,11 +66,10 @@
                 android:padding="16dp">
 
                 <!-- Karte 1: Eigene Freigabe -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -103,7 +102,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/location_share_card_subtitle"
                                     android:textSize="@dimen/text_body_small"
-                                    android:textColor="#666666" />
+                                    android:textColor="@color/rd_text_secondary" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -116,7 +115,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            style="@style/Widget.App.TextInputLayout"
                             android:hint="@string/location_share_label_hint">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -133,18 +132,20 @@
                             android:layout_height="wrap_content"
                             android:text="@string/location_share_own_status_inactive"
                             android:textSize="@dimen/text_body_small"
-                            android:textColor="#666666"
+                            android:textColor="@color/rd_text_secondary"
                             android:layout_marginTop="8dp" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Karte 2: WebDAV Warnung -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:id="@+id/cardNoWebDav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="#FFF8E1"
+                    app:strokeColor="@color/gl_warning_stroke"
+                    app:strokeWidth="1.5dp"
+                    app:cardBackgroundColor="@color/gl_fill"
                     android:layout_marginBottom="12dp"
                     android:visibility="gone">
 
@@ -158,7 +159,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/location_share_webdav_missing_title"
-                            android:textColor="#E65100"
+                            android:textColor="@color/gl_warning"
                             android:textStyle="bold" />
 
                         <TextView
@@ -167,26 +168,24 @@
                             android:layout_marginTop="4dp"
                             android:text="@string/location_share_webdav_missing_message"
                             android:textSize="12sp"
-                            android:textColor="#BF360C" />
+                            android:textColor="@color/gl_danger" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnOpenWebDavSettings"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.App.Button.Text.Warning"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_gravity="end"
-                            android:text="@string/location_share_webdav_missing_button"
-                            android:textColor="#E65100" />
+                            android:text="@string/location_share_webdav_missing_button" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Karte 3: Karten-Optionen -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -208,7 +207,7 @@
                                 android:text="@string/location_share_map_settings_title"
                                 android:textStyle="bold" />
 
-                            <com.google.android.material.button.MaterialButton
+                            <com.hundewildnis.app.GlassButton
                                 android:id="@+id/btnRefreshMap"
                                 style="?attr/materialIconButtonStyle"
                                 android:layout_width="48dp"
@@ -223,7 +222,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/location_share_routing_profile_label"
                             android:textSize="12sp"
-                            android:textColor="#666666"
+                            android:textColor="@color/rd_text_secondary"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="4dp"/>
 
@@ -236,9 +235,9 @@
                             app:checkedButton="@+id/btnProfileFoot"
                             android:layout_marginBottom="8dp">
 
-                            <com.google.android.material.button.MaterialButton
+                            <com.hundewildnis.app.GlassButton
                                 android:id="@+id/btnProfileFoot"
-                                style="?attr/materialButtonOutlinedStyle"
+                                style="@style/Widget.App.Button.Outlined"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
                                 android:text="@string/location_share_profile_foot"
@@ -246,9 +245,9 @@
                                 android:paddingHorizontal="12dp"
                                 app:cornerRadius="8dp" />
 
-                            <com.google.android.material.button.MaterialButton
+                            <com.hundewildnis.app.GlassButton
                                 android:id="@+id/btnProfileBike"
-                                style="?attr/materialButtonOutlinedStyle"
+                                style="@style/Widget.App.Button.Outlined"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
                                 android:text="@string/location_share_profile_bike"
@@ -256,9 +255,9 @@
                                 android:paddingHorizontal="12dp"
                                 app:cornerRadius="8dp" />
 
-                            <com.google.android.material.button.MaterialButton
+                            <com.hundewildnis.app.GlassButton
                                 android:id="@+id/btnProfileCar"
-                                style="?attr/materialButtonOutlinedStyle"
+                                style="@style/Widget.App.Button.Outlined"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
                                 android:text="@string/location_share_profile_car"
@@ -280,17 +279,15 @@
                             android:layout_height="wrap_content"
                             android:text="@string/location_share_map_status_no_data"
                             android:textSize="@dimen/text_body_small"
-                            android:textColor="#666666" />
+                            android:textColor="@color/rd_text_secondary" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Karte 4: Geräteliste -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="?attr/colorSurface"
                     android:layout_marginBottom="24dp">
 
                     <LinearLayout
@@ -316,7 +313,7 @@
                             android:layout_height="wrap_content"
                             android:nestedScrollingEnabled="false" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

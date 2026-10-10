@@ -1,7 +1,7 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.content.res.Configuration
+import androidx.core.content.ContextCompat
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
@@ -176,10 +176,10 @@ class DogViewActivity : SecureBaseActivity() {
                     PulseStatus.UNKNOWN -> emDash
                 }
                 val statusColor = when (r.pulseStatus(shoulderCm)) {
-                    PulseStatus.NORMAL  -> Color.parseColor("#2d5016")
-                    PulseStatus.HIGH    -> Color.parseColor("#B00020")
-                    PulseStatus.LOW     -> Color.parseColor("#E65100")
-                    PulseStatus.UNKNOWN -> Color.GRAY
+                    PulseStatus.NORMAL  -> ContextCompat.getColor(this@DogViewActivity, R.color.gl_success)
+                    PulseStatus.HIGH    -> ContextCompat.getColor(this@DogViewActivity, R.color.gl_danger)
+                    PulseStatus.LOW     -> ContextCompat.getColor(this@DogViewActivity, R.color.gl_warning)
+                    PulseStatus.UNKNOWN -> ContextCompat.getColor(this@DogViewActivity, R.color.rd_text_secondary)
                 }
                 addVitalTableRow(
                     binding.llVitalTable,
@@ -223,8 +223,6 @@ class DogViewActivity : SecureBaseActivity() {
         isHeader: Boolean,
         lastColColor: Int? = null
     ) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
         val weights = listOf(2f, 1.5f, 1.5f, 1.5f, 0.8f)
 
         val row = LinearLayout(this).apply {
@@ -234,7 +232,7 @@ class DogViewActivity : SecureBaseActivity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).also { it.bottomMargin = dpToPx(2) }
             if (isHeader) {
-                setBackgroundColor(if (isDark) Color.parseColor("#1B3A0A") else Color.parseColor("#e8f5e9"))
+                setBackgroundColor(ContextCompat.getColor(this@DogViewActivity, R.color.gl_success_fill))
             }
         }
 
@@ -249,7 +247,7 @@ class DogViewActivity : SecureBaseActivity() {
                     setTextColor(lastColColor)
                     setTypeface(null, Typeface.BOLD)
                 } else {
-                    setTextColor(if (isDark) Color.WHITE else Color.parseColor("#212121"))
+                    setTextColor(Color.WHITE)
                 }
             }
             row.addView(tv)
@@ -316,9 +314,7 @@ class DogViewActivity : SecureBaseActivity() {
         }
 
         // Button-Farbe ans Theme anpassen
-        val isDark = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val accentColor = Color.WHITE
         binding.btnAddHeatCycle.setTextColor(accentColor)
     }
 
@@ -332,8 +328,6 @@ class DogViewActivity : SecureBaseActivity() {
      * Tipp → HeatCycleActivity zum Bearbeiten öffnen.
      */
     private fun buildCycleRow(entry: HeatCycleEntry, dogId: String): View {
-        val isDark = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
         val container = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -342,7 +336,7 @@ class DogViewActivity : SecureBaseActivity() {
             isFocusable = true
             background = android.graphics.drawable.RippleDrawable(
                 android.content.res.ColorStateList.valueOf(
-                    if (isDark) 0x33FFFFFF else 0x33000000
+                    0x33FFFFFF
                 ),
                 null, null
             )
@@ -398,7 +392,7 @@ class DogViewActivity : SecureBaseActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 1
             ).apply { setMargins(0, 8, 0, 0) }
-            setBackgroundColor(if (isDark) 0x33FFFFFF else 0x1A000000)
+            setBackgroundColor(0x33FFFFFF)
         }
         container.addView(divider)
 

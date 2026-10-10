@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Fokussiert/aktiv: deutlich sichtbarer Ocker-Akzent (modus-automatisch über rd_overlay_accent) -->
+    <!-- Fokussiert/aktiv: Gold-Akzent -->
     <item android:state_focused="true" android:color="@color/rd_overlay_accent" />
-    <!-- Fehler-Zustand: rot -->
-    <item android:state_enabled="false" android:color="@color/rd_border_light" android:alpha="0.5" />
-    <!-- Ruhezustand: gedeckter Rahmen -->
-    <item android:color="@color/rd_border_light" />
+    <!-- Deaktiviert -->
+    <item android:state_enabled="false" android:color="@color/gl_stroke_subtle" />
+    <!-- Ruhezustand: Glasrand -->
+    <item android:color="@color/gl_stroke_strong" />
 </selector>

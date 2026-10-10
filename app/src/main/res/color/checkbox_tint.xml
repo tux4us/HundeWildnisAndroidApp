@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Aktiv / Checked: Akzentfarbe des jeweiligen Modus -->
     <item android:state_checked="true" android:color="@color/rd_overlay_accent" />
-
-    <!-- Nicht aktiv: Grauton -->
-    <item android:state_checked="false" android:color="#888888" />
-
-    <!-- Default -->
-    <item android:color="#888888" />
+    <item android:color="@color/gl_stroke_strong" />
 </selector>

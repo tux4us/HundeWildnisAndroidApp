@@ -127,17 +127,15 @@ class TrainingDetailActivity : SecureBaseActivity() {
         binding.tvRecommendationReason.text = recommendation.reasoning
 
         val color = when (recommendation.priority) {
-            RecommendationPriority.HIGH -> android.graphics.Color.parseColor("#d32f2f")
-            RecommendationPriority.MEDIUM -> android.graphics.Color.parseColor("#f57c00")
-            RecommendationPriority.LOW -> android.graphics.Color.parseColor("#388e3c")
+            RecommendationPriority.HIGH -> android.graphics.Color.parseColor("#F0786C")
+            RecommendationPriority.MEDIUM -> android.graphics.Color.parseColor("#F2B84B")
+            RecommendationPriority.LOW -> android.graphics.Color.parseColor("#6FBF73")
         }
         binding.cardRecommendation.setCardBackgroundColor(
-            android.graphics.Color.argb(20,
-                android.graphics.Color.red(color),
-                android.graphics.Color.green(color),
-                android.graphics.Color.blue(color)
-            )
+            androidx.core.content.ContextCompat.getColor(this, R.color.gl_fill)
         )
+        binding.cardRecommendation.strokeColor = color
+        binding.cardRecommendation.strokeWidth = (2f * resources.displayMetrics.density).toInt()
     }
 
     private fun displayAnalysis(analysis: ProgressAnalysis) {
@@ -189,14 +187,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
         }
 
         // ✅ FIX: Button-Farben für Dark Mode
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        if (isDark) {
-            dialogBinding.btnExportPdf.setTextColor(android.graphics.Color.WHITE)
-            dialogBinding.btnExportCsv.setTextColor(android.graphics.Color.WHITE)
-            dialogBinding.btnClose.setTextColor(android.graphics.Color.WHITE)
-        }
 
         // Dialog erstellen
         val dialog = AlertDialog.Builder(this)
@@ -263,9 +254,7 @@ class TrainingDetailActivity : SecureBaseActivity() {
 
     private fun showDeleteSessionDialog(session: TrainingSession) {
         // ✅ DARK MODE FIX
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val colorNormal = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        val colorNormal = android.graphics.Color.WHITE
 
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
 
@@ -363,14 +352,7 @@ class SessionHistoryAdapter(
 
         // ✅ FIX: Button-Farben für Dark Mode
         val context = holder.itemView.context
-        val isDark = (context.resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        if (isDark) {
-            holder.binding.btnViewSession.setTextColor(android.graphics.Color.WHITE)
-            // btnDeleteSession bleibt rot (ist schon im XML gesetzt)
-        }
 
         // Button Handler
         holder.binding.btnViewSession.setOnClickListener {

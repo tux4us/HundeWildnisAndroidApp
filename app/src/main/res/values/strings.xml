@@ -14,7 +14,6 @@
     <string name="pages">Seiten</string>
     <string name="courses">Kurse</string>
     <string name="search">Suchen</string>
-    <string name="toggle_theme">☀️🌛 Hell-Dunkel-Modus</string>
     <string name="refresh">Aktualisieren</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
     <string name="privacy_url">https://wildnislehrer.com/impressum/datenschutzerklaerung/</string>
@@ -2699,7 +2698,6 @@
     <!-- Main Menu (StartActivity Options Menu) -->
     <string name="menu_main_language">🌐 Sprache / Language</string>
     <string name="menu_main_refresh">🔁 Aktualisieren</string>
-    <string name="menu_main_theme">🌞🌒 Theme wechseln</string>
     <string name="menu_main_settings">⚙️ Einstellungen</string>
     <string name="menu_main_backup_create">📦 Backup erstellen</string>
     <string name="menu_main_backup_restore">📥 Backup importieren</string>

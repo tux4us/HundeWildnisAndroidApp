@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="#1a1a1a">
+    android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -61,7 +60,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:text="@string/weather_loading_placeholder"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="18sp" />
 
             <!-- Wetterwarnung-Badge -->
@@ -76,7 +75,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/weather_no_warning_badge"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
@@ -84,14 +83,12 @@
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU 1: TRAININGSWETTER-INDEX CARD -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/pawWeatherCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -114,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_calculating_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="14sp"
                         android:lineSpacingMultiplier="1.3"
                         android:layout_marginBottom="12dp" />
@@ -125,7 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FFC107"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.3"
                         android:visibility="gone"
@@ -137,21 +134,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#64B5F6"
+                        android:textColor="@color/gl_info"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.3"
                         android:visibility="gone" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Regenradar Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -183,23 +178,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_radar_live_data_hint"
-                        android:textColor="#666666"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="12sp"
                         android:padding="8dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU 2: TAGESLÄNGE & DÄMMERUNG CARD -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/daylightCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -222,7 +215,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_daylight_duration_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
@@ -233,7 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#64B5F6"
+                        android:textColor="@color/gl_info"
                         android:textSize="13sp"
                         android:visibility="gone"
                         android:layout_marginBottom="12dp" />
@@ -244,7 +237,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_dawn_placeholder"
-                        android:textColor="#C8C8C8"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
 
@@ -254,7 +247,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_sunrise_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
 
@@ -264,7 +257,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_sunset_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp" />
 
@@ -274,7 +267,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_dusk_placeholder"
-                        android:textColor="#CECDCD"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="12dp" />
 
@@ -284,7 +277,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FFF18C"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.3"
                         android:visibility="gone"
@@ -296,12 +289,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FFCA80"
+                        android:textColor="@color/gl_warning"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.3"
                         android:visibility="gone" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Min/Max Temperatur -->
             <TextView
@@ -310,18 +303,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/weather_min_max_placeholder"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="16sp"
                 android:layout_marginBottom="24dp" />
 
             <!-- Aktuelles Wetter Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -350,7 +341,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_feels_like_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -358,7 +349,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--°C"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -375,7 +366,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_humidity_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -383,7 +374,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--%"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -400,7 +391,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_wind_strength_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <!-- Beaufort Visuelles Symbol -->
@@ -426,7 +417,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_wind_direction_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -434,7 +425,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- km/h"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:gravity="end" />
@@ -451,7 +442,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_precipitation_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -459,21 +450,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- mm"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Weitere Details Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -502,7 +491,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_pressure_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -510,7 +499,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- hPa"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -527,7 +516,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_visibility_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -535,7 +524,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="> 10 km"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -551,7 +540,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_uv_index_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -559,21 +548,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- 24h Vorhersage Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -594,7 +581,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_tap_details_scroll_hours_hint"
-                        android:textColor="#E9E375"
+                        android:textColor="@color/gl_warning"
                         android:textSize="12sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
@@ -609,19 +596,17 @@
                         android:paddingEnd="12dp"
                         android:paddingBottom="12dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU: 7-TAGE-VORHERSAGE CARD -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/card7DayForecast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -642,7 +627,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_tap_details_scroll_days_hint"
-                        android:textColor="#E9E375"
+                        android:textColor="@color/gl_warning"
                         android:textSize="12sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
@@ -657,19 +642,17 @@
                         android:paddingEnd="12dp"
                         android:paddingBottom="12dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU: WIND-VORHERSAGE CARD (stündlich 24h) -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardWindForecast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -704,28 +687,28 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_bft_legend_0_3"
-                                android:textColor="#4CAF50"
+                                android:textColor="@color/gl_success"
                                 android:textSize="10sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_bft_legend_4_5"
-                                android:textColor="#FFC107"
+                                android:textColor="@color/gl_warning"
                                 android:textSize="10sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_bft_legend_6_7"
-                                android:textColor="#FF9800"
+                                android:textColor="@color/gl_warning"
                                 android:textSize="10sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_bft_legend_8plus"
-                                android:textColor="#F44336"
+                                android:textColor="@color/gl_danger"
                                 android:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -734,7 +717,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_wind_arrow_hint"
-                        android:textColor="#E9E375"
+                        android:textColor="@color/gl_warning"
                         android:textSize="12sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
@@ -749,20 +732,18 @@
                         android:paddingEnd="12dp"
                         android:paddingBottom="12dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU: LUFTQUALITÄT CARD (24h stündlich) -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardAirQuality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -790,35 +771,35 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_aqi_index_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_aqi_legend_0_good"
-                            android:textColor="#4CAF50"
+                            android:textColor="@color/gl_success"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_aqi_legend_1_moderate"
-                            android:textColor="#8BC34A"
+                            android:textColor="@color/gl_success"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_aqi_legend_2_sensitive"
-                            android:textColor="#FFC107"
+                            android:textColor="@color/gl_warning"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_aqi_legend_3plus_unhealthy"
-                            android:textColor="#FF9800"
+                            android:textColor="@color/gl_warning"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -835,7 +816,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_aqi_current_label"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -843,7 +824,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_aqi_current_placeholder"
-                            android:textColor="#4CAF50"
+                            android:textColor="@color/gl_success"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -854,7 +835,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.4"
                         android:layout_marginBottom="12dp" />
@@ -863,7 +844,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_scroll_hours_hint"
-                        android:textColor="#E9E375"
+                        android:textColor="@color/gl_warning"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
 
@@ -881,22 +862,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_source_air_quality_ugm3"
-                        android:textColor="#555555"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="10sp"
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU 3: TEMPERATUR-VERLAUFSGRAFIK -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -922,16 +901,14 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- NEU: Niederschlags-Diagramm Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -942,7 +919,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_precip_chart_card_title"
-                        android:textColor="#2196F3"
+                        android:textColor="@color/gl_info"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:padding="16dp"
@@ -957,19 +934,17 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU: SONNE-CARD                                                  -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardSun"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -981,7 +956,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_sun_card_title"
-                        android:textColor="#FFD54F"
+                        android:textColor="@color/gl_warning"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp" />
@@ -999,7 +974,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_sunrise_azimuth_placeholder"
-                            android:textColor="#FFCC80"
+                            android:textColor="@color/gl_warning"
                             android:textSize="13sp"
                             android:lineSpacingMultiplier="1.4"
                             android:gravity="start" />
@@ -1007,7 +982,7 @@
                         <View
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="#444444"
+                            android:background="@color/gl_divider"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp" />
 
@@ -1017,7 +992,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_sunset_azimuth_placeholder"
-                            android:textColor="#FF8A65"
+                            android:textColor="@color/gl_danger"
                             android:textSize="13sp"
                             android:lineSpacingMultiplier="1.4"
                             android:gravity="end" />
@@ -1029,7 +1004,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_sun_position_placeholder"
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.5"
                         android:layout_marginTop="8dp"
@@ -1048,7 +1023,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_shadow_lengths_title"
-                            android:textColor="#FFD54F"
+                            android:textColor="@color/gl_warning"
                             android:textSize="13sp"
                             android:textStyle="bold" />
 
@@ -1069,7 +1044,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="–"
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.5"
                         android:layout_marginBottom="12dp" />
@@ -1086,7 +1061,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_sunshine_duration_title"
-                        android:textColor="#FFD54F"
+                        android:textColor="@color/gl_warning"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
@@ -1096,7 +1071,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_sunshine_today_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
 
@@ -1120,7 +1095,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_uv_hourly_title"
-                        android:textColor="#FFD54F"
+                        android:textColor="@color/gl_warning"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
@@ -1136,35 +1111,35 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_uv_legend_0_2_low"
-                            android:textColor="#4CAF50"
+                            android:textColor="@color/gl_success"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_uv_legend_3_5_moderate"
-                            android:textColor="#FFC107"
+                            android:textColor="@color/gl_warning"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_uv_legend_6_7_high"
-                            android:textColor="#FF9800"
+                            android:textColor="@color/gl_warning"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_uv_legend_8_10_very_high"
-                            android:textColor="#F44336"
+                            android:textColor="@color/gl_danger"
                             android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_uv_legend_11plus_extreme"
-                            android:textColor="#9C27B0"
+                            android:textColor="@color/rd_group6_accent"
                             android:textSize="10sp" />
                     </LinearLayout>
 
@@ -1191,22 +1166,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FFCC80"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
                         android:visibility="gone" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/moonPhaseCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#1e2233"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:strokeColor="@color/gl_info_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill"
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1219,7 +1195,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_moon_phase_card_title"
-                        android:textColor="#C8A8E8"
+                        android:textColor="@color/rd_group6_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
@@ -1249,7 +1225,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_moon_full_placeholder"
-                                android:textColor="#E8D5FF"
+                                android:textColor="@color/rd_group6_accent"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="4dp" />
@@ -1259,7 +1235,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_moon_age_placeholder"
-                                android:textColor="#E5E5EF"
+                                android:textColor="@color/rd_text_primary"
                                 android:textSize="12sp"
                                 android:layout_marginBottom="6dp" />
 
@@ -1268,7 +1244,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/weather_moon_illumination_placeholder"
-                                android:textColor="#C8A8E8"
+                                android:textColor="@color/rd_group6_accent"
                                 android:textSize="13sp"
                                 android:layout_marginBottom="6dp" />
 
@@ -1280,8 +1256,8 @@
                                 android:layout_height="6dp"
                                 android:max="100"
                                 android:progress="100"
-                                android:progressTint="#C8A8E8"
-                                android:progressBackgroundTint="#333355" />
+                                android:progressTint="@color/rd_group6_accent"
+                                android:progressBackgroundTint="@color/gl_fill_strong" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -1289,7 +1265,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#333355"
+                        android:background="@color/gl_divider"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Nächste Mondphasen -->
@@ -1305,7 +1281,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_moon_next_full_placeholder"
-                            android:textColor="#D7D1CC"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="13sp" />
 
                         <TextView
@@ -1314,7 +1290,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/weather_moon_next_new_placeholder"
-                            android:textColor="#C8C8D9"
+                            android:textColor="@color/rd_text_primary"
                             android:textSize="13sp"
                             android:gravity="end" />
                     </LinearLayout>
@@ -1325,7 +1301,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_moon_zodiac_placeholder"
-                        android:textColor="#F0F0F8"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.3"
                         android:layout_marginTop="8dp"
@@ -1335,7 +1311,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#333355"
+                        android:background="@color/gl_divider"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Astronomische Information -->
@@ -1344,7 +1320,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_moon_astronomy_loading"
-                        android:textColor="#C8C8DD"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
                         android:layout_marginBottom="12dp" />
@@ -1353,7 +1329,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#333355"
+                        android:background="@color/gl_divider"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Natur & Tierwelt -->
@@ -1362,7 +1338,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_moon_nature_loading"
-                        android:textColor="#A8CCA8"
+                        android:textColor="@color/gl_success"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
                         android:layout_marginBottom="12dp" />
@@ -1371,7 +1347,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#333355"
+                        android:background="@color/gl_divider"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Hund & Training -->
@@ -1380,25 +1356,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_moon_dogtips_loading"
-                        android:textColor="#F0C87A"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU: POLLEN CARD -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardPollen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:strokeColor="@color/gl_warning_stroke"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1410,30 +1386,30 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_pollen_card_title"
-                        android:textColor="@color/rd_overlay_accent"
+                        android:textColor="@color/gl_warning"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
                     <!-- Medizinischer Disclaimer -->
-                    <com.google.android.material.card.MaterialCardView
+                    <com.hundewildnis.app.GlassCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        app:cardBackgroundColor="#1a2a1a"
+                        app:cardBackgroundColor="@color/gl_fill"
                         app:cardCornerRadius="8dp"
-                        app:strokeColor="#3d5016"
+                        app:strokeColor="@color/gl_warning_stroke"
                         app:strokeWidth="1dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/weather_pollen_disclaimer"
-                            android:textColor="@color/rd_overlay_accent"
+                            android:textColor="@color/gl_warning"
                             android:textSize="11sp"
                             android:lineSpacingMultiplier="1.3"
                             android:padding="10dp" />
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Pollenbelastung heute -->
                     <TextView
@@ -1441,7 +1417,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_pollen_loading"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.5"
                         android:layout_marginBottom="12dp" />
@@ -1459,7 +1435,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#F0C87A"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
                         android:visibility="gone" />
@@ -1469,24 +1445,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_source_pollen_grainsm3"
-                        android:textColor="#555555"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="10sp"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- BIOWETTER CARD                                                   -->
             <!-- Einfügen: direkt nach moonPhaseCard, vor locationText            -->
             <!-- ════════════════════════════════════════════════════════════════ -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardBiowetter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1509,7 +1483,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_biowetter_explanation"
-                        android:textColor="#999999"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="12sp"
                         android:lineSpacingMultiplier="1.3"
                         android:layout_marginBottom="12dp" />
@@ -1538,7 +1512,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.3"
                         android:layout_marginBottom="12dp" />
@@ -1549,7 +1523,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#F0C87A"
+                        android:textColor="@color/gl_warning"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.3"
                         android:textStyle="bold"
@@ -1574,13 +1548,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/weather_biowetter_disclaimer"
-                        android:textColor="#555555"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="10sp"
                         android:lineSpacingMultiplier="1.3"
                         android:layout_marginTop="12dp" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
 
             <!-- Standort Info -->
@@ -1590,7 +1564,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/weather_location_determining_placeholder"
-                android:textColor="#FAFAFA"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="16sp" />
 
             <!-- Datenquelle -->
@@ -1600,7 +1574,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:text="@string/weather_data_source_footer"
-                android:textColor="#666666"
+                android:textColor="@color/rd_text_secondary"
                 android:textSize="11sp"
                 android:autoLink="web"
                 android:linksClickable="true" />

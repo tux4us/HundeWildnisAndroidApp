@@ -58,15 +58,17 @@ class FirstAidInstructionActivity : SecureBaseActivity() {
         binding.tvUrgency.text = instruction.urgency.displayName(this)
 
         val urgencyColor = android.graphics.Color.parseColor(instruction.urgency.color)
-        binding.cardUrgency.setCardBackgroundColor(urgencyColor)
+        binding.cardUrgency.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.gl_fill))
+        binding.cardUrgency.strokeColor = urgencyColor
+        binding.cardUrgency.strokeWidth = (2.5f * resources.displayMetrics.density).toInt()
 
         // Symptome
         binding.tvSymptoms.text = instruction.symptoms(this).joinToString("\n") { "• $it" }
-        binding.tvSymptoms.setTextColor(android.graphics.Color.parseColor("#B71C1C"))
+        binding.tvSymptoms.setTextColor(android.graphics.Color.parseColor("#F0786C"))
 
         // Sofortmaßnahmen
         binding.tvImmediateActions.text = instruction.immediateActions(this).joinToString("\n")
-        binding.tvImmediateActions.setTextColor(android.graphics.Color.parseColor("#1B5E20"))
+        binding.tvImmediateActions.setTextColor(android.graphics.Color.parseColor("#6FBF73"))
 
         // Was TUN
         binding.tvDoList.text = instruction.doList(this).joinToString("\n")

@@ -21,8 +21,8 @@ enum class SlopeClass(
     FLAT("🟢", "#4CAF50", 4.0),
     LIGHT("🟡", "#8BC34A", 8.0),
     MODERATE("🟠", "#FF9800", 15.0),
-    DEMANDING("🔴", "#E64A19", 25.0),
-    ALPINE("⛰️", "#7B0000", Double.MAX_VALUE);
+    DEMANDING("🔴", "#FF8A65", 25.0),
+    ALPINE("⛰️", "#FF5C7C", Double.MAX_VALUE);
 
     fun displayName(context: android.content.Context): String = when (this) {
         FLAT -> context.getString(R.string.slope_class_flat)
@@ -54,7 +54,7 @@ enum class SlopeClass(
 // ── Witterungsrisiko ──────────────────────────────────────────────
 enum class TerrainWarningLevel(val icon: String, val color: String) {
     CAUTION("⚠️", "#FF9800"),
-    WARNING("🔴", "#E64A19");
+    WARNING("🔴", "#FF8A65");
 
     fun displayName(context: android.content.Context): String = when (this) {
         CAUTION -> context.getString(R.string.terrain_warning_level_caution)

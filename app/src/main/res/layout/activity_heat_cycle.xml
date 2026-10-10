@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="?android:attr/colorBackground">
+    android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -15,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -74,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Startdatum *"
-                        android:textColor="#999999"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="13sp" />
 
                     <TextView
@@ -102,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Enddatum"
-                        android:textColor="#999999"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="13sp" />
 
                     <TextView
@@ -206,7 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Beobachtete Verhaltensänderungen:"
-                android:textColor="#999999"
+                android:textColor="@color/rd_text_secondary"
                 android:textSize="13sp"
                 android:layout_marginBottom="6dp" />
 
@@ -260,7 +259,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Anzeichen der Scheinträchtigkeit:"
-                    android:textColor="#999999"
+                    android:textColor="@color/rd_text_secondary"
                     android:textSize="13sp"
                     android:layout_marginBottom="6dp" />
 
@@ -295,16 +294,17 @@
                 android:layout_height="wrap_content"
                 android:text="Speichern"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.App.Button" />
 
             <Button
                 android:id="@+id/btnDeleteHeatCycle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Läufigkeit löschen"
-                android:backgroundTint="@android:color/holo_red_dark"
                 android:visibility="gone"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="24dp"
+                style="@style/Widget.App.Button.Danger" />
 
         </LinearLayout>
     </ScrollView>

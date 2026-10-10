@@ -3,7 +3,6 @@ package com.hundewildnis.app
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
@@ -101,8 +100,6 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun checkLocationPermission() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.weather_location_services_title))
@@ -118,8 +115,6 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 .create()
                 .apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
                 }
         } else {
             getLocation()
@@ -887,15 +882,12 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             String.format(Locale.getDefault(), "%.1f°C", item.feelsLike),
             item.precipitation.toInt()
         )
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(getString(R.string.weather_forecast_item_detail_title))
             .setMessage(message)
             .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
-                getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(color)
             }
     }
 
@@ -1094,7 +1086,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             INFO     -> Color.parseColor("#2196F3")
             CAUTION  -> Color.parseColor("#FFC107")
             WARNING  -> Color.parseColor("#FF9800")
-            CRITICAL -> Color.parseColor("#F44336")
+            CRITICAL -> Color.parseColor("#FF6F60")
         }
     }
 
@@ -1296,8 +1288,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         1 -> android.graphics.Color.parseColor("#8BC34A")   // hellgrün
         2 -> android.graphics.Color.parseColor("#FFC107")   // gelb
         3 -> android.graphics.Color.parseColor("#FF9800")   // orange
-        4 -> android.graphics.Color.parseColor("#F44336")   // rot
-        else -> android.graphics.Color.parseColor("#9C27B0") // lila
+        4 -> android.graphics.Color.parseColor("#FF6F60")   // rot
+        else -> android.graphics.Color.parseColor("#CE93D8") // lila
     }
 
     /** Pollen-Konzentration in Level 0–4 (Grains/m³, nach DWD-Skala) */
@@ -1322,7 +1314,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         1 -> android.graphics.Color.parseColor("#8BC34A")
         2 -> android.graphics.Color.parseColor("#FFC107")
         3 -> android.graphics.Color.parseColor("#FF9800")
-        else -> android.graphics.Color.parseColor("#F44336")
+        else -> android.graphics.Color.parseColor("#FF6F60")
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -1404,10 +1396,6 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             append("$uvWarning")
         }
 
-        val isDark = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.weather_daily_forecast_title))
@@ -1415,15 +1403,10 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
             }
     }
 
     private fun showUvHourlyDetail(item: UvForecastItem) {
-        val isDark = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.weather_uv_hourly_dialog_title, item.time, String.format(Locale.getDefault(), "%.1f", item.uvIndex), item.label))
@@ -1431,7 +1414,6 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
             }
     }
 
@@ -1682,7 +1664,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                         barH >= 8 -> android.graphics.Color.parseColor("#FFD54F")
                         barH >= 4 -> android.graphics.Color.parseColor("#FFA726")
                         barH >= 1 -> android.graphics.Color.parseColor("#FF7043")
-                        else      -> android.graphics.Color.parseColor("#555555")
+                        else      -> android.graphics.Color.parseColor("#8A8A86")
                     })
                 }
 
@@ -1871,10 +1853,6 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         prefs: android.content.SharedPreferences,
         onDone: () -> Unit
     ) {
-        val isDark = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         val density = resources.displayMetrics.density
 
         // Drei EditText-Felder
@@ -1938,8 +1916,6 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(accentColor)
             }
     }
 
@@ -1955,12 +1931,12 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     }
 
     private fun uvIndexColor(uv: Double): Int = when {
-        uv < 1  -> android.graphics.Color.parseColor("#757575")   // grau
+        uv < 1  -> android.graphics.Color.parseColor("#B2B2AE")   // grau
         uv < 3  -> android.graphics.Color.parseColor("#4CAF50")   // grün
         uv < 6  -> android.graphics.Color.parseColor("#FFC107")   // gelb
         uv < 8  -> android.graphics.Color.parseColor("#FF9800")   // orange
-        uv < 11 -> android.graphics.Color.parseColor("#F44336")   // rot
-        else    -> android.graphics.Color.parseColor("#9C27B0")   // lila
+        uv < 11 -> android.graphics.Color.parseColor("#FF6F60")   // rot
+        else    -> android.graphics.Color.parseColor("#CE93D8")   // lila
     }
 
     private fun buildUvProtectionText(peakUv: Double): String {
@@ -2297,7 +2273,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 val tapHint = android.widget.TextView(this).apply {
                     text = getString(R.string.weather_tap_for_details)
                     textSize = 11f
-                    setTextColor(android.graphics.Color.parseColor("#666666"))
+                    setTextColor(android.graphics.Color.parseColor("#B2B2AE"))
                     layoutParams = android.widget.LinearLayout.LayoutParams(
                         android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
                         android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
@@ -2319,7 +2295,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                             it.topMargin    = (4 * density).toInt()
                             it.bottomMargin = (4 * density).toInt()
                         }
-                        setBackgroundColor(android.graphics.Color.parseColor("#2a2a2a"))
+                        setBackgroundColor(ContextCompat.getColor(this@WeatherActivity, R.color.gl_divider))
                     }
                     binding.biowetterIndicatorsContainer.addView(divider)
                 }
@@ -2336,11 +2312,6 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     }
 
     private fun showBiowetterDetail(indicator: BioIndicator) {
-        val isDark = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) android.graphics.Color.WHITE
-        else android.graphics.Color.parseColor("#2d5016")
 
         val message = buildString {
             append("${indicator.valueText}\n\n")
@@ -2355,7 +2326,6 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             .setPositiveButton(getString(R.string.ok), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
             }
     }
 }

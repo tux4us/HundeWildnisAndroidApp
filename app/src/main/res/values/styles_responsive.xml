@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- res/values/styles_responsive.xml -->
-    <!-- DIESE STYLES SORGEN FÜR EINE BESSERE SKALIERUNG BEI INDIVIDUELLEN SCHRIFTGRÖSSEN -->
+    <!-- GLAS-STYLES: Buttons, Karten, Eingabefelder, Leisten. Tokens: colors_glass.xml. -->
 
-    <!-- Custom Button mit Auto-Scaling -->
+    <!-- ═══════════════ Buttons ═══════════════
+         Grundform: neutrales Glas mit farbigem Rand der Rollenfarbe (1,5 dp), heller Text.
+         Rollen: Primary (Gold, Hauptaktion), Success, Warning, Danger, Info; ohne Rolle neutral.
+         Varianten: (ohne) = Glas gefüllt, .Outlined = nur Rand, .Text = nur Text. -->
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMinTextSize">12sp</item>
@@ -14,36 +17,262 @@
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>
         <item name="android:minHeight">60dp</item>
+        <item name="android:textColor">@color/gl_btn_text_on_glass</item>
+        <item name="iconTint">@color/gl_btn_text_on_glass</item>
+        <item name="backgroundTint">@color/gl_btn_fill_neutral</item>
+        <item name="strokeColor">@color/gl_btn_stroke_neutral</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="rippleColor">@color/gl_neutral_ripple</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <!-- Outlined-Button-Variante: eigene Textfarbe nötig, da colorPrimary
-         app-weit auf die Hintergrundfarbe (rd_bg_light/rd_bg_dark) gemappt ist,
-         nicht auf eine Akzentfarbe. Material3s OutlinedButton-Default würde sonst
-         den Text in colorPrimary einfärben - im Dark-Modus praktisch unsichtbar
-         (fast schwarzer Text auf dunklem Grund). -->
+    <style name="Widget.App.Button.Primary">
+        <item name="backgroundTint">@color/gl_btn_fill_primary</item>
+        <item name="strokeColor">@color/gl_btn_stroke_primary</item>
+        <item name="rippleColor">@color/gl_primary_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Success">
+        <item name="backgroundTint">@color/gl_btn_fill_success</item>
+        <item name="strokeColor">@color/gl_btn_stroke_success</item>
+        <item name="rippleColor">@color/gl_success_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Warning">
+        <item name="backgroundTint">@color/gl_btn_fill_warning</item>
+        <item name="strokeColor">@color/gl_btn_stroke_warning</item>
+        <item name="rippleColor">@color/gl_warning_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Danger">
+        <item name="backgroundTint">@color/gl_btn_fill_danger</item>
+        <item name="strokeColor">@color/gl_btn_stroke_danger</item>
+        <item name="rippleColor">@color/gl_danger_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Info">
+        <item name="backgroundTint">@color/gl_btn_fill_info</item>
+        <item name="strokeColor">@color/gl_btn_stroke_info</item>
+        <item name="rippleColor">@color/gl_info_ripple</item>
+    </style>
+
+    <!-- Outlined: nur Rand, Textfarbe = Rollenfarbe (neutral: Standardtext) -->
     <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:textColor">?attr/colorOnBackground</item>
-        <item name="strokeColor">?attr/colorOnBackground</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_button_large</item>
+        <item name="autoSizeStepGranularity">1sp</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/gl_btn_text_on_glass</item>
+        <item name="iconTint">@color/gl_btn_text_on_glass</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="strokeColor">@color/gl_btn_stroke_neutral_strong</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="rippleColor">@color/gl_neutral_ripple</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <!-- TextInputLayout (OutlinedBox): eigener boxStrokeColor nötig, da Material3s
-         Default den Rahmen über colorPrimary einfärbt - bei uns die Hintergrundfarbe,
-         nicht ein Akzent. Ohne diesen Fix "verschwindet" der Rahmen beim Fokussieren/
-         Tippen, weil er in der Hintergrundfarbe gezeichnet wird (fast unsichtbar). -->
+    <style name="Widget.App.Button.Outlined.Primary">
+        <item name="android:textColor">@color/gl_btn_text_primary</item>
+        <item name="iconTint">@color/gl_btn_text_primary</item>
+        <item name="strokeColor">@color/gl_btn_stroke_primary</item>
+        <item name="rippleColor">@color/gl_primary_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined.Success">
+        <item name="android:textColor">@color/gl_btn_text_success</item>
+        <item name="iconTint">@color/gl_btn_text_success</item>
+        <item name="strokeColor">@color/gl_btn_stroke_success</item>
+        <item name="rippleColor">@color/gl_success_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined.Warning">
+        <item name="android:textColor">@color/gl_btn_text_warning</item>
+        <item name="iconTint">@color/gl_btn_text_warning</item>
+        <item name="strokeColor">@color/gl_btn_stroke_warning</item>
+        <item name="rippleColor">@color/gl_warning_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined.Danger">
+        <item name="android:textColor">@color/gl_btn_text_danger</item>
+        <item name="iconTint">@color/gl_btn_text_danger</item>
+        <item name="strokeColor">@color/gl_btn_stroke_danger</item>
+        <item name="rippleColor">@color/gl_danger_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined.Info">
+        <item name="android:textColor">@color/gl_btn_text_info</item>
+        <item name="iconTint">@color/gl_btn_text_info</item>
+        <item name="strokeColor">@color/gl_btn_stroke_info</item>
+        <item name="rippleColor">@color/gl_info_ripple</item>
+    </style>
+
+    <!-- Text: kein Hintergrund, Textfarbe = Rollenfarbe (Standard: Gold) -->
+    <style name="Widget.App.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/gl_btn_text_primary</item>
+        <item name="iconTint">@color/gl_btn_text_primary</item>
+        <item name="rippleColor">@color/gl_primary_ripple</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.App.Button.Text.Success">
+        <item name="android:textColor">@color/gl_btn_text_success</item>
+        <item name="iconTint">@color/gl_btn_text_success</item>
+        <item name="rippleColor">@color/gl_success_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Text.Warning">
+        <item name="android:textColor">@color/gl_btn_text_warning</item>
+        <item name="iconTint">@color/gl_btn_text_warning</item>
+        <item name="rippleColor">@color/gl_warning_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Text.Danger">
+        <item name="android:textColor">@color/gl_btn_text_danger</item>
+        <item name="iconTint">@color/gl_btn_text_danger</item>
+        <item name="rippleColor">@color/gl_danger_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Text.Info">
+        <item name="android:textColor">@color/gl_btn_text_info</item>
+        <item name="iconTint">@color/gl_btn_text_info</item>
+        <item name="rippleColor">@color/gl_info_ripple</item>
+    </style>
+
+    <!-- Button ohne Auto-Scaling für kleine/spezielle Buttons -->
+    <style name="Widget.App.Button.Fixed">
+        <item name="autoSizeTextType">none</item>
+        <item name="android:textSize">@dimen/text_body_small</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">88dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Fixed.Primary">
+        <item name="backgroundTint">@color/gl_btn_fill_primary</item>
+        <item name="strokeColor">@color/gl_btn_stroke_primary</item>
+        <item name="rippleColor">@color/gl_primary_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Fixed.Success">
+        <item name="backgroundTint">@color/gl_btn_fill_success</item>
+        <item name="strokeColor">@color/gl_btn_stroke_success</item>
+        <item name="rippleColor">@color/gl_success_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Fixed.Warning">
+        <item name="backgroundTint">@color/gl_btn_fill_warning</item>
+        <item name="strokeColor">@color/gl_btn_stroke_warning</item>
+        <item name="rippleColor">@color/gl_warning_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Fixed.Danger">
+        <item name="backgroundTint">@color/gl_btn_fill_danger</item>
+        <item name="strokeColor">@color/gl_btn_stroke_danger</item>
+        <item name="rippleColor">@color/gl_danger_ripple</item>
+    </style>
+
+    <style name="Widget.App.Button.Fixed.Info">
+        <item name="backgroundTint">@color/gl_btn_fill_info</item>
+        <item name="strokeColor">@color/gl_btn_stroke_info</item>
+        <item name="rippleColor">@color/gl_info_ripple</item>
+    </style>
+
+    <!-- ═══════════════ Karten ═══════════════
+         Glasfläche: transparente Füllung, feiner heller Rand, keine Elevation
+         (ein Schatten unter einer transparenten Fläche würde durchscheinen). -->
+    <style name="Widget.App.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/gl_fill</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="strokeColor">@color/gl_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="rippleColor">@color/gl_ripple</item>
+    </style>
+
+    <!-- Innere Karte (Karte in Karte): dezenter, damit sich die Transparenzen nicht aufaddieren -->
+    <style name="Widget.App.Card.Inner">
+        <item name="cardBackgroundColor">@color/gl_fill_subtle</item>
+        <item name="strokeColor">@color/gl_stroke_subtle</item>
+        <item name="cardCornerRadius">12dp</item>
+    </style>
+
+    <!-- ═══════════════ Leisten ═══════════════ -->
+    <style name="Widget.App.AppBarLayout" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
+        <item name="elevation">0dp</item>
+        <item name="liftOnScroll">false</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/gl_bar</item>
+        <item name="elevation">0dp</item>
+        <item name="itemIconTint">@color/bottom_nav_colors</item>
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+        <item name="itemRippleColor">@color/rd_ripple_accent</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNav.Indicator</item>
+    </style>
+
+    <!-- ═══════════════ Eingabefelder ═══════════════ -->
     <style name="Widget.App.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxBackgroundColor">@color/gl_fill_subtle</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
         <item name="hintTextColor">@color/rd_overlay_accent</item>
         <item name="android:textColorHint">?attr/colorOnSurface</item>
-        <!-- Cursor-Farbe: app:cursorColor ist das korrekte Material-Components-
-             Attribut (API 28+), NICHT android:cursorColor (existiert nicht im
-             öffentlichen SDK). Auf niedrigeren API-Leveln greift automatisch
-             ?attr/colorControlActivated als Fallback. -->
         <item name="cursorColor">@color/rd_overlay_accent</item>
     </style>
 
-    <!-- ════════════════════════════════════════════════════════════════ -->
+    <style name="Widget.App.TextInputLayout.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxBackgroundColor">@color/gl_fill_subtle</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="hintTextColor">@color/rd_overlay_accent</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
+        <item name="cursorColor">@color/rd_overlay_accent</item>
+    </style>
+
+    <style name="Widget.App.TextInputLayout.Dense" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxBackgroundColor">@color/gl_fill_subtle</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="hintTextColor">@color/rd_overlay_accent</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
+        <item name="cursorColor">@color/rd_overlay_accent</item>
+    </style>
+
+    <!-- ═══════════════ Chips ═══════════════ -->
+    <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/gl_fill</item>
+        <item name="chipStrokeColor">@color/gl_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="rippleColor">@color/gl_ripple</item>
+    </style>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
     <!-- TEXT APPEARANCE STYLES (Punkt-Notation für Vererbung) -->
     <!-- ════════════════════════════════════════════════════════════════ -->
 
@@ -78,29 +307,19 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <!-- Button Style ohne Auto-Scaling für kleine/spezielle Buttons -->
-    <style name="Widget.App.Button.Fixed" parent="Widget.Material3.Button">
-        <item name="autoSizeTextType">none</item>
-        <item name="android:textSize">@dimen/text_body_small</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:minWidth">88dp</item>
-    </style>
-
-    <!-- Bottom Navigation Styling -->
+    <!-- Bottom Navigation: Aktiv-Indikator (Gold-Glas) -->
     <style name="Widget.App.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">#4DA3762F</item> <!-- 30% transparenter Ocker-Akzent -->
+        <item name="android:color">@color/gl_primary_fill</item>
         <item name="marginHorizontal">12dp</item>
     </style>
 
     <style name="TextAppearance.App.BottomNav.Active" parent="TextAppearance.Material3.LabelSmall">
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">@color/rd_overlay_accent</item>
     </style>
 
     <style name="TextAppearance.App.BottomNav.Inactive" parent="TextAppearance.Material3.LabelSmall">
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">#E6FFFFFF</item>
+        <item name="android:textColor">@color/rd_text_secondary</item>
     </style>
 </resources>

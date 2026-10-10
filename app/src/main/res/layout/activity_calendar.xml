@@ -17,8 +17,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/green_primary"
-            app:titleTextColor="@android:color/white" />
+            android:background="@color/gl_bar"
+            app:titleTextColor="@color/rd_text_primary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Hinweis bei fehlenden Hundeprofilen -->
@@ -74,12 +74,11 @@
             </LinearLayout>
 
             <!-- ─── 7-Tage Wettereignung ──────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/card_elevation">
+                app:cardCornerRadius="@dimen/card_corner_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,15 +108,14 @@
                     </HorizontalScrollView>
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── Lückenanalyse ──────────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/card_elevation">
+                app:cardCornerRadius="@dimen/card_corner_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -148,15 +146,14 @@
                         android:orientation="vertical" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── Monatskalender ─────────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/card_elevation">
+                app:cardCornerRadius="@dimen/card_corner_radius">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -219,13 +216,13 @@
                         android:gravity="center" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Planen-Button (fixiert) -->
-    <com.google.android.material.button.MaterialButton
+    <com.hundewildnis.app.GlassButton
         android:id="@+id/btnPlanSession"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height_large"
@@ -233,6 +230,6 @@
         android:layout_margin="16dp"
         android:text="@string/calendar_btn_plan"
         android:textSize="@dimen/text_button_small"
-        app:backgroundTint="@color/green_primary" />
+        style="@style/Widget.App.Button.Success" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

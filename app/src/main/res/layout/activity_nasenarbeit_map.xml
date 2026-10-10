@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,7 +47,7 @@
             android:elevation="8dp"
             android:baselineAligned="false">
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnModeLinie"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -58,7 +58,6 @@
                 app:autoSizeMinTextSize="8sp"
                 app:autoSizeMaxTextSize="12sp"
                 app:autoSizeStepGranularity="1sp"
-                android:textColor="#FFFFFF"
                 android:textAllCaps="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
@@ -66,9 +65,9 @@
                 android:paddingEnd="2dp"
                 android:layout_marginEnd="4dp"
                 app:cornerRadius="6dp"
-                style="@style/Widget.MaterialComponents.Button"/>
+                style="@style/Widget.App.Button"/>
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnModeTrail"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -79,7 +78,6 @@
                 app:autoSizeMinTextSize="8sp"
                 app:autoSizeMaxTextSize="12sp"
                 app:autoSizeStepGranularity="1sp"
-                android:textColor="#FFFFFF"
                 android:textAllCaps="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
@@ -87,9 +85,9 @@
                 android:paddingEnd="2dp"
                 android:layout_marginEnd="4dp"
                 app:cornerRadius="6dp"
-                style="@style/Widget.MaterialComponents.Button"/>
+                style="@style/Widget.App.Button"/>
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnModePoly"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -100,14 +98,13 @@
                 app:autoSizeMinTextSize="8sp"
                 app:autoSizeMaxTextSize="12sp"
                 app:autoSizeStepGranularity="1sp"
-                android:textColor="#FFFFFF"
                 android:textAllCaps="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:paddingStart="2dp"
                 android:paddingEnd="2dp"
                 app:cornerRadius="6dp"
-                style="@style/Widget.MaterialComponents.Button"/>
+                style="@style/Widget.App.Button"/>
 
         </LinearLayout>
 
@@ -129,7 +126,7 @@
                 android:id="@+id/tvMapHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="13sp"
                 android:layout_marginBottom="6dp"/>
 
@@ -138,7 +135,7 @@
                 android:id="@+id/tvResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="10dp"/>
@@ -150,7 +147,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="8dp">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnUndo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -160,16 +157,14 @@
                     app:autoSizeTextType="uniform"
                     app:autoSizeMinTextSize="8sp"
                     app:autoSizeMaxTextSize="10sp"
-                    android:textColor="#FFFFFF"
                     android:textAllCaps="false"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:layout_marginEnd="6dp"
                     app:cornerRadius="6dp"
-                    app:backgroundTint="#555555"
-                    style="@style/Widget.MaterialComponents.Button"/>
+                    style="@style/Widget.App.Button"/>
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnClear"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -179,13 +174,11 @@
                     app:autoSizeTextType="uniform"
                     app:autoSizeMinTextSize="8sp"
                     app:autoSizeMaxTextSize="10sp"
-                    android:textColor="#FFFFFF"
                     android:textAllCaps="false"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     app:cornerRadius="6dp"
-                    app:backgroundTint="#c0392b"
-                    style="@style/Widget.MaterialComponents.Button"/>
+                    style="@style/Widget.App.Button.Danger"/>
 
             </LinearLayout>
 
@@ -195,37 +188,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnSkip"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
                     android:text="@string/nasenarbeit_map_btn_skip"
                     android:textSize="12sp"
-                    android:textColor="#FFFFFF"
                     android:textAllCaps="false"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:layout_marginEnd="8dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    app:strokeColor="#88FFFFFF"
+                    style="@style/Widget.App.Button.Outlined"
                     app:cornerRadius="8dp"/>
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnConfirm"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
                     android:text="@string/nasenarbeit_map_btn_confirm"
                     android:textSize="12sp"
-                    android:textColor="#FFFFFF"
                     android:textAllCaps="false"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
 
                     android:enabled="false"
-                    app:backgroundTint="#4C6238"
-                    app:cornerRadius="8dp"/>
+                    app:cornerRadius="8dp"
+                    style="@style/Widget.App.Button.Success"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -244,7 +234,7 @@
             android:paddingBottom="2dp"
             android:background="#CC000000"
             android:text="© OpenStreetMap contributors"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/rd_text_primary"
             android:textSize="9sp"
             android:translationZ="10dp"
             android:elevation="10dp"

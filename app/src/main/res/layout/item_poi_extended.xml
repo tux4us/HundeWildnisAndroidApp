@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hundewildnis.app.GlassCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/rd_surface_alt">
+    style="@style/Widget.App.Card.Inner">
 
     <LinearLayout
         android:id="@+id/poiContainer"
@@ -47,7 +46,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/poi_item_category_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999"
+                    android:textColor="@color/rd_text_secondary"
                     android:textAlignment="center"
                     android:maxWidth="88dp"
                     android:maxLines="2"
@@ -69,7 +68,7 @@
                     android:text="@string/poi_item_name_placeholder"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/rd_text_primary"
                     android:maxLines="2"
                     android:ellipsize="end" />
 
@@ -93,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" • "
-                        android:textColor="#666666" />
+                        android:textColor="@color/rd_text_secondary" />
 
                     <TextView
                         android:id="@+id/poiDirection"
@@ -101,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/poi_item_direction_placeholder"
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="#999999" />
+                        android:textColor="@color/rd_text_secondary" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -113,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/poi_item_more_hint"
                 android:textSize="@dimen/text_body_medium"
-                android:textColor="#999999"
+                android:textColor="@color/rd_text_secondary"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
@@ -134,7 +133,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#555555"
+                android:background="@color/gl_divider"
                 android:layout_marginBottom="8dp" />
 
             <!-- Adresse -->
@@ -151,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_address"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiAddress"
@@ -160,7 +159,7 @@
                     android:layout_weight="1"
                     android:text="@string/poi_item_address_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#CCCCCC" />
+                    android:textColor="@color/rd_text_primary" />
             </LinearLayout>
 
             <!-- Telefon -->
@@ -177,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_phone"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiPhone"
@@ -186,7 +185,7 @@
                     android:layout_weight="1"
                     android:text="@string/poi_item_phone_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/rd_text_primary"
                     android:autoLink="phone" />
             </LinearLayout>
 
@@ -204,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_website"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiWebsite"
@@ -231,7 +230,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_hours"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiHours"
@@ -240,7 +239,7 @@
                     android:layout_weight="1"
                     android:text="@string/poi_item_hours_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#CCCCCC" />
+                    android:textColor="@color/rd_text_primary" />
             </LinearLayout>
 
             <!-- Beschreibung -->
@@ -257,7 +256,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_info"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiDescription"
@@ -266,7 +265,7 @@
                     android:layout_weight="1"
                     android:text="@string/poi_item_description_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#CCCCCC"
+                    android:textColor="@color/rd_text_primary"
                     android:maxLines="3"
                     android:ellipsize="end" />
             </LinearLayout>
@@ -285,7 +284,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_operator"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiOperator"
@@ -294,7 +293,7 @@
                     android:layout_weight="1"
                     android:text="@string/poi_item_operator_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#CCCCCC" />
+                    android:textColor="@color/rd_text_primary" />
             </LinearLayout>
 
             <!-- Zugang -->
@@ -310,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/poi_label_access"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#999999" />
+                    android:textColor="@color/rd_text_secondary" />
 
                 <TextView
                     android:id="@+id/poiAccess"
@@ -319,11 +318,11 @@
                     android:layout_weight="1"
                     android:text="@string/poi_item_access_placeholder"
                     android:textSize="@dimen/text_body_medium"
-                    android:textColor="#CCCCCC" />
+                    android:textColor="@color/rd_text_primary" />
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</com.hundewildnis.app.GlassCardView>

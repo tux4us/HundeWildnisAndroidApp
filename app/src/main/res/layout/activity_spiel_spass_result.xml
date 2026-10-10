@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -30,7 +30,7 @@
             android:padding="12dp"
             android:textSize="13sp"
             android:textAlignment="center"
-            android:background="?attr/colorSurfaceVariant"/>
+            android:background="@color/gl_divider"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvResults"
@@ -52,9 +52,9 @@
             android:text="@string/spiel_spass_result_empty"
             android:visibility="gone"/>
 
-        <com.google.android.material.button.MaterialButton
+        <com.hundewildnis.app.GlassButton
             android:id="@+id/btnChangeFilter"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.App.Button.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"

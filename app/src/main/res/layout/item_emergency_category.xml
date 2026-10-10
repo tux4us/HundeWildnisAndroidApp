@@ -2,13 +2,12 @@
 <!-- ════════════════════════════════════════════════════════════════
      item_emergency_category.xml - Hauptkategorien (Unfall/Erkrankung)
      ════════════════════════════════════════════════════════════════ -->
-<com.google.android.material.card.MaterialCardView
+<com.hundewildnis.app.GlassCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="4dp"
     app:cardCornerRadius="12dp"
     android:clickable="true"
     android:focusable="true"
@@ -40,4 +39,4 @@
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</com.hundewildnis.app.GlassCardView>

@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,17 +55,17 @@ class VitalListAdapter(
         when (status) {
             PulseStatus.NORMAL -> {
                 b.tvPulseStatus.text = context.getString(R.string.vital_item_status_normal)
-                b.tvPulseStatus.setBackgroundColor(Color.parseColor("#2d5016"))
+                b.tvPulseStatus.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.gl_success_fill))
                 b.tvPulseStatus.visibility = View.VISIBLE
             }
             PulseStatus.HIGH -> {
                 b.tvPulseStatus.text = context.getString(R.string.vital_item_status_high)
-                b.tvPulseStatus.setBackgroundColor(Color.parseColor("#B00020"))
+                b.tvPulseStatus.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.gl_danger_fill))
                 b.tvPulseStatus.visibility = View.VISIBLE
             }
             PulseStatus.LOW -> {
                 b.tvPulseStatus.text = context.getString(R.string.vital_item_status_low)
-                b.tvPulseStatus.setBackgroundColor(Color.parseColor("#E65100"))
+                b.tvPulseStatus.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.gl_warning_fill))
                 b.tvPulseStatus.visibility = View.VISIBLE
             }
             PulseStatus.UNKNOWN -> {

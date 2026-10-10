@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
@@ -83,9 +82,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)?.apply {
             // Themenkonformes Tinting: das Icon war fest auf Weiß kodiert und dadurch
             // im hellen Modus auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            setTint(if (isDark) Color.WHITE else Color.parseColor("#2B2620"))
+            setTint(Color.WHITE)
         }
 
         setupButtons()
@@ -106,8 +103,7 @@ class StartActivity : BaseBottomNavActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDark) Color.WHITE else Color.BLACK
+        val textColor = Color.WHITE
 
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
@@ -126,7 +122,6 @@ class StartActivity : BaseBottomNavActivity() {
                 true
             }
             R.id.action_language -> { showLanguageDialog(); true }
-            R.id.action_theme -> { toggleTheme(); true }
             R.id.action_settings -> { showSettingsDialog(); true }
             R.id.action_instructions -> { showInstructionsDialog(); true }
             R.id.action_permissions -> { showPermissionsDialog(); true }
@@ -150,8 +145,6 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun showNotificationDisclosure() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.start_notification_disclosure_title))
@@ -167,36 +160,29 @@ class StartActivity : BaseBottomNavActivity() {
             .setNegativeButton(getString(R.string.start_notification_disclosure_decline), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
 
     private fun showInstructionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
+        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(Color.WHITE)
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.start_understood), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
     }
 
     private fun showPermissionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
+        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(Color.WHITE)
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.ok), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#8A7A1F"))
     }
 
     private fun showAboutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_about, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
-        val linkColor = if (isDark) Color.parseColor("#B0A25A") else Color.parseColor("#8A7A1F")
+        val titleColor = Color.WHITE
+        val linkColor = Color.parseColor("#B0A25A")
 
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
 
@@ -219,20 +205,9 @@ class StartActivity : BaseBottomNavActivity() {
 
         val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton(getString(R.string.start_close), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
-    }
-
-    private fun toggleTheme() {
-        val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-        val isDarkMode = sharedPreferences.getBoolean("is_dark_mode", false)
-        sharedPreferences.edit().putBoolean("is_dark_mode", !isDarkMode).apply()
-        AppCompatDelegate.setDefaultNightMode(if (isDarkMode) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
-        recreate()
     }
 
     private fun showLanguageDialog() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         // Explizite Liste um Index-Fehler zu vermeiden
         val supportedLanguages = listOf(
@@ -269,8 +244,6 @@ class StartActivity : BaseBottomNavActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
             .apply {
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(accentColor)
             }
     }
 
@@ -278,8 +251,7 @@ class StartActivity : BaseBottomNavActivity() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val appSettings = AppSettings(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_settings, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
+        val accentColor = Color.WHITE
         val colorStateList = android.content.res.ColorStateList.valueOf(accentColor)
 
         val s1 = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchBackgroundUpdates)
@@ -339,12 +311,9 @@ class StartActivity : BaseBottomNavActivity() {
             }
             .create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(accentColor)
     }
 
     private fun showOrsInfoDialog() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.start_ors_api_key_title))
             .setMessage(getString(R.string.start_ors_api_key_message))
@@ -352,7 +321,6 @@ class StartActivity : BaseBottomNavActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
             }
     }
 
@@ -569,9 +537,6 @@ class StartActivity : BaseBottomNavActivity() {
 
         if (profiles.isEmpty()) {
             // Kein Hund vorhanden - zeige Hinweis
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.start_no_dog_title))
@@ -583,8 +548,6 @@ class StartActivity : BaseBottomNavActivity() {
                 .create()
                 .apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
                 }
             return
         }
@@ -592,8 +555,6 @@ class StartActivity : BaseBottomNavActivity() {
         // Mehrere Hunde? Auswahl anzeigen
         if (profiles.size > 1) {
             val dogNames = profiles.map { it.name }.toTypedArray()
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.start_which_dog_title))
@@ -604,7 +565,6 @@ class StartActivity : BaseBottomNavActivity() {
                 .setNegativeButton(getString(R.string.cancel), null)
                 .create().apply {
                     show()
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
                 }
         } else {
             // Nur ein Hund - direkt öffnen
@@ -639,12 +599,8 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun confirmRestore(file: File) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         val dialog = AlertDialog.Builder(this).setTitle(getString(R.string.start_restore_backup_title)).setMessage(getString(R.string.start_restore_backup_message)).setPositiveButton(getString(R.string.yes)) { _, _ -> restoreBackup(file) }.setNegativeButton(getString(R.string.cancel)) { _, _ -> file.delete() }.create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
     }
 
     private fun restoreBackup(file: File) {
@@ -662,8 +618,6 @@ class StartActivity : BaseBottomNavActivity() {
     }
 
     private fun offerShare(file: File) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.start_share_backup_title))
@@ -671,8 +625,6 @@ class StartActivity : BaseBottomNavActivity() {
             .setNegativeButton(getString(R.string.start_later), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -720,12 +672,11 @@ class StartActivity : BaseBottomNavActivity() {
 
     private fun showUpdateDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_update_support, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-        val textColor = if (isDark) Color.parseColor("#E0E0E0") else Color.parseColor("#424242")
-        val buttonBgColor = Color.parseColor("#8A7A1F")
-        val buttonOutlineColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
+        val titleColor = Color.WHITE
+        val textColor = ContextCompat.getColor(this, R.color.rd_text_primary)
+        val buttonBgColor = ContextCompat.getColor(this, R.color.gl_primary_fill)
+        val buttonOutlineColor = Color.WHITE
 
         dialogView.findViewById<TextView>(R.id.tvUpdateTitle).setTextColor(titleColor)
         dialogView.findViewById<TextView>(R.id.tvUpdateVersion).apply {
@@ -834,12 +785,7 @@ class StartActivity : BaseBottomNavActivity() {
         binding.blogPreviewLoading.visibility = View.GONE
 
         // Design-Farben für Blog-Kachel (waldiges Grün statt Gruppe 5 Blau)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-        val headerColorRes = if (isDark) R.color.rd_blog_header_dark else R.color.rd_blog_header_light
-        binding.blogHeaderLayout.setBackgroundColor(ContextCompat.getColor(this, headerColorRes))
-        binding.blogHeaderTitle.setTextColor(Color.WHITE)
-        binding.blogHeaderAction.setTextColor(Color.WHITE)
+        binding.blogHeaderLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.rd_blog_header))
 
         // Titel
         binding.blogPreviewTitle.text = post.title

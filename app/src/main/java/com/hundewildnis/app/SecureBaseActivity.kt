@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -22,16 +22,17 @@ import com.google.android.material.appbar.AppBarLayout
 abstract class SecureBaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Glas-Design ist nur dunkel: systemweite Hell-Einstellung ignorieren
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
 
         // Edge-to-Edge aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        // Status- und Navigation-Bar Icons je nach Theme (Hell/Dunkel) anpassen
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        // Die App ist ausschließlich dunkel: helle Symbole in Status- und Navigationsleiste
         WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = !isDark
-            isAppearanceLightNavigationBars = !isDark
+            isAppearanceLightStatusBars = false
+            isAppearanceLightNavigationBars = false
         }
 
         // FLAG_SECURE: Blockiert Screenshots & Screen Recording
@@ -41,10 +42,10 @@ abstract class SecureBaseActivity : AppCompatActivity() {
         )
 
         // ✅ NEU: Globaler HOME Button in der Toolbar (über MenuProvider)
-        setupGlobalHomeButton(isDark)
+        setupGlobalHomeButton()
     }
 
-    private fun setupGlobalHomeButton(isDark: Boolean) {
+    private fun setupGlobalHomeButton() {
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 // Home-Icon nur anzeigen, wenn wir NICHT in der StartActivity sind
@@ -53,14 +54,7 @@ abstract class SecureBaseActivity : AppCompatActivity() {
                     item.setIcon(R.drawable.ic_home)
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-                    // Themenkonformes Icon-Tinting: Weiß im Dark-Theme, Dunkel im Light-Theme.
-                    // Vorher war das Icon hartcodiert weiß und dadurch im hellen Modus
-                    // auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
-                    val iconColor = if (isDark) {
-                        android.graphics.Color.WHITE
-                    } else {
-                        androidx.core.content.ContextCompat.getColor(this@SecureBaseActivity, R.color.rd_text_primary_light)
-                    }
+                    val iconColor = androidx.core.content.ContextCompat.getColor(this@SecureBaseActivity, R.color.rd_text_primary)
                     item.icon?.setTint(iconColor)
                 }
             }

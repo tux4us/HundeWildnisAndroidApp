@@ -5,10 +5,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -215,8 +213,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun confirmDeleteDraft() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.notes_confirm_delete_draft_title))
@@ -227,8 +223,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show().apply {
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
             }
     }
 
@@ -246,8 +240,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
     // NEU: Wiederverwendbarer Dialog
     private fun showProminentDisclosure() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.notes_location_disclosure_title))
@@ -259,8 +251,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
             }
     }
 
@@ -271,8 +261,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             return
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.notes_camera_disclosure_title))
@@ -285,8 +273,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -525,8 +511,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun confirmDelete(session: NoteSession) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.notes_confirm_delete_history_title))
             .setMessage(getString(R.string.notes_confirm_delete_history_msg))
@@ -541,8 +525,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show().apply {
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
             }
     }
 
@@ -852,9 +834,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
         } else {
             // ✅ MIT BILDERN - Zeige Auswahl-Dialog für User-Kontrolle
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.notes_share_dialog_title))
@@ -874,9 +853,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 .create()
                 .apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
                 }
         }
     }
@@ -898,9 +874,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
         } else {
             // ✅ MEHRERE BILDER - Zeige DIALOG statt Toast
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.notes_share_warning_title))
@@ -919,8 +892,6 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 .create()
                 .apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
                 }
         }
     }

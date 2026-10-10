@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,11 +40,10 @@
                 android:layout_marginBottom="16dp" />
 
             <!-- BASIS-DATEN -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -117,14 +116,13 @@
                         android:text="@string/dog_view_color_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- IDENTIFIKATION -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -172,14 +170,13 @@
                         android:text="@string/dog_view_pet_passport_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- GESUNDHEIT -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -259,14 +256,13 @@
                         android:text="@string/dog_view_medical_notes_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- KONTAKTE -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -322,14 +318,13 @@
                         android:text="@string/dog_view_emergency_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- FUTTER & VERHALTEN -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -361,7 +356,7 @@
                         android:text="@string/dog_view_behavior_format"
                         android:textSize="@dimen/text_body_medium" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ════════ VITALWERTE ════════ -->
             <LinearLayout
@@ -414,7 +409,7 @@
 
                     <Button
                         android:id="@+id/btnStartPulscheck"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.App.Button.Outlined"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -423,7 +418,7 @@
 
                     <Button
                         android:id="@+id/btnOpenVitalList"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.App.Button.Outlined"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -459,12 +454,11 @@
                     android:layout_marginBottom="10dp" />
 
                 <!-- Stats-Karte -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     app:cardCornerRadius="8dp"
-                    app:cardElevation="2dp"
                     xmlns:app="http://schemas.android.com/apk/res-auto">
 
                     <LinearLayout
@@ -498,7 +492,7 @@
                             android:textStyle="italic" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Liste bisheriger Zyklen (wird dynamisch befüllt) -->
                 <LinearLayout
@@ -511,7 +505,7 @@
                 <!-- Button: neue Läufigkeit eintragen -->
                 <Button
                     android:id="@+id/btnAddHeatCycle"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.App.Button.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/dog_view_btn_add_heat_cycle"

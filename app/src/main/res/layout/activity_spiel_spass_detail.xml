@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -35,9 +35,9 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="16dp"/>
 
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                android:layout_marginBottom="16dp" app:cardCornerRadius="12dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="14dp">
 
@@ -62,28 +62,28 @@
                     </LinearLayout>
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/layoutHinweis"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp" app:cardCornerRadius="12dp"
-                app:strokeColor="#f0ad4e" app:strokeWidth="1dp"
+                app:strokeColor="@color/gl_warning_stroke" app:strokeWidth="1dp"
                 android:visibility="gone">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="14dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:text="@string/spiel_spass_detail_hinweis_label" android:textStyle="bold" android:textSize="13sp"
-                        android:textColor="#f0ad4e" android:layout_marginBottom="4dp"/>
+                        android:textColor="@color/gl_warning" android:layout_marginBottom="4dp"/>
                     <TextView android:id="@+id/tvHinweisValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnLog"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="@string/spiel_spass_detail_log_button"
-                android:minHeight="52dp" app:cornerRadius="10dp"/>
+                android:minHeight="52dp" app:cornerRadius="10dp" style="@style/Widget.App.Button"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

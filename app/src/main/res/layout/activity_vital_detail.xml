@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -15,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:title="@string/vital_detail_toolbar_title" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -32,12 +31,11 @@
             android:padding="16dp">
 
             <!-- Meta-Info -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -70,15 +68,14 @@
                         android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Vitalwerte anzeigen / bearbeiten -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -100,7 +97,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/vital_detail_hint_pulse"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.App.TextInputLayout"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDetailPulse"
@@ -115,7 +112,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/vital_detail_hint_respiration"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.App.TextInputLayout"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDetailResp"
@@ -130,7 +127,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/vital_detail_hint_temperature"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.App.TextInputLayout"
                         app:suffixText="°C"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
@@ -146,7 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/vital_detail_hint_crt"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.App.TextInputLayout"
                         android:layout_marginBottom="10dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDetailCrt"
@@ -205,15 +202,14 @@
                         android:layout_marginBottom="10dp" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Notizen -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -234,7 +230,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/vital_detail_hint_notes"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        style="@style/Widget.App.TextInputLayout">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDetailNotes"
                             android:layout_width="match_parent"
@@ -246,44 +242,39 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Action-Buttons -->
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnDetailSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="52dp"
                 android:text="@string/vital_detail_btn_save"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="?attr/colorSecondary"
                 app:cornerRadius="10dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.App.Button.Primary" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnDetailShare"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:text="@string/vital_detail_btn_share"
                 android:textSize="14sp"
-                android:textColor="@color/rd_overlay_accent"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="@color/rd_overlay_accent"
+                style="@style/Widget.App.Button.Outlined.Primary"
                 app:cornerRadius="10dp"
                 android:layout_marginBottom="8dp" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnDetailSharePdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:text="@string/vital_detail_btn_share_as_text"
                 android:textSize="14sp"
-                android:textColor="@color/rd_overlay_accent"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="@color/rd_overlay_accent"
+                style="@style/Widget.App.Button.Outlined.Primary"
                 app:cornerRadius="10dp"
                 android:layout_marginBottom="16dp" />
 

@@ -58,6 +58,6 @@ class WindForecastAdapter(
         bft <= 3 -> android.graphics.Color.parseColor("#4CAF50")   // grün
         bft <= 5 -> android.graphics.Color.parseColor("#FFC107")   // gelb
         bft <= 7 -> android.graphics.Color.parseColor("#FF9800")   // orange
-        else     -> android.graphics.Color.parseColor("#F44336")   // rot
+        else     -> android.graphics.Color.parseColor("#FF6F60")   // rot
     }
 }

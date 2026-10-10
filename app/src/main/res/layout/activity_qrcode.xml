@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,11 +45,10 @@
             android:textAlignment="center"
             android:layout_marginBottom="24dp" />
 
-        <com.google.android.material.card.MaterialCardView
+        <com.hundewildnis.app.GlassCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
             android:layout_marginBottom="24dp">
 
             <FrameLayout
@@ -73,7 +72,7 @@
 
             </FrameLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </com.hundewildnis.app.GlassCardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gridQrActions"

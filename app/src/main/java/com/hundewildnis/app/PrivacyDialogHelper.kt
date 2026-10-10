@@ -2,7 +2,6 @@ package com.hundewildnis.app
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.widget.CheckBox
 import android.widget.LinearLayout
@@ -28,10 +27,7 @@ object PrivacyDialogHelper {
         title: String,
         onConfirm: (Set<String>) -> Unit
     ) {
-        val isDark = (context.resources.configuration.uiMode and 
-                     Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDark) Color.WHITE else Color.BLACK
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val textColor = Color.WHITE
 
         val allFields = profile.getAllFields(context)
         val checkBoxes = mutableMapOf<String, CheckBox>()
@@ -108,7 +104,5 @@ object PrivacyDialogHelper {
         dialog.show()
         
         // Button-Farben anpassen
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     }
 }

@@ -17,8 +17,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="@android:color/white" />
+            android:background="@color/gl_bar"
+            app:titleTextColor="@color/rd_text_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,12 +45,11 @@
                 android:textStyle="bold"
                 android:gravity="center" />
 
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardUrgency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardElevation="4dp"
                 app:cardCornerRadius="8dp">
 
                 <TextView
@@ -61,17 +60,16 @@
                     android:text="@string/emergency_placeholder_urgency"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/rd_text_primary"
                     android:gravity="center" />
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Symptome -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="2dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
@@ -96,14 +94,13 @@
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Sofortmaßnahmen -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="2dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
@@ -129,14 +126,13 @@
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Was TUN -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="2dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
@@ -161,14 +157,13 @@
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Was NICHT tun -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="2dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
@@ -193,14 +188,13 @@
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Transport -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="2dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
@@ -225,15 +219,14 @@
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Spezielle Hinweise -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardSpecialNotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="2dp"
                 app:cardCornerRadius="8dp"
                 android:visibility="gone">
 
@@ -242,7 +235,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp"
-                    android:background="#FFF3CD">
+                    android:background="@color/gl_warning_fill">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -257,12 +250,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:textSize="@dimen/text_body_medium"
-                        android:textColor="#856404"
+                        android:textColor="@color/gl_warning"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
         </LinearLayout>
 
@@ -275,34 +268,35 @@
         android:layout_gravity="bottom"
         android:orientation="vertical"
         android:padding="8dp"
-        android:background="?attr/colorSurface"
         android:elevation="8dp">
 
         <!-- HLW Timer (conditional) -->
-        <com.google.android.material.button.MaterialButton
+        <com.hundewildnis.app.GlassButton
             android:id="@+id/btnHlwTimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/first_aid_button_hlw_timer_start"
-            android:backgroundTint="#d32f2f"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/Widget.App.Button.Danger" />
 
         <!-- Simple Timer (conditional) -->
-        <com.google.android.material.button.MaterialButton
+        <com.hundewildnis.app.GlassButton
             android:id="@+id/btnTimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/first_aid_button_timer_start"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/Widget.App.Button" />
 
         <!-- Notfall melden -->
-        <com.google.android.material.button.MaterialButton
+        <com.hundewildnis.app.GlassButton
             android:id="@+id/btnEmergencyReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/first_aid_button_emergency_report" />
+            android:text="@string/first_aid_button_emergency_report"
+            style="@style/Widget.App.Button" />
 
     </LinearLayout>
 

@@ -59,7 +59,7 @@ class ElevationChartView @JvmOverloads constructor(
     }
 
     private val placeholderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#666666")
+        color = Color.parseColor("#B2B2AE")
         textSize = 30f
         textAlign = Paint.Align.CENTER
     }

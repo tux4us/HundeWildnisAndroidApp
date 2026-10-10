@@ -52,9 +52,6 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         binding.layoutDogCards.visibility = View.GONE
         binding.tvNoDogs.visibility = View.VISIBLE
 
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.diary_no_dog_dialog_title))
@@ -71,8 +68,6 @@ class TrainingDiaryActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -119,14 +114,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
         cardBinding.tvDogInfo.text = getString(R.string.diary_stats_this_week, weeklyStats.totalSessions, weeklyStats.totalMinutes)
 
         // ✅ FIX: Button-Farben für Dark Mode
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        if (isDark) {
-            cardBinding.btnExportPdf.setTextColor(Color.WHITE)
-            cardBinding.btnExportCsv.setTextColor(Color.WHITE)
-            // btnDeleteTrainingData bleibt rot (ist schon im XML gesetzt)
-        }
 
         // ✅ Click auf Hunde-Info → Kategorien öffnen
         cardBinding.layoutDogInfo.setOnClickListener {
@@ -189,9 +177,7 @@ class TrainingDiaryActivity : SecureBaseActivity() {
 
     private fun showDeleteAllTrainingDataDialog(profile: DogProfile) {
         // ✅ DARK MODE FIX
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val colorNormal = Color.WHITE
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.diary_delete_dialog_title))

@@ -1,8 +1,7 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
+import androidx.core.content.ContextCompat
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -201,19 +200,19 @@ class PulscheckActivity : SecureBaseActivity() {
         when (status) {
             PulseStatus.NORMAL -> {
                 binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_normal)
-                binding.tvPulseBadge.setTextColor(Color.parseColor("#2d5016"))
+                binding.tvPulseBadge.setTextColor(ContextCompat.getColor(this@PulscheckActivity, R.color.gl_success))
             }
             PulseStatus.LOW -> {
                 binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_low)
-                binding.tvPulseBadge.setTextColor(Color.parseColor("#E65100"))
+                binding.tvPulseBadge.setTextColor(ContextCompat.getColor(this@PulscheckActivity, R.color.gl_warning))
             }
             PulseStatus.HIGH -> {
                 binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_high)
-                binding.tvPulseBadge.setTextColor(Color.parseColor("#B00020"))
+                binding.tvPulseBadge.setTextColor(ContextCompat.getColor(this@PulscheckActivity, R.color.gl_danger))
             }
             PulseStatus.UNKNOWN -> {
                 binding.tvPulseBadge.text = getString(R.string.pulscheck_badge_unknown)
-                binding.tvPulseBadge.setTextColor(Color.parseColor("#555555"))
+                binding.tvPulseBadge.setTextColor(ContextCompat.getColor(this@PulscheckActivity, R.color.rd_text_secondary))
             }
         }
     }
@@ -244,7 +243,7 @@ class PulscheckActivity : SecureBaseActivity() {
             binding.btnCrt3 to 3,
             binding.btnCrt4 to 4
         )
-        val colors = listOf("#4a6135", "#2d5016", "#E65100", "#B00020")
+        val colors = listOf(R.color.gl_success_fill, R.color.gl_success_fill, R.color.gl_warning_fill, R.color.gl_danger_fill)
         val labels = listOf("1s", "2s ✓", "3s", ">3s")
 
         buttons.forEachIndexed { index, (btn, value) ->
@@ -253,14 +252,14 @@ class PulscheckActivity : SecureBaseActivity() {
                 // Alle zurücksetzen
                 buttons.forEachIndexed { i, (b, _) ->
                     b.strokeWidth = 0
-                    b.setBackgroundColor(Color.parseColor(colors[i]))
+                    b.setBackgroundColor(ContextCompat.getColor(this@PulscheckActivity, colors[i]))
                     b.text = labels[i]
                     b.alpha = 0.7f
                 }
                 // Ausgewählten hervorheben
                 btn.alpha = 1.0f
                 btn.strokeWidth = dpToPx(3)
-                btn.strokeColor = android.content.res.ColorStateList.valueOf(Color.WHITE)
+                btn.strokeColor = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this@PulscheckActivity, R.color.gl_stroke_strong))
 
                 val hint = when (value) {
                     1 -> getString(R.string.pulscheck_crt_selected_1s)
@@ -385,9 +384,6 @@ class PulscheckActivity : SecureBaseActivity() {
     }
 
     private fun showAbnormalWarning(record: VitalRecord, status: PulseStatus) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#B00020")
 
         val msg = when (status) {
             PulseStatus.HIGH ->
@@ -405,8 +401,6 @@ class PulscheckActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(Color.parseColor("#B00020"))
             }
     }
 

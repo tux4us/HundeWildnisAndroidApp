@@ -1,6 +1,5 @@
 package com.hundewildnis.app
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -36,9 +35,7 @@ class WebDavSyncActivity : SecureBaseActivity() {
     }
 
     private fun buttonColor(): Int {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-        return if (isDark) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#2d5016")
+        return android.graphics.Color.WHITE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -214,8 +211,6 @@ class WebDavSyncActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor())
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor())
     }
 
     private fun confirmAndClearCredentials() {
@@ -231,8 +226,6 @@ class WebDavSyncActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor())
     }
 
     private fun triggerSync() {
@@ -292,7 +285,7 @@ class WebDavSyncActivity : SecureBaseActivity() {
         binding.tvConnectionStatus.isVisible = true
         binding.tvConnectionStatus.text = message
         binding.tvConnectionStatus.setTextColor(
-            android.graphics.Color.parseColor(if (isError) "#F44336" else "#2E7D32")
+            android.graphics.Color.parseColor(if (isError) "#FF6F60" else "#6FBF73")
         )
     }
 

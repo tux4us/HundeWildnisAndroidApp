@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="?attr/colorSurface"
     android:padding="10dp"
     android:layout_marginBottom="8dp">
 
@@ -33,7 +32,7 @@
             android:id="@+id/tvWarningMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#CCCCCC"
+            android:textColor="@color/rd_text_primary"
             android:textSize="11sp"
             android:layout_marginTop="2dp" />
 

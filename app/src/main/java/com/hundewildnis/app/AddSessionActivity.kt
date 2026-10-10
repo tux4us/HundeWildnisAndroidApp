@@ -2,7 +2,6 @@ package com.hundewildnis.app
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -12,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.lifecycle.lifecycleScope
 import com.hundewildnis.app.databinding.ActivityAddSessionBinding
-import android.content.res.Configuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -245,10 +243,7 @@ class AddSessionActivity : SecureBaseActivity() {
             return
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
         val colors = StartGroupColors.forGroup(this, 1) // Gruppe 2 für Training
-        val color = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("📍 Wetter abrufen")
@@ -261,16 +256,11 @@ class AddSessionActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
     private fun showProminentDisclosure(action: PendingAction) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
         val colors = StartGroupColors.forGroup(this, 1)
-        val buttonColor = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("📍 Standortzugriff für Trainingstagebuch")
@@ -317,8 +307,6 @@ class AddSessionActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
             }
     }
 
@@ -423,10 +411,7 @@ class AddSessionActivity : SecureBaseActivity() {
             return
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
         val colors = StartGroupColors.forGroup(this, 1) // Gruppe 2 für Training
-        val color = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("📍 GPS-Standort abrufen")
@@ -439,8 +424,6 @@ class AddSessionActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 
@@ -526,10 +509,7 @@ class AddSessionActivity : SecureBaseActivity() {
     }
 
     private fun showSuccessDialog() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
         val colors = StartGroupColors.forGroup(this, 1) // Gruppe 2 für Training
-        val color = if (isDark) Color.WHITE else ContextCompat.getColor(this, colors.accentColorRes)
 
         AlertDialog.Builder(this)
             .setTitle("✅ Trainingseinheit gespeichert")
@@ -540,7 +520,6 @@ class AddSessionActivity : SecureBaseActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
             }
     }
 

@@ -1,6 +1,5 @@
 package com.hundewildnis.app
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -61,9 +60,6 @@ class SpielSpassDetailActivity : SecureBaseActivity() {
 
     private fun showLogDialog() {
         val dialogBinding = DialogSpielSpassLogBinding.inflate(LayoutInflater.from(this))
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         dialogBinding.editDauer.setText(
             if (aktivitaet.minDauerMinuten == aktivitaet.maxDauerMinuten)
@@ -81,8 +77,6 @@ class SpielSpassDetailActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
     }
 
     private fun saveSession(dialogBinding: DialogSpielSpassLogBinding) {

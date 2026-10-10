@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -30,59 +30,58 @@
             android:padding="16dp">
 
             <!-- Session Header -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="10dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:id="@+id/tvDatum" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:layout_marginBottom="4dp"/>
                     <TextView android:id="@+id/tvDisziplin" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                     <TextView android:id="@+id/tvEmpfohlen" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:layout_marginBottom="4dp"/>
                     <TextView android:id="@+id/tvBewertung" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="16sp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Scores -->
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+            <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_scoring" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvScores" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:fontFamily="monospace"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Ergebnisse -->
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+            <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_results" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvErgebnisse" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Wetter -->
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+            <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_weather" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvWetter" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Level -->
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+            <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_level" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvLevel" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Notizen -->
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp" app:cardElevation="2dp">
+            <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                     <TextView android:id="@+id/tvNotizenLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_session_detail_section_notes" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                     <TextView android:id="@+id/tvNotizen" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

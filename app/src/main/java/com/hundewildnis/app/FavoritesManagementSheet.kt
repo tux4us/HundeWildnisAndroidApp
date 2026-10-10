@@ -54,7 +54,6 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
 
         val root = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor("#2d2d2d"))
         }
 
         // ── Header ───────────────────────────────────────────────
@@ -84,13 +83,13 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
         root.addView(TextView(ctx).apply {
             text = "☰ Halten & Ziehen zum Sortieren  ·  Antippen zum Umbenennen"
             textSize = 10f
-            setTextColor(Color.parseColor("#666666"))
+            setTextColor(Color.parseColor("#B2B2AE"))
             setPadding((16*dp).toInt(), 0, (16*dp).toInt(), (8*dp).toInt())
         })
         root.addView(View(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 1)
-            setBackgroundColor(Color.parseColor("#484848"))
+            setBackgroundColor(androidx.core.content.ContextCompat.getColor(ctx, R.color.gl_divider))
         })
 
         // ── Leer-State ───────────────────────────────────────────
@@ -98,7 +97,7 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
             root.addView(TextView(ctx).apply {
                 text = "Noch keine Favoriten gespeichert.\nNavigationsziele über ⭐ speichern."
                 textSize = 12f
-                setTextColor(Color.parseColor("#777777"))
+                setTextColor(Color.parseColor("#B2B2AE"))
                 gravity = Gravity.CENTER
                 setPadding((16*dp).toInt(), (40*dp).toInt(),
                     (16*dp).toInt(), (40*dp).toInt())
@@ -159,10 +158,6 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
     private fun showRenameDialog(fav: FavoritePOI) {
         val ctx   = requireContext()
         val dp    = ctx.resources.displayMetrics.density
-        val isDark = (ctx.resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         val input = EditText(ctx).apply {
             setText(fav.displayName)
@@ -190,16 +185,10 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
     }
 
     private fun confirmDelete(fav: FavoritePOI) {
         val ctx   = requireContext()
-        val isDark = (ctx.resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         val dialog = AlertDialog.Builder(ctx)
             .setTitle("Favorit löschen")
@@ -213,8 +202,6 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#F44336"))
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
     }
 
     // ════════════════════════════════════════════════════════════
@@ -255,7 +242,7 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
 
             val drag = TextView(ctx).apply {
                 tag = "drag"; text = "☰"; textSize = 20f
-                setTextColor(Color.parseColor("#555555"))
+                setTextColor(Color.parseColor("#B2B2AE"))
                 setPadding(0, 0, (12*dp).toInt(), 0)
             }
 
@@ -271,7 +258,7 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
             }
             val addr = TextView(ctx).apply {
                 tag = "addr"; textSize = 10f
-                setTextColor(Color.parseColor("#777777"))
+                setTextColor(Color.parseColor("#B2B2AE"))
                 maxLines = 1; ellipsize = android.text.TextUtils.TruncateAt.END
             }
             info.addView(name); info.addView(addr)
@@ -286,7 +273,7 @@ class FavoritesManagementSheet : BottomSheetDialogFragment() {
             wrapper.addView(View(ctx).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 1)
-                setBackgroundColor(Color.parseColor("#3d3d3d"))
+                setBackgroundColor(Color.parseColor("#26FFFFFF"))
             })
             return VH(wrapper)
         }

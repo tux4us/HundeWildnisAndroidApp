@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,8 +33,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="8dp"
-            android:paddingBottom="4dp"
-            android:background="?attr/colorSurface">
+            android:paddingBottom="4dp">
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
@@ -105,9 +104,9 @@
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Wetter Karte -->
-                    <com.google.android.material.card.MaterialCardView
+                    <com.hundewildnis.app.GlassCardView
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                        android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="16dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -134,43 +133,43 @@
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Harter Ausschluss -->
-                    <com.google.android.material.card.MaterialCardView
+                    <com.hundewildnis.app.GlassCardView
                         android:id="@+id/cardExclusion"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp" app:cardCornerRadius="12dp"
-                        app:strokeColor="#f87171" app:strokeWidth="2dp" android:visibility="gone">
+                        app:strokeColor="@color/gl_danger_stroke" app:strokeWidth="2dp" android:visibility="gone">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="16dp" android:gravity="center">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_exclusion_title" android:textSize="15sp" android:textStyle="bold" android:textColor="#f87171" android:layout_marginBottom="6dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_exclusion_title" android:textSize="15sp" android:textStyle="bold" android:textColor="@color/gl_danger" android:layout_marginBottom="6dp"/>
                             <TextView android:id="@+id/tvExclusionReason" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="13sp" android:textAlignment="center"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Disziplin-Eignung Wetter -->
                     <LinearLayout android:id="@+id/layoutWetterEignung"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:orientation="vertical" android:layout_marginBottom="12dp"
                         android:visibility="gone">
-                        <com.google.android.material.card.MaterialCardView
+                        <com.hundewildnis.app.GlassCardView
                             android:layout_width="match_parent" android:layout_height="wrap_content"
-                            app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                            app:cardCornerRadius="12dp">
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                                 android:orientation="vertical" android:padding="14dp">
                                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                                     android:text="@string/nasenarbeit_beratung_suitability_header" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
                                 <LinearLayout android:id="@+id/layoutWetterBadges" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
                             </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                        </com.hundewildnis.app.GlassCardView>
                     </LinearLayout>
 
                     <!-- Windrichtung -->
-                    <com.google.android.material.card.MaterialCardView
+                    <com.hundewildnis.app.GlassCardView
                         android:id="@+id/cardWindDir"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp"
+                        android:layout_marginBottom="12dp" app:cardCornerRadius="12dp"
                         android:visibility="gone">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="14dp">
@@ -193,13 +192,13 @@
                             </RadioGroup>
                             <LinearLayout android:id="@+id/layoutWindDirBadges" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="8dp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
-                    <com.google.android.material.button.MaterialButton
+                    <com.hundewildnis.app.GlassButton
                         android:id="@+id/btnWetterWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/nasenarbeit_beratung_btn_wetter_next"
-                        android:minHeight="52dp" app:cornerRadius="10dp" android:enabled="false"/>
+                        android:minHeight="52dp" app:cornerRadius="10dp" android:enabled="false" style="@style/Widget.App.Button"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -217,27 +216,27 @@
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Topografie -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_topo_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_topo_desc" android:textSize="11sp" android:layout_marginBottom="8dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupTopoSel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" app:chipSpacingVertical="4dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupTopoOpts" android:layout_width="match_parent" android:layout_height="wrap_content" app:chipSpacingVertical="4dp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Umgebung -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_umb_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_umb_desc" android:textSize="11sp" android:layout_marginBottom="8dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupUmbSel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" app:chipSpacingVertical="4dp"/>
                             <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupUmbOpts" android:layout_width="match_parent" android:layout_height="wrap_content" app:chipSpacingVertical="4dp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Trainingsgebiet -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_gebiet_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="12dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
@@ -252,15 +251,15 @@
                             <SeekBar android:id="@+id/sbGebietHa" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="99" android:progress="4" android:layout_marginBottom="8dp"/>
                             <TextView android:id="@+id/tvGebietHint" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <LinearLayout android:id="@+id/layoutGelaendeEignung" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="12dp"/>
 
-                    <com.google.android.material.button.MaterialButton
+                    <com.hundewildnis.app.GlassButton
                         android:id="@+id/btnGelaendeWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/nasenarbeit_beratung_btn_gelaende_next"
-                        android:minHeight="52dp" app:cornerRadius="10dp"/>
+                        android:minHeight="52dp" app:cornerRadius="10dp" style="@style/Widget.App.Button"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -277,23 +276,23 @@
                         android:textSize="10sp" android:textAllCaps="true" android:textStyle="bold"
                         android:layout_marginBottom="8dp"/>
 
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="10dp">
                         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:text="@string/nasenarbeit_beratung_boden_desc"
                             android:textSize="12sp" android:padding="12dp"/>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Dynamische Boden-Einträge -->
                     <LinearLayout android:id="@+id/layoutBodenEntries"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:orientation="vertical"/>
 
-                    <com.google.android.material.button.MaterialButton
+                    <com.hundewildnis.app.GlassButton
                         android:id="@+id/btnBodenWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/nasenarbeit_beratung_btn_boden_next"
                         android:minHeight="52dp" app:cornerRadius="10dp"
-                        android:enabled="false" android:layout_marginTop="8dp"/>
+                        android:enabled="false" android:layout_marginTop="8dp" style="@style/Widget.App.Button"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -311,15 +310,15 @@
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Level -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_level_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
                             <LinearLayout android:id="@+id/layoutLevelDisplay" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Letzte Einheit -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_session_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
                             <RadioGroup android:id="@+id/rgLetzte" android:layout_width="match_parent" android:layout_height="wrap_content">
@@ -330,10 +329,10 @@
                                 <RadioButton android:id="@+id/rbNochKeine" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_last_none" android:textSize="13sp" android:padding="6dp"/>
                             </RadioGroup>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Tagesverfassung -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_condition_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
                             <RadioGroup android:id="@+id/rgVerfassung" android:layout_width="match_parent" android:layout_height="wrap_content">
@@ -342,10 +341,10 @@
                                 <RadioButton android:id="@+id/rbExtrem" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_condition_extreme" android:textSize="13sp" android:padding="6dp"/>
                             </RadioGroup>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Leistungsdaten -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_performance_title" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="10dp"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
@@ -364,13 +363,13 @@
                             </LinearLayout>
                             <SeekBar android:id="@+id/sbPerfFl" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="50" android:progress="4"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
-                    <com.google.android.material.button.MaterialButton
+                    <com.hundewildnis.app.GlassButton
                         android:id="@+id/btnTrainingWeiter"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/nasenarbeit_beratung_btn_training_next"
-                        android:minHeight="52dp" app:cornerRadius="10dp"/>
+                        android:minHeight="52dp" app:cornerRadius="10dp" style="@style/Widget.App.Button"/>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -388,9 +387,9 @@
                         android:layout_marginBottom="12dp"/>
 
                     <!-- Block 1: Empfehlung -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block1_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block1_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="@color/gl_divider"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                                 <TextView android:id="@+id/tvEmpfehlungDiz" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="22sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
                                 <TextView android:id="@+id/tvEmpfehlungAlt" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:layout_marginBottom="6dp" android:visibility="gone"/>
@@ -398,28 +397,28 @@
                                 <TextView android:id="@+id/tvEmpfehlungGrund" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                             </LinearLayout>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Block 2: Parameter -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block2_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block2_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="@color/gl_divider"/>
                             <LinearLayout android:id="@+id/layoutParamGrid" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Block 3: Vorbereitung -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block3_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block3_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="@color/gl_divider"/>
                             <LinearLayout android:id="@+id/layoutVorbereitung" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Block 5: Während -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block5_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block5_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="@color/gl_divider"/>
                             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
                                 <!-- Tab Buttons -->
                                 <com.google.android.material.tabs.TabLayout
@@ -431,8 +430,8 @@
                                     app:tabGravity="fill"
                                     app:tabIndicatorHeight="2dp"
                                     app:tabTextAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                                    app:tabSelectedTextColor="?attr/colorPrimary"
-                                    app:tabIconTint="?attr/colorPrimary"
+                                    app:tabSelectedTextColor="?attr/colorSecondary"
+                                    app:tabIconTint="?attr/colorSecondary"
                                     app:tabRippleColor="@null">
                                     <com.google.android.material.tabs.TabItem
                                         android:layout_width="wrap_content"
@@ -458,27 +457,27 @@
                                 <LinearLayout android:id="@+id/layoutB5Content" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
                             </LinearLayout>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
                     <!-- Block 6: Nach dem Training -->
-                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <com.hundewildnis.app.GlassCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="12dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block6_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="?attr/colorSurfaceVariant"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/nasenarbeit_beratung_block6_title" android:textSize="11sp" android:textStyle="bold" android:textAllCaps="true" android:padding="12dp" android:background="@color/gl_divider"/>
                             <LinearLayout android:id="@+id/layoutNachTraining" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp"/>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </com.hundewildnis.app.GlassCardView>
 
-                    <com.google.android.material.button.MaterialButton
+                    <com.hundewildnis.app.GlassButton
                         android:id="@+id/btnTrainingStarten"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/nasenarbeit_beratung_btn_start_training"
-                        android:minHeight="56dp" app:cornerRadius="10dp" android:layout_marginBottom="8dp"/>
+                        android:minHeight="56dp" app:cornerRadius="10dp" android:layout_marginBottom="8dp" style="@style/Widget.App.Button"/>
 
-                    <com.google.android.material.button.MaterialButton
+                    <com.hundewildnis.app.GlassButton
                         android:id="@+id/btnNeueBeratung"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/nasenarbeit_beratung_btn_new_beratung"
-                        android:minHeight="48dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:minHeight="48dp" style="@style/Widget.App.Button.Outlined"
                         app:cornerRadius="10dp"/>
 
                 </LinearLayout>

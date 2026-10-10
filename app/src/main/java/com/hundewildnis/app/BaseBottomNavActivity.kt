@@ -2,8 +2,6 @@ package com.hundewildnis.app
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -128,8 +126,6 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
     private fun openSignalJoerg() { openSignal("Jörg", "https://signal.me/#eu/UquXr52-0uUIh1o40pI5jH6HLy6gb3eIWeaSLn8eTIuCTKmOtFRF9Ji2VDvGXqFo") }
 
     private fun openSignal(name: String, link: String) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
         
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.signal_contact_title, name))
@@ -140,6 +136,5 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
-            .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
     }
 }

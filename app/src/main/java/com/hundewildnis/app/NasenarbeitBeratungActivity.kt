@@ -354,9 +354,6 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
      * ✅ NEU: Warn-Dialog bei Gewitter
      */
     private fun showThunderstormWarningDialog() {
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val colorNormal = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.nasenarbeit_beratung_thunderstorm_dialog_title))
@@ -371,8 +368,6 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.YELLOW)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(colorNormal)
             }
     }
 
@@ -580,7 +575,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         }
         binding.layoutGelaendeEignung.removeAllViews()
         if (topoSequenz.isNotEmpty() || umbSequenz.isNotEmpty()) {
-            val card = MaterialCardView(this).apply { radius = 12f * resources.displayMetrics.density; cardElevation = 2f * resources.displayMetrics.density }
+            val card = GlassCardView(this).apply { radius = 12f * resources.displayMetrics.density; cardElevation = 2f * resources.displayMetrics.density }
             val inner = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(14),dp(14),dp(14),dp(14)) }
             val title = TextView(this).apply { text = getString(R.string.nasenarbeit_beratung_topo_eval_title); textSize = 13f; setTypeface(null, Typeface.BOLD); setPadding(0,0,0,dp(10)) }
             inner.addView(title)
@@ -650,7 +645,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
 
     private fun buildBodenEntry(idx: Int, name: String): View {
         val dp = { n: Int -> (n * resources.displayMetrics.density).toInt() }
-        val card = MaterialCardView(this).apply {
+        val card = GlassCardView(this).apply {
             radius = 10f * resources.displayMetrics.density
             cardElevation = 2f * resources.displayMetrics.density
             val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -1150,12 +1145,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun updateOptionsHighlighting() {
-        val activeColor = Color.parseColor("#004c6f")
-        val isDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val inactiveColor = if (isDark) Color.parseColor("#333333") else Color.parseColor("#E0E0E0")
+        val activeColor = ContextCompat.getColor(this, R.color.gl_info_fill)
+        val inactiveColor = ContextCompat.getColor(this, R.color.gl_fill)
         val activeTextColor = Color.WHITE
-        val inactiveTextColor = if (isDark) Color.WHITE else Color.BLACK
+        val inactiveTextColor = Color.WHITE
 
         // Topo
         for (i in 0 until binding.chipGroupTopoOpts.childCount) {

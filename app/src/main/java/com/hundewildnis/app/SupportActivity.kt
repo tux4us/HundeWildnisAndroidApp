@@ -146,8 +146,6 @@ class SupportActivity : SecureBaseActivity() {
 
         dialog.show()
 
-        // ✅ Button-Farben für Dark Mode
-        applyDialogButtonColors(btnToggleQR, btnClose)
     }
 
     private fun openWeroLink() {
@@ -191,7 +189,6 @@ class SupportActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        applyDialogButtonColors(dialog)
     }
 
     private fun showSumUpInfo() {
@@ -217,34 +214,6 @@ class SupportActivity : SecureBaseActivity() {
             .create()
 
         dialog.show()
-        applyDialogButtonColors(dialog)
-    }
-
-    // ✅ Überladene Funktion für AlertDialog
-    private fun applyDialogButtonColors(dialog: AlertDialog) {
-        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-        val buttonColor = if (isDarkTheme) {
-            android.graphics.Color.WHITE
-        } else {
-            android.graphics.Color.parseColor("#8A7A1F")
-        }
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
-    }
-
-    // ✅ Überladene Funktion für MaterialButtons
-    private fun applyDialogButtonColors(vararg buttons: MaterialButton) {
-        val isDarkTheme = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-        if (isDarkTheme) {
-            buttons.forEach { button ->
-                button.setTextColor(android.graphics.Color.WHITE)
-            }
-        }
     }
 
     private fun copyToClipboard(text: String, label: String) {

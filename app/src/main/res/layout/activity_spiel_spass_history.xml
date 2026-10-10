@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -44,9 +44,9 @@
                 android:orientation="vertical">
 
                 <!-- Gesamtzahl -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:orientation="vertical" android:padding="16dp" android:gravity="center">
                         <TextView android:id="@+id/tvTotalSessions" android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -56,12 +56,12 @@
                         <TextView android:id="@+id/tvAvgRating" android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:textSize="12sp" android:layout_marginTop="8dp" android:visibility="gone"/>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Nach Örtlichkeit -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:orientation="vertical" android:padding="14dp">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -69,12 +69,12 @@
                             android:layout_marginBottom="8dp"/>
                         <TextView android:id="@+id/tvByOrt" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Nach Fokus -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    android:layout_marginBottom="12dp" app:cardCornerRadius="12dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:orientation="vertical" android:padding="14dp">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -82,12 +82,12 @@
                             android:layout_marginBottom="8dp"/>
                         <TextView android:id="@+id/tvByFokus" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Top Aktivitäten -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    android:layout_marginBottom="16dp" app:cardCornerRadius="12dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:orientation="vertical" android:padding="14dp">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                             android:layout_marginBottom="8dp"/>
                         <TextView android:id="@+id/tvTopActivities" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp"/>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Verlauf -->
                 <TextView

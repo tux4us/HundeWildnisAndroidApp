@@ -28,7 +28,7 @@ data class LightningMeasurement(
 enum class StormProximityLevel(val icon: String, val color: String) {
     SAFE("🟢", "#4CAF50"),
     CAUTION("🟠", "#FF9800"),
-    DANGER("🔴", "#E64A19");
+    DANGER("🔴", "#FF8A65");
 
     fun displayName(context: android.content.Context): String = when (this) {
         SAFE -> context.getString(R.string.storm_proximity_level_safe)
@@ -169,7 +169,7 @@ object LightningCalculator {
 enum class ThunderstormForecastLevel(val icon: String, val color: String) {
     LOW("🟢", "#4CAF50"),
     MODERATE("🟠", "#FF9800"),
-    HIGH("🔴", "#E64A19");
+    HIGH("🔴", "#FF8A65");
 
     fun displayName(context: android.content.Context): String = when (this) {
         LOW -> context.getString(R.string.thunderstorm_forecast_level_low)

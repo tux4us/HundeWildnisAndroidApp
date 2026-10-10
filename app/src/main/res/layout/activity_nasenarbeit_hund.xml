@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -29,12 +29,11 @@
             android:padding="16dp">
 
             <!-- Hund Header -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,15 +66,14 @@
                             android:textSize="12sp"/>
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Statistik -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +90,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="11sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textAlignment="center"
                             android:background="@drawable/info_badge_bg"
                             android:padding="8dp"
@@ -103,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="11sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textAlignment="center"
                             android:background="@drawable/info_badge_bg"
                             android:padding="8dp"
@@ -114,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="11sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/rd_text_primary"
                             android:textAlignment="center"
                             android:background="@drawable/info_badge_bg"
                             android:padding="8dp"/>
@@ -132,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Buttons im neuen Grid-Stil -->
             <androidx.recyclerview.widget.RecyclerView

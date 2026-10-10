@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -38,7 +38,7 @@
             android:text="@string/dog_profile_empty_hint"
             android:textAlignment="center"
             android:textSize="@dimen/text_body_medium"
-            android:textColor="#666666"
+            android:textColor="@color/rd_text_secondary"
             android:visibility="gone"
             android:layout_marginTop="100dp" />
 

@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
@@ -165,7 +164,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        binding.toolbar.navigationIcon?.setTint(ContextCompat.getColor(this, R.color.rd_text_primary_dark))
+        binding.toolbar.navigationIcon?.setTint(ContextCompat.getColor(this, R.color.rd_text_primary))
 
         setupChart()
         setupHistory()
@@ -186,8 +185,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun confirmDelete(session: SpeedSession) {
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDarkTheme) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(getString(R.string.walking_speed_delete_measurement_title))
@@ -205,34 +202,27 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             .create()
 
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
     }
 
     private fun showInstructionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
+        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(Color.WHITE)
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.start_understood), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
     }
 
     private fun showPermissionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
+        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(Color.WHITE)
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.ok), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
     }
 
     private fun showAboutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_about, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        val titleColor = if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
-        val linkColor = if (isDark) Color.parseColor("#B0A25A") else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+        val titleColor = Color.WHITE
+        val linkColor = Color.parseColor("#B0A25A")
 
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
 
@@ -255,7 +245,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
         val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton(getString(R.string.start_close), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light))
     }
 
     private fun displaySession(session: SpeedSession) {
@@ -330,9 +319,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
     private fun setupChart() {
         speedChart = binding.speedChart
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDarkTheme) Color.WHITE else Color.BLACK
+        val textColor = Color.WHITE
 
         speedChart.apply {
             description.isEnabled = false
@@ -481,9 +468,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     private fun updateChartData() {
         if (speedDataPoints.isEmpty()) return
 
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDarkTheme) Color.WHITE else Color.BLACK
+        val textColor = Color.WHITE
 
         val entries = speedDataPoints.map { point ->
             val seconds = ((point.timestamp - sessionStartTime) / 1000f)
@@ -491,7 +476,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
         }
 
         val dataSet = LineDataSet(entries, getString(R.string.walking_speed_chart_speed_label)).apply {
-            val chartColor = ContextCompat.getColor(this@WalkingSpeedActivity, R.color.rd_group2_accent_light)
+            val chartColor = ContextCompat.getColor(this@WalkingSpeedActivity, R.color.rd_group2_accent)
             color = chartColor
             setCircleColor(chartColor)
             lineWidth = 2f
@@ -632,10 +617,11 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
         // Design-Anpassung Status-Bar (Gruppe 2 = Index 1)
         val colors = StartGroupColors.forGroup(this, 1)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
         binding.cardStatus.setCardBackgroundColor(ContextCompat.getColor(this, colors.chipColorRes))
-        binding.tvStatus.setTextColor(ContextCompat.getColor(this, if (isDark) R.color.rd_text_primary_dark else R.color.rd_text_primary_light))
+        binding.cardStatus.strokeColor = ContextCompat.getColor(this, colors.accentColorRes)
+        binding.cardStatus.strokeWidth = (2f * resources.displayMetrics.density).toInt()
+        binding.tvStatus.setTextColor(ContextCompat.getColor(this, R.color.rd_text_primary))
 
         updateActionGrid()
     }
@@ -660,8 +646,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun requestPermissionsAndStart() {
-        val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDarkThemeMode) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder(this)
@@ -674,8 +658,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                 .create()
                 .apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
                 }
             return
         }
@@ -683,8 +665,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun checkNotificationPermissionAndStart() {
-        val isDarkThemeMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val buttonColor = if (isDarkThemeMode) Color.WHITE else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
@@ -701,8 +681,6 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
                     .create()
                     .apply {
                         show()
-                        getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(buttonColor)
-                        getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(buttonColor)
                     }
                 return
             }
@@ -732,8 +710,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
     }
 
     private fun restoreChartThemeColors() {
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDarkTheme) Color.WHITE else Color.BLACK
+        val textColor = Color.WHITE
         speedChart.xAxis.textColor = textColor
         speedChart.axisLeft.textColor = textColor
         speedChart.legend.textColor = textColor
@@ -749,7 +726,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
         paint.textSize = 20f
         paint.isFakeBoldText = true
-        paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+        paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent)
         canvas.drawText(getString(R.string.walking_speed_pdf_title), 50f, 50f, paint)
 
         paint.textSize = 12f
@@ -773,7 +750,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
 
             paint.textSize = 14f
             paint.isFakeBoldText = true
-            paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+            paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent)
             canvas.drawText(getString(R.string.walking_speed_pdf_statistics), 50f, y, paint)
             y += 25f
             paint.textSize = 12f
@@ -786,13 +763,13 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             canvas.drawText(getString(R.string.walking_speed_pdf_limit, speedLimit), 50f, y, paint); y += 20f
             canvas.drawText(getString(R.string.walking_speed_pdf_total_measurements, totalMeasurements), 50f, y, paint); y += 20f
             canvas.drawText(getString(R.string.walking_speed_pdf_exceedances, exceedCountForPdf), 50f, y, paint); y += 20f
-            paint.color = if (exceedPercentage > 20f) Color.RED else ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+            paint.color = if (exceedPercentage > 20f) Color.RED else ContextCompat.getColor(this, R.color.rd_group2_accent)
             canvas.drawText(getString(R.string.walking_speed_pdf_exceedance_share, exceedPercentage), 50f, y, paint)
             paint.color = Color.BLACK; y += 30f
         }
 
         if (limitChanges.isNotEmpty()) {
-            paint.textSize = 14f; paint.isFakeBoldText = true; paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+            paint.textSize = 14f; paint.isFakeBoldText = true; paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent)
             canvas.drawText(getString(R.string.walking_speed_pdf_limit_changes_header), 50f, y, paint); y += 25f
             paint.textSize = 11f; paint.isFakeBoldText = false; paint.color = Color.DKGRAY
             limitChanges.forEachIndexed { index, change ->
@@ -812,7 +789,7 @@ class WalkingSpeedActivity : SecureBaseActivity(), SpeedUpdateListener {
             y += 15f
         }
 
-        paint.textSize = 14f; paint.isFakeBoldText = true; paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent_light)
+        paint.textSize = 14f; paint.isFakeBoldText = true; paint.color = ContextCompat.getColor(this, R.color.rd_group2_accent)
         canvas.drawText(getString(R.string.walking_speed_pdf_chart_header), 50f, y, paint); y += 20f
         val chartBitmap = Bitmap.createBitmap(speedChart.width, speedChart.height, Bitmap.Config.ARGB_8888)
         val chartCanvas = android.graphics.Canvas(chartBitmap)

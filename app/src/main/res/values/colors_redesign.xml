@@ -1,91 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ═══════════════════════════════════════════════════════════
-         REDESIGN 2026 — Startseite / Kursliste / Seitenliste
-         Light-Theme Basis: warmes Weiß + erdige/ockerfarbene Akzente
+         REDESIGN 2026 — Glas-Design, ausschließlich Dark.
+         Gruppenfarben (rd_group1..6_accent / _chip / _stroke) und alle Glas-
+         Tokens (gl_*) stehen in colors_glass.xml.
          ═══════════════════════════════════════════════════════════ -->
 
-    <!-- Grundflächen Light -->
-    <color name="rd_bg_light">#FAF7F0</color>
-    <color name="rd_card_light">#FFFFFF</color>
-    <color name="rd_border_light">#9C8E6E</color>
-    <color name="rd_text_primary_light">#2B2620</color>
-    <color name="rd_text_secondary_light">#7A6F5C</color>
+    <!-- Grundflächen. rd_card ist bewusst opak: Popup-Menüs, Spinner-Listen und
+         Auswahlfenster dürfen nicht durchscheinen. -->
+    <color name="rd_bg">#121315</color>
+    <color name="rd_card">#1C2024</color>
+    <color name="rd_border">#6B6B6B</color>
+    <color name="rd_text_primary">#F0F0EE</color>
+    <color name="rd_text_secondary">#B2B2AE</color>
 
-    <!-- Gruppenfarben Light (Chip-Hintergrund / Akzent) -->
-    <color name="rd_group1_chip_light">#F8E8C8</color>
-    <color name="rd_group1_accent_light">#A3762F</color>
-
-    <color name="rd_group2_chip_light">#F2EAB8</color>
-    <color name="rd_group2_accent_light">#8A7A1F</color>
-
-    <color name="rd_group3_chip_light">#D6E8D0</color>
-    <color name="rd_group3_accent_light">#4A7A42</color>
-
-    <color name="rd_group4_chip_light">#FADFC5</color>
-    <color name="rd_group4_accent_light">#A35A2F</color>
-
-    <color name="rd_group5_chip_light">#D6E3F5</color>
-    <color name="rd_group5_accent_light">#3F5F8A</color>
-
-    <color name="rd_group6_chip_light">#E0D4F0</color>
-    <color name="rd_group6_accent_light">#6A4F8A</color>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         Dark-Theme Basis: Anthrazit bis Schwarz + gedeckte Akzente
-         ═══════════════════════════════════════════════════════════ -->
-
-    <!-- Grundflächen Dark -->
-    <color name="rd_bg_dark">#141414</color>
-    <color name="rd_card_dark">#1E1E1E</color>
-    <color name="rd_border_dark">#6B6B6B</color>
-    <color name="rd_text_primary_dark">#F0F0EE</color>
-    <color name="rd_text_secondary_dark">#9A9A96</color>
-
-    <!-- Gruppenfarben Dark (Chip-Hintergrund / Akzent) -->
-    <color name="rd_group1_chip_dark">#383228</color>
-    <color name="rd_group1_accent_dark">#C9A26A</color>
-
-    <color name="rd_group2_chip_dark">#333324</color>
-    <color name="rd_group2_accent_dark">#B0A25A</color>
-
-    <color name="rd_group3_chip_dark">#28362A</color>
-    <color name="rd_group3_accent_dark">#7FA07A</color>
-
-    <color name="rd_group4_chip_dark">#3D2D2D</color>
-    <color name="rd_group4_accent_dark">#C08A6A</color>
-
-    <color name="rd_group5_chip_dark">#28323D</color>
-    <color name="rd_group5_accent_dark">#7A92B0</color>
-
-    <color name="rd_group6_chip_dark">#302A3D</color>
-    <color name="rd_group6_accent_dark">#9A8AB0</color>
-
-    <!-- Notfall — bleibt in beiden Modi kräftig rot -->
-    <color name="rd_danger_chip_dark">#8A2E22</color>
-    <color name="rd_danger_chip_light">#C0392B</color>
+    <!-- Notfall: neutrales Glas mit kräftigem roten Rand -->
+    <color name="rd_danger_chip">#1AFFFFFF</color>
+    <color name="rd_danger_stroke">#F2F0786C</color>
     <color name="rd_danger_text">#FFE0D8</color>
+    <color name="rd_danger_toolbar">#B8161A1E</color>
 
-    <!-- Blog-Vorschau — waldiges Grün -->
-    <color name="rd_blog_header_light">#2D5016</color>
-    <color name="rd_blog_header_dark">#1B300D</color>
+    <!-- Blog-Vorschau — waldiges Grün (Glas) -->
+    <color name="rd_blog_header">#1AFFFFFF</color>
 
-    <!-- Modus-automatischer Alias für direkte XML-Verwendung (z.B. Toolbar-Hintergrund).
-         Wert hier = Light-Variante; values-night/colors_redesign.xml überschreibt mit Dark-Variante. -->
-    <color name="rd_danger_toolbar">#C0392B</color>
+    <!-- Akzent-Aliase für direkte XML-Verwendung -->
+    <color name="rd_overlay_accent">#C9A26A</color>
+    <color name="rd_label_overlay">#CCC9A26A</color>
+    <color name="rd_label_overlay_strong">#DDC9A26A</color>
+    <color name="rd_ripple_accent">#33C9A26A</color>
 
-    <!-- Weitere modus-automatische Aliase für direkte XML-Verwendung
-         (OutlinedButton-Text/-Rand, ProgressBar-Tint, Kartenlabel-Overlays).
-         Wert hier = Light-Variante; values-night/colors_redesign.xml überschreibt mit Dark-Variante. -->
-    <color name="rd_overlay_accent">#A3762F</color>
-    <color name="rd_label_overlay">#CCA3762F</color>
-    <color name="rd_label_overlay_strong">#DDA3762F</color>
-    <color name="rd_ripple_accent">#33A3762F</color>
+    <!-- Abgesetzte innere Fläche innerhalb einer Karte (Header-Leisten, Divider-Container) -->
+    <color name="rd_surface_alt">#14FFFFFF</color>
 
-    <!-- Leicht abgesetzte innere Fläche innerhalb einer Karte (Header-Leisten, Divider-Container).
-         Ersetzt vormals hartcodiertes #3d3d3d, das im Light-Modus zu dunkel wirkte. -->
-    <color name="rd_surface_alt">#F0EADC</color>
-
-    <!-- Neutrales, halbtransparentes Overlay für auf Kartenansichten schwebende Buttons/Controls -->
-    <color name="rd_map_overlay">#DDFFFFFF</color>
+    <!-- Overlay für auf Kartenansichten schwebende Buttons/Controls (höhere Deckkraft wegen Kartenhintergrund) -->
+    <color name="rd_map_overlay">#D91A2025</color>
 </resources>

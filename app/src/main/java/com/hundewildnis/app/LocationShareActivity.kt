@@ -371,11 +371,11 @@ class LocationShareActivity : SecureBaseActivity() {
         if (LocationShareService.isServiceRunning) {
             binding.switchLocationShare.isChecked = true
             binding.tvShareStatus.text = getString(R.string.location_share_own_status_active)
-            binding.tvShareStatus.setTextColor(Color.parseColor("#2E7D32"))
+            binding.tvShareStatus.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.gl_success))
         } else {
             binding.switchLocationShare.isChecked = false
             binding.tvShareStatus.text = getString(R.string.location_share_own_status_inactive)
-            binding.tvShareStatus.setTextColor(Color.parseColor("#666666"))
+            binding.tvShareStatus.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.rd_text_secondary))
         }
         isUpdatingSwitch = false
     }

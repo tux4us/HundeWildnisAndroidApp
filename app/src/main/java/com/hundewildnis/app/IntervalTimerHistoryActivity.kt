@@ -129,7 +129,7 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
-                    ?.setTextColor(android.graphics.Color.parseColor("#C0392B"))
+                    ?.setTextColor(android.graphics.Color.parseColor("#F0786C"))
             }
     }
 
@@ -151,7 +151,7 @@ class IntervalTimerHistoryActivity : SecureBaseActivity() {
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
-                    ?.setTextColor(android.graphics.Color.parseColor("#C0392B"))
+                    ?.setTextColor(android.graphics.Color.parseColor("#F0786C"))
             }
     }
 

@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,15 +45,14 @@
                 android:text="Synchronisiert deine HundeWildnis-Daten zwischen mehreren Geräten über einen eigenen WebDAV-Server (z.B. Nextcloud, Hetzner Storage Box, Mailbox.org)."
                 android:textSize="@dimen/text_body_medium"
                 android:textAlignment="center"
-                android:textColor="#666666"
+                android:textColor="@color/rd_text_secondary"
                 android:layout_marginBottom="24dp" />
 
             <!-- Sync aktivieren -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -70,7 +69,7 @@
                         android:textStyle="bold" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Zugangsdaten + Auto-Sync + Manueller Sync (sichtbar wenn aktiviert) -->
             <LinearLayout
@@ -81,11 +80,10 @@
                 android:visibility="gone">
 
                 <!-- Zugangsdaten -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -103,7 +101,7 @@
                             android:layout_marginBottom="12dp" />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Server-URL"
@@ -122,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:text="z.B. https://cloud.example.com/remote.php/dav/files/benutzername/"
                             android:textSize="12sp"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:layout_marginBottom="4dp" />
 
                         <TextView
@@ -130,11 +128,11 @@
                             android:layout_height="wrap_content"
                             android:text="📍 So findest du die WebDAV-Adresse bei Nextcloud:\n1. Dateien-App öffnen\n2. Unten links auf das Zahnrad-Symbol tippen\n3. Bereich „WebDAV“ → Adresse kopieren\n\n⚠️ Wichtig: Die allgemein angezeigte Server-Adresse reicht NICHT aus - es muss der vollständige WebDAV-Pfad inkl. /remote.php/dav/files/BENUTZERNAME/ sein, sonst schlägt die Synchronisation mit „HTTP 403“ fehl.\n\nBei anderen Anbietern (z.B. Mailbox.org, Hetzner) kann der Pfad abweichen - dort hilft meist die Hilfeseite des jeweiligen Anbieters zum Stichwort „WebDAV-Adresse“."
                             android:textSize="12sp"
-                            android:textColor="#1976D2"
+                            android:textColor="@color/gl_info"
                             android:layout_marginBottom="12dp" />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Benutzername"
@@ -149,7 +147,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Passwort / App-Passwort"
@@ -170,7 +168,7 @@
                             android:layout_height="wrap_content"
                             android:text="🔒 Es ist bereits ein Passwort hinterlegt. Leer lassen, um es weiter zu verwenden. Nur ausfüllen, wenn du ein in Nextcloud (oder bei deinem Anbieter) bereits erzeugtes App-Passwort hinterlegen möchtest - hier wird kein neues Passwort erstellt."
                             android:textSize="12sp"
-                            android:textColor="#2E7D32"
+                            android:textColor="@color/gl_success"
                             android:layout_marginBottom="4dp"
                             android:visibility="gone" />
 
@@ -179,26 +177,24 @@
                             android:layout_height="wrap_content"
                             android:text="Tipp: Verwende ein App-Passwort (z.B. Nextcloud → Einstellungen → Sicherheit), nicht dein Hauptpasswort."
                             android:textSize="12sp"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:layout_marginBottom="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnTestConnection"
                             style="@style/Widget.App.Button.Outlined"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Verbindung testen" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnClearWebdavCredentials"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.App.Button.Text.Danger"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:text="Zugangsdaten löschen"
-                            android:textColor="#D32F2F"
-                            app:icon="@android:drawable/ic_menu_delete"
-                            app:iconTint="#D32F2F" />
+                            app:icon="@android:drawable/ic_menu_delete" />
 
                         <TextView
                             android:id="@+id/tvConnectionStatus"
@@ -209,14 +205,13 @@
                             android:visibility="gone" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Automatischer Sync -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -278,20 +273,19 @@
                                 android:layout_height="wrap_content"
                                 android:text="Empfohlen: Verhindert hohen mobilen Datenverbrauch durch automatische Hintergrund-Synchronisation."
                                 android:textSize="12sp"
-                                android:textColor="#999999"
+                                android:textColor="@color/rd_text_secondary"
                                 android:layout_marginTop="2dp" />
 
                         </LinearLayout>
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Manueller Sync -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -308,9 +302,9 @@
                             android:textStyle="bold"
                             android:layout_marginBottom="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnSyncNow"
-                            style="@style/Widget.Material3.Button"
+                            style="@style/Widget.App.Button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="🔄 Jetzt synchronisieren"
@@ -332,18 +326,19 @@
                             android:layout_height="wrap_content"
                             android:text="Letzter Sync: noch nie"
                             android:textSize="@dimen/text_body_medium"
-                            android:textColor="#666666" />
+                            android:textColor="@color/rd_text_secondary" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- Info -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E3F2FD"
+                    app:strokeColor="@color/gl_info_stroke"
+                    app:strokeWidth="1.5dp"
+                    app:cardBackgroundColor="@color/gl_fill"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -358,7 +353,7 @@
                             android:text="💡 TIPP"
                             android:textSize="@dimen/text_body_medium"
                             android:textStyle="bold"
-                            android:textColor="#1976D2"
+                            android:textColor="@color/gl_info"
                             android:layout_marginBottom="8dp" />
 
                         <TextView
@@ -366,7 +361,7 @@
                             android:layout_height="wrap_content"
                             android:text="Jedes Gerät legt eine eigene Backup-Datei im Ordner /HundeWildnis/ auf dem Server ab. Beim Sync werden alle Geräte zusammengeführt - es gehen keine Daten verloren."
                             android:textSize="@dimen/text_body_medium"
-                            android:textColor="#1565C0"
+                            android:textColor="@color/gl_info"
                             android:layout_marginBottom="8dp" />
 
                         <TextView
@@ -375,10 +370,10 @@
                             android:layout_height="wrap_content"
                             android:text="Geräte-ID: -"
                             android:textSize="12sp"
-                            android:textColor="#1976D2" />
+                            android:textColor="@color/gl_info" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
             </LinearLayout>
             <!-- Ende layoutWebdavCredentials -->

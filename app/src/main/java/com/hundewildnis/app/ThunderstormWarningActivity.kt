@@ -2,7 +2,6 @@ package com.hundewildnis.app
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -230,7 +229,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
             binding.tvEtaValue.text = getString(R.string.thunderstorm_eta_value_min, etaMinutes)
             // Dringlichkeits-Färbung: je kürzer die ETA, desto alarmierender die Farbe
             val etaColor = when {
-                etaMinutes <= 10.0 -> "#E64A19"
+                etaMinutes <= 10.0 -> "#FF8A65"
                 etaMinutes <= 25.0 -> "#FF9800"
                 else -> "#4CAF50"
             }
@@ -269,9 +268,6 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.thunderstorm_location_dialog_title))
@@ -287,8 +283,6 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
                 .create()
                 .apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
                 }
         } else {
             loadForecast()

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/item_plant.xml -->
-<com.google.android.material.card.MaterialCardView
+<com.hundewildnis.app.GlassCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardPlantItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="@dimen/card_corner_radius">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
             android:id="@+id/viewToxicityStripe"
             android:layout_width="6dp"
             android:layout_height="match_parent"
-            android:background="#C62828" />
+            android:background="@color/gl_danger_fill" />
 
         <!-- Inhalt -->
         <LinearLayout
@@ -51,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_body_very_small"
-                    android:textColor="#FF5252"
+                    android:textColor="@color/gl_danger"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -98,4 +97,4 @@
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</com.hundewildnis.app.GlassCardView>

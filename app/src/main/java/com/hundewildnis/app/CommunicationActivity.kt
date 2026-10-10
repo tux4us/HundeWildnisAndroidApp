@@ -6,7 +6,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.media.AudioManager
 import android.media.ToneGenerator
@@ -102,7 +101,7 @@ class CommunicationActivity : SecureBaseActivity() {
         private const val HIT_COOLDOWN_MS = 1000L
 
         // Glow-Farben
-        private const val COLOR_CARD_NORMAL = "#2d5016"
+        private const val COLOR_CARD_NORMAL = "#6FBF73"
         private const val COLOR_GLOW_AMBER  = "#FFB300"
         // Dauer des Shimmer-Sweeps in ms
         private const val SHIMMER_DURATION_MS = 1000L
@@ -153,8 +152,7 @@ class CommunicationActivity : SecureBaseActivity() {
      */
     private fun setupChart() {
         frequencyChart = binding.frequencyChart
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDark) Color.WHITE else Color.BLACK
+        val textColor = Color.WHITE
 
         frequencyChart.apply {
             description.isEnabled = false
@@ -276,8 +274,6 @@ class CommunicationActivity : SecureBaseActivity() {
     // ─────────────────────────────────────────────────────────────
 
     private fun requestMicPermissionAndStart() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
             != android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -300,8 +296,6 @@ class CommunicationActivity : SecureBaseActivity() {
                 .setNegativeButton("ABLEHNEN", null)
                 .create().apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
                 }
             return
         }
@@ -325,7 +319,7 @@ class CommunicationActivity : SecureBaseActivity() {
 
         isRecording = true
         binding.btnStartStop.text = getString(R.string.comm_btn_stop)
-        binding.btnStartStop.setBackgroundColor(getColor(android.R.color.holo_red_dark))
+        binding.btnStartStop.setBackgroundColor(ContextCompat.getColor(this@CommunicationActivity, R.color.gl_danger_fill))
 
         // Steuerelemente während der Messung sperren
         setControlsEnabled(false)
@@ -371,7 +365,7 @@ class CommunicationActivity : SecureBaseActivity() {
         cancelShimmer()
 
         binding.btnStartStop.text = getString(R.string.comm_btn_start)
-        binding.btnStartStop.setBackgroundColor(Color.parseColor(COLOR_CARD_NORMAL))
+        binding.btnStartStop.setBackgroundColor(ContextCompat.getColor(this@CommunicationActivity, R.color.gl_success_fill))
 
         // Steuerelemente wieder freigeben
         setControlsEnabled(true)
@@ -747,8 +741,6 @@ class CommunicationActivity : SecureBaseActivity() {
     }
 
     private fun confirmDelete(session: VoiceSession) {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.voice_session_delete_title))
@@ -764,8 +756,6 @@ class CommunicationActivity : SecureBaseActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             }
     }
 

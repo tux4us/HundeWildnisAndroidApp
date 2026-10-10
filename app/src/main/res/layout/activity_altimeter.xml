@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="#1a1a1a">
+    android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -56,17 +55,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:text="@string/altimeter_altitude_over_sea_level"
-                android:textColor="#999999"
+                android:textColor="@color/rd_text_secondary"
                 android:textSize="@dimen/text_body_large" />
 
             <!-- GPS Höhe Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -88,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/altitude_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold" />
 
@@ -97,20 +94,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="@string/altimeter_based_on_gps_data"
-                        android:textColor="#999999"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="@dimen/text_body_large" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Barometer Höhe Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/barometerCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/altitude_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="@dimen/text_body_large"
                         android:textStyle="bold" />
 
@@ -141,20 +136,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="@string/altimeter_based_on_air_pressure"
-                        android:textColor="#999999"
+                        android:textColor="@color/rd_text_secondary"
                         android:textSize="@dimen/text_body_large" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Luftdruck Card -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/pressureCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -176,10 +169,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pressure_placeholder"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="@dimen/text_body_large" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- Genauigkeit Info -->
             <TextView
@@ -187,7 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/altimeter_accuracy_placeholder"
-                android:textColor="#999999"
+                android:textColor="@color/rd_text_secondary"
                 android:textSize="@dimen/text_body_large"
                 android:layout_marginBottom="16dp" />
 
@@ -204,12 +197,11 @@
                 android:layout_marginBottom="32dp" />
 
             <!-- Messhinweise -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#252525"
                 app:cardCornerRadius="12dp"
-                app:strokeColor="@color/rd_surface_alt"
+                app:strokeColor="@color/gl_stroke_subtle"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -222,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/altimeter_measurement_notes_title"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
@@ -231,11 +223,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/altimeter_measurement_notes_body"
-                        android:textColor="#CCCCCC"
+                        android:textColor="@color/rd_text_primary"
                         android:textSize="12sp"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
         </LinearLayout>
     </ScrollView>

@@ -1,12 +1,12 @@
 package com.hundewildnis.app
 
-import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 
@@ -37,8 +37,6 @@ class StartTileAdapter(
     override fun onBindViewHolder(holder: TileViewHolder, position: Int) {
         val tile = tiles[position]
         val context = holder.card.context
-        val isDark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                Configuration.UI_MODE_NIGHT_YES
 
         val icon = holder.card.findViewById<ImageView>(R.id.tileIcon)
         val emoji = holder.card.findViewById<TextView>(R.id.tileEmoji)
@@ -59,28 +57,29 @@ class StartTileAdapter(
 
         label.text = tile.label
 
+        // Glas-Kachel: neutrale Glasfüllung + kräftiger Rand und Icon in der Akzentfarbe
         if (tile.isDanger) {
-            // NOTFALL-Kachel: bleibt unabhängig von der Gruppenfarbe immer rot
-            val dangerChipRes = if (isDark) R.color.rd_danger_chip_dark else R.color.rd_danger_chip_light
-            val dangerChip = ContextCompat.getColor(context, dangerChipRes)
+            // NOTFALL-Kachel: bleibt unabhängig von der Gruppenfarbe immer rot, höhere Deckkraft
             val dangerText = ContextCompat.getColor(context, R.color.rd_danger_text)
-            holder.card.setCardBackgroundColor(dangerChip)
+            holder.card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.rd_danger_chip))
+            holder.card.strokeColor = ContextCompat.getColor(context, R.color.rd_danger_stroke)
             icon.setColorFilter(dangerText)
             label.setTextColor(dangerText)
         } else {
-            // chipColorRes/accentColorRes kommen bereits themenkorrekt aufgelöst
-            // von StartGroupColors.forGroup() — hier nur noch anwenden
-            val textPrimaryRes = if (isDark) R.color.rd_text_primary_dark else R.color.rd_text_primary_light
-            val chipColor = ContextCompat.getColor(context, chipColorRes)
             val accentColor = ContextCompat.getColor(context, accentColorRes)
-            val textColor = ContextCompat.getColor(context, textPrimaryRes)
-            holder.card.setCardBackgroundColor(chipColor)
+            holder.card.setCardBackgroundColor(ContextCompat.getColor(context, chipColorRes))
+            holder.card.strokeColor = ColorUtils.setAlphaComponent(accentColor, STROKE_ALPHA)
             icon.setColorFilter(accentColor)
-            label.setTextColor(textColor)
+            label.setTextColor(ContextCompat.getColor(context, R.color.rd_text_primary))
         }
 
         holder.card.setOnClickListener { onTileClick(tile.id) }
     }
 
     override fun getItemCount() = tiles.size
+
+    private companion object {
+        /** 55 % Deckkraft für den Glasrand */
+        const val STROKE_ALPHA = 230
+    }
 }

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="#1a1a1a">
+    android:fitsSystemWindows="false">
 
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- TOOLBAR                                            -->
@@ -19,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -33,7 +32,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:background="?android:attr/windowBackground"
         android:elevation="4dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -66,7 +64,7 @@
             android:visibility="gone"
             android:padding="10dp" />
 
-        <com.google.android.material.button.MaterialButton
+        <com.hundewildnis.app.GlassButton
             android:id="@+id/btnSearchPOI"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
@@ -76,8 +74,8 @@
             android:padding="0dp"
             android:text="🔍"
             android:textSize="@dimen/text_body_medium"
-            app:backgroundTint="?attr/colorPrimary"
-            app:cornerRadius="24dp" />
+            app:cornerRadius="24dp"
+            style="@style/Widget.App.Button.Primary" />
 
         <ProgressBar
             android:id="@+id/progressSearch"
@@ -125,7 +123,7 @@
                 android:paddingBottom="2dp"
                 android:background="#CC000000"
                 android:text="© OpenStreetMap contributors"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="8dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -142,57 +140,45 @@
                 android:padding="4dp"
                 android:elevation="4dp">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnCurrentLocation"
-                    style="@style/Widget.App.Button.Fixed"
+                    style="@style/Widget.App.Button.Fixed.Primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/map_btn_location"
                     android:textSize="@dimen/text_body_small"
                     android:padding="8dp"
-                    android:backgroundTint="?attr/colorSurface"
-                    app:strokeColor="?attr/colorSecondary"
-                    app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="?attr/colorOnSurface"
                     android:layout_marginEnd="0dp"
                     android:minWidth="100dp"
                     android:minHeight="0dp"
                     app:autoSizeTextType="none" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/shareButton"
-                    style="@style/Widget.App.Button.Fixed"
+                    style="@style/Widget.App.Button.Fixed.Primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/map_btn_share"
                     android:textSize="@dimen/text_body_small"
                     android:padding="8dp"
-                    android:backgroundTint="?attr/colorSurface"
-                    app:strokeColor="?attr/colorSecondary"
-                    app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="?attr/colorOnSurface"
                     android:enabled="false"
                     android:minWidth="100dp"
                     android:minHeight="0dp"
                     app:autoSizeTextType="none" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnToggleMapRotation"
-                    style="@style/Widget.App.Button.Fixed"
+                    style="@style/Widget.App.Button.Fixed.Primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/map_orientation_north"
                     android:textSize="@dimen/text_body_small"
                     android:padding="8dp"
-                    android:backgroundTint="?attr/colorSurface"
-                    app:strokeColor="?attr/colorSecondary"
-                    app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="?attr/colorOnSurface"
                     android:minWidth="100dp"
                     android:minHeight="0dp"
                     app:autoSizeTextType="none" />
@@ -209,39 +195,31 @@
                 android:padding="4dp"
                 android:elevation="4dp">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnZoomIn"
-                    style="@style/Widget.App.Button.Fixed"
+                    style="@style/Widget.App.Button.Fixed.Primary"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:text="➕"
                     android:textSize="20sp"
                     android:padding="0dp"
-                    android:backgroundTint="?attr/colorSurface"
-                    app:strokeColor="?attr/colorSecondary"
-                    app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="?attr/colorOnSurface"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     app:autoSizeTextType="none" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnZoomOut"
-                    style="@style/Widget.App.Button.Fixed"
+                    style="@style/Widget.App.Button.Fixed.Primary"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:layout_marginStart="8dp"
                     android:text="➖"
                     android:textSize="20sp"
                     android:padding="0dp"
-                    android:backgroundTint="?attr/colorSurface"
-                    app:strokeColor="?attr/colorSecondary"
-                    app:strokeWidth="2dp"
                     app:cornerRadius="8dp"
-                    android:textColor="?attr/colorOnSurface"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:insetTop="0dp"
@@ -257,7 +235,7 @@
                 android:layout_gravity="top|start"
                 android:layout_margin="16dp"
                 android:text="@string/location_determining_placeholder"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="@dimen/text_body_small"
                 android:background="#80000000"
                 android:padding="6dp"
@@ -271,7 +249,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="90dp"
                 android:text="@string/navigation_info_placeholder"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold"
                 android:background="@color/rd_label_overlay_strong"
@@ -289,12 +267,10 @@
         </FrameLayout>
 
         <!-- ─── Bottom Panel (untere 50%) ─────────────── -->
-        <com.google.android.material.card.MaterialCardView
+        <com.hundewildnis.app.GlassCardView
             android:id="@+id/bottomCard"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:cardBackgroundColor="?attr/colorSurface"
-            app:cardElevation="8dp"
             app:cardCornerRadius="16dp"
             android:layout_margin="0dp"
             app:layout_constraintTop_toBottomOf="@id/mapFrame"
@@ -324,8 +300,7 @@
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:padding="16dp"
-                        android:textAlignment="center"
-                        android:background="?attr/colorSurface" />
+                        android:textAlignment="center" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/gridPOICategories"
@@ -388,12 +363,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/poi_count_placeholder"
-                                android:textColor="#999999"
+                                android:textColor="@color/rd_text_secondary"
                                 android:textSize="@dimen/text_body_medium" />
                         </LinearLayout>
 
                         <!-- ✅ NEU: Verwalten-Button (nur bei Favoriten sichtbar) -->
-                        <com.google.android.material.button.MaterialButton
+                        <com.hundewildnis.app.GlassButton
                             android:id="@+id/btnManageFavorites"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -402,10 +377,9 @@
                             android:padding="8dp"
                             android:minWidth="0dp"
                             android:minHeight="0dp"
-                            app:backgroundTint="#7A5C00"
                             app:cornerRadius="8dp"
-                            android:textColor="#FFFFFF"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            style="@style/Widget.App.Button.Warning" />
 
                     </LinearLayout>
 
@@ -435,14 +409,14 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/no_poi_found"
-                            android:textColor="#666666"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="@dimen/text_body_medium"
                             android:textAlignment="center"
                             android:visibility="gone" />
                     </FrameLayout>
                 </LinearLayout>
             </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </com.hundewildnis.app.GlassCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -455,7 +429,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="?attr/colorSurface"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight="72dp"
         app:behavior_hideable="true"
@@ -480,7 +453,7 @@
             <View
                 android:layout_width="64dp"
                 android:layout_height="6dp"
-                android:background="#999999"
+                android:background="@color/gl_divider"
                 android:layout_marginBottom="8dp" />
 
             <!-- Interaktions-Hinweis -->
@@ -524,35 +497,32 @@
                 app:checkedButton="@+id/btnProfileFoot"
                 android:layout_marginEnd="8dp">
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnProfileFoot"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.App.Button.Outlined.Primary"
                     android:layout_width="48dp"
                     android:layout_height="36dp"
                     android:padding="0dp"
                     android:text="🥾"
-                    app:cornerRadius="4dp"
-                    app:strokeColor="@color/rd_overlay_accent" />
+                    app:cornerRadius="4dp" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnProfileBike"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.App.Button.Outlined.Primary"
                     android:layout_width="48dp"
                     android:layout_height="36dp"
                     android:padding="0dp"
                     android:text="🚲"
-                    app:cornerRadius="4dp"
-                    app:strokeColor="@color/rd_overlay_accent" />
+                    app:cornerRadius="4dp" />
 
-                <com.google.android.material.button.MaterialButton
+                <com.hundewildnis.app.GlassButton
                     android:id="@+id/btnProfileCar"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.App.Button.Outlined.Primary"
                     android:layout_width="48dp"
                     android:layout_height="36dp"
                     android:padding="0dp"
                     android:text="🚗"
-                    app:cornerRadius="4dp"
-                    app:strokeColor="@color/rd_overlay_accent" />
+                    app:cornerRadius="4dp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <TextView
@@ -560,7 +530,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#CCCCCC"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -578,12 +548,10 @@
                 android:padding="12dp">
 
                 <!-- ─── CARD 1: Höhenprofil ─────────── -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    app:cardBackgroundColor="#3a3a3a"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -607,16 +575,14 @@
                             android:layout_height="0dp"
                             android:layout_weight="1" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- ─── CARD 2: Höheninfos ──────────── -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:id="@+id/cardElevationStats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3a3a3a"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -641,35 +607,33 @@
                             android:layout_marginBottom="12dp">
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_ascent_label" android:textColor="#999999" android:textSize="11sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_ascent_label" android:textColor="@color/rd_text_secondary" android:textSize="11sp" />
                                 <TextView android:id="@+id/tvAscentValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_overlay_accent" android:textStyle="bold" android:textSize="18sp" />
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_descent_label" android:textColor="#999999" android:textSize="11sp" />
-                                <TextView android:id="@+id/tvDescentValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FF8A65" android:textStyle="bold" android:textSize="18sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_descent_label" android:textColor="@color/rd_text_secondary" android:textSize="11sp" />
+                                <TextView android:id="@+id/tvDescentValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/gl_danger" android:textStyle="bold" android:textSize="18sp" />
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_min_label" android:textColor="#999999" android:textSize="11sp" />
-                                <TextView android:id="@+id/tvMinElevationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="15sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_min_label" android:textColor="@color/rd_text_secondary" android:textSize="11sp" />
+                                <TextView android:id="@+id/tvMinElevationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_text_primary" android:textStyle="bold" android:textSize="15sp" />
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_max_label" android:textColor="#999999" android:textSize="11sp" />
-                                <TextView android:id="@+id/tvMaxElevationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="15sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/elevation_max_label" android:textColor="@color/rd_text_secondary" android:textSize="11sp" />
+                                <TextView android:id="@+id/tvMaxElevationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_text_primary" android:textStyle="bold" android:textSize="15sp" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- ─── CARD 3: Oberfläche & Wegtyp ─── -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3a3a3a"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -697,7 +661,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="#484848"
+                            android:background="@color/gl_divider"
                             android:layout_marginBottom="10dp" />
 
                         <TextView
@@ -715,16 +679,14 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- ─── CARD: Geländeanalyse ──────────── -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:id="@+id/cardTerrainAnalysis"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3a3a3a"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -750,12 +712,11 @@
                                 android:textStyle="bold"
                                 android:textSize="13sp" />
 
-                            <com.google.android.material.card.MaterialCardView
+                            <com.hundewildnis.app.GlassCardView
                                 android:id="@+id/cardSlopeClassBadge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:cardCornerRadius="20dp"
-                                app:cardElevation="0dp">
+                                app:cardCornerRadius="20dp">
                                 <TextView
                                     android:id="@+id/tvSlopeClassBadge"
                                     android:layout_width="wrap_content"
@@ -763,10 +724,10 @@
                                     android:paddingHorizontal="12dp"
                                     android:paddingVertical="5dp"
                                     android:text="@string/slope_class_flat_placeholder"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/rd_text_primary"
                                     android:textStyle="bold"
                                     android:textSize="11sp" />
-                            </com.google.android.material.card.MaterialCardView>
+                            </com.hundewildnis.app.GlassCardView>
 
                         </LinearLayout>
 
@@ -784,7 +745,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/terrain_for_dog_label"
-                                android:textColor="#AAAAAA"
+                                android:textColor="@color/rd_text_secondary"
                                 android:textSize="11sp"
                                 android:layout_marginEnd="8dp" />
 
@@ -804,7 +765,6 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:background="?attr/colorSurface"
                             android:padding="10dp"
                             android:layout_marginBottom="10dp">
 
@@ -813,7 +773,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/terrain_recommended_max_distance_label"
-                                android:textColor="#AAAAAA"
+                                android:textColor="@color/rd_text_secondary"
                                 android:textSize="11sp" />
 
                             <TextView
@@ -832,7 +792,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="11sp"
-                            android:textColor="#999999"
+                            android:textColor="@color/rd_text_secondary"
                             android:layout_marginBottom="10dp"
                             android:visibility="gone" />
 
@@ -854,16 +814,14 @@
                             android:visibility="gone" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
 
                 <!-- ─── CARD 4: Wetter am Ziel ──────── -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3a3a3a"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="12dp">
 
                     <LinearLayout
@@ -891,38 +849,38 @@
                             <TextView android:id="@+id/tvWeatherIcon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="…" android:textSize="28sp" android:layout_marginEnd="12dp" />
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:id="@+id/tvWeatherDesc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/loading_ellipsis" android:textColor="#CCCCCC" android:textSize="13sp" />
-                                <TextView android:id="@+id/tvWeatherArrivalLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textColor="#777777" android:textSize="11sp" />
+                                <TextView android:id="@+id/tvWeatherDesc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/loading_ellipsis" android:textColor="@color/rd_text_primary" android:textSize="13sp" />
+                                <TextView android:id="@+id/tvWeatherArrivalLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textColor="@color/rd_text_secondary" android:textSize="11sp" />
                             </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_temp" android:textColor="#999999" android:textSize="10sp" />
-                                <TextView android:id="@+id/tvWeatherTemp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="16sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_temp" android:textColor="@color/rd_text_secondary" android:textSize="10sp" />
+                                <TextView android:id="@+id/tvWeatherTemp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_text_primary" android:textStyle="bold" android:textSize="16sp" />
                             </LinearLayout>
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_rain" android:textColor="#999999" android:textSize="10sp" />
-                                <TextView android:id="@+id/tvWeatherPrecip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#64B5F6" android:textStyle="bold" android:textSize="16sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_rain" android:textColor="@color/rd_text_secondary" android:textSize="10sp" />
+                                <TextView android:id="@+id/tvWeatherPrecip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/gl_info" android:textStyle="bold" android:textSize="16sp" />
                             </LinearLayout>
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_wind" android:textColor="#999999" android:textSize="10sp" />
-                                <TextView android:id="@+id/tvWeatherWind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="12sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_wind" android:textColor="@color/rd_text_secondary" android:textSize="10sp" />
+                                <TextView android:id="@+id/tvWeatherWind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_text_primary" android:textSize="12sp" />
                             </LinearLayout>
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_humidity" android:textColor="#999999" android:textSize="10sp" />
-                                <TextView android:id="@+id/tvWeatherHumidity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="12sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weather_label_humidity" android:textColor="@color/rd_text_secondary" android:textSize="10sp" />
+                                <TextView android:id="@+id/tvWeatherHumidity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/rd_text_primary" android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#484848" android:layout_marginBottom="8dp" />
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/gl_divider" android:layout_marginBottom="8dp" />
 
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="6dp">
-                            <TextView android:id="@+id/tvWeatherSunrise" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="🌅 —" android:textColor="#CCCCCC" android:textSize="11sp" />
-                            <TextView android:id="@+id/tvWeatherSunset" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="🌇 —" android:textColor="#CCCCCC" android:textSize="11sp" />
+                            <TextView android:id="@+id/tvWeatherSunrise" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="🌅 —" android:textColor="@color/rd_text_primary" android:textSize="11sp" />
+                            <TextView android:id="@+id/tvWeatherSunset" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="🌇 —" android:textColor="@color/rd_text_primary" android:textSize="11sp" />
                         </LinearLayout>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#484848" android:layout_marginBottom="6dp" />
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/gl_divider" android:layout_marginBottom="6dp" />
 
                         <TextView
                             android:id="@+id/tvWeatherSafetyInfo"
@@ -933,15 +891,13 @@
                             android:textStyle="bold"
                             android:lineSpacingExtra="2dp" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
                 <!-- ─── CARD 5: Route-POIs ───────────── -->
-                <com.google.android.material.card.MaterialCardView
+                <com.hundewildnis.app.GlassCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3a3a3a"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
                     android:layout_marginBottom="24dp">
 
                     <LinearLayout
@@ -964,7 +920,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/loading_generic_ellipsis"
-                            android:textColor="#777777"
+                            android:textColor="@color/rd_text_secondary"
                             android:textSize="11sp"
                             android:visibility="visible" />
 
@@ -974,7 +930,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </com.hundewildnis.app.GlassCardView>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

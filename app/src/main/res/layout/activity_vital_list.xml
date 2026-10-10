@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -15,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,13 +25,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Statistik-Karte -->
-        <com.google.android.material.card.MaterialCardView
+        <com.hundewildnis.app.GlassCardView
             android:id="@+id/cardStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,7 +58,7 @@
                     android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </com.hundewildnis.app.GlassCardView>
 
         <!-- Export-Buttons Grid -->
         <androidx.recyclerview.widget.RecyclerView

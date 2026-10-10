@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ab API 31: Fenster-Blur für Dialoge und Bottom Sheets.
+         Ist Blur systemseitig nicht verfügbar (Energiesparmodus, Geräte ohne Unterstützung),
+         bleibt die Füllung aus drawable-v31/bg_glass_dialog bzw. gl_sheet lesbar. -->
+    <style name="AlertDialogTheme" parent="AlertDialogTheme.Base">
+        <item name="android:windowBackgroundBlurRadius">32dp</item>
+        <item name="android:windowBlurBehindEnabled">true</item>
+        <item name="android:windowBlurBehindRadius">12dp</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.App.BottomSheet</item>
+        <item name="android:windowBlurBehindEnabled">true</item>
+        <item name="android:windowBlurBehindRadius">24dp</item>
+    </style>
+</resources>

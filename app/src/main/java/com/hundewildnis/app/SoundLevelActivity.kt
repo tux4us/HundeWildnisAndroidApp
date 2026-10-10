@@ -2,7 +2,6 @@ package com.hundewildnis.app
 
 import android.Manifest
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -163,8 +162,7 @@ class SoundLevelActivity : SecureBaseActivity() {
     }
 
     private fun dialogButtonColor(): Int {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        return if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        return Color.WHITE
     }
 
     private fun requestMicPermissionAndCalibrate() {
@@ -184,8 +182,6 @@ class SoundLevelActivity : SecureBaseActivity() {
                 .setNegativeButton("ABBRECHEN", null)
                 .create().apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(dialogButtonColor())
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(dialogButtonColor())
                 }
             return
         }
@@ -208,8 +204,6 @@ class SoundLevelActivity : SecureBaseActivity() {
             .setNegativeButton("Abbrechen", null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(dialogButtonColor())
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(dialogButtonColor())
             }
     }
 
@@ -305,8 +299,6 @@ class SoundLevelActivity : SecureBaseActivity() {
                 .setNegativeButton("ABLEHNEN", null)
                 .create().apply {
                     show()
-                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(dialogButtonColor())
-                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(dialogButtonColor())
                 }
             return
         }
@@ -327,7 +319,7 @@ class SoundLevelActivity : SecureBaseActivity() {
 
         isRecording = true
         binding.btnStartStop.text = getString(R.string.sound_btn_stop)
-        binding.btnStartStop.setBackgroundColor(getColor(android.R.color.holo_red_dark))
+        binding.btnStartStop.setBackgroundColor(ContextCompat.getColor(this@SoundLevelActivity, R.color.gl_danger_fill))
         binding.btnCalibrate.isEnabled = false
 
         try {
@@ -355,7 +347,7 @@ class SoundLevelActivity : SecureBaseActivity() {
         pitchDetector = null
 
         binding.btnStartStop.text = getString(R.string.sound_btn_start)
-        binding.btnStartStop.setBackgroundColor(Color.parseColor("#2d5016"))
+        binding.btnStartStop.setBackgroundColor(ContextCompat.getColor(this@SoundLevelActivity, R.color.gl_success_fill))
         binding.btnCalibrate.isEnabled = true
 
         if (dataPoints.isNotEmpty()) {
@@ -519,8 +511,6 @@ class SoundLevelActivity : SecureBaseActivity() {
             .setNegativeButton("Abbrechen", null)
             .create().apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(dialogButtonColor())
-                getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(dialogButtonColor())
             }
     }
 

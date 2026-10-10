@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/item_interval_session.xml -->
-<com.google.android.material.card.MaterialCardView
+<com.hundewildnis.app.GlassCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardElevation="3dp">
+    app:cardCornerRadius="@dimen/card_corner_radius">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,7 +70,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnSessionShare"
                 style="@style/Widget.App.Button.Outlined"
                 android:layout_width="0dp"
@@ -81,19 +80,17 @@
                 android:text="@string/interval_finish_btn_share"
                 android:textSize="@dimen/text_label_small" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.hundewildnis.app.GlassButton
                 android:id="@+id/btnSessionDelete"
-                style="@style/Widget.App.Button.Outlined"
+                style="@style/Widget.App.Button.Outlined.Danger"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/start_delete"
-                android:textColor="#C0392B"
-                app:strokeColor="#C0392B"
                 android:textSize="@dimen/text_label_small" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</com.hundewildnis.app.GlassCardView>

@@ -59,6 +59,8 @@ class PlantListAdapter(
         )
 
         holder.tvToxicity.setTextColor(Color.parseColor(plant.toxicityLevel.color))
+        holder.card.strokeColor = Color.parseColor(plant.toxicityLevel.color)
+        holder.card.strokeWidth = (1.5f * ctx.resources.displayMetrics.density).toInt()
 
         holder.card.setOnClickListener { onClick(plant) }
     }

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hundewildnis.app.databinding.ItemEmergencyCategoryBinding
 import com.hundewildnis.app.databinding.ItemEmergencySubcategoryBinding
 import com.hundewildnis.app.databinding.ItemSymptomCheckBinding
-import android.content.res.Configuration
 import android.view.HapticFeedbackConstants
 
 // ════════════════════════════════════════════════════════════════
@@ -147,21 +146,15 @@ class SymptomCheckAdapter(
 
         holder.binding.tvQuestion.text = question.question(holder.binding.root.context)
 
-        // ✅ Dark Mode Detection
-        val context = holder.binding.root.context
-        val isDarkTheme = (context.resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-
         // ✅ Farben definieren
-        val selectedYesColor = Color.parseColor("#4CAF50")      // Grün
-        val selectedNoColor = Color.parseColor("#F44336")        // Rot
-        val unselectedBgColor = if (isDarkTheme) Color.parseColor("#2d2d2d") else Color.WHITE
-        val unselectedStrokeColor = if (isDarkTheme) Color.parseColor("#555555") else Color.parseColor("#CCCCCC")
+        val selectedYesColor = androidx.core.content.ContextCompat.getColor(context, R.color.gl_success_fill)   // Grün (Glas)
+        val selectedNoColor = androidx.core.content.ContextCompat.getColor(context, R.color.gl_danger_fill)      // Rot (Glas)
+        val unselectedBgColor = androidx.core.content.ContextCompat.getColor(context, R.color.gl_fill)
+        val unselectedStrokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.gl_stroke)
 
         // ✅ Reset auf Standardzustand
-        resetButtonStyle(holder.binding.btnYes, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
-        resetButtonStyle(holder.binding.btnNo, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+        resetButtonStyle(holder.binding.btnYes, unselectedBgColor, unselectedStrokeColor)
+        resetButtonStyle(holder.binding.btnNo, unselectedBgColor, unselectedStrokeColor)
 
         // ✅ Zeige bereits gegebene Antwort
         answers[position]?.let { answer ->
@@ -181,7 +174,7 @@ class SymptomCheckAdapter(
 
             // Visuelles Feedback
             setButtonSelected(holder.binding.btnYes, selectedYesColor, Color.WHITE)
-            resetButtonStyle(holder.binding.btnNo, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+            resetButtonStyle(holder.binding.btnNo, unselectedBgColor, unselectedStrokeColor)
 
             checkIfAllAnswered()
         }
@@ -195,7 +188,7 @@ class SymptomCheckAdapter(
 
             // Visuelles Feedback
             setButtonSelected(holder.binding.btnNo, selectedNoColor, Color.WHITE)
-            resetButtonStyle(holder.binding.btnYes, unselectedBgColor, unselectedStrokeColor, isDarkTheme)
+            resetButtonStyle(holder.binding.btnYes, unselectedBgColor, unselectedStrokeColor)
 
             checkIfAllAnswered()
         }
@@ -221,12 +214,11 @@ class SymptomCheckAdapter(
     private fun resetButtonStyle(
         button: com.google.android.material.button.MaterialButton,
         backgroundColor: Int,
-        strokeColorInt: Int,
-        isDarkTheme: Boolean
+        strokeColorInt: Int
     ) {
         button.apply {
             setBackgroundColor(backgroundColor)
-            setTextColor(if (isDarkTheme) Color.WHITE else Color.BLACK)
+            setTextColor(Color.WHITE)
             setStrokeColorResource(android.R.color.transparent)
             strokeWidth = 2  // Dünner Rand
             elevation = 0f

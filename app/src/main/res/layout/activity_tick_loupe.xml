@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <!-- Toolbar im App-Stil -->
     <com.google.android.material.appbar.AppBarLayout
@@ -16,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/gl_bar"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -46,7 +45,7 @@
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
                 android:background="@color/rd_label_overlay"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/tick_loupe_filter_thermal" />
@@ -73,8 +72,8 @@
                     android:layout_margin="8dp"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
-                    android:background="#CCBD0000"
-                    android:textColor="#FFFFFF"
+                    android:background="@color/gl_danger_fill"
+                    android:textColor="@color/rd_text_primary"
                     android:textSize="12sp"
                     android:text="@string/tick_loupe_frozen_overlay_label"
                     android:visibility="gone" />

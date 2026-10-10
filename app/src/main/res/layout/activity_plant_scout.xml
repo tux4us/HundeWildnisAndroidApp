@@ -6,8 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <!-- AppBar – identisches Muster wie activity_pulscheck.xml / activity_walking_speed.xml -->
     <com.google.android.material.appbar.AppBarLayout
@@ -20,8 +19,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/green_primary"
-            app:titleTextColor="@android:color/white" />
+            android:background="@color/gl_bar"
+            app:titleTextColor="@color/rd_text_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,15 +32,15 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Saisonbanner -->
-        <com.google.android.material.card.MaterialCardView
+        <com.hundewildnis.app.GlassCardView
             android:id="@+id/cardSeasonBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:visibility="gone"
-            app:cardBackgroundColor="#7B0000"
+            app:cardBackgroundColor="@color/gl_fill"
             app:cardCornerRadius="10dp"
-            app:strokeColor="#FF5252"
+            app:strokeColor="@color/gl_danger_stroke"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -54,7 +53,7 @@
                     android:id="@+id/tvSeasonTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/rd_text_primary"
                     android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
@@ -63,11 +62,11 @@
                     android:id="@+id/tvSeasonPlants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFCDD2"
+                    android:textColor="@color/gl_danger"
                     android:textSize="@dimen/text_small" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </com.hundewildnis.app.GlassCardView>
 
         <!-- Suche + Filter -->
         <LinearLayout
@@ -85,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+                style="@style/Widget.App.TextInputLayout.Dense">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSearch"

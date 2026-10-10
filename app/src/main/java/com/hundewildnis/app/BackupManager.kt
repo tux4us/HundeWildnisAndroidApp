@@ -681,8 +681,6 @@ object BackupManager {
 
     private fun collectSettings(context: Context): Map<String, String> {
         val settings = mutableMapOf<String, String>()
-        val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        settings["is_dark_mode"] = themePrefs.getBoolean("is_dark_mode", false).toString()
         val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
         settings["background_updates_enabled"] = appPrefs.getBoolean("background_updates_enabled", true).toString()
         settings["notifications_enabled"] = appPrefs.getBoolean("notifications_enabled", true).toString()
@@ -690,8 +688,6 @@ object BackupManager {
     }
 
     private fun restoreSettings(context: Context, settings: Map<String, String>) {
-        val themePrefs = context.getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        settings["is_dark_mode"]?.let { themePrefs.edit().putBoolean("is_dark_mode", it.toBoolean()).apply() }
         val appPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
         settings["background_updates_enabled"]?.let { appPrefs.edit().putBoolean("background_updates_enabled", it.toBoolean()).apply() }
         settings["notifications_enabled"]?.let { appPrefs.edit().putBoolean("notifications_enabled", it.toBoolean()).apply() }

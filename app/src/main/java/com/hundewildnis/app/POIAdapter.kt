@@ -1,6 +1,5 @@
 package com.hundewildnis.app
 
-import android.content.res.Configuration
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +16,6 @@ class POIAdapter(
 
         fun bind(poi: POI) {
             val context = binding.root.context
-            val isDarkTheme = (context.resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
             // ✅ Haupt-Daten setzen
             binding.poiName.text = poi.name
@@ -31,11 +28,10 @@ class POIAdapter(
             binding.poiDirection.text = "${poi.directionArrow} ${poi.direction}"
 
             // ✅ Detail-Farbe: Weiß im Dark Mode, Dunkelgrün im Light Mode
-            val detailColor = if (isDarkTheme) Color.WHITE else Color.parseColor("#2d5016")
+            val detailColor = Color.WHITE
 
             // Alle Detail-TextViews:
             binding.poiAddress.setTextColor(detailColor)
-            binding.poiPhone.setTextColor(Color.WHITE)
             binding.poiPhone.setLinkTextColor(Color.WHITE)
             binding.poiHours.setTextColor(detailColor)
             binding.poiDescription.setTextColor(detailColor)
@@ -67,7 +63,6 @@ class POIAdapter(
             if (!poi.website.isNullOrEmpty()) {
                 binding.websiteLayout.visibility = View.VISIBLE
                 binding.poiWebsite.text = poi.website
-                binding.poiWebsite.setTextColor(Color.WHITE)
                 binding.poiWebsite.setLinkTextColor(Color.WHITE)
             } else {
                 binding.websiteLayout.visibility = View.GONE

@@ -1,6 +1,7 @@
 package com.hundewildnis.app
 
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
@@ -383,26 +384,28 @@ class IntervalTimerActivity : SecureBaseActivity() {
     private fun showPhaseCard(phase: IntervalTimerPhase) {
         // Hintergrundfarbe des Timer-Displays je nach Phase
         val bgColor = when (phase) {
-            IntervalTimerPhase.PREPARE  -> "#1B3A0A"   // dunkelgrün (neutral)
-            IntervalTimerPhase.ACTIVE   -> "#1B3A0A"   // grün
-            IntervalTimerPhase.REST     -> "#0D2A4A"   // blau
-            IntervalTimerPhase.COOLDOWN -> "#1A1A2E"   // dunkelblau
-            IntervalTimerPhase.FINISHED -> "#1B3A0A"
+            IntervalTimerPhase.PREPARE  -> R.color.gl_fill          // neutral
+            IntervalTimerPhase.ACTIVE   -> R.color.gl_success_fill  // grün
+            IntervalTimerPhase.REST     -> R.color.gl_info_fill     // blau
+            IntervalTimerPhase.COOLDOWN -> R.color.rd_group6_chip   // violett
+            IntervalTimerPhase.FINISHED -> R.color.gl_success_fill
         }
         binding.cardTimerDisplay.setCardBackgroundColor(
-            android.graphics.Color.parseColor(bgColor)
+            ContextCompat.getColor(this, bgColor)
         )
 
         val indicatorColor = when (phase) {
             IntervalTimerPhase.ACTIVE   -> "#4CAF50"
             IntervalTimerPhase.REST     -> "#2196F3"
-            IntervalTimerPhase.COOLDOWN -> "#7C4DFF"
+            IntervalTimerPhase.COOLDOWN -> "#B39DFF"
             else                        -> "#4CAF50"
         }
         binding.progressPhase.progressTintList =
             android.content.res.ColorStateList.valueOf(
                 android.graphics.Color.parseColor(indicatorColor)
             )
+        binding.cardTimerDisplay.strokeColor = android.graphics.Color.parseColor(indicatorColor)
+        binding.cardTimerDisplay.strokeWidth = (2.5f * resources.displayMetrics.density).toInt()
     }
 
     private fun showFinishedState(abortedEarly: Boolean) {
@@ -532,7 +535,7 @@ class IntervalTimerActivity : SecureBaseActivity() {
             .show()
             .apply {
                 getButton(AlertDialog.BUTTON_POSITIVE)
-                    ?.setTextColor(android.graphics.Color.parseColor("#C0392B"))
+                    ?.setTextColor(android.graphics.Color.parseColor("#F0786C"))
             }
     }
 

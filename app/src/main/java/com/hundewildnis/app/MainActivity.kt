@@ -1,7 +1,6 @@
 package com.hundewildnis.app
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -14,7 +13,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -78,7 +76,6 @@ class MainActivity : BaseBottomNavActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadThemePreference()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -87,9 +84,7 @@ class MainActivity : BaseBottomNavActivity() {
         binding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_menu_hamburger)?.apply {
             // Themenkonformes Tinting: das Icon war fest auf Weiß kodiert und dadurch
             // im hellen Modus auf hellem Toolbar-Hintergrund unsichtbar (weiß auf weiß).
-            val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            setTint(if (isDark) Color.WHITE else Color.parseColor("#2B2620"))
+            setTint(Color.WHITE)
         }
         contentCache = ContentCache(this)
         setupRecyclerViews()
@@ -131,13 +126,7 @@ class MainActivity : BaseBottomNavActivity() {
     private fun setupButtons() {
         super.setupBottomNavigation()
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val accentColor = if (isDark) Color.WHITE else Color.parseColor("#8A7A1F")
-
-        binding.filterScrollView.setBackgroundColor(if (isDark) Color.parseColor("#121212") else Color.parseColor("#F5F5F5"))
-        binding.btnFilterAll.setTextColor(accentColor)
-        binding.btnFilterCategories.setTextColor(accentColor)
-        binding.btnFilterCategories.setStrokeColor(android.content.res.ColorStateList.valueOf(accentColor))
+        // Filter-Buttons und Leiste werden über Styles/Theme (Glas) gefärbt
 
         binding.btnFilterAll.setOnClickListener {
             selectedCategoryId = null
@@ -152,7 +141,7 @@ class MainActivity : BaseBottomNavActivity() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             loadContentFromNetwork(silent = false)
         }
-        binding.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#8A7A1F"))
+        binding.swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.rd_overlay_accent))
 
         binding.btnLoadMore.setOnClickListener { loadMoreBlogPosts() }
         binding.blogRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -503,8 +492,7 @@ class MainActivity : BaseBottomNavActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val textColor = if (isDark) Color.WHITE else Color.BLACK
+        val textColor = Color.WHITE
         for (i in 0 until menu.size()) {
             val span = SpannableString(menu.getItem(i).title.toString())
             span.setSpan(ForegroundColorSpan(textColor), 0, span.length, 0)
@@ -520,7 +508,6 @@ class MainActivity : BaseBottomNavActivity() {
                 loadContentFromNetwork(silent = false)
                 true
             }
-            R.id.action_theme -> { toggleTheme(); true }
             R.id.action_settings -> { showSettingsDialog(); true }
             R.id.action_instructions -> { showInstructionsDialog(); true }
             R.id.action_permissions -> { showPermissionsDialog(); true }
@@ -556,8 +543,6 @@ class MainActivity : BaseBottomNavActivity() {
         }
 
         val categoryNames = categories.map { "${it.name} (${it.count})" }.toTypedArray()
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
 
         try {
             AlertDialog.Builder(this)
@@ -571,7 +556,6 @@ class MainActivity : BaseBottomNavActivity() {
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
                 .apply {
-                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
                 }
             Log.d("MainActivity", "AlertDialog shown")
         } catch (e: Exception) {
@@ -581,28 +565,23 @@ class MainActivity : BaseBottomNavActivity() {
 
     private fun showInstructionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_instructions, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        view.findViewById<TextView>(R.id.tvInsTitle).setTextColor(Color.WHITE)
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.main_button_understood), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
     }
 
     private fun showPermissionsDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_permissions, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        view.findViewById<TextView>(R.id.tvPermTitle).setTextColor(Color.WHITE)
         val dialog = AlertDialog.Builder(this).setView(view).setPositiveButton(getString(R.string.ok), null).create()
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
     }
 
     private fun showAboutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_about, null)
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        val titleColor = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
-        val linkColor = if (isDark) Color.parseColor("#8fad6f") else Color.parseColor("#2d5016")
+        val titleColor = Color.WHITE
+        val linkColor = Color.parseColor("#8fad6f")
 
         dialogView.findViewById<TextView>(R.id.tvAboutTitle).setTextColor(titleColor)
         val tvWeb = dialogView.findViewById<TextView>(R.id.tvAboutWeb)
@@ -616,7 +595,7 @@ class MainActivity : BaseBottomNavActivity() {
         tvEmail.setOnClickListener { startActivity(Intent.createChooser(Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse("mailto:hundewildnisschuleapp@online.de"); putExtra(Intent.EXTRA_SUBJECT, getString(R.string.main_about_email_subject)) }, getString(R.string.main_about_email_chooser_title))) }
 
         val dialog = AlertDialog.Builder(this).setView(dialogView).setPositiveButton(getString(R.string.main_button_close), null).create()
-        dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#2d5016"))
+        dialog.show()
     }
 
     private fun showSettingsDialog() {
@@ -657,8 +636,7 @@ class MainActivity : BaseBottomNavActivity() {
             orsEdit.setText("********")
         }
 
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
+        val color = Color.WHITE
         val csl = android.content.res.ColorStateList.valueOf(color)
         listOf(s1, s2, s3).forEach { it.thumbTintList = csl; it.trackTintList = csl.withAlpha(77) }
 
@@ -677,12 +655,10 @@ class MainActivity : BaseBottomNavActivity() {
                 }
             }
             .create()
-        dialog.show(); dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+        dialog.show()
     }
 
     private fun showOrsInfoDialog() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.main_ors_info_title))
             .setMessage(getString(R.string.main_ors_info_message))
@@ -690,26 +666,16 @@ class MainActivity : BaseBottomNavActivity() {
             .create()
             .apply {
                 show()
-                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
             }
     }
 
     private fun openPrivacyPolicy() { openUrl("https://wildnislehrer.com/datenschutzerklaerung/", getString(R.string.main_link_title_datenschutz)) }
     private fun openImprint() { startActivity(Intent(this, ImprintActivity::class.java)) }
-    private fun loadThemePreference() { if (getSharedPreferences("theme_prefs", MODE_PRIVATE).getBoolean("is_dark_mode", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
-    private fun toggleTheme() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        getSharedPreferences("theme_prefs", MODE_PRIVATE).edit().putBoolean("is_dark_mode", !isDark).apply()
-        AppCompatDelegate.setDefaultNightMode(if (isDark) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
-        recreate()
-    }
 
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
             val prefs = getSharedPreferences("settings", MODE_PRIVATE)
             if (!prefs.getBoolean("notification_permission_asked", false)) {
-                val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                val color = if (isDark) Color.WHITE else Color.parseColor("#2d5016")
                 val dialog = AlertDialog.Builder(this)
                     .setTitle(getString(R.string.main_notification_permission_title))
                     .setMessage(getString(R.string.main_notification_permission_message))
@@ -723,8 +689,6 @@ class MainActivity : BaseBottomNavActivity() {
                     }
                     .create()
                 dialog.show()
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
             } else {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
             }

@@ -7,8 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -19,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/rd_text_primary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -36,12 +35,11 @@
             android:padding="16dp">
 
             <!-- ─── HEADER: Name + Giftigkeitsstufe ──────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="@dimen/card_corner_radius">
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="20dp">
@@ -69,7 +67,7 @@
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
 
-                        <com.google.android.material.card.MaterialCardView
+                        <com.hundewildnis.app.GlassCardView
                             android:id="@+id/cardToxicity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -86,10 +84,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="@dimen/text_body_very_small"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/rd_text_primary"
                                     android:textStyle="bold" android:gravity="center" />
                             </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                        </com.hundewildnis.app.GlassCardView>
 
                     </LinearLayout>
 
@@ -109,33 +107,34 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_small" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── SAISONALER HINWEIS ────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardSeasonHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="#7B0000"
+                app:strokeColor="@color/gl_danger_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill"
                 app:cardCornerRadius="@dimen/card_corner_radius">
                 <TextView android:id="@+id/tvSeasonHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="14dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/rd_text_primary"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_body_medium" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── EIGENE FOTOS (3 Slots) ────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="@dimen/card_corner_radius">
 
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -175,7 +174,6 @@
                             <ImageView android:id="@+id/imgSlot0"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="#1A1A1A"
                                 android:scaleType="centerCrop"
                                 android:contentDescription="@string/plant_detail_photo_slot_content_description_1" />
                             <!-- Leerer Zustand -->
@@ -184,9 +182,8 @@
                                 android:layout_height="match_parent"
                                 android:text="＋"
                                 android:textSize="32sp"
-                                android:textColor="#444444"
-                                android:gravity="center"
-                                android:background="#1A1A1A" />
+                                android:textColor="@color/rd_text_secondary"
+                                android:gravity="center" />
                             <!-- Löschen-Button -->
                             <TextView android:id="@+id/btnDeleteSlot0"
                                 android:layout_width="24dp"
@@ -195,7 +192,7 @@
                                 android:layout_margin="4dp"
                                 android:text="✕"
                                 android:textSize="12sp"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/rd_text_primary"
                                 android:gravity="center"
                                 android:background="#CC000000"
                                 android:visibility="gone" />
@@ -209,7 +206,6 @@
                             <ImageView android:id="@+id/imgSlot1"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="#1A1A1A"
                                 android:scaleType="centerCrop"
                                 android:contentDescription="@string/plant_detail_photo_slot_content_description_2" />
                             <TextView android:id="@+id/overlaySlot1"
@@ -217,9 +213,8 @@
                                 android:layout_height="match_parent"
                                 android:text="＋"
                                 android:textSize="32sp"
-                                android:textColor="#444444"
-                                android:gravity="center"
-                                android:background="#1A1A1A" />
+                                android:textColor="@color/rd_text_secondary"
+                                android:gravity="center" />
                             <TextView android:id="@+id/btnDeleteSlot1"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
@@ -227,7 +222,7 @@
                                 android:layout_margin="4dp"
                                 android:text="✕"
                                 android:textSize="12sp"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/rd_text_primary"
                                 android:gravity="center"
                                 android:background="#CC000000"
                                 android:visibility="gone" />
@@ -240,7 +235,6 @@
                             <ImageView android:id="@+id/imgSlot2"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="#1A1A1A"
                                 android:scaleType="centerCrop"
                                 android:contentDescription="@string/plant_detail_photo_slot_content_description_3" />
                             <TextView android:id="@+id/overlaySlot2"
@@ -248,9 +242,8 @@
                                 android:layout_height="match_parent"
                                 android:text="＋"
                                 android:textSize="32sp"
-                                android:textColor="#444444"
-                                android:gravity="center"
-                                android:background="#1A1A1A" />
+                                android:textColor="@color/rd_text_secondary"
+                                android:gravity="center" />
                             <TextView android:id="@+id/btnDeleteSlot2"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
@@ -258,7 +251,7 @@
                                 android:layout_margin="4dp"
                                 android:text="✕"
                                 android:textSize="12sp"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/rd_text_primary"
                                 android:gravity="center"
                                 android:background="#CC000000"
                                 android:visibility="gone" />
@@ -274,10 +267,10 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── ERKENNUNGSMERKMALE ─────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -302,22 +295,24 @@
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── SYMPTOME ───────────────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardBackgroundColor="#1C0000">
+                app:strokeColor="@color/gl_danger_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill">
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="16dp">
                     <TextView android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/plant_detail_symptoms_title"
-                        android:textColor="#FFCDD2"
+                        android:textColor="@color/gl_danger"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp" />
@@ -326,22 +321,24 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── ERSTE HILFE ────────────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardBackgroundColor="#001C00">
+                app:strokeColor="@color/gl_success_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill">
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="16dp">
                     <TextView android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/plant_detail_firstaid_title"
-                        android:textColor="#C8E6C9"
+                        android:textColor="@color/gl_success"
                         android:textSize="@dimen/text_body_medium"
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp" />
@@ -350,62 +347,63 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── TIERARZT-PFLICHT ───────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardVetRequired"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="#B71C1C"
+                app:strokeColor="@color/gl_danger_stroke"
+                app:strokeWidth="1.5dp"
+                app:cardBackgroundColor="@color/gl_fill"
                 app:cardCornerRadius="@dimen/card_corner_radius">
                 <TextView android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="14dp"
                     android:text="@string/plant_detail_vet_required_banner"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/rd_text_primary"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textSize="@dimen/text_body_medium" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── VERWECHSLUNGSGEFAHR ────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardConfusion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="#1A1200"
+                app:cardBackgroundColor="@color/gl_fill"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:strokeColor="#F57C00"
+                app:strokeColor="@color/gl_warning_stroke"
                 app:strokeWidth="1dp">
                 <TextView android:id="@+id/tvConfusionRisk"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="14dp"
-                    android:textColor="#FFE0B2"
+                    android:textColor="@color/gl_warning"
                     android:textSize="@dimen/text_small" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
             <!-- ─── HINWEIS ────────────────────────────────────── -->
-            <com.google.android.material.card.MaterialCardView
+            <com.hundewildnis.app.GlassCardView
                 android:id="@+id/cardNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:visibility="gone"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardBackgroundColor="@color/green_dark">
+                app:cardCornerRadius="@dimen/card_corner_radius">
                 <TextView android:id="@+id/tvNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="14dp"
-                    android:textColor="#CCCCCC"
+                    android:textColor="@color/rd_text_primary"
                     android:textSize="@dimen/text_small" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.hundewildnis.app.GlassCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
