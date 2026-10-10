@@ -650,7 +650,7 @@ class ActivityCalendarActivity : SecureBaseActivity() {
             ).also { it.marginEnd = (6 * dp).toInt() }
             background = android.graphics.drawable.GradientDrawable().apply {
                 cornerRadius = 8 * dp
-                setColor(Color.parseColor("#1FFFFFFF"))
+                setColor(Color.parseColor("#9914181F"))
                 setStroke((2 * dp).toInt(), Color.parseColor(suitability.color))
             }
             isClickable = true

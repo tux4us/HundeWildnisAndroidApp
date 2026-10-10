@@ -9,7 +9,7 @@ import android.graphics.Shader
 
 /**
  * Gemeinsame Zeichenlogik des Glas-Stils (Vorlage: MiriquidiLauncher, `GlassStyle.kt`):
- *  - Glanz: oben 12 % Weiß, ab 45 % der Höhe transparent, unten 12 % Schwarz.
+ *  - Glanz: oben 18 % Weiß, ab 45 % der Höhe transparent, unten 16 % Schwarz.
  *  - Randverlauf: oben kräftig, nach unten auf ca. 20 % (neutral) bzw. 45 % (Rollenfarbe) abnehmend,
  *    als fiele das Licht von oben auf die Kante.
  * Die Füllung selbst (neutrales Glas-Grau) kommt weiterhin vom Hintergrund der View.
@@ -67,10 +67,10 @@ internal class GlassPainter {
     }
 
     companion object {
-        private val SHEEN_TOP = Color.argb(31, 255, 255, 255)        // 12 %
+        private val SHEEN_TOP = Color.argb(46, 255, 255, 255)        // 18 %
         private val SHEEN_TOP_FADE = Color.argb(0, 255, 255, 255)
         private val SHEEN_BOTTOM_FADE = Color.argb(0, 0, 0, 0)
-        private val SHEEN_BOTTOM = Color.argb(31, 0, 0, 0)           // 12 %
+        private val SHEEN_BOTTOM = Color.argb(41, 0, 0, 0)           // 16 %
 
         /** Weiße oder (fast) transparente Randfarben gelten als neutral (kein Rollenrand). */
         fun isNeutral(color: Int) =

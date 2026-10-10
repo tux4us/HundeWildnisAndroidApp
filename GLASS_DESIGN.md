@@ -63,7 +63,11 @@ Die Tokens `gl_<rolle>_fill` und `rd_groupN_chip` bleiben als Alias erhalten, ze
   neutral weiß 60 % → 20 %, Rollenfarbe 100 % → 45 %).
 - `strokeColor`/`strokeWidth` werden weiter wie bisher gesetzt (XML und Code); die Views übernehmen sie und zeichnen den Rand selbst.
   Der Material-Standardrand ist abgeschaltet.
-- Füllung neutral 10 % Weiß (`gl_fill` = `#1AFFFFFF`). Kein Schatten (Elevation bleibt 0).
+- Füllung dunkles Glas `#14181F` mit 60 % Deckkraft (`gl_fill` = `#9914181F`), Glanz oben 18 % / unten 16 % (Variante B). Kein Schatten (Elevation bleibt 0).
 - Drawables mit Glanz-Ebene (layer-list): FABs, Badges, Metrik-Kachel, Gefahr-Banner, POI-Button. Der Rand dort bleibt einfarbig.
 - Bewusst flach: Eingabefelder, Dialoge, Bottom-Sheets, Toolbars, Listenzeilen.
 - Neue Cards/Buttons im Code: `GlassCardView(context)` bzw. `GlassButton(context)` verwenden.
+
+## Update: dunkleres Glas (mehr Kontrast)
+Die Kartenfüllung ist jetzt dunkel statt hell (`gl_fill` = `#9914181F`, alle Rollen-/Gruppen-Fills identisch). Glanz wieder 18 % / 16 %,
+Hintergrundverlauf und Glows etwas dunkler (`gl_bg_*`, `rd_bg` = `#0D0E10`), Eingabefelder `gl_fill_subtle` = `#66101419`.
