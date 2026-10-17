@@ -41,6 +41,7 @@
 -keep class com.hundewildnis.app.BackupMetadata { *; }
 -keep class com.hundewildnis.app.BackupItemCount { *; }
 -keep class com.hundewildnis.app.HeatCycleEntry { *; }
+-keep class com.hundewildnis.app.TimelineUserEntry { *; }
 -keep class com.hundewildnis.app.VitalRecord { *; }
 -keep class com.hundewildnis.app.EmergencyReport { *; }
 -keep class com.hundewildnis.app.TrainingSession { *; }

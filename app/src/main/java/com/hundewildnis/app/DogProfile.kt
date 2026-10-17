@@ -16,6 +16,11 @@ data class DogProfile(
     var gender: String = "", // Stabiler interner Code: "male" / "female" (siehe GenderCode)
     var neutered: String = "", // Stabiler interner Code: "yes" / "no" / "unknown" (siehe NeuteredCode)
     var birthDate: String = "",
+    // Beginn der gemeinsamen Zeit (Kauf/Übernahme/Pflege), Format wie birthDate:
+    // dd.MM.yyyy, MM.yyyy oder yyyy. Leer = Geburtsdatum gilt (siehe TogetherMath.compute).
+    var togetherSince: String = "",
+    // Stabiler Code aus TogetherSinceType ("birth", "purchase", "adoption", "foster"); leer = birth
+    var togetherSinceType: String = "",
     var originCountry: String = "",
     var color: String = "",
 
@@ -84,6 +89,12 @@ data class DogProfile(
     // Werden von VitalManager synchron gehalten.
     // ═══════════════════════════════════════════════════════════
     var vitalRecords: List<VitalRecord> = emptyList(),
+
+    // ═══════════════════════════════════════════════════════════
+    // EIGENE TIMELINE-EINTRÄGE
+    // Vom Nutzer nachträglich erfasste Stationen (siehe TimelineUserEntry).
+    // ═══════════════════════════════════════════════════════════
+    var timelineEntries: List<TimelineUserEntry> = emptyList(),
 
     // lastModified bleibt das letzte Feld (bereits vorhanden):
     var lastModified: Long = 0L

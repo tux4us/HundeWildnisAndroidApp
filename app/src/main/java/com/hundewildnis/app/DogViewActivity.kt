@@ -60,6 +60,7 @@ class DogViewActivity : SecureBaseActivity() {
         // nach Rückkehr aus anderen Activities aktuell sind
         if (profileId.isNotEmpty()) {
             DogProfileManager.getProfile(this, profileId)?.let { fresh ->
+                displayTogetherSection(fresh)
                 displayVitalSection(fresh)
                 displayHeatCycleSection(fresh)
             }
@@ -127,11 +128,47 @@ class DogViewActivity : SecureBaseActivity() {
         binding.tvFood.text = getString(R.string.dog_view_food_format, p.food.ifEmpty { dash })
         binding.tvBehavior.text = getString(R.string.dog_view_behavior_format, p.behavior.ifEmpty { dash })
 
+        // Gemeinsame Zeit
+        displayTogetherSection(p)
+
+        // Timeline
+        binding.btnOpenTimeline.setOnClickListener {
+            startActivity(Intent(this, TimelineActivity::class.java).putExtra("profile", p))
+        }
+
         // Vitalwerte
         displayVitalSection(p)
 
         // Läufigkeit
         displayHeatCycleSection(p)
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // GEMEINSAME ZEIT — KARTE
+    // Wird bei jedem onResume neu berechnet, weil sich das Ergebnis mit
+    // dem Datum ändert. Ohne gültiges Start- oder Geburtsdatum bleibt die
+    // Karte ausgeblendet.
+    // ════════════════════════════════════════════════════════════════
+
+    private fun displayTogetherSection(p: DogProfile) {
+        val info = TogetherMath.compute(p)
+        if (info == null) {
+            binding.cardTogether.visibility = View.GONE
+            return
+        }
+
+        val display = TogetherFormatter.format(this, info)
+        binding.cardTogether.visibility = View.VISIBLE
+        binding.tvTogetherSince.text = display.sinceLine
+        binding.tvTogetherHeadline.text = display.headline
+
+        fun bind(view: TextView, text: String?) {
+            view.text = text.orEmpty()
+            view.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+        }
+        bind(binding.tvTogetherDays, display.daysLine)
+        bind(binding.tvTogetherDogAge, display.dogAgeLine)
+        bind(binding.tvTogetherMilestone, display.milestoneLine)
     }
 
     // ════════════════════════════════════════════════════════════════

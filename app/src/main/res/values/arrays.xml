@@ -23,6 +23,14 @@
         <item>Unbekannt</item>
     </string-array>
 
+    <!-- Gemeinsame Zeit: Beginn (Reihenfolge = TogetherSinceType.ORDER) -->
+    <string-array name="together_since_type_options">
+        <item>Seit Geburt</item>
+        <item>Seit Kauf</item>
+        <item>Seit Übernahme</item>
+        <item>Seit Pflege/Adoption</item>
+    </string-array>
+
     <!-- NasenarbeitSessionDetailActivity: Windrichtung relativ zur Suchrichtung -->
     <string-array name="nasenarbeit_wind_directions">
         <item>Rückenwind</item>

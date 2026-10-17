@@ -167,10 +167,8 @@ object PlantPhotoManager {
 
     private fun copyUriToFile(context: Context, uri: Uri, dest: File): Boolean =
         try {
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                FileOutputStream(dest).use { output -> input.copyTo(output) }
-            }
-            true
+            // Verkleinert (max. 1280 px) übernehmen
+            PhotoCompressor.compressToFile(context, uri, dest)
         } catch (e: Exception) {
             Log.e(TAG, "copyUriToFile Fehler: ${e.message}")
             false

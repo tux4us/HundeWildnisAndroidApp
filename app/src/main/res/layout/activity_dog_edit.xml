@@ -183,6 +183,55 @@
                     android:hint="" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- GEMEINSAME ZEIT: Beginn (Geburt / Kauf / Übernahme / Pflege) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dog_edit_hint_together_type"
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu"
+                android:layout_marginBottom="8dp">
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerTogetherType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="@string/dog_edit_together_type_birth" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTogetherPrecision"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:hint="@string/dog_edit_hint_together_precision"
+                style="@style/Widget.App.TextInputLayout.ExposedDropdownMenu"
+                android:layout_marginBottom="8dp">
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerTogetherPrecision"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="@string/dog_edit_birthdate_type_known" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTogetherSince"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:hint="@string/dog_edit_hint_together_since"
+                android:layout_marginBottom="12dp"
+                app:placeholderText="@string/dog_edit_birthdate_placeholder_full">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTogetherSince"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:hint="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

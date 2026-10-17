@@ -242,9 +242,8 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
             try {
                 val dest = File(filesDir, "nasenarbeit_photos/${UUID.randomUUID()}.jpg")
                     .also { it.parentFile?.mkdirs() }
-                contentResolver.openInputStream(uri)?.use { inp ->
-                    dest.outputStream().use { inp.copyTo(it) }
-                }
+                // Verkleinert (max. 1280 px) übernehmen
+                if (!PhotoCompressor.compressToFile(this, uri, dest)) return@mapNotNull null
                 FileProvider.getUriForFile(this, "${packageName}.fileprovider", dest).toString()
             } catch (e: Exception) { null }
         }

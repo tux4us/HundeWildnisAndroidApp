@@ -341,6 +341,21 @@
             android:exported="false" />
 
         <activity
+            android:name="com.hundewildnis.app.TimelineActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.DogViewActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
+            android:name="com.hundewildnis.app.TimelineEntryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName="com.hundewildnis.app.TimelineActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
+        <activity
             android:name=".HeatCycleActivity"
             android:label="Läufigkeit"
             android:parentActivityName=".DogViewActivity" />

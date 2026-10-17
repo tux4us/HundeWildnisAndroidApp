@@ -24,6 +24,14 @@
         <item>Unknown</item>
     </string-array>
 
+    <!-- Together time: start (order = TogetherSinceType.ORDER) -->
+    <string-array name="together_since_type_options">
+        <item>Since birth</item>
+        <item>Since purchase</item>
+        <item>Since adoption</item>
+        <item>Since fostering/adoption</item>
+    </string-array>
+
     <!-- Geburtsdatum Typ -->
     <string-array name="birthdate_type_options">
         <item>Date known</item>

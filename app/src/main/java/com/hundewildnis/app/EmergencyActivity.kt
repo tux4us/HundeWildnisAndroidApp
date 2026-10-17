@@ -86,8 +86,7 @@ class EmergencyActivity : SecureBaseActivity() {
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             currentPhotoPath?.let { path ->
-                val uri = Uri.fromFile(File(path))
-                addPhoto(uri)
+                importPhotos(listOf(Uri.fromFile(File(path))), deleteSource = true)
             }
         }
     }
@@ -99,8 +98,8 @@ class EmergencyActivity : SecureBaseActivity() {
             try {
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } catch (e: Exception) {}
-            addPhoto(uri)
         }
+        importPhotos(uris)
     }
 
     private val locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -340,6 +339,27 @@ class EmergencyActivity : SecureBaseActivity() {
             }
     }
 
+    /**
+     * Übernimmt neue Fotos verkleinert (max. 1280 px) in den App-Speicher.
+     * Lässt sich ein Foto nicht verkleinern, wird die ursprüngliche URI verwendet.
+     * @param deleteSource löscht die Quelldatei nach erfolgreicher Übernahme (Kamera-Zwischendatei)
+     */
+    private fun importPhotos(sources: List<Uri>, deleteSource: Boolean = false) {
+        lifecycleScope.launch {
+            val imported = withContext(Dispatchers.IO) {
+                sources.map { src ->
+                    val copy = PhotoCompressor.importPhoto(this@EmergencyActivity, src)
+                    if (copy != null && deleteSource) {
+                        try { src.path?.let { File(it).delete() } } catch (e: Exception) {}
+                    }
+                    copy ?: src
+                }
+            }
+            imported.forEach { addPhoto(it) }
+            saveCache()
+        }
+    }
+
     private fun addPhoto(uri: Uri) {
         if (attachedPhotos.contains(uri)) return
         attachedPhotos.add(uri)
@@ -352,6 +372,7 @@ class EmergencyActivity : SecureBaseActivity() {
             setOnClickListener {
                 attachedPhotos.remove(uri)
                 binding.layoutPhotos.removeView(this)
+                PhotoCompressor.deleteOwnPhoto(this@EmergencyActivity, uri)
                 saveCache()
             }
         }

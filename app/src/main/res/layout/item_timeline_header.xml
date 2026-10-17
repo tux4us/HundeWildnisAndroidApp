@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp">
+
+    <!-- Linie durchgehend, damit sie über Monatsköpfe hinweg nicht unterbrochen wird -->
+    <FrameLayout
+        android:layout_width="28dp"
+        android:layout_height="match_parent">
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/gl_stroke" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="6dp"
+        android:textSize="@dimen/text_body_large"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary" />
+</LinearLayout>

@@ -109,7 +109,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
     }
 
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success && currentPhotoUri != null) { addPhoto(currentPhotoUri!!); saveToHistory(false) }
+        if (success && currentPhotoUri != null) importPhotos(listOf(currentPhotoUri!!))
     }
 
     // ✅ SINGLE PHOTO PICKER
@@ -120,8 +120,7 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             try {
                 contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } catch (e: Exception) {}
-            addPhoto(it)
-            saveToHistory(false)
+            importPhotos(listOf(it))
         }
     }
 
@@ -133,11 +132,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             try {
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } catch (e: Exception) {}
-            addPhoto(uri)
         }
-        if (uris.isNotEmpty()) {
-            saveToHistory(false)
-        }
+        if (uris.isNotEmpty()) importPhotos(uris)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -467,11 +463,27 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
         updatePhotoVisibility()
     }
 
+    /**
+     * Übernimmt neue Fotos verkleinert (max. 1280 px) in den App-Speicher und hängt sie an die Notiz.
+     * Lässt sich ein Foto nicht verkleinern, wird die ursprüngliche URI verwendet.
+     */
+    private fun importPhotos(sources: List<Uri>) {
+        lifecycleScope.launch {
+            val imported = withContext(Dispatchers.IO) {
+                sources.map { PhotoCompressor.importPhoto(this@DailyNotesActivity, it) ?: it }
+            }
+            imported.forEach { addPhoto(it) }
+            saveToHistory(false)
+        }
+    }
+
     private fun updatePhotoVisibility() {
         binding.rvPhotos.visibility = if (photos.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun deletePhotoFile(uri: Uri) {
+        // Eigene, verkleinerte Kopie: Datei löschen. Sonst wie bisher über den Content-Provider.
+        if (PhotoCompressor.deleteOwnPhoto(this, uri)) return
         try { contentResolver.delete(uri, null, null) } catch (e: Exception) {}
     }
 

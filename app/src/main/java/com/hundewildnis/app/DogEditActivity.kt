@@ -12,6 +12,10 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import com.hundewildnis.app.databinding.ActivityDogEditBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,23 +26,31 @@ class DogEditActivity : SecureBaseActivity() {
     private var profile: DogProfile? = null
     private var photoUri: String = ""
 
+    /** In dieser Sitzung neu importiertes (verkleinertes) Foto, solange noch nicht gespeichert. */
+    private var sessionPhoto: String = ""
+    private var saved = false
+
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
-                try {
-                    // Persistente Permission
-                    contentResolver.takePersistableUriPermission(
-                        uri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                    photoUri = uri.toString()
-                    binding.ivPhoto.setImageURI(uri)
-                    binding.btnRemovePhoto.visibility = android.view.View.VISIBLE
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Toast.makeText(this, getString(R.string.dog_edit_photo_error, e.message), Toast.LENGTH_SHORT).show()
+                // Foto verkleinert (max. 1280 px) in den App-Speicher übernehmen
+                lifecycleScope.launch {
+                    val imported = withContext(Dispatchers.IO) { PhotoCompressor.importPhoto(this@DogEditActivity, uri) }
+                    if (imported != null) {
+                        discardSessionPhoto()
+                        sessionPhoto = imported.toString()
+                        photoUri = sessionPhoto
+                        binding.ivPhoto.setImageURI(imported)
+                        binding.btnRemovePhoto.visibility = android.view.View.VISIBLE
+                    } else {
+                        Toast.makeText(
+                            this@DogEditActivity,
+                            getString(R.string.dog_edit_photo_error, ""),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
@@ -91,6 +103,30 @@ class DogEditActivity : SecureBaseActivity() {
         binding.spinnerBirthDateType.setAdapter(birthDateTypeAdapter)
         binding.spinnerBirthDateType.setOnItemClickListener { _, _, position, _ ->
             updateBirthDateField(position)
+        }
+
+        // Gemeinsame Zeit: Art des Beginns
+        binding.spinnerTogetherType.setAdapter(
+            ArrayAdapter.createFromResource(
+                this,
+                R.array.together_since_type_options,
+                android.R.layout.simple_dropdown_item_1line
+            )
+        )
+        binding.spinnerTogetherType.setOnItemClickListener { _, _, position, _ ->
+            updateTogetherFields(position, currentTogetherPrecisionIndex())
+        }
+
+        // Gemeinsame Zeit: Genauigkeit (gleiche Auswahl wie beim Geburtsdatum)
+        binding.spinnerTogetherPrecision.setAdapter(
+            ArrayAdapter.createFromResource(
+                this,
+                R.array.birthdate_type_options,
+                android.R.layout.simple_dropdown_item_1line
+            )
+        )
+        binding.spinnerTogetherPrecision.setOnItemClickListener { _, _, position, _ ->
+            updateTogetherFields(currentTogetherTypeIndex(), position)
         }
     }
 
@@ -188,6 +224,55 @@ class DogEditActivity : SecureBaseActivity() {
         }
     }
 
+    private fun currentTogetherTypeIndex(): Int {
+        val options = resources.getStringArray(R.array.together_since_type_options)
+        return options.indexOf(binding.spinnerTogetherType.text.toString()).coerceAtLeast(0)
+    }
+
+    private fun currentTogetherPrecisionIndex(): Int {
+        val options = resources.getStringArray(R.array.birthdate_type_options)
+        return options.indexOf(binding.spinnerTogetherPrecision.text.toString()).coerceAtLeast(0)
+    }
+
+    /**
+     * Blendet die Felder für den Beginn der gemeinsamen Zeit passend ein/aus.
+     * typeIndex 0 = seit Geburt: kein eigenes Datum, das Geburtsdatum gilt.
+     * precisionIndex wie beim Geburtsdatum: 0 Datum, 1 Monat/Jahr, 2 Jahr, 3 Unbekannt.
+     */
+    private fun updateTogetherFields(typeIndex: Int, precisionIndex: Int) {
+        binding.etTogetherSince.hint = null
+
+        if (typeIndex == 0) {
+            binding.tilTogetherPrecision.visibility = View.GONE
+            binding.tilTogetherSince.visibility = View.GONE
+            return
+        }
+
+        binding.tilTogetherPrecision.visibility = View.VISIBLE
+        val current = binding.etTogetherSince.text.toString()
+        when (precisionIndex) {
+            0 -> {
+                binding.tilTogetherSince.visibility = View.VISIBLE
+                binding.tilTogetherSince.placeholderText = getString(R.string.dog_edit_birthdate_placeholder_full)
+                if (!current.matches(Regex("\\d{2}\\.\\d{2}\\.\\d{4}"))) binding.etTogetherSince.setText("")
+            }
+            1 -> {
+                binding.tilTogetherSince.visibility = View.VISIBLE
+                binding.tilTogetherSince.placeholderText = getString(R.string.dog_edit_birthdate_placeholder_month_year)
+                if (!current.matches(Regex("\\d{2}\\.\\d{4}"))) binding.etTogetherSince.setText("")
+            }
+            2 -> {
+                binding.tilTogetherSince.visibility = View.VISIBLE
+                binding.tilTogetherSince.placeholderText = getString(R.string.dog_edit_birthdate_placeholder_year)
+                if (!current.matches(Regex("\\d{4}"))) binding.etTogetherSince.setText("")
+            }
+            else -> {
+                binding.tilTogetherSince.visibility = View.GONE
+                binding.etTogetherSince.setText("")
+            }
+        }
+    }
+
     private fun loadData() {
         profile?.let { p ->
             binding.etName.setText(p.name)
@@ -234,6 +319,26 @@ class DogEditActivity : SecureBaseActivity() {
             )
             binding.etBirthDate.setText(displayDate)
             updateBirthDateField(typeIndex)
+
+            // Gemeinsame Zeit
+            val togetherTypeIndex = TogetherSinceType.toIndex(p.togetherSinceType)
+            val togetherPrecisionIndex = when {
+                p.togetherSince.matches(Regex("\\d{2}\\.\\d{2}\\.\\d{4}")) -> 0
+                p.togetherSince.matches(Regex("\\d{2}\\.\\d{4}")) -> 1
+                p.togetherSince.matches(Regex("\\d{4}")) -> 2
+                togetherTypeIndex == 0 -> 0
+                else -> 3
+            }
+            binding.spinnerTogetherType.setText(
+                binding.spinnerTogetherType.adapter.getItem(togetherTypeIndex).toString(),
+                false
+            )
+            binding.spinnerTogetherPrecision.setText(
+                binding.spinnerTogetherPrecision.adapter.getItem(togetherPrecisionIndex).toString(),
+                false
+            )
+            binding.etTogetherSince.setText(p.togetherSince)
+            updateTogetherFields(togetherTypeIndex, togetherPrecisionIndex)
 
             binding.etColor.setText(p.color)
             binding.etChipNumber.setText(p.chipNumber)
@@ -286,6 +391,7 @@ class DogEditActivity : SecureBaseActivity() {
         }
 
         binding.btnRemovePhoto.setOnClickListener {
+            discardSessionPhoto()
             photoUri = ""
             binding.ivPhoto.setImageResource(R.drawable.ic_dog_placeholder)
             binding.btnRemovePhoto.visibility = android.view.View.GONE
@@ -293,6 +399,19 @@ class DogEditActivity : SecureBaseActivity() {
 
         binding.btnSave.setOnClickListener { save() }
         binding.btnCancel.setOnClickListener { finish() }
+    }
+
+    /** Löscht das in dieser Sitzung importierte, noch nicht gespeicherte Foto. */
+    private fun discardSessionPhoto() {
+        if (sessionPhoto.isNotEmpty()) {
+            PhotoCompressor.deleteOwnPhoto(this, sessionPhoto)
+            sessionPhoto = ""
+        }
+    }
+
+    override fun onDestroy() {
+        if (isFinishing && !saved) discardSessionPhoto()
+        super.onDestroy()
     }
 
     private fun setupDatePickers() {
@@ -316,11 +435,36 @@ class DogEditActivity : SecureBaseActivity() {
                     ).show()
                 }
                 options[1] -> { // Monat/Jahr
-                    showMonthYearPicker()
+                    showMonthYearPicker(binding.etBirthDate, false)
                 }
                 options[2] -> { // Jahr
-                    showYearPicker()
+                    showYearPicker(binding.etBirthDate)
                 }
+            }
+        }
+
+        // Beginn der gemeinsamen Zeit: Datum darf nicht in der Zukunft liegen
+        binding.etTogetherSince.setOnClickListener {
+            val options = resources.getStringArray(R.array.birthdate_type_options)
+            when (options.getOrNull(currentTogetherPrecisionIndex())) {
+                options[0] -> {
+                    val c = Calendar.getInstance()
+                    DatePickerDialog(
+                        this,
+                        { _, year, month, day ->
+                            val picked = Calendar.getInstance().apply { set(year, month, day) }
+                            binding.etTogetherSince.setText(SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(picked.time))
+                        },
+                        c.get(Calendar.YEAR),
+                        c.get(Calendar.MONTH),
+                        c.get(Calendar.DAY_OF_MONTH)
+                    ).apply {
+                        datePicker.maxDate = System.currentTimeMillis()
+                        show()
+                    }
+                }
+                options[1] -> showMonthYearPicker(binding.etTogetherSince, true)
+                options[2] -> showYearPicker(binding.etTogetherSince)
             }
         }
 
@@ -338,7 +482,7 @@ class DogEditActivity : SecureBaseActivity() {
         }
     }
 
-    private fun showMonthYearPicker() {
+    private fun showMonthYearPicker(target: EditText, limitToToday: Boolean) {
         val calendar = Calendar.getInstance()
         val view = layoutInflater.inflate(R.layout.dialog_month_year_picker, null)
         val monthPicker = view.findViewById<NumberPicker>(R.id.monthPicker)
@@ -358,8 +502,12 @@ class DogEditActivity : SecureBaseActivity() {
             .setTitle(getString(R.string.dog_edit_month_year_dialog_title))
             .setView(view)
             .setPositiveButton(getString(R.string.dog_edit_ok_button)) { _, _ ->
-                val month = String.format(Locale.getDefault(), "%02d", monthPicker.value)
-                binding.etBirthDate.setText("$month.${yearPicker.value}")
+                var monthValue = monthPicker.value
+                if (limitToToday && yearPicker.value == currentYear) {
+                    monthValue = minOf(monthValue, calendar.get(Calendar.MONTH) + 1)
+                }
+                val month = String.format(Locale.getDefault(), "%02d", monthValue)
+                target.setText("$month.${yearPicker.value}")
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
@@ -367,7 +515,7 @@ class DogEditActivity : SecureBaseActivity() {
             }
     }
 
-    private fun showYearPicker() {
+    private fun showYearPicker(target: EditText) {
         val calendar = Calendar.getInstance()
         val yearPicker = NumberPicker(this)
         val currentYear = calendar.get(Calendar.YEAR)
@@ -380,7 +528,7 @@ class DogEditActivity : SecureBaseActivity() {
             .setTitle(getString(R.string.dog_edit_year_dialog_title))
             .setView(yearPicker)
             .setPositiveButton(getString(R.string.dog_edit_ok_button)) { _, _ ->
-                binding.etBirthDate.setText("${yearPicker.value}")
+                target.setText("${yearPicker.value}")
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .create().apply {
@@ -409,6 +557,19 @@ class DogEditActivity : SecureBaseActivity() {
         }
     }
 
+    /** Seit Geburt wird als leerer Code gespeichert (Geburtsdatum gilt). */
+    private fun togetherTypeToSave(): String {
+        val code = TogetherSinceType.fromIndex(currentTogetherTypeIndex())
+        return if (code == TogetherSinceType.BIRTH) "" else code
+    }
+
+    /** Nur ein gültig formatiertes Datum wird gespeichert; sonst leer (Fallback auf Geburtsdatum). */
+    private fun togetherSinceToSave(): String {
+        if (currentTogetherTypeIndex() == 0) return ""
+        val text = binding.etTogetherSince.text.toString().trim()
+        return if (TogetherMath.parse(text) != null) text else ""
+    }
+
     private fun save() {
         val name = binding.etName.text.toString().trim()
         if (name.isEmpty()) {
@@ -422,6 +583,8 @@ class DogEditActivity : SecureBaseActivity() {
             gender = genderTextToCode(binding.spinnerGender.text.toString()),
             neutered = neuteredTextToCode(binding.spinnerNeutered.text.toString()),
             birthDate = binding.etBirthDate.text.toString(),
+            togetherSinceType = togetherTypeToSave(),
+            togetherSince = togetherSinceToSave(),
             color = binding.etColor.text.toString(),
             chipNumber = binding.etChipNumber.text.toString(),
             taxNumber = binding.etTaxNumber.text.toString(),
@@ -457,6 +620,12 @@ class DogEditActivity : SecureBaseActivity() {
         )
 
         if (DogProfileManager.saveProfile(this, savedProfile)) {
+            saved = true
+            // Ersetztes oder entferntes Foto aus dem App-Speicher löschen
+            val previousPhoto = profile?.photoUri.orEmpty()
+            if (previousPhoto.isNotEmpty() && previousPhoto != photoUri) {
+                PhotoCompressor.deleteOwnPhoto(this, previousPhoto)
+            }
             Toast.makeText(this, getString(R.string.dog_edit_saved_toast, name), Toast.LENGTH_SHORT).show()
             setResult(RESULT_OK)
             finish()

@@ -29,6 +29,16 @@
         name="nasenarbeit_photos"
         path="nasenarbeit_photos/" />
 
+    <!-- Eigene Timeline-Einträge: Fotos -->
+    <files-path
+        name="timeline_photos"
+        path="timeline_photos/" />
+
+    <!-- Verkleinerte Fotos: Hundeprofil, Tagesnotizen, Notfallmeldungen -->
+    <files-path
+        name="user_photos"
+        path="user_photos/" />
+
     <!-- ✅ NEU: Nasenarbeit PDFs -->
     <files-path
         name="nasenarbeit_pdfs"

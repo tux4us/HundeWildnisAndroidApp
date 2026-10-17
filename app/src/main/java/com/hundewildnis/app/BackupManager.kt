@@ -27,6 +27,13 @@ object BackupManager {
     private const val DATA_FILE = "backup_data.json"
     private const val PHOTOS_DIR = "photos"
 
+    /**
+     * true: Fotos werden beim Erstellen eines Backups auf max. 1280 px verkleinert (JPEG, Qualität 85).
+     * Kleinere Fotos werden unverändert übernommen. Die Fotos in der App bleiben unverändert.
+     * false: Fotos werden 1:1 gesichert.
+     */
+    private const val COMPRESS_PHOTOS_IN_BACKUP = true
+
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
@@ -92,7 +99,7 @@ object BackupManager {
                         val fileNameInZip = "plant_${plantId}_${idx}.jpg"
                         val destFile = File(photosInZipDir, fileNameInZip)
                         try {
-                            if (sourceFile.copyTo(destFile, overwrite = true).exists()) {
+                            if (copyUriToFile(context, Uri.fromFile(sourceFile), destFile)) {
                                 backupPaths.add("${PHOTOS_DIR}/$fileNameInZip")
                             }
                         } catch (e: Exception) {
@@ -118,6 +125,22 @@ object BackupManager {
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Fehler beim Kopieren von Hundefoto: ${e.message}")
+                    }
+                }
+            }
+
+            // Timeline-Fotos (eigene Einträge) kopieren
+            dogs.forEach { dog ->
+                dog.timelineEntries.forEach { entry ->
+                    if (entry.photoUri.isNotEmpty()) {
+                        try {
+                            val photoFile = File(photosInZipDir, "timeline_${entry.id}.jpg")
+                            if (copyUriToFile(context, Uri.parse(entry.photoUri), photoFile)) {
+                                photoMapping[entry.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Fehler beim Kopieren von Timeline-Foto: ${e.message}")
+                        }
                     }
                 }
             }
@@ -294,6 +317,7 @@ object BackupManager {
             photoFingerprints.add("$uriString:${photoStat(context, uriString)}")
         }
         dogs.forEach { if (it.photoUri.isNotEmpty()) addPhotoFingerprint(it.photoUri) }
+        dogs.forEach { dog -> dog.timelineEntries.forEach { if (it.photoUri.isNotEmpty()) addPhotoFingerprint(it.photoUri) } }
         notes?.forEach { note -> note.photoUris.forEach { addPhotoFingerprint(it) } }
         emergencyReports?.forEach { report -> report.photoUris.forEach { addPhotoFingerprint(it) } }
         plantPhotoMap.forEach { (_, paths) -> paths.forEach { addPhotoFingerprint(it) } }
@@ -398,7 +422,7 @@ object BackupManager {
                         if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri))
                             dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
                         else dog
-                    },
+                    }.map { it.remapTimelinePhotos(restoredPhotoMapping) },
                     existing = existing
                 )
                 existing.forEach { DogProfileManager.deleteProfile(context, it.id) }
@@ -411,7 +435,7 @@ object BackupManager {
                     val restoredDog = if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri)) {
                         dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
                     } else dog
-                    DogProfileManager.saveProfile(context, restoredDog)
+                    DogProfileManager.saveProfile(context, restoredDog.remapTimelinePhotos(restoredPhotoMapping))
                 }
             }
 
@@ -631,6 +655,9 @@ object BackupManager {
         // 1. Alle aktuell referenzierten URIs aus allen Modulen sammeln
         try {
             DogProfileManager.getAllProfiles(context).forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
+            DogProfileManager.getAllProfiles(context).forEach { dog ->
+                dog.timelineEntries.forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
+            }
             collectNotes(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
             collectEmergencyReports(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
             PlantPhotoManager.getAllPhotos(context).values.forEach { it.forEach { uri -> activeUris.add(uri) } }
@@ -825,6 +852,11 @@ object BackupManager {
     }
 
     private fun copyUriToFile(context: Context, uri: Uri, destFile: File): Boolean {
+        if (COMPRESS_PHOTOS_IN_BACKUP) {
+            // Große Fotos (> 1280 px) werden nur für das Backup verkleinert; kleine bleiben unverändert.
+            // Die Originale in der App bleiben unberührt. Bei einem Fehler wird das Original kopiert.
+            return PhotoCompressor.compressToFile(context, uri, destFile)
+        }
         return try {
             context.contentResolver.openInputStream(uri)?.use { input ->
                 FileOutputStream(destFile).use { output ->
@@ -877,6 +909,15 @@ object BackupManager {
                         val photoFile = File(photosInZipDir, "dog_${index}_${timestamp}.jpg")
                         if (copyUriToFile(context, Uri.parse(dog.photoUri), photoFile)) {
                             photoMapping[dog.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    }
+                    // Timeline-Fotos (eigene Einträge)
+                    dog.timelineEntries.forEach { entry ->
+                        if (entry.photoUri.isNotEmpty()) {
+                            val entryPhoto = File(photosInZipDir, "timeline_${entry.id}.jpg")
+                            if (copyUriToFile(context, Uri.parse(entry.photoUri), entryPhoto)) {
+                                photoMapping[entry.photoUri] = "${PHOTOS_DIR}/${entryPhoto.name}"
+                            }
                         }
                     }
                 }
@@ -971,7 +1012,7 @@ object BackupManager {
                         if (src.exists()) {
                             val dest = File(tempDir, "${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg")
                             dest.parentFile?.mkdirs()
-                            try { src.copyTo(dest, overwrite = true); copiedPaths.add("${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg") }
+                            try { if (copyUriToFile(context, Uri.fromFile(src), dest)) copiedPaths.add("${PHOTOS_DIR}/plant_${plantId}_${idx}.jpg") }
                             catch (_: Exception) {}
                         }
                     }
@@ -1199,7 +1240,7 @@ object BackupManager {
             if (profile.photoUri.isNotEmpty() && photoMapping.containsKey(profile.photoUri)) {
                 profile.copy(photoUri = photoMapping[profile.photoUri]!!)
             } else profile
-        }
+        }.map { it.remapTimelinePhotos(photoMapping) }
 
         when (mode) {
             MergeMode.ADD_NEW -> {
