@@ -431,7 +431,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         waypointReachedDialogShown = false
         lastPOIFetchLocation = null
         finalDestination = GeoPoint(poi.lat, poi.lon)
-        binding.btnCurrentLocation.text = getString(R.string.map_btn_navigation)
+        binding.btnCurrentLocation.text = getString(R.string.map_btn_stop_navigation)
         clearPOIMarkers()   // ← NEU: Marker ausblenden
         binding.mapView.invalidate()
 

@@ -144,6 +144,7 @@
     <string name="map_btn_location">📍 Standort</string>
     <string name="map_btn_share">📤 Teilen</string>
     <string name="map_btn_navigation">🧭 Navigation</string>
+    <string name="map_btn_stop_navigation">⏹ Beenden</string>
     <string name="map_orientation_north">🧭 Nord</string>
     <string name="map_orientation_course">🧭 Kurs</string>
 

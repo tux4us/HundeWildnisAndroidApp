@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fast deckendes Glas für Panels, die über der Karte liegen (Navigations-Details):
+     Karteninhalt darf nicht durchscheinen, sonst sind Texte schlecht lesbar. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/gl_sheet" />
+    <corners
+        android:topLeftRadius="24dp"
+        android:topRightRadius="24dp" />
+    <stroke android:width="1dp" android:color="@color/gl_stroke_strong" />
+</shape>

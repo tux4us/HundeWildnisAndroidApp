@@ -2555,6 +2555,7 @@
     <string name="entspannungstraining_title">Relaxation Training</string>
     <string name="map_btn_location">📍 Location</string>
     <string name="map_btn_navigation">🧭 Navigation</string>
+    <string name="map_btn_stop_navigation">⏹ Stop</string>
     <string name="map_btn_share">📤 Share</string>
     <string name="map_orientation_course">🧭 Course</string>
     <string name="map_orientation_north">🧭 North</string>
