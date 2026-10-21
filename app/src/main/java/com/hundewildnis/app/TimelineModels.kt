@@ -65,7 +65,10 @@ data class TimelineEvent(
     val icon: String? = null,
     val dateText: String? = null,
     val photoUri: String = "",
-    val plain: String = ""
+    val plain: String = "",
+    /** Standort (WGS84), falls bekannt: aus der Quelle, dem eigenen Eintrag oder nachträglich gesetzt. */
+    val lat: Double? = null,
+    val lon: Double? = null
 )
 
 /** Zeilen der RecyclerView: Monatskopf oder Eintrag. */

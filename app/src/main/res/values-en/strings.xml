@@ -4476,7 +4476,7 @@ high</string>
     <string name="timeline_export_share">Share timeline</string>
     <string name="timeline_export_all_categories">all</string>
     <string name="timeline_export_filter_format">Period: %1$s · Categories: %2$s</string>
-    <string name="timeline_csv_header">Date;Time;Date (sortable);Category;Type;Title;Details;Place;Note;Photo</string>
+    <string name="timeline_csv_header">Date;Time;Date (sortable);Category;Type;Title;Details;Place;Note;Photo;Latitude;Longitude</string>
     <string name="timeline_csv_yes">yes</string>
     <string name="timeline_pdf_title_format">Timeline – %1$s</string>
     <string name="timeline_pdf_entries_format">%1$d entries</string>
@@ -4489,6 +4489,17 @@ high</string>
     <string name="timeline_rating_2">Partly</string>
     <string name="timeline_rating_3">Successful</string>
     <string name="timeline_rating_4">Very good</string>
+    <string name="timeline_entry_hint_location">Location (GPS, optional)</string>
+    <string name="timeline_location_help">Paste coordinates, e.g. 50.11552, 8.68417. In a maps app, long-press the place and copy the coordinates; a map link also works.</string>
+    <string name="timeline_location_invalid">Coordinates not recognized. Example: 50.11552, 8.68417</string>
+    <string name="timeline_location_hint">Tip: Long-press an entry to add a location (GPS). Entries with a location are marked with 📍 and can be exported as GPX.</string>
+    <string name="timeline_location_dialog_title">Location: %1$s</string>
+    <string name="timeline_location_dialog_hint">e.g. 50.11552, 8.68417</string>
+    <string name="timeline_location_remove">Remove</string>
+    <string name="timeline_location_save_error">Could not save the location.</string>
+    <string name="timeline_export_option_gpx">GPX (visited places for navigation apps, %1$d with location)</string>
+    <string name="timeline_export_gpx_none">No entry in the current selection has a location. Long-press an entry to add one.</string>
+    <string name="timeline_pdf_location_format">Location: %1$s</string>
     <plurals name="together_years">
         <item quantity="one">%d year</item>
         <item quantity="other">%d years</item>

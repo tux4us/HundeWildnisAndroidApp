@@ -95,6 +95,8 @@ data class DogProfile(
     // Vom Nutzer nachträglich erfasste Stationen (siehe TimelineUserEntry).
     // ═══════════════════════════════════════════════════════════
     var timelineEntries: List<TimelineUserEntry> = emptyList(),
+    /** Nachträglich gesetzte Standorte für Timeline-Ereignisse (siehe TimelineLocation.kt). */
+    var timelineLocations: List<TimelineLocation> = emptyList(),
 
     // lastModified bleibt das letzte Feld (bereits vorhanden):
     var lastModified: Long = 0L

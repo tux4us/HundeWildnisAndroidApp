@@ -125,13 +125,21 @@ object TimelineCsvExporter {
                 field(details, text = true),
                 field(entry?.place.orEmpty(), text = true),
                 field(entry?.note.orEmpty(), text = true),
-                field(photo)
+                field(photo),
+                coordinate(e.lat, e.lon, first = true),
+                coordinate(e.lat, e.lon, first = false)
             ).joinToString(SEP)
         }
 
         val file = File(TimelineExportSupport.exportDir(context), TimelineExportSupport.fileName(profile, "csv"))
         file.writeBytes(("﻿" + lines.joinToString("\r\n") + "\r\n").toByteArray(Charsets.UTF_8))
         return file
+    }
+
+    /** Dezimalgrad mit Punkt, unabhängig von der Gerätesprache; leer ohne Standort. */
+    private fun coordinate(lat: Double?, lon: Double?, first: Boolean): String {
+        if (!GeoCoordinates.isValid(lat, lon)) return ""
+        return String.format(java.util.Locale.ROOT, "%.6f", if (first) lat else lon)
     }
 
     private fun field(value: String, text: Boolean = false): String {
@@ -250,6 +258,12 @@ object TimelinePdfExporter {
             val detail = TimelineExportSupport.plainDetail(e)
             if (detail.isNotBlank()) cell.add(Paragraph(clean(detail)).setFontSize(9f).setFontColor(GRAY))
         }
+        if (GeoCoordinates.isValid(e.lat, e.lon)) {
+            cell.add(
+                Paragraph(context.getString(R.string.timeline_pdf_location_format, GeoCoordinates.format(e.lat!!, e.lon!!)))
+                    .setFontSize(8.5f).setFontColor(GRAY)
+            )
+        }
         return cell
     }
 
@@ -324,4 +338,82 @@ object TimelinePdfExporter {
             ExifInterface.ORIENTATION_ROTATE_270 -> 270
             else -> 0
         }
+}
+// ────────────────────────────────────────────────────────────────
+// GPX
+// ────────────────────────────────────────────────────────────────
+
+object TimelineGpxExporter {
+
+    /**
+     * GPX 1.1 mit einem Wegpunkt je Timeline-Eintrag, der einen Standort hat (älteste zuerst).
+     * Einträge ohne Standort werden übersprungen. Zeitangabe in UTC. Die Datei lässt sich in
+     * Navigations- und Karten-Apps (z. B. OsmAnd, Organic Maps, Komoot, Garmin) importieren.
+     */
+    fun export(context: Context, profile: DogProfile, events: List<TimelineEvent>): File {
+        val located = events
+            .filter { GeoCoordinates.isValid(it.lat, it.lon) }
+            .sortedBy { it.timestamp }
+
+        val utc = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }
+
+        val xml = StringBuilder()
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        xml.append("<gpx version=\"1.1\" creator=\"HundeWildnis App\" ")
+        xml.append("xmlns=\"http://www.topografix.com/GPX/1/1\" ")
+        xml.append("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ")
+        xml.append("xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n")
+        xml.append("  <metadata>\n")
+        xml.append("    <name>").append(esc(TimelineExportSupport.stripSymbols(
+            context.getString(R.string.timeline_pdf_title_format, profile.name)))).append("</name>\n")
+        xml.append("    <time>").append(utc.format(Date())).append("</time>\n")
+        xml.append("  </metadata>\n")
+
+        for (e in located) {
+            val entry = TimelineExportSupport.userEntry(profile, e)
+            val name = "${TimelineExportSupport.dateText(e)} – ${TimelineExportSupport.stripSymbols(e.title)}"
+
+            val desc = buildList<String> {
+                if (entry != null) {
+                    add(TimelineEntryKind.label(context, TimelineEntryKind.normalize(entry.kind)))
+                    if (entry.place.isNotBlank()) add(entry.place)
+                    if (entry.note.isNotBlank()) add(entry.note)
+                } else {
+                    TimelineExportSupport.plainDetail(e).takeIf { it.isNotBlank() }?.let { add(it) }
+                }
+            }.joinToString(" | ") { TimelineExportSupport.stripSymbols(it).replace("\n", " ") }
+
+            xml.append("  <wpt lat=\"").append(String.format(Locale.ROOT, "%.6f", e.lat))
+            xml.append("\" lon=\"").append(String.format(Locale.ROOT, "%.6f", e.lon)).append("\">\n")
+            xml.append("    <time>").append(utc.format(Date(e.timestamp))).append("</time>\n")
+            xml.append("    <name>").append(esc(name)).append("</name>\n")
+            if (desc.isNotEmpty()) xml.append("    <desc>").append(esc(desc)).append("</desc>\n")
+            xml.append("    <type>").append(esc(e.category.label(context))).append("</type>\n")
+            xml.append("  </wpt>\n")
+        }
+        xml.append("</gpx>\n")
+
+        val file = File(TimelineExportSupport.exportDir(context), TimelineExportSupport.fileName(profile, "gpx"))
+        file.writeText(xml.toString(), Charsets.UTF_8)
+        return file
+    }
+
+    /** Escapet XML-Sonderzeichen und entfernt Steuerzeichen, die in XML 1.0 nicht erlaubt sind. */
+    private fun esc(s: String): String {
+        val sb = StringBuilder()
+        for (ch in s) {
+            when {
+                ch == '&' -> sb.append("&amp;")
+                ch == '<' -> sb.append("&lt;")
+                ch == '>' -> sb.append("&gt;")
+                ch == '"' -> sb.append("&quot;")
+                ch == '\'' -> sb.append("&apos;")
+                ch.code < 0x20 && ch != '\n' && ch != '\t' && ch != '\r' -> Unit
+                else -> sb.append(ch)
+            }
+        }
+        return sb.toString()
+    }
 }

@@ -94,7 +94,7 @@ class TimelineActivity : SecureBaseActivity() {
     // ════════════════════════════════════════════════════════════════
 
     private fun setupRecyclerView() {
-        adapter = TimelineAdapter(this) { event -> openEvent(event) }
+        adapter = TimelineAdapter(this, { event -> openEvent(event) }, { event -> showLocationDialog(event) })
         val layoutManager = LinearLayoutManager(this)
         binding.rvTimeline.layoutManager = layoutManager
         binding.rvTimeline.adapter = adapter
@@ -232,13 +232,27 @@ class TimelineActivity : SecureBaseActivity() {
             Toast.makeText(this, getString(R.string.timeline_export_empty), Toast.LENGTH_SHORT).show()
             return
         }
+        val withLocation = filtered.count { GeoCoordinates.isValid(it.lat, it.lon) }
         val options = arrayOf(
             getString(R.string.timeline_export_option_csv),
-            getString(R.string.timeline_export_option_pdf)
+            getString(R.string.timeline_export_option_pdf),
+            getString(R.string.timeline_export_option_gpx, withLocation)
         )
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.timeline_export_dialog_title, filtered.size))
-            .setItems(options) { _, which -> runExport(csv = which == 0) }
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> runExport(ExportFormat.CSV)
+                    1 -> runExport(ExportFormat.PDF)
+                    else -> {
+                        if (withLocation == 0) {
+                            Toast.makeText(this, getString(R.string.timeline_export_gpx_none), Toast.LENGTH_LONG).show()
+                        } else {
+                            runExport(ExportFormat.GPX)
+                        }
+                    }
+                }
+            }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
@@ -260,7 +274,11 @@ class TimelineActivity : SecureBaseActivity() {
         return getString(R.string.timeline_export_filter_format, rangeText, categoryText)
     }
 
-    private fun runExport(csv: Boolean) {
+    private enum class ExportFormat(val mimeType: String) {
+        CSV("text/csv"), PDF("application/pdf"), GPX("application/gpx+xml")
+    }
+
+    private fun runExport(format: ExportFormat) {
         val events = filtered.toList()
         val exportProfile = DogProfileManager.getProfile(this, profile.id) ?: profile
         val filterText = filterDescription()
@@ -271,13 +289,16 @@ class TimelineActivity : SecureBaseActivity() {
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
                 runCatching {
-                    if (csv) TimelineCsvExporter.export(this@TimelineActivity, exportProfile, events)
-                    else TimelinePdfExporter.export(this@TimelineActivity, exportProfile, events, filterText)
+                    when (format) {
+                        ExportFormat.CSV -> TimelineCsvExporter.export(this@TimelineActivity, exportProfile, events)
+                        ExportFormat.PDF -> TimelinePdfExporter.export(this@TimelineActivity, exportProfile, events, filterText)
+                        ExportFormat.GPX -> TimelineGpxExporter.export(this@TimelineActivity, exportProfile, events)
+                    }
                 }
             }
             binding.btnExport.isEnabled = true
             result
-                .onSuccess { file -> shareFile(file, if (csv) "text/csv" else "application/pdf") }
+                .onSuccess { file -> shareFile(file, format.mimeType) }
                 .onFailure { e ->
                     e.printStackTrace()
                     Toast.makeText(
@@ -297,6 +318,79 @@ class TimelineActivity : SecureBaseActivity() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         startActivity(Intent.createChooser(intent, getString(R.string.timeline_export_share)))
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // STANDORT (langer Druck auf einen Eintrag)
+    // ════════════════════════════════════════════════════════════════
+
+    private fun showLocationDialog(event: TimelineEvent) {
+        val pad = (20 * resources.displayMetrics.density).toInt()
+        val input = android.widget.EditText(this).apply {
+            hint = getString(R.string.timeline_location_dialog_hint)
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            maxLines = 3
+            if (GeoCoordinates.isValid(event.lat, event.lon)) {
+                setText(GeoCoordinates.format(event.lat!!, event.lon!!))
+                setSelection(text.length)
+            }
+        }
+        val help = android.widget.TextView(this).apply {
+            text = getString(R.string.timeline_location_help)
+            textSize = 12f
+            alpha = 0.75f
+            setPadding(0, pad / 2, 0, 0)
+        }
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(pad, pad / 2, pad, 0)
+            addView(input)
+            addView(help)
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.timeline_location_dialog_title, event.title))
+            .setView(container)
+            .setPositiveButton(getString(R.string.save), null)
+            .setNegativeButton(getString(R.string.cancel), null)
+            .apply {
+                if (GeoCoordinates.isValid(event.lat, event.lon)) {
+                    setNeutralButton(getString(R.string.timeline_location_remove)) { _, _ ->
+                        storeLocation(event, null, null)
+                    }
+                }
+            }
+            .create()
+
+        // Bei ungültiger Eingabe bleibt der Dialog offen
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val text = input.text.toString().trim()
+                if (text.isEmpty()) {
+                    dialog.dismiss()
+                    return@setOnClickListener
+                }
+                val coordinates = GeoCoordinates.parse(text)
+                if (coordinates == null) {
+                    input.error = getString(R.string.timeline_location_invalid)
+                } else {
+                    storeLocation(event, coordinates.first, coordinates.second)
+                    dialog.dismiss()
+                }
+            }
+        }
+        dialog.show()
+    }
+
+    private fun storeLocation(event: TimelineEvent, lat: Double?, lon: Double?) {
+        lifecycleScope.launch {
+            val ok = withContext(Dispatchers.IO) { TimelineLocations.save(this@TimelineActivity, profile.id, event, lat, lon) }
+            if (ok) {
+                loadEvents()
+            } else {
+                Toast.makeText(this@TimelineActivity, getString(R.string.timeline_location_save_error), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -374,7 +468,8 @@ class TimelineActivity : SecureBaseActivity() {
 
 class TimelineAdapter(
     private val context: android.content.Context,
-    private val onClick: (TimelineEvent) -> Unit
+    private val onClick: (TimelineEvent) -> Unit,
+    private val onLongClick: (TimelineEvent) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var rows: List<TimelineRow> = emptyList()
@@ -434,7 +529,7 @@ class TimelineAdapter(
         }
 
         val date = Date(e.timestamp)
-        b.tvDate.text = if (e.dateText != null) {
+        val dateLabel = if (e.dateText != null) {
             e.dateText
         } else if (e.hasTime) {
             context.getString(
@@ -443,6 +538,11 @@ class TimelineAdapter(
         } else {
             dateFormat.format(date)
         }
+
+        // 📍 kennzeichnet Einträge mit Standort
+        b.tvDate.text = if (GeoCoordinates.isValid(e.lat, e.lon)) "$dateLabel  📍" else dateLabel
+
+        b.card.setOnLongClickListener { onLongClick(e); true }
 
         val clickable = e.category != TimelineCategory.START
         b.card.isClickable = clickable

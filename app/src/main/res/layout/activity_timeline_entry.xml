@@ -105,6 +105,23 @@
                     android:maxLength="80" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Standort (GPS, optional) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/timeline_entry_hint_location"
+                app:helperText="@string/timeline_location_help"
+                app:helperTextEnabled="true"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="200" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Notiz -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

@@ -30,7 +30,10 @@ data class TimelineUserEntry(
     val place: String = "",
     val note: String = "",
     /** content://-URI einer Datei in filesDir/timeline_photos (FileProvider) oder leer. */
-    val photoUri: String = ""
+    val photoUri: String = "",
+    /** Optionaler Standort (WGS84, Dezimalgrad). */
+    val lat: Double? = null,
+    val lon: Double? = null
 ) : Parcelable
 
 /** Stabile interne Codes der Eintragsarten (nicht der Anzeigetext). */

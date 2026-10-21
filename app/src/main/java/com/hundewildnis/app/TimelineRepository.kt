@@ -32,7 +32,14 @@ object TimelineRepository {
             events += safe { startEvents(context, profile) }
         }
 
-        return events.sortedWith(
+        // Nachträglich gesetzte Standorte haben Vorrang vor dem Standort der Quelle
+        val overrides = profile?.timelineLocations.orEmpty().associateBy { it.eventId }
+        val located = if (overrides.isEmpty()) events else events.map { ev ->
+            overrides[ev.id]?.takeIf { GeoCoordinates.isValid(it.lat, it.lon) }
+                ?.let { ev.copy(lat = it.lat, lon = it.lon) } ?: ev
+        }
+
+        return located.sortedWith(
             compareByDescending<TimelineEvent> { it.timestamp }.thenBy { it.id }
         )
     }
@@ -65,7 +72,9 @@ object TimelineRepository {
                     title = s.category.displayName(context),
                     subtitle = subtitle(effort, ratingIcon(s.successRating)),
                     payload = s.category.id.toString(),
-                    plain = subtitle(effort, ratingText(context, s.successRating))
+                    plain = subtitle(effort, ratingText(context, s.successRating)),
+                    lat = s.gpsLatitude.takeIf { GeoCoordinates.isValid(s.gpsLatitude, s.gpsLongitude) },
+                    lon = s.gpsLongitude.takeIf { GeoCoordinates.isValid(s.gpsLatitude, s.gpsLongitude) }
                 )
             }
 
@@ -83,7 +92,9 @@ object TimelineRepository {
                     title = s.durchgefuehrteDisziplin.displayName(context),
                     subtitle = subtitle(duration, ratingIcon(s.erfolgsbewertung)),
                     payload = s.id,
-                    plain = subtitle(duration, ratingText(context, s.erfolgsbewertung))
+                    plain = subtitle(duration, ratingText(context, s.erfolgsbewertung)),
+                    lat = s.gpsLat.takeIf { GeoCoordinates.isValid(s.gpsLat, s.gpsLon) },
+                    lon = s.gpsLon.takeIf { GeoCoordinates.isValid(s.gpsLat, s.gpsLon) }
                 )
             }
 
@@ -197,7 +208,9 @@ object TimelineRepository {
                 payload = e.id,
                 icon = TimelineEntryKind.icon(kind),
                 dateText = TogetherFormatter.startText(date),
-                photoUri = e.photoUri
+                photoUri = e.photoUri,
+                lat = e.lat.takeIf { GeoCoordinates.isValid(e.lat, e.lon) },
+                lon = e.lon.takeIf { GeoCoordinates.isValid(e.lat, e.lon) }
             )
         }
 

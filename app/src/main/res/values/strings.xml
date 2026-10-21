@@ -4501,7 +4501,7 @@ hoch</string>
     <string name="timeline_export_share">Timeline teilen</string>
     <string name="timeline_export_all_categories">alle</string>
     <string name="timeline_export_filter_format">Zeitraum: %1$s · Kategorien: %2$s</string>
-    <string name="timeline_csv_header">Datum;Uhrzeit;Datum (sortierbar);Kategorie;Art;Titel;Details;Ort;Notiz;Foto</string>
+    <string name="timeline_csv_header">Datum;Uhrzeit;Datum (sortierbar);Kategorie;Art;Titel;Details;Ort;Notiz;Foto;Breitengrad;Längengrad</string>
     <string name="timeline_csv_yes">ja</string>
     <string name="timeline_pdf_title_format">Timeline – %1$s</string>
     <string name="timeline_pdf_entries_format">%1$d Einträge</string>
@@ -4514,6 +4514,17 @@ hoch</string>
     <string name="timeline_rating_2">Teilweise</string>
     <string name="timeline_rating_3">Erfolgreich</string>
     <string name="timeline_rating_4">Sehr gut</string>
+    <string name="timeline_entry_hint_location">Standort (GPS, optional)</string>
+    <string name="timeline_location_help">Koordinaten einfügen, z. B. 50.11552, 8.68417. In einer Karten-App den Ort lange berühren und die Koordinaten kopieren; auch ein Karten-Link funktioniert.</string>
+    <string name="timeline_location_invalid">Koordinaten nicht erkannt. Beispiel: 50.11552, 8.68417</string>
+    <string name="timeline_location_hint">Tipp: Einen Eintrag lange berühren, um einen Standort (GPS) hinzuzufügen. Einträge mit Standort sind mit 📍 markiert und lassen sich als GPX exportieren.</string>
+    <string name="timeline_location_dialog_title">Standort: %1$s</string>
+    <string name="timeline_location_dialog_hint">z. B. 50.11552, 8.68417</string>
+    <string name="timeline_location_remove">Entfernen</string>
+    <string name="timeline_location_save_error">Standort konnte nicht gespeichert werden.</string>
+    <string name="timeline_export_option_gpx">GPX (besuchte Orte für Navigations-Apps, %1$d mit Standort)</string>
+    <string name="timeline_export_gpx_none">Kein Eintrag der aktuellen Auswahl hat einen Standort. Einen Eintrag lange berühren, um einen Standort hinzuzufügen.</string>
+    <string name="timeline_pdf_location_format">Standort: %1$s</string>
     <plurals name="together_years">
         <item quantity="one">%d Jahr</item>
         <item quantity="other">%d Jahre</item>

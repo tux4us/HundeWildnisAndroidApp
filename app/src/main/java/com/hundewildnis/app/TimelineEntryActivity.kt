@@ -173,6 +173,9 @@ class TimelineEntryActivity : SecureBaseActivity() {
 
         binding.etTitle.setText(entry?.title.orEmpty())
         binding.etPlace.setText(entry?.place.orEmpty())
+        if (entry != null && GeoCoordinates.isValid(entry.lat, entry.lon)) {
+            binding.etLocation.setText(GeoCoordinates.format(entry.lat!!, entry.lon!!))
+        }
         binding.etNote.setText(entry?.note.orEmpty())
 
         originalPhotoUri = entry?.photoUri.orEmpty()
@@ -222,6 +225,15 @@ class TimelineEntryActivity : SecureBaseActivity() {
             return
         }
 
+        // Standort: leer = keiner; sonst muss der Text als Koordinaten lesbar sein
+        val locationText = binding.etLocation.text.toString().trim()
+        val coordinates = if (locationText.isEmpty()) null else GeoCoordinates.parse(locationText)
+        if (locationText.isNotEmpty() && coordinates == null) {
+            binding.tilLocation.error = getString(R.string.timeline_location_invalid)
+            return
+        }
+        binding.tilLocation.error = null
+
         val entry = TimelineUserEntry(
             id = editing?.id ?: java.util.UUID.randomUUID().toString(),
             date = dateText,
@@ -229,7 +241,9 @@ class TimelineEntryActivity : SecureBaseActivity() {
             title = title,
             place = binding.etPlace.text.toString().trim(),
             note = binding.etNote.text.toString().trim(),
-            photoUri = currentPhotoUri
+            photoUri = currentPhotoUri,
+            lat = coordinates?.first,
+            lon = coordinates?.second
         )
 
         val fresh = DogProfileManager.getProfile(this, profile.id) ?: profile
