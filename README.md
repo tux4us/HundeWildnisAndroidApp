@@ -309,16 +309,13 @@ Die App ist **ausschließlich über den Google Play Store** verfügbar:
 
 ▶ [play.google.com/store/apps/details?id=com.hundewildnis.app](https://play.google.com/store/apps/details?id=com.hundewildnis.app)
 
-Eine F-Droid-Veröffentlichung befindet sich in Vorbereitung. Die App ist kostenlos, solange sie sich durch freiwillige Unterstützung finanzieren kann.
 
 ---
 
 ## 🤝 Mitmachen
 
-Issues und Pull Requests sind willkommen. Bitte zuerst ein Issue öffnen.
+Issues und Pull Requests sind willkommen. Bitte kontaktiert uns gern.
 
-- 🐛 [Bug melden](https://github.com/tux4us/HundeWildnisAndroidApp/issues)
-- 💡 [Feature vorschlagen](https://github.com/tux4us/HundeWildnisAndroidApp/issues)
 - 📬 [wildnislehrer.com/kontakt](https://wildnislehrer.com/informationen/kontakt/)
 
 ---
@@ -334,7 +331,6 @@ Dieses Projekt ist unter [diesen Bedingungen](https://github.com/tux4us/HundeWil
 **HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR** · Freital
 
 - 🌐 [wildnislehrer.com](https://wildnislehrer.com)
-- 🐙 [github.com/tux4us/HundeWildnisAndroidApp](https://github.com/tux4us/HundeWildnisAndroidApp)
 
 ---
 
