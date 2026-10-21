@@ -299,6 +299,7 @@ UI               Android Views · ViewBinding · Material Design
 | Internet | Für Karte, Wetter, Blog-Inhalte, WebDAV-Sync |
 | GPS | Optional – für Navigation, Tempo-Trainer, Nasenarbeit, Kompass-Himmelsberechnung |
 | ORS-API-Key | Für Routing erforderlich – eigener Schlüssel (kostenlos bei openrouteservice.org) |
+| Wetter-API-Key | Für Wetter erforderlich – eigener Schlüssel (bei openweathermap.org) |
 
 ---
 
