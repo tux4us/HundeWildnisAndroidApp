@@ -162,7 +162,7 @@ Der Beratungs-Wizard führt durch fünf Bildschirme mit Fortschrittsanzeige:
 #### Gruppe 4 – Hund, Sicherheit und Notfall
 | Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
-| 🐕 Stammdaten | Beliebig viele Hundeprofile | Basis-/Identifikations-/Gesundheits-/Kontaktdaten · Läufigkeitstracker · 6 Wesensmerkmal-Skalen, 11 Schnellprofile · Export (Text/QR/PDF) · eigenständige Notfallmeldung ab Profilkarte |
+| 🐕 Stammdaten | Beliebig viele Hundeprofile | Basis-/Identifikations-/Gesundheits-/Kontaktdaten · Timelinetracker (gemeinsame Lebenszeit mit dem Hund inclusive aller mit der App aufgenommenenen Aktivitäten und Situationen) · Läufigkeitstracker · 6 Wesensmerkmal-Skalen, 11 Schnellprofile · Export (Text/QR/PDF/GPX) · eigenständige Notfallmeldung ab Profilkarte |
 | ❤️ Pulscheck | Geführte Puls-/Atemfrequenzmessung | 15-s-Countdowns mit automatischer Hochrechnung · Bewertung nach Schulterhöhe · Kapillarfüllzeit, Schleimhautfarbe, Bewusstsein, Belastungsszenario · Übernahme in Notfallmeldung · Verlauf, CSV-Export |
 | 🔍 Zeckenlupe | Digitale Lupe (Camera2 API) | 3 Filter (Wärmebild/Invertierung/Hoher Kontrast) · Antipp-Fokus · Freeze-Frame · Speichern in Galerie |
 | 🌿 Gefahrenpflanzen | Offline-Datenbank, 56 Giftpflanzen | Saisonale Warnung · Textsuche, Toxizitäts-Filter, Saisonal-Umschalter · eigene Fotos je Pflanze · Verknüpfung mit Notfall-Assistent |
