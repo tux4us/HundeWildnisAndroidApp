@@ -15,7 +15,7 @@
 
 **Eine 100 %ige Eigenentwicklung der HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR, Freital**
 
-[📥 Download](#-download) · [🌐 Website](https://wildnislehrer.com/hundewildnisapp/) · [📖 Funktionsübersicht](#-funktionsübersicht)
+[🌐 Website](https://wildnislehrer.com/hundewildnisapp/) · [📖 Funktionsübersicht](#-funktionsübersicht)
 
 </div>
 
