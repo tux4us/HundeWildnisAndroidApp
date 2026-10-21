@@ -348,6 +348,6 @@ Dieses Projekt ist unter [diesen Bedingungen](https://github.com/tux4us/HundeWil
 
 Entwickelt mit 💚 für Hunde und ihre Menschen
 
-[🌐 wildnislehrer.com](https://wildnislehrer.com) · [📱 Play Store](https://play.google.com/store/apps/details?id=com.hundewildnis.app) · MIT-Lizenz
+[🌐 wildnislehrer.com](https://wildnislehrer.com) · [📱 Play Store](https://play.google.com/store/apps/details?id=com.hundewildnis.app)
 
 </div>
