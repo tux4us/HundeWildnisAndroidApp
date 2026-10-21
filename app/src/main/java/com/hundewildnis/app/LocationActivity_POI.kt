@@ -16,6 +16,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import android.util.Log
@@ -134,7 +135,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        OsmConfig.getInstance().userAgentValue = packageName
+        OsmConfig.getInstance().userAgentValue = AppNetwork.USER_AGENT
         binding = ActivityLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -195,6 +196,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.setMultiTouchControls(true)
         binding.mapView.setBuiltInZoomControls(false)
         binding.mapView.controller.setZoom(15.0)
+        // Quellenangabe laut OSM-Richtlinie („© OpenStreetMap contributors“)
+        binding.mapView.overlays.add(CopyrightOverlay(this))
 
         val mapEventsReceiver = object : org.osmdroid.events.MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
@@ -826,7 +829,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
         conn.setRequestProperty("Accept",        "application/json, application/geo+json")
         conn.setRequestProperty("Authorization", apiKey)
-        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
         conn.connectTimeout = 15000
         conn.readTimeout    = 20000
         conn.doOutput       = true
@@ -1096,7 +1099,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     if (category.key == POICategories.KEY_THUNDERSTORM_SHELTER) {
                         try {
                             val bridges = withContext(Dispatchers.IO) {
-                                BridgeExposureFilter.fetchNearbyBridges(location.latitude, location.longitude, radiusMeters)
+                                BridgeExposureFilter.fetchNearbyBridges(applicationContext, location.latitude, location.longitude, radiusMeters)
                             }
                             bridges.forEach { bridge ->
                                 val dist = calculateDistance(location.latitude, location.longitude, bridge.centerLat, bridge.centerLon)
@@ -1282,7 +1285,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             out body; >; out skel qt;
         """.trimIndent()
 
-        val json     = OverpassHelper.queryWithRetry(overpassQuery) ?: throw Exception(getString(R.string.overpass_api_unreachable))
+        val json     = OverpassHelper.queryWithRetry(applicationContext, overpassQuery) ?: throw Exception(getString(R.string.overpass_api_unreachable))
         val elements = json.getJSONArray("elements")
         val pois     = mutableListOf<POI>()
 
@@ -1561,19 +1564,20 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         // Regex-Suche (~".*",i) in Overpass ist bei großem Radius EXTREM langsam.
         // Wir begrenzen den Radius hier auf max 10km für Overpass.
         val safeRadius = radius.coerceAtMost(10000)
+        val safeQuery = OverpassHelper.escapeForRegexLiteral(query)
         val overpassQuery = """
             [out:json][timeout:10];
             (
-              node["name"~"$query",i](around:$safeRadius,$lat,$lon);
-              node["brand"~"$query",i](around:$safeRadius,$lat,$lon);
+              node["name"~"$safeQuery",i](around:$safeRadius,$lat,$lon);
+              node["brand"~"$safeQuery",i](around:$safeRadius,$lat,$lon);
             );
             out center;
         """.trimIndent()
-        val url = "https://overpass-api.de/api/interpreter"
+        val url = OverpassHelper.withInterpreterPath(OverpassHelper.primaryServer(applicationContext))
         val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
         conn.requestMethod = "POST"
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-        conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+        conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
         conn.doOutput = true
         conn.connectTimeout = 8000; conn.readTimeout = 10000
         conn.outputStream.use { it.write("data=${URLEncoder.encode(overpassQuery, "UTF-8")}".toByteArray()) }
@@ -1594,9 +1598,10 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             "$baseUrl&lat=$lat&lon=$lon"
         }
 
+        AppNetwork.waitForNominatimSlot()
         val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
         conn.requestMethod = "GET"
-        conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
+        conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
         conn.connectTimeout = 8000; conn.readTimeout = 8000
 
         if (conn.responseCode != 200) return emptyList()
@@ -1999,14 +2004,14 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
 
     // ── C: Wetter-Fetch Funktion (neu, ans Ende der Klasse) ──────
     private fun fetchWeatherAtDestination(lat: Double, lon: Double): JSONObject {
-        val url = "https://api.open-meteo.com/v1/forecast?" +
-                "latitude=$lat&longitude=$lon" +
-                "&hourly=temperature_2m,relative_humidity_2m,precipitation_probability," +
-                "weather_code,wind_speed_10m,wind_gusts_10m" +
-                "&daily=sunrise,sunset" +
-                "&forecast_days=2" +
-                "&timezone=auto"
-        return JSONObject(URL(url).readText())
+        return WeatherProvider.fetchForecast(
+            applicationContext, lat, lon,
+            "&hourly=temperature_2m,relative_humidity_2m,precipitation_probability," +
+                    "weather_code,wind_speed_10m,wind_gusts_10m" +
+                    "&daily=sunrise,sunset" +
+                    "&forecast_days=2" +
+                    "&timezone=auto"
+        )
     }
 
     // ── D: Wetter-Card befüllen (neu, ans Ende der Klasse) ───────
@@ -2196,7 +2201,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         out center 1;
     """.trimIndent()
 
-        val json     = OverpassHelper.queryWithRetry(query) ?: return null
+        val json     = OverpassHelper.queryWithRetry(applicationContext, query) ?: return null
         val elements = json.getJSONArray("elements")
         if (elements.length() == 0) return null
 
@@ -2367,7 +2372,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         out center;
     """.trimIndent()
 
-        val json     = OverpassHelper.queryWithRetry(query) ?: return emptyList()
+        val json     = OverpassHelper.queryWithRetry(applicationContext, query) ?: return emptyList()
         val elements = json.getJSONArray("elements")
         val result   = mutableListOf<POI>()
         val seen     = mutableSetOf<String>()
@@ -2674,7 +2679,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
         conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
         conn.setRequestProperty("Accept",        "application/json, application/geo+json")
         conn.setRequestProperty("Authorization", apiKey)
-        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
         conn.connectTimeout = 15000; conn.readTimeout = 20000
         conn.doOutput = true
         conn.outputStream.use { it.write(bodyObj.toString().toByteArray(Charsets.UTF_8)) }

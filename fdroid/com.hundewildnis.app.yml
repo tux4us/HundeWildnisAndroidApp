@@ -1,0 +1,32 @@
+# ENTWURF für fdroiddata (metadata/com.hundewildnis.app.yml).
+# Nicht geprüft: Merge-Request erst stellen, wenn ein Release-Tag mit der freien Lizenz existiert
+# und der Build lokal mit "fdroid build" gelaufen ist.
+Categories:
+  - Sports & Health
+License: GPL-3.0-or-later
+AuthorName: HundeWildnisSchule Ulbricht
+WebSite: https://wildnislehrer.com/hundewildnisapp/
+SourceCode: https://github.com/tux4us/HundeWildnisAndroidApp
+IssueTracker: https://github.com/tux4us/HundeWildnisAndroidApp/issues
+
+# Zu klären mit den F-Droid-Betreuern (nicht selbst entscheiden):
+#  - NonFreeNet: Wetter kommt von Diensten, die nicht frei sind (OpenWeatherMap / Open-Meteo, jeweils mit
+#    Nutzerschlüssel bzw. Nutzer-Server, kein Standarddienst). Anti-Feature NonFreeNet vermutlich zu setzen.
+#  - Spendenlinks (Wero/PayPal o. ä.) in SupportActivity müssen im Metadatensatz stimmen.
+AntiFeatures: []
+
+RepoType: git
+Repo: https://github.com/tux4us/HundeWildnisAndroidApp.git
+
+Builds:
+  - versionName: '24.1'
+    versionCode: 131
+    commit: v24.1        # Tag mit freier Lizenz setzen
+    subdir: app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '24.1'
+CurrentVersionCode: 131

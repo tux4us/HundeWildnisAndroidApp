@@ -1,15 +1,7 @@
 package com.hundewildnis.app
 
 import android.content.Context
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.TextAlignment
-import com.itextpdf.layout.properties.UnitValue
+import android.graphics.Color
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -22,31 +14,26 @@ object SoundLevelPDFGenerator {
         val fileName = "Lautstaerketrainer_${dateFormat.format(Date(session.startTime))}.pdf"
         val pdfFile = File(context.cacheDir, fileName)
 
-        var document: Document? = null
-        var pdfDocument: PdfDocument? = null
+        val document = PdfDoc(FileOutputStream(pdfFile))
 
         try {
-            val writer = PdfWriter(FileOutputStream(pdfFile))
-            pdfDocument = PdfDocument(writer)
-            document = Document(pdfDocument)
-
-            val greenColor = DeviceRgb(45, 80, 22)
-            val grayColor = DeviceRgb(128, 128, 128)
+            val greenColor = Color.rgb(45, 80, 22)
+            val grayColor = Color.rgb(128, 128, 128)
 
             document.add(
-                Paragraph(context.getString(R.string.sound_level_pdf_title))
+                PdfParagraph(context.getString(R.string.sound_level_pdf_title))
                     .setFontSize(24f)
                     .setBold()
                     .setFontColor(greenColor)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             document.add(
-                Paragraph(context.getString(R.string.sound_level_pdf_date, dateStr))
+                PdfParagraph(context.getString(R.string.sound_level_pdf_date, dateStr))
                     .setFontSize(12f)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
@@ -61,7 +48,7 @@ object SoundLevelPDFGenerator {
             ))
 
             addSectionTitle(document, context.getString(R.string.sound_level_pdf_distribution), greenColor)
-            val table = Table(UnitValue.createPercentArray(floatArrayOf(45f, 20f, 20f, 15f)))
+            val table = PdfTable.percent(floatArrayOf(45f, 20f, 20f, 15f))
                 .useAllAvailableWidth()
                 .setMarginBottom(10f)
 
@@ -71,7 +58,7 @@ object SoundLevelPDFGenerator {
                 context.getString(R.string.sound_level_pdf_column_data_points),
                 context.getString(R.string.sound_level_pdf_column_share)
             ).forEach { header ->
-                table.addCell(Cell().add(Paragraph(header).setBold()).setPadding(5f))
+                table.addCell(PdfCell().add(PdfParagraph(header).setBold()).setPadding(5f))
             }
 
             listOf(
@@ -80,15 +67,15 @@ object SoundLevelPDFGenerator {
                 SpeechLevel.A3_ANGEHOBEN to session.countA3,
                 SpeechLevel.A4_SCHARF to session.countA4
             ).forEach { (level, count) ->
-                table.addCell(Paragraph(level.label(context)).setPadding(5f))
-                table.addCell(Paragraph(level.rangeLabel).setPadding(5f))
-                table.addCell(Paragraph("$count").setPadding(5f))
-                table.addCell(Paragraph("${session.getPercentage(count)}%").setPadding(5f))
+                table.addCell(PdfParagraph(level.label(context)).setPadding(5f))
+                table.addCell(PdfParagraph(level.rangeLabel).setPadding(5f))
+                table.addCell(PdfParagraph("$count").setPadding(5f))
+                table.addCell(PdfParagraph("${session.getPercentage(count)}%").setPadding(5f))
             }
             document.add(table)
 
             document.add(
-                Paragraph(context.getString(R.string.sound_level_pdf_disclaimer))
+                PdfParagraph(context.getString(R.string.sound_level_pdf_disclaimer))
                     .setFontSize(9f)
                     .setFontColor(grayColor)
                     .setMarginTop(10f)
@@ -96,10 +83,10 @@ object SoundLevelPDFGenerator {
             )
 
             document.add(
-                Paragraph(context.getString(R.string.sound_level_pdf_footer))
+                PdfParagraph(context.getString(R.string.sound_level_pdf_footer))
                     .setFontSize(10f)
                     .setFontColor(grayColor)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginTop(30f)
             )
 
@@ -107,16 +94,15 @@ object SoundLevelPDFGenerator {
             e.printStackTrace()
             throw e
         } finally {
-            try { document?.close() } catch (e: Exception) { e.printStackTrace() }
-            try { pdfDocument?.close() } catch (e: Exception) { e.printStackTrace() }
+            try { document.close() } catch (e: Exception) { e.printStackTrace() }
         }
 
         return pdfFile
     }
 
-    private fun addSectionTitle(document: Document, title: String, color: DeviceRgb) {
+    private fun addSectionTitle(document: PdfDoc, title: String, color: Int) {
         document.add(
-            Paragraph(title)
+            PdfParagraph(title)
                 .setFontSize(14f)
                 .setBold()
                 .setFontColor(color)
@@ -125,14 +111,14 @@ object SoundLevelPDFGenerator {
         )
     }
 
-    private fun addDataTable(document: Document, data: List<Pair<String, String>>) {
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(35f, 65f)))
+    private fun addDataTable(document: PdfDoc, data: List<Pair<String, String>>) {
+        val table = PdfTable.percent(floatArrayOf(35f, 65f))
             .useAllAvailableWidth()
             .setMarginBottom(10f)
 
         data.forEach { (label, value) ->
-            table.addCell(Cell().add(Paragraph(label).setBold()).setPadding(5f))
-            table.addCell(Cell().add(Paragraph(value)).setPadding(5f))
+            table.addCell(PdfCell().add(PdfParagraph(label).setBold()).setPadding(5f))
+            table.addCell(PdfCell().add(PdfParagraph(value)).setPadding(5f))
         }
         document.add(table)
     }

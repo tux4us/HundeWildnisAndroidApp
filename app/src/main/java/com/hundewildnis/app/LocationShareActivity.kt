@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.graphics.DashPathEffect
 import org.json.JSONArray
 import org.json.JSONObject
+import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Polyline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -121,12 +122,14 @@ class LocationShareActivity : SecureBaseActivity() {
     // ── Karte ──────────────────────────────────────────────────────────────
 
     private fun setupMap() {
-        OsmConfig.getInstance().userAgentValue = packageName
+        OsmConfig.getInstance().userAgentValue = AppNetwork.USER_AGENT
         binding.mapView.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(13.0)
             controller.setCenter(GeoPoint(51.0, 13.0))
+            // Quellenangabe laut OSM-Richtlinie („© OpenStreetMap contributors“)
+            overlays.add(CopyrightOverlay(this@LocationShareActivity))
         }
 
         val provider = GpsMyLocationProvider(this).apply {
@@ -689,7 +692,7 @@ class LocationShareActivity : SecureBaseActivity() {
         conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
         conn.setRequestProperty("Accept",        "application/json, application/geo+json")
         conn.setRequestProperty("Authorization", apiKey)
-        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/13.4")
+        conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
         conn.connectTimeout = 15_000
         conn.readTimeout    = 20_000
         conn.doOutput = true

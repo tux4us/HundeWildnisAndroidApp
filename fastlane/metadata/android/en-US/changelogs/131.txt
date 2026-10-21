@@ -1,0 +1,5 @@
+• Free license (GPL-3.0-or-later), prepared for F-Droid
+• PDF export without a third-party library
+• Rain radar removed
+• Weather and Overpass servers can be changed in the settings
+• Map section in the scent-work PDF rendered from the visible map

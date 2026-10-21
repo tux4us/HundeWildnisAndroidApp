@@ -3,21 +3,10 @@ package com.hundewildnis.app
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
-import com.itextpdf.io.image.ImageDataFactory
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.borders.Border
-import com.itextpdf.layout.borders.SolidBorder
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Image
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.UnitValue
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
@@ -66,8 +55,8 @@ internal object TimelineExportSupport {
         e.plain.ifEmpty { stripSymbols(e.subtitle) }.replace("\n", " | ")
 
     /**
-     * Entfernt Emoji und Symbolzeichen. Die Standardschrift im PDF (Helvetica) kann sie nicht
-     * darstellen; sie würden als Lücken erscheinen.
+     * Entfernt Emoji und Symbolzeichen. Die PDF-Ausgabe nutzt die Systemschrift, die nicht alle
+     * Symbole enthält; sie würden als Lücken erscheinen.
      */
     fun stripSymbols(s: String): String {
         val sb = StringBuilder()
@@ -156,10 +145,10 @@ object TimelineCsvExporter {
 
 object TimelinePdfExporter {
 
-    private val GREEN = DeviceRgb(45, 80, 22)
-    private val GRAY = DeviceRgb(100, 100, 100)
-    private val MONTH_BG = DeviceRgb(236, 240, 232)
-    private val LINE = DeviceRgb(210, 210, 210)
+    private val GREEN = Color.rgb(45, 80, 22)
+    private val GRAY = Color.rgb(100, 100, 100)
+    private val MONTH_BG = Color.rgb(236, 240, 232)
+    private val LINE = Color.rgb(210, 210, 210)
 
     private const val PHOTO_MAX_PX = 480
     private const val PHOTO_BOX_PT = 150f
@@ -174,7 +163,7 @@ object TimelinePdfExporter {
         filterText: String
     ): File {
         val file = File(TimelineExportSupport.exportDir(context), TimelineExportSupport.fileName(profile, "pdf"))
-        val doc = Document(PdfDocument(PdfWriter(file)))
+        val doc = PdfDoc(file)
         try {
             doc.setMargins(36f, 36f, 36f, 36f)
             writeHeader(context, doc, profile, events.size, filterText)
@@ -188,28 +177,28 @@ object TimelinePdfExporter {
 
     private fun clean(s: String) = TimelineExportSupport.stripSymbols(s)
 
-    private fun writeHeader(context: Context, doc: Document, profile: DogProfile, count: Int, filterText: String) {
+    private fun writeHeader(context: Context, doc: PdfDoc, profile: DogProfile, count: Int, filterText: String) {
         doc.add(
-            Paragraph(clean(context.getString(R.string.timeline_pdf_title_format, profile.name)))
+            PdfParagraph(clean(context.getString(R.string.timeline_pdf_title_format, profile.name)))
                 .setBold().setFontSize(18f).setFontColor(GREEN)
         )
         val subtitle = listOf(profile.breed).filter { it.isNotBlank() }.joinToString(" · ")
-        if (subtitle.isNotEmpty()) doc.add(Paragraph(clean(subtitle)).setFontSize(11f).setFontColor(GRAY))
+        if (subtitle.isNotEmpty()) doc.add(PdfParagraph(clean(subtitle)).setFontSize(11f).setFontColor(GRAY))
 
         TogetherMath.compute(profile)?.let { info ->
             val display = TogetherFormatter.format(context, info)
-            doc.add(Paragraph(clean("${display.sinceLine} – ${display.headline}")).setFontSize(10f).setFontColor(GRAY))
+            doc.add(PdfParagraph(clean("${display.sinceLine} – ${display.headline}")).setFontSize(10f).setFontColor(GRAY))
         }
 
-        doc.add(Paragraph(clean(filterText)).setFontSize(10f).setFontColor(GRAY))
+        doc.add(PdfParagraph(clean(filterText)).setFontSize(10f).setFontColor(GRAY))
         doc.add(
-            Paragraph(context.getString(R.string.timeline_pdf_entries_format, count))
+            PdfParagraph(context.getString(R.string.timeline_pdf_entries_format, count))
                 .setFontSize(10f).setFontColor(GRAY).setMarginBottom(10f)
         )
     }
 
-    private fun writeTable(context: Context, doc: Document, profile: DogProfile, events: List<TimelineEvent>) {
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(1.5f, 1.6f, 6f))).useAllAvailableWidth()
+    private fun writeTable(context: Context, doc: PdfDoc, profile: DogProfile, events: List<TimelineEvent>) {
+        val table = PdfTable.percent(floatArrayOf(1.5f, 1.6f, 6f)).useAllAvailableWidth()
         table.addHeaderCell(headerCell(context.getString(R.string.timeline_pdf_col_date)))
         table.addHeaderCell(headerCell(context.getString(R.string.timeline_pdf_col_category)))
         table.addHeaderCell(headerCell(context.getString(R.string.timeline_pdf_col_entry)))
@@ -226,8 +215,8 @@ object TimelinePdfExporter {
                 val label = monthFormat.format(Date(e.timestamp))
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
                 table.addCell(
-                    Cell(1, 3).add(Paragraph(label).setBold().setFontSize(11f).setFontColor(GREEN))
-                        .setBackgroundColor(MONTH_BG).setBorder(Border.NO_BORDER).setPaddingTop(6f)
+                    PdfCell(1, 3).add(PdfParagraph(label).setBold().setFontSize(11f).setFontColor(GREEN))
+                        .setBackgroundColor(MONTH_BG).setBorder(PdfBorder.NONE).setPaddingTop(6f)
                 )
                 lastKey = key
             }
@@ -235,15 +224,15 @@ object TimelinePdfExporter {
             val dateLine = TimelineExportSupport.timeText(e).let { time ->
                 if (time.isEmpty()) TimelineExportSupport.dateText(e) else "${TimelineExportSupport.dateText(e)}\n$time"
             }
-            table.addCell(bodyCell(Paragraph(dateLine).setFontSize(9f)))
-            table.addCell(bodyCell(Paragraph(e.category.label(context)).setFontSize(9f).setFontColor(GRAY)))
+            table.addCell(bodyCell(PdfParagraph(dateLine).setFontSize(9f)))
+            table.addCell(bodyCell(PdfParagraph(e.category.label(context)).setFontSize(9f).setFontColor(GRAY)))
             table.addCell(entryCell(context, profile, e))
         }
         doc.add(table)
     }
 
-    private fun entryCell(context: Context, profile: DogProfile, e: TimelineEvent): Cell {
-        val cell = bodyCell(Paragraph(clean(e.title)).setBold().setFontSize(10f))
+    private fun entryCell(context: Context, profile: DogProfile, e: TimelineEvent): PdfCell {
+        val cell = bodyCell(PdfParagraph(clean(e.title)).setBold().setFontSize(10f))
         val entry = TimelineExportSupport.userEntry(profile, e)
 
         if (entry != null) {
@@ -251,33 +240,33 @@ object TimelinePdfExporter {
                 TimelineEntryKind.label(context, TimelineEntryKind.normalize(entry.kind)),
                 entry.place
             ).filter { it.isNotBlank() }.joinToString(" · ")
-            if (meta.isNotEmpty()) cell.add(Paragraph(clean(meta)).setFontSize(9f).setFontColor(GRAY))
-            if (entry.note.isNotBlank()) cell.add(Paragraph(clean(entry.note)).setFontSize(9.5f))
+            if (meta.isNotEmpty()) cell.add(PdfParagraph(clean(meta)).setFontSize(9f).setFontColor(GRAY))
+            if (entry.note.isNotBlank()) cell.add(PdfParagraph(clean(entry.note)).setFontSize(9.5f))
             photoImage(context, entry.photoUri)?.let { cell.add(it) }
         } else {
             val detail = TimelineExportSupport.plainDetail(e)
-            if (detail.isNotBlank()) cell.add(Paragraph(clean(detail)).setFontSize(9f).setFontColor(GRAY))
+            if (detail.isNotBlank()) cell.add(PdfParagraph(clean(detail)).setFontSize(9f).setFontColor(GRAY))
         }
         if (GeoCoordinates.isValid(e.lat, e.lon)) {
             cell.add(
-                Paragraph(context.getString(R.string.timeline_pdf_location_format, GeoCoordinates.format(e.lat!!, e.lon!!)))
+                PdfParagraph(context.getString(R.string.timeline_pdf_location_format, GeoCoordinates.format(e.lat!!, e.lon!!)))
                     .setFontSize(8.5f).setFontColor(GRAY)
             )
         }
         return cell
     }
 
-    private fun bodyCell(p: Paragraph): Cell =
-        Cell().add(p).setBorder(Border.NO_BORDER).setBorderBottom(SolidBorder(LINE, 0.5f)).setPaddingTop(4f).setPaddingBottom(4f)
+    private fun bodyCell(p: PdfParagraph): PdfCell =
+        PdfCell().add(p).setBorder(PdfBorder.NONE).setBorderBottom(PdfBorder(LINE, 0.5f)).setPaddingTop(4f).setPaddingBottom(4f)
 
-    private fun headerCell(text: String): Cell =
-        Cell().add(Paragraph(text).setBold().setFontSize(9f).setFontColor(GREEN))
-            .setBorder(Border.NO_BORDER).setBorderBottom(SolidBorder(GREEN, 1f))
+    private fun headerCell(text: String): PdfCell =
+        PdfCell().add(PdfParagraph(text).setBold().setFontSize(9f).setFontColor(GREEN))
+            .setBorder(PdfBorder.NONE).setBorderBottom(PdfBorder(GREEN, 1f))
 
-    private fun writeFooter(context: Context, doc: Document) {
+    private fun writeFooter(context: Context, doc: PdfDoc) {
         val created = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.ROOT).format(Date())
         doc.add(
-            Paragraph(context.getString(R.string.timeline_pdf_created_format, created))
+            PdfParagraph(context.getString(R.string.timeline_pdf_created_format, created))
                 .setFontSize(8f).setFontColor(GRAY).setMarginTop(12f)
         )
     }
@@ -287,7 +276,7 @@ object TimelinePdfExporter {
      * unverändert kopiert werden (BitmapFactory ignoriert EXIF). Bei einem Fehler oder
      * fehlender Datei wird kein Bild eingefügt.
      */
-    private fun photoImage(context: Context, uriString: String): Image? {
+    private fun photoImage(context: Context, uriString: String): PdfImage? {
         if (uriString.isBlank()) return null
         return try {
             val uri = Uri.parse(uriString)
@@ -324,7 +313,7 @@ object TimelinePdfExporter {
 
             val bytes = ByteArrayOutputStream().also { bitmap.compress(Bitmap.CompressFormat.JPEG, 80, it) }.toByteArray()
             bitmap.recycle()
-            Image(ImageDataFactory.create(bytes)).scaleToFit(PHOTO_BOX_PT, PHOTO_BOX_PT).setMarginTop(4f)
+            PdfImage(bytes).scaleToFit(PHOTO_BOX_PT, PHOTO_BOX_PT).setMarginTop(4f)
         } catch (e: Exception) {
             e.printStackTrace()
             null

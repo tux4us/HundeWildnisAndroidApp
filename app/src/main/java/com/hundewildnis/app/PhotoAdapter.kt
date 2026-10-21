@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
+import coil.size.Scale
 
 /**
  * PhotoAdapter - Zeigt Foto-Vorschau mit Löschen-Button
@@ -31,14 +32,13 @@ class PhotoAdapter(
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photoUri = photos[position]
         
-        // Foto laden mit Glide
+        // Foto laden mit Coil (Zuschnitt wie bisher: centerCrop)
         try {
-            Glide.with(holder.itemView.context)
-                .load(photoUri)
-                .placeholder(R.drawable.ic_placeholder_image)
-                .error(R.drawable.ic_error_image)
-                .centerCrop()
-                .into(holder.imageView)
+            holder.imageView.load(photoUri) {
+                placeholder(R.drawable.ic_placeholder_image)
+                error(R.drawable.ic_error_image)
+                scale(Scale.FILL)
+            }
         } catch (e: Exception) {
             // Fallback: Direkt setzen
             holder.imageView.setImageResource(R.drawable.ic_error_image)

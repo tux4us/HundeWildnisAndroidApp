@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.config.Configuration as OsmConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -92,6 +93,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         const val RESULT_TOPO         = "result_topo"        // ArrayList<String>
         const val RESULT_SEGMENT_VALUES = "result_segment_values" // DoubleArray
         const val RESULT_WEIGHTS      = "result_weights"     // DoubleArray
+        const val RESULT_MAP_SNAPSHOT = "result_map_snapshot" // String (Dateipfad, PNG der sichtbaren Karte)
         const val RC_MAP              = 4200
         private const val REQ_LOCATION = 4201
     }
@@ -102,7 +104,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        OsmConfig.getInstance().userAgentValue = packageName
+        OsmConfig.getInstance().userAgentValue = AppNetwork.USER_AGENT
         binding = ActivityNasenarbeitMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -131,6 +133,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
         binding.mapView.controller.setZoom(17.0)
+        // Quellenangabe laut OSM-Richtlinie („© OpenStreetMap contributors“), erscheint auch im PDF-Ausschnitt
+        binding.mapView.overlays.add(CopyrightOverlay(this))
 
         val scaleBar = ScaleBarOverlay(binding.mapView).apply {
             setCentred(false); setAlignBottom(true)
@@ -347,7 +351,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
         conn.setRequestProperty("Accept",        "application/json, application/geo+json")
         conn.setRequestProperty("Authorization", AppSettings(this).getOrsApiKey())
-        conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+        conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
         conn.connectTimeout = 15000
         conn.readTimeout    = 20000
         conn.doOutput = true
@@ -392,7 +396,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             conn.setRequestProperty("Content-Type",  "application/json; charset=utf-8")
             conn.setRequestProperty("Accept",        "application/json, application/geo+json")
             conn.setRequestProperty("Authorization", AppSettings(this).getOrsApiKey())
-            conn.setRequestProperty("User-Agent",    "HundeWildnisApp/9.7")
+            conn.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
             conn.connectTimeout = 15000
             conn.readTimeout    = 20000
             conn.doOutput = true
@@ -666,7 +670,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             out tags;
         """.trimIndent()
 
-        val json = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return Triple(emptyList(), emptyList(), emptyList())
+        val json = OverpassHelper.queryWithRetry(applicationContext, query, maxRetries = 1) ?: return Triple(emptyList(), emptyList(), emptyList())
         val elements = json.getJSONArray("elements")
 
         val landuseCounts  = mutableMapOf<String, Int>()
@@ -891,6 +895,8 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
             putStringArrayListExtra(RESULT_TOPO,     ArrayList(detectedTopo))
             putExtra(RESULT_SEGMENT_VALUES, segmentValues.toDoubleArray())
             putExtra(RESULT_WEIGHTS, detectedWeights.toDoubleArray())
+            // Ausschnitt der sichtbaren Karte für den PDF-Export (keine zusätzlichen Kachelabrufe)
+            NasenarbeitMapSnapshot.capture(this@NasenarbeitMapActivity, binding.mapView)?.let { putExtra(RESULT_MAP_SNAPSHOT, it) }
         }
         setResult(RESULT_OK, data)
         finish()
@@ -1035,20 +1041,11 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
 
         val latStr = samples.joinToString(",") { String.format(java.util.Locale.US, "%.6f", it.latitude)  }
         val lonStr = samples.joinToString(",") { String.format(java.util.Locale.US, "%.6f", it.longitude) }
-        val url    = "https://api.open-meteo.com/v1/elevation?latitude=$latStr&longitude=$lonStr"
 
         return try {
-            val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
-            conn.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
-            conn.connectTimeout = 10000
-            conn.readTimeout    = 12000
-
-            if (conn.responseCode != 200) {
-                android.util.Log.e("NasenarbeitMap", "Elevation API ${conn.responseCode}")
-                return segs.map { "Eben" }  // Fallback
-            }
-
-            val json       = org.json.JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
+            // Höhendaten gibt es nur bei Open-Meteo mit eingetragener Serveradresse; sonst Fallback.
+            val json = WeatherProvider.fetchElevation(applicationContext, latStr, lonStr)
+                ?: return segs.map { "Eben" }  // Fallback ohne Höhendaten
             val elevArr    = json.getJSONArray("elevation")
             val elevations = (0 until elevArr.length()).map { elevArr.getDouble(it) }
 
@@ -1154,7 +1151,7 @@ class NasenarbeitMapActivity : SecureBaseActivity(), LocationListener {
         """.trimIndent()
 
         return try {
-            val json     = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return emptyList()
+            val json     = OverpassHelper.queryWithRetry(applicationContext, query, maxRetries = 1) ?: return emptyList()
             val elements = json.getJSONArray("elements")
             val features = mutableListOf<String>()
             for (i in 0 until elements.length()) {

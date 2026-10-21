@@ -317,7 +317,7 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
                 }
                 displayForecast(json)
             } catch (e: Exception) {
-                Toast.makeText(this@ThunderstormWarningActivity, getString(R.string.start_error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ThunderstormWarningActivity, WeatherProvider.describeError(applicationContext, e), Toast.LENGTH_LONG).show()
             } finally {
                 binding.forecastProgressBar.visibility = View.GONE
             }
@@ -348,17 +348,16 @@ class ThunderstormWarningActivity : SecureBaseActivity() {
      * Zugrichtung eines Gewitters anzuzeigen (Richtung, aus der der Wind weht).
      */
     private fun fetchThunderstormForecast(latitude: Double, longitude: Double): JSONObject {
-        val url = "https://api.open-meteo.com/v1/forecast?" +
-                "latitude=$latitude&longitude=$longitude" +
-                "&hourly=cape,precipitation_probability,weather_code,wind_direction_10m" +
-                "&forecast_hours=12" +
-                "&timezone=auto"
-        val connection = URL(url).openConnection() as HttpURLConnection
-        connection.connectTimeout = 15000
-        connection.readTimeout = 20000
-        connection.setRequestProperty("User-Agent", "HundeWildnisApp/9.7")
-        val response = connection.inputStream.bufferedReader().use { it.readText() }
-        return JSONObject(response)
+        // CAPE liefert nur Open-Meteo; andere Anbieter können die Gewittervorhersage nicht berechnen.
+        if (WeatherProvider.isConfigured(applicationContext) && !WeatherProvider.capabilities(applicationContext).cape) {
+            throw WeatherProviderException(WeatherProviderException.Kind.UNSUPPORTED)
+        }
+        return WeatherProvider.fetchForecast(
+            applicationContext, latitude, longitude,
+            "&hourly=cape,precipitation_probability,weather_code,wind_direction_10m" +
+                    "&forecast_hours=12" +
+                    "&timezone=auto"
+        )
     }
 
     /**

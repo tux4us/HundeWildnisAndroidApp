@@ -244,6 +244,9 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
                     val url = URL("https://api.brightsky.dev/current_weather?lat=$lat&lon=$lon")
                     val connection = url.openConnection() as HttpURLConnection
                     connection.requestMethod = "GET"
+                    AppNetwork.applyUserAgent(connection)
+                    connection.connectTimeout = 10000
+                    connection.readTimeout = 15000
                     connection.connect()
 
                     if (connection.responseCode == 200) {

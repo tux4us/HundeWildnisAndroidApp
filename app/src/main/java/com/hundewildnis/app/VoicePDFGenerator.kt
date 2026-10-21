@@ -2,16 +2,7 @@ package com.hundewildnis.app
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.itextpdf.io.image.ImageDataFactory
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.Image
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.TextAlignment
-import com.itextpdf.layout.properties.UnitValue
+import android.graphics.Color
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -29,33 +20,28 @@ object VoicePDFGenerator {
         val fileName = "Kommunikation_${dateFormat.format(Date(session.startTime))}.pdf"
         val pdfFile = File(context.cacheDir, fileName)
 
-        var document: Document? = null
-        var pdfDocument: PdfDocument? = null
+        val document = PdfDoc(FileOutputStream(pdfFile))
 
         try {
-            val writer = PdfWriter(FileOutputStream(pdfFile))
-            pdfDocument = PdfDocument(writer)
-            document = Document(pdfDocument)
-
-            val greenColor = DeviceRgb(45, 80, 22)
-            val grayColor = DeviceRgb(128, 128, 128)
+            val greenColor = Color.rgb(45, 80, 22)
+            val grayColor = Color.rgb(128, 128, 128)
 
             // Titel
             document.add(
-                Paragraph("KOMMUNIKATIONS-ANALYSE")
+                PdfParagraph("KOMMUNIKATIONS-ANALYSE")
                     .setFontSize(24f)
                     .setBold()
                     .setFontColor(greenColor)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
             // Datum
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             document.add(
-                Paragraph("Datum: $dateStr")
+                PdfParagraph("Datum: $dateStr")
                     .setFontSize(12f)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
@@ -90,15 +76,15 @@ object VoicePDFGenerator {
             // TREFFER & VERWEILDAUER
             addSectionTitle(document, "TREFFER & VERWEILDAUER", greenColor)
 
-            val table = Table(UnitValue.createPercentArray(floatArrayOf(30f, 25f, 25f, 20f)))
+            val table = PdfTable.percent(floatArrayOf(30f, 25f, 25f, 20f))
                 .useAllAvailableWidth()
                 .setMarginBottom(10f)
 
             // Header
             listOf("Frequenz", "Treffer", "Verweildauer", "Anteil").forEach { header ->
                 table.addCell(
-                    com.itextpdf.layout.element.Cell()
-                        .add(Paragraph(header).setBold())
+                    PdfCell()
+                        .add(PdfParagraph(header).setBold())
                         .setPadding(5f)
                 )
             }
@@ -116,10 +102,10 @@ object VoicePDFGenerator {
                     (time.toFloat() / session.voiceDuration.toFloat() * 100f).toInt()
                 } else 0
 
-                table.addCell(Paragraph(freq).setPadding(5f))
-                table.addCell(Paragraph("${hits}×").setPadding(5f))
-                table.addCell(Paragraph(formatDuration(timeSeconds)).setPadding(5f))
-                table.addCell(Paragraph("$percentage%").setPadding(5f))
+                table.addCell(PdfParagraph(freq).setPadding(5f))
+                table.addCell(PdfParagraph("${hits}×").setPadding(5f))
+                table.addCell(PdfParagraph(formatDuration(timeSeconds)).setPadding(5f))
+                table.addCell(PdfParagraph("$percentage%").setPadding(5f))
             }
 
             document.add(table)
@@ -130,19 +116,19 @@ object VoicePDFGenerator {
 
                 val chartBytes = ByteArrayOutputStream()
                 chartBitmap.compress(Bitmap.CompressFormat.PNG, 100, chartBytes)
-                val chartImage = Image(ImageDataFactory.create(chartBytes.toByteArray()))
+                val chartImage = PdfImage(chartBytes.toByteArray())
                     .setWidth(495f)
-                    .setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER)
+                    .setHorizontalAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
                 document.add(chartImage)
             }
 
             // Footer
             document.add(
-                Paragraph("Erstellt mit HundeWildnis App von www.wildnislehrer.de")
+                PdfParagraph("Erstellt mit HundeWildnis App von www.wildnislehrer.de")
                     .setFontSize(10f)
                     .setFontColor(grayColor)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginTop(30f)
             )
 
@@ -151,13 +137,7 @@ object VoicePDFGenerator {
             throw e
         } finally {
             try {
-                document?.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            try {
-                pdfDocument?.close()
+                document.close()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -166,8 +146,8 @@ object VoicePDFGenerator {
         return pdfFile
     }
 
-    private fun addSectionTitle(document: Document, title: String, color: DeviceRgb) {
-        val paragraph = Paragraph(title)
+    private fun addSectionTitle(document: PdfDoc, title: String, color: Int) {
+        val paragraph = PdfParagraph(title)
             .setFontSize(14f)
             .setBold()
             .setFontColor(color)
@@ -176,20 +156,20 @@ object VoicePDFGenerator {
         document.add(paragraph)
     }
 
-    private fun addDataTable(document: Document, data: List<Pair<String, String>>) {
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(35f, 65f)))
+    private fun addDataTable(document: PdfDoc, data: List<Pair<String, String>>) {
+        val table = PdfTable.percent(floatArrayOf(35f, 65f))
             .useAllAvailableWidth()
             .setMarginBottom(10f)
 
         data.forEach { (label, value) ->
             table.addCell(
-                com.itextpdf.layout.element.Cell()
-                    .add(Paragraph(label).setBold())
+                PdfCell()
+                    .add(PdfParagraph(label).setBold())
                     .setPadding(5f)
             )
             table.addCell(
-                com.itextpdf.layout.element.Cell()
-                    .add(Paragraph(value))
+                PdfCell()
+                    .add(PdfParagraph(value))
                     .setPadding(5f)
             )
         }

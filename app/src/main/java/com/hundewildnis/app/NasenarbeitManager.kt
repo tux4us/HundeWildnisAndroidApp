@@ -49,6 +49,7 @@ object NasenarbeitManager {
         // dogId VOR dem Filtern ermitteln - danach ist die Session nicht mehr auffindbar
         val dogId = allSessions.find { it.id == sessionId }?.dogId
         saveSessions(context, allSessions.filter { it.id != sessionId }.toMutableList())
+        NasenarbeitMapSnapshot.delete(context, sessionId)
         // Recalculate fortschritt for affected dog
         if (dogId != null) recalcFortschritt(context, dogId)
     }

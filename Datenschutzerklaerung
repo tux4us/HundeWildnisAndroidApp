@@ -156,45 +156,53 @@ Datenschutzerklärung: https://osmfoundation.org/wiki/Privacy_Policy
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der Kartenfunktion)
 
-3.5 Open-Meteo (Wetterdaten)
+3.5 Wetterdaten (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang)
 
-Die App verwendet Ihren Standort, um aktuelle Wetterdaten anzuzeigen.
+Die App ruft Wetterdaten erst ab, wenn Sie in den Einstellungen (Dienste & Server) einen Wetteranbieter gewählt und Ihren eigenen Zugang eingetragen haben: entweder einen Schlüssel von OpenWeatherMap oder die Serveradresse (und ggf. den Schlüssel) Ihres Open-Meteo-Zugangs bzw. eigenen Servers. Ohne Auswahl und Zugang werden keine Wetterdaten abgerufen und es werden keine Daten an Wetteranbieter gesendet.
 
 Übertragene Daten:
 - Standortkoordinaten (Breiten- und Längengrad)
 - IP-Adresse (technisch erforderlich)
+- Ihr Zugangsschlüssel (wird verschlüsselt auf Ihrem Gerät gespeichert und dem Anbieter bei jeder Anfrage übermittelt)
 
-Zweck: Abruf von Wetterdaten für Ihren aktuellen Standort
+Zweck: Abruf von Wetterdaten für Ihren Standort bzw. einen von Ihnen gewählten Ort
 
 Verschlüsselung: HTTPS (verschlüsselt)
 
-Speicherung: Open-Meteo speichert keine personenbezogenen Daten. Die Anfragen sind anonym.
+Freiwilligkeit: Die Wetterfunktion und die Standortfreigabe sind optional. Sie können die Berechtigung jederzeit in den Android-Einstellungen widerrufen und den Wetteranbieter in den Einstellungen abwählen.
 
-Freiwilligkeit: Die Standortfreigabe ist optional. Sie können die Berechtigung jederzeit in den Android-Einstellungen widerrufen.
+Anbieter: Es gelten die Datenschutzbestimmungen und Nutzungsbedingungen des von Ihnen gewählten Anbieters. Sie schließen den Vertrag über den Zugang selbst mit dem Anbieter.
+- OpenWeatherMap / OpenWeather Ltd.: https://openweather.co.uk/privacy-policy
+- Open-Meteo: https://open-meteo.com/en/terms
 
-Anbieter: Open-Meteo (https://open-meteo.com)
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auswahl des Anbieters, Eintrag des Zugangs und Standortfreigabe)
 
-Datenschutzerklärung: https://open-meteo.com/en/terms
+3.6 Weitere Kartendienste und Wetterquellen (Nominatim, Overpass, OpenRouteService, Bright Sky)
 
-DSGVO-Konformität: ✅ Open-Meteo ist DSGVO-konform, keine Registrierung erforderlich, anonyme Nutzung
+Auf Ihre Aktion hin (Ortssuche, Orte in der Nähe, Routenberechnung, Höhenmesser) ruft die App Daten bei folgenden Diensten ab:
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Standortfreigabe)
-
-3.6 RainViewer (Niederschlagsradar)
+- Nominatim (OpenStreetMap Foundation): Ortssuche und Ortsnamen zu Koordinaten
+- Overpass API (öffentliche Server, z. B. overpass-api.de; auf Wunsch ein von Ihnen eingetragener Server): Umgebungsdaten und Orte in der Nähe
+- OpenRouteService (HeiGIT gGmbH): Routenberechnung mit Ihrem eigenen Zugangsschlüssel
+- Bright Sky (Daten des Deutschen Wetterdienstes): Luftdruck-Referenzwert für den Höhenmesser
 
 Übertragene Daten:
+- Suchbegriff bzw. Koordinaten (Breiten- und Längengrad) oder Kartenbereich
 - IP-Adresse (technisch erforderlich)
-- Kartenbereich (geografische Koordinaten)
+- bei OpenRouteService zusätzlich Ihr Zugangsschlüssel
 
-Zweck: Anzeige von Niederschlagsradar-Daten
+Zweck: Bereitstellung der jeweils ausgelösten Funktion
 
 Verschlüsselung: HTTPS (verschlüsselt)
 
-Anbieter: RainViewer
+Eigene Server: In den Einstellungen (Dienste & Server) können Sie die Adresse für Overpass ändern. Wetteranbieter und Zugang legen Sie dort ebenfalls selbst fest (siehe 3.5). Schlüssel werden verschlüsselt auf Ihrem Gerät gespeichert.
 
-Datenschutzerklärung: https://www.rainviewer.com/privacy-policy.html
+Datenschutzerklärungen:
+- OpenStreetMap Foundation (Nominatim, Overpass): https://osmfoundation.org/wiki/Privacy_Policy
+- HeiGIT / OpenRouteService: https://openrouteservice.org/privacy-policy/
+- Bright Sky: https://brightsky.dev/
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auslösen der Funktion und Standortfreigabe)
 
 3.7 Signal Messenger (Support-Gruppe)
 
@@ -238,8 +246,10 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
 | YouTube Data API | Video-Liste | IP, API-Request | ✅ HTTPS |
 | Twitter/X | Link zu Profil | IP, Geräteinfo | ✅ HTTPS |
 | OpenStreetMap | Karten anzeigen | IP, Kartenbereich | ✅ HTTPS |
-| Open-Meteo | Wetterdaten | IP, Standort | ✅ HTTPS |
-| RainViewer | Niederschlagsradar | IP, Kartenbereich | ✅ HTTPS |
+| Wetteranbieter nach Ihrer Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang) | Wetterdaten | IP, Standort, Zugangsschlüssel | ✅ HTTPS |
+| Nominatim / Overpass | Ortssuche, Orte in der Nähe | IP, Suchbegriff, Koordinaten | ✅ HTTPS |
+| OpenRouteService | Routenberechnung | IP, Koordinaten, eigener Schlüssel | ✅ HTTPS |
+| Bright Sky (DWD) | Luftdruck-Referenz | IP, Koordinaten | ✅ HTTPS |
 | Signal Messenger | Support-Gruppe | Telefonnummer, Nachrichten | ✅ E2E-verschlüsselt |
 
 4. Datenschutzhinweise zur Nutzung der Webseite mittels auf Wunsch eingerichteten Nutzerkontos über die App HundeWildnis

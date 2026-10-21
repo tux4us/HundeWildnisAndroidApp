@@ -2519,7 +2519,7 @@
     <string name="instr_daily_notes_title">📝📸 Daily Notes</string>
     <string name="instr_daily_notes_desc">Document your training, your observations, and anything important with photos, text, and geodata.\n• Text field for the note title, \n• Text field for your notes. Optionally you can add \n• Weather data (automatically retrieved for your location) and \n• GPS coordinates (GPS data automatically retrieved). You can also attach \n• Photos from the gallery or via \n• Camera\n• Notes can be saved and shared as a \n• PDF file and \n• GPX file. \n• \'Save note\' also saves the current note in the history.</string>
     <string name="instr_weather_title">🌦📍 Dog Weather</string>
-    <string name="instr_weather_desc">Comprehensive weather report for your current location to plan your activities and support your training\n• Training weather index (with weather-dependent tips).\n• Daylight and twilight information (day length, dawn, sunrise, sunset, dusk, tips, calculation of the \'Golden Hour\' for great photos)\n• Daily minimum and maximum temperature\n• 24h temperature trend chart\n• Current data (feels-like temperature, humidity, wind, wind direction, wind strength, gusts, precipitation)\n• Further details (air pressure, visibility, UV index)\n• 24h hourly forecast including details\n• Precipitation radar for the last 6h including 1h forecast\n• All weather data from Open-Meteo (CC BY 4.0).</string>
+    <string name="instr_weather_desc">Comprehensive weather report for your current location to plan your activities and support your training\n• Training weather index (with weather-dependent tips).\n• Daylight and twilight information (day length, dawn, sunrise, sunset, dusk, tips, calculation of the \'Golden Hour\' for great photos)\n• Daily minimum and maximum temperature\n• 24h temperature trend chart\n• Current data (feels-like temperature, humidity, wind, wind direction, wind strength, gusts, precipitation)\n• Further details (air pressure, visibility, UV index)\n• 24h hourly forecast including details\n• All weather data from Open-Meteo (CC BY 4.0).</string>
     <string name="instr_navigation_title">🗺🛰 Area Navigation</string>
     <string name="instr_navigation_desc">Interactive map showing categories of hiking- and dog-relevant places via OpenStreetMap, plus routing. Interactive OSM map: uses free OpenStreetMap (Mapnik) material for a detailed view of the surroundings.\n• Location display: shows the current position on the map.\n• Real-time tracking: the map follows your movement in the terrain (updates every 5 meters or every 2 seconds).\n• Recenter on location: the \'📍 Location\' button lets you recenter the map on your current position at any time.\n• Coordinate display: the exact GPS data (latitude and longitude) is shown live.\n• Share location: your current position can be sent directly to other people or shared to other apps.\n• POI search (points of interest) with detailed info (if available in OpenStreetMap)\n Category grid for quickly selecting dog-specific places:\n• Dog exercise areas and dog parks\n• Vets and veterinary clinics\n• Pet supplies and animal shelters\n• Hiking trails and viewpoints\n• Drinking water and restrooms\n• Supermarkets, bakeries, and restaurants\n• Emergency services (pharmacy, police, fire department, doctors, hospitals)\n• Nature reserves and national parks\n• SOS points and much more\n• Radar search: automatically searches a 3 km radius for all entries of the selected category via the Overpass API.\n• Result preview: shows all found locations as markers on the map at once and zooms so that all destinations plus your own position are visible.\nSmart navigation (routing)\n• Clicking a place in the list or a marker on the map starts navigation.\n• Route calculation: the app uses professional routing services (OpenRouteService, Graphhopper, or OSRM) to calculate the best walking route.\n• Statistics: shows the exact distance and estimated walking time to the destination.\n• Live update: while walking, the route is continuously adjusted to your current position.\n• Straight-line fallback: if no footpath is known on the map, a dashed straight line to the destination is shown automatically.\nPOI details\n• Comprehensive info: if available in OSM, the app shows details such as address, phone number, website, opening hours, and access restrictions (e.g. leash requirement).\n• Direct actions: phone numbers and web links are clickable for immediate contact.\n• Local and free: no use of Google Maps. Your location is only sent anonymously to free map servers for the current search.\n• Two-click logic: first click on a marker shows info, second click starts navigation – for error-free operation.\n• Search field for text-based search</string>
     <string name="instr_compass_title">🧭🌐 Compass</string>
@@ -3631,9 +3631,6 @@ Illumination: ~%1$d%%</string>
     <string name="weather_azimuth_south_of_west">South of West</string>
     <string name="weather_sunrise_azimuth">🌅 Sunrise\n%1$s\n%2$s° %3$s</string>
     <string name="weather_sunset_azimuth">🌇 Sunset\n%1$s\n%2$s° %3$s</string>
-    <string name="weather_radar_loading">Loading radar…</string>
-    <string name="weather_radar_your_location">Your location</string>
-    <string name="weather_radar_unavailable">Radar unavailable</string>
     <string name="weather_search_no_results">No results found</string>
     <string name="weather_error_prefix">Error: %1$s</string>
     <string name="weather_daily_min_max_display">Min: %1$.1f°C • Max: %2$.1f°C</string>
@@ -3677,8 +3674,6 @@ Illumination: ~%1$d%%</string>
     <string name="weather_no_warning_badge">✅ No weather warning</string>
     <string name="weather_paw_index_title">🐾 Training Weather Index</string>
     <string name="weather_calculating_placeholder">Calculating...</string>
-    <string name="weather_radar_card_title">2h Precipitation Radar</string>
-    <string name="weather_radar_live_data_hint">📡 = Live data</string>
     <string name="weather_daylight_card_title">🌅 Daylight and Twilight</string>
     <string name="weather_daylight_duration_placeholder">☀️ Daylight: --h --m</string>
     <string name="weather_dawn_placeholder">🌄 Dawn: --:--</string>
@@ -3751,7 +3746,6 @@ Illumination: ~%1$d%%</string>
     <string name="weather_biowetter_calculating">● Calculating...</string>
     <string name="weather_biowetter_disclaimer">⚕️ Biometeorology is for general orientation only. Not a substitute for medical or veterinary advice.</string>
     <string name="weather_location_determining_placeholder">📍 Determining location...</string>
-    <string name="weather_data_source_footer">Data: © Open-Meteo (CC BY 4.0)</string>
     <string name="weather_uv_level_1_desc">UV Index %1$s – Low\nNo mandatory sun protection needed; recommended for longer periods outdoors.\n</string>
     <string name="weather_uv_level_2_desc">UV Index %1$s – Moderate\nSun protection recommended for longer periods outdoors.\n</string>
     <string name="weather_uv_level_3_desc">UV Index %1$s – High\nSun protection necessary. Avoid midday sun.\n</string>
@@ -4131,7 +4125,8 @@ GPS altitude only (inaccurate)</string>
     <string name="altimeter_location_permission_needed_status">❌ Location permission required</string>
     <string name="altimeter_location_permission_denied_toast">Location permission was denied</string>
     <string name="altimeter_qnh_updated_status">🌤️ Reference pressure (QNH) updated: %1$.1f hPa
-🎯 Barometer accuracy improved</string>
+🎯 Barometer accuracy improved
+Source: Deutscher Wetterdienst (DWD) via Bright Sky</string>
     <string name="altimeter_qnh_based_format">%1$.1f m (QNH-based)</string>
     <string name="altimeter_accuracy_very_good">very good</string>
     <string name="altimeter_accuracy_good">good</string>
@@ -5488,4 +5483,34 @@ high</string>
     <string name="backup_type_play_fun">Play &amp; Fun</string>
     <string name="backup_type_play_fun_desc">Logged play and activity sessions per dog</string>
 
+    <!-- Network services (servers and keys) -->
+    <string name="net_services_open">🌐 Services &amp; servers …</string>
+    <string name="net_services_title">Services &amp; servers</string>
+    <string name="net_services_intro">The app requests weather and map data from services that you choose here or use with your own access. Only https addresses are allowed.</string>
+    <string name="net_services_weather_title">Weather</string>
+    <string name="net_services_weather_desc">The app shows no weather without your own access. Choose a provider and enter your personal key or server address. You are responsible for complying with the provider\'s terms of use.</string>
+    <string name="net_services_weather_url_hint">Weather server (https://…)</string>
+    <string name="net_services_air_url_hint">Air quality server (https://…, optional)</string>
+    <string name="net_services_weather_key_hint">Open-Meteo API key (optional)</string>
+    <string name="net_services_overpass_title">Overpass (surroundings data)</string>
+    <string name="net_services_overpass_desc">The public Overpass servers are shared by everyone. If you search often, you can enter your own or another server. If a server is entered, only that one is used.</string>
+    <string name="net_services_overpass_url_hint">Overpass server (e.g. https://overpass.example.org)</string>
+    <string name="net_services_reset">Reset to defaults</string>
+    <string name="net_services_invalid_url">Invalid address: %1$s – please enter an https address without spaces.</string>
+    <string name="net_services_saved">Saved</string>
+    <string name="net_services_reset_done">Reset to defaults</string>
+    <string name="net_services_provider_none">No weather</string>
+    <string name="net_services_provider_owm">OpenWeatherMap (your own key)</string>
+    <string name="net_services_provider_open_meteo">Open-Meteo (your own key or server)</string>
+    <string name="net_services_owm_desc">Create a free account at openweathermap.org and enter the API key here (new keys are often active only after a few minutes to hours). The free plan has no UV index, sunshine duration, thunderstorm forecast (CAPE) or pollen; those displays are hidden. OpenWeather\'s terms apply.</string>
+    <string name="net_services_owm_key_hint">OpenWeatherMap API key</string>
+    <string name="net_services_open_meteo_desc">The free address of open-meteo.com is only allowed for non-commercial use and is therefore not preset. Enter the address of your Open-Meteo customer access or your own server (without a path) and, if needed, your key. Without an air quality address, air quality and pollen are not shown.</string>
+    <string name="net_services_saved_incomplete">Saved – the chosen provider still needs access (key or server address). Until then the app shows no weather.</string>
+    <string name="weather_setup_title">Set up weather</string>
+    <string name="weather_setup_hint">For weather data, choose a weather provider (OpenWeatherMap or Open-Meteo) under Settings → \"Services &amp; servers\" and enter your own key or server address.</string>
+    <string name="weather_not_supported_by_provider">The chosen weather provider does not offer this feature (e.g. the thunderstorm forecast is only available with Open-Meteo).</string>
+    <string name="weather_key_rejected">The provider rejected the key. Please check it; new OpenWeatherMap keys are often active only after a few minutes to hours.</string>
+    <string name="weather_rate_limited">Too many requests to the weather provider. Please try again later.</string>
+    <string name="weather_attribution_owm">Weather data © OpenWeather</string>
+    <string name="weather_attribution_open_meteo">Data: © Open-Meteo (CC BY 4.0)</string>
 </resources>

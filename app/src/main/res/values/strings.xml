@@ -105,8 +105,6 @@
     <string name="uv_index_label">UV-Index:</string>
     <string name="uv_index_placeholder">--</string>
     <string name="forecast_24h_title">24-Stunden Vorhersage</string>
-    <string name="precipitation_radar_title">Niederschlagsradar</string>
-    <string name="rainviewer_source">Quelle: RainViewer</string>
     <string name="location_determining">📍 Standort wird ermittelt...</string>
     <string name="open_meteo_source">Daten: Open-Meteo.com</string>
 
@@ -2667,7 +2665,7 @@
     <string name="instr_daily_notes_title">📝📸 Tagesnotizen</string>
     <string name="instr_daily_notes_desc">Dokumentiere Dein Training, Deine Beobachtungen und alles Wichtige mit Fotos, Text und Geodaten.\n• Textfeld für Notiztitel, \n• Textfeld für Deine Notizen. Optional können \n• Wetterdaten (werden automatisch für Deinen Standort abgerufen) und \n• GPS-Koordinaten (GPS-Daten werden automatisch abgerufen) eingefügt werden. Zusätzlich können \n• Fotos aus der Galerie bzw. über \n• Kamera angehangen werden\n• Die Notizen können als \n• PDF-Datei und \n• GPX-Datei gespeichert und geteilt werden. \n• \'Notiz sichern\' speichert die aktuelle Notiz zusätzlich in der Historie.</string>
     <string name="instr_weather_title">🌦📍 Hundewetter</string>
-    <string name="instr_weather_desc">Umfangreicher Wetterbericht für Deinen aktuelle Standort zur Planung Deiner Aktivitäten und zur Unterstützung Deines Trainings\n• Trainingswetter-Index (mit wetterabhängigen Tipps).\n• Tageslicht- und Dämmerungsinformationen (Tageslänge, Morgendämmerung, Sonnenaufgang, Sonneuntergang, Abenddämmerung, Tipps, Berechnung der \'Goldenen Stunde\' für tolle Fotos)\n• tägliche Minimal- und Maximaltemperatur\n• 24h Temperaturverlaufsdiagramm\n• aktuelle Daten (gefühlte Temperatur, Luftfeuchte, Wind, Windrichtung, Windstärke, Windböen, Niederschlag)\n• Weitere Details (Luftdruck, Sichtweite, UV-Index)\n• 24h Vorhersage für jede Stunde inclusive Details\n• Niederschlagsradar der letzten 6h inclusive 1h Prognose\n• Alle Wetterdaten von Open-Meteo (CC BY 4.0).</string>
+    <string name="instr_weather_desc">Umfangreicher Wetterbericht für Deinen aktuelle Standort zur Planung Deiner Aktivitäten und zur Unterstützung Deines Trainings\n• Trainingswetter-Index (mit wetterabhängigen Tipps).\n• Tageslicht- und Dämmerungsinformationen (Tageslänge, Morgendämmerung, Sonnenaufgang, Sonneuntergang, Abenddämmerung, Tipps, Berechnung der \'Goldenen Stunde\' für tolle Fotos)\n• tägliche Minimal- und Maximaltemperatur\n• 24h Temperaturverlaufsdiagramm\n• aktuelle Daten (gefühlte Temperatur, Luftfeuchte, Wind, Windrichtung, Windstärke, Windböen, Niederschlag)\n• Weitere Details (Luftdruck, Sichtweite, UV-Index)\n• 24h Vorhersage für jede Stunde inclusive Details\n• Alle Wetterdaten von Open-Meteo (CC BY 4.0).</string>
     <string name="instr_navigation_title">🗺🛰 Revier - Navigation</string>
     <string name="instr_navigation_desc">Interaktive Karte mit Anzeige von Kategorien von wander- und hunderelevanten Orten via OpenStreetMap und Routing. Interaktive OSM-Karte: Nutzt das freie OpenStreetMap (Mapnik) Material für eine detaillierte Darstellung der Umgebung.\n• Standort-Anzeige: Zeigt die aktuelle Position auf der Karte an.\n• Echtzeit-Tracking: Die Karte folgt der eigenen Bewegung im Gelände (aktualisiert sich alle 5 Meter oder alle 2 Sekunden).\n• Standort-Zentrierung: Über den Button \'📍 Standort\' lässt sich die Karte jederzeit wieder auf die aktuelle Position ausrichten.\n• Koordinaten-Anzeige: Die exakten GPS-Daten (Breiten- und Längengrad) werden live eingeblendet.\n• Standort teilen: Die aktuelle Position lässt sich direkt an weitere Personen versenden oder zu anderen Apps teilen.\n• POI-Suche (Points of Interest) mit Detailinfos (falls in OpenStreetMap hinterlegt)\n Kategorien-Grid für schnelle Auswahl hundespezifischer Orte:\n• Hundeausläufe und Hundeparks\n• Tierärzte und Tierkliniken\n• Tierbedarf und Tierheime\n• Wanderwege und Aussichtspunkte\n• Trinkwasser und Toiletten\n• Supermärkte, Bäckereien und Restaurants\n• Notfall-Services (Apotheke, Polizei, Feuerwehr, Arztpraxen, Krankenhäuser)\n• Naturschutzgebiete und Nationalparks\n• SOS-Punkte und vieles mehr\n• Radar-Suche: Sucht automatisch in einem Umkreis von 3 km nach allen Einträgen der gewählten Kategorie via Overpass-API.\n• Ergebnis-Vorschau: Zeigt alle Fundorte gleichzeitig als Marker auf der Karte an und zoomt so, dass alle Ziele plus die eigene Position sichtbar sind.\nIntelligente Navigation (Routing)\n• Ein Klick auf einen Ort in der Liste oder einen Marker auf der Karte startet die Navigation.\n• Routenberechnung: Die App nutzt professionelle Routing-Dienste (OpenRouteService, Graphhopper oder OSRM), um den besten Weg für Fußgänger zu berechnen.\n• Statistiken: Zeigt die exakte Entfernung und die geschätzte Gehzeit zum Ziel an.\n• Live-Update: Während des Laufens wird die Route ständig an die aktuelle Position angepasst.\n• Luftlinie-Fallback: Sollte kein Fußweg in der Karte bekannt sein, wird automatisch eine gestrichelte Luftlinie zum Ziel angezeigt.\nPOI-Details\n• Umfassende Infos: Sofern in OSM hinterlegt, zeigt die App Details wie Adresse, Telefonnummer, Webseite, Öffnungszeiten und Zutrittsbeschränkungen (z. B. Leinenpflicht) an.\n• Direkt-Aktionen: Telefonnummern und Web-Links sind klickbar, um sofort Kontakt aufzunehmen.\n• Lokal und Frei: Keine Nutzung von Google Maps. Der Standort wird nur für die aktuelle Suche anonym an freie Karten-Server gesendet.\n• Zwei-Klick-Logik: Erster Klick auf Marker zeigt Info, zweiter Klick startet die Navigation – für eine fehlerfreie Bedienung.\n• Suchfeld für textbasierte Suche</string>
     <string name="instr_compass_title">🧭🌐 Kompass</string>
@@ -3682,9 +3680,6 @@
     <string name="weather_azimuth_south_of_west">Süd von West</string>
     <string name="weather_sunrise_azimuth">🌅 Aufgang\n%1$s Uhr\n%2$s° %3$s</string>
     <string name="weather_sunset_azimuth">🌇 Untergang\n%1$s Uhr\n%2$s° %3$s</string>
-    <string name="weather_radar_loading">Lade Radar…</string>
-    <string name="weather_radar_your_location">Dein Standort</string>
-    <string name="weather_radar_unavailable">Radar nicht verfügbar</string>
     <string name="weather_search_no_results">Keine Ergebnisse gefunden</string>
     <string name="weather_error_prefix">Fehler: %1$s</string>
     <string name="weather_daily_min_max_display">Min: %1$.1f°C • Max: %2$.1f°C</string>
@@ -3728,8 +3723,6 @@
     <string name="weather_no_warning_badge">✅ Keine Wetterwarnung</string>
     <string name="weather_paw_index_title">🐾 Trainingswetter-Index</string>
     <string name="weather_calculating_placeholder">Wird berechnet...</string>
-    <string name="weather_radar_card_title">2h Niederschlagsradar</string>
-    <string name="weather_radar_live_data_hint">📡 = Aktuelle Daten</string>
     <string name="weather_daylight_card_title">🌅 Tageslicht und Dämmerung</string>
     <string name="weather_daylight_duration_placeholder">☀️ Tageslänge: --h --m</string>
     <string name="weather_dawn_placeholder">🌄 Morgendämmerung: --:--</string>
@@ -3802,7 +3795,6 @@
     <string name="weather_biowetter_calculating">● Wird berechnet...</string>
     <string name="weather_biowetter_disclaimer">⚕️ Biowetter dient der allgemeinen Orientierung. Kein Ersatz für medizinische oder tierärztliche Beratung.</string>
     <string name="weather_location_determining_placeholder">📍 Standort wird ermittelt...</string>
-    <string name="weather_data_source_footer">Daten: © Open-Meteo (CC BY 4.0)</string>
     <string name="day_sun">So</string>
     <string name="day_mon">Mo</string>
     <string name="day_tue">Di</string>
@@ -4159,7 +4151,8 @@ Nur GPS-Höhe (ungenau)</string>
     <string name="altimeter_location_permission_needed_status">❌ Standortberechtigung benötigt</string>
     <string name="altimeter_location_permission_denied_toast">Standortberechtigung wurde verweigert</string>
     <string name="altimeter_qnh_updated_status">🌤️ Referenzdruck (QNH) aktualisiert: %1$.1f hPa
-🎯 Barometer-Genauigkeit verbessert</string>
+🎯 Barometer-Genauigkeit verbessert
+Quelle: Deutscher Wetterdienst (DWD) über Bright Sky</string>
     <string name="altimeter_qnh_based_format">%1$.1f m (QNH-basiert)</string>
     <string name="altimeter_accuracy_very_good">sehr gut</string>
     <string name="altimeter_accuracy_good">gut</string>
@@ -5497,4 +5490,34 @@ hoch</string>
     <string name="backup_type_play_fun">Spiel &amp; Spaß</string>
     <string name="backup_type_play_fun_desc">Protokollierte Spiel- und Beschäftigungs-Sessions je Hund</string>
 
+    <!-- Netzwerkdienste (Server und Schlüssel) -->
+    <string name="net_services_open">🌐 Dienste &amp; Server …</string>
+    <string name="net_services_title">Dienste &amp; Server</string>
+    <string name="net_services_intro">Die App fragt Wetter- und Kartendaten bei Diensten ab, die du hier selbst festlegst bzw. mit deinem eigenen Zugang nutzt. Es sind nur https-Adressen erlaubt.</string>
+    <string name="net_services_weather_title">Wetter</string>
+    <string name="net_services_weather_desc">Die App liefert kein Wetter ohne eigenen Zugang. Wähle einen Anbieter und trage deinen persönlichen Schlüssel bzw. deine Serveradresse ein. Du bist selbst für die Einhaltung der Nutzungsbedingungen des Anbieters verantwortlich.</string>
+    <string name="net_services_weather_url_hint">Wetter-Server (https://…)</string>
+    <string name="net_services_air_url_hint">Luftqualitäts-Server (https://…, optional)</string>
+    <string name="net_services_weather_key_hint">Open-Meteo API-Schlüssel (optional)</string>
+    <string name="net_services_overpass_title">Overpass (Umgebungsdaten)</string>
+    <string name="net_services_overpass_desc">Die öffentlichen Overpass-Server werden von allen geteilt. Wenn du häufig suchst, kannst du einen eigenen oder einen anderen Server eintragen. Ist ein Server eingetragen, wird nur dieser verwendet.</string>
+    <string name="net_services_overpass_url_hint">Overpass-Server (z. B. https://overpass.example.org)</string>
+    <string name="net_services_reset">Auf Standard zurücksetzen</string>
+    <string name="net_services_invalid_url">Ungültige Adresse: %1$s – bitte eine https-Adresse ohne Leerzeichen eingeben.</string>
+    <string name="net_services_saved">Gespeichert</string>
+    <string name="net_services_reset_done">Auf Standard zurückgesetzt</string>
+    <string name="net_services_provider_none">Kein Wetter</string>
+    <string name="net_services_provider_owm">OpenWeatherMap (eigener Schlüssel)</string>
+    <string name="net_services_provider_open_meteo">Open-Meteo (eigener Schlüssel bzw. Server)</string>
+    <string name="net_services_owm_desc">Kostenloses Konto auf openweathermap.org anlegen und den API-Schlüssel hier eintragen (neue Schlüssel sind oft erst nach einigen Minuten bis Stunden aktiv). Im kostenlosen Tarif fehlen UV-Index, Sonnenscheindauer, Gewitter-Vorhersage (CAPE) und Pollen; diese Anzeigen werden dann ausgeblendet. Es gelten die Bedingungen von OpenWeather.</string>
+    <string name="net_services_owm_key_hint">OpenWeatherMap API-Schlüssel</string>
+    <string name="net_services_open_meteo_desc">Die kostenlose Adresse von open-meteo.com ist nur für nicht-kommerzielle Nutzung erlaubt und deshalb nicht vorbelegt. Trage die Adresse deines Open-Meteo-Kundenzugangs oder deines eigenen Servers ein (ohne Pfad) und ggf. deinen Schlüssel. Ohne Luftqualitäts-Adresse entfallen Luftqualität und Pollen.</string>
+    <string name="net_services_saved_incomplete">Gespeichert – für den gewählten Anbieter fehlt noch der Zugang (Schlüssel bzw. Serveradresse). Bis dahin zeigt die App kein Wetter.</string>
+    <string name="weather_setup_title">Wetter einrichten</string>
+    <string name="weather_setup_hint">Für Wetterdaten wähle unter Einstellungen → „Dienste &amp; Server\" einen Wetteranbieter (OpenWeatherMap oder Open-Meteo) und trage deinen eigenen Schlüssel bzw. deine Serveradresse ein.</string>
+    <string name="weather_not_supported_by_provider">Diese Funktion liefert der gewählte Wetteranbieter nicht (z. B. Gewitter-Vorhersage nur mit Open-Meteo).</string>
+    <string name="weather_key_rejected">Der Anbieter hat den Schlüssel abgelehnt. Bitte Schlüssel prüfen; neue OpenWeatherMap-Schlüssel sind oft erst nach einigen Minuten bis Stunden aktiv.</string>
+    <string name="weather_rate_limited">Zu viele Anfragen beim Wetteranbieter. Bitte später erneut versuchen.</string>
+    <string name="weather_attribution_owm">Weather data © OpenWeather</string>
+    <string name="weather_attribution_open_meteo">Daten: © Open-Meteo (CC BY 4.0)</string>
 </resources>

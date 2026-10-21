@@ -2,23 +2,16 @@ package com.hundewildnis.app
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.UnitValue
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * SpielSpassPDFGenerator – iText7.
+ * SpielSpassPDFGenerator – eigene PDF-Ausgabe (siehe PdfLayout.kt).
  * Erstellt eine Gesamt-Übersicht (Statistik + vollständige Session-Tabelle)
  * für einen Hund, analog NasenarbeitPDFGenerator.generateGesamtPDF().
  */
@@ -26,8 +19,8 @@ object SpielSpassPDFGenerator {
 
     private val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN)
 
-    private val GREEN = DeviceRgb(45, 80, 22)   // #2d5016
-    private val GRAY = DeviceRgb(100, 100, 100)
+    private val GREEN = Color.rgb(45, 80, 22)   // #2d5016
+    private val GRAY = Color.rgb(100, 100, 100)
 
     fun generateGesamtPDF(
         context: Context,
@@ -48,7 +41,7 @@ object SpielSpassPDFGenerator {
             val dir = File(context.filesDir, "spiel_spass_pdfs").also { it.mkdirs() }
             val file = File(dir, fileName)
             try {
-                val doc = Document(PdfDocument(PdfWriter(file)))
+                val doc = PdfDoc(file)
                 writeContent(context, doc, sessions, profile)
                 doc.close()
                 file
@@ -59,16 +52,16 @@ object SpielSpassPDFGenerator {
         }
     }
 
-    private fun writeContent(context: Context, doc: Document, sessions: List<SpielSession>, profile: DogProfile) {
+    private fun writeContent(context: Context, doc: PdfDoc, sessions: List<SpielSession>, profile: DogProfile) {
         val stats = SpielSpassManager.getStatistikForDog(context, profile.id)
 
-        doc.add(Paragraph(context.getString(R.string.spiel_spass_pdf_title)).setBold().setFontSize(18f).setFontColor(GREEN))
-        doc.add(Paragraph("${profile.name} · ${profile.breed}").setFontSize(12f).setFontColor(GRAY))
-        doc.add(Paragraph(" "))
+        doc.add(PdfParagraph(context.getString(R.string.spiel_spass_pdf_title)).setBold().setFontSize(18f).setFontColor(GREEN))
+        doc.add(PdfParagraph("${profile.name} · ${profile.breed}").setFontSize(12f).setFontColor(GRAY))
+        doc.add(PdfParagraph(" "))
 
         // Statistik-Zusammenfassung
-        doc.add(Paragraph(context.getString(R.string.spiel_spass_pdf_section_summary)).setBold().setFontSize(13f))
-        val summaryTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 1f))).useAllAvailableWidth()
+        doc.add(PdfParagraph(context.getString(R.string.spiel_spass_pdf_section_summary)).setBold().setFontSize(13f))
+        val summaryTable = PdfTable.percent(floatArrayOf(1f, 1f)).useAllAvailableWidth()
         summaryTable.addCell(labelCell(context.getString(R.string.spiel_spass_stats_total_sessions)))
         summaryTable.addCell(valueCell("${stats.gesamtSessions}"))
         if (stats.durchschnittsBewertung > 0) {
@@ -76,24 +69,24 @@ object SpielSpassPDFGenerator {
             summaryTable.addCell(valueCell(""))
         }
         doc.add(summaryTable)
-        doc.add(Paragraph(" "))
+        doc.add(PdfParagraph(" "))
 
         // Nach Örtlichkeit
         if (stats.sessionsProOrt.isNotEmpty()) {
-            doc.add(Paragraph(context.getString(R.string.spiel_spass_stats_by_ort)).setBold().setFontSize(13f))
-            val ortTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 1f))).useAllAvailableWidth()
+            doc.add(PdfParagraph(context.getString(R.string.spiel_spass_stats_by_ort)).setBold().setFontSize(13f))
+            val ortTable = PdfTable.percent(floatArrayOf(1f, 1f)).useAllAvailableWidth()
             stats.sessionsProOrt.entries.sortedByDescending { it.value }.forEach { (ortName, count) ->
                 val ort = try { SpielOrt.valueOf(ortName) } catch (e: Exception) { null }
                 ortTable.addCell(labelCell(ort?.displayName(context) ?: ortName))
                 ortTable.addCell(valueCell("$count"))
             }
             doc.add(ortTable)
-            doc.add(Paragraph(" "))
+            doc.add(PdfParagraph(" "))
         }
 
         // Verlauf
-        doc.add(Paragraph(context.getString(R.string.spiel_spass_stats_history)).setBold().setFontSize(13f))
-        val historyTable = Table(UnitValue.createPercentArray(floatArrayOf(1.2f, 2f, 1f, 0.6f))).useAllAvailableWidth()
+        doc.add(PdfParagraph(context.getString(R.string.spiel_spass_stats_history)).setBold().setFontSize(13f))
+        val historyTable = PdfTable.percent(floatArrayOf(1.2f, 2f, 1f, 0.6f)).useAllAvailableWidth()
         historyTable.addHeaderCell(headerCell(context.getString(R.string.spiel_spass_pdf_col_date)))
         historyTable.addHeaderCell(headerCell(context.getString(R.string.spiel_spass_pdf_col_activity)))
         historyTable.addHeaderCell(headerCell(context.getString(R.string.spiel_spass_pdf_col_location)))
@@ -109,11 +102,11 @@ object SpielSpassPDFGenerator {
         doc.add(historyTable)
     }
 
-    private fun labelCell(text: String) = Cell().add(Paragraph(text).setFontSize(10f).setFontColor(GRAY)).setBorder(null)
-    private fun valueCell(text: String) = Cell().add(Paragraph(text).setFontSize(10f)).setBorder(null)
-    private fun headerCell(text: String) = Cell().add(Paragraph(text).setBold().setFontSize(10f).setFontColor(GREEN)).setBorder(null)
+    private fun labelCell(text: String) = PdfCell().add(PdfParagraph(text).setFontSize(10f).setFontColor(GRAY)).setBorder(null)
+    private fun valueCell(text: String) = PdfCell().add(PdfParagraph(text).setFontSize(10f)).setBorder(null)
+    private fun headerCell(text: String) = PdfCell().add(PdfParagraph(text).setBold().setFontSize(10f).setFontColor(GREEN)).setBorder(null)
 
-    private fun exportPdfViaMediaStore(context: Context, fileName: String, writer: (Document) -> Unit): File? {
+    private fun exportPdfViaMediaStore(context: Context, fileName: String, writer: (PdfDoc) -> Unit): File? {
         val values = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
             put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
@@ -122,11 +115,10 @@ object SpielSpassPDFGenerator {
         val uri = context.contentResolver.insert(MediaStore.Files.getContentUri("external"), values) ?: return null
 
         try {
-            context.contentResolver.openOutputStream(uri)?.use { output ->
-                val doc = Document(PdfDocument(PdfWriter(output)))
-                writer(doc)
-                doc.close()
-            }
+            val output = context.contentResolver.openOutputStream(uri) ?: return null
+            val doc = PdfDoc(output)   // close() schließt den Strom
+            writer(doc)
+            doc.close()
         } catch (e: Exception) {
             return null
         }
@@ -141,12 +133,12 @@ object SpielSpassPDFGenerator {
         return filePath?.let { File(it) }
     }
 
-    private fun exportPdfOldWay(fileName: String, writer: (Document) -> Unit): File? {
+    private fun exportPdfOldWay(fileName: String, writer: (PdfDoc) -> Unit): File? {
         val docsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         if (!docsDir.exists()) docsDir.mkdirs()
         val file = File(docsDir, fileName)
         return try {
-            val doc = Document(PdfDocument(PdfWriter(file)))
+            val doc = PdfDoc(file)
             writer(doc)
             doc.close()
             file

@@ -10,8 +10,6 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -228,8 +226,21 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         currentLon = longitude
         currentCityName = cityName
 
-        binding.progressBar.visibility = View.VISIBLE
         updateFavoriteIcon()
+
+        // Ohne Anbieter/Zugang ruft die App nichts ab und zeigt nur den Hinweis.
+        if (!WeatherProvider.isConfigured(this)) {
+            binding.progressBar.visibility = View.GONE
+            binding.descriptionText.text = getString(R.string.weather_setup_hint)
+            binding.weatherSourceFooter.text = ""
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(getString(R.string.weather_setup_title))
+                .setMessage(getString(R.string.weather_setup_hint))
+                .setPositiveButton(getString(R.string.ok), null)
+                .show()
+            return
+        }
+        binding.progressBar.visibility = View.VISIBLE
 
         val displayLoc = cityName ?: String.format(Locale.getDefault(), "%.4f°, %.4f°", latitude, longitude)
         binding.locationText.text = getString(R.string.weather_location_prefix, displayLoc)
@@ -266,7 +277,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
                 binding.descriptionText.text = getString(R.string.weather_load_error)
-                Toast.makeText(this@WeatherActivity, getString(R.string.start_error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
+                Toast.makeText(this@WeatherActivity, WeatherProvider.describeError(applicationContext, e), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -278,8 +289,9 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 val results = withContext(Dispatchers.IO) {
                     val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
                     val url = "https://nominatim.openstreetmap.org/search?q=$encodedQuery&format=json&limit=5&accept-language=de"
+                    AppNetwork.waitForNominatimSlot()
                     val connection = URL(url).openConnection() as java.net.HttpURLConnection
-                    connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
+                    connection.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
                     val response = connection.inputStream.bufferedReader().use { it.readText() }
                     val jsonArray = org.json.JSONArray(response)
                     val list = mutableListOf<WeatherFavorite>()
@@ -372,8 +384,9 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         return try {
             val languageTag = LanguageManager.getCurrentLanguage().tag
             val url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json&accept-language=$languageTag"
+            AppNetwork.waitForNominatimSlot()
             val connection = URL(url).openConnection() as java.net.HttpURLConnection
-            connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
+            connection.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
             val response = connection.inputStream.bufferedReader().use { it.readText() }
             val json = JSONObject(response)
             val address = json.optJSONObject("address")
@@ -384,8 +397,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun fetchWeatherData(latitude: Double, longitude: Double): JSONObject {
-        val url = "https://api.open-meteo.com/v1/forecast?" +
-                "latitude=$latitude&longitude=$longitude" +
+        return WeatherProvider.fetchForecast(applicationContext, latitude, longitude,
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature," +
                 "precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m," +
                 "wind_gusts_10m,uv_index,is_day" +
@@ -397,21 +409,16 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
                 "wind_speed_10m_max,wind_gusts_10m_max,uv_index_max,sunshine_duration" +
                 "&past_days=1" +
                 "&forecast_days=7" +
-                "&timezone=auto"
-        val response = URL(url).readText()
-        return JSONObject(response)
+                "&timezone=auto")
     }
 
     private fun fetchAirQualityData(latitude: Double, longitude: Double): JSONObject {
-        // Separater Open-Meteo Air-Quality Endpunkt – kostenlos, kein API-Key nötig
-        val url = "https://air-quality-api.open-meteo.com/v1/air-quality?" +
-                "latitude=$latitude&longitude=$longitude" +
+        // Luftqualität: je nach Anbieter (Open-Meteo-Dienst oder OpenWeatherMap)
+        return WeatherProvider.fetchAirQuality(applicationContext, latitude, longitude,
                 "&hourly=pm10,pm2_5,nitrogen_dioxide,ozone,carbon_monoxide," +
                 "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen" +
                 "&forecast_days=2" +
-                "&timezone=auto"
-        val response = URL(url).readText()
-        return JSONObject(response)
+                "&timezone=auto")
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -429,7 +436,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val humidity      = current.getInt("relative_humidity_2m")
         val precipitation = current.getDouble("precipitation")
         val pressure      = current.getDouble("surface_pressure")
-        val uvIndex       = current.getDouble("uv_index")
+        val uvIndex       = current.optDouble("uv_index", Double.NaN)   // nicht bei jedem Anbieter
 
         binding.temperatureText.text = getString(R.string.weather_degree_celsius, temperature)
 
@@ -449,7 +456,8 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         binding.precipitationText.text = getString(R.string.weather_mm, precipitation)
         binding.pressureText.text = getString(R.string.weather_hpa, pressure)
         binding.visibilityText.text = getString(R.string.weather_visibility_format)
-        binding.uvIndexText.text = String.format(Locale.getDefault(), "%.1f", uvIndex)
+        binding.uvIndexRow.visibility = if (uvIndex.isNaN()) View.GONE else View.VISIBLE
+        if (!uvIndex.isNaN()) binding.uvIndexText.text = String.format(Locale.getDefault(), "%.1f", uvIndex)
 
         displaySunriseSunset(data)
         display24HourForecast(data)
@@ -459,9 +467,11 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         displaySunCard(data, latitude, longitude)                // NEU: Sonne-Card
         if (airQualityData != null) {
             displayAirQualityCard(airQualityData)   // NEU: Luftqualität-Card
-            displayPollenCard(airQualityData)       // NEU: Pollen-Card
+            if (airQualityData.optJSONObject("hourly")?.has("birch_pollen") == true) {
+                displayPollenCard(airQualityData)   // NEU: Pollen-Card (nur Open-Meteo)
+            }
         }
-        setupRainRadar(latitude, longitude)
+        binding.weatherSourceFooter.text = WeatherProvider.attribution(this)
         displayPawWeather(data, windSpeed, windGusts)
         displayTemperatureChart(data)
         displayPrecipitationChart(data)
@@ -892,63 +902,6 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
     }
 
     // ════════════════════════════════════════════════════════════════
-    // REGENRADAR
-    // ════════════════════════════════════════════════════════════════
-
-    private fun setupRainRadar(lat: Double, lon: Double) {
-        binding.radarWebView.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            databaseEnabled = true
-            allowFileAccess = true
-            allowContentAccess = true
-            mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-        }
-        binding.radarWebView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                if (url.contains("leafletjs.com") || url.contains("openstreetmap.org") || url.contains("rainviewer.com")) {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                    return true
-                }
-                return false
-            }
-        }
-        val jsLocale = if (LanguageManager.getCurrentLanguage().tag == "de") "de-DE" else "en-US"
-        val timeSuffix = if (LanguageManager.getCurrentLanguage().tag == "de") " Uhr" else ""
-        val jsLoadingRadar = getString(R.string.weather_radar_loading)
-        val jsYourLocation = getString(R.string.weather_radar_your_location)
-        val jsRadarUnavailable = getString(R.string.weather_radar_unavailable)
-        val html = """<!DOCTYPE html>
-<html><head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>* { margin: 0; padding: 0; } html, body { height: 100%; background: #1a1a1a; } #map { width: 100%; height: calc(100% - 50px); } #controls { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: rgba(45,45,45,0.95); display: flex; align-items: center; justify-content: center; gap: 10px; z-index: 1000; padding: 0 10px; } .control-btn { background: #8fad6f; color: white; border: none; border-radius: 5px; padding: 8px 15px; font-size: 14px; font-weight: bold; cursor: pointer; } #timestamp { color: #999; font-size: 12px; flex: 1; text-align: center; }</style>
-</head><body>
-<div id="map"></div>
-<div id="controls">
-  <button class="control-btn" id="playBtn" onclick="togglePlay()">▶ Play</button>
-  <button class="control-btn" onclick="stopAnimation()">⏹ Stop</button>
-  <div id="timestamp">$jsLoadingRadar</div>
-</div>
-<script>
-let map, radarLayers=[], timestamps=[], currentFrame=0, isPlaying=false, animationInterval=null;
-map = L.map('map', { center: [$lat, $lon], zoom: 6, zoomControl: true });
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
-L.marker([$lat, $lon]).addTo(map).bindPopup('$jsYourLocation').openPopup();
-fetch('https://api.rainviewer.com/public/weather-maps.json').then(r=>r.json()).then(apiData=>{
-  if(apiData.radar && apiData.radar.past){ timestamps=apiData.radar.past; timestamps.forEach(item=>{ radarLayers.push(L.tileLayer('https://tilecache.rainviewer.com'+item.path+'/256/{z}/{x}/{y}/2/1_1.png',{tileSize:256,opacity:0.9,zIndex:10})); }); if(radarLayers.length>0){ currentFrame=radarLayers.length-1; radarLayers[currentFrame].addTo(map); updateTimestamp(); } }
-}).catch(()=>{ document.getElementById('timestamp').textContent='$jsRadarUnavailable'; });
-function togglePlay(){ isPlaying ? pauseAnimation() : startAnimation(); }
-function startAnimation(){ if(!radarLayers.length) return; isPlaying=true; document.getElementById('playBtn').innerHTML='⏸ Pause'; animationInterval=setInterval(()=>{ radarLayers[currentFrame].remove(); currentFrame=(currentFrame+1)%radarLayers.length; radarLayers[currentFrame].addTo(map); updateTimestamp(); },500); }
-function pauseAnimation(){ isPlaying=false; document.getElementById('playBtn').innerHTML='▶ Play'; if(animationInterval){ clearInterval(animationInterval); animationInterval=null; } }
-function stopAnimation(){ pauseAnimation(); if(radarLayers.length>0){ radarLayers[currentFrame].remove(); currentFrame=radarLayers.length-1; radarLayers[currentFrame].addTo(map); updateTimestamp(); } }
-function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(timestamps[currentFrame].time*1000); document.getElementById('timestamp').textContent='📡 Radar: '+d.toLocaleTimeString('$jsLocale',{hour:'2-digit',minute:'2-digit'})+'$timeSuffix'; } }
-</script></body></html>"""
-        binding.radarWebView.loadDataWithBaseURL("https://hundewildnis.com", html, "text/html", "UTF-8", null)
-    }
-
-    // ════════════════════════════════════════════════════════════════
     // TRAININGSWETTER-INDEX (Pfotenwetter)
     // ════════════════════════════════════════════════════════════════
 
@@ -957,7 +910,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
         val temperature  = current.getDouble("temperature_2m")
         val feelsLike    = current.getDouble("apparent_temperature")
         val weatherCode  = current.getInt("weather_code")
-        val uvIndex      = current.getDouble("uv_index")
+        val uvIndex      = current.optDouble("uv_index", 0.0)   // ohne UV-Daten keine UV-Warnung
         val precipitation = current.getDouble("precipitation")
         var pawResult = calculatePawWeatherIndex(temperature, feelsLike, weatherCode, uvIndex, precipitation)
         pawResult = addWindWarning(pawResult, windSpeed, windGusts)
@@ -1331,8 +1284,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val precipProb = daily.getJSONArray("precipitation_probability_max")
             val windMax    = daily.getJSONArray("wind_speed_10m_max")
             val gustsMax   = daily.getJSONArray("wind_gusts_10m_max")
-            val uvMax      = daily.getJSONArray("uv_index_max")
-            val sunshine   = daily.getJSONArray("sunshine_duration") // Sekunden
+            val uvMax      = daily.optJSONArray("uv_index_max")
+            val sunshine   = daily.optJSONArray("sunshine_duration") // Sekunden
 
             val dayNames = listOf(
                 getString(R.string.day_sun), getString(R.string.day_mon), getString(R.string.day_tue),
@@ -1358,8 +1311,8 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                     precipProbability = precipProb.getInt(i),
                     windSpeedMax      = windMax.getDouble(i),
                     windGustsMax      = gustsMax.getDouble(i),
-                    uvIndexMax        = uvMax.getDouble(i),
-                    sunshineDurationMin = sunshine.getDouble(i) / 60.0
+                    uvIndexMax        = uvMax?.optDouble(i, Double.NaN) ?: Double.NaN,
+                    sunshineDurationMin = (sunshine?.optDouble(i, Double.NaN) ?: Double.NaN) / 60.0
                 ))
             }
 
@@ -1376,14 +1329,16 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
     private fun showDailyForecastDetail(item: DailyForecastItem) {
         val (description, icon) = getWeatherDescription(item.weatherCode)
         val beaufort = getBeaufortScale(item.windSpeedMax)
+        val hasUv = !item.uvIndexMax.isNaN()
+        val hasSunshine = !item.sunshineDurationMin.isNaN()
         val uvWarning = when {
             item.uvIndexMax >= 8 -> "☀️ Sehr hohe UV-Strahlung – Schatten bevorzugen!"
             item.uvIndexMax >= 6 -> "⚡ Hohe UV-Strahlung – Schutz empfohlen"
             item.uvIndexMax >= 3 -> "🌤️ Moderate UV-Strahlung"
             else                 -> "✅ Niedrige UV-Strahlung"
         }
-        val sunshineh = (item.sunshineDurationMin / 60).toInt()
-        val sunshinem = (item.sunshineDurationMin % 60).toInt()
+        val sunshineh = if (hasSunshine) (item.sunshineDurationMin / 60).toInt() else 0
+        val sunshinem = if (hasSunshine) (item.sunshineDurationMin % 60).toInt() else 0
 
         val message = buildString {
             append("${item.dayLabel}, ${item.dateLabel}\n\n")
@@ -1391,9 +1346,11 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             append(getString(R.string.weather_forecast_temp_range, item.tempMax, item.tempMin)).append("\n")
             append(getString(R.string.weather_forecast_precip_prob, item.precipProbability)).append("\n")
             append(getString(R.string.weather_forecast_wind_max, item.windSpeedMax, beaufort, item.windGustsMax)).append("\n")
-            append(getString(R.string.weather_forecast_sunshine, sunshineh, sunshinem)).append("\n")
-            append(getString(R.string.weather_forecast_uv_max, item.uvIndexMax)).append("\n")
-            append("$uvWarning")
+            if (hasSunshine) append(getString(R.string.weather_forecast_sunshine, sunshineh, sunshinem)).append("\n")
+            if (hasUv) {
+                append(getString(R.string.weather_forecast_uv_max, item.uvIndexMax)).append("\n")
+                append("$uvWarning")
+            }
         }
 
 
@@ -1531,7 +1488,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
             val times      = daily.getJSONArray("time")
             val sunriseArr = daily.getJSONArray("sunrise")
             val sunsetArr  = daily.getJSONArray("sunset")
-            val sunshine   = daily.getJSONArray("sunshine_duration") // Sekunden
+            val sunshine   = daily.optJSONArray("sunshine_duration") // Sekunden, nicht bei jedem Anbieter
 
             val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
             val timeFmt = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -1616,7 +1573,9 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 showShadowHeightDialog(prefs) { displaySunCard(data, lat, lon) }
             }
 
-            // ── Sonnenscheindauer heute ────────────────────────────────────────
+            // ── Sonnenscheindauer heute (nur wenn der Anbieter sie liefert) ──────
+            binding.sunshineSection.visibility = if (sunshine != null) View.VISIBLE else View.GONE
+            if (sunshine != null) {
             val todaySunshineSec = sunshine.getDouble(1)
             val shH = (todaySunshineSec / 3600).toInt()
             val shM = ((todaySunshineSec % 3600) / 60).toInt()
@@ -1699,11 +1658,14 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 col.addView(dLabel)
                 binding.sunshineBarsContainer.addView(col)
             }
+            }
 
-            // ── UV-Index stündlich ─────────────────────────────────────────────
+            // ── UV-Index stündlich (nur wenn der Anbieter ihn liefert) ──────────
             val hourly   = data.getJSONObject("hourly")
             val hTimes   = hourly.getJSONArray("time")
-            val uvValues = hourly.getJSONArray("uv_index")
+            val uvValues = hourly.optJSONArray("uv_index")
+            binding.uvSection.visibility = if (uvValues != null) View.VISIBLE else View.GONE
+            if (uvValues != null) {
             val now      = System.currentTimeMillis()
             val oneHour  = 3600000L
 
@@ -1736,6 +1698,7 @@ function updateTimestamp(){ if(timestamps[currentFrame]){ const d=new Date(times
                 binding.uvProtectionText.visibility = View.VISIBLE
             } else {
                 binding.uvProtectionText.visibility = View.GONE
+            }
             }
 
         } catch (e: Exception) {

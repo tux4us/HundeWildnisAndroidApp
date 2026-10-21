@@ -586,12 +586,11 @@ class ActivityCalendarActivity : SecureBaseActivity() {
     }
 
     private fun fetchOpenMeteoWeekForecast(lat: Double, lon: Double): List<CalendarDayForecast> {
-        val url = "https://api.open-meteo.com/v1/forecast?" +
-                "latitude=$lat&longitude=$lon" +
-                "&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max" +
-                "&forecast_days=7&timezone=auto"
-
-        val json = JSONObject(URL(url).readText())
+        val json = WeatherProvider.fetchForecast(
+            applicationContext, lat, lon,
+            "&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max" +
+                    "&forecast_days=7&timezone=auto"
+        )
         val daily = json.getJSONObject("daily")
         val times = daily.getJSONArray("time")
         val codes = daily.getJSONArray("weather_code")

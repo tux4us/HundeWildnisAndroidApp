@@ -2,20 +2,11 @@ package com.hundewildnis.app
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
-import com.itextpdf.kernel.colors.ColorConstants
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.TextAlignment
-import com.itextpdf.layout.properties.UnitValue
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -31,8 +22,8 @@ object TrainingExportManager {
     private val fileNameFormat = SimpleDateFormat("yyyy-MM-dd_HHmm", Locale.GERMAN)
 
     // Farben (wie Emergency PDFs)
-    private val colorPrimary = DeviceRgb(45, 80, 22)  // #2d5016
-    private val colorSecondary = DeviceRgb(122, 146, 101)  // #7a9265
+    private val colorPrimary = Color.rgb(45, 80, 22)  // #2d5016
+    private val colorSecondary = Color.rgb(122, 146, 101)  // #7a9265
 
     // ════════════════════════════════════════════════════════════
     // 1. GESAMT-TAGEBUCH EXPORT (alle Kategorien eines Hundes)
@@ -66,39 +57,37 @@ object TrainingExportManager {
     ): File? {
         return try {
             val file = createTempFile(context, "$fileName.pdf")
-            val writer = PdfWriter(file)
-            val pdfDoc = PdfDocument(writer)
-            val document = Document(pdfDoc)
+            val document = PdfDoc(file)
 
             // Header
             document.add(
-                Paragraph("🦮 TRAININGSTAGEBUCH")
+                PdfParagraph("🦮 TRAININGSTAGEBUCH")
                     .setFontSize(20f)
                     .setBold()
                     .setFontColor(colorPrimary)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
             )
 
             document.add(
-                Paragraph("${dog.name}")
+                PdfParagraph("${dog.name}")
                     .setFontSize(16f)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
             // Übersicht
-            document.add(Paragraph("📊 ÜBERSICHT").setBold().setFontSize(14f).setFontColor(colorPrimary))
-            document.add(Paragraph("Erstellt: ${dateFormat.format(Date())}").setFontSize(10f))
-            document.add(Paragraph("Gesamt-Sessions: ${sessions.size}").setFontSize(10f))
-            document.add(Paragraph("Trainierte Kategorien: ${progressList.size}").setFontSize(10f))
-            document.add(Paragraph("Erreichte Meilensteine: ${milestones.size}").setFontSize(10f).setMarginBottom(15f))
+            document.add(PdfParagraph("📊 ÜBERSICHT").setBold().setFontSize(14f).setFontColor(colorPrimary))
+            document.add(PdfParagraph("Erstellt: ${dateFormat.format(Date())}").setFontSize(10f))
+            document.add(PdfParagraph("Gesamt-Sessions: ${sessions.size}").setFontSize(10f))
+            document.add(PdfParagraph("Trainierte Kategorien: ${progressList.size}").setFontSize(10f))
+            document.add(PdfParagraph("Erreichte Meilensteine: ${milestones.size}").setFontSize(10f).setMarginBottom(15f))
 
             // Fortschritt pro Kategorie
-            document.add(Paragraph("📈 FORTSCHRITT PRO KATEGORIE").setBold().setFontSize(14f).setFontColor(colorPrimary))
+            document.add(PdfParagraph("📈 FORTSCHRITT PRO KATEGORIE").setBold().setFontSize(14f).setFontColor(colorPrimary))
 
             progressList.sortedByDescending { it.progressPercentage }.forEach { progress ->
                 document.add(
-                    Paragraph(context.getString(R.string.training_export_category_progress_line,
+                    PdfParagraph(context.getString(R.string.training_export_category_progress_line,
                         progress.category.displayName(context), progress.progressPercentage,
                         progress.currentLevel?.displayName(context) ?: TrainingLevel.BEGINNER.displayName(context)))
                         .setFontSize(11f)
@@ -113,18 +102,18 @@ object TrainingExportManager {
                 }
 
                 document.add(
-                    Paragraph(effortStr)
+                    PdfParagraph(effortStr)
                         .setFontSize(9f)
                         .setMarginBottom(8f)
-                        .setFontColor(ColorConstants.DARK_GRAY)
+                        .setFontColor(Color.DKGRAY)
                 )
             }
 
             // Sessions gruppiert nach Kategorie
-            document.add(Paragraph(context.getString(R.string.training_export_all_sessions_header)).setBold().setFontSize(14f).setFontColor(colorPrimary))
+            document.add(PdfParagraph(context.getString(R.string.training_export_all_sessions_header)).setBold().setFontSize(14f).setFontColor(colorPrimary))
 
             sessions.groupBy { it.category }.forEach { (category, categorySessions) ->
-                document.add(Paragraph("\n${category.displayName(context)}").setBold().setFontSize(12f).setFontColor(colorSecondary))
+                document.add(PdfParagraph("\n${category.displayName(context)}").setBold().setFontSize(12f).setFontColor(colorSecondary))
 
                 categorySessions.sortedByDescending { it.date }.forEach { session ->
                     addSessionToDocument(context, document, session)
@@ -204,43 +193,41 @@ object TrainingExportManager {
     ): File? {
         return try {
             val file = createTempFile(context, "$fileName.pdf")
-            val writer = PdfWriter(file)
-            val pdfDoc = PdfDocument(writer)
-            val document = Document(pdfDoc)
+            val document = PdfDoc(file)
 
             // Header
             document.add(
-                Paragraph("📋 ${category.displayName(context)}")
+                PdfParagraph("📋 ${category.displayName(context)}")
                     .setFontSize(18f)
                     .setBold()
                     .setFontColor(colorPrimary)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
             )
 
             document.add(
-                Paragraph("${dog.name}")
+                PdfParagraph("${dog.name}")
                     .setFontSize(14f)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
             // Fortschritt
-            document.add(Paragraph("📊 FORTSCHRITT").setBold().setFontSize(14f).setFontColor(colorPrimary))
-            document.add(Paragraph(context.getString(R.string.training_export_progress_status, progress.progressPercentage, progress.currentLevel?.displayName(context) ?: TrainingLevel.BEGINNER.displayName(context))).setFontSize(11f))
-            document.add(Paragraph("Gesamt-Sessions: ${progress.totalSessions}").setFontSize(10f))
+            document.add(PdfParagraph("📊 FORTSCHRITT").setBold().setFontSize(14f).setFontColor(colorPrimary))
+            document.add(PdfParagraph(context.getString(R.string.training_export_progress_status, progress.progressPercentage, progress.currentLevel?.displayName(context) ?: TrainingLevel.BEGINNER.displayName(context))).setFontSize(11f))
+            document.add(PdfParagraph("Gesamt-Sessions: ${progress.totalSessions}").setFontSize(10f))
 
             if (progress.totalMinutes > 0) {
-                document.add(Paragraph("Trainingszeit: ${progress.totalMinutes} Minuten").setFontSize(10f))
+                document.add(PdfParagraph("Trainingszeit: ${progress.totalMinutes} Minuten").setFontSize(10f))
             }
             if (progress.totalRepetitions > 0) {
-                document.add(Paragraph("Wiederholungen: ${progress.totalRepetitions}x").setFontSize(10f))
+                document.add(PdfParagraph("Wiederholungen: ${progress.totalRepetitions}x").setFontSize(10f))
             }
 
-            document.add(Paragraph("Durchschnitt: ${String.format("%.1f", progress.averageSuccess)}/4.0").setFontSize(10f))
-            document.add(Paragraph("Aufeinanderfolgende Tage: ${progress.consecutiveDays}").setFontSize(10f).setMarginBottom(15f))
+            document.add(PdfParagraph("Durchschnitt: ${String.format("%.1f", progress.averageSuccess)}/4.0").setFontSize(10f))
+            document.add(PdfParagraph("Aufeinanderfolgende Tage: ${progress.consecutiveDays}").setFontSize(10f).setMarginBottom(15f))
 
             // Sessions
-            document.add(Paragraph("📝 TRAININGSEINHEITEN").setBold().setFontSize(14f).setFontColor(colorPrimary))
+            document.add(PdfParagraph("📝 TRAININGSEINHEITEN").setBold().setFontSize(14f).setFontColor(colorPrimary))
             sessions.sortedByDescending { it.date }.forEach { session ->
                 addSessionToDocument(context, document, session)
             }
@@ -311,16 +298,14 @@ object TrainingExportManager {
     ): File? {
         return try {
             val file = createTempFile(context, "$fileName.pdf")
-            val writer = PdfWriter(file)
-            val pdfDoc = PdfDocument(writer)
-            val document = Document(pdfDoc)
+            val document = PdfDoc(file)
 
             document.add(
-                Paragraph("📝 TRAININGSEINHEIT")
+                PdfParagraph("📝 TRAININGSEINHEIT")
                     .setFontSize(18f)
                     .setBold()
                     .setFontColor(colorPrimary)
-                    .setTextAlignment(TextAlignment.CENTER)
+                    .setTextAlignment(PdfAlign.CENTER)
                     .setMarginBottom(20f)
             )
 
@@ -373,9 +358,9 @@ object TrainingExportManager {
     // HILFSFUNKTIONEN
     // ════════════════════════════════════════════════════════════
 
-    private fun addSessionToDocument(context: Context, document: Document, session: TrainingSession, detailed: Boolean = false) {
+    private fun addSessionToDocument(context: Context, document: PdfDoc, session: TrainingSession, detailed: Boolean = false) {
         // ✅ Fix: Absolute Breite statt 100% (verhindert Überlauf bei langen Inhalten)
-        val table = Table(UnitValue.createPointArray(floatArrayOf(100f, 400f)))
+        val table = PdfTable.points(floatArrayOf(100f, 400f))
             .setMarginBottom(10f)
 
         table.addCell(createCell("Datum:", true))
@@ -428,11 +413,11 @@ object TrainingExportManager {
         document.add(table)
     }
 
-    private fun createCell(text: String, bold: Boolean = false, fontSize: Float = 10f): Cell {
-        val paragraph = Paragraph(text).setFontSize(fontSize)
+    private fun createCell(text: String, bold: Boolean = false, fontSize: Float = 10f): PdfCell {
+        val paragraph = PdfParagraph(text).setFontSize(fontSize)
         if (bold) paragraph.setBold()
 
-        return Cell().add(paragraph)
+        return PdfCell().add(paragraph)
             .setPadding(5f)
             .setKeepTogether(true) // Verhindert unschöne Seitenumbrüche innerhalb einer Zeile
     }

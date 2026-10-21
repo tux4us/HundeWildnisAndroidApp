@@ -230,9 +230,9 @@ class SupportActivity : SecureBaseActivity() {
             }
             startActivity(intent)
         } catch (e: Exception) {
-            // Fallback: Browser öffnen
+            // Fallback (kein Store installiert): Projektseite im Browser öffnen
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                data = Uri.parse("https://wildnislehrer.com/hundewildnisapp/")
             }
             startActivity(intent)
         }
@@ -244,8 +244,8 @@ class SupportActivity : SecureBaseActivity() {
             
             Die perfekte Begleiter-App für entspannte Spaziergänge mit deinem Hund!
             
-            Jetzt herunterladen:
-            https://play.google.com/store/apps/details?id=$packageName
+            Mehr Infos und Download:
+            https://wildnislehrer.com/hundewildnisapp/
         """.trimIndent()
 
         val intent = Intent(Intent.ACTION_SEND).apply {

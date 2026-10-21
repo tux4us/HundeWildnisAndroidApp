@@ -1,13 +1,9 @@
-# This file is an hundewildnis. Rename it to local.properties and add your API key.
+# Beispiel: in "local.properties" umbenennen. Diese Datei gehört NICHT in die Versionsverwaltung.
 #
-# This file must *NOT* be checked into Version Control Systems,
-# as it contains information specific to your local configuration.
-#
-# Location of the SDK. If you wish to specify a different location,
-# edit this file to point to the location of your SDK and restart the IDE.
+# Pfad zum Android-SDK (nur nötig, wenn ANDROID_HOME nicht gesetzt ist):
+# sdk.dir=/pfad/zum/Android/Sdk
 
-sdk.dir=/home/tuxus/Android/Sdk
-
-# Add your API keys here
-YOUTUBE_API_KEY=YOUR_API_KEY_HERE
-ORS_API_KEY=YOUR_ORS_API_KEY_HERE
+# Optional: Voreinstellung für den OpenRouteService-Schlüssel in selbst gebauten Versionen.
+# Nutzerinnen und Nutzer tragen ihren eigenen Schlüssel in der App unter Einstellungen ein.
+# Ohne Eintrag enthält der Build keinen Schlüssel (so wird auch F-Droid bauen).
+ORS_API_KEY=

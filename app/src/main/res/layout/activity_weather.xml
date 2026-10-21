@@ -141,49 +141,6 @@
                 </LinearLayout>
             </com.hundewildnis.app.GlassCardView>
 
-            <!-- Regenradar Card -->
-            <com.hundewildnis.app.GlassCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/weather_radar_card_title"
-                        android:textColor="@color/rd_overlay_accent"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:padding="16dp"
-                        android:paddingBottom="8dp" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="360dp">
-
-                        <WebView
-                            android:id="@+id/radarWebView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/weather_radar_live_data_hint"
-                        android:textColor="@color/rd_text_secondary"
-                        android:textSize="12sp"
-                        android:padding="8dp" />
-                </LinearLayout>
-            </com.hundewildnis.app.GlassCardView>
-
             <!-- ════════════════════════════════════════════════════════════════ -->
             <!-- NEU 2: TAGESLÄNGE & DÄMMERUNG CARD -->
             <!-- ════════════════════════════════════════════════════════════════ -->
@@ -531,6 +488,7 @@
 
                     <!-- UV-Index -->
                     <LinearLayout
+                        android:id="@+id/uvIndexRow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -1049,6 +1007,12 @@
                         android:lineSpacingMultiplier="1.5"
                         android:layout_marginBottom="12dp" />
 
+                    <LinearLayout
+                        android:id="@+id/sunshineSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
                     <!-- Divider -->
                     <View
                         android:layout_width="match_parent"
@@ -1082,6 +1046,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginBottom="12dp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/uvSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                     <!-- Divider -->
                     <View
@@ -1170,6 +1142,8 @@
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.4"
                         android:visibility="gone" />
+                    </LinearLayout>
+
 
                 </LinearLayout>
             </com.hundewildnis.app.GlassCardView>
@@ -1569,11 +1543,12 @@
 
             <!-- Datenquelle -->
             <TextView
+                android:id="@+id/weatherSourceFooter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="@string/weather_data_source_footer"
+                android:text=""
                 android:textColor="@color/rd_text_secondary"
                 android:textSize="11sp"
                 android:autoLink="web"

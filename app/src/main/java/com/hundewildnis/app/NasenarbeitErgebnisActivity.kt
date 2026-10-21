@@ -278,6 +278,7 @@ class NasenarbeitErgebnisActivity : SecureBaseActivity() {
         )
 
         NasenarbeitManager.addSession(this, session)
+        NasenarbeitMapSnapshot.adopt(this, intent.getStringExtra("map_snapshot"), session.id)
 
         // PDF Export in den öffentlichen Dokumenten-Ordner
         // Session ist bereits gespeichert (addSession() oben) - ein PDF-Fehler darf den

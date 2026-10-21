@@ -205,7 +205,7 @@ class WordPressApiParser {
         val connection = URL(urlString).openConnection()
         connection.connectTimeout = TIMEOUT
         connection.readTimeout = TIMEOUT
-        connection.setRequestProperty("User-Agent", "HundeWildnis-App/1.0")
+        connection.setRequestProperty("User-Agent", AppNetwork.USER_AGENT)
 
         val response = connection.getInputStream().bufferedReader().use { it.readText() }
         android.util.Log.d("WordPressAPI", "Response from $urlString: ${response.take(100)}...")

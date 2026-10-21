@@ -1,0 +1,16 @@
+Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – vom täglichen Training über Nasenarbeit, Vitalwertmessung und Erste Hilfe bis zu Karte, Routen und Wetteranalyse. Alle Funktionen teilen sich die Hunde-Profile.
+
+Deine Daten bleiben auf deinem Gerät. Die App enthält kein Tracking, keine Werbung und keine Google-Dienste.
+
+Funktionen (Auswahl):
+• Trainingstagebuch und Nasenarbeit mit Karte, Strecken- und Flächenberechnung
+• Revier-Wetter mit Pfotenwetter-Index, Luftqualität, Pollen und Tageslicht
+• Orte in der Nähe (Hundeausläufe, Tierärzte, Trinkwasser u. v. m.) und Routen
+• Erste Hilfe, Notfallbericht und Läufigkeitskalender
+• PDF-Export von Berichten
+• Sicherung per WebDAV (z. B. Nextcloud)
+
+Hinweise zu externen Diensten:
+Die App ruft nur auf deine Aktion hin Daten bei freien Diensten ab (OpenStreetMap, Overpass, Bright Sky/DWD). Für Wetter wählst du in den Einstellungen einen Anbieter (OpenWeatherMap oder Open-Meteo) und trägst deinen eigenen Schlüssel bzw. Server ein; ohne Eintrag zeigt die App kein Wetter. Für Routen trägst du deinen eigenen, kostenlosen OpenRouteService-Schlüssel ein. Den Overpass-Server kannst du in den Einstellungen ändern.
+
+Freie Software unter GPL-3.0-or-later.

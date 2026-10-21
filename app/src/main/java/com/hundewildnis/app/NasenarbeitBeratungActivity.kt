@@ -121,6 +121,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
     private var mapTopo     = listOf<String>()
     private var mapSegmentValues = doubleArrayOf()
     private var mapWeights = doubleArrayOf()
+    private var mapSnapshotPath: String? = null
 
     private val mapLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -149,6 +150,13 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                     NasenarbeitMapActivity.RESULT_SEGMENT_VALUES) ?: doubleArrayOf()
                 mapWeights = data.getDoubleArrayExtra(
                     NasenarbeitMapActivity.RESULT_WEIGHTS) ?: doubleArrayOf()
+
+                // Kartenausschnitt: einen früheren, nicht verwendeten Ausschnitt verwerfen
+                val newSnapshot = data.getStringExtra(NasenarbeitMapActivity.RESULT_MAP_SNAPSHOT)
+                if (newSnapshot != null) {
+                    NasenarbeitMapSnapshot.discardPending(this, mapSnapshotPath)
+                    mapSnapshotPath = newSnapshot
+                }
 
                 // Bei jedem neuen Kartenergebnis die abgeleiteten Sequenzen zurücksetzen,
                 // damit buildGelaendeScreen() sie garantiert mit den NEUEN Kartendaten
@@ -272,9 +280,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
         lifecycleScope.launch {
             try {
                 val data = withContext(Dispatchers.IO) {
-                    val url = "https://api.open-meteo.com/v1/forecast?latitude=$paramLat&longitude=$paramLon" +
-                            "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m"
-                    JSONObject(URL(url).readText()).getJSONObject("current")
+                    WeatherProvider.fetchForecast(
+                        applicationContext, paramLat, paramLon,
+                        "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m"
+                    ).getJSONObject("current")
                 }
                 paramTemp     = data.getDouble("temperature_2m")
                 paramHumidity = data.getInt("relative_humidity_2m")
@@ -285,7 +294,10 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
                 showScreen(1)
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@NasenarbeitBeratungActivity, getString(R.string.nasenarbeit_beratung_weather_not_available), Toast.LENGTH_LONG).show()
+                    val hint = if (e is WeatherProviderException) WeatherProvider.describeError(applicationContext, e) else ""
+                    Toast.makeText(this@NasenarbeitBeratungActivity,
+                        getString(R.string.nasenarbeit_beratung_weather_not_available) + (if (hint.isNotEmpty()) "\n$hint" else ""),
+                        Toast.LENGTH_LONG).show()
                     paramTemp = 15.0; paramBf = 3; paramWmo = 2; paramHumidity = 70
                     buildWetterScreen()
                     showScreen(1)
@@ -972,6 +984,7 @@ class NasenarbeitBeratungActivity : SecureBaseActivity(), LocationListener {
             intent.putExtra("scoring_p", result.scores[1])
             intent.putExtra("scoring_f", result.scores[2])
             intent.putExtra("primaer_disziplin", result.primaer.name)
+            mapSnapshotPath?.let { intent.putExtra("map_snapshot", it) }
             startActivity(intent)
         }
         binding.btnNeueBeratung.setOnClickListener { resetAndRestart() }

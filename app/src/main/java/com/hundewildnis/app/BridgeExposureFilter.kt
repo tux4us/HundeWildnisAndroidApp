@@ -44,8 +44,8 @@ object BridgeExposureFilter {
      * nächstgelegenen zurück, sortiert nach Entfernung zum Standort.
      * Keine Höhen- oder Eignungsprüfung mehr – siehe Klassenkommentar.
      */
-    suspend fun fetchNearbyBridges(lat: Double, lon: Double, radiusMeters: Int): List<BridgeCandidate> {
-        val bridges = fetchBridgeWays(lat, lon, radiusMeters)
+    suspend fun fetchNearbyBridges(context: android.content.Context, lat: Double, lon: Double, radiusMeters: Int): List<BridgeCandidate> {
+        val bridges = fetchBridgeWays(context, lat, lon, radiusMeters)
         if (bridges.isEmpty()) return emptyList()
 
         return bridges
@@ -69,7 +69,7 @@ object BridgeExposureFilter {
 
     private data class RawBridge(val id: String, val name: String, val nodes: List<Pair<Double, Double>>)
 
-    private suspend fun fetchBridgeWays(lat: Double, lon: Double, radiusMeters: Int): List<RawBridge> {
+    private suspend fun fetchBridgeWays(context: android.content.Context, lat: Double, lon: Double, radiusMeters: Int): List<RawBridge> {
         // Bewusst nur nach bridge=yes gefiltert, OHNE zusätzliches highway-Tag,
         // damit auch Brücken-Segmente längerer Straßen mit variierendem
         // Tag-Set zuverlässig gefunden werden.
@@ -83,7 +83,7 @@ object BridgeExposureFilter {
             out skel qt;
         """.trimIndent()
 
-        val json = OverpassHelper.queryWithRetry(query, maxRetries = 1) ?: return emptyList()
+        val json = OverpassHelper.queryWithRetry(context, query, maxRetries = 1) ?: return emptyList()
         val elements = json.getJSONArray("elements")
 
         // Erst alle Nodes indizieren, dann Ways daraus zusammensetzen

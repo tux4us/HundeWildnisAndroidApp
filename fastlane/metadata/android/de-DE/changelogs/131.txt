@@ -1,0 +1,5 @@
+• Freie Lizenz (GPL-3.0-or-later), vorbereitet für F-Droid
+• PDF-Export ohne Fremdbibliothek
+• Regenradar entfernt
+• Server für Wetter und Overpass in den Einstellungen änderbar
+• Kartenausschnitt im Nasenarbeit-PDF aus der sichtbaren Karte

@@ -88,22 +88,6 @@
     public static final ** CREATOR;
 }
 
-# ════════════════════════════════════════════════════════════
-# SPEZIFISCHE FIXES (iText & Jsoup)
-# ════════════════════════════════════════════════════════════
-
-# iText 7 benötigt oft Reflection für interne Komponenten
--keep class com.itextpdf.** { *; }
--dontwarn com.itextpdf.**
--keepclassmembers class com.itextpdf.** {
-    public <fields>;
-    public <methods>;
-}
-
-# Jsoup
--dontwarn org.jsoup.**
--dontwarn com.google.re2j.**
-
 # OSMDroid
 -keep class org.osmdroid.** { *; }
 -dontwarn org.osmdroid.**

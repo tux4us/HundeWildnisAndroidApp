@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -33,18 +34,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hundewildnis.app.databinding.ActivityEmergencyReportBinding
 import com.hundewildnis.app.databinding.ItemEmergencyReportBinding
-import com.itextpdf.io.image.ImageDataFactory
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.AreaBreak
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Image
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.TextAlignment
-import com.itextpdf.layout.properties.UnitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -547,9 +536,7 @@ class EmergencyActivity : SecureBaseActivity() {
             ?: throw IOException("MediaStore insert failed")
 
         contentResolver.openOutputStream(uri)?.use { outputStream ->
-            val writer = PdfWriter(outputStream)
-            val pdf = PdfDocument(writer)
-            val document = Document(pdf)
+            val document = PdfDoc(outputStream)
             writePdfContent(document)
             document.close()
         } ?: throw IOException("Failed to open output stream")
@@ -571,9 +558,7 @@ class EmergencyActivity : SecureBaseActivity() {
         val docsDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "HundeWildnis")
         if (!docsDir.exists()) docsDir.mkdirs()
         val file = File(docsDir, fileName)
-        val writer = PdfWriter(FileOutputStream(file))
-        val pdf = PdfDocument(writer)
-        val document = Document(pdf)
+        val document = PdfDoc(file)
         writePdfContent(document)
         document.close()
         return file
@@ -583,82 +568,82 @@ class EmergencyActivity : SecureBaseActivity() {
     // PDF-INHALT
     // ════════════════════════════════════════════════════════════════
 
-    private fun writePdfContent(document: Document) {
-        document.add(Paragraph(getString(R.string.emergency_pdf_header_title))
+    private fun writePdfContent(document: PdfDoc) {
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_header_title))
             .setFontSize(22f)
-            .setFontColor(DeviceRgb(176, 0, 32))
-            .setTextAlignment(TextAlignment.CENTER))
+            .setFontColor(Color.rgb(176, 0, 32))
+            .setTextAlignment(PdfAlign.CENTER))
 
-        document.add(Paragraph(getString(R.string.emergency_pdf_created_at_format, SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())))
-            .setTextAlignment(TextAlignment.CENTER))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_created_at_format, SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())))
+            .setTextAlignment(PdfAlign.CENTER))
 
-        document.add(Paragraph(getString(R.string.emergency_pdf_footer_app_credit))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_footer_app_credit))
             .setFontSize(10f)
-            .setTextAlignment(TextAlignment.CENTER))
+            .setTextAlignment(PdfAlign.CENTER))
 
-        document.add(Paragraph("\n"))
+        document.add(PdfParagraph("\n"))
 
-        document.add(Paragraph(getString(R.string.emergency_pdf_medical_emergency_header))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_medical_emergency_header))
             .setBold().setFontSize(16f))
-        document.add(Paragraph(getString(R.string.emergency_pdf_symptom_format, binding.spinnerSymptoms.text)).setFontSize(14f))
-        document.add(Paragraph(getString(R.string.emergency_pdf_additional_info_format, binding.etNotes.text)).setFontSize(12f))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_symptom_format, binding.spinnerSymptoms.text)).setFontSize(14f))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_additional_info_format, binding.etNotes.text)).setFontSize(12f))
 
         lastLocation?.let {
             val osmUrl = "https://www.openstreetmap.org/?mlat=${it.latitude}&mlon=${it.longitude}#map=18/${it.latitude}/${it.longitude}"
-            document.add(Paragraph(getString(R.string.emergency_pdf_location_format, it.latitude, it.longitude)).setBold())
-            document.add(Paragraph(getString(R.string.emergency_pdf_map_link_format, osmUrl)).setFontColor(DeviceRgb(0, 0, 255)))
+            document.add(PdfParagraph(getString(R.string.emergency_pdf_location_format, it.latitude, it.longitude)).setBold())
+            document.add(PdfParagraph(getString(R.string.emergency_pdf_map_link_format, osmUrl)).setFontColor(Color.rgb(0, 0, 255)))
         }
 
-        document.add(Paragraph("\n"))
+        document.add(PdfParagraph("\n"))
 
         // ── STAMMDATEN ───────────────────────────────────────────────
-        document.add(Paragraph(getString(R.string.emergency_pdf_patient_data_header))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_patient_data_header))
             .setBold().setFontSize(16f))
 
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(30f, 70f))).useAllAvailableWidth()
+        val table = PdfTable.percent(floatArrayOf(30f, 70f)).useAllAvailableWidth()
 
         profile?.let { p ->
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_name))))
-            table.addCell(Cell().add(Paragraph(p.name)))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_name))))
+            table.addCell(PdfCell().add(PdfParagraph(p.name)))
 
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_breed))))
-            table.addCell(Cell().add(Paragraph(p.breed)))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_breed))))
+            table.addCell(PdfCell().add(PdfParagraph(p.breed)))
 
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_birthdate))))
-            table.addCell(Cell().add(Paragraph(p.birthDate)))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_birthdate))))
+            table.addCell(PdfCell().add(PdfParagraph(p.birthDate)))
 
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_gender))))
-            table.addCell(Cell().add(Paragraph(GenderCode.displayName(this, p.gender))))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_gender))))
+            table.addCell(PdfCell().add(PdfParagraph(GenderCode.displayName(this, p.gender))))
 
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_neutered))))
-            table.addCell(Cell().add(Paragraph(p.neutered.ifEmpty { getString(R.string.emergency_pdf_value_unknown) })))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_neutered))))
+            table.addCell(PdfCell().add(PdfParagraph(p.neutered.ifEmpty { getString(R.string.emergency_pdf_value_unknown) })))
 
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_weight))))
-            table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_value_kg_format, p.weight))))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_weight))))
+            table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_value_kg_format, p.weight))))
 
             if (p.shoulderHeight.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_shoulder_height))))
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_value_cm_format, p.shoulderHeight))))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_shoulder_height))))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_value_cm_format, p.shoulderHeight))))
             }
             if (p.bodyLength.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_body_length))))
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_value_cm_format, p.bodyLength))))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_body_length))))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_value_cm_format, p.bodyLength))))
             }
             if (p.chipNumber.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_chip_number))))
-                table.addCell(Cell().add(Paragraph(p.chipNumber)))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_chip_number))))
+                table.addCell(PdfCell().add(PdfParagraph(p.chipNumber)))
             }
             if (p.vaccinationStatus.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_vaccination_status))))
-                table.addCell(Cell().add(Paragraph(p.vaccinationStatus)))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_vaccination_status))))
+                table.addCell(PdfCell().add(PdfParagraph(p.vaccinationStatus)))
             }
             if (p.medicalNotes.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_medical_notes))))
-                table.addCell(Cell().add(Paragraph(p.medicalNotes)))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_medical_notes))))
+                table.addCell(PdfCell().add(PdfParagraph(p.medicalNotes)))
             }
             if (p.owner.isNotEmpty()) {
-                table.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_field_owner))))
-                table.addCell(Cell().add(Paragraph(p.owner)))
+                table.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_field_owner))))
+                table.addCell(PdfCell().add(PdfParagraph(p.owner)))
             }
         }
 
@@ -667,19 +652,19 @@ class EmergencyActivity : SecureBaseActivity() {
         // ── LÄUFIGKEIT (nur Hündinnen, nicht kastriert) ──────────────
         profile?.let { p ->
             if ((p.gender == GenderCode.FEMALE || p.gender == "Hündin") && (p.neutered != NeuteredCode.YES && p.neutered != "Ja")) {
-                document.add(Paragraph("\n"))
+                document.add(PdfParagraph("\n"))
                 writeHeatCyclePdfSection(document, p)
             }
         }
 
         // ── FOTOS ────────────────────────────────────────────────────
         if (attachedPhotos.isNotEmpty()) {
-            document.add(AreaBreak())
-            document.add(Paragraph(getString(R.string.emergency_pdf_photos_header))
+            document.add(PdfPageBreak())
+            document.add(PdfParagraph(getString(R.string.emergency_pdf_photos_header))
                 .setBold().setFontSize(16f))
-            document.add(Paragraph("\n"))
+            document.add(PdfParagraph("\n"))
 
-            var photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
+            var photoTable = PdfTable.percent(floatArrayOf(50f, 50f))
                 .useAllAvailableWidth().setMarginTop(10f)
             var imageCounter = 0
 
@@ -698,9 +683,9 @@ class EmergencyActivity : SecureBaseActivity() {
                     val stream = ByteArrayOutputStream()
                     scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream)
 
-                    val img = Image(ImageDataFactory.create(stream.toByteArray())).setAutoScale(true)
-                    val cell = Cell().add(img)
-                    cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                    val img = PdfImage(stream.toByteArray()).setAutoScale(true)
+                    val cell = PdfCell().add(img)
+                    cell.setBorder(PdfBorder.NONE)
                     cell.setPadding(10f)
                     photoTable.addCell(cell)
                     imageCounter++
@@ -710,8 +695,8 @@ class EmergencyActivity : SecureBaseActivity() {
 
                     if (imageCounter % 2 == 0 && imageCounter < attachedPhotos.size) {
                         document.add(photoTable)
-                        document.add(AreaBreak())
-                        photoTable = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
+                        document.add(PdfPageBreak())
+                        photoTable = PdfTable.percent(floatArrayOf(50f, 50f))
                             .useAllAvailableWidth().setMarginTop(10f)
                     }
                 } catch (e: Exception) { e.printStackTrace() }
@@ -719,8 +704,8 @@ class EmergencyActivity : SecureBaseActivity() {
 
             if (photoTable.getNumberOfRows() > 0) {
                 if (imageCounter % 2 != 0) {
-                    val emptyCell = Cell().add(Paragraph(""))
-                    emptyCell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                    val emptyCell = PdfCell().add(PdfParagraph(""))
+                    emptyCell.setBorder(PdfBorder.NONE)
                     photoTable.addCell(emptyCell)
                 }
                 document.add(photoTable)
@@ -733,13 +718,13 @@ class EmergencyActivity : SecureBaseActivity() {
     // Wird nur für intakte Hündinnen eingefügt.
     // ════════════════════════════════════════════════════════════════
 
-    private fun writeHeatCyclePdfSection(document: Document, p: DogProfile) {
+    private fun writeHeatCyclePdfSection(document: PdfDoc, p: DogProfile) {
         val cycles = p.heatCycles
 
-        document.add(Paragraph(getString(R.string.emergency_pdf_heat_cycle_header))
+        document.add(PdfParagraph(getString(R.string.emergency_pdf_heat_cycle_header))
             .setBold().setFontSize(16f))
 
-        val heatTable = Table(UnitValue.createPercentArray(floatArrayOf(40f, 60f))).useAllAvailableWidth()
+        val heatTable = PdfTable.percent(floatArrayOf(40f, 60f)).useAllAvailableWidth()
 
         // ── Aktueller Status ─────────────────────────────────────────
         val activeCycle = cycles.firstOrNull { it.isActive }
@@ -748,8 +733,8 @@ class EmergencyActivity : SecureBaseActivity() {
             cycles.isEmpty()    -> getString(R.string.emergency_pdf_heat_status_no_data)
             else                -> getString(R.string.emergency_pdf_heat_status_not_active)
         }
-        heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_heat_current_status_label)).setBold()))
-        heatTable.addCell(Cell().add(Paragraph(statusText)))
+        heatTable.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_heat_current_status_label)).setBold()))
+        heatTable.addCell(PdfCell().add(PdfParagraph(statusText)))
 
         // ── Letzte Läufigkeit ────────────────────────────────────────
         val lastCycle = cycles.filter { !it.isActive }.maxByOrNull { it.startDate }
@@ -759,23 +744,23 @@ class EmergencyActivity : SecureBaseActivity() {
                 if (lastCycle.endDate.isNotEmpty()) append(" – ${lastCycle.endDate} (${lastCycle.durationLabel})")
                 append(getString(R.string.emergency_pdf_heat_intensity_suffix_format, lastCycle.intensity))
             }
-            heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_heat_last_cycle_label)).setBold()))
-            heatTable.addCell(Cell().add(Paragraph(lastInfo)))
+            heatTable.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_heat_last_cycle_label)).setBold()))
+            heatTable.addCell(PdfCell().add(PdfParagraph(lastInfo)))
 
             if (lastCycle.behaviorSigns.isNotEmpty()) {
-                heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_pdf_heat_behavior_changes_label)).setBold()))
-                heatTable.addCell(Cell().add(Paragraph(lastCycle.behaviorSigns.joinToString(", "))))
+                heatTable.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_pdf_heat_behavior_changes_label)).setBold()))
+                heatTable.addCell(PdfCell().add(PdfParagraph(lastCycle.behaviorSigns.joinToString(", "))))
             }
             if (lastCycle.symptoms.isNotEmpty()) {
-                heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_heat_cycle_symptoms_label)).setBold()))
-                heatTable.addCell(Cell().add(Paragraph(lastCycle.symptoms)))
+                heatTable.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_heat_cycle_symptoms_label)).setBold()))
+                heatTable.addCell(PdfCell().add(PdfParagraph(lastCycle.symptoms)))
             }
             if (lastCycle.hasPseudoPregnancy) {
                 val pseudoText = if (lastCycle.pseudoPregnancySigns.isNotEmpty()) {
                     lastCycle.pseudoPregnancySigns.joinToString(", ")
                 } else getString(R.string.emergency_heat_cycle_observed)
-                heatTable.addCell(Cell().add(Paragraph(getString(R.string.emergency_heat_cycle_pseudopregnancy_label)).setBold()))
-                heatTable.addCell(Cell().add(Paragraph(pseudoText)))
+                heatTable.addCell(PdfCell().add(PdfParagraph(getString(R.string.emergency_heat_cycle_pseudopregnancy_label)).setBold()))
+                heatTable.addCell(PdfCell().add(PdfParagraph(pseudoText)))
             }
         }
 
@@ -788,18 +773,18 @@ class EmergencyActivity : SecureBaseActivity() {
                         getString(R.string.emergency_heat_cycle_filtered_intervals, analysis.zwischenlaeufe)
                     else ""
         }
-        heatTable.addCell(Cell().add(Paragraph(avgText)))
+        heatTable.addCell(PdfCell().add(PdfParagraph(avgText)))
 
 
         document.add(heatTable)
 
         // Hinweisbox wenn aktuell läufig — medizinisch relevant
         if (activeCycle != null) {
-            document.add(Paragraph("\n"))
-            document.add(Paragraph(
+            document.add(PdfParagraph("\n"))
+            document.add(PdfParagraph(
                 getString(R.string.emergency_heat_cycle_vet_notice, activeCycle.startDate)
             ).setFontSize(11f)
-                .setFontColor(DeviceRgb(176, 0, 32))
+                .setFontColor(Color.rgb(176, 0, 32))
                 .setBold())
         }
     }

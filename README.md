@@ -7,7 +7,7 @@
 [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-100%25-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Version](https://img.shields.io/badge/Version-20.2%20Build%20114-C9A84C?style=flat-square)](#)
-[![License](https://img.shields.io/badge/Lizenz-MIT-5C8A3C?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/Lizenz-GPL--3.0--or--later-5C8A3C?style=flat-square)](LICENSE)
 [![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#-datenschutz--sicherheit)
 [![F-Droid](https://img.shields.io/badge/F--Droid-in%20Vorbereitung-lightgrey?style=flat-square)](https://f-droid.org/)
 
@@ -47,7 +47,7 @@ Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – 
 - Alle Nutzerdaten bleiben lokal auf dem Gerät – keine Cloud-Pflicht
 - Keine proprietären Google-Bibliotheken, keine Google Services
 - WebDAV-Synchronisation für geräteübergreifende Datensicherung (Nextcloud & kompatible Server)
-- **Ausschließlich verfügbar über den Google Play Store**
+- Freie Software unter **GPL-3.0-or-later**, Quelltext öffentlich; Veröffentlichung über Google Play Store und F-Droid (in Vorbereitung)
 
 ---
 
@@ -90,7 +90,7 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | 📎 Impressum | Anbieterkennzeichnung |
 | ℹ️ Über die App | Versionsnummer, Website- und Kontakt-Link |
 
-**Zum ORS-Routing-Key:** Standardmäßig nutzt die App einen in der App hinterlegten OpenRouteService-Schlüssel. Ein eigener, kostenloser Schlüssel ist optional, wird verschlüsselt gespeichert und hat Vorrang. Ablauf der Routenberechnung: zunächst vollständige Route mit Höhenprofil/Oberflächen-/Wegtyp-Daten → bei Fehlschlag Route nur mit Höhendaten → letzter Fallback gestrichelte Luftlinie.
+**Zum ORS-Routing-Key:** Für die Routenberechnung trägst du in den Einstellungen deinen eigenen, kostenlosen OpenRouteService-Schlüssel ein (openrouteservice.org). Er wird verschlüsselt gespeichert. Bei Builds, die ein Entwickler mit einem eigenen Schlüssel in `local.properties` erstellt hat, dient dieser nur als Voreinstellung; F-Droid-Builds enthalten keinen Schlüssel. Ablauf der Routenberechnung: zunächst vollständige Route mit Höhenprofil/Oberflächen-/Wegtyp-Daten → bei Fehlschlag Route nur mit Höhendaten → letzter Fallback gestrichelte Luftlinie.
 
 ---
 
@@ -138,7 +138,7 @@ Der Beratungs-Wizard führt durch fünf Bildschirme mit Fortschrittsanzeige:
 | Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
 | 📝 Tagesnotizen | Notizen mit Text, Foto, Geodaten | Automatischer Wetter-/GPS-Abruf · Kamera/Galerie · PDF-/GPX-Export, Teilen, Löschen · Historie |
-| 🌦️ Revier-Wetter | Umfassender Wetterbericht (Open-Meteo) | Temperatur/Wind/Luftdruck/UV · Pfotenwetter-Index · Tageslicht/Mondphase · 24h-/7-Tage-Vorschau · Luftqualität/Pollen · Regenradar · Wetter-Favoriten |
+| 🌦️ Revier-Wetter | Umfassender Wetterbericht (OpenWeatherMap oder Open-Meteo, jeweils mit eigenem Zugang; ohne Zugang erscheint ein Hinweis). Mit OpenWeatherMap (kostenloser Tarif) entfallen UV, Sonnenscheindauer, Pollen und die Gewitter-Vorhersage | Temperatur/Wind/Luftdruck/UV · Pfotenwetter-Index · Tageslicht/Mondphase · 24h-/7-Tage-Vorschau · Luftqualität/Pollen · Wetter-Favoriten |
 | ⛈️ Gewitterwarner | Zwei Funktionen: Blitz-Donner-Distanzrechner (offline) + Gewitterrisiko-Vorhersage | Zeitmessung Blitz→Donner, Ampel-Einstufung, Trend/Näherungsgeschwindigkeit/ETA bei Folgemessungen |
 | 🗺️ Revier-Navigation | OSM-Karte, POI-Suche, Routing – **siehe Detailabschnitt unten** | 34 POI-Kategorien (3 km, Gewitterschutz 5 km) mit Untertyp-Erkennung und Flächen-/Wege-Umrissen · Routing Fuß/Fahrrad/Auto · Live-Rerouting · Favoriten · Zoom-Buttons, umschaltbares Bedienfeld |
 | 🧭 Kompass | Digitale Orientierung + Himmelsberechnung – s. Abschnitt „Was ist neu" | Sensor-Fallback-Kette · Sonne/Mond/Polaris-Anzeige inkl. Großer-Wagen-Uhrzeiger, alle 30 s aktualisiert, vollständig offline berechnet |
@@ -256,14 +256,13 @@ UI               Android Views · ViewBinding · Material Design
 |---|---|
 | Karten | OSMDroid (OpenStreetMap) |
 | Routing | OpenRouteService (Fuß/Fahrrad/Auto) |
-| Wetter | Open-Meteo API (CC BY 4.0) |
-| Regenradar | RainViewer API (Leaflet.js in WebView) |
+| Wetter | Anbieter-Auswahl in „Dienste & Server“: OpenWeatherMap (eigener Schlüssel) oder Open-Meteo (eigene Adresse/Schlüssel); kein vorbelegter Dienst; Bright Sky (DWD) im Höhenmesser |
 | Gelände / POI | Overpass API (OpenStreetMap) |
 | Astronomische Berechnung | Eigene Implementierung nach Jean Meeus (`SkyCalculator`) |
 | Diagramme | MPAndroidChart |
 | Kamera | Camera2 API |
-| PDF | iText7 |
-| HTML-Parser | Jsoup |
+| PDF | Eigene Ausgabe auf Basis von `android.graphics.pdf.PdfDocument` (keine Bibliothek) |
+| Bilder | Coil |
 | Hintergrund | WorkManager |
 | Netzwerk | HttpURLConnection |
 | JSON | Gson |
@@ -299,13 +298,13 @@ UI               Android Views · ViewBinding · Material Design
 | Android | 7.0 (API 24) oder höher |
 | Internet | Für Karte, Wetter, Blog-Inhalte, WebDAV-Sync |
 | GPS | Optional – für Navigation, Tempo-Trainer, Nasenarbeit, Kompass-Himmelsberechnung |
-| ORS-API-Key | Optional – eigener Schlüssel für Routing (kostenlos bei openrouteservice.org) |
+| ORS-API-Key | Für Routing erforderlich – eigener Schlüssel (kostenlos bei openrouteservice.org) |
 
 ---
 
 ## 📥 Download
 
-Die App ist **ausschließlich über den Google Play Store** verfügbar:
+Die App ist im Google Play Store verfügbar; eine Veröffentlichung auf F-Droid ist in Vorbereitung:
 
 ▶ [play.google.com/store/apps/details?id=com.hundewildnis.app](https://play.google.com/store/apps/details?id=com.hundewildnis.app)
 
@@ -322,7 +321,7 @@ Issues und Pull Requests sind willkommen. Bitte kontaktiert uns gern.
 
 ## 📄 Lizenz
 
-Dieses Projekt ist unter [diesen Bedingungen](https://github.com/tux4us/HundeWildnisAndroidApp?tab=License-1-ov-file) lizenziert.
+Die HundeWildnis App ist freie Software: Du kannst sie unter den Bedingungen der **GNU General Public License, Version 3 oder (nach deiner Wahl) jeder späteren Version** weitergeben und verändern. Den Lizenztext findest du in [`LICENSE`](LICENSE), Hinweise zu Schrift, Bibliotheken und externen Diensten in [`NOTICE.md`](NOTICE.md).
 
 ---
 
@@ -337,8 +336,8 @@ Dieses Projekt ist unter [diesen Bedingungen](https://github.com/tux4us/HundeWil
 ## 🙏 Danksagungen
 
 - Kartendaten © [OpenStreetMap Contributors](https://www.openstreetmap.org/copyright) (ODbL)
-- Wetterdaten © [Open-Meteo](https://open-meteo.com/) (CC BY 4.0)
-- Regenradar © [RainViewer](https://www.rainviewer.com/)
+- Wetterdaten je nach gewähltem Anbieter: © [OpenWeather](https://openweathermap.org/) bzw. © [Open-Meteo](https://open-meteo.com/) (CC BY 4.0)
+- Aktuelles Wetter (Bright Sky) © [Deutscher Wetterdienst](https://www.dwd.de/)
 - Routing © [OpenRouteService](https://openrouteservice.org/) (HeiGIT gGmbH)
 - Astronomische Berechnungsgrundlage: Jean Meeus, *Astronomical Algorithms*
 

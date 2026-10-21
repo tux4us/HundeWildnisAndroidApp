@@ -14,8 +14,8 @@ android {
         applicationId = "com.hundewildnis.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 131
-        versionName = "24.1"
+        versionCode = 132
+        versionName = "25.0"
 
         // API Key aus local.properties laden
         val localProperties = Properties()
@@ -57,6 +57,13 @@ android {
         buildConfig = true
     }
 
+    // Keine verschlüsselten Abhängigkeits-Metadaten (Google-Signing-Block) in APK/AAB:
+    // F-Droid verlangt das für Reproduzierbarkeit und Datenschutz.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     bundle {
         language {
             enableSplit = false
@@ -70,7 +77,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.recyclerview)
-    implementation(libs.jsoup)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)
@@ -85,10 +91,8 @@ dependencies {
     // Google Play Services & YouTube Player entfernt für F-Droid Kompatibilität
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    implementation("com.github.bumptech.glide:glide:5.0.5")
 
     // ✅ HUNDE-STAMMDATEN
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation("com.itextpdf:itext7-core:7.2.5")
 }

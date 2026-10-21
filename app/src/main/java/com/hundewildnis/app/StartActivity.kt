@@ -260,6 +260,9 @@ class StartActivity : BaseBottomNavActivity() {
         val orsEdit = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOrsApiKey)
         val orsLayout = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.layoutOrsApiKey)
         val btnClearOrs = dialogView.findViewById<View>(R.id.btnClearOrsKey)
+        dialogView.findViewById<View>(R.id.btnNetworkServices).setOnClickListener {
+            showNetworkServicesDialog()
+        }
 
         orsLayout.setEndIconOnClickListener {
             showOrsInfoDialog()
@@ -311,6 +314,102 @@ class StartActivity : BaseBottomNavActivity() {
             }
             .create()
         dialog.show()
+    }
+
+    /**
+     * Wetteranbieter (OpenWeatherMap oder Open-Meteo, jeweils mit eigenem Zugang) und Overpass.
+     * Es gibt keinen vorbelegten Wetterdienst: Ohne Auswahl und Zugang ruft die App kein Wetter ab.
+     * Es werden nur https-Adressen akzeptiert.
+     */
+    private fun showNetworkServicesDialog() {
+        val settings = AppSettings(this)
+        val view = layoutInflater.inflate(R.layout.dialog_network_services, null)
+        val radio = view.findViewById<android.widget.RadioGroup>(R.id.radioWeatherProvider)
+        val groupOwm = view.findViewById<View>(R.id.groupOwm)
+        val groupOm = view.findViewById<View>(R.id.groupOpenMeteo)
+        val editOwmKey = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOwmApiKey)
+        val editWeather = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editWeatherUrl)
+        val editAir = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editAirQualityUrl)
+        val editKey = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editWeatherApiKey)
+        val editOverpass = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOverpassUrl)
+        val btnReset = view.findViewById<View>(R.id.btnResetNetworkServices)
+
+        fun updateGroups() {
+            groupOwm.visibility = if (radio.checkedRadioButtonId == R.id.radioProviderOwm) View.VISIBLE else View.GONE
+            groupOm.visibility = if (radio.checkedRadioButtonId == R.id.radioProviderOpenMeteo) View.VISIBLE else View.GONE
+        }
+        radio.check(when (settings.getWeatherProvider()) {
+            WeatherProviderType.OPEN_WEATHER_MAP -> R.id.radioProviderOwm
+            WeatherProviderType.OPEN_METEO -> R.id.radioProviderOpenMeteo
+            WeatherProviderType.NONE -> R.id.radioProviderNone
+        })
+        updateGroups()
+        radio.setOnCheckedChangeListener { _, _ -> updateGroups() }
+
+        settings.getWeatherBaseUrl()?.let { editWeather.setText(it) }
+        settings.getAirQualityBaseUrl()?.let { editAir.setText(it) }
+        settings.getCustomOverpassUrl()?.let { editOverpass.setText(it) }
+        if (settings.hasWeatherApiKey()) editKey.setText("********")
+        if (settings.hasOwmApiKey()) editOwmKey.setText("********")
+
+        btnReset.setOnClickListener {
+            radio.check(R.id.radioProviderNone)
+            editOwmKey.setText("")
+            editWeather.setText("")
+            editAir.setText("")
+            editKey.setText("")
+            editOverpass.setText("")
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.net_services_title))
+            .setView(view)
+            .setPositiveButton(getString(R.string.start_done), null)
+            .setNegativeButton(getString(R.string.cancel), null)
+            .create()
+        dialog.show()
+
+        // Eigener Klick-Handler, damit der Dialog bei ungültiger Eingabe offen bleibt
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val inputs = listOf(editWeather, editAir, editOverpass).map { it.text?.toString()?.trim().orEmpty() }
+            val invalid = inputs.firstOrNull { it.isNotEmpty() && AppSettings.normalizeHttpsUrl(it) == null }
+            if (invalid != null) {
+                Toast.makeText(this, getString(R.string.net_services_invalid_url, invalid), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            settings.setWeatherServers(inputs[0], inputs[1])
+            settings.setCustomOverpassUrl(inputs[2])
+
+            val omKeyInput = editKey.text?.toString()?.trim().orEmpty()
+            when {
+                omKeyInput.isEmpty() -> settings.clearWeatherApiKey()
+                omKeyInput != "********" -> settings.saveWeatherApiKey(omKeyInput)
+            }
+            val owmKeyInput = editOwmKey.text?.toString()?.trim().orEmpty()
+            when {
+                owmKeyInput.isEmpty() -> settings.clearOwmApiKey()
+                owmKeyInput != "********" -> settings.saveOwmApiKey(owmKeyInput)
+            }
+
+            val chosen = when (radio.checkedRadioButtonId) {
+                R.id.radioProviderOwm -> WeatherProviderType.OPEN_WEATHER_MAP
+                R.id.radioProviderOpenMeteo -> WeatherProviderType.OPEN_METEO
+                else -> WeatherProviderType.NONE
+            }
+            settings.setWeatherProvider(chosen)
+
+            val incomplete = when (chosen) {
+                WeatherProviderType.OPEN_WEATHER_MAP -> !settings.hasOwmApiKey()
+                WeatherProviderType.OPEN_METEO -> settings.getWeatherBaseUrl() == null
+                WeatherProviderType.NONE -> false
+            }
+            Toast.makeText(
+                this,
+                getString(if (incomplete) R.string.net_services_saved_incomplete else R.string.net_services_saved),
+                Toast.LENGTH_LONG
+            ).show()
+            dialog.dismiss()
+        }
     }
 
     private fun showOrsInfoDialog() {

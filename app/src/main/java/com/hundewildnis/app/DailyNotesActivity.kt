@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -35,18 +36,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hundewildnis.app.databinding.ActivityDailyNotesBinding
 import com.hundewildnis.app.databinding.ItemNoteSessionBinding
-import com.itextpdf.io.image.ImageDataFactory
-import com.itextpdf.kernel.colors.DeviceRgb
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.AreaBreak
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Image
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.properties.TextAlignment
-import com.itextpdf.layout.properties.UnitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -356,9 +345,10 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
         try {
             val weather = withContext(Dispatchers.IO) {
-                val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m"
-                val response = URL(url).readText()
-                val json = JSONObject(response)
+                val json = WeatherProvider.fetchForecast(
+                    applicationContext, lat, lon,
+                    "&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m"
+                )
                 val current = json.getJSONObject("current")
 
                 val temp = current.getDouble("temperature_2m")
@@ -393,7 +383,8 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@DailyNotesActivity, getString(R.string.notes_weather_error), Toast.LENGTH_SHORT).show()
+                val hint = if (e is WeatherProviderException) WeatherProvider.describeError(applicationContext, e) else getString(R.string.notes_weather_error)
+                Toast.makeText(this@DailyNotesActivity, hint, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -604,32 +595,30 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 val appDir = getAppDocumentsFolder()
                 val file = File(appDir, fileName)
 
-                val writer = PdfWriter(FileOutputStream(file))
-                val pdf = PdfDocument(writer)
-                val document = Document(pdf)
+                val document = PdfDoc(file)
 
                 // ═══════════════════════════════════════════════════════
                 // HEADER
                 // ═══════════════════════════════════════════════════════
-                document.add(Paragraph(getString(R.string.notes_pdf_header))
+                document.add(PdfParagraph(getString(R.string.notes_pdf_header))
                     .setFontSize(20f)
                     .setBold()
-                    .setTextAlignment(TextAlignment.CENTER))
+                    .setTextAlignment(PdfAlign.CENTER))
 
-                document.add(Paragraph(getString(R.string.notes_pdf_created_at, dateStr))
-                    .setTextAlignment(TextAlignment.CENTER))
+                document.add(PdfParagraph(getString(R.string.notes_pdf_created_at, dateStr))
+                    .setTextAlignment(PdfAlign.CENTER))
 
-                document.add(Paragraph(getString(R.string.notes_pdf_footer))
+                document.add(PdfParagraph(getString(R.string.notes_pdf_footer))
                     .setFontSize(10f)
-                    .setTextAlignment(TextAlignment.CENTER))
+                    .setTextAlignment(PdfAlign.CENTER))
 
-                document.add(Paragraph("\n"))
+                document.add(PdfParagraph("\n"))
 
                 // ═══════════════════════════════════════════════════════
                 // TITEL
                 // ═══════════════════════════════════════════════════════
                 if (title.isNotEmpty()) {
-                    document.add(Paragraph(getString(R.string.notes_pdf_label_title, title)).setBold().setFontSize(16f))
+                    document.add(PdfParagraph(getString(R.string.notes_pdf_label_title, title)).setBold().setFontSize(16f))
                 }
 
                 // ═══════════════════════════════════════════════════════
@@ -639,9 +628,9 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                     val osmUrl = "https://www.openstreetmap.org/?mlat=$currentLatitude&mlon=$currentLongitude#map=18/$currentLatitude/$currentLongitude"
                     val latStr = String.format(Locale.US, "%.5f", currentLatitude)
                     val lonStr = String.format(Locale.US, "%.5f", currentLongitude)
-                    document.add(Paragraph(getString(R.string.notes_pdf_label_location, latStr, lonStr)).setBold())
-                    document.add(Paragraph(getString(R.string.notes_pdf_label_map, osmUrl))
-                        .setFontColor(DeviceRgb(0, 0, 255))
+                    document.add(PdfParagraph(getString(R.string.notes_pdf_label_location, latStr, lonStr)).setBold())
+                    document.add(PdfParagraph(getString(R.string.notes_pdf_label_map, osmUrl))
+                        .setFontColor(Color.rgb(0, 0, 255))
                         .setFontSize(10f))
                 }
 
@@ -649,14 +638,14 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                 // WETTER
                 // ═══════════════════════════════════════════════════════
                 if (currentWeatherInfo != null) {
-                    document.add(Paragraph(getString(R.string.notes_pdf_label_weather, currentWeatherInfo)))
+                    document.add(PdfParagraph(getString(R.string.notes_pdf_label_weather, currentWeatherInfo)))
                 }
 
                 // ═══════════════════════════════════════════════════════
                 // NOTIZEN
                 // ═══════════════════════════════════════════════════════
-                document.add(Paragraph("\n" + getString(R.string.notes_pdf_label_notes)).setBold())
-                document.add(Paragraph(notes))
+                document.add(PdfParagraph("\n" + getString(R.string.notes_pdf_label_notes)).setBold())
+                document.add(PdfParagraph(notes))
 
                 // ═══════════════════════════════════════════════════════
                 // FOTOS - ✅ INTELLIGENTE PLATZIERUNG (INTELLIGENTE SEITEN-NUTZUNG)
@@ -672,13 +661,13 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
 
                     if (needsNewPage) {
                         // Neue Seite für Fotos
-                        document.add(AreaBreak())
+                        document.add(PdfPageBreak())
                     }
 
-                    document.add(Paragraph("\n" + getString(R.string.notes_pdf_label_photos)).setBold().setFontSize(14f))
+                    document.add(PdfParagraph("\n" + getString(R.string.notes_pdf_label_photos)).setBold().setFontSize(14f))
 
                     // ✅ Fotos in 3-Spalten-Tabelle
-                    val photoTable = Table(UnitValue.createPercentArray(floatArrayOf(33f, 33f, 33f)))
+                    val photoTable = PdfTable.percent(floatArrayOf(33f, 33f, 33f))
                         .useAllAvailableWidth()
                         .setMarginTop(10f)
 
@@ -706,11 +695,11 @@ class DailyNotesActivity : SecureBaseActivity(), LocationListener {
                             val stream = ByteArrayOutputStream()
                             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream)
 
-                            val img = Image(ImageDataFactory.create(stream.toByteArray()))
+                            val img = PdfImage(stream.toByteArray())
                                 .setAutoScale(true)
 
-                            val cell = Cell().add(img)
-                            cell.setBorder(com.itextpdf.layout.borders.Border.NO_BORDER)
+                            val cell = PdfCell().add(img)
+                            cell.setBorder(PdfBorder.NONE)
                             cell.setPadding(5f)
                             photoTable.addCell(cell)
 
