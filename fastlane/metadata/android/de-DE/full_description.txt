@@ -11,6 +11,6 @@ Funktionen (Auswahl):
 • Sicherung per WebDAV (z. B. Nextcloud)
 
 Hinweise zu externen Diensten:
-Die App ruft nur auf deine Aktion hin Daten bei freien Diensten ab (OpenStreetMap, Overpass, Bright Sky/DWD). Für Wetter wählst du in den Einstellungen einen Anbieter (OpenWeatherMap oder Open-Meteo) und trägst deinen eigenen Schlüssel bzw. Server ein; ohne Eintrag zeigt die App kein Wetter. Für Routen trägst du deinen eigenen, kostenlosen OpenRouteService-Schlüssel ein. Den Overpass-Server kannst du in den Einstellungen ändern.
+Die App ruft nur auf deine Aktion hin Daten bei freien Diensten ab (OpenStreetMap, Overpass). Für Wetter wählst du in den Einstellungen einen Anbieter (OpenWeatherMap oder Open-Meteo) und trägst deinen eigenen Schlüssel bzw. Server ein; ohne Eintrag zeigt die App kein Wetter. Für Routen trägst du deinen eigenen, kostenlosen OpenRouteService-Schlüssel ein. Den Overpass-Server kannst du in den Einstellungen ändern.
 
 Freie Software unter GPL-3.0-or-later.

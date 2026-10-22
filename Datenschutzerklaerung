@@ -177,14 +177,13 @@ Anbieter: Es gelten die Datenschutzbestimmungen und Nutzungsbedingungen des von 
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auswahl des Anbieters, Eintrag des Zugangs und Standortfreigabe)
 
-3.6 Weitere Kartendienste und Wetterquellen (Nominatim, Overpass, OpenRouteService, Bright Sky)
+3.6 Weitere Kartendienste (Nominatim, Overpass, OpenRouteService)
 
-Auf Ihre Aktion hin (Ortssuche, Orte in der Nähe, Routenberechnung, Höhenmesser) ruft die App Daten bei folgenden Diensten ab:
+Auf Ihre Aktion hin (Ortssuche, Orte in der Nähe, Routenberechnung) ruft die App Daten bei folgenden Diensten ab:
 
 - Nominatim (OpenStreetMap Foundation): Ortssuche und Ortsnamen zu Koordinaten
 - Overpass API (öffentliche Server, z. B. overpass-api.de; auf Wunsch ein von Ihnen eingetragener Server): Umgebungsdaten und Orte in der Nähe
 - OpenRouteService (HeiGIT gGmbH): Routenberechnung mit Ihrem eigenen Zugangsschlüssel
-- Bright Sky (Daten des Deutschen Wetterdienstes): Luftdruck-Referenzwert für den Höhenmesser
 
 Übertragene Daten:
 - Suchbegriff bzw. Koordinaten (Breiten- und Längengrad) oder Kartenbereich
@@ -200,7 +199,6 @@ Eigene Server: In den Einstellungen (Dienste & Server) können Sie die Adresse f
 Datenschutzerklärungen:
 - OpenStreetMap Foundation (Nominatim, Overpass): https://osmfoundation.org/wiki/Privacy_Policy
 - HeiGIT / OpenRouteService: https://openrouteservice.org/privacy-policy/
-- Bright Sky: https://brightsky.dev/
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auslösen der Funktion und Standortfreigabe)
 
@@ -249,7 +247,6 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
 | Wetteranbieter nach Ihrer Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang) | Wetterdaten | IP, Standort, Zugangsschlüssel | ✅ HTTPS |
 | Nominatim / Overpass | Ortssuche, Orte in der Nähe | IP, Suchbegriff, Koordinaten | ✅ HTTPS |
 | OpenRouteService | Routenberechnung | IP, Koordinaten, eigener Schlüssel | ✅ HTTPS |
-| Bright Sky (DWD) | Luftdruck-Referenz | IP, Koordinaten | ✅ HTTPS |
 | Signal Messenger | Support-Gruppe | Telefonnummer, Nachrichten | ✅ E2E-verschlüsselt |
 
 4. Datenschutzhinweise zur Nutzung der Webseite mittels auf Wunsch eingerichteten Nutzerkontos über die App HundeWildnis

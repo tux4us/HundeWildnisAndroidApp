@@ -11,6 +11,6 @@ Features (selection):
 • Backup via WebDAV (e.g. Nextcloud)
 
 Notes on external services:
-The app only fetches data from free services (OpenStreetMap, Overpass, Bright Sky/DWD) when you trigger a feature. For weather you choose a provider in the settings (OpenWeatherMap or Open-Meteo) and enter your own key or server; without it the app shows no weather. For routes you enter your own free OpenRouteService key. You can change the Overpass server in the settings.
+The app only fetches data from free services (OpenStreetMap, Overpass) when you trigger a feature. For weather you choose a provider in the settings (OpenWeatherMap or Open-Meteo) and enter your own key or server; without it the app shows no weather. For routes you enter your own free OpenRouteService key. You can change the Overpass server in the settings.
 
 Free software under GPL-3.0-or-later.

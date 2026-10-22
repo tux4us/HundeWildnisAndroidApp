@@ -4124,10 +4124,6 @@ GPS altitude only (inaccurate)</string>
 🌡️ Barometer is used for accuracy</string>
     <string name="altimeter_location_permission_needed_status">❌ Location permission required</string>
     <string name="altimeter_location_permission_denied_toast">Location permission was denied</string>
-    <string name="altimeter_qnh_updated_status">🌤️ Reference pressure (QNH) updated: %1$.1f hPa
-🎯 Barometer accuracy improved
-Source: Deutscher Wetterdienst (DWD) via Bright Sky</string>
-    <string name="altimeter_qnh_based_format">%1$.1f m (QNH-based)</string>
     <string name="altimeter_accuracy_very_good">very good</string>
     <string name="altimeter_accuracy_good">good</string>
     <string name="altimeter_accuracy_medium">medium</string>
@@ -4144,7 +4140,6 @@ Source: Deutscher Wetterdienst (DWD) via Bright Sky</string>
     <string name="altimeter_gps_only_status">⚠️ GPS only available</string>
     <string name="altimeter_pressure_format">%1$.1f hPa</string>
     <string name="altimeter_calibrated_format">%1$.1f m (calibrated)</string>
-    <string name="altimeter_qnh_based_label">QNH-based</string>
     <string name="altimeter_not_calibrated_label">not calibrated</string>
     <string name="altimeter_uncalibrated_format">%1$.1f m (%2$s)</string>
     <string name="altimeter_calibrated_toast">✅ Barometer calibrated to %1$dm</string>
@@ -4164,7 +4159,7 @@ Source: Deutscher Wetterdienst (DWD) via Bright Sky</string>
     <string name="altimeter_accuracy_placeholder">Accuracy: ± -- m</string>
     <string name="altimeter_determining_altitude">Determining altitude...</string>
     <string name="altimeter_measurement_notes_title">Measurement notes &amp;amp; conditions</string>
-    <string name="altimeter_measurement_notes_body">• GPS altitude: Requires a clear view of the sky. Often very inaccurate indoors or in deep valleys.\n\n• Barometer altitude: Very precise for relative changes (stairs, mountains). For absolute altitude above sea level, a reference value (QNH) is automatically loaded from weather stations via the internet.\n\n• Geoid correction: The app automatically corrects the GPS error (WGS84 vs. MSL) for more accurate sea-level readings.\n\n• Calibration: Without internet, the GPS altitude is used as a reference for the barometer as soon as GPS accuracy is sufficient.</string>
+    <string name="altimeter_measurement_notes_body">• GPS altitude: Requires a clear view of the sky. Often very inaccurate indoors or in deep valleys.\n\n• Barometer altitude: Very precise for relative changes (stairs, mountains). For absolute altitude above sea level, the barometer is calibrated to the GPS altitude; without calibration the standard atmosphere is used (inaccurate).\n\n• Geoid correction: The app automatically corrects the GPS error (WGS84 vs. MSL) for more accurate sea-level readings.\n\n• Calibration: The GPS altitude is used as a reference for the barometer as soon as a GPS value is available. No data is loaded from the internet.</string>
 
     <!-- DogProfile.kt: field labels, gender/neutered display, export -->
     <string name="dog_gender_male">Male</string>
@@ -5488,7 +5483,7 @@ high</string>
     <string name="net_services_title">Services &amp; servers</string>
     <string name="net_services_intro">The app requests weather and map data from services that you choose here or use with your own access. Only https addresses are allowed.</string>
     <string name="net_services_weather_title">Weather</string>
-    <string name="net_services_weather_desc">The app shows no weather without your own access. Choose a provider and enter your personal key or server address. You are responsible for complying with the provider\'s terms of use.</string>
+    <string name="net_services_weather_desc">The app shows no weather without your own access. Choose a provider and enter your personal key or server address. You are responsible for complying with the provider\'s terms of use. Tap the guide if you do not have access yet.</string>
     <string name="net_services_weather_url_hint">Weather server (https://…)</string>
     <string name="net_services_air_url_hint">Air quality server (https://…, optional)</string>
     <string name="net_services_weather_key_hint">Open-Meteo API key (optional)</string>
@@ -5513,4 +5508,10 @@ high</string>
     <string name="weather_rate_limited">Too many requests to the weather provider. Please try again later.</string>
     <string name="weather_attribution_owm">Weather data © OpenWeather</string>
     <string name="weather_attribution_open_meteo">Data: © Open-Meteo (CC BY 4.0)</string>
+    <string name="net_services_help_button">ℹ️ Guide: set up weather &amp; Overpass</string>
+    <string name="net_services_help_title">Set up weather &amp; Overpass</string>
+    <string name="net_services_help_open_owm">Open OpenWeatherMap</string>
+    <string name="net_services_help_no_browser">No browser found. Open openweathermap.org manually.</string>
+    <string name="net_services_help_body">Why do I need my own access?\nThe app has no weather server of its own and does not ship weather data. Weather services only allow requests with a personal key (API key). With your own key, the limits and terms of your account with the provider apply, and requests go directly between your device and the provider. The app developer does not see them.\n\nRecommended to start: OpenWeatherMap\n1. Open openweathermap.org and create a free account (button below). Confirm your email address.\n2. Sign in and open the \"API keys\" section of your account. A key (\"Default\") already exists. It has about 32 characters.\n3. Copy the key, choose \"OpenWeatherMap\" here and paste it into the field. Tap \"Done\".\n4. A new key is often active only after a few minutes, sometimes after one or two hours. If the app reports that the key was rejected, wait a while and try again.\n\nNotes\n• The free plan is enough for the app. Do not book a paid plan.\n• Treat the key like a password and do not share it. The app stores it encrypted on your device.\n• With OpenWeatherMap\'s free plan, UV index, sunshine duration, pollen and the thunderstorm forecast are not available. The app hides these displays.\n• The weather view names the provider as the source (\"Weather data © OpenWeather\").\n\nOpen-Meteo\nOpen-Meteo is meant for users who have a customer access with their own server address and key (open-meteo.com) or run their own server. The free Open-Meteo address is only permitted for non-commercial use; whether your case qualifies is for you to check in Open-Meteo\'s terms. Enter the address (and, if you have them, the air quality address and key) exactly as the provider gives them to you. With Open-Meteo all weather displays are available.\n\nOverpass (nearby places, surroundings)
+For searching nearby places and for surroundings data on the map, the app queries the Overpass API. You need no key and no account. By default the app uses public Overpass servers (overpass-api.de and overpass.private.coffee) that all users share. They are free but limited: under heavy load they respond slowly or reject requests. The app then switches to the other server automatically. If you search often or searches fail often, enter the https address of another public server or of your own server under "Overpass server". If something is entered there, the app uses only that server. The operator\'s usage policy applies. If you leave the field empty, everything stays as described.\n\nWithout an entry for the weather services the app shows no weather. All other features work as before.</string>
 </resources>

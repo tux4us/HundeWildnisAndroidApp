@@ -29,11 +29,13 @@ Dateien auf Syntaxfehler. Ein echter Gradle-Build steht aus.
   Sonnenscheindauer, Pollen, Gewitter-Vorhersage (CAPE), Höhendaten (Nasenarbeit-Karte fällt auf „Eben“ zurück).
   Näherungen: Vorhersage in 3-Stunden-Schritten stündlich interpoliert; keine Vergangenheitsdaten (Luftdruck-Trend im Biowetter
   fehlt, Tageswerte „heute“ gelten ab jetzt); Sonnenauf-/-untergang astronomisch berechnet (wenige Minuten Abweichung).
+- Anleitung für unerfahrene Nutzer: Button „Anleitung: Wetter-Zugang einrichten“ im Dialog „Dienste & Server“ (Warum, Schritte für OpenWeatherMap, Hinweise, Open-Meteo, Overpass)
 - Quellenangabe in der Wetteransicht: „Weather data © OpenWeather“ bzw. „Daten: © Open-Meteo (CC BY 4.0)“
 - Overpass: Standardserver `overpass-api.de` und `overpass.private.coffee`, eigener Server einstellbar,
   Serverwechsel bei 429/504, Sucheingabe wird maskiert
 - Einheitliche Kennung (User-Agent) in allen Abrufen, Nominatim auf 1 Anfrage/Sekunde begrenzt
-- Quellenangabe „© OpenStreetMap contributors“ auf den Karten, DWD/Bright Sky im Höhenmesser
+- Quellenangabe „© OpenStreetMap contributors“ auf den Karten
+- Höhenmesser: kein Internetabruf mehr (Bright Sky/DWD entfernt). Das Barometer wird an der GPS-Höhe kalibriert, davor gilt die Standardatmosphäre (Anzeige „nicht kalibriert“)
 
 ## Aufräumen
 - Entfernt: jsoup, Glide (Coil ersetzt es), Repository `mvn.0110.be`, `.idea`, `.artifacts`, ProGuard-Regeln für iText
@@ -45,7 +47,7 @@ Dateien auf Syntaxfehler. Ein echter Gradle-Build steht aus.
 1. Build und alle Tests auf einem Gerät (insbesondere PDFs, Karte, Einstellungsdialog, Wetter mit eigener Adresse)
 2. Datenschutzerklärung auf wildnislehrer.com anpassen (die App verlinkt dorthin); `Datenschutzerklaerung` hier ist ein Entwurf
 3. Wetter: mit eigenem Schlüssel von OpenWeatherMap und mit Open-Meteo (Kundenadresse) auf einem Gerät testen; die Adressen des
-   Open-Meteo-Kundenzugangs (Wetter, Luftqualität) stehen in deren Dokumentation und sind hier nicht vorbelegt. Bright Sky (DWD,
-   Höhenmesser) ist noch ein fest eingetragener Dienst – Nutzungsbedingungen prüfen oder ebenfalls konfigurierbar machen
+   Open-Meteo-Kundenzugangs (Wetter, Luftqualität) stehen in deren Dokumentation und sind hier nicht vorbelegt. Höhenmesser testen (GPS-Fix abwarten,
+   Kalibrierung des Barometers prüfen)
 4. Rechtliche Prüfung der Lizenzumstellung (Mitwirkende Dritte? Dann deren Zustimmung nötig)
 5. Tag mit freier Lizenz setzen, `fdroid build` lokal laufen lassen, dann Merge-Request bei fdroiddata

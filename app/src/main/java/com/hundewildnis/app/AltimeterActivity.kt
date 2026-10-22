@@ -17,14 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hundewildnis.app.databinding.ActivityAltimeterBinding
-import androidx.lifecycle.lifecycleScope
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Locale
 import kotlin.math.pow
 import androidx.core.view.WindowCompat
@@ -40,9 +32,9 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
     private var barometerAltitude: Double? = null
     private var currentPressure: Float? = null
 
-    // Dynamischer Referenzdruck (QNH)
-    private var dynamicSeaLevelPressure = 1013.25
-    private var isQnhFetched = false
+    // Referenzdruck: Standardatmosphäre. Es wird kein Dienst abgefragt; genaue Werte entstehen
+    // durch die Kalibrierung des Barometers an der GPS-Höhe.
+    private val seaLevelReferencePressure = SEA_LEVEL_PRESSURE
 
     // Für Barometer-Kalibrierung
     private var referenceAltitude: Double? = null
@@ -229,59 +221,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
             location.altitude
         }
 
-        // Fetch QNH if not done yet
-        if (dynamicSeaLevelPressure == 1013.25) {
-            fetchQnh(location.latitude, location.longitude)
-        }
-
         updateGpsAltitude(location, mslAltitude)
-    }
-
-    private fun fetchQnh(lat: Double, lon: Double) {
-        lifecycleScope.launch {
-            try {
-                val qnh = withContext(Dispatchers.IO) {
-                    val url = URL("https://api.brightsky.dev/current_weather?lat=$lat&lon=$lon")
-                    val connection = url.openConnection() as HttpURLConnection
-                    connection.requestMethod = "GET"
-                    AppNetwork.applyUserAgent(connection)
-                    connection.connectTimeout = 10000
-                    connection.readTimeout = 15000
-                    connection.connect()
-
-                    if (connection.responseCode == 200) {
-                        val response = connection.inputStream.bufferedReader().readText()
-                        val json = JsonParser.parseString(response).asJsonObject
-                        if (json.has("weather")) {
-                            json.getAsJsonObject("weather").get("pressure_msl").asDouble
-                        } else null
-                    } else null
-                }
-
-                qnh?.let {
-                    dynamicSeaLevelPressure = it
-                    isQnhFetched = true
-                    binding.statusText.text = String.format(
-                        Locale.getDefault(),
-                        getString(R.string.altimeter_qnh_updated_status),
-                        it
-                    )
-                    // Trigger redraw of barometer altitude
-                    currentPressure?.let { p ->
-                        if (referenceAltitude == null) {
-                            barometerAltitude = calculateAltitudeFromPressure(p)
-                            binding.barometerAltitudeText.text = String.format(
-                                Locale.getDefault(),
-                                getString(R.string.altimeter_qnh_based_format),
-                                barometerAltitude
-                            )
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     override fun onProviderEnabled(provider: String) {}
@@ -370,7 +310,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
             } else {
                 barometerAltitude = calculateAltitudeFromPressure(currentPressure!!)
 
-                val label = if (isQnhFetched) getString(R.string.altimeter_qnh_based_label) else getString(R.string.altimeter_not_calibrated_label)
+                val label = getString(R.string.altimeter_not_calibrated_label)
                 binding.barometerAltitudeText.text = String.format(
                     Locale.getDefault(),
                     getString(R.string.altimeter_uncalibrated_format),
@@ -404,7 +344,7 @@ class AltimeterActivity : SecureBaseActivity(), SensorEventListener, LocationLis
     }
 
     private fun calculateAltitudeFromPressure(pressure: Float): Double {
-        return 44330 * (1.0 - (pressure / dynamicSeaLevelPressure).pow(1.0 / 5.255))
+        return 44330 * (1.0 - (pressure / seaLevelReferencePressure).pow(1.0 / 5.255))
     }
 
     private fun updateMainAltitude() {

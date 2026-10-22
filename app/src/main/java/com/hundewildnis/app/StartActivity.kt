@@ -334,6 +334,8 @@ class StartActivity : BaseBottomNavActivity() {
         val editOverpass = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editOverpassUrl)
         val btnReset = view.findViewById<View>(R.id.btnResetNetworkServices)
 
+        view.findViewById<View>(R.id.btnWeatherHelp).setOnClickListener { showWeatherHelpDialog() }
+
         fun updateGroups() {
             groupOwm.visibility = if (radio.checkedRadioButtonId == R.id.radioProviderOwm) View.VISIBLE else View.GONE
             groupOm.visibility = if (radio.checkedRadioButtonId == R.id.radioProviderOpenMeteo) View.VISIBLE else View.GONE
@@ -410,6 +412,22 @@ class StartActivity : BaseBottomNavActivity() {
             ).show()
             dialog.dismiss()
         }
+    }
+
+    /** Ausführliche Anleitung: Warum ein eigener Zugang nötig ist und wie man ihn anlegt. */
+    private fun showWeatherHelpDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.net_services_help_title))
+            .setMessage(getString(R.string.net_services_help_body))
+            .setPositiveButton(getString(R.string.ok), null)
+            .setNeutralButton(getString(R.string.net_services_help_open_owm)) { _, _ ->
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://home.openweathermap.org/users/sign_up")))
+                } catch (e: Exception) {
+                    Toast.makeText(this, getString(R.string.net_services_help_no_browser), Toast.LENGTH_LONG).show()
+                }
+            }
+            .show()
     }
 
     private fun showOrsInfoDialog() {

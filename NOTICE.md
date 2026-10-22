@@ -41,7 +41,6 @@ Einstellungen ändern bzw. eigene Schlüssel hinterlegen, soweit unten angegeben
 |---|---|---|
 | OpenWeatherMap | Wetter, Vorhersage, Luftqualität (Anbieter-Auswahl) | Nur mit eigenem API-Schlüssel des Nutzers (kostenloser Tarif genügt). Datenlizenz ODbL; Quellenangabe „Weather data © OpenWeather“ wird in der Wetteransicht angezeigt. |
 | Open-Meteo | Wetter, Luftqualität, Pollen, Höhe (Anbieter-Auswahl) | Kein vorbelegter Server: Der Nutzer trägt Adresse und ggf. Schlüssel seines eigenen Zugangs (kommerzielle Kundenadresse oder eigener Server) ein. Die kostenlose Adresse ist nur für nicht-kommerzielle Nutzung erlaubt. Datenlizenz CC BY 4.0. |
-| Bright Sky / Deutscher Wetterdienst | aktuelles Wetter | Daten des DWD; Quellenangabe in der App |
 | OpenStreetMap-Kacheln | Kartenanzeige (osmdroid) | © OpenStreetMap contributors (ODbL); [Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) |
 | Nominatim | Ortssuche | [Nutzungsrichtlinie](https://operations.osmfoundation.org/policies/nominatim/) |
 | Overpass API | Umgebungsdaten, Orte in der Nähe | Gemeinsam genutzte Server; Serveradresse einstellbar |

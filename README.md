@@ -256,7 +256,7 @@ UI               Android Views · ViewBinding · Material Design
 |---|---|
 | Karten | OSMDroid (OpenStreetMap) |
 | Routing | OpenRouteService (Fuß/Fahrrad/Auto) |
-| Wetter | Anbieter-Auswahl in „Dienste & Server“: OpenWeatherMap (eigener Schlüssel) oder Open-Meteo (eigene Adresse/Schlüssel); kein vorbelegter Dienst; Bright Sky (DWD) im Höhenmesser |
+| Wetter | Anbieter-Auswahl in „Dienste & Server“: OpenWeatherMap (eigener Schlüssel) oder Open-Meteo (eigene Adresse/Schlüssel); kein vorbelegter Dienst |
 | Gelände / POI | Overpass API (OpenStreetMap) |
 | Astronomische Berechnung | Eigene Implementierung nach Jean Meeus (`SkyCalculator`) |
 | Diagramme | MPAndroidChart |
@@ -299,7 +299,7 @@ UI               Android Views · ViewBinding · Material Design
 | Internet | Für Karte, Wetter, Blog-Inhalte, WebDAV-Sync |
 | GPS | Optional – für Navigation, Tempo-Trainer, Nasenarbeit, Kompass-Himmelsberechnung |
 | ORS-API-Key | Für Routing erforderlich – eigener Schlüssel (kostenlos bei openrouteservice.org) |
-| Wetter-API-Key | Für Wetter erforderlich – eigener Schlüssel (bei openweathermap.org) |
+| Wetter-Zugang | Für Wetter erforderlich – eigener Schlüssel von OpenWeatherMap (openweathermap.org) oder eigener Open-Meteo-Zugang |
 
 ---
 
@@ -338,7 +338,6 @@ Die HundeWildnis App ist freie Software: Du kannst sie unter den Bedingungen der
 
 - Kartendaten © [OpenStreetMap Contributors](https://www.openstreetmap.org/copyright) (ODbL)
 - Wetterdaten je nach gewähltem Anbieter: © [OpenWeather](https://openweathermap.org/) bzw. © [Open-Meteo](https://open-meteo.com/) (CC BY 4.0)
-- Aktuelles Wetter (Bright Sky) © [Deutscher Wetterdienst](https://www.dwd.de/)
 - Routing © [OpenRouteService](https://openrouteservice.org/) (HeiGIT gGmbH)
 - Astronomische Berechnungsgrundlage: Jean Meeus, *Astronomical Algorithms*
 
