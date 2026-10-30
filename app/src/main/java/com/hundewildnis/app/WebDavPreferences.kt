@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 /**
  * Speichert WebDAV-Zugangsdaten verschlüsselt (EncryptedSharedPreferences)
  * und nicht-sensible Sync-Einstellungen im normalen "settings"-Prefs-File,
- * analog zum bestehenden Muster (siehe UpdateHelper.kt / ContentUpdateWorker.kt).
+ * analog zum bestehenden Muster (siehe UpdateHelper.kt).
  */
 class WebDavPreferences(private val context: Context) {
 

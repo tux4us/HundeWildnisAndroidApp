@@ -1,0 +1,298 @@
+{
+ "id": "11",
+ "title": "Accident Prevention",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Prevention for safety and wellbeing"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "11-01",
+   "title": "Introduction",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Accident prevention in living with dogs and in handling them refers to the entirety of preventive measures aimed at avoiding injuries, hazards and traumatic events for humans and dogs."
+    },
+    {
+     "type": "p",
+     "text": "It covers both physical and psychological aspects of safety and takes into account the particular demands of an interspecific relationship characterised by dependence, communication and responsibility."
+    },
+    {
+     "type": "p",
+     "text": "In technical terms, accident prevention is based on findings from veterinary medicine, behavioural biology, accident research and human-animal interaction research."
+    },
+    {
+     "type": "h",
+     "text": "Important insight ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Many accidents in human-dog coexistence are not random, but the result of misjudgements, inadequate prevention, stress or insufficient communication."
+    },
+    {
+     "type": "h",
+     "text": "Dimensions of accident prevention 🌐"
+    },
+    {
+     "type": "p",
+     "text": "Emotional level: Accident prevention emphasises the responsibility to recognise signals of stress and overload early and to shape the relationship in such a way that trust and security develop."
+    },
+    {
+     "type": "p",
+     "text": "Philosophical level: It points to the human's ethical duty to ensure protection in a structurally asymmetrical relationship without violating the dog's autonomy and dignity."
+    },
+    {
+     "type": "p",
+     "text": "Accident prevention is not a purely technical topic, but an integral part of responsible dog ownership. It presupposes recognising dogs as sentient, learning and socially responsive beings."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-02",
+   "title": "1. Technical aspects",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Behavioural biology and scientific foundations"
+    },
+    {
+     "type": "h",
+     "text": "Basic principles of prevention 🔬"
+    },
+    {
+     "type": "p",
+     "text": "From a behavioural-biological point of view, many accidents in the human-dog context arise from a discrepancy between human expectations and canine behaviour."
+    },
+    {
+     "type": "p",
+     "text": "Dogs react depending on the situation to stress, pain, threat or overload. If these states are not recognised or are misinterpreted, defensive reactions, flight movements or uncontrolled movements can result."
+    },
+    {
+     "type": "p",
+     "text": "Accident prevention therefore primarily aims at reducing stressors, promoting safe interactions and creating a predictable environment."
+    },
+    {
+     "type": "p",
+     "text": "Preventive measures always take both the dog and the human into account as active participants."
+    },
+    {
+     "type": "h",
+     "text": "Typical accident risks ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Bite and defensive injuries: Mostly triggered by fear, pain, resource guarding or misunderstandings in interaction."
+    },
+    {
+     "type": "p",
+     "text": "Falls and trips: For example through pulling on the leash, sudden movements or unsecured situations."
+    },
+    {
+     "type": "p",
+     "text": "Household injuries: These include swallowing unsuitable objects, and injuries from electrical cables or toxic substances."
+    },
+    {
+     "type": "p",
+     "text": "Traffic and transport risks: In particular with unsecured dogs in road traffic or in the vehicle."
+    },
+    {
+     "type": "p",
+     "text": "Incidents with other animals: Triggered by lack of control, missing socialisation or territorial conflicts."
+    },
+    {
+     "type": "h",
+     "text": "Preventive measures 🛡️"
+    },
+    {
+     "type": "p",
+     "text": "Early and continuous socialisation, adapted to age and individual resilience."
+    },
+    {
+     "type": "p",
+     "text": "Training based on positive reinforcement and minimally aversive methods (e.g. the LIMA principle ) in order to avoid stress and fear."
+    },
+    {
+     "type": "p",
+     "text": "Reading and respecting canine body language, for example at signs of insecurity, withdrawal or freezing."
+    },
+    {
+     "type": "p",
+     "text": "Safe design of the home environment, including storage of potentially dangerous substances and objects."
+    },
+    {
+     "type": "p",
+     "text": "Appropriate securing in road traffic and during transport, in order to avoid distraction and injuries."
+    },
+    {
+     "type": "p",
+     "text": "Regular veterinary care, since pain or illness can increase the risk of accidents."
+    },
+    {
+     "type": "h",
+     "text": "Children and dogs 👶"
+    },
+    {
+     "type": "p",
+     "text": "A particular focus lies on prevention in contact with children, as they often cannot interpret canine signals correctly and therefore need guidance and supervision."
+    },
+    {
+     "type": "h",
+     "text": "Limits and differentiation ⚖️"
+    },
+    {
+     "type": "p",
+     "text": "Accident prevention must always be adapted individually. Age, state of health, learning experiences and environmental conditions considerably influence the risk."
+    },
+    {
+     "type": "p",
+     "text": "Blanket attributions, for example based on breed membership, are considered scientifically insufficient, as behaviour always arises from the interplay of genetics, environment and experience."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-03",
+   "title": "2. Empathic aspects",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Emotional bonding and reciprocity"
+    },
+    {
+     "type": "h",
+     "text": "Emotional security as a protective factor 💚"
+    },
+    {
+     "type": "p",
+     "text": "A stable, trusting relationship between human and dog acts as a central protective factor against accidents."
+    },
+    {
+     "type": "p",
+     "text": "Dogs that feel secure show fewer stress-related defensive reactions and can process human signals better."
+    },
+    {
+     "type": "p",
+     "text": "Emotional security arises through reliable interactions, calm communication and consistent framework conditions."
+    },
+    {
+     "type": "h",
+     "text": "Emotional signals & prevention 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Empathic accident prevention requires the ability to recognise early signs of stress or overload. These include avoidance behaviour, increased muscle tension, freezing or excessive arousal."
+    },
+    {
+     "type": "p",
+     "text": "These signals are not \"naughtiness\", but adaptive reactions that must be taken seriously."
+    },
+    {
+     "type": "p",
+     "text": "From a modern welfare-oriented perspective, promoting room for action is considered accident-preventive. Dogs that have choices within safe boundaries show less frustration and react impulsively less often. Autonomy here does not mean loss of control, but deliberately designed options."
+    },
+    {
+     "type": "h",
+     "text": "Emotional aftercare 🩹"
+    },
+    {
+     "type": "p",
+     "text": "After distressing events, emotional stabilisation is important. Both dogs and humans can develop stress reactions after accidents."
+    },
+    {
+     "type": "p",
+     "text": "Calm, supportive interactions and, where appropriate, professional guidance help with processing and reduce the risk of further incidents."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-04",
+   "title": "3. Philosophical aspects",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Ethics, justice and power dynamics"
+    },
+    {
+     "type": "h",
+     "text": "Responsibility in asymmetrical relationships ⚖️"
+    },
+    {
+     "type": "p",
+     "text": "Philosophically speaking, the human is the structurally superior party in the human-dog relationship. This power asymmetry establishes a particular moral responsibility to minimise hazards and prevent harm."
+    },
+    {
+     "type": "p",
+     "text": "Safety is thus not merely functional, but an expression of care and respect."
+    },
+    {
+     "type": "p",
+     "text": "Modern animal ethics recognises dogs as morally relevant, sentient beings. From this perspective, accidents are not only practical problems, but potential violations of moral duties that result from domestication and dependence."
+    },
+    {
+     "type": "h",
+     "text": "Safety vs. freedom 🔐"
+    },
+    {
+     "type": "p",
+     "text": "A central ethical area of tension lies in the relationship between safety and autonomy. Fair accident prevention does not seek maximum control, but a responsible balance that offers protection without turning the dog into an object of pure risk avoidance."
+    },
+    {
+     "type": "p",
+     "text": "Complete equality between human and dog is not philosophically possible. Ethics in accident prevention therefore does not mean equality, but reflected responsibility that is regularly reviewed and adapted to new findings."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-05",
+   "title": "4. Integration and overall perspective",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Accident prevention in life with dogs is a multidisciplinary cross-cutting topic that combines biological findings, emotional competence and ethical reflection."
+    },
+    {
+     "type": "p",
+     "text": "It is not an add-on to dog ownership, but a fundamental component of a respectful, safe and responsible coexistence."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-06",
+   "title": "Key points",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Accidents are often avoidable through prevention and attentive communication."
+    },
+    {
+     "type": "p",
+     "text": "Emotional security is a central protective factor."
+    },
+    {
+     "type": "p",
+     "text": "Recognising stress signals early prevents dangerous situations."
+    },
+    {
+     "type": "p",
+     "text": "Individual adaptation is more important than blanket rules."
+    },
+    {
+     "type": "p",
+     "text": "Accident prevention is an expression of ethical responsibility in asymmetrical relationships."
+    },
+    {
+     "type": "p",
+     "text": "Safety arises from a balance of protection, trust and autonomy."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

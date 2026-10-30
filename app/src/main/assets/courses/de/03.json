@@ -1,0 +1,349 @@
+{
+ "id": "03",
+ "title": "Korrektur",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "mit Weitsicht und Verstand"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "03-01",
+   "title": "Grundlagen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Bedingungen für alternative Korrekturhandlungen"
+    },
+    {
+     "type": "p",
+     "text": "Korrektur ist eine Hilfe. Korrektur ist keine Strafe."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur beschreibt eine bewusst und umsichtig herbeigeführte unmittelbare Folge auf eine veränderungswürdige Handlung."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur ist eine für den Hund erkennbare unmittelbare Folge auf sein Tun hin."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur ist die zu trainierende Alternativhandlung, auf welche der Hund konditioniert werden soll."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur ist das Trainieren von alternativen Szenarien, welche in verschiedenen Variationen ein sich wiederholendes, erkennbares, beabsichtigtes Grundmuster enthalten."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur ist das folgerichtige Training von hilfreichen Alternativen um Schaden abzuwenden. Korrektur ist keine Strafe."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "03-02",
+   "title": "Wichtige Bedingungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Zu vermeidende Fehlkorrekturen"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide emotionale Korrektur."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur sollte zeitlich und räumlich nicht ungenau sein."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur darf niemals unangemessen sein."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur darf nicht ohne zeitlichen Zusammenhang zur Fehlhandlung stattfinden."
+    },
+    {
+     "type": "p",
+     "text": "Korrektur ist keine Strafe!"
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "03-03",
+   "title": "Die Kunst des Ignorierens",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "…in der Ruhe liegt der Erfolg"
+    },
+    {
+     "type": "h",
+     "text": "Was beim Ignorieren zu beachten ist"
+    },
+    {
+     "type": "p",
+     "text": "Ignorieren bedeutet, Handlungen unbeachtet zu lassen, welche momentan und künftig als unproblematisch einzuordnen sind."
+    },
+    {
+     "type": "p",
+     "text": "Beachte: Ignorieren führt nicht zwingend dazu, dass Handlungen künftig unterbleiben."
+    },
+    {
+     "type": "p",
+     "text": "Ignorieren eignet sich für situationsbedingtes, deeskalierendes Anwenden ohne Anspruch auf Nachhaltigkeit."
+    },
+    {
+     "type": "p",
+     "text": "Ignorieren eignet sich bei fordernden Verhalten – aber nur, wenn der Hund dadurch nicht zu weiteren Fehlhandlungen provoziert wird."
+    },
+    {
+     "type": "h",
+     "text": "Wann Ignorieren falsch ist"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Ignorieren, wenn eine Handlung aktiv korrigiert werden müsste."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Ignorieren von offensiven Handlungen, die künftig nicht mehr auftreten sollen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Ignorieren von Handlungen, die problematische Folgen nach sich ziehen."
+    },
+    {
+     "type": "p",
+     "text": "Ignorieren ist kein genereller Ersatz für aktives Training."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "03-04",
+   "title": "Unterbrechen von Handlungen",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "…als Basis für Alternativen"
+    },
+    {
+     "type": "h",
+     "text": "Strategien zur Unterbrechung"
+    },
+    {
+     "type": "p",
+     "text": "Unterbrechungen dienen der akuten Situationsarbeit bei unerwünschten Handlungen."
+    },
+    {
+     "type": "p",
+     "text": "Je früher der Unterbrechungsversuch, desto wirkungsvoller die Beendigung der Handlung."
+    },
+    {
+     "type": "p",
+     "text": "Unterbrechungen sind oft nur Vorbereitungen für eine alternative Konditionierung."
+    },
+    {
+     "type": "p",
+     "text": "Nutze optische oder akustische Einwirkungen, um den Hund von seinem Vorhaben abzulenken."
+    },
+    {
+     "type": "p",
+     "text": "Wichtig: Unterbrechungen wirken oft nicht nachhaltig, solange der Ablenkungsreiz noch vorhanden ist."
+    },
+    {
+     "type": "h",
+     "text": "Wann sind Unterbrechen zu vermeiden?"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Unterbrechungen ohne anschließende Korrekturalternativen (Gefahr der sofortigen Wiederaufnahme)."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Unterbrechungsversuche, wenn von vornherein absehbar ist, dass diese wirkungslos bleiben (negativer Lerneffekt)."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Unterbrechungen, wenn der Hund gerade erwünschte Handlungen zeigt."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide grobe oder laute Unterbrechungshandlungen; dies könnte die Führbarkeit in ähnlichen Situationen erschweren."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "03-05",
+   "title": "Konditionieren von Alternativen",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "…das bessere Training"
+    },
+    {
+     "type": "h",
+     "text": "Wege zum nachhaltigen Erfolg"
+    },
+    {
+     "type": "p",
+     "text": "Ersetze unerwünschte Reaktionsmuster durch intelligente Alternativhandlungen."
+    },
+    {
+     "type": "p",
+     "text": "Fordere die alternative Leistung genau zu Beginn der Fehlhandlung ab."
+    },
+    {
+     "type": "p",
+     "text": "Wähle Übungen, die zum Wesen und Ausbildungsstandes Deines Hundes passen und eine hohe Zuverlässigkeit besitzen."
+    },
+    {
+     "type": "p",
+     "text": "Sorge für eine hohe Trainingswiederholungsrate, um eine starke Festigung der alternativen Handlung zu erreichen."
+    },
+    {
+     "type": "p",
+     "text": "Trainiere mit ausreichendem Abstand zur Ablenkungsquelle, damit der Hund stressfrei lernen kann."
+    },
+    {
+     "type": "h",
+     "text": "Kritische Fehler beim Konditionieren"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide unklare Inhalte oder Anweisungen ohne ausreichend trainiertes Reaktionsmuster."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide aufgeregtes, lautes oder gestresstes Reagieren während des Trainings."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Training, wenn die Fehlhandlung bereits im vollen Gange ist (mangelnde Aufnahmefähigkeit). Gehe in dem Fall mit dem Hund aus der Situation heraus bis er wieder ansprechbar ist."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Training bei Überforderung durch Umgebungsbedingungen oder zu geringem Abstand zum Reiz."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide panische Reaktionen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "03-06",
+   "title": "Korrektur aus fachlicher Sicht",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was die Forschung zu Korrekturmethoden zeigt"
+    },
+    {
+     "type": "p",
+     "text": "Mehrere Studien haben verglichen, wie sich Trainingsmethoden auf das Wohlbefinden von Hunden auswirken."
+    },
+    {
+     "type": "p",
+     "text": "Eine Übersichtsarbeit (Ziv, 2017) wertete die vorhandene Forschung zu aversiven Methoden aus. Sie fand Zusammenhänge mit mehr Stressverhalten, Angst und einem schlechteren Wohlbefinden der Hunde."
+    },
+    {
+     "type": "p",
+     "text": "Eine portugiesische Studie (Vieira de Castro et al., 2020) verglich Hunde aus Trainingsschulen mit unterschiedlichen Methoden. Bei Hunden aus Schulen mit überwiegend aversiven Methoden fanden sich mehr Stresssignale und höhere Cortisolwerte im Speichel."
+    },
+    {
+     "type": "p",
+     "text": "Viele dieser Untersuchungen zeigen Zusammenhänge und keine einzelne Ursache. Die Richtung der Ergebnisse ist jedoch eindeutig und entspricht dem Ansatz dieses Kurses: Alternativen aufbauen, statt zu bestrafen."
+    },
+    {
+     "type": "p",
+     "text": "Stress verschlechtert zusätzlich die Lernfähigkeit. Eine Korrektur, die den Hund verunsichert, erschwert daher das Training der gewünschten Alternative."
+    },
+    {
+     "type": "h",
+     "text": "Eine wirksame Alternativhandlung aufbauen"
+    },
+    {
+     "type": "p",
+     "text": "Die Alternativhandlung muss mit dem unerwünschten Verhalten unvereinbar sein. Ein Hund kann nicht gleichzeitig Sitz machen und an einer Person hochspringen."
+    },
+    {
+     "type": "p",
+     "text": "Trainiere die Alternative zuerst ohne den Auslöser, dann mit großem Abstand zum Auslöser und verringere den Abstand erst in kleinen Schritten."
+    },
+    {
+     "type": "p",
+     "text": "Verändere immer nur einen Faktor gleichzeitig: Abstand, Dauer oder Ablenkung."
+    },
+    {
+     "type": "p",
+     "text": "Belohne die Alternative deutlich, damit sie für den Hund attraktiver wird als das ursprüngliche Verhalten."
+    },
+    {
+     "type": "p",
+     "text": "Kläre die Ursache des Verhaltens. Angst, Frust, Übererregung und Unsicherheit erfordern unterschiedliche Vorgehensweisen. Bei Angst steht der Abstand zum Auslöser und der Aufbau von Sicherheit an erster Stelle."
+    },
+    {
+     "type": "p",
+     "text": "Plötzlich auftretende Verhaltensänderungen können körperliche Ursachen haben. Lass in diesem Fall zuerst tierärztlich abklären, ob Schmerzen oder eine Erkrankung vorliegen."
+    },
+    {
+     "type": "h",
+     "text": "Auslöser erkennen und früh handeln"
+    },
+    {
+     "type": "p",
+     "text": "Jede Fehlhandlung hat Vorzeichen, zum Beispiel Fixieren, Versteifen des Körpers, veränderte Atmung oder gespannte Rute."
+    },
+    {
+     "type": "p",
+     "text": "Je früher Du diese Vorzeichen erkennst, desto leichter gelingt es Dir, die Alternativhandlung abzufordern, bevor die Fehlhandlung beginnt."
+    },
+    {
+     "type": "p",
+     "text": "Übung: Führe zwei Wochen lang ein Protokoll mit vier Angaben: Auslöser, Frühzeichen des Hundes, Deine Reaktion und die eingesetzte Alternative."
+    },
+    {
+     "type": "p",
+     "text": "Halte die Einträge unter „Meine Reflexion“ am Ende dieser Seite fest. Wiederkehrende Muster zeigen Dir, an welchem Auslöser Du zuerst trainieren solltest."
+    },
+    {
+     "type": "p",
+     "text": "Bei Aggression gegenüber Menschen oder Hunden zieh frühzeitig eine fachlich qualifizierte Trainerin oder einen qualifizierten Trainer hinzu."
+    },
+    {
+     "type": "p",
+     "text": "Quellen: Ziv G. (2017): The effects of using aversive training methods in dogs – A review. Journal of Veterinary Behavior 19, 50–60. Vieira de Castro A. C. et al. (2020): Does training method matter? Evidence for the negative impact of aversive-based methods on companion dog welfare. PLoS ONE 15 (12)."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "03-07",
+   "title": "Merke Dir:",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Korrektur ist niemals eine Strafe, sondern konstruktive Hilfe."
+    },
+    {
+     "type": "p",
+     "text": "Richtige Korrekturen bieten immer empathische Alternativen an."
+    },
+    {
+     "type": "p",
+     "text": "Zeige Deinem Hund wie es anders gemacht wird und biete ihm vertrauensvolle Alternativen."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

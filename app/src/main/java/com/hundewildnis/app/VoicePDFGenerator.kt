@@ -125,7 +125,7 @@ object VoicePDFGenerator {
 
             // Footer
             document.add(
-                PdfParagraph("Erstellt mit HundeWildnis App von www.wildnislehrer.de")
+                PdfParagraph("Erstellt mit HundeWildnis App")
                     .setFontSize(10f)
                     .setFontColor(grayColor)
                     .setTextAlignment(PdfAlign.CENTER)

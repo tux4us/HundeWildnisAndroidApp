@@ -91,9 +91,6 @@ class StartActivity : BaseBottomNavActivity() {
         // ✅ Hintergrund-Updates initialisieren (Wichtig bei Neuinstallation!)
         UpdateHelper.scheduleContentUpdates(this)
 
-        // ✅ NEU: Blog-Preview laden
-        loadLatestBlogPost()
-
         // ✅ Erst-Info Dialog für Benachrichtigungen (Google Play Konform)
         checkNotificationDisclosure()
 
@@ -116,11 +113,6 @@ class StartActivity : BaseBottomNavActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_refresh -> {
-                loadLatestBlogPost()
-                Toast.makeText(this, getString(R.string.start_blog_refreshing), Toast.LENGTH_SHORT).show()
-                true
-            }
             R.id.action_language -> { showLanguageDialog(); true }
             R.id.action_settings -> { showSettingsDialog(); true }
             R.id.action_instructions -> { showInstructionsDialog(); true }
@@ -441,13 +433,7 @@ class StartActivity : BaseBottomNavActivity() {
             }
     }
 
-    private fun openPrivacyPolicy() {
-        startActivity(Intent(this, ContentActivity::class.java).apply {
-            putExtra("url", "https://wildnislehrer.com/datenschutzerklaerung/")
-            putExtra("title", getString(R.string.start_privacy_policy_title))
-            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, MainActivity.VIEW_START)
-        })
-    }
+    private fun openPrivacyPolicy() { startActivity(Intent(this, PrivacyActivity::class.java)) }
 
     private fun openImprint() { startActivity(Intent(this, ImprintActivity::class.java)) }
 
@@ -486,8 +472,6 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 0,
             tiles = listOf(
-                StartTile("daily_exercise", R.drawable.ic_exercise, getString(R.string.tile_daily_exercise)),
-                StartTile("daily_meditation", R.drawable.ic_meditation, getString(R.string.tile_meditation)),
                 StartTile("entspannung", R.drawable.ic_breathing, getString(R.string.tile_relaxation))
             )
         )
@@ -545,8 +529,6 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 4,
             tiles = listOf(
-                StartTile("nav_blog", R.drawable.ic_blog, getString(R.string.tile_blog)),
-                StartTile("nav_pages", R.drawable.ic_pages, getString(R.string.tile_pages)),
                 StartTile("nav_courses", R.drawable.ic_courses, getString(R.string.tile_online_courses))
             )
         )
@@ -590,8 +572,6 @@ class StartActivity : BaseBottomNavActivity() {
      */
     private fun handleTileClick(tileId: String) {
         when (tileId) {
-            "daily_exercise" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/uebung-der-woche/", getString(R.string.tile_daily_exercise))
-            "daily_meditation" -> openWebView("https://wildnislehrer.com/onlinekurse-hundeschule/kursverzeichnis-hundeschule/meditation/", getString(R.string.meditation_title))
             "entspannung" -> startActivity(Intent(this, EntspannungstrainingActivity::class.java))
             "walking_speed" -> startActivity(Intent(this, WalkingSpeedActivity::class.java))
             "communication" -> startActivity(Intent(this, CommunicationActivity::class.java))
@@ -613,8 +593,6 @@ class StartActivity : BaseBottomNavActivity() {
             "plant_scout" -> startActivity(Intent(this, PlantScoutActivity::class.java))
             "location_share" -> startActivity(Intent(this, LocationShareActivity::class.java))
             "emergency" -> openEmergencyWizard()
-            "nav_blog" -> openMainActivity(MainActivity.VIEW_BLOG)
-            "nav_pages" -> openMainActivity(MainActivity.VIEW_PAGES)
             "nav_courses" -> openMainActivity(MainActivity.VIEW_COURSES)
             "backup" -> startActivity(Intent(this, BackupActivity::class.java))
             "support" -> startActivity(Intent(this, SupportActivity::class.java))
@@ -646,53 +624,6 @@ class StartActivity : BaseBottomNavActivity() {
         } else {
             rawSpan.coerceIn(3, 5)
         }
-    }
-
-    private fun openEmergencyWizard() {
-        // Prüfe ob Hunde vorhanden
-        val profiles = DogProfileManager.getAllProfiles(this)
-
-        if (profiles.isEmpty()) {
-            // Kein Hund vorhanden - zeige Hinweis
-
-            AlertDialog.Builder(this)
-                .setTitle(getString(R.string.start_no_dog_title))
-                .setMessage(getString(R.string.start_no_dog_message))
-                .setPositiveButton(getString(R.string.start_to_master_data)) { _, _ ->
-                    startActivity(Intent(this, DogProfileActivity::class.java))
-                }
-                .setNegativeButton(getString(R.string.cancel), null)
-                .create()
-                .apply {
-                    show()
-                }
-            return
-        }
-
-        // Mehrere Hunde? Auswahl anzeigen
-        if (profiles.size > 1) {
-            val dogNames = profiles.map { it.name }.toTypedArray()
-
-            AlertDialog.Builder(this)
-                .setTitle(getString(R.string.start_which_dog_title))
-                .setItems(dogNames) { _, which ->
-                    val selectedProfile = profiles[which]
-                    openFirstAidWizard(selectedProfile)
-                }
-                .setNegativeButton(getString(R.string.cancel), null)
-                .create().apply {
-                    show()
-                }
-        } else {
-            // Nur ein Hund - direkt öffnen
-            openFirstAidWizard(profiles[0])
-        }
-    }
-
-    private fun openFirstAidWizard(profile: DogProfile) {
-        val intent = Intent(this, FirstAidWizardActivity::class.java)
-        intent.putExtra("profile", profile)
-        startActivity(intent)
     }
 
     private fun createBackup() {
@@ -764,14 +695,6 @@ class StartActivity : BaseBottomNavActivity() {
         startActivity(intent)
     }
 
-    private fun openWebView(url: String, title: String) {
-        startActivity(Intent(this, ContentActivity::class.java).apply {
-            putExtra("url", url)
-            putExtra("title", title)
-            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, MainActivity.VIEW_START)
-        })
-    }
-
     // ════════════════════════════════════════════════════════════════
     // ✅ UPDATE-DIALOG FUNKTIONEN
     // ════════════════════════════════════════════════════════════════
@@ -829,173 +752,6 @@ class StartActivity : BaseBottomNavActivity() {
         }
 
         dialog.show()
-    }
-
-    /**
-     * Lädt den neuesten Blog-Beitrag für die Preview-Card
-     */
-    private fun loadLatestBlogPost() {
-        scope.launch {
-            try {
-                // Zeige initialen Status
-                binding.cardLatestBlogPost.visibility = View.VISIBLE
-                binding.blogPreviewLoading.visibility = View.VISIBLE
-
-                val contentCache = ContentCache(this@StartActivity)
-                var cachedPost: ContentItem? = null
-
-                // 1. ZUERST: Versuche aus Cache zu laden für sofortige Anzeige
-                val cachedPosts = contentCache.getBlogPosts()
-                if (cachedPosts != null && cachedPosts.isNotEmpty()) {
-                    cachedPost = cachedPosts.first()
-                    displayBlogPreview(cachedPost)
-                    binding.blogPreviewLoading.visibility = View.GONE
-                    android.util.Log.d("StartActivity", "Blog-Preview aus Cache angezeigt")
-                } else {
-                    binding.blogPreviewTitle.text = getString(R.string.start_loading)
-                }
-
-                // 2. DANN: Immer im Hintergrund prüfen, ob es einen neueren Post gibt
-                val newestPost = withContext(Dispatchers.IO) {
-                    try {
-                        val api = WordPressApiParser()
-                        // Lade nur den allerneuesten Post
-                        val posts = api.loadBlogPosts(page = 1, perPage = 1)
-                        if (posts.isNotEmpty()) posts.first() else null
-                    } catch (e: Exception) {
-                        android.util.Log.e("StartActivity", "Netzwerk-Check fehlgeschlagen: ${e.message}")
-                        null
-                    }
-                }
-
-                // 3. VERGLEICH & UPDATE
-                if (newestPost != null) {
-                    if (cachedPost == null || newestPost.url != cachedPost.url) {
-                        android.util.Log.d("StartActivity", "Neuer Post gefunden oder Cache war leer. Aktualisiere Anzeige.")
-                        displayBlogPreview(newestPost)
-
-                        // Wenn es wirklich ein neuer Post ist -> Vollständiges Hintergrund-Update triggern
-                        if (cachedPost != null && newestPost.url != cachedPost.url) {
-                            UpdateHelper.triggerImmediateUpdate(this@StartActivity)
-                        }
-                    }
-                } else if (cachedPost == null) {
-                    // Gar nichts gefunden (weder Cache noch Netz)
-                    hideBlogPreview()
-                }
-
-                binding.blogPreviewLoading.visibility = View.GONE
-
-            } catch (e: Exception) {
-                android.util.Log.e("StartActivity", "Fehler bei Blog-Preview", e)
-                if (binding.blogPreviewTitle.text == getString(R.string.start_loading)) {
-                    hideBlogPreview()
-                }
-            }
-        }
-    }
-
-    /**
-     * Zeigt den Blog-Post in der Preview-Card
-     */
-    private fun displayBlogPreview(post: ContentItem) {
-        binding.blogPreviewLoading.visibility = View.GONE
-
-        // Design-Farben für Blog-Kachel (waldiges Grün statt Gruppe 5 Blau)
-        binding.blogHeaderLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.rd_blog_header))
-
-        // Titel
-        binding.blogPreviewTitle.text = post.title
-
-        // Datum
-        if (post.date.isNotEmpty()) {
-            binding.blogPreviewDate.text = post.date
-            binding.blogPreviewDate.visibility = View.VISIBLE
-        } else {
-            binding.blogPreviewDate.visibility = View.GONE
-        }
-
-        // Excerpt
-        if (post.excerpt.isNotEmpty()) {
-            binding.blogPreviewExcerpt.text = post.excerpt
-            binding.blogPreviewExcerpt.visibility = View.VISIBLE
-        } else {
-            binding.blogPreviewExcerpt.visibility = View.GONE
-        }
-
-        // Bild (falls vorhanden)
-        if (post.imageUrl.isNotEmpty()) {
-            binding.blogPreviewImage.visibility = View.VISIBLE
-            binding.blogPreviewImage.load(post.imageUrl) {
-                size(800) // Mittelgroßes Bild
-                scale(Scale.FIT)
-                diskCachePolicy(CachePolicy.ENABLED)
-                memoryCachePolicy(CachePolicy.ENABLED)
-                placeholder(R.drawable.ic_placeholder_image)
-                error(R.drawable.ic_error_image)
-                crossfade(200)
-            }
-        } else {
-            binding.blogPreviewImage.visibility = View.GONE
-        }
-
-        // Click-Handler: Lade ZUERST alle Blog-Posts, DANN öffne MainActivity
-        binding.cardLatestBlogPost.setOnClickListener {
-            // Zeige kurz Loading-Feedback
-            binding.blogPreviewTitle.alpha = 0.5f
-
-            scope.launch {
-                try {
-                    // Lade Blog-Posts im Hintergrund (genau wie MainActivity)
-                    withContext(Dispatchers.IO) {
-                        val api = WordPressApiParser()
-                        val contentCache = ContentCache(this@StartActivity)
-
-                        // Prüfe ob Cache veraltet ist
-                        if (contentCache.isCacheExpired() || contentCache.getBlogPosts().isNullOrEmpty()) {
-                            android.util.Log.d("StartActivity", "Lade Blog-Posts vor Wechsel...")
-
-                            // ✅ VEREINFACHT: Lade nur 100 Posts (wie MainActivity)
-                            val posts = api.loadBlogPosts(perPage = 100)
-
-                            // Speichere im Cache
-                            if (posts.isNotEmpty()) {
-                                contentCache.saveBlogPosts(posts)
-                                android.util.Log.d("StartActivity", "✓ ${posts.size} Blog-Posts geladen und gecacht")
-                            }
-                        } else {
-                            android.util.Log.d("StartActivity", "Cache noch gültig, überspringe Laden")
-                        }
-                    }
-
-                    // JETZT öffne MainActivity - Cache ist gefüllt!
-                    binding.blogPreviewTitle.alpha = 1.0f
-                    val intent = Intent(this@StartActivity, MainActivity::class.java).apply {
-                        putExtra("INITIAL_VIEW", MainActivity.VIEW_BLOG)
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    }
-                    startActivity(intent)
-
-                } catch (e: Exception) {
-                    android.util.Log.e("StartActivity", "Fehler beim Vorladen", e)
-                    binding.blogPreviewTitle.alpha = 1.0f
-
-                    // Öffne trotzdem MainActivity (lädt dann selbst)
-                    val intent = Intent(this@StartActivity, MainActivity::class.java).apply {
-                        putExtra("INITIAL_VIEW", MainActivity.VIEW_BLOG)
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    }
-                    startActivity(intent)
-                }
-            }
-        }
-    }
-
-    /**
-     * Versteckt die Blog-Preview bei Fehler
-     */
-    private fun hideBlogPreview() {
-        binding.cardLatestBlogPost.visibility = View.GONE
     }
 
     override fun onResume() {

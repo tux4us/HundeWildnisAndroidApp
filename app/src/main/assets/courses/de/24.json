@@ -1,0 +1,233 @@
+{
+ "id": "24",
+ "title": "Teamwalk",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…im Einklang mit Hund und Natur"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "24-01",
+   "title": "Was ist Teamwalk?",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Definition und Zweck 🐕"
+    },
+    {
+     "type": "p",
+     "text": "Teamwalk ist der Weg zur Intensivierung der Beziehung zwischen uns und unserem Hund."
+    },
+    {
+     "type": "p",
+     "text": "Teamwalk versteht sich als eine dem Hund entsprechende Art des gemeinsamen Seins in der Natur."
+    },
+    {
+     "type": "p",
+     "text": "Wir lernen unseren Hund so zu führen, dass wir entspannt und weitgehend unabhängig von Situationen unterwegs sein können. Dabei erreichen wir eine spürbare Verringerung an Konflikten und eine deutliche Erweiterung unserer Komfortzone beim Führen des Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Teamwalk ist der Weg zur Intensivierung der Beziehung zwischen uns und unserem Hund."
+    },
+    {
+     "type": "p",
+     "text": "Teamwalk versteht sich als eine dem Hund entsprechende Art des gemeinsamen Seins in der Natur."
+    },
+    {
+     "type": "p",
+     "text": "Wir lernen unseren Hund so zu führen, dass wir entspannt und weitgehend unabhängig von Situationen unterwegs sein können – mit spürbarer Verringerung an Konflikten und deutlicher Erweiterung unserer Komfortzone."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "24-02",
+   "title": "Zum Geleit",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Geeignete Orte und Steigerung 🌲"
+    },
+    {
+     "type": "p",
+     "text": "Wir suchen so oft es geht mit unserem Hund die freie Natur außerhalb der urbanen Zonen auf. Idealerweise bewegen wir uns im Wald, im Grünland oder auch alternativ in weitläufigen Parkanlagen und Grünzonen."
+    },
+    {
+     "type": "p",
+     "text": "Anfangs sollte es weitläufiges Gelände mit wenig Begängnis sein. Je abgelegener der Platz, umso geeigneter ist er."
+    },
+    {
+     "type": "p",
+     "text": "Mit zunehmender Routine dürfen wir im Laufe der Zeit lebhaftere Orte einbeziehen. Die Steigerung orientiert sich an unserer stetig wachsenden Gelassenheit in der Führung unseres Hundes und dessen Ausgeglichenheit im Zusammensein mit uns."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "24-03",
+   "title": "Der Weg",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Vorgehen im Gelände 🐾"
+    },
+    {
+     "type": "p",
+     "text": "Wir begeben uns mit unserem Hund ohne Zeitdruck ins Gelände. Wichtig ist, dass wir weder ein festes örtliches Ziel noch einen geplanten Weg im Geiste mit uns tragen."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen im Gelände ruhig Schritt für Schritt. Wir lassen alle Dinge und Gedanken, welche uns ablenken könnten, zu Hause. Jeder einzelne Schritt zusammen mit unserem Hund erzählt eine Geschichte."
+    },
+    {
+     "type": "p",
+     "text": "So oft und so weit es möglich und erlaubt ist verlassen wir die Hauptwege und bewegen uns im abseitigen Gelände auf Pfaden und stillen Nebenwegen. Natürlich respektieren wir die Ruhezonen der Wildtiere und bewegen uns rücksichtsvoll gegenüber den Pflanzen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "24-04",
+   "title": "Die Übung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Bewusstes Gehen und Wahrnehmung 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen ruhig und bewusst Schritt für Schritt. Wir spüren den Wind, hören den Gesang der Vögel, nehmen den Boden unter uns wahr. Der Hund tut es bereits und ist damit ständig im Wissensvorsprung."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen in Ruhe und sind vollständig gegenwärtig mit unseren Sinnen. Unser Hund übernimmt im Lauf der Zeit die ruhige Art unseres Gehens und passt sich an."
+    },
+    {
+     "type": "p",
+     "text": "Wir halten ab und an inne um unsere Umgebung aufmerksam zu beobachten. Wir setzen dazu alle Sinne ein und tun es unserem Hund gleich. Wir riechen, hören, sehen und fühlen alles was auf uns einströmt."
+    },
+    {
+     "type": "h",
+     "text": "Entwicklung und Fortschritt 📈"
+    },
+    {
+     "type": "p",
+     "text": "Zu Anfang werden wir mit Unruhe in uns und unserem Hund Bekanntschaft schließen. Wir sind es nicht gewohnt, in die Ruhe des Denkers zu kommen."
+    },
+    {
+     "type": "p",
+     "text": "Im Lauf der Tage und Wochen unseres Trainings werden wir jedoch eine wachsende Gelassenheit spüren, welche sich dann auch nach und nach in unserem Hund einstellt. Je nach Wesen unseres Hundes in ganz individuellen Ausprägungen und unterschiedlich langen Zeiträumen."
+    },
+    {
+     "type": "p",
+     "text": "Haben wir nun einige Zeit unsere Runden mit unserem Hund im Teamwalk durch das Gelände absolviert und dabei die nötige Gelassenheit in uns einkehren lassen, können wir uns den Scouttechniken im nächsten Abschnitt zuwenden."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "24-05",
+   "title": "Was Du vermeiden solltest",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wichtige Hinweise ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden lautstarkes und schnelles Durchlaufen des Geländes."
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden Teamwalk unter Termindruck oder in einem definierten Zeitfenster."
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden das vorherige Planen des Weges."
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden alle Ablenkung."
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden hektisches, unbewusstes Verhalten."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "24-06",
+   "title": "Abschnitt 6",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Einfach da sein"
+    },
+    {
+     "type": "p",
+     "text": "Lass das Handy zu Hause, plane keinen Weg und setze dir kein Ziel. Geh raus mit deinem Hund – und folge ihm gedanklich für einen Moment. Was nimmt er wahr? Was riecht er? Dieses Bewusstsein ist der Kern des Teamwalks und der Beginn einer tieferen Verbindung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "24-07",
+   "title": "Checkliste für erfolgreiches Training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Beherrscht unser Hund „Sitz\" und „Platz\" in gefestigter Form?"
+    },
+    {
+     "type": "p",
+     "text": "→ Trainiere ich in der Anfangszeit im ablenkungsfreien Gelände?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich einen störungsfreien Verlauf abgesichert?"
+    },
+    {
+     "type": "p",
+     "text": "→ Trainiere ich die erste Zeit konsequent an der langen Leine?"
+    },
+    {
+     "type": "p",
+     "text": "→ Steigere ich die Trainingsanforderungen schrittweise hin zur Anwendung in Situationen mit Ablenkung?"
+    },
+    {
+     "type": "p",
+     "text": "→ Wechsle ich erst zum leinenfreien Training, wenn der Leineneinsatz zur Ausführung der Übung nicht mehr notwendig ist?"
+    },
+    {
+     "type": "p",
+     "text": "→ Kommuniziere ich ruhig und verbindlich mit dem Hund?"
+    },
+    {
+     "type": "p",
+     "text": "→ Stimmt meine Körperarbeit und gehe ich souverän Richtung Hund?"
+    },
+    {
+     "type": "p",
+     "text": "→ Bringe ich den Hund vertrauensvoll und zeitnah ins „Platz\"?"
+    },
+    {
+     "type": "p",
+     "text": "→ Lasse ich den Hund regelmäßig eine Weile in Position?"
+    },
+    {
+     "type": "p",
+     "text": "→ Beende ich die Übung entsprechend Anleitung ruhig und mit den angemessenen Pausen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Lobe ich im Anschluss ausgiebig?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

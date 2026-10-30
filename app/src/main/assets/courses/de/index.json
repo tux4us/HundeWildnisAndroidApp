@@ -1,0 +1,248 @@
+[
+ {
+  "id": "01",
+  "title": "01 Grundlagen",
+  "summary": "Für ruhige, klare und harmonische Führung",
+  "file": "01.json"
+ },
+ {
+  "id": "02",
+  "title": "02 Motivation",
+  "summary": "um mit Freude zu lernen",
+  "file": "02.json"
+ },
+ {
+  "id": "03",
+  "title": "03 Korrektur",
+  "summary": "mit Weitsicht und Verstand",
+  "file": "03.json"
+ },
+ {
+  "id": "04",
+  "title": "04 Harmonie",
+  "summary": "ist der Schlüssel zum Verständnis",
+  "file": "04.json"
+ },
+ {
+  "id": "05",
+  "title": "05 Mentaltraining",
+  "summary": "sei Vorbild für Deinen Hund",
+  "file": "05.json"
+ },
+ {
+  "id": "06",
+  "title": "06 Körpersprache",
+  "summary": "weil der Hund sieht, was wir denken",
+  "file": "06.json"
+ },
+ {
+  "id": "07",
+  "title": "07 Sprachkommunikation",
+  "summary": "ein Hund hört auch das, was wir nicht aussprechen",
+  "file": "07.json"
+ },
+ {
+  "id": "08",
+  "title": "08 Sinneswahrnehmung",
+  "summary": "Wie Hunde ihre Welt wahrnehmen",
+  "file": "08.json"
+ },
+ {
+  "id": "09",
+  "title": "09 Teamarbeit",
+  "summary": "Eine der ältesten interspezifischen Kooperationen",
+  "file": "09.json"
+ },
+ {
+  "id": "10",
+  "title": "10 Routinen",
+  "summary": "Struktur für ein faires und stressarmes Miteinander",
+  "file": "10.json"
+ },
+ {
+  "id": "11",
+  "title": "11 Unfallschutz",
+  "summary": "Prävention für Sicherheit und Wohlergehen",
+  "file": "11.json"
+ },
+ {
+  "id": "12",
+  "title": "12 Junghundeprägung",
+  "summary": "...die Jugend ist einmalig",
+  "file": "12.json"
+ },
+ {
+  "id": "13",
+  "title": "13 Leinenarbeit",
+  "summary": "...bedeutet loslassen können",
+  "file": "13.json"
+ },
+ {
+  "id": "14",
+  "title": "14 Unterbrechungen",
+  "summary": "Unterbrechungen von Situationen mit Platz, Sitz & Steh",
+  "file": "14.json"
+ },
+ {
+  "id": "15",
+  "title": "15 Fuss",
+  "summary": "...gemeinsam gehen",
+  "file": "15.json"
+ },
+ {
+  "id": "16",
+  "title": "16 Sitz",
+  "summary": "…wenn es entspannt bleiben soll",
+  "file": "16.json"
+ },
+ {
+  "id": "17",
+  "title": "17 Platz",
+  "summary": "…wenn es zuverlässig sein muss",
+  "file": "17.json"
+ },
+ {
+  "id": "18",
+  "title": "18 Steh",
+  "summary": "...in alltäglicher Routine",
+  "file": "18.json"
+ },
+ {
+  "id": "19",
+  "title": "19 Sozialisierungstechniken",
+  "summary": "...und sich stressfrei begegnen",
+  "file": "19.json"
+ },
+ {
+  "id": "20",
+  "title": "20 Langleinentraining",
+  "summary": "…der Weg zur Gelassenheit",
+  "file": "20.json"
+ },
+ {
+  "id": "21",
+  "title": "21 Distanzunterbrechungen",
+  "summary": "…immer in stabiler Verbindung",
+  "file": "21.json"
+ },
+ {
+  "id": "22",
+  "title": "22 Freiarbeit",
+  "summary": "…vollkommene Entspannung",
+  "file": "22.json"
+ },
+ {
+  "id": "23",
+  "title": "23 Freifolge",
+  "summary": "…vollkommene Entspannung",
+  "file": "23.json"
+ },
+ {
+  "id": "24",
+  "title": "24 Teamwalk",
+  "summary": "…im Einklang mit Hund und Natur",
+  "file": "24.json"
+ },
+ {
+  "id": "25",
+  "title": "25 Scouttechniken",
+  "summary": "…die Komfortzone vergrößern",
+  "file": "25.json"
+ },
+ {
+  "id": "26",
+  "title": "26 Jagdvermeidung",
+  "summary": "…respektvoll unterwegs sein",
+  "file": "26.json"
+ },
+ {
+  "id": "27",
+  "title": "27 Nasenarbeit",
+  "summary": "…die schönste Sache der Hundewelt",
+  "file": "27.json"
+ },
+ {
+  "id": "28",
+  "title": "28 Leinenfuehrigkeit",
+  "summary": "…sicher unterwegs",
+  "file": "28.json"
+ },
+ {
+  "id": "29",
+  "title": "29 Begegnungssituationen",
+  "summary": "…und Akzeptanz des Gegenüber",
+  "file": "29.json"
+ },
+ {
+  "id": "30",
+  "title": "30 Stresstoleranztraining",
+  "summary": "…in Ruhe unterwegs sein",
+  "file": "30.json"
+ },
+ {
+  "id": "31",
+  "title": "31 Strassenroutinen",
+  "summary": "…gelassen reagieren können",
+  "file": "31.json"
+ },
+ {
+  "id": "32",
+  "title": "32 Hundekonflikte",
+  "summary": "…Panik ist nicht hilfreich",
+  "file": "32.json"
+ },
+ {
+  "id": "33",
+  "title": "33 Menschenkonflikte",
+  "summary": "…Ruhe bewahren und vermitteln",
+  "file": "33.json"
+ },
+ {
+  "id": "34",
+  "title": "34 Umweltkonflikte",
+  "summary": "…eine Frage der Gelassenheit",
+  "file": "34.json"
+ },
+ {
+  "id": "35",
+  "title": "35 Besitzerkonflikte",
+  "summary": "…Vertrauen ist alles",
+  "file": "35.json"
+ },
+ {
+  "id": "36",
+  "title": "36 Tierschutzhunde",
+  "summary": "…eine zweite Chance braucht Zeit und Verständnis",
+  "file": "36.json"
+ },
+ {
+  "id": "37",
+  "title": "37 Hunde mit Vorbesitzern",
+  "summary": "…was du weißt, was du glaubst zu wissen – und was der Hund weiß",
+  "file": "37.json"
+ },
+ {
+  "id": "38",
+  "title": "38 Kranke Hunde",
+  "summary": "…da sein, wenn es zählt",
+  "file": "38.json"
+ },
+ {
+  "id": "39",
+  "title": "39 Traumahunde",
+  "summary": "…Heilung beginnt dort, wo Sicherheit entsteht",
+  "file": "39.json"
+ },
+ {
+  "id": "40",
+  "title": "40 Erste Hilfe Set",
+  "summary": "…ruhig bleiben, richtig handeln, Leben retten",
+  "file": "40.json"
+ },
+ {
+  "id": "41",
+  "title": "41 Erste Hilfe am Hund",
+  "summary": "…ruhig bleiben, richtig handeln, Leben retten",
+  "file": "41.json"
+ }
+]

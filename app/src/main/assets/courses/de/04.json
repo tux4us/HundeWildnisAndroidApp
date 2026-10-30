@@ -1,0 +1,291 @@
+{
+ "id": "04",
+ "title": "Harmonie",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "ist der Schlüssel zum Verständnis"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "04-01",
+   "title": "Grundlagen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wissen zur Harmonie"
+    },
+    {
+     "type": "p",
+     "text": "Harmonie zwischen Hund und Mensch ist die wichtigste Bedingung für ein vertrauensvolles und lernendes Miteinander."
+    },
+    {
+     "type": "p",
+     "text": "Halte vor jeder Trainingseinheit eine kleine Weile inne und überlege in Ruhe die nächsten Schritte sowie eventuelle Alternativen."
+    },
+    {
+     "type": "p",
+     "text": "Gehe beruhigt voran und strahle Ruhe aus."
+    },
+    {
+     "type": "p",
+     "text": "Dein Hund spürt, wie Du Dich fühlst und wird sich dementsprechend verhalten."
+    },
+    {
+     "type": "p",
+     "text": "Harmonie braucht Zeitlosigkeit. Trainiere nicht unter Zeitdruck."
+    },
+    {
+     "type": "p",
+     "text": "Harmonie ist der Zustand, in dem der Hund und Du so weit wie möglich unabhängig von Ablenkung sind und der Hund sich an Dir orientiert."
+    },
+    {
+     "type": "p",
+     "text": "Harmonie ist trainierbar. Sitze zusammen mit Deinem Hund regelmäßig und mindestens 15 Minuten an einem ruhigen Ort in der Natur."
+    },
+    {
+     "type": "p",
+     "text": "Sprich ruhig mit Deinem Hund."
+    },
+    {
+     "type": "p",
+     "text": "Mache ruhige und übersichtliche Bewegungen, wenn Du mit Deinem Hund trainierst."
+    },
+    {
+     "type": "p",
+     "text": "Begegne auch schwierigen Situationen mit Ruhe und Bedachtheit."
+    },
+    {
+     "type": "p",
+     "text": "Sei verbindlich Deinem Hund gegenüber, damit er sich auf Dich verlassen kann."
+    },
+    {
+     "type": "p",
+     "text": "Sei dem Hund Vorbild mit Deinem Verhalten. So, wie Du bist, so ist Dein Hund."
+    },
+    {
+     "type": "p",
+     "text": "Reflektiere Handlungen und Situationen und mache dann erst mit dem nächsten Schritt weiter, wenn sich wieder Ruhe eingestellt hat."
+    },
+    {
+     "type": "p",
+     "text": "Kontrolliere Deine Atmung und Schrittgeschwindigkeit. Sei ruhig und souverän."
+    },
+    {
+     "type": "p",
+     "text": "Erkenne den harmonischen Grundzustand und behalte diesen Zustand bei, so oft es möglich ist."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "04-02",
+   "title": "Harmonie aus fachlicher Sicht",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Den harmonischen Grundzustand erkennen"
+    },
+    {
+     "type": "p",
+     "text": "Ein Hund im harmonischen Grundzustand zeigt eine lockere Körperhaltung und eine weiche Mimik mit entspannten Augen und geschlossenem oder leicht geöffnetem Maul."
+    },
+    {
+     "type": "p",
+     "text": "Die Rute wird in ihrer rassetypischen Ruheposition getragen. Die Atmung ist ruhig und gleichmäßig."
+    },
+    {
+     "type": "p",
+     "text": "Der Hund ist ansprechbar, orientiert sich an Dir, zeigt Interesse an der Umgebung und an Handlungen."
+    },
+    {
+     "type": "p",
+     "text": "Er kann sich hinlegen und ausruhen, auch wenn in der Umgebung etwas geschieht."
+    },
+    {
+     "type": "p",
+     "text": "Lernen Dein Hund und Du diesen Zustand kennen, erkennst Du Abweichungen früher: veränderte Körperspannung, Hecheln ohne Anlass, Fixieren oder Verlust der Ansprechbarkeit."
+    },
+    {
+     "type": "p",
+     "text": "Übung: Prüfe vor jeder Trainingseinheit drei Punkte. Wie atme ich? Wie ist meine Körperspannung? Zeigt mein Hund den harmonischen Grundzustand? Beginne das Training erst, wenn alle drei Fragen positiv beantwortet sind."
+    },
+    {
+     "type": "h",
+     "text": "Atmung und Tempo als Werkzeug"
+    },
+    {
+     "type": "p",
+     "text": "Langsame, tiefe Atmung mit verlängerter Ausatmung beruhigt beim Menschen nachweislich den Körper. Herzfrequenz und Muskelspannung nehmen ab."
+    },
+    {
+     "type": "p",
+     "text": "Du kannst diese Wirkung gezielt einsetzen, bevor Du auf Deinen Hund zugehst oder eine Übung beginnst."
+    },
+    {
+     "type": "p",
+     "text": "Dein Hund erkennt Deine Anspannung an Körperhaltung, Bewegungstempo und Stimme. Eine ruhige Atmung verändert alle drei."
+    },
+    {
+     "type": "p",
+     "text": "Gehe in einem gleichmäßigen ruhigen Schritttempo und vermeide aufbrausende, hektische und gestresste Reaktionen."
+    },
+    {
+     "type": "h",
+     "text": "Ruhe und Erholung als Teil des Trainings"
+    },
+    {
+     "type": "p",
+     "text": "Hunde haben einen hohen Ruhebedarf. Erwachsene Hunde schlafen und ruhen im Durchschnitt 12 bis 14 Stunden am Tag, Welpen und Junghunde deutlich mehr."
+    },
+    {
+     "type": "p",
+     "text": "Zu viele Reize und zu wenig Erholung machen einen Hund schneller erregbar und verschlechtern die Lernfähigkeit."
+    },
+    {
+     "type": "p",
+     "text": "Plane nach jeder Trainingseinheit und nach jedem Spaziergang mit vielen Eindrücken eine Ruhephase ein."
+    },
+    {
+     "type": "p",
+     "text": "Kurze Trainingseinheiten mit Pausen sind wirksamer als eine lange Einheit ohne Unterbrechung."
+    },
+    {
+     "type": "p",
+     "text": "Ein Hund, der sich in Deiner Gegenwart ruhig hinlegt und entspannt, zeigt Vertrauen. Fördere diesen Zustand aktiv und belohne ihn."
+    },
+    {
+     "type": "h",
+     "text": "Vorhersehbarkeit gibt Sicherheit"
+    },
+    {
+     "type": "p",
+     "text": "Tiere erleben Situationen als weniger belastend, wenn sie diese vorhersehen und beeinflussen können."
+    },
+    {
+     "type": "p",
+     "text": "Gleichbleibende Abläufe vor dem Training, zum Beispiel immer die gleiche Begrüßung und das gleiche Ankündigungssignal, zeigen Deinem Hund, was als Nächstes geschieht."
+    },
+    {
+     "type": "p",
+     "text": "Verlässliche Regeln wirken ebenso: Was heute erlaubt ist, gilt auch morgen. Das entspricht Deiner Forderung nach Verbindlichkeit."
+    },
+    {
+     "type": "p",
+     "text": "Kündige Veränderungen schrittweise an, zum Beispiel einen neuen Ort oder eine neue Übung, und beginne dort mit einfachen Anforderungen."
+    },
+    {
+     "type": "p",
+     "text": "Hinweis: Alle Angaben zu Ruhezeiten sind Erfahrungswerte. Alter, Rasse, Gesundheitszustand und Tagesablauf beeinflussen den individuellen Bedarf. Zeigt Dein Hund trotz ausreichender Ruhe anhaltende Unruhe oder Erschöpfung sollte es unter Umständen tierärztlich abgeklärt werden."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "04-03",
+   "title": "Wichtige Bedingungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Zu vermeidende Faktoren"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es unbedingt, den Hund als Ableiter für Stress und Termindruck zu missbrauchen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, im gestressten bzw. aufgeregtem Zustand mit dem Hund zu trainieren."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, unvorbereitet in Trainingseinheiten einzusteigen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, unter Zeitdruck oder Streckenvorgaben mit dem Hund zu trainieren."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide in überraschenden Situationen unbedingt Hektik, Unentschlossenheit und Überreaktionen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, dass Du Dich von äußeren Umständen derart beeinflussen lässt, dass Du Stress auf den Hund überträgst."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide zu schnelle Abläufe und pausenloses Trainieren."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, Ergebnisse in schwierigen Situationen abzufordern, die in einfachen noch nicht trainiert wurden."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, mit dem Hund nur in Bewegung zu sein. Harmonie braucht Ruhephasen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide unbedingt aufgeregtes, hektisches Sprechen und Sprechen im Befehlston."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Regelbrüche Deinerseits. Entweder es gibt eine Regel oder es gibt keine."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Frust- und Missbilligungsgefühle dem Hund gegenüber; sie verunsichern ihn nur."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "04-04",
+   "title": "Abschnitt 4",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Der Harmonie-Anker"
+    },
+    {
+     "type": "p",
+     "text": "Suche Dir heute einen Platz in der Natur und setze Dich mit Deinem Hund für 15 Minuten einfach nur hin. Ohne Handy, ohne Kommandos, ohne Erwartung. Atme bewusst ruhig und beobachte, wie sich die Körperspannung Deines Hundes Deiner inneren Stille anpasst."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "04-05",
+   "title": "Merke Dir:",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Harmonie ist der friedliche Grundzustand innerhalb eines Systems."
+    },
+    {
+     "type": "p",
+     "text": "Das Erkennen des harmonischen Grundzustandes ist ein essentielles Werkzeug."
+    },
+    {
+     "type": "p",
+     "text": "Jede Störung des harmonischen Grundzustandes wirkt sich auf die Reaktionsmuster des Hundes aus."
+    },
+    {
+     "type": "p",
+     "text": "Harmonie ist ein Zustand. Es ist keine Sache des Denkers."
+    },
+    {
+     "type": "p",
+     "text": "Harmonie herzustellen muss ein Grundbedürfnis sein."
+    },
+    {
+     "type": "p",
+     "text": "Sei harmonisch mit Deinem Hund."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

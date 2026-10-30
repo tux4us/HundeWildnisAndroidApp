@@ -1,0 +1,452 @@
+{
+ "id": "36",
+ "title": "Tierschutzhunde",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…eine zweite Chance braucht Zeit und Verständnis"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "36-01",
+   "title": "Grundgedanke und Weg",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Ein Tierschutzhund ist kein Hund mit einem leeren Blatt. Er trägt eine Geschichte mit sich, sei es Vernachlässigung, Angst, Verlust oder unzureichender Sozialisierung. Diese Geschichte ist weder sein Fehler noch sein Schicksal. Sie ist sein Ausgangspunkt."
+    },
+    {
+     "type": "p",
+     "text": "Der Tierschutzhund möchte Sicherheit. Er möchte verstehen, dass sein neues Zuhause ein verlässlicher, ruhiger Ort ist und dass der Mensch an seiner Seite eine beständige und emphatische Führung bietet, der er mit der Zeit vertrauen kann."
+    },
+    {
+     "type": "p",
+     "text": "Geduld ist keine Tugend, sondern eine Notwendigkeit. Die Zeit zum Ankommen, Verstehen und Vertrauen kann nicht abgekürzt werden."
+    },
+    {
+     "type": "h",
+     "text": "Was Du wissen solltest 📋"
+    },
+    {
+     "type": "p",
+     "text": "Konflikte entstehen häufig dort, wo die Vorgeschichte des Hundes nicht ernst genommen wird, wo zu schnell zu viel erwartet wird oder wo der Mensch das Verhalten des Hundes nach menschlichen Maßstäben bewertet."
+    },
+    {
+     "type": "p",
+     "text": "Das konsequente Vermeiden von Überforderung, Druck und negativen Einwirkungen schafft die Basis, auf der ein Tierschutzhund überhaupt erst in der Lage ist, sich zu öffnen und Neues zu erlernen."
+    },
+    {
+     "type": "p",
+     "text": "Die Bereitschaft, das eigene Handeln ständig zu hinterfragen und bei Bedarf professionelle Unterstützung zu suchen, ist kein Zeichen von Schwäche, sondern von Verantwortungsbewusstsein."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-02",
+   "title": "Vorgeschichte und Trauma",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was der Hund erlebt haben kann 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Tierschutzhunde kommen aus sehr unterschiedlichen Situationen: aus dem Straßenleben, aus Tötungsstationen, aus Zuständen der Verwahrlosung oder aus Haltungsbedingungen, die keinerlei soziale Prägung ermöglichten."
+    },
+    {
+     "type": "p",
+     "text": "Ein traumatisierter Hund zeigt sein Innenleben nicht offen. Er friert ein, weicht aus, flieht oder reagiert scheinbar „grundlos\" mit Angst oder Aggression auf Reize, die für uns Menschen völlig alltäglich sind. Hinter jedem dieser Signale steckt eine Erfahrung, die wir respektieren müssen."
+    },
+    {
+     "type": "p",
+     "text": "Es ist wichtig zu verstehen: Traumatisierte Hunde sind nicht „kaputt\". Sie haben überlebt. Ihre Reaktionen sind Ausdruck von Intelligenz und Anpassungsfähigkeit. Unsere Aufgabe ist es, ihnen zu zeigen, dass das alte Verhalten in der neuen Welt nicht mehr nötig ist."
+    },
+    {
+     "type": "h",
+     "text": "Typische Verhaltensweisen und ihre Bedeutung 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Einfrieren: Der Hund erstarrt bei bestimmten Situationen oder Annäherungen. Dies ist ein klassisches Anzeichen für erlebte Hilflosigkeit – dieser Zustand darf nie als Akzeptanz oder Ruhe fehlgedeutet werden."
+    },
+    {
+     "type": "p",
+     "text": "Dauerhafter Rückzug: Der Hund versteckt sich und meidet Kontakt. Dies ist kein Desinteresse, sondern Schutzverhalten. Wir geben ihm den Raum und warten geduldig, bis er selbst den Kontakt sucht."
+    },
+    {
+     "type": "p",
+     "text": "Übermäßige Anhänglichkeit: Manche Hunde klammern extrem und zeigen Stress bei jeder Trennung. Das neue Umfeld fühlt sich gut an, aber der Hund weiß noch nicht, ob es so bleibt."
+    },
+    {
+     "type": "p",
+     "text": "Ressourcenbewachung: Hunde, die früher ums Futter kämpfen mussten, können beim Fressen oder bei Objekten angespannt reagieren. Dies ist kein Dominanzverhalten, sondern ein erlerntes Überlebensmuster."
+    },
+    {
+     "type": "p",
+     "text": "Reaktivität auf Leinen: Viele Straßenhunde haben kaum gelernt, entspannt an der Leine zu gehen. Die Einschränkung der Bewegungsfreiheit kann Stress und reaktives Verhalten auslösen."
+    },
+    {
+     "type": "h",
+     "text": "Häufige Fehler im Umgang mit der Vorgeschichte ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund zu bedauern und ihm in jedem Moment des Unwohlseins nachzugeben verstärkt unsicheres Verhalten und verhindert, dass er lernt, mit alltäglichen Situationen umzugehen."
+    },
+    {
+     "type": "p",
+     "text": "Zu erwarten, dass der Hund nach wenigen Wochen „aufgetaut\" ist und nun wie ein normal sozialisierter Hund reagiert, führt zu Druck, der dem Hund schadet."
+    },
+    {
+     "type": "p",
+     "text": "Niemals den Tierschutzhund in der Eingewöhnungsphase in überfordernde Situationen bringen. Besuche, Hundetreffen, belebtes Stadtgebiet verführen dazu, die eigene Ungeduld als „Sozialisierung\" zu rechtfertigen. Das Gegenteil ist der Fall."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-03",
+   "title": "Eingewöhnung und Stressabbau",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Die ersten Wochen – Die 3-3-3-Regel 📅"
+    },
+    {
+     "type": "p",
+     "text": "Die ersten 3 Tage: Der Hund ist überwältigt. Alles ist neu: Gerüche, Geräusche, Gesichter, Abläufe. Er frisst möglicherweise wenig, schläft unruhig oder versteckt sich. Dies ist normal. Wir geben ihm Raum, beobachten ruhig und verzichten auf jegliche Anforderungen."
+    },
+    {
+     "type": "p",
+     "text": "Die ersten 3 Wochen: Der Hund beginnt, Abläufe zu erkennen und erste Orientierungspunkte zu finden. Erste Persönlichkeitszüge werden sichtbar – manchmal auch erste Problemverhalten, weil der Hund sich sicherer fühlt. Wir bleiben gelassen und strukturieren den Alltag."
+    },
+    {
+     "type": "p",
+     "text": "Die ersten 3 Monate: Der Hund fühlt sich zuhause. Er kennt die Abläufe, vertraut den Menschen in seinem Haushalt und zeigt nun sein wahres Wesen. Erst in dieser Phase ist eine verlässliche Einschätzung und ein sinnvoller Trainingsbeginn möglich."
+    },
+    {
+     "type": "h",
+     "text": "Der Urlaubs-Effekt – und warum er trügt 🎭"
+    },
+    {
+     "type": "p",
+     "text": "Viele neue Tierschutzhalter berichten in den ersten Tagen von einem „perfekten\" Hund: ruhig, angepasst, unproblematisch. Dies ist kein Glück – es ist Schock. Der Hund befindet sich im Ausnahme- und Beobachtungsmodus."
+    },
+    {
+     "type": "p",
+     "text": "Nach einigen Wochen tauchen oft völlig neue Verhaltensweisen auf: Bellen, Ressourcenbewachung, Trennungsangst, Reaktivität. Dies ist kein Rückschritt, sondern ein Zeichen, dass der Hund angekommen ist und jetzt wirklich er selbst sein kann."
+    },
+    {
+     "type": "p",
+     "text": "Dieser Moment verlangt, dass wir die neuen Verhaltensweisen nicht als Enttäuschung, sondern als Arbeitsmaterial begreifen – als den Beginn der eigentlichen gemeinsamen Entwicklung."
+    },
+    {
+     "type": "h",
+     "text": "Stressabbau und Entspannung aktiv fördern 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Ruhige, strukturierte Spaziergänge in reizarmer Umgebung sind für Tierschutzhunde in der Eingewöhnung wertvoller als ausgedehnte Abenteuer im Stadtpark. Wenige, verlässliche Abläufe helfen dem Nervensystem mehr als abwechslungsreiche Eindrücke."
+    },
+    {
+     "type": "p",
+     "text": "Schnüffeln und Suchen sind natürliche Stressregulatoren. Das gezielte Einstreuen von Suchaufgaben baut Cortisol ab und stärkt gleichzeitig die Bindung durch gemeinsames Erleben."
+    },
+    {
+     "type": "p",
+     "text": "Ausreichend Schlaf ist für Tierschutzhunde essenziell. Ein erwachsener Hund schläft 16 bis 20 Stunden täglich. Der ungestörte Ruheplatz im neuen Zuhause ist deshalb einer der wichtigsten Beiträge, den wir leisten können."
+    },
+    {
+     "type": "h",
+     "text": "Zeichen von Stress erkennen 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Wir lernen, die Stresssignale unseres Hundes zu lesen: Gähnen, Schütteln, Lecken der Lefzen, Knurren, Wegschauen, „Versteinern\", schnelles Hecheln ohne körperliche Belastung, Ohren angelegt, gesenkte Rute."
+    },
+    {
+     "type": "p",
+     "text": "Schweifwedeln bedeutet nicht automatisch Freude. Ein tief wedelnder Schweif in eingezogener Körperhaltung signalisiert Unsicherheit."
+    },
+    {
+     "type": "p",
+     "text": "Wir reagieren auf Stresssignale immer mit Entlastung – nie mit Bestärkung der Situation, die sie auslöst. Der Hund soll erleben: Mein Mensch sieht, wenn es mir nicht gut geht, und handelt entsprechend."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-04",
+   "title": "Vertrauen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Die Grundfeste der neuen Beziehung 🤝"
+    },
+    {
+     "type": "p",
+     "text": "Vertrauen ist das Fundament, auf dem alles andere aufgebaut wird. Bei Tierschutzhunden ist dieses Fundament nicht gegeben – es muss aktiv und behutsam errichtet werden, Stein für Stein, Tag für Tag."
+    },
+    {
+     "type": "p",
+     "text": "Vertrauen entsteht nicht durch einen großen Moment, sondern durch tausend kleine: durch das ruhige Einhalten von Abläufen, durch das Respektieren von Grenzen, durch das geduldige Warten auf Fortschritt und durch die Verlässlichkeit, mit der wir jeden Tag erscheinen."
+    },
+    {
+     "type": "h",
+     "text": "Vertrauensfördernd ✅"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund selbst entscheiden lassen, wann er Kontakt sucht, ohne ihn dazu zu drängen oder zu locken."
+    },
+    {
+     "type": "p",
+     "text": "Jede Annäherung ankündigen: Körperhaltung öffnen, Blick lockern, sich ruhig und harmonisch präsentieren."
+    },
+    {
+     "type": "p",
+     "text": "Ruhige, gleichförmige Tagesabläufe, an denen der Hund lernt, was als Nächstes kommt."
+    },
+    {
+     "type": "p",
+     "text": "Lob und positive Reaktion für jede noch so kleine Zugewandtheit des Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Das konsequente Respektieren seines Rückzugsortes als unantastbaren Schutzraum."
+    },
+    {
+     "type": "p",
+     "text": "Gemeinsames ruhiges Beieinandersein ohne Anforderungen – einfach da sein."
+    },
+    {
+     "type": "p",
+     "text": "Positive Verknüpfungen mit der Hand: füttern aus der Hand, ruhiges Handauflegen auf Körper und Kopf des Hundes."
+    },
+    {
+     "type": "h",
+     "text": "Vertrauensschädigend ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund in Situationen zu drängen, die er durch seine Körpersprache klar ablehnt."
+    },
+    {
+     "type": "p",
+     "text": "Streicheln, bevor der Hund aktiv Kontakt gesucht hat – besonders im Kopfbereich."
+    },
+    {
+     "type": "p",
+     "text": "Überraschende Berührungen, schnelle Bewegungen oder laute Geräusche in der Eingewöhnungsphase."
+    },
+    {
+     "type": "p",
+     "text": "Das Missdeuten von Einfrieren oder Duldung als Einverständnis."
+    },
+    {
+     "type": "p",
+     "text": "Körperliche Korrekturmaßnahmen jeglicher Art – sie zerstören bei traumatisierten Hunden das mühsam aufgebaute Vertrauen in kürzester Zeit, welches dann oft dauerhaft nicht wiederherstellbar ist."
+    },
+    {
+     "type": "p",
+     "text": "Wir hüten uns besonders vor gut gemeinten, aber schädlichen Ratschlägen: „Der muss das lernen\", „Zeig ihm, wer der Chef ist\" oder „Der stellt dich auf die Probe\" sind beim Tierschutzhund gefährliche Fehldeutungen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-05",
+   "title": "Besonderheiten im Training",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Grundsatz: Erst Sicherheit, dann Lernen 🧘"
+    },
+    {
+     "type": "p",
+     "text": "Ein Tierschutzhund, der sich nicht sicher fühlt, kann nicht lernen. Das Gehirn eines dauerhaft gestressten Tieres ist in einem Überlebensmodus, der für Trainingsfortschritte nicht zugänglich ist."
+    },
+    {
+     "type": "p",
+     "text": "Training mit Tierschutzhunden beginnt nicht mit Kommandos. Es beginnt mit der Beobachtung: Was mag der Hund? Womit reagiert er positiv? Was lässt ihn aufatmen?"
+    },
+    {
+     "type": "p",
+     "text": "Kurze, positive, häufige Trainingseinheiten sind wirkungsvoller als lange Sessions. Zwei bis drei Minuten echtes, freudiges Miteinander sind wertvoller als zwanzig Minuten erzwungener Wiederholungen."
+    },
+    {
+     "type": "h",
+     "text": "Trigger verstehen und managen 🎯"
+    },
+    {
+     "type": "p",
+     "text": "Ein Trigger ist ein Reiz, der beim Hund eine starke emotionale Reaktion auslöst. Das Identifizieren der individuellen Trigger unseres Hundes ist eine der wichtigsten Aufgaben in der ersten Zeit."
+    },
+    {
+     "type": "p",
+     "text": "Triggermanagement bedeutet zunächst: Distanz schaffen. Wir halten den Hund unterhalb seiner Reizschwelle – in einem Abstand zum Trigger, bei dem er ihn noch wahrnimmt, aber noch nicht reaktiv wird. Auf dieser Schwelle beginnen wir, neue positive Erfahrungen zu verknüpfen."
+    },
+    {
+     "type": "p",
+     "text": "Desensibilisierung und Gegenkonditionierung sind die wissenschaftlich fundierten Methoden zur Arbeit mit Triggern. Sie erfordern Geduld, Systematik und – bei starken Reaktionen – professionelle Begleitung."
+    },
+    {
+     "type": "h",
+     "text": "Übersprungshandlungen lesen und Angst begleiten 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Übersprungshandlungen sind Verhaltensweisen in Konfliktsituationen, um innere Anspannung abzubauen: plötzliches Kratzen, Gähnen, Schnüffeln am Boden, Schütteln, Lecken – obwohl kein offensichtlicher Anlass besteht. Beim Tierschutzhund sind sie ein besonders wichtiges Signal, das wir mit Entlastung der Situation beantworten."
+    },
+    {
+     "type": "p",
+     "text": "Angst ist keine Charakterschwäche. Sie kann nicht durch Strafe, Druck oder erzwungene Konfrontation überwunden werden – sie wird dadurch sogar meist verstärkt."
+    },
+    {
+     "type": "p",
+     "text": "Ängstliche Hunde profitieren besonders von vorhersehbaren Abläufen. Jedes Mal, wenn eine Situation ruhig und ohne Schaden endet, entsteht eine neue Erinnerung: „Das geht gut aus.\" Diese Erinnerungen sammeln sich über die Zeit und bauen Angst ab."
+    },
+    {
+     "type": "p",
+     "text": "Bei ausgeprägten Angststörungen ist professionelle Begleitung kein Luxus, sondern notwendige Fürsorge. Wir erkennen die Grenzen unserer eigenen Möglichkeiten rechtzeitig an."
+    },
+    {
+     "type": "h",
+     "text": "Was im Training mit Tierschutzhunden nicht funktioniert ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Flut- oder Konfrontationsmethoden – das erzwungene Aussetzen gegenüber dem Angstreiz – sind beim Tierschutzhund besonders schädlich und können zu dauerhaften Traumatisierungen führen."
+    },
+    {
+     "type": "p",
+     "text": "Strafbasierte Trainingsmethoden jeglicher Art. Der Tierschutzhund hat möglicherweise gelernt, dass Menschen Schmerz oder Bedrohung bedeuten. Jede Bestrafung bestätigt diese Erfahrung."
+    },
+    {
+     "type": "p",
+     "text": "Zu frühes Einfordern von Gehorsamkeit in ablenkungsreichen Umgebungen. Zuverlässige Reaktionen entstehen erst nach langer, positiver Trainingsarbeit."
+    },
+    {
+     "type": "p",
+     "text": "Wir schützen unseren Tierschutzhund vor Trainingsansätzen, die auf Dominanz, Unterwerfung oder starker körperlicher Einwirkung beruhen. Was bei einem normal sozialisierten Hund bereits fragwürdig ist, kann bei einem traumatisierten Tier das Ende jeder Vertrauensbasis bedeuten."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-06",
+   "title": "Beschäftigung und Alltag",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Spiel mit dem Tierschutzhund 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Viele Tierschutzhunde kennen Spiel nicht oder haben gelernt, dass Aufregung gefährlich ist. Wir beginnen ruhig: ein robustes Spielzeug wird angeboten, liegt da und wir beobachten. Wir erzwingen das Spiel nie – wir laden nur ein."
+    },
+    {
+     "type": "p",
+     "text": "Zerrspiele sind, wenn der Hund beginnt, ihnen zu vertrauen, gesunde und bindungsstärkende Beutespiele. Das gemeinsame Spiel ist ein wichtiger Indikator für den Fortschritt: Ein Hund, der beginnt, spielfreudig zu reagieren, hat einen entscheidenden Schritt in Richtung Vertrauen gemacht."
+    },
+    {
+     "type": "h",
+     "text": "Die Suche – artgerechte Ausarbeitung 👃"
+    },
+    {
+     "type": "p",
+     "text": "Die Suche nach verstecktem Spielzeug oder einem Futterdummy ist für Tierschutzhunde eine besonders wertvolle Beschäftigung: sie ist reizarm, kooperativ, erfolgversprechend und spricht tief verwurzelte artgemäße Instinkte an."
+    },
+    {
+     "type": "p",
+     "text": "Auch mit Futter gefüllte Kongs, Leckerlis in einer Dose, versteckt im Gelände sind niederschwellige Suchmöglichkeiten, die täglich mehrmals angeboten werden sollten. Die Nase zu benutzen baut Stress ab, fördert Konzentration und stärkt das Selbstbewusstsein des Hundes."
+    },
+    {
+     "type": "h",
+     "text": "Alltagsroutinen bewusst gestalten 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Verlässliche, ruhige Abläufe – immer zur gleichen Zeit, immer auf die gleiche Art – geben dem Hund Orientierung in einer Welt, die für ihn anfangs vollständig unbekannt ist."
+    },
+    {
+     "type": "p",
+     "text": "Das Füttern geschieht stets ungestört, am selben Ort. Wir nutzen die Futterzeit nicht für Trainingseinlagen wie das Wegnehmen des Fressnapfes – dies erzeugt bei Tierschutzhunden mit Ressourcenerfahrungen unnötigen Stress."
+    },
+    {
+     "type": "p",
+     "text": "Türen, Treppen und Übergänge absolviert der Hund in der Anfangszeit angeleint und uns folgend. Wir führen ihn ruhig, ohne Hektik, und belobigen jeden reibungslosen Ablauf."
+    },
+    {
+     "type": "p",
+     "text": "Das häusliche Umfeld ist ein Ort der Ruhe. Je ruhiger und strukturierter das Zuhause, umso schneller findet der Tierschutzhund seinen inneren Grundzustand der Sicherheit – und umso früher kann echte Entwicklung stattfinden."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-07",
+   "title": "Abschnitt 7",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Weniger ist mehr"
+    },
+    {
+     "type": "p",
+     "text": "Der häufigste Fehler mit einem Tierschutzhund ist nicht Gleichgültigkeit – es ist zu viel des Gutgemeinten. Zu viele Menschen, zu viele Eindrücke, zu viel Drängen. Der wertvollste Schritt, den Du heute tun kannst: Nichts von ihm verlangen. Einfach ruhig daneben sitzen. Manchmal ist die lautloseste Handlung die lauteste Botschaft: Du bist hier sicher."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-08",
+   "title": "Checkliste für einen gelungenen Neustart",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Habe ich mich mit der möglichen Vorgeschichte meines Tierschutzhundes ernsthaft auseinandergesetzt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Gebe ich meinem Hund ausreichend Zeit zum Ankommen – ohne Erwartungen in den ersten 3 Monaten?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erkenne ich seine Stresssignale und reagiere ich entlastend darauf?"
+    },
+    {
+     "type": "p",
+     "text": "→ Ist sein Ruheplatz ein unantastbarer Schutzraum, den ich konsequent respektiere?"
+    },
+    {
+     "type": "p",
+     "text": "→ Vermeide ich in der Eingewöhnungsphase Reizüberflutung, Besuche und überfordernde Situationen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Baue ich Vertrauen durch verlässliche Abläufe, ruhige Kommunikation und freiwilligen Kontakt auf?"
+    },
+    {
+     "type": "p",
+     "text": "→ Trainiere ich ausschließlich positiv, geduldig und unterhalb der Reizschwelle meines Hundes?"
+    },
+    {
+     "type": "p",
+     "text": "→ Suche ich professionelle Unterstützung, wenn ich an Grenzen stoße – für mich und meinen Hund?"
+    },
+    {
+     "type": "p",
+     "text": "→ Biete ich täglich Suchbeschäftigung als artgerechten Stressabbau an?"
+    },
+    {
+     "type": "p",
+     "text": "→ Jeder Tag, den ich meinem Tierschutzhund Sicherheit gebe, ist ein Tag, an dem er lernt: Hier bin ich richtig."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

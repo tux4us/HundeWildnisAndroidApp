@@ -45,7 +45,7 @@ Dateien auf Syntaxfehler. Ein echter Gradle-Build steht aus.
 
 ## Noch zu tun (nicht durch mich erledigt)
 1. Build und alle Tests auf einem Gerät (insbesondere PDFs, Karte, Einstellungsdialog, Wetter mit eigener Adresse)
-2. Datenschutzerklärung auf wildnislehrer.com anpassen (die App verlinkt dorthin); `Datenschutzerklaerung` hier ist ein Entwurf
+2. Datenschutzerklärung: Sie ist in der App eingebaut (Menü, Deutsch/Englisch; Quelle `privacy_content` in `values/` und `values-en/strings.xml`). Die Klartext-Fassungen `Datenschutzerklaerung` und `PrivacyPolicy.en.txt` im Repository entsprechen diesem Text. Für Play Console und F-Droid wird zusätzlich eine öffentlich erreichbare URL benötigt, z. B. die Raw-Datei im Repository oder eine Seite auf der Webseite. Änderungshinweise: `docs/Datenschutz-Anpassungen.md`.
 3. Wetter: mit eigenem Schlüssel von OpenWeatherMap und mit Open-Meteo (Kundenadresse) auf einem Gerät testen; die Adressen des
    Open-Meteo-Kundenzugangs (Wetter, Luftqualität) stehen in deren Dokumentation und sind hier nicht vorbelegt. Höhenmesser testen (GPS-Fix abwarten,
    Kalibrierung des Barometers prüfen)

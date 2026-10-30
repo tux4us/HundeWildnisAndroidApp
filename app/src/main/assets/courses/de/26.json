@@ -1,0 +1,360 @@
+{
+ "id": "26",
+ "title": "Jagdvermeidung",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…respektvoll unterwegs sein"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "26-01",
+   "title": "Einleitung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Grundverständnis und Zielsetzung 🐕"
+    },
+    {
+     "type": "p",
+     "text": "In Wald und Feld sind wir zu Gast und haben die Pflicht alle Wildtiere als Gastgeber für uns und unseren Hund anzuerkennen."
+    },
+    {
+     "type": "p",
+     "text": "Jedwedes Vertreiben, Verunsichern, Hetzen oder gar Verwunden von Wildtieren durch unseren Hund ist zu verhindern. Als Hundehalter hat man keinerlei Rechtsgrundlage seinen Hund, welcher noch nicht sicher in der Führung des Hundehalters steht, ohne Leine in der Natur frei laufen zu lassen."
+    },
+    {
+     "type": "p",
+     "text": "Nicht selten führt das freie Laufenlassen des noch unausgebildeten Hundes zu dessen Verletzung oder gar Tötung durch Begegnung mit entsprechenden Wildtieren."
+    },
+    {
+     "type": "p",
+     "text": "Das Vermeiden des unerwünschten Jagdverhaltens ist daher ein Schlüsselthema in der Ausbildung unseres Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Hunde besitzen einen unterschiedlich stark ausgeprägten Jagdtrieb. Einerseits wird dieser bestimmt durch die genetische Veranlagung und darauf aufbauend natürlich durch die Prägung während des Heranwachsens und den gemachten Erfahrungen."
+    },
+    {
+     "type": "p",
+     "text": "Grundsätzlich gilt, dass der Jagdtrieb bei jedem Hund beeinflussbar ist. In welchem Umfang dies erfolgreich ist, wird maßgeblich durch Ausdauer, Konsequenz und vor allem regelmäßiges Training bestimmt."
+    },
+    {
+     "type": "p",
+     "text": "Jagdvermeidung basiert auf einer Strategie der Sättigung mit Tierreizen und einer Verbindung mit zweckmäßigen Verhaltensmustern."
+    },
+    {
+     "type": "p",
+     "text": "In Wald und Feld sind wir zu Gast und haben die Pflicht, alle Wildtiere als Gastgeber für uns und unseren Hund anzuerkennen. Jedwedes Vertreiben, Verunsichern, Hetzen oder gar Verwunden von Wildtieren durch unseren Hund ist zu verhindern."
+    },
+    {
+     "type": "p",
+     "text": "Hunde besitzen einen unterschiedlich stark ausgeprägten Jagdtrieb – bestimmt durch die genetische Veranlagung und durch die Prägung während des Heranwachsens. Grundsätzlich gilt: Der Jagdtrieb ist bei jedem Hund beeinflussbar. In welchem Umfang, wird maßgeblich durch Ausdauer, Konsequenz und regelmäßiges Training bestimmt."
+    },
+    {
+     "type": "p",
+     "text": "Jagdvermeidung basiert auf einer Strategie der Sättigung mit Tierreizen und einer Verbindung mit zweckmäßigen Verhaltensmustern."
+    },
+    {
+     "type": "h",
+     "text": "Erfolgsfaktoren im Überblick 📋"
+    },
+    {
+     "type": "p",
+     "text": "Frühes Erkennen von Jagdverhalten und Reizen."
+    },
+    {
+     "type": "p",
+     "text": "Sachgerechtes Reagieren in jeder Situation."
+    },
+    {
+     "type": "p",
+     "text": "Konsequente Regeln, die verlässlich eingehalten werden."
+    },
+    {
+     "type": "p",
+     "text": "Ausdauerndes Training über einen angemessenen Zeitraum."
+    },
+    {
+     "type": "p",
+     "text": "Intensiver TEAMWALK als tragende Grundlage."
+    },
+    {
+     "type": "p",
+     "text": "Lernen und Anwenden der SCOUTTECHNIKEN."
+    },
+    {
+     "type": "p",
+     "text": "Anwenden aller einzelnen Trainingsabschnitte ohne Auslassen."
+    },
+    {
+     "type": "p",
+     "text": "Wechsel zum nächsten Trainingsabschnitt erst bei Festigung des vorherigen."
+    },
+    {
+     "type": "h",
+     "text": "Wichtige Grundsätze ⚖️"
+    },
+    {
+     "type": "p",
+     "text": "Das Training der Jagdvermeidung ist bei Ausdauer und Intensität des Tuns immer von Erfolg gekrönt."
+    },
+    {
+     "type": "p",
+     "text": "Die beschriebenen Trainingsschritte werden sowohl beim jungen, heranwachsenden Hund als auch beim erwachsenen Hund angewandt. Ein zu frühes Beenden oder gar Auslassen einzelner Trainingsabschnitte ist nicht geraten und stellt den nachhaltigen Erfolg des Trainings in Frage."
+    },
+    {
+     "type": "p",
+     "text": "Es gilt: Je älter der Hund und je gefestigter sein Jagdverhalten, umso länger und intensiver muss trainiert werden, um eine gewünschte Änderung des Verhaltens zu erreichen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-02",
+   "title": "Der Weg",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Vorbereitung und Grundhaltung 🌲"
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen täglich, mindestens alle zwei Tage mit unserem Hund in die freie Natur. Unser Hund benötigt so viele Sinneswahrnehmungen von der Tierwelt wie möglich."
+    },
+    {
+     "type": "p",
+     "text": "Wir bewegen uns immer in einem ruhigen Tempo und sind entspannt unterwegs. Ein schnelles Bewegen animiert die Jagdlust."
+    },
+    {
+     "type": "p",
+     "text": "Wir benötigen eine normale Führleine, eine Schleppleine mit circa 6–8 m Länge sowie Spielzeug bzw. Leckerlie."
+    },
+    {
+     "type": "p",
+     "text": "Die Inhalte der Rubriken TEAMWALK und SCOUTTECHNIKEN werden begleitend angewandt."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-03",
+   "title": "Übung 1 – An der Führleine und langen Schleppleine",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Vorgehen und Zielsetzung 🦮"
+    },
+    {
+     "type": "p",
+     "text": "Je nach Gelände und Bedingungen gehen wir mit unserem Hund an der Führleine oder an der langen Schleppleine. Den unangeleinten Zustand gibt es vorerst nicht mehr."
+    },
+    {
+     "type": "p",
+     "text": "Davon ausgehend, dass sich unser Hund immer für Umweltreize interessiert, üben wir von Beginn an das Ablegen ins „Platz\" wo immer wir unterwegs sind."
+    },
+    {
+     "type": "p",
+     "text": "Jedweder Reiz – sei es eine direkte Sichtung oder Begegnung mit Wildtieren, eine Querung eines frischen Wildwechsels, eine frische Hinterlassenschaft oder ein noch warmer Lagerplatz – dient uns zum Training und muss zwingend zur Umsetzung des gewünschten „Platz\" genutzt werden."
+    },
+    {
+     "type": "p",
+     "text": "Die tägliche Quote beträgt anfangs 10, bis später regelmäßig 20 bis 30 mal „Platz\" im Gelände verteilt auf unsere Tour(en). Bei einer höheren Anzahl an Begegnungen und Reizen natürlich dementsprechend häufiger."
+    },
+    {
+     "type": "p",
+     "text": "Der Platzvorgang richtet sich dabei strikt nach den Vorgaben aus den Rubriken GRUNDLAGENTRAINING-PLATZ und FREIARBEIT-DISTANZUNTERBRECHUNGEN."
+    },
+    {
+     "type": "p",
+     "text": "Wichtig ist, dass unser Hund das „Platz\" immer weniger als lästige Pflicht, sondern künftig im Zusammenspiel mit TEAMWALK und SCOUTTECHNIKEN als ganz normalen, routinemäßigen Vorgang empfindet."
+    },
+    {
+     "type": "p",
+     "text": "Jeder Vorgang wird ruhig und warmherzig belobigt – nachdem die Situation vorbei ist und wir unseren Hund ins „Sitz\" gebracht haben. Nun erhält er sein wohlverdientes Leckerlie oder sein Spielzeug und darf dieses mit uns gemeinsam spielerisch ein Stück des Wegs tragen."
+    },
+    {
+     "type": "p",
+     "text": "Mit zunehmender Zuverlässigkeit können wir immer häufiger die Schleppleine fallen lassen, so dass unser Hund sie nur noch hinter sich herzieht. Nötigenfalls sind wir damit in der Lage, schnell durch Zugriff eine Situation absichern zu können. Gleichzeitig trainieren wir uns so bereits für den nächsten Ausbildungsschritt."
+    },
+    {
+     "type": "p",
+     "text": "Sobald unser Hund nach einigen Wochen beharrlichen Trainings ohne nennenswerte Hilfe bei auftauchendem Wild zuverlässig ohne aktive Leinenhilfe ins „Platz\" geht und dies über mindestens 20–30 Begegnungen mit Wildtieren nachvollziehbar ist, können wir zum nächsten Schritt übergehen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-04",
+   "title": "Übung 2 – An der kurzen Schleppleine",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Vorgehen und Zielsetzung 🔗"
+    },
+    {
+     "type": "p",
+     "text": "Wir haben unser Training soweit vorangebracht, dass unser Hund bei auftauchender Ablenkung durch Wildtiere und deren Hinterlassenschaften ohne nennenswerte Leinenhilfe zuverlässig ins „Platz\" geht und die Situation vorübergehen lässt."
+    },
+    {
+     "type": "p",
+     "text": "Wir benötigen eine circa 4 m lange Schleppleine ohne Schlaufe . Lediglich ein Knoten am freien Ende gibt uns etwas Griffmöglichkeit. Keinesfalls darf die Leine sich irgendwo verhängen können."
+    },
+    {
+     "type": "p",
+     "text": "Wir müssen uns unbedingt vergegenwärtigen, dass unser Hund recht schnell herausfinden wird, ob er angeleint ist oder nicht. Daher gehen wir über den Zwischenschritt einer kurzen Schleppleine."
+    },
+    {
+     "type": "p",
+     "text": "Diese verbleibt nun anstatt der langen Schleppleine während aller Touren am Hund, sobald wir ihn von der Führleine lösen. Unser Hund bewegt sich nun frei mit schleppender Leine in unserer Nähe."
+    },
+    {
+     "type": "p",
+     "text": "Will sich unser Hund mehr als 8–10 m von uns entfernen, oder haben wir auch nur den leisesten Verdacht einer Ablenkung, bringen wir unseren Hund durch ruhiges aber verbindliches Ansprechen mit „Platz\" in die Platz-Position. Wir sollten bereits vorsorglich ein „Platz\" durchführen lassen und nie erst auf die Reaktion des Hundes warten. Es geht darum, dass unser Hund lernt, auf jeden Wildtierreiz hin routinemäßig „Platz\" zu machen. Ausschließlich darüber entsteht Zuverlässigkeit."
+    },
+    {
+     "type": "p",
+     "text": "Da das Mitführen und Benutzen der kurzen Schleppleine für uns und unseren Hund keinen weiteren Aufwand bedeutet, jedoch von herausragender Bedeutung in der Nachhaltigkeit des Trainings ist, erstreckt sich diese Trainingsstufe über mindestens 4–6 Monate ."
+    },
+    {
+     "type": "p",
+     "text": "Erst wenn wir in dieser Stufe eine höchstmögliche Routine in der Zuverlässigkeit der Ausführung von „Platz\" bei plötzlich auftauchender Ablenkung durch Wildtiere erreicht haben, können wir zum abschließenden Schritt übergehen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-05",
+   "title": "Übung 3 – Das Ableinen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Vorgehen und Zielsetzung 🔓"
+    },
+    {
+     "type": "p",
+     "text": "Wir haben uns und unseren Hund soweit trainiert, dass wir bei jedem Ablenkungsreiz zeitnah mit einem ruhigen „Platz\" unseren Hund soweit befrieden, dass er keinerlei Startversuche mehr unternimmt und sich zuverlässig über die gesamte Reizdauer ablegt."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen mit unserem abgeleinten Hund ruhig und entspannt durchs Gelände. Wir bleiben aufmerksam und entscheiden verantwortungsvoll, wo wir uns abgeleint bewegen können und wo es besser ist, den Hund an der Führleine, kurzen oder langen Schleppleine zu belassen. Seid dabei genauso verantwortungsvoll wie Kletterer im Fels, welche auch immer aufs Neue entscheiden, ob sie sich gegenseitig mit Seilen sichern müssen oder frei klettern können."
+    },
+    {
+     "type": "p",
+     "text": "Bei auftauchenden Ablenkungsreizen reagieren wir frühzeitig und souverän mit „Platz\", welches unser Hund dank wochenlangen Trainings nun fließend und zuverlässig ausführt."
+    },
+    {
+     "type": "p",
+     "text": "Wir unterstützen unseren Hund dabei, indem wir bei Kommandoabgabe auf ihn zugehen und mit tief gehaltener Hand einen Griff zur nunmehr nicht mehr vorhandenen Schleppleine imitieren."
+    },
+    {
+     "type": "p",
+     "text": "Im Verlauf der nächsten Wochen lernen wir immer besser mit Situationen umzugehen. Wir bemerken, wie es immer weniger Mühe macht, unseren Hund in die Platz-Position zu bringen, zunehmend auch dann, wenn er doch einmal ausbrechen möchte."
+    },
+    {
+     "type": "p",
+     "text": "Wir bewegen uns von nun an gelassener durchs Gelände und nutzen weiterhin jede Gelegenheit zum Training. Ein ruhiges und intensives Loben beendet jede vorbeigegangene Situation."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-06",
+   "title": "Was Du vermeiden solltest",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wichtige Hinweise ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide in den ersten Wochen unbedingt ein Ableinen des Hundes. Jeder Fehlversuch zerstört langfristig den Erfolg der Ausbildung."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide einen zu frühen Wechsel zur nächsten Übungsstufe. Eine Übungsstufe muss sicher abrufbar sein, bevor man zur nächsten übergeht."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide fehlerhaftes Training. Lieber nochmal eine Übungsstufe zurückgehen und diese festigen, statt mit der nächsten Übungsstufe Fehlversuche und ein Misslingen des Trainings in Kauf zu nehmen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Training im abgelenkten Zustand. Sei immer gegenwärtig und bewusst im Training."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide lautes, hektisches, unbewusstes Verhalten."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-07",
+   "title": "Abschnitt 7",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Geduld schlägt Jagdtrieb"
+    },
+    {
+     "type": "p",
+     "text": "Jagdvermeidung ist keine schnelle Lösung – sie ist ein langfristiger Prozess. Nutze jeden Spaziergang als Trainingseinheit, gehe nie zu früh zur nächsten Stufe über und kehre ohne Zögern eine Stufe zurück, wenn nötig. Die Natur ist Dein tägliches Trainingslager – und Dein Hund wird Dir mit wachsender Zuverlässigkeit danken."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "26-08",
+   "title": "Checkliste für erfolgreiches Training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Bin ich im Gelände mit meinem Hund aufmerksam und ablenkungsfrei unterwegs?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich für anspruchsvolle Trainingsabschnitte die lange Trainingsleine dabei?"
+    },
+    {
+     "type": "p",
+     "text": "→ Halte ich ein Trainingsintervall von mindestens jeden 2. Tag ein?"
+    },
+    {
+     "type": "p",
+     "text": "→ Trage ich das erlernte Wissen von TEAMWALK und SCOUTTECHNIKEN bei mir?"
+    },
+    {
+     "type": "p",
+     "text": "→ Halte ich den Trainingszustand des Gehens mit der langen Schleppleine ein?"
+    },
+    {
+     "type": "p",
+     "text": "→ Konditioniere ich das „Platz\" in ausreichender Wiederholungsanzahl?"
+    },
+    {
+     "type": "p",
+     "text": "→ Bin ich entspannt und strahle ich dies auch auf meinen Hund ab?"
+    },
+    {
+     "type": "p",
+     "text": "→ Lobe ich ausgiebig nach jeder positiv verlaufenen Trainingssituation?"
+    },
+    {
+     "type": "p",
+     "text": "→ Vollziehe ich den Wechsel zur kurzen Trainingsleine erst, wenn ich eine Führungssicherheit aufgebaut habe?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erstreckt sich das Training mit den Hilfsleinen tatsächlich über einen ausreichend großen Zeitraum bis zur Festigung der erwünschten Trainingsziele?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erkenne ich, wenn es angezeigt ist, wieder einen Schritt zurück zu gehen und Trainingsabläufe zu festigen – und bleibe ich konsequent im Training?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

@@ -16,7 +16,6 @@
     <string name="search">Suchen</string>
     <string name="refresh">Aktualisieren</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
-    <string name="privacy_url">https://wildnislehrer.com/impressum/datenschutzerklaerung/</string>
     <string name="action_privacy">Datenschutzerklärung</string>
     <string name="youtube">YouTube</string>
     <!-- Impressum Text -->
@@ -72,7 +71,7 @@
 
             <h4>Datenschutz</h4>
             <p>
-            Diese App nutzt die WordPress API (hundewildnis.de) zum Inhalte laden, die YouTube Data API zum Anzeigen von Videos unseres Kanals, verlinkt (Optional) zur X-App bzw. zu X im Webbrowser, den Signal Messenger (optional) zum freiwilligen Beitritt zu unserer Support-Gruppe.
+            Diese App verbindet sich nur mit den Diensten, die für die genutzten Funktionen nötig sind (z. B. Wetter-, Routing- und Kartendienste sowie, optional, Dein eigener WebDAV-Server). Inhalte von unserer Webseite werden nicht nachgeladen.
             Alle Verbindungen sind verschlüsselt (HTTPS).
             Ausführliche Informationen in unserer Datenschutzerklärung.
             </p>
@@ -830,7 +829,7 @@
     <string name="sound_level_pdf_column_data_points">Datenpunkte</string>
     <string name="sound_level_pdf_column_share">Anteil</string>
     <string name="sound_level_pdf_disclaimer">Hinweis: Geschätzter Wert auf Basis einer einmaligen Nutzerkalibrierung. Kein kalibriertes Messgerät nach DIN EN 61672 – dient nur der eigenen Vergleichbarkeit über mehrere Sessions. Die Wirkung auf den Hund wird dadurch nicht bewertet; entscheidend sind Tonhöhe, Plötzlichkeit, Vorhersagbarkeit und die Beobachtung des Hundeverhaltens.</string>
-    <string name="sound_level_pdf_footer">Erstellt mit HundeWildnis App von www.wildnislehrer.de</string>
+    <string name="sound_level_pdf_footer">Erstellt mit HundeWildnis App</string>
 
     <!-- SoundLevelSessionAdapter -->
     <string name="sound_level_session_summary">Ø %1$d dB(A) · %2$s · %3$d:%4$02d Min</string>
@@ -2608,7 +2607,7 @@
     <!-- activity_start.xml: Layout-Texte -->
     <string name="start_new_blog_post">💬 Neuer Blogbeitrag</string>
     <string name="start_view_all">Alle anzeigen ›</string>
-    <string name="start_group_weekly_exercises">Übungen der Woche</string>
+    <string name="start_group_weekly_exercises">Mentale Vorbereitung</string>
     <string name="start_group_training_tools">Trainingswerkzeuge</string>
     <string name="start_group_outdoor_tools">Outdoorwerkzeuge</string>
     <string name="start_group_dog_safety_emergency">Hund, Sicherheit und Notfall</string>
@@ -2617,11 +2616,11 @@
 
     <!-- dialog_settings.xml -->
     <string name="settings_background_updates">Hintergrund-Updates</string>
-    <string name="settings_background_updates_desc">Die App prüft zweimal täglich 8 Uhr morgens und 20 Uhr abends auf neue Inhalte. Du kannst aber auch jederzeit selbst die Aktualisierung starten.</string>
-    <string name="settings_enable_background_updates">Hintergrund-Updates aktivieren</string>
-    <string name="settings_wifi_only">Nur über WLAN aktualisieren</string>
-    <string name="settings_show_notifications">Benachrichtigungen anzeigen</string>
-    <string name="settings_data_usage_note">ℹ️ Datenverbrauch bei 2x täglich Update der Inhaltslisten ist sehr gering.</string>
+    <string name="settings_background_updates_desc">Wenn Du einen WebDAV-Server eingerichtet hast, synchronisiert die App Deine Daten im Hintergrund. Ohne eingerichteten Server geschieht nichts.</string>
+    <string name="settings_enable_background_updates">Automatische WebDAV-Synchronisation aktivieren</string>
+    <string name="settings_wifi_only">Nur über WLAN synchronisieren</string>
+    <string name="settings_show_notifications">Benachrichtigungen zur Synchronisation anzeigen</string>
+    <string name="settings_data_usage_note">ℹ️ Die Synchronisation überträgt nur geänderte Daten.</string>
     <string name="settings_ors_navigation">OpenRouteService (Navigation)</string>
     <string name="settings_ors_desc">Für die Routenberechnung wird ein API-Key benötigt. Diesen erhältst du kostenlos auf openrouteservice.org.</string>
     <string name="settings_delete_reset_key">Key löschen / zurücksetzen</string>
@@ -2679,9 +2678,9 @@
     <string name="instr_backup_title">📦💾 Backup App Daten</string>
     <string name="instr_backup_desc">Sichere deine Daten regelmäßig.\n• Verwende alle Deine Daten auf weiteren Android-Geräten mit der HundeWildnisApp\n• Das Backup umfasst Profile, Notizen, Fotos und Statistiken.\n• Speicherort: Downloads/HundeWildnis_Backups/.</string>
     <string name="instr_support_title">💖🤝 Deine Unterstützung</string>
-    <string name="instr_support_desc">Unterstütze uns gern mit einer Spende. Wir haben dazu sichere Wege eingerichtet, über welche Du uns und die Entwicklung der App mit einem kleinen Honorar Deiner wahl einmalig oder gern regelmäßig unterstützen kannst. Damit wir auch künftig die App kostenlos zur Verfügung stellen können.</string>
+    <string name="instr_support_desc">Du kannst die Entwicklung der App freiwillig mit einem Betrag Deiner Wahl unterstützen. Du erhältst dafür keine Gegenleistung und keine zusätzlichen Funktionen. Die App bleibt kostenlos.</string>
     <string name="instr_bottom_nav_title">Navigationsleiste unten</string>
-    <string name="instr_bottom_nav_desc">Rufe jederzeit auf:\n• Startseite der App\n• HundeWildnis - Blog\n• Informationsseiten der HundeWildnisSchule\n• Online-Trainingskurse (nur nach individueller Freischaltung)\n• \'Mehr\' (Youtube-Kanal, HundeWildnis-Podcast, X-Kanal, Direktchats mit Manuela und Jörg)</string>
+    <string name="instr_bottom_nav_desc">Rufe jederzeit auf:\n• Startseite der App\n• Kurse (in der App gespeichert, ohne Internetverbindung lesbar)</string>
     <string name="instr_top_menu_title">Menue oben</string>
     <string name="instr_top_menu_desc">Nutze das Hauptmenü (Hamburger-Icon oben rechts) für schnelle Aktionen wie \n• Aktualisieren\n• Wechsel zwischen hellen oder dunklen Modus\n• Appeinstellungen\n• Backup erstellen\n• Backup importieren\n• Anleitung zur Nutzung der App\n• Berechtigungen der App\n• Datenschutzerklärung\n• Impressum\n• Über die App\n• Startseite</string>
 
@@ -3155,7 +3154,7 @@
     <string name="notes_default_pdf_title">Tagesnotiz</string>
     <string name="notes_pdf_header">📝 TAGESNOTIZ - HundeWildnis</string>
     <string name="notes_pdf_created_at">Erstellt am: %1$s</string>
-    <string name="notes_pdf_footer">Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de</string>
+    <string name="notes_pdf_footer">Erstellt und abgesendet mit HundeWildnis - Android App</string>
     <string name="notes_pdf_label_title">Titel: %1$s</string>
     <string name="notes_pdf_label_location">📍 Standort (GPS): %1$s, %2$s</string>
     <string name="notes_pdf_label_map">Karte (OpenStreetMap): %1$s</string>
@@ -4885,7 +4884,7 @@ hoch</string>
     <!-- Emergency: PDF content -->
     <string name="emergency_pdf_header_title">🚨 NOTFALLMELDUNG - HUND</string>
     <string name="emergency_pdf_created_at_format">Erstellt am: %1$s</string>
-    <string name="emergency_pdf_footer_app_credit">Erstellt und abgesendet mit HundeWildnis - Android App von www.wildnislehrer.de</string>
+    <string name="emergency_pdf_footer_app_credit">Erstellt und abgesendet mit HundeWildnis - Android App</string>
     <string name="emergency_pdf_medical_emergency_header">MEDIZINISCHER NOTFALL:</string>
     <string name="emergency_pdf_symptom_format">Symptom: %1$s</string>
     <string name="emergency_pdf_additional_info_format">Zusatz-Info: %1$s</string>
@@ -5521,4 +5520,204 @@ hoch</string>
     <string name="net_services_help_no_browser">Kein Browser gefunden. Öffne openweathermap.org manuell.</string>
     <string name="net_services_help_body">Warum brauche ich einen eigenen Zugang?\nDie App hat keinen eigenen Wetterserver und liefert keine Wetterdaten mit. Wetterdienste erlauben den Abruf nur mit einem persönlichen Schlüssel (API-Schlüssel). Mit deinem eigenen Schlüssel gelten die Grenzen und Bedingungen deines Kontos beim Anbieter, und die Abrufe laufen direkt zwischen deinem Gerät und dem Anbieter. Der Entwickler der App sieht sie nicht.\n\nEmpfehlung für den Einstieg: OpenWeatherMap\n1. Öffne openweathermap.org und lege ein kostenloses Konto an (Button unten). Bestätige die E-Mail-Adresse.\n2. Melde dich an und öffne in deinem Konto den Bereich „API keys“. Dort gibt es bereits einen Schlüssel („Default“). Er besteht aus etwa 32 Zeichen.\n3. Kopiere den Schlüssel, wähle hier „OpenWeatherMap“ und füge ihn in das Feld ein. Tippe auf „Fertig“.\n4. Ein neuer Schlüssel ist oft erst nach einigen Minuten, manchmal erst nach ein bis zwei Stunden aktiv. Meldet die App, dass der Schlüssel abgelehnt wurde, warte etwas und versuche es erneut.\n\nHinweise\n• Der kostenlose Tarif reicht für die App aus. Buche keinen kostenpflichtigen Tarif.\n• Behandle den Schlüssel wie ein Passwort und gib ihn nicht weiter. Die App speichert ihn verschlüsselt auf deinem Gerät.\n• Mit dem kostenlosen Tarif von OpenWeatherMap fehlen UV-Index, Sonnenscheindauer, Pollen und die Gewitter-Vorhersage. Diese Anzeigen blendet die App aus.\n• Die Wetteransicht nennt den Anbieter als Quelle („Weather data © OpenWeather“).\n\nOpen-Meteo\nOpen-Meteo ist für Nutzer gedacht, die einen Kundenzugang mit eigener Serveradresse und Schlüssel (open-meteo.com) oder einen eigenen Server betreiben. Die kostenlose Open-Meteo-Adresse ist nur für nicht-kommerzielle Nutzung erlaubt; ob dein Fall darunterfällt, prüfst du in den Bedingungen von Open-Meteo. Trage Adresse (und, falls vorhanden, Luftqualitäts-Adresse und Schlüssel) so ein, wie sie dir der Anbieter nennt. Mit Open-Meteo sind alle Wetteranzeigen verfügbar.\n\nOverpass (Orte in der Nähe, Umgebungsdaten)
 Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fragt die App die Overpass-API ab. Dafür brauchst du keinen Schlüssel und kein Konto. Die App nutzt standardmäßig öffentliche Overpass-Server (overpass-api.de und overpass.private.coffee), die sich alle Nutzer teilen. Sie sind kostenlos, aber begrenzt: Bei hoher Auslastung antworten sie langsam oder lehnen Anfragen ab. Die App wechselt dann automatisch auf den anderen Server. Wenn du häufig suchst oder die Suche oft fehlschlägt, trage unter „Overpass-Server“ die https-Adresse eines anderen öffentlichen Servers oder eines eigenen Servers ein. Ist dort etwas eingetragen, nutzt die App nur diesen Server. Die Nutzungsrichtlinien des jeweiligen Betreibers gelten. Lässt du das Feld leer, bleibt alles wie beschrieben.\n\nOhne Eintrag bei den Wetter-Diensten zeigt die App kein Wetter. Alle anderen Funktionen laufen unverändert.</string>
+    <string name="error_no_browser">Kein Browser gefunden</string>
+    <string name="courses_heading">Kurse</string>
+    <string name="courses_empty">Keine Kurse verfügbar.</string>
+    <string name="courses_load_error">Kurse konnten nicht geladen werden.</string>
+    <string name="course_lessons_heading">Lektionen</string>
+    <string name="nav_emergency">NOTFALL</string>
+    <string name="course_previous">Vorherige Lektion</string>
+    <string name="course_next">Nächste Lektion</string>
+    <string name="imprint_title">Impressum</string>
+    <string name="privacy_title">Datenschutzerklärung</string>
+    <string name="privacy_content">
+        <![CDATA[
+        <h2>Datenschutzerklärung zur HundeWildnis App</h2>
+        <p>Stand: Oktober 2026</p>
+
+        <h3>1. Verantwortlicher</h3>
+        <p>
+        HundeWildnisSchule<br>
+        Manuela Ulbricht und Peter Jörg Ulbricht GbR<br>
+        Hohe Lehne 14<br>
+        01705 Freital<br>
+        Ust-IdNr.: DE458205581<br>
+        E-Mail: tux4us@online.de
+        </p>
+
+        <h3>2. Datenverarbeitung in der App</h3>
+
+        <h4>2.1 Keine Erhebung personenbezogener Daten durch den Anbieter</h4>
+        <p>
+        Der Anbieter betreibt für die App keine Server, auf denen Daten der Nutzer gespeichert werden, und bietet kein Nutzerkonto an. Der Anbieter erhebt, speichert oder verarbeitet keine personenbezogenen Daten der Nutzer.
+        </p>
+        <p>
+        Die Daten, die du in der App eingibst (z. B. Hundeprofile, Tagebuch-, Trainings- und Gesundheitseinträge, Fotos, Standortnotizen), liegen ausschließlich auf deinem Gerät.
+        </p>
+
+        <h4>2.2 Keine Tracking- oder Analyse-Dienste</h4>
+        <p>Die App verwendet nicht:</p>
+        <ul>
+        <li>Google Analytics oder andere Tracking- bzw. Analyse-SDKs</li>
+        <li>Werbe-SDKs</li>
+        <li>Tracking-Cookies oder Cookies von Drittanbietern</li>
+        <li>Google Play Services (außer für Updates über den Play Store)</li>
+        <li>Anmeldung oder Nutzerkonto</li>
+        </ul>
+
+        <h4>2.3 Lokale Datenspeicherung</h4>
+        <p>Die App speichert lokal auf deinem Gerät:</p>
+        <ul>
+        <li>deine Eingaben und Aufzeichnungen (siehe 2.1)</li>
+        <li>Einstellungen der App</li>
+        <li>Zugangsdaten für optionale Dienste (WebDAV-Server, Wetter- und Routing-Schlüssel); die WebDAV-Zugangsdaten werden verschlüsselt gespeichert</li>
+        <li>zwischengespeicherte Kartenkacheln, um Datenvolumen zu sparen</li>
+        </ul>
+        <p>
+        Die Kurse in der App sind Teil der App und werden lokal gelesen. Dafür ist keine Internetverbindung nötig.
+        </p>
+        <p>
+        Diese Daten verlassen dein Gerät nur, wenn du eine Funktion auslöst, die dies erfordert (siehe Abschnitt 3), oder wenn du Daten selbst exportierst oder teilst. Durch Deinstallation der App werden die lokal gespeicherten Daten gelöscht.
+        </p>
+        <p>
+        Hinweis: Android kann App-Daten je nach Geräte- und Systemeinstellungen im Rahmen der Android-Datensicherung des Geräteherstellers bzw. von Google sichern. Das steuerst du in den Systemeinstellungen deines Geräts. Auf diese Sicherung hat der Anbieter keinen Einfluss.
+        </p>
+
+        <h4>2.4 Berechtigungen</h4>
+        <p>Die App fragt Berechtigungen erst an, wenn eine Funktion sie braucht. Du kannst sie jederzeit in den Android-Einstellungen widerrufen.</p>
+        <ul>
+        <li><b>Standort:</b> für Karte, Orte in der Nähe, Wetter am Standort, Kompass, Höhenmesser, Gehgeschwindigkeit, Navigation, Standortfreigabe und Notfallmeldung</li>
+        <li><b>Kamera:</b> für Fotos (z. B. Hundeprofil, Pflanzen) und die Zeckenlupe</li>
+        <li><b>Mikrofon:</b> für Lautstärke- und Stimmmessung; die App sendet keine Audiodaten an den Anbieter oder an Server</li>
+        <li><b>Benachrichtigungen und Vordergrunddienst:</b> für Erinnerungen, Timer sowie laufende Navigation, Gehgeschwindigkeits- und Standortfunktionen</li>
+        <li><b>Speicherzugriff:</b> für Export und Import von Sicherungen, PDF- und CSV-Dateien</li>
+        </ul>
+
+        <h3>3. Externe Dienste</h3>
+        <p>
+        Die App verbindet sich nur mit den Diensten, die für eine von dir genutzte Funktion nötig sind. Alle Verbindungen erfolgen verschlüsselt über HTTPS. Bei jeder Verbindung wird technisch bedingt die IP-Adresse an den jeweiligen Dienst übertragen.
+        </p>
+
+        <h4>3.1 OpenStreetMap (Kartendarstellung)</h4>
+        <p>Die App verwendet OpenStreetMap zur Anzeige von Karten.</p>
+        <p>Übertragene Daten:</p>
+        <ul>
+        <li>IP-Adresse (technisch erforderlich)</li>
+        <li>Kartenausschnitt (geografische Koordinaten des angezeigten Bereichs)</li>
+        <li>Zoom-Level</li>
+        </ul>
+        <p>Zweck: Anzeige von Kartenkacheln für die Standort-Funktionen</p>
+        <p>Speicherung: Kartenkacheln werden lokal zwischengespeichert.</p>
+        <p>
+        Beim Antippen des OpenStreetMap-Lizenzhinweises wird die Seite openstreetmap.org/copyright in einer eingebetteten Ansicht geladen; dabei wird ebenfalls die IP-Adresse übertragen.
+        </p>
+        <p>Anbieter: OpenStreetMap Foundation, St John&#39;s Innovation Centre, Cowley Road, Cambridge CB4 0WS, United Kingdom</p>
+        <p>Datenschutzerklärung: <a href="https://osmfoundation.org/wiki/Privacy_Policy">https://osmfoundation.org/wiki/Privacy_Policy</a></p>
+        <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der Kartenfunktion)</p>
+
+        <h4>3.2 Wetterdaten (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang)</h4>
+        <p>
+        Die App ruft Wetterdaten erst ab, wenn du in den Einstellungen (Dienste &amp; Server) einen Wetteranbieter gewählt und deinen eigenen Zugang eingetragen hast: entweder einen Schlüssel von OpenWeatherMap oder die Serveradresse (und ggf. den Schlüssel) deines Open-Meteo-Zugangs bzw. eigenen Servers. Ohne Auswahl und Zugang werden keine Wetterdaten abgerufen und es werden keine Daten an Wetteranbieter gesendet.
+        </p>
+        <p>Übertragene Daten:</p>
+        <ul>
+        <li>Standortkoordinaten (Breiten- und Längengrad)</li>
+        <li>IP-Adresse (technisch erforderlich)</li>
+        <li>dein Zugangsschlüssel (wird verschlüsselt auf deinem Gerät gespeichert und dem Anbieter bei jeder Anfrage übermittelt)</li>
+        </ul>
+        <p>Zweck: Abruf von Wetterdaten für deinen Standort bzw. einen von dir gewählten Ort</p>
+        <p>Freiwilligkeit: Die Wetterfunktion und die Standortfreigabe sind optional. Du kannst die Berechtigung jederzeit in den Android-Einstellungen widerrufen und den Wetteranbieter in den Einstellungen abwählen.</p>
+        <p>Anbieter: Es gelten die Datenschutzbestimmungen und Nutzungsbedingungen des von dir gewählten Anbieters. Du schließt den Vertrag über den Zugang selbst mit dem Anbieter.</p>
+        <ul>
+        <li>OpenWeatherMap / OpenWeather Ltd.: <a href="https://openweather.co.uk/privacy-policy">https://openweather.co.uk/privacy-policy</a></li>
+        <li>Open-Meteo: <a href="https://open-meteo.com/en/terms">https://open-meteo.com/en/terms</a></li>
+        </ul>
+        <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auswahl des Anbieters, Eintrag des Zugangs und Standortfreigabe)</p>
+
+        <h4>3.3 Weitere Kartendienste (Nominatim, Overpass, OpenRouteService)</h4>
+        <p>Auf deine Aktion hin (Ortssuche, Orte in der Nähe, Routenberechnung) ruft die App Daten bei folgenden Diensten ab:</p>
+        <ul>
+        <li>Nominatim (OpenStreetMap Foundation): Ortssuche und Ortsnamen zu Koordinaten</li>
+        <li>Overpass API (öffentliche Server, z. B. overpass-api.de; auf Wunsch ein von dir eingetragener Server): Umgebungsdaten und Orte in der Nähe</li>
+        <li>OpenRouteService (HeiGIT gGmbH): Routenberechnung mit deinem eigenen Zugangsschlüssel</li>
+        </ul>
+        <p>Übertragene Daten:</p>
+        <ul>
+        <li>Suchbegriff bzw. Koordinaten (Breiten- und Längengrad) oder Kartenbereich</li>
+        <li>IP-Adresse (technisch erforderlich)</li>
+        <li>bei OpenRouteService zusätzlich dein Zugangsschlüssel</li>
+        </ul>
+        <p>Zweck: Bereitstellung der jeweils ausgelösten Funktion</p>
+        <p>Eigene Server: In den Einstellungen (Dienste &amp; Server) kannst du die Adresse für Overpass ändern. Wetteranbieter und Zugang legst du dort ebenfalls selbst fest (siehe 3.2). Schlüssel werden verschlüsselt auf deinem Gerät gespeichert.</p>
+        <p>Datenschutzerklärungen:</p>
+        <ul>
+        <li>OpenStreetMap Foundation (Nominatim, Overpass): <a href="https://osmfoundation.org/wiki/Privacy_Policy">https://osmfoundation.org/wiki/Privacy_Policy</a></li>
+        <li>HeiGIT / OpenRouteService: <a href="https://openrouteservice.org/privacy-policy/">https://openrouteservice.org/privacy-policy/</a></li>
+        </ul>
+        <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auslösen der Funktion und Standortfreigabe)</p>
+
+        <h4>3.4 WebDAV-Synchronisation (optional, eigener Server)</h4>
+        <p>
+        Die App kann deine Daten mit einem WebDAV-Server synchronisieren, den du selbst einträgst. Ohne Eintrag eines Servers findet keine Synchronisation statt.
+        </p>
+        <p>Übertragene Daten:</p>
+        <ul>
+        <li>die von dir zur Synchronisation vorgesehenen App-Daten (Datendateien und Fotos)</li>
+        <li>deine Zugangsdaten zum Server (Benutzername und Passwort)</li>
+        <li>IP-Adresse (technisch erforderlich)</li>
+        </ul>
+        <p>Zweck: Abgleich deiner Daten zwischen deinen Geräten</p>
+        <p>
+        Verantwortlich für den Server und die dort gespeicherten Daten bist du bzw. der Betreiber des Servers, den du wählst. Der Anbieter der App erhält diese Daten nicht. Zugangsdaten werden verschlüsselt auf deinem Gerät gespeichert.
+        </p>
+        <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Einrichten und Aktivieren der Synchronisation)</p>
+
+        <h4>3.5 Links in andere Anwendungen</h4>
+        <p>
+        Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im Play Store. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
+        </p>
+        <ul>
+        <li><b>Spende über PayPal:</b> Die App enthält einen Link zu PayPal für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
+        <li><b>Karten-Links:</b> Standort-Links zu openstreetmap.org werden nur in Nachrichten eingefügt, die du selbst teilst, oder auf deine Aktion hin im Browser geöffnet.</li>
+        <li><b>Bewerten und Teilen der App:</b> Der Link zum Play Store öffnet den Play Store bzw. den Browser.</li>
+        </ul>
+        <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Antippen des Links)</p>
+
+        <h4>3.6 Teilen und Export</h4>
+        <p>
+        Notfallmeldungen, Standortfreigaben, PDF- und CSV-Dateien sowie Sicherungen gibst du über die Android-Funktion „Teilen“ oder über den Datei-Export weiter. Du wählst selbst, welche Anwendung oder welchen Empfänger du verwendest. Mit der Weitergabe liegen die Daten bei dem von dir gewählten Empfänger. Für diese Verarbeitung gelten dessen Datenschutzbestimmungen.
+        </p>
+
+        <h4>3.7 Übersicht der Drittanbieter-Dienste</h4>
+        <ul>
+        <li>OpenStreetMap: Karten anzeigen; IP-Adresse, Kartenbereich</li>
+        <li>Wetteranbieter nach deiner Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang): Wetterdaten; IP-Adresse, Standort, Zugangsschlüssel</li>
+        <li>Nominatim / Overpass: Ortssuche, Orte in der Nähe; IP-Adresse, Suchbegriff, Koordinaten</li>
+        <li>OpenRouteService: Routenberechnung; IP-Adresse, Koordinaten, eigener Schlüssel</li>
+        <li>WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse</li>
+        <li>PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App</li>
+        </ul>
+        <p>Alle Verbindungen sind durch HTTPS verschlüsselt.</p>
+
+        <h3>4. Deine Rechte</h3>
+        <p>
+        Da der Anbieter über die App keine personenbezogenen Daten von dir erhält, kann er dir keine Auskunft über gespeicherte Daten geben und keine Daten berichtigen oder löschen. Die Daten auf deinem Gerät kannst du selbst einsehen, ändern und löschen.
+        </p>
+        <p>
+        Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
+        </p>
+        <p>
+        Du hast außerdem das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO).
+        </p>
+        <p>
+        Bei Fragen zur Datenschutzerklärung oder zur App kannst du dich jederzeit melden: tux4us@online.de
+        </p>
+
+        <h3>5. Änderungen dieser Datenschutzerklärung</h3>
+        <p>
+        Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du in der App im Menü unter „Datenschutzerklärung“.
+        </p>
+        <p>Stand dieser Datenschutzerklärung: Oktober 2026</p>
+        ]]>
+    </string>
 </resources>

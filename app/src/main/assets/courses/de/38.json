@@ -1,0 +1,451 @@
+{
+ "id": "38",
+ "title": "Kranke Hunde",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…da sein, wenn es zählt"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "38-01",
+   "title": "Grundgedanke und Weg",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Krankheit verändert alles – für den Hund und für uns. Sie verändert, was er leisten kann, was er braucht, wie er sich verhält und wie wir mit ihm umgehen müssen. Ein kranker Hund ist kein anderer Hund. Er ist derselbe – mit denselben Bedürfnissen nach Sicherheit, Bindung und Orientierung – aber mit veränderten körperlichen und emotionalen Möglichkeiten."
+    },
+    {
+     "type": "p",
+     "text": "Krankheit ist kein Erziehungsproblem und kein Trainingsversagen. Ein Hund, der aufgrund von Schmerz, Erschöpfung oder Beeinträchtigung anders reagiert, sendet uns Signale – keine Herausforderungen."
+    },
+    {
+     "type": "p",
+     "text": "Qualität vor Quantität: kürzere Einheiten, weniger Reize, mehr Ruhe, tiefere Aufmerksamkeit. Das gemeinsame Dasein zählt mehr als jede Übung."
+    },
+    {
+     "type": "h",
+     "text": "Was Du wissen solltest 📋"
+    },
+    {
+     "type": "p",
+     "text": "Wir passen unsere Erwartungen der Realität des Hundes an – nicht umgekehrt. Was der Hund heute leisten kann, ist der Maßstab. Was er gestern konnte, ist Vergangenheit."
+    },
+    {
+     "type": "p",
+     "text": "Die enge Zusammenarbeit mit dem behandelnden Tierarzt ist nicht optional. Alle Entscheidungen über Aktivität, Training und Alltagsgestaltung werden im Licht der medizinischen Einschätzung getroffen."
+    },
+    {
+     "type": "p",
+     "text": "Wir suchen rechtzeitig Unterstützung – beim Tierarzt, beim Hundetrainer, bei Fachleuten für Tierphysiotherapie oder Verhaltensmedizin. Die Bereitschaft, Hilfe anzunehmen, ist keine Schwäche, sondern Verantwortung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-02",
+   "title": "Vorübergehende Erkrankungen – Genesung begleiten",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was Genesung für den Hund bedeutet 🏥"
+    },
+    {
+     "type": "p",
+     "text": "Nach Operationen, Verletzungen oder akuten Erkrankungen befindet sich der Hund in einer Phase der körperlichen Heilung, die gleichzeitig eine erhebliche psychische Belastung darstellt."
+    },
+    {
+     "type": "p",
+     "text": "Besonders anspruchsvoll ist die mittlere Genesungsphase: Der Hund fühlt sich subjektiv besser, ist es objektiv aber noch nicht. Er möchte spielen, rennen, springen – und wir müssen ihn schützen, ohne ihm das Vertrauen zu nehmen."
+    },
+    {
+     "type": "p",
+     "text": "Wir halten uns strikt an die tierärztlichen Vorgaben zu Bewegungseinschränkung und Belastung – auch wenn der Hund uns mit Hundeaugen ansieht. Zu frühe Belastung kann Wochen der Heilung zunichtemachen."
+    },
+    {
+     "type": "h",
+     "text": "Genesungszeit sinnvoll gestalten 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Geistige Beschäftigung ersetzt in der Genesungsphase körperliche Auslastung – mit Bedacht und ohne Überforderung. Kurze Nasenarbeit, leichtes Suchspiel in der Wohnung oder ruhiges Interaktionsspiel vom Liegeplatz aus sind oft erlaubt und wertvoll."
+    },
+    {
+     "type": "p",
+     "text": "Körperkontakt und ruhige Zuwendung haben einen nachweisbar positiven Einfluss auf Heilungsprozesse. Langsames Streicheln, ruhiges Beieinandersein, das sanfte Sprechen mit dem Hund – all das gibt ihm Sicherheit in einer verwirrenden Zeit."
+    },
+    {
+     "type": "p",
+     "text": "Kurze, ruhige Beschäftigungsmomente – ein gefüllter Kong, eine Schnüffelmatte, ein Kauartikel – helfen dem Hund, die Einschränkung zu überbrücken, ohne Frustration aufzubauen."
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden Besuche, laute Haushaltsgeräusche in Hundenähe und aufgeregte Interaktionen während der Genesungszeit. Jeder vermiedene Stressor ist ein Beitrag zur Heilung."
+    },
+    {
+     "type": "h",
+     "text": "Häufige Fehler in der Genesungsphase ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund aus Mitleid von allen Einschränkungen zu befreien, sobald er sich subjektiv besser zeigt. Klinische Heilung braucht ihre Zeit – unabhängig von der Stimmung des Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Übermäßige Beschäftigung zur Kompensation der Bewegungseinschränkung. Auch geistige Auslastung kostet Energie, die der Körper für die Heilung braucht."
+    },
+    {
+     "type": "p",
+     "text": "Das Ignorieren von Schmerzanzeichen, weil der Hund „sich keine Blöße gibt\". Subtile Veränderungen – Appetitverlust, veränderter Blick, Rückzug – sind die ehrlicheren Signale."
+    },
+    {
+     "type": "p",
+     "text": "Wir geben dem Hund in der Genesungszeit keine Anforderungen, die über das medizinisch Sinnvolle hinausgehen. Seine einzige Aufgabe ist es, gesund zu werden."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-03",
+   "title": "Chronische körperliche Erkrankungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Leben mit einer dauerhaften Diagnose 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Chronische Erkrankungen wie Arthrose, Herzerkrankungen, Niereninsuffizienz, Diabetes oder Tumorerkrankungen verändern das Leben des Hundes dauerhaft. Es gibt keine Rückkehr zum „Vorher\" – nur ein neues Miteinander, das wir gemeinsam gestalten."
+    },
+    {
+     "type": "p",
+     "text": "Der wichtigste Grundsatz: Lebensqualität vor Leistung. Was dem Hund Freude bereitet, was ihn weder körperlich überfordert noch langweilt – das ist der Maßstab für jeden Tag."
+    },
+    {
+     "type": "p",
+     "text": "Gute Tage und schlechte Tage gehören zur Realität chronischer Erkrankung. Ein guter Tag darf uns nicht dazu verführen, zu viel zu fordern. Ein schlechter Tag ist kein Rückschritt – er ist Teil des Verlaufs."
+    },
+    {
+     "type": "h",
+     "text": "Angepasstes Training und Beschäftigung 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Training bleibt wertvoll – es muss nur neu gedacht werden. Der Fokus verschiebt sich von Leistung und Konditionierung hin zu mentaler Stimulation, Bindungspflege und dem Erhalt von Freude."
+    },
+    {
+     "type": "p",
+     "text": "Kurze Trainingseinheiten von zwei bis fünf Minuten sind für chronisch kranke Hunde oft ideal. Wir hören auf, bevor der Hund Ermüdungszeichen zeigt."
+    },
+    {
+     "type": "p",
+     "text": "Nasenarbeit und Suchspiele sind für viele chronisch kranke Hunde die wertvollste Beschäftigungsform: körperlich schonend, geistig fordernd, tief befriedigend."
+    },
+    {
+     "type": "p",
+     "text": "Spaziergänge werden kürzer, ruhiger und der Tagesform des Hundes angepasst. Wir lernen, den Spaziergang vom Hund führen zu lassen: Wo möchte er schnüffeln? Wann möchte er stehen bleiben? Der Weg ist kein Pflichtprogramm mehr – er ist Lebensqualität."
+    },
+    {
+     "type": "h",
+     "text": "Schmerzmanagement im Alltag 💊"
+    },
+    {
+     "type": "p",
+     "text": "Schmerz verändert Verhalten. Ein Hund, der Schmerzen hat, kann gereizt, rückzugsgeneigt oder apathisch wirken – Verhaltensweisen, die ohne Kenntnis der Erkrankung leicht fehlgedeutet werden."
+    },
+    {
+     "type": "p",
+     "text": "Wir achten auf subtile Schmerzzeichen: Steifheit nach dem Aufstehen, Zögern vor Treppen oder dem Springen, veränderter Gang, Lecken bestimmter Körperstellen, Rückzug bei Berührung."
+    },
+    {
+     "type": "p",
+     "text": "Wir passen Liegeplätze und Zugangswege aktiv an: Rampen statt Treppen, Matten auf Glattböden, erhöhte Fress- und Trinknäpfe bei Arthrose, Wärme an belasteten Gelenken. Kleine Anpassungen können den Komfort erheblich verbessern."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-04",
+   "title": "Neurologische und kognitive Einschränkungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wenn das Gehirn sich verändert – CDS und neurologische Erkrankungen 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Das Canine Dysfunktionssyndrom (CDS) sowie neurologische Erkrankungen verändern nicht nur das Verhalten des Hundes, sondern seine gesamte Wahrnehmung der Welt. Typische Zeichen: Orientierungslosigkeit in vertrauter Umgebung, veränderter Schlaf-Wach-Rhythmus, Vergessen erlernter Signale, vermindertes Interesse an Interaktion."
+    },
+    {
+     "type": "p",
+     "text": "Ein Hund mit kognitiven Einschränkungen ist nicht weniger wert und nicht weniger würdig. Er braucht uns mehr – und anders. Er braucht Geduld, wo er früher Selbstständigkeit zeigte. Er braucht Orientierung, wo er früher Sicherheit fand."
+    },
+    {
+     "type": "h",
+     "text": "Orientierung und Sicherheit erhalten 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Verlässliche Abläufe sind für Hunde mit kognitiven Einschränkungen Grundbedürfnis. Je stabiler und vorhersehbarer der Alltag, desto weniger muss das beeinträchtigte Gehirn leisten. Wir verändern so wenig wie möglich an Abläufen, Ruheplätzen und Tagesstruktur."
+    },
+    {
+     "type": "p",
+     "text": "Wir sichern potenzielle Gefahrenquellen: offene Treppen, Zugänge zu Pools oder Terrassen, schmale Durchgänge, in denen sich der Hund festlaufen kann."
+    },
+    {
+     "type": "p",
+     "text": "Sanfte Berührung, ruhige Ansprache und körperliche Nähe geben dem Hund in Momenten der Orientierungslosigkeit Sicherheit. Wir reagieren auf Verwirrtheitszustände immer mit Ruhe – nie mit Ungeduld."
+    },
+    {
+     "type": "h",
+     "text": "Beschäftigung bei kognitiven Einschränkungen 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Einfachste Suchaufgaben – sichtbar ausgelegtes Futter, das der Hund mit der Nase findet – sind oft noch lange möglich und bereiten Freude, auch wenn komplexere Aufgaben nicht mehr bewältigbar sind."
+    },
+    {
+     "type": "p",
+     "text": "Körperkontakt und gemeinsames Ruhen haben für Hunde mit kognitiven Einschränkungen einen besonders hohen Wert. Das ruhige Beieinandersein, das vertraute Atmen des Menschen in der Nähe – das ist für viele dieser Hunde die wertvollste Form der Zuwendung."
+    },
+    {
+     "type": "p",
+     "text": "Wir verzichten auf das Einfordern früher gelernter Signale, wenn der Hund offensichtlich nicht mehr in der Lage ist, sie zuverlässig abzurufen. Das Vergessen ist keine Verweigerung – es ist das Krankheitsbild."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-05",
+   "title": "Schmerzbedingte Verhaltensveränderungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wenn Schmerz das Verhalten übernimmt 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Schmerz ist der am häufigsten übersehene Faktor hinter Verhaltensveränderungen beim Hund. Aggressives Verhalten, das plötzlich auftritt, Rückzug, Unsauberkeit, verminderter Appetit, Schreckhaftigkeit oder Reizbarkeit – all das kann Ausdruck von Schmerz sein, lange bevor eine Diagnose gestellt wurde."
+    },
+    {
+     "type": "p",
+     "text": "Jede plötzliche oder schleichende Verhaltensveränderung bei einem bislang stabilen Hund ist zunächst ein Tierarztbesuch – keine Trainingsfrage. Erst wenn körperliche Ursachen ausgeschlossen oder behandelt sind, ist Verhaltensarbeit sinnvoll und fair."
+    },
+    {
+     "type": "h",
+     "text": "Subtile Schmerzzeichen erkennen 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Körperliche Zeichen: Steifheit nach dem Aufstehen oder nach Ruhe, veränderter Gang oder Haltung, Zögern vor dem Treppensteigen oder Springen, Lecken oder Kauen an bestimmten Körperstellen, Zucken bei Berührung."
+    },
+    {
+     "type": "p",
+     "text": "Verhaltenszeichen: Rückzug aus sozialen Interaktionen, die früher gesucht wurden; Reizbarkeit oder Schnappen bei Berührung; nachlassendes Interesse an Spiel; veränderter Schlaf; Appetitveränderungen."
+    },
+    {
+     "type": "p",
+     "text": "Im Training: Nachlassende Motivation, Verweigern von Übungen mit körperlicher Belastung, verlangsamte Reaktionen, scheinbares „Vergessen\" von gut gelernten Signalen. Auch das ist häufig Schmerz – kein Trotz."
+    },
+    {
+     "type": "p",
+     "text": "Wir führen bei Verdacht auf Schmerz ein kurzes Schmerztagebuch: Wann zeigt der Hund welche Zeichen? Nach welchen Aktivitäten? Zu welcher Tageszeit? Diese Beobachtungen sind für den Tierarzt wertvolle Informationen."
+    },
+    {
+     "type": "h",
+     "text": "Was wir bei schmerzbedingten Verhaltensveränderungen niemals tun ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Verhaltensprobleme, die durch Schmerz entstanden sind, mit Training, Konsequenz oder Druck angehen – ohne vorherige tierärztliche Abklärung. Ein Hund, der aus Schmerz schnappt, braucht Schmerzbehandlung – keine Verhaltenskorrektur."
+    },
+    {
+     "type": "p",
+     "text": "Körperliche Korrekturen oder Druck bei einem Hund, der möglicherweise Schmerzen hat. Jede körperliche Einwirkung kann Schmerz verstärken und das Vertrauen dauerhaft beschädigen."
+    },
+    {
+     "type": "p",
+     "text": "Den Hund zu Aktivitäten oder Übungen drängen, bei denen er zögert oder ausweicht. Zögern ist häufig Schmerzsignal. Wir respektieren es immer."
+    },
+    {
+     "type": "p",
+     "text": "Wir schützen unseren kranken Hund vor gut gemeinten Ratschlägen, die sein verändertes Verhalten als Ungehorsam, Dominanz oder Faulheit deuten. Ein Hund, der krank ist, verhält sich anders – weil er krank ist. Das ist keine Charakterfrage."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-06",
+   "title": "Vertrauen in der Krankheit",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was Vertrauen für den kranken Hund bedeutet 🤝"
+    },
+    {
+     "type": "p",
+     "text": "Für einen kranken Hund ist Vertrauen in seinen Menschen von besonderer Bedeutung: Er kann seinen Zustand nicht einordnen, nicht erklären, nicht vorhersagen. Was er spüren kann, ist die Verlässlichkeit der Person an seiner Seite."
+    },
+    {
+     "type": "p",
+     "text": "Vertrauen entsteht im Kranksein durch konsequente Fürsorge: durch das Einhalten von Routinen auch an schlechten Tagen, durch das ruhige Begleiten von Schmerz und Verwirrung und durch die Bereitschaft, für ihn da zu sein – ohne Erwartungen."
+    },
+    {
+     "type": "h",
+     "text": "Vertrauensfördernd im Kranksein ✅"
+    },
+    {
+     "type": "p",
+     "text": "Ruhige, gleichförmige Abläufe, auch wenn der Alltag durch Tierarztbesuche und Pflegemaßnahmen unterbrochen wird."
+    },
+    {
+     "type": "p",
+     "text": "Sanfte Ankündigung aller Berührungen, Untersuchungen und Pflegemaßnahmen – nie überraschen, nie überrumpeln."
+    },
+    {
+     "type": "p",
+     "text": "Das konsequente Respektieren von Rückzugswünschen – auch wenn wir aus Sorge bei ihm sein möchten."
+    },
+    {
+     "type": "p",
+     "text": "Keine Erwartungen und kein Leistungsdruck in Phasen, in denen der Hund offensichtlich leidet oder sich unwohl fühlt."
+    },
+    {
+     "type": "p",
+     "text": "Unsere eigene Ruhe in schwierigen Momenten. Der Hund spürt unsere Anspannung und Sorge. Wir schulden ihm – soweit es uns möglich ist – eine ruhige, gefestigte Präsenz."
+    },
+    {
+     "type": "h",
+     "text": "Vertrauensschädigend im Kranksein ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Pflegemaßnahmen mit Zwang durchsetzen, wenn der Hund Schmerz oder Angst dabei zeigt – ohne nach Alternativen zu suchen oder tierärztliche Unterstützung zu holen."
+    },
+    {
+     "type": "p",
+     "text": "Den Hund mit Mitleid so zu überfluten, dass keine Normalität mehr möglich ist. Übertriebene emotionale Reaktionen können die Anspannung des Hundes verstärken."
+    },
+    {
+     "type": "p",
+     "text": "Wir hüten uns davor, die Krankheit unseres Hundes zu verdrängen oder kleinzureden. Ein Hund, dessen Leiden nicht gesehen wird, trägt es allein. Hinschauen, benennen und handeln ist die ehrlichste Form der Fürsorge."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-07",
+   "title": "Das emotionale Erleben der Halter",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was Krankheit mit uns macht 💙"
+    },
+    {
+     "type": "p",
+     "text": "Die Krankheit unseres Hundes betrifft uns. Sie bringt Sorge, Erschöpfung, Hilflosigkeit, manchmal Trauer – und manchmal den stillen Schmerz des Wissens, dass dieser Weg endlich ist. All das ist real, berechtigt und muss nicht verdrängt werden."
+    },
+    {
+     "type": "p",
+     "text": "Schuldgefühle sind ein häufiger Begleiter: Hätte ich früher zum Tierarzt gehen sollen? Habe ich etwas übersehen? Diese Fragen führen selten zu konstruktiven Antworten. Was hilft, ist der Blick nach vorn: Was kann ich heute tun, um meinem Hund diesen Tag gut zu gestalten?"
+    },
+    {
+     "type": "h",
+     "text": "Für sich selbst sorgen 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Wer dauerhaft für einen kranken Hund sorgt, braucht selbst Ressourcen. Gespräche mit verständnisvollen Menschen, Pausen vom intensiven Beobachten und Pflegen, Momente der Leichtigkeit – all das ist keine Selbstsucht, sondern Voraussetzung dafür, dass wir langfristig für unseren Hund da sein können."
+    },
+    {
+     "type": "p",
+     "text": "Wir erlauben uns auch, gute Momente zu genießen – ohne schlechtes Gewissen. Ein schöner gemeinsamer Moment, ein Tag, an dem es ihm sichtlich gutgeht – das darf Freude bereiten. Krankheit ist nicht das Einzige, was zählt."
+    },
+    {
+     "type": "p",
+     "text": "Wenn die emotionale Belastung dauerhaft hoch ist, ist es in Ordnung, sich auch menschliche Unterstützung zu holen. Das Trauern um einen noch lebenden Hund – die sogenannte antizipatorische Trauer – ist real und verdient Anerkennung."
+    },
+    {
+     "type": "h",
+     "text": "Die Frage nach der Lebensqualität 🕊️"
+    },
+    {
+     "type": "p",
+     "text": "Lebensqualität ist der ehrlichste Maßstab. Sie fragt nicht: Was ist medizinisch noch möglich? Sie fragt: Wie geht es diesem Hund – heute, jetzt, in diesem Moment?"
+    },
+    {
+     "type": "p",
+     "text": "Zeichen guter Lebensqualität: Der Hund nimmt Futter an, zeigt Interesse an seiner Umgebung, sucht Kontakt, kann ausreichend schlafen, hat mehr Momente ohne Schmerz als mit."
+    },
+    {
+     "type": "p",
+     "text": "Die Entscheidung, das Leben eines Hundes durch Einschläferung zu beenden, gehört zu den schwersten, die ein Halter treffen kann. Sie ist keine Aufgabe – sie ist ein letzter Akt der Fürsorge, wenn das Leiden größer ist als die Lebensqualität. Diese Entscheidung zu tragen, ist eine Form von Liebe."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-08",
+   "title": "Abschnitt 8",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Heute zählt"
+    },
+    {
+     "type": "p",
+     "text": "Stell Dir heute eine einzige Frage: Was bereitet meinem Hund in seinem aktuellen Zustand Freude – und kann ich ihm das heute geben? Nicht gestern, nicht morgen. Heute. Diese eine Frage, täglich gestellt und ehrlich beantwortet, ist der wichtigste Kompass im Leben mit einem kranken Hund."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-09",
+   "title": "Checkliste für das Leben mit einem kranken Hund",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Passe ich Aktivität, Training und Alltag konsequent dem heutigen Zustand meines Hundes an – nicht dem gestrigen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Beobachte ich subtile Verhaltens- und Körpersignale und melde ich Veränderungen frühzeitig dem Tierarzt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Halte ich mich an alle tierärztlichen Vorgaben zu Belastung, Medikation und Schonung – auch an guten Tagen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Biete ich meinem Hund täglich schonende Beschäftigung, die Freude bereitet ohne zu überfordern?"
+    },
+    {
+     "type": "p",
+     "text": "→ Ist sein Liegeplatz und seine Umgebung so gestaltet, dass sie seinen körperlichen Einschränkungen gerecht wird?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erkenne ich schmerzbedingte Verhaltensveränderungen als solche – und nicht als Trotz oder Ungehorsam?"
+    },
+    {
+     "type": "p",
+     "text": "→ Bleibe ich in schwierigen Momenten ruhig und verlässlich – als Anker für meinen Hund?"
+    },
+    {
+     "type": "p",
+     "text": "→ Sorge ich auch für mich selbst – und nehme ich Unterstützung an, wenn die Belastung zu groß wird?"
+    },
+    {
+     "type": "p",
+     "text": "→ Halte ich die Frage nach der Lebensqualität meines Hundes ehrlich im Blick – jeden Tag neu?"
+    },
+    {
+     "type": "p",
+     "text": "→ Da sein, wenn es zählt – das ist die tiefste Form der Verbindung zwischen Mensch und Hund."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

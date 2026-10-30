@@ -1,0 +1,271 @@
+{
+ "id": "08",
+ "title": "Sinneswahrnehmung",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Wie Hunde ihre Welt wahrnehmen"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "08-01",
+   "title": "Die Welt der Sensorik",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Die Sinneswahrnehmungen (Sensorik) des Hundes sind evolutionär an die Anforderungen eines carnivoren Beutegreifers und hochsozialen Säugetiers angepasst. Im Gegensatz zum Menschen, dessen Wahrnehmung primär visuell dominiert ist, stellt beim Hund der Geruchssinn den wichtigsten Informationskanal dar, gefolgt von auditiven und taktil-propriozeptiven Fähigkeiten."
+    },
+    {
+     "type": "p",
+     "text": "Die sensorische Verarbeitung erfolgt über spezialisierte Rezeptorsysteme und wird im zentralen Nervensystem integriert. Dabei spielen das Gehirn – insbesondere der Bulbus olfactorius , der auditorische Cortex sowie multimodale Assoziationsareale – eine zentrale Rolle."
+    },
+    {
+     "type": "p",
+     "text": "Hunde sind in der Lage, multisensorische Informationen (z. B. Geruch, Geräusch, Körperhaltung) zu verknüpfen, um ihre Umwelt, Artgenossen und Menschen differenziert zu interpretieren."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-02",
+   "title": "1. Geruchssinn (Olfaktion)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Geruchssinn ist der dominierende Sinn des Hundes und dient der Orientierung, Nahrungssuche, Sozialkommunikation, Territorialität und Gefahreneinschätzung."
+    },
+    {
+     "type": "h",
+     "text": "Anatomie & Leistung 👃"
+    },
+    {
+     "type": "p",
+     "text": "Zellpower: Hunde verfügen – je nach Rasse – über etwa 125 bis 300 Millionen olfaktorische Rezeptorzellen in der Nasenschleimhaut (Mensch: ca. 5–6 Millionen). Die Riechschleimhaut kann eine Fläche von bis zu 150–170 cm² erreichen (Mensch: ca. 5 cm²)."
+    },
+    {
+     "type": "p",
+     "text": "Bulbus olfactorius: Er ist im Verhältnis zur Gehirngröße deutlich größer als beim Menschen, was die hohe olfaktorische Verarbeitungsleistung widerspiegelt. Gesichert ist, dass Hunde sehr geringe Konzentrationen flüchtiger organischer Verbindungen (VOC) zuverlässig detektieren und differenzieren können."
+    },
+    {
+     "type": "p",
+     "text": "Jacobson-Organ: Hunde nutzen das vomeronasale Organ (Jacobson-Organ) zur Wahrnehmung nicht-flüchtiger chemischer Signale, insbesondere im Rahmen der Sozial- und Fortpflanzungskommunikation (z. B. Sexualstatus, Stress- oder Angstsignale)."
+    },
+    {
+     "type": "p",
+     "text": "Stereo-Riechen: Hunde nehmen Gerüche bilateral getrennt über beide Nasenlöcher auf, was eine Richtungsbestimmung (osmotische Stereowahrnehmung) ermöglicht. Diese Fähigkeiten werden praktisch genutzt, etwa beim Spürhundewesen (Sprengstoffe, Drogen, Menschensuche) sowie in der medizinischen Detektion krankheitsspezifischer Geruchsmuster."
+    },
+    {
+     "type": "h",
+     "text": "Einschränkungen ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Die olfaktorische Leistung kann durch Austrocknung der Nasenschleimhaut, Infektionen der oberen Atemwege oder anatomische Besonderheiten beeinträchtigt werden."
+    },
+    {
+     "type": "p",
+     "text": "Zudem bestehen deutliche rassespezifische Unterschiede; langnasige Hunde (z. B. Bloodhound) besitzen in der Regel eine höhere olfaktorische Kapazität als kurznasige (brachyzephale) Rassen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-03",
+   "title": "2. Gehörsinn (Audition)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Gehörsinn des Hundes ist hochentwickelt und spielt eine zentrale Rolle bei Kommunikation, Beutewahrnehmung und Gefahreneinschätzung."
+    },
+    {
+     "type": "h",
+     "text": "Leistungsfähigkeit 👂"
+    },
+    {
+     "type": "p",
+     "text": "Frequenzbereich: Hunde hören Schallfrequenzen von etwa 40 Hz bis 60.000–65.000 Hz (Mensch: ca. 20 Hz bis 20.000 Hz). Sie sind damit deutlich empfindlicher für hochfrequente Töne und Ultraschall. Die Hörschwelle liegt bei optimalen Frequenzen unter der des Menschen (teils unter 0 dB)."
+    },
+    {
+     "type": "p",
+     "text": "Präzision: Die beweglichen Ohrmuscheln (Pinnae) erlauben eine sehr präzise Schalllokalisation, mit einer Winkelauflösung von wenigen Grad."
+    },
+    {
+     "type": "p",
+     "text": "Distanz: Hunde können Geräusche aus größerer Distanz wahrnehmen als Menschen und fein zwischen verschiedenen Vokalisationen (Bellen, Knurren, Winseln) sowie Umgebungsgeräuschen unterscheiden. Dies ist essenziell für soziale Interaktionen und Alarmreaktionen."
+    },
+    {
+     "type": "h",
+     "text": "Einschränkungen ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Übermäßiger oder unvorhersehbarer Lärm kann zu Stressreaktionen führen."
+    },
+    {
+     "type": "p",
+     "text": "Alterungsprozesse, Entzündungen des Ohres (z. B. Otitis externa/media) oder strukturelle Schäden können das Hörvermögen deutlich reduzieren."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-04",
+   "title": "3. Sehsinn (Vision)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Das Sehvermögen des Hundes ist vor allem auf Bewegungserkennung und Dämmerungssehen ausgelegt, weniger auf Detail- und Farbwahrnehmung."
+    },
+    {
+     "type": "h",
+     "text": "Bewegung & Dämmerung 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Sichtfeld: Das binokulare Sichtfeld liegt – abhängig von der Kopf- und Augenstellung – bei etwa 60–80° (Mensch: ca. 120°), während das Gesamtsichtfeld bis zu 250–270° betragen kann (Mensch: ca. 180°). Die visuelle Auflösung ist geringer als beim Menschen; sie entspricht ungefähr einer Sehschärfe von 20/75. Die meisten Hunde sind leicht kurzsichtig (myop)."
+    },
+    {
+     "type": "p",
+     "text": "Farben: Hunde besitzen ein dichromatisches Farbsystem mit Zapfen für kurzwelliges (blaues) und mittleres (gelbliches) Licht. Rot- und Grüntöne können sie nur eingeschränkt unterscheiden. Die Flimmerfusionsfrequenz liegt höher als beim Menschen (ca. 70–80 Hz), wodurch Bewegungen besonders gut erkannt werden."
+    },
+    {
+     "type": "p",
+     "text": "Nachtmodus: Das Tapetum lucidum , eine reflektierende Schicht hinter der Netzhaut, verbessert das Sehen bei schwachem Licht."
+    },
+    {
+     "type": "h",
+     "text": "Einschränkungen ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Die visuelle Wahrnehmung variiert stark zwischen Rassen. Brachyzephale Rassen weisen häufig ein eingeschränktes peripheres Sichtfeld auf, während dolichocephale Rassen ein besonders weites Gesichtsfeld besitzen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-05",
+   "title": "4. Tastsinn & Körpergefühl",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Tastsinn umfasst mechanosensitive Rezeptoren in Haut, Pfoten, Schnauze und Haarfollikeln."
+    },
+    {
+     "type": "h",
+     "text": "Vibrissen & Pfoten ✋"
+    },
+    {
+     "type": "p",
+     "text": "Vibrissen: Tasthaare sind hochsensible Sinnesorgane, die Luftströmungen, Objektabstände und Berührungen registrieren."
+    },
+    {
+     "type": "p",
+     "text": "Propriozeption: Sie beruht auf Rezeptoren in Muskeln, Sehnen (Golgi-Sehnenorgane) und Gelenken und ermöglicht eine präzise Körper- und Bewegungswahrnehmung. In den Pfotenballen befinden sich unter anderem Pacini-Körperchen, die Vibrationen wahrnehmen."
+    },
+    {
+     "type": "p",
+     "text": "Thermozeption & Gleichgewicht: Hunde verfügen über funktionell vergleichbare Mechanismen zur Temperatur- und Schmerzwahrnehmung wie der Mensch. Ihre höhere Kältetoleranz beruht primär auf Fellstruktur und Körperbau. Das Vestibularsystem im Innenohr steuert Gleichgewicht und räumliche Orientierung."
+    },
+    {
+     "type": "h",
+     "text": "Einschränkungen ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Hauterkrankungen, neurologische Störungen oder orthopädische Probleme können taktile und propriozeptive Fähigkeiten beeinträchtigen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-06",
+   "title": "5. Geschmackssinn (Gustation)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Geschmackssinn ist beim Hund weniger ausgeprägt und steht funktionell in enger Verbindung mit dem Geruchssinn."
+    },
+    {
+     "type": "h",
+     "text": "Leistungsfähigkeit 👅"
+    },
+    {
+     "type": "p",
+     "text": "Hunde besitzen etwa 1.500–2.000 Geschmacksknospen (Mensch: ca. 9.000). Sie verfügen über Rezeptoren für süß, sauer, bitter, salzig und umami. Die Geschmackswahrnehmung wird stark durch die retronasale Olfaktion beeinflusst."
+    },
+    {
+     "type": "p",
+     "text": "Der Geschmackssinn unterstützt die Nahrungsselektion und kann bei der Vermeidung stark bitterer (potenziell toxischer) Substanzen helfen. Die Differenzierungsfähigkeit ist jedoch deutlich geringer als beim Menschen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-07",
+   "title": "6. Multisensorische Integration",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Zusammenspiel der Sinne 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Im Gehirn des Hundes werden sensorische Informationen integrativ verarbeitet. Die Verknüpfung von Geruch, Gehör, Sicht und Körpersignalen ermöglicht eine hochadaptive Verhaltenssteuerung."
+    },
+    {
+     "type": "p",
+     "text": "Untersuchungen zeigen, dass Hunde insbesondere soziale Reize (z. B. Körperhaltungen und Stimmen) in spezialisierten neuronalen Netzwerken verarbeiten."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-08",
+   "title": "Abschnitt 8",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Die \"5-Minuten-Nasenzeit\""
+    },
+    {
+     "type": "p",
+     "text": "Lass Deinen Hund regelmäßig auf der Runde nach einem zunehmend schwieriger versteckten Futterdummy oder seinem Spielzeug suchen, bis er es gefunden hat. Diese Suche verarbeitet enorme Informationsmengen (VOCs) und ist mental anstrengender als eine größere Strecke bloßes Laufen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-09",
+   "title": "Zusammenfassung",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Geruchssinn ist der dominierende Sinn des Hundes und dient Orientierung, Kommunikation und Gefahreneinschätzung."
+    },
+    {
+     "type": "p",
+     "text": "Hunde hören hochfrequente Töne bis 65.000 Hz – weit jenseits des menschlichen Hörvermögens."
+    },
+    {
+     "type": "p",
+     "text": "Das Sehvermögen ist auf Bewegungserkennung und Dämmerungssehen spezialisiert, nicht auf Farbdetails."
+    },
+    {
+     "type": "p",
+     "text": "Der Geschmackssinn steht in enger Verbindung mit dem Geruchssinn und ist weniger differenziert als beim Menschen."
+    },
+    {
+     "type": "p",
+     "text": "Tastsinn und Propriozeption ermöglichen präzise Körper- und Bewegungswahrnehmung."
+    },
+    {
+     "type": "p",
+     "text": "Die Integration aller Sinne macht den Hund zu einem hochadaptiven Lebewesen – er lebt in einer multisensorischen Welt, die für uns Menschen oft unsichtbar bleibt."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

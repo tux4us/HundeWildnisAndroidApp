@@ -76,17 +76,16 @@ Die App gliedert sich in drei Bedienebenen: das **Hamburger-Menü** (App-weite S
 
 ### A · Hamburger-Menü
 
-Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der Startseite ebenso wie in Blog, Seiten und Online-Kursen.
+Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der Startseite ebenso wie in der Kursübersicht.
 
 | Eintrag | Funktion |
 |---|---|
-| 🔁 Aktualisieren | Lädt die Blog-Vorschau bzw. die aktuell sichtbare Liste neu |
-| ⚙️ Einstellungen | Öffnet Dialog mit: Hintergrund-Updates ein/aus · Beschränkung auf WLAN · Benachrichtigungen ein/aus · eigener OpenRouteService-API-Key (eingeben/testen/löschen) |
+| ⚙️ Einstellungen | Öffnet Dialog mit: WebDAV-Synchronisation im Hintergrund ein/aus · Beschränkung auf WLAN · Benachrichtigungen zur Synchronisation ein/aus · eigener OpenRouteService-API-Key (eingeben/testen/löschen) |
 | 📦 Backup erstellen | Vollständige Sicherungsdatei in `Downloads/HundeWildnis_Backups`, anschließend Teilen-Angebot |
 | 📥 Backup importieren | Dateiauswahl, Prüfung, Abfrage der Merge-Art (Hinzufügen/Ersetzen/Zusammenführen) vor der Wiederherstellung |
 | 📖 Anleitung zur Nutzung | Kurzanleitung zu den wichtigsten Funktionen |
 | 🛡️ Berechtigungen der App | Erläuterung der angeforderten Systemberechtigungen |
-| 📜 Datenschutzerklärung | Vollständige Datenschutzerklärung von wildnislehrer.com, in-app |
+| 📜 Datenschutzerklärung | Zeigt die Datenschutzerklärung in der App (Deutsch/Englisch) |
 | 📎 Impressum | Anbieterkennzeichnung |
 | ℹ️ Über die App | Versionsnummer, Website- und Kontakt-Link |
 
@@ -96,11 +95,9 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 
 ### B · Startseite (6 Kachelgruppen)
 
-#### Gruppe 1 – Übungen der Woche
+#### Gruppe 1 – Mentale Vorbereitung
 | Kachel | Beschreibung |
 |---|---|
-| 🏋️ Übung der Woche | Wöchentlich wechselnde Basisübung aus der Schulpraxis (Webinhalt in-app) |
-| 🧘 Meditation | Wöchentlich neue Teamgeist-Meditation (Webinhalt in-app) |
 | 🌬️ Entspannung | Geführte 4-Phasen-Atemübung (Ein-/Ausatmen/Halten, je 4 s) mit wachsendem/schrumpfendem Atemkreis, Vibration je Phasenwechsel, optionale Hintergrundmusik, Laufzeitanzeige |
 
 #### Gruppe 2 – Trainingswerkzeuge
@@ -209,36 +206,25 @@ Das fertige PDF lässt sich mit einem Tap über die Android-Teilen-Funktion an T
 #### Gruppe 5 – Informationen und Lernen
 | Kachel | Beschreibung |
 |---|---|
-| 📰 Blog | Artikel von wildnislehrer.com mit Kategorie-Filter |
-| 📄 Seiten | Themengruppen Hundeschule, Wildnisschule, weitere Informationen |
-| 🎓 Online-Kurse | 41 nummerierte Onlinekurse, Freischaltung über wildnislehrer.com |
+| 🎓 Kurse | 41 Kurse mit Lektionen, in der App gespeichert (Deutsch, Englisch), ohne Internetverbindung lesbar |
 
 #### Gruppe 6 – App-Service
 | Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
 | 📦 Backup | Sicherung, Wiederherstellung, Synchronisation | Backup erstellen · Wiederherstellen (3 Merge-Modi) · WebDAV-Sync (Hub-and-Spoke, 14 selektive Datenbereiche) · Standortfreigabe-Zugriff · Speicher bereinigen |
-| 💛 Unterstützung | Freiwillige Finanzierung | Wero, PayPal, Banküberweisung, Zahlungslink · kostenlos: bewerten, teilen |
+| 💛 Unterstützung | Freiwillige Finanzierung | PayPal (freiwillig, ohne Gegenleistung) · kostenlos: bewerten, teilen |
 
 ---
 
 ### C · Untere Navigationsleiste (Footer)
 
-Durchgehend sichtbare Navigationsleiste am unteren Bildschirmrand mit fünf Einträgen:
+Durchgehend sichtbare Navigationsleiste am unteren Bildschirmrand mit drei Einträgen:
 
 | Eintrag | Funktion |
 |---|---|
 | 🏠 Start | Zurück zur Kachel-Startseite |
-| 📰 Blog | Blog-Ansicht mit Kategorie-Filter |
-| 📄 Seiten | Seiten-Ansicht (Hundeschule/Wildnisschule/Weitere Informationen) |
-| 🎓 Kurse | Kursübersicht, 41 Onlinekurse |
-| ⋯ Mehr | Öffnet Auswahlfenster mit externen Kanälen |
-
-**Untermenü „Mehr":**
-- 🎥 YouTube-Kanal (öffnet nach Möglichkeit direkt die YouTube-App)
-- 🎙️ Podcast-Übersicht auf wildnislehrer.com, in-app
-- 🎧 Podcast-Kanal auf Spotify
-- 💬 SIGNAL-Chat mit Manuela (mit Bestätigungsdialog vor Weiterleitung)
-- 💬 SIGNAL-Chat mit Jörg (mit Bestätigungsdialog vor Weiterleitung)
+| 🎓 Kurse | Kursübersicht, 41 Kurse mit Lektionen |
+| 🚨 Notfall | Öffnet direkt den Erste-Hilfe-Assistenten (bei mehreren Hunden mit Auswahl) |
 
 ---
 
@@ -278,13 +264,13 @@ UI               Android Views · ViewBinding · Material Design
 
 | Berechtigung | Verwendung |
 |---|---|
-| `INTERNET` | Wetter, Karte, Blog, WebDAV-Sync |
+| `INTERNET` | Wetter, Karte, WebDAV-Sync |
 | `ACCESS_FINE_LOCATION` | Navigation, Wetter, Nasenarbeit-Karte, Tempo-Trainer, Kompass (Himmelsberechnung), Standortfreigabe |
 | `ACCESS_COARSE_LOCATION` | Standort-Fallback |
 | `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | GPS-Tracking (Tempo-Trainer, Standortfreigabe, Navigation) |
 | `CAMERA` | Zeckenlupe, Fotos für Notizen, Notfall-PDF, Gefahrenpflanzen |
 | `RECORD_AUDIO` | Sprach-Trainer (Frequenzanalyse) |
-| `POST_NOTIFICATIONS` | Tempo-Trainer-Warnungen, Läufigkeits-Erinnerungen, Blog-Updates |
+| `POST_NOTIFICATIONS` | Tempo-Trainer-Warnungen, Läufigkeits-Erinnerungen, WebDAV-Synchronisation |
 | `VIBRATE` | Feedback in Sprach-Trainer, Entspannung, Intervall-Timer |
 | `READ_EXTERNAL_STORAGE` | Backup-Import, Foto-Auswahl |
 | `WRITE_EXTERNAL_STORAGE` | Backup-Export, PDF/GPX-Export |
@@ -296,7 +282,7 @@ UI               Android Views · ViewBinding · Material Design
 | Anforderung | Details |
 |---|---|
 | Android | 7.0 (API 24) oder höher |
-| Internet | Für Karte, Wetter, Blog-Inhalte, WebDAV-Sync |
+| Internet | Für Karte, Wetter, WebDAV-Sync (Kurse sind in der App gespeichert) |
 | GPS | Optional – für Navigation, Tempo-Trainer, Nasenarbeit, Kompass-Himmelsberechnung |
 | ORS-API-Key | Für Routing erforderlich – eigener Schlüssel (kostenlos bei openrouteservice.org) |
 | Wetter-Zugang | Für Wetter erforderlich – eigener Schlüssel von OpenWeatherMap (openweathermap.org) oder eigener Open-Meteo-Zugang |

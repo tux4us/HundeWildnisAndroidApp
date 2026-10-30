@@ -1,0 +1,266 @@
+{
+ "id": "17",
+ "title": "Platz",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…wenn es zuverlässig sein muss"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "17-01",
+   "title": "Was ist der Vorgang „Platz\"?",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Vorgang „Platz\" ist geeignet für alle Situationen, in denen der Hund starker Ablenkung ausgesetzt ist, welche sich jedoch nicht problematisch im bedrängenden Sinne darstellt."
+    },
+    {
+     "type": "p",
+     "text": "„Platz\" ist das ultimative Mittel der Wahl, um unseren Hund zuverlässig vom Jagen, Stöbern, Weglaufen und anderen unerwünschten Handlungen abzuhalten beziehungsweise ihn darin zu unterbrechen."
+    },
+    {
+     "type": "p",
+     "text": "Ein gut trainiertes „Platz\" erlaubt es uns, unseren Hund auch über eine längere Zeitspanne ablenkungsunabhängig an einem Ort abzulegen. Es ist darüber hinaus eine elegante Möglichkeit, um Begegnungssituationen zwischen Hunden zu entspannen."
+    },
+    {
+     "type": "p",
+     "text": "Voraussetzung für alle „Platz\"-Szenarien ist natürlich eine reibungslose Ausführung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "17-02",
+   "title": "Trainingsgrundlagen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Beginn, Voraussetzungen & Trainingsfrequenz 📅"
+    },
+    {
+     "type": "p",
+     "text": "Beginn: Ab circa dem 5. bis 6. Lebensmonat."
+    },
+    {
+     "type": "p",
+     "text": "Trainingsfrequenz: Anfangs in ablenkungsfreier Umgebung täglich 5 bis 10 separate Übungen – nicht zusammenhängend ausgeführt."
+    },
+    {
+     "type": "p",
+     "text": "Die Übungsfrequenz steigert sich innerhalb der nächsten Wochen und Monate auf 20 bis 30 „Platz\"-Anwendungen mit jeweils unterschiedlicher Verweildauer und nach und nach steigender Ablenkung von außen."
+    },
+    {
+     "type": "p",
+     "text": "„Platz\" muss an den unterschiedlichsten Orten trainiert und abgefragt werden. Der Erfolg dieser Übung lebt von Wiederholung, Vielfalt und ruhiger Souveränität."
+    },
+    {
+     "type": "h",
+     "text": "Ausführung & Trainingsumgebung 🐕"
+    },
+    {
+     "type": "p",
+     "text": "Idealerweise trainieren wir „Platz\" während des Spaziergangs im angeleinten Zustand: Den Hund mit dem Namen ansprechen, um Aufmerksamkeit herzustellen, dabei wenige Schritte seitwärts – später eher rückwärts – gehen und ruhig „Platz\" sagen."
+    },
+    {
+     "type": "p",
+     "text": "Der Melodieverlauf des Wortes „Platz\" sollte ruhig, tragend und zum Ende hin abfallend sein. Keinesfalls sollte „Platz\" mit heller Stimme und hochgezogener Intonation ausgesprochen werden."
+    },
+    {
+     "type": "p",
+     "text": "Der Hund sollte sich in der Bewegung zu uns wenden und wird dann mit Handzeichen (die flache Hand bewegt sich nach unten) sowie Unterstützung durch fließenden Zug am Geschirr oder Halsband ins Platz bewegt. Keinesfalls sollte von oben auf Schultern oder Rücken gedrückt werden."
+    },
+    {
+     "type": "h",
+     "text": "Hinweis zu Futter & Zeigen 💡"
+    },
+    {
+     "type": "p",
+     "text": "Ein „Platz\"-Training ausschließlich mittels Futter oder nur durch Zeigen ist zwar möglich, erweist sich jedoch erfahrungsgemäß in realen Situationen mit hoher Ablenkung als nicht zuverlässig."
+    },
+    {
+     "type": "p",
+     "text": "Im Zweifelsfall besteht dann keine Möglichkeit mehr, unseren Hund bei Gefahr zu unterbrechen und zu sichern."
+    },
+    {
+     "type": "p",
+     "text": "Merke: „Platz\" ist eine Muss-Übung, keine Kann-Übung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "17-03",
+   "title": "Schritt-für-Schritt-Anleitung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Schritt 1: Aufmerksamkeit & Positionierung 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund während des angeleinten Spaziergangs mit seinem Namen ansprechen und damit Aufmerksamkeit herstellen."
+    },
+    {
+     "type": "p",
+     "text": "Zeitgleich wenige Schritte seitwärts gehen und ruhig, mit abfallender Intonation, „Platz\" sagen."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 2: Handzeichen & Leinenunterstützung ✋"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund mit der flachen Hand, die sich nach unten bewegt, und einem fließenden Zug an Geschirr oder Halsband ins Platz begleiten."
+    },
+    {
+     "type": "p",
+     "text": "Kein Druck von oben auf Schultern oder Rücken. Kein hartes Straffen der Leine."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 3: Verweildauer & Ruhe ⏳"
+    },
+    {
+     "type": "p",
+     "text": "Zu Beginn genügt es, dass unser Hund mehrere Sekunden ohne weitere Hilfe liegen bleibt."
+    },
+    {
+     "type": "p",
+     "text": "Gelobt wird erst nach Auflösung des „Platz\" – nicht während des Liegens, da frühzeitiges Lob die Position destabilisiert."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 4: Ablösung mit „Sitz\" 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Der Vorgang wird durch ein motivierend ausgesprochenes „Sitz\" beendet, gefolgt von kräftigem Lob."
+    },
+    {
+     "type": "p",
+     "text": "Der Hund wird dabei nicht nach oben gezogen. Wir rufen ihn liebevoll bei seinem Namen, gehen 2 Schritte zurück, und sobald er aufsteht, sagen wir ruhig „Sitz\"."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 5: Weiterentwicklung – Dauer & Distanz 🎯"
+    },
+    {
+     "type": "p",
+     "text": "Im Laufe der Wochen verlängern wir bei einzelnen Übungen die Liegedauer auf mehrere Minuten und verlassen den liegenden Hund auch örtlich – jedoch immer nur so weit, dass wir bei vorzeitigem Aufstehen zügig beim Hund sind."
+    },
+    {
+     "type": "p",
+     "text": "In diesem Fall legen wir ihn unbedingt an seinen ursprünglichen Ort zurück. Ausnahmsweise darf ein geringfügig versetzter Ort gewählt werden, wenn der ursprüngliche Ort dies nicht mehr zulässt – etwa wegen plötzlicher Veränderung der Bedingungen (Gefahren, Insekten, Bedrängnis)."
+    },
+    {
+     "type": "p",
+     "text": "Keinesfalls den Hund ins Platz zurückzwingen, wenn erkennbare Hinderungsgründe bestehen oder der Hund Stressreaktionen zeigt."
+    },
+    {
+     "type": "p",
+     "text": "Ein Herausrufen über Distanz aus der Position „Platz\" empfiehlt sich erst, wenn „Platz\" soweit gefestigt ist, dass unser Hund bei starker Ablenkung die Position nicht mehr verlässt. Bis dahin ist ein Abholen vor Ort zielführender und bewahrt die Zuverlässigkeit der Übung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "17-04",
+   "title": "Wichtige Bedingungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was Du vermeiden solltest ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide beim Training und in der Alltagsanwendung scharf gesprochene Kommandos."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide ein Kurzhalten der Leine oder – wie mancherorts noch vermittelt – das Stellen des Fußes auf die Leine."
+    },
+    {
+     "type": "p",
+     "text": "Ein Verbringen des Hundes ins Platz durch Auf-die-Leine-Treten oder durch sogenannte Unterwerfungsgesten ist als falsch und destruktiv anzusehen und daher grundsätzlich zu vermeiden."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide ein vom Hundeführer abgewandtes Platz."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide frühzeitiges Lob während des Platzvorganges."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Stress während der Übung."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide ein selbstständiges Verlassen des Platzes durch den Hund."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "17-05",
+   "title": "Abschnitt 5",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Vielfalt als Schlüssel"
+    },
+    {
+     "type": "p",
+     "text": "Trainiere „Platz\" bewusst an unterschiedlichen Orten – vor dem Supermarkt, am Waldrand, auf dem Parkplatz. Jeder neue Ort ist eine neue Prüfung und stärkt die Zuverlässigkeit. Der Hund lernt: „Platz\" gilt überall, nicht nur zuhause auf dem Teppich."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "17-06",
+   "title": "Checkliste für erfolgreiches Training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Habe ich auf eine ruhige und ablenkungsfreie Umgebung geachtet?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich das Training täglich und wiederholt durchgeführt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich die Trainingsorte gewechselt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Bin ich unterstützend immer seitwärts oder rückwärts gegangen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich die ruhige Kommunikation mit dem Hund beachtet?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich mit Handzeichen und Leinenhilfe unterstützt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich den Hund bis zur Beruhigung liegen lassen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Wurde jedes Platz ordentlich mit „Sitz\" abgeschlossen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich ruhig und intensiv gelobt?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

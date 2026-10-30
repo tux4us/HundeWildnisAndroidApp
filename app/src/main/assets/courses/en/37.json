@@ -1,0 +1,424 @@
+{
+ "id": "37",
+ "title": "Dogs with Previous Owners",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…what you know, what you think you know – and what the dog knows"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "37-01",
+   "title": "Basic idea and approach",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "A dog with previous owners is neither a blank slate nor a hopeless case. He is a living being with a lived history – established patterns, learned behaviours and his own idea of how the world works."
+    },
+    {
+     "type": "p",
+     "text": "The greatest risk when taking over a dog lies not in the dog, but in the expectations and interpretations we bring with us. We take on a dog – not the story we were told."
+    },
+    {
+     "type": "p",
+     "text": "The dog is the most reliable source of information. What he shows us always takes precedence over what we were told."
+    },
+    {
+     "type": "h",
+     "text": "What you should know 📋"
+    },
+    {
+     "type": "p",
+     "text": "What is special about dogs from private rehoming is the uncertainty: sometimes you learn a lot about the previous owner – and still have to assess it critically. Sometimes you learn nothing at all."
+    },
+    {
+     "type": "p",
+     "text": "Even a dog that comes from a private household and apparently lived there without problems has to learn anew in his new home who we are and what he can expect from us."
+    },
+    {
+     "type": "p",
+     "text": "When unexpected behaviours appear, they are not a failure – they are information. They show us what the dog has learned and give us the opportunity to build something new together."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-02",
+   "title": "The past – what we know and what we do not",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The problem with information from previous owners 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Previous owners see their dog through their own lens: they did not perceive unconsciously established behaviours as problematic because these were part of everyday life. What they describe as “he is a bit restless at times” can be experienced by us as genuine overstimulation."
+    },
+    {
+     "type": "p",
+     "text": "Problematic behaviours are often played down, left unmentioned or simply not recognised – not out of ill intent, but because the previous daily routine allowed or even encouraged these behaviours."
+    },
+    {
+     "type": "p",
+     "text": "Statements such as “gets along with children”, “is house-trained” or “needs a lot of exercise” are always context-dependent. They describe how the dog was with the previous owner – not how he is in general or will be with us."
+    },
+    {
+     "type": "h",
+     "text": "What the dog actually brings with him 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Learned rules and routines: The dog knows certain sequences – when he was fed, where he slept, how walks went. These patterns are deeply ingrained and are initially continued in the new home, even though the context has changed."
+    },
+    {
+     "type": "p",
+     "text": "Unintentionally reinforced behaviours: What was tolerated or unconsciously rewarded in the old household – jumping up in greeting, begging at the table, barking at the doorbell – is a successful strategy for the dog. He continues to show it because it has always worked."
+    },
+    {
+     "type": "p",
+     "text": "Gaps in socialisation: Some dogs from private households had little contact with children, strangers or urban stimuli. These gaps only become apparent when the new daily life brings such situations with it."
+    },
+    {
+     "type": "p",
+     "text": "Attachment patterns: A dog that was very closely bound to one person can develop separation anxiety. A dog that received little individual attention may seem distant at first."
+    },
+    {
+     "type": "h",
+     "text": "Common false assumptions when taking over a dog ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "“He had no problems with the previous owner, so he will have none with me.” – A new home, new people and new routines change the context completely. Behaviour that worked before is recalibrated."
+    },
+    {
+     "type": "p",
+     "text": "“The previous owner said he needs a firm hand.” – This remark tempts us to work with pressure from the start, before any basis of trust has formed. Consistency without a relationship is ineffective and harmful."
+    },
+    {
+     "type": "p",
+     "text": "“He knows the command, so he knows it.” – A dog that learned a command with the previous owner has not automatically transferred it to the new person and the new environment."
+    },
+    {
+     "type": "p",
+     "text": "We avoid measuring the dog against the previous owner's information in the first weeks. The dog is the source – not the handover conversations."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-03",
+   "title": "Settling in – a fresh start with a history",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Arriving despite previous experience 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Even a dog that lived in a private household for many years has to arrive in his new home. He knows households – but not this one. He knows people – but not us."
+    },
+    {
+     "type": "p",
+     "text": "The first days are a phase of orientation for the dog. We provide this orientation through calm, clear routines – and give him the space to form his own picture."
+    },
+    {
+     "type": "p",
+     "text": "We plan generously: we give the dog at least four to eight weeks before we begin training in earnest or form firm judgements about his character. Some dogs need considerably longer – especially if the bond with the previous owners was very close."
+    },
+    {
+     "type": "h",
+     "text": "Grief, confusion and searching behaviour 💙"
+    },
+    {
+     "type": "p",
+     "text": "Dogs grieve. When a dog loses his familiar person – even if that person gave him up – he can go through a genuine phase of grief and disorientation. Loss of appetite, restlessness, vocalisation, searching behaviour and social withdrawal are possible signs of this."
+    },
+    {
+     "type": "p",
+     "text": "We meet this phase with calm presence, without being intrusive. Grief is not a rejection of us – it is the expression of a genuine bond that needs time to change."
+    },
+    {
+     "type": "p",
+     "text": "If grieving and searching behaviour do not subside after several weeks or turn into pronounced separation anxiety, we recommend the support of an experienced professional."
+    },
+    {
+     "type": "h",
+     "text": "Reducing stress in the transition phase 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Changing households is a considerable stressor for every dog – regardless of how well or badly he was doing with the previous owner. The nervous system needs time and calm to adjust to the new situation."
+    },
+    {
+     "type": "p",
+     "text": "We provide calm sniffing and searching activities several times a day. In the early period we deliberately limit visits and introductions – the dog first has to get to know us, not our family, friends and neighbours at the same time."
+    },
+    {
+     "type": "p",
+     "text": "We resist the impulse to constantly offer the dog something. Boredom is not a danger for a dog in the settling-in phase – overstimulation, however, is."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-04",
+   "title": "Trust",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Rebuilding trust – despite previous experience 🤝"
+    },
+    {
+     "type": "p",
+     "text": "A dog that has already lived a life with humans knows in principle that people are part of his everyday life. That is an advantage – but it does not replace personal trust. Trust is always individual and first has to develop towards us as a person."
+    },
+    {
+     "type": "p",
+     "text": "If we behave differently from his previous person – calmer, more consistent, structured differently – he has to learn to place this new pattern. This takes time and repetition."
+    },
+    {
+     "type": "h",
+     "text": "Trust-building ✅"
+    },
+    {
+     "type": "p",
+     "text": "Calm, predictable daily routines that give the dog orientation."
+    },
+    {
+     "type": "p",
+     "text": "Waiting until the dog actively seeks contact – and then responding warmly to that moment."
+    },
+    {
+     "type": "p",
+     "text": "Consistently respecting the retreat space as his personal safe place."
+    },
+    {
+     "type": "p",
+     "text": "Building positive associations: hand feeding, sitting quietly beside him, shared search games."
+    },
+    {
+     "type": "p",
+     "text": "Praising and reinforcing all behaviours directed towards us – including the small ones."
+    },
+    {
+     "type": "p",
+     "text": "Composure in dealing with unexpected behaviours: no overreaction, no scolding, no frustration."
+    },
+    {
+     "type": "h",
+     "text": "Trust-damaging ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Overwhelming the dog with excessive affection before he feels safe."
+    },
+    {
+     "type": "p",
+     "text": "Starting immediately with prohibitions, corrections and restrictions before a relationship has formed."
+    },
+    {
+     "type": "p",
+     "text": "Suppressing behaviours from the old household with pressure instead of replacing them with positive alternatives."
+    },
+    {
+     "type": "p",
+     "text": "Physical corrections of any kind – they destroy the emerging trust and can cause profound setbacks in dogs with a difficult past."
+    },
+    {
+     "type": "p",
+     "text": "We guard against the thought that we have to “show the dog from the start who makes the rules here”. Trust comes before obedience – always. A dog that trusts us follows us. A dog that fears us may obey – but only as long as he has to."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-05",
+   "title": "Assessing and changing learned behaviour",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Principle: behaviour always has a history 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Every behaviour has proven useful in some way in the past – it generated attention, reduced stress or allowed control. This behaviour is not defiance, but the result of learning experiences."
+    },
+    {
+     "type": "p",
+     "text": "Behaviour change does not succeed through suppression alone. A behaviour that is given no alternative finds another form of expression. We replace unwanted behaviours with desired ones – and make these as attractive as possible."
+    },
+    {
+     "type": "h",
+     "text": "Typical behaviours dogs bring with them and how we deal with them 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Begging: We consistently ignore the behaviour – without scolding, without sending him away, without eye contact. The behaviour fades over time if it no longer has an effect."
+    },
+    {
+     "type": "p",
+     "text": "Jumping up in greeting: When he jumps, we consistently turn away, wait for all four paws to be on the ground and then respond calmly and in a friendly way. Never by physically pushing him away."
+    },
+    {
+     "type": "p",
+     "text": "Pulling on the leash: We start leash training again from the beginning – in a low-stimulus environment, with plenty of praise and short sessions."
+    },
+    {
+     "type": "p",
+     "text": "Barking and alarm behaviour: We work calmly and systematically on conditioning relaxation towards triggers – not by scolding, but by building an alternative, calm behaviour."
+    },
+    {
+     "type": "p",
+     "text": "Resource guarding: At first we do not approach his resources at all, build positive associations and approach the topic carefully and without confrontation."
+    },
+    {
+     "type": "h",
+     "text": "Commands – rebuild instead of taking over 🔧"
+    },
+    {
+     "type": "p",
+     "text": "Even if the previous owner assures us that the dog “knows” certain commands, we generally recommend rebuilding all cues from scratch. The dog knows the cue in the context of the previous owner – with that person's voice, body language and habits."
+    },
+    {
+     "type": "p",
+     "text": "We begin in a low-stimulus environment, work with a high reward rate and raise the requirements only once the behaviour is shown reliably."
+    },
+    {
+     "type": "p",
+     "text": "We take care not to show frustration when the dog does not respond to a cue. He is not refusing – he has not yet learned it in our context."
+    },
+    {
+     "type": "h",
+     "text": "What does not work when dealing with learned behaviour ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Punishing behaviours that the dog never experienced as wrong with the previous owner. From his point of view he is doing the right thing – we have to show him what is right with us."
+    },
+    {
+     "type": "p",
+     "text": "Excessive repetition of cues the dog does not respond to. Repeating them several times devalues the cue and teaches the dog to respond only on the third or fifth time."
+    },
+    {
+     "type": "p",
+     "text": "We protect ourselves and our dog from the comparison: “But that worked with the previous owner.” This thought creates pressure and overlooks that the dog is currently navigating a completely new world. We are the new context – and we shape it."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-06",
+   "title": "Activity and daily life",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Play and bond building 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Playing together is one of the most effective ways to build a new bond. We offer robust toys with a good grip – leather pieces, knotted ropes, fabric rolls – and invite the dog without pushing."
+    },
+    {
+     "type": "p",
+     "text": "Not all dogs play immediately. Some have learned that excitement has unpleasant consequences. We wait patiently and trust that the dog will find his way to play when he feels safe enough."
+    },
+    {
+     "type": "h",
+     "text": "Searching as a daily basic need 👃"
+    },
+    {
+     "type": "p",
+     "text": "Search work is particularly valuable for dogs with previous owners because it provides species-appropriate activity without requiring a high degree of trust or training. The nose always works – even when the rest is still being built up."
+    },
+    {
+     "type": "p",
+     "text": "Snuffle mats, food scattered in the grass, filled Kongs and nose work are low-threshold everyday companions that reduce stress hormones, regulate the nervous system and strengthen the dog's self-confidence."
+    },
+    {
+     "type": "h",
+     "text": "Deliberately redesigning daily routines 🏠"
+    },
+    {
+     "type": "p",
+     "text": "The dog brings habits from his old household. We shape our daily life deliberately and clearly so that the dog can learn what applies with us."
+    },
+    {
+     "type": "p",
+     "text": "Regular feeding times, reliable walk times and clear rest periods give the dog the orientation he needs. We stick to these routines – even if the dog initially shows no response to them."
+    },
+    {
+     "type": "p",
+     "text": "We do not leave objects lying within reach that could provoke conflict. A dog that brings old habits regarding certain objects gets the chance to develop new habits through avoidance."
+    },
+    {
+     "type": "p",
+     "text": "The home environment should radiate calm and reliability. The more structured and calm our daily life is, the faster the dog finds his inner baseline with us."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-07",
+   "title": "Section 7",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: The dog knows the truth"
+    },
+    {
+     "type": "p",
+     "text": "Set the handover notes aside for today and observe your dog with fresh eyes. How does he behave when he is alone in a room? How does he react to your hand? What makes him relax and breathe out? These observations are more reliable than any story you were told – and they are your actual starting point."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-08",
+   "title": "Checklist for a successful fresh start with a history",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Do I observe the dog openly – without using the previous owner's statements as a template?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I give the dog enough time to arrive before I form judgements or begin training?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I accompany a possible grieving phase with calm presence instead of distraction or impatience?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I rebuild all cues and routines in the new context – instead of building on old knowledge?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I respond to unwanted behaviour with calm redirection instead of pressure or punishment?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I create space every day for searching activities, calm play and genuine rest periods?"
+    },
+    {
+     "type": "p",
+     "text": "→ In the settling-in phase, do I avoid unnecessary stimuli, visits and overstimulation?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I build trust through reliability and patience – not through control and demands?"
+    },
+    {
+     "type": "p",
+     "text": "→ If problems persist, do I seek professional support in good time?"
+    },
+    {
+     "type": "p",
+     "text": "→ It is not the dog's past that decides our shared future – but what we build together today."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

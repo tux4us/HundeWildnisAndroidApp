@@ -1,0 +1,222 @@
+{
+ "id": "18",
+ "title": "Steh",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "...in alltäglicher Routine"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "18-01",
+   "title": "Was ist der Vorgang „Steh\"?",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Der Vorgang „Steh\" ist geeignet für alle Situationen, in denen der Hund keiner oder absolut unproblematischer Ablenkung ausgesetzt ist."
+    },
+    {
+     "type": "p",
+     "text": "„Steh\" ist eine gute Alternative zum „Sitz\" bei allen Arten von Umwelteinflüssen, die auf ein „Sitz\" verzichten lassen – wie zum Beispiel ungünstige Bodenverhältnisse, extreme Witterungsbedingungen und ähnliches."
+    },
+    {
+     "type": "p",
+     "text": "Weiterhin eignet sich „Steh\" für Situationen, die nur einen kurzen Halt erfordern, sowie für einfache Begegnungssituationen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "18-02",
+   "title": "Trainingsgrundlagen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Beginn, Voraussetzungen und Trainingsfrequenz 📋"
+    },
+    {
+     "type": "p",
+     "text": "Beginn: Ab circa dem 5. Lebensmonat."
+    },
+    {
+     "type": "p",
+     "text": "Trainingsfrequenz: Täglich in geeigneten Situationen – beginnend ohne Ablenkung und im Laufe der Zeit unter wachsender Reizlage."
+    },
+    {
+     "type": "h",
+     "text": "Ausführung und Trainingsumgebung 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Idealerweise trainieren wir „Steh\" auf dem Spaziergang im anfangs angeleinten Zustand in ruhiger, reizarmer Umgebung."
+    },
+    {
+     "type": "p",
+     "text": "Später, mit wachsender Reaktionsfreudigkeit, darf das Training situationsgerecht unter stetig wachsender Reizlage stattfinden."
+    },
+    {
+     "type": "p",
+     "text": "„Steh\" ist eine der in der Anbahnung und Ausführung ruhigsten Übungen – es bedarf viel Geduld und konsequentem Training, um sie alltagstauglich und zuverlässig zu festigen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "18-03",
+   "title": "Schritt-für-Schritt-Anleitung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Schritt 1: Ansprechen und Hörzeichen 🗣️"
+    },
+    {
+     "type": "p",
+     "text": "Während des Spazierganges sprechen wir den Hund im Gehen ruhig mit seinem Namen an."
+    },
+    {
+     "type": "p",
+     "text": "Nach einer kurzen Pause sagen wir ruhig und leicht gedehnt „Steh\" (gesprochen: „Steeeeh\")."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 2: Leinenhilfe und Handunterstützung 🤝"
+    },
+    {
+     "type": "p",
+     "text": "Gleichzeitig bremsen wir den Hund mit sanfter Leinenhilfe leicht aus."
+    },
+    {
+     "type": "p",
+     "text": "Unsere Hand umfasst dabei ruhig die Taille des Hundes von außen in Richtung Bauch, um ein unwillkürliches Hinsetzen zu verhindern – während wir weiterhin ruhig „Steh\" sprechen."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 3: Unterstützung zurücknehmen und Lob 🌟"
+    },
+    {
+     "type": "p",
+     "text": "Sobald der Hund kurze Zeit unterstützungsfrei steht – wir haben die stützende Hand also bereits etwas weggenommen –, sprechen wir ihn mit seinem Namen an und gehen einige Schritte unter gleichzeitigem Lob weiter."
+    },
+    {
+     "type": "p",
+     "text": "Während des gesamten Stehvorganges darf ruhig und lobend bestätigt werden."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 4: Korrektur bei Hinsetzen 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Möchte sich der Hund setzen, besteht die Korrektur darin, einen angetäuschten Schritt vorwärts zu machen, um den Hund zum Aufstehen zu bewegen."
+    },
+    {
+     "type": "p",
+     "text": "Anschließend verfahren wir wie oben beschrieben – ruhiges Hörzeichen, sanfte Unterstützung, geduldiges Lob."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 5: Fortschritt und Rücknahme der Hilfen 📈"
+    },
+    {
+     "type": "p",
+     "text": "Im Laufe der Wochen werden wir – gutes Training vorausgesetzt – bemerken, dass unser Hund das Hörzeichen „Steh\" zunehmend zuverlässiger und freiwilliger ausführt."
+    },
+    {
+     "type": "p",
+     "text": "In diesem Maß des Fortschritts können wir Leinen- und Handunterstützung schrittweise zurücknehmen."
+    },
+    {
+     "type": "p",
+     "text": "Die ruhige, motivierende Kommunikation mit dem Hund bleibt dabei stets erhalten."
+    },
+    {
+     "type": "p",
+     "text": "Ein selbständiges Verlassen des „Steh\" durch den Hund sollte konsequent, aber ruhig korrigiert werden."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "18-04",
+   "title": "Was Du vermeiden solltest",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wichtige Hinweise ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide beim Training und in der Alltagsanwendung hart oder scharf gesprochene Kommandos – Dein Hund könnte ein scharf gesprochenes „Steh\" fehlinterpretieren und sich stattdessen hinsetzen oder hinlegen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide „Steh\" in anspruchsvollen oder ablenkungsreichen Situationen, solange die Übung noch nicht gefestigt ist."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Stress während des gesamten Stehvorganges."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide, dass der Hund die Position „Steh\" selbständig verlässt, ohne dass ein Lösezeichen gegeben wurde."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "18-05",
+   "title": "Abschnitt 5",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Tägliche Routine"
+    },
+    {
+     "type": "p",
+     "text": "Nutze jeden Spaziergang als Trainingsmoment. Wähle bewusst ruhige Passagen ohne Ablenkung, um „Steh\" einzubauen. Mit der Zeit wirst Du merken, wie Dein Hund das Zeichen immer freudiger und selbstständiger ausführt – ein klares Signal, dass Deine geduldige Konsequenz Früchte trägt."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "18-06",
+   "title": "Checkliste für erfolgreiches Training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Habe ich auf eine ruhige und ablenkungsfreie Umgebung geachtet?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich das Training täglich und wiederholt durchgeführt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich den Hund ruhig und aufmerksam mit seinem Namen angesprochen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erfolgte die Leinenhilfe sanft und geduldig?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erfolgte die Unterstützung mit der Hand stressfrei und fließend?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich auf ruhige Kommunikation mit dem Hund geachtet?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich geduldig und konsequent korrigiert?"
+    },
+    {
+     "type": "p",
+     "text": "→ Habe ich ruhig und intensiv gelobt?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

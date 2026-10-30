@@ -1,0 +1,294 @@
+{
+ "id": "10",
+ "title": "Routinen",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Struktur für ein faires und stressarmes Miteinander"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "10-01",
+   "title": "Einführung",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Routinen im Zusammenleben mit Hunden sind ein zentrales Element für ein stabiles, stressarmes und faires Miteinander. Sie schaffen Vorhersehbarkeit, strukturieren den Alltag und ermöglichen dem Hund, seine Umwelt kognitiv und emotional zuverlässig einzuordnen."
+    },
+    {
+     "type": "p",
+     "text": "Fachlich betrachtet unterstützen konsistente Abläufe die physische Gesundheit, die emotionale Stabilität und die Lernfähigkeit des Hundes und können zur Prävention stressbedingter Verhaltensprobleme beitragen."
+    },
+    {
+     "type": "p",
+     "text": "Gleichzeitig haben Routinen die wichtige ethische Funktion einer verlässlichen Zusammenarbeit, welche aus der asymmetrischen Beziehung zwischen Halter und Hund resultiert."
+    },
+    {
+     "type": "h",
+     "text": "Was bedeuten Routinen im fairen Führen? 🤝"
+    },
+    {
+     "type": "p",
+     "text": "Faires Führen bedeutet nicht Kontrolle oder Dominanz, sondern eine strukturierende, wohlwollende und verlässliche Orientierung, die dem Hund Sicherheit bietet und seine artspezifischen Bedürfnisse berücksichtigt."
+    },
+    {
+     "type": "p",
+     "text": "Routinen sind dabei keine starren Pläne, sondern sind eine wachsende Sammlung an trainierten Handlungen und Reaktionsmustern, welche sich an Alter, Gesundheitszustand, genetische Disposition, individuelle Lernerfahrung des Hundes und aktuell vorherrschenden Umweltbedingungen orientieren."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "10-02",
+   "title": "1. Fachliche Aspekte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Verhaltensbiologie und wissenschaftliche Grundlagen"
+    },
+    {
+     "type": "h",
+     "text": "Ethologische Grundlagen von Routinen 🔬"
+    },
+    {
+     "type": "p",
+     "text": "Hunde sind sozial lebende Tiere mit einer ausgeprägten Fähigkeit zur Antizipation von Ereignissen. Wiederkehrende Abläufe erleichtern diese Antizipation und reduzieren Unsicherheit, die als relevanter Stressor gilt."
+    },
+    {
+     "type": "p",
+     "text": "Die Vorhersagbarkeit von Umweltreizen sind mit niedrigeren Stressindikatoren (z. B. Cortisol) assoziiert, während unvorhersehbare Abläufe Stressreaktionen begünstigen können."
+    },
+    {
+     "type": "p",
+     "text": "Routinen unterstützen zudem Lernprozesse, da Lernen bei Hunden stark kontextabhängig ist. Wiederkehrende zeitliche und räumliche Strukturen erleichtern die Verknüpfung von Verhalten und Konsequenz."
+    },
+    {
+     "type": "h",
+     "text": "Tägliche Struktur und funktionale Kernroutinen 📅"
+    },
+    {
+     "type": "p",
+     "text": "Bewegung: Ein oder mehrere Gänge pro Tag, deren Dauer und Intensität sich am individuellen Aktivitätsniveau orientieren. Für viele adulte Hunde sind insgesamt 60–120 Minuten Bewegung realistisch, verteilt über den Tag. Hochaktive oder arbeitsorientierte Linien benötigen häufig mehr, während sehr junge, alte oder gesundheitlich eingeschränkte Hunde angepasste Umfänge benötigen."
+    },
+    {
+     "type": "p",
+     "text": "Ernährung: In der Regel ein bis zwei Mahlzeiten täglich bei adulten Hunden; Welpen entsprechend häufiger. Regelmäßige Fütterungszeiten unterstützen Verdauung und Stoffwechsel, sind aber individuell anpassbar."
+    },
+    {
+     "type": "p",
+     "text": "Mentale Auslastung: Kurze, gezielte Einheiten kognitiver Beschäftigung (z. B. Suchspiele, Problemlöseaufgaben) von wenigen Minuten können bereits wirksam sein. Überforderung ist dabei zu vermeiden."
+    },
+    {
+     "type": "p",
+     "text": "Ruhe und Schlaf: Adulte Hunde schlafen im Durchschnitt 12–14 Stunden pro Tag, Welpen und Senioren deutlich mehr. Verlässliche Ruhephasen sind essenziell für Regeneration und emotionale Stabilität."
+    },
+    {
+     "type": "h",
+     "text": "Training und faires Führen 🎓"
+    },
+    {
+     "type": "p",
+     "text": "Zeitgemäßes Hundetraining orientiert sich an dem Prinzip LIMA (Least Intrusive, Minimally Aversive) und bevorzugt Methoden der positiven Verstärkung."
+    },
+    {
+     "type": "p",
+     "text": "Konsistente Routinen im Training – etwa bei Leinenführung, Rückruf oder Alltagsregeln – erleichtern dem Hund das Verständnis von Erwartungen."
+    },
+    {
+     "type": "p",
+     "text": "Der Begriff „Führung\" ist dabei funktional zu verstehen: Der Mensch übernimmt Planung, Ressourcenmanagement und Rahmensetzung, ohne Zwang oder Einschüchterung einzusetzen."
+    },
+    {
+     "type": "p",
+     "text": "Forschung zeigt, dass klare, konsistente Signale effektiver sind als wechselnde oder widersprüchliche Anforderungen."
+    },
+    {
+     "type": "h",
+     "text": "Gesundheitliche Routinen 🏥"
+    },
+    {
+     "type": "p",
+     "text": "Zu den fachlich relevanten Routinen zählen auch regelmäßige Gesundheitschecks, Pflegehandlungen (z. B. Bürsten, Pfotenkontrolle) und präventive tierärztliche Maßnahmen."
+    },
+    {
+     "type": "p",
+     "text": "Diese tragen nicht nur zur körperlichen Gesundheit bei, sondern erleichtern durch Gewöhnung auch medizinische Behandlungen."
+    },
+    {
+     "type": "h",
+     "text": "Grenzen und Anpassungsbedarf ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Routinen müssen stets an Alter, Gesundheitszustand, Umweltbedingungen und individuelle Belastbarkeit angepasst werden."
+    },
+    {
+     "type": "p",
+     "text": "Übermäßige Fixierung auf starre Abläufe kann kontraproduktiv sein und Flexibilität sowie Stressresilienz beeinträchtigen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "10-03",
+   "title": "2. Empathische Aspekte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Emotionale Bindung und Gegenseitigkeit"
+    },
+    {
+     "type": "h",
+     "text": "Emotionale Sicherheit durch Vorhersagbarkeit 💚"
+    },
+    {
+     "type": "p",
+     "text": "Aus bindungstheoretischer Perspektive fördern verlässliche Routinen ein Gefühl von Sicherheit. Hunde nutzen wiederkehrende Interaktionen mit vertrauten Menschen als emotionale Referenzpunkte."
+    },
+    {
+     "type": "p",
+     "text": "Gemeinsame Rituale wie Spaziergänge oder Ruhezeiten können dabei eine regulierende Wirkung auf den emotionalen Zustand haben."
+    },
+    {
+     "type": "h",
+     "text": "Feinfühligkeit und Bedürfnisorientierung 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Empathisches Führen bedeutet, das Verhalten des Hundes kontextbezogen zu interpretieren. Signale von Überforderung, Stress oder Rückzug erfordern eine Anpassung bestehender Routinen."
+    },
+    {
+     "type": "p",
+     "text": "Fachlich ist hierbei von responsiver Interaktion zu sprechen, nicht von Vermenschlichung."
+    },
+    {
+     "type": "h",
+     "text": "Wahlmöglichkeiten 🎯"
+    },
+    {
+     "type": "p",
+     "text": "Aktuelle welfare-orientierte Ansätze betonen die Bedeutung von Handlungsspielräumen. Innerhalb klarer Rahmenbedingungen können Wahlmöglichkeiten (z. B. bei Spielarten oder Bewegungsrichtung) das emotionale Wohlbefinden steigern und Frustration reduzieren."
+    },
+    {
+     "type": "h",
+     "text": "Risiken emotionaler Dysbalance ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Eine übermäßige emotionale Verschmelzung oder mangelnde Förderung von Selbstständigkeit kann Trennungsstress begünstigen."
+    },
+    {
+     "type": "p",
+     "text": "Empathische Routinen berücksichtigen daher auch Phasen selbstständiger Ruhe und Distanz."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "10-04",
+   "title": "3. Philosophische Aspekte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Ethik, Gerechtigkeit und Machtdynamiken"
+    },
+    {
+     "type": "h",
+     "text": "Ethik der Verantwortung ⚖️"
+    },
+    {
+     "type": "p",
+     "text": "Philosophisch sind Routinen Ausdruck der moralischen Verantwortung des Menschen gegenüber einem abhängigen, empfindungsfähigen Lebewesen."
+    },
+    {
+     "type": "p",
+     "text": "Die Beziehung ist strukturell asymmetrisch; daraus ergibt sich die Pflicht, Macht nicht missbräuchlich auszuüben."
+    },
+    {
+     "type": "h",
+     "text": "Gerechtigkeit und Wohlergehen 📚"
+    },
+    {
+     "type": "p",
+     "text": "Ethische Leitlinien wie die Fünf Freiheiten des Tierwohls oder neuere Konzepte der positiven Welfare-Bewertung bilden einen normativen Rahmen für faire Routinen."
+    },
+    {
+     "type": "p",
+     "text": "Diese schließen das Recht auf angemessene Versorgung, Schutz vor Leid und die Möglichkeit zur Ausübung artspezifischen Verhaltens ein."
+    },
+    {
+     "type": "h",
+     "text": "Führung statt Dominanz 🛡️"
+    },
+    {
+     "type": "p",
+     "text": "Dominanzmodelle gelten in der modernen Ethologie als unzureichend."
+    },
+    {
+     "type": "p",
+     "text": "Stattdessen wird Führung als strukturierende Fürsorge verstanden, die klare Grenzen setzt, ohne Gewalt oder Einschüchterung einzusetzen."
+    },
+    {
+     "type": "h",
+     "text": "Philosophische Grenzen 🌍"
+    },
+    {
+     "type": "p",
+     "text": "Eine vollständige Gleichberechtigung zwischen Mensch und Hund ist philosophisch nicht realisierbar."
+    },
+    {
+     "type": "p",
+     "text": "Ethik bedeutet daher nicht Gleichheit, sondern verantwortungsvolle Ungleichheit, die regelmäßig reflektiert und angepasst wird."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "10-05",
+   "title": "4. Integration und Gesamtperspektive",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Routinen im fairen Zusammenleben mit Hunden lassen sich am sinnvollsten als integratives System verstehen, das biologische Rhythmen, emotionale Bedürfnisse und ethische Prinzipien verbindet."
+    },
+    {
+     "type": "p",
+     "text": "Sie sind kein Selbstzweck, sondern ein Werkzeug, um Sicherheit, Lernfähigkeit, Wohlbefinden und Beziehung nachhaltig zu fördern."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "10-06",
+   "title": "Kernaussagen",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Routinen schaffen Vorhersagbarkeit und reduzieren Stress."
+    },
+    {
+     "type": "p",
+     "text": "Verlässliche Strukturen fördern Lernfähigkeit und emotionale Stabilität."
+    },
+    {
+     "type": "p",
+     "text": "Faires Führen bedeutet strukturierende Fürsorge, nicht Dominanz."
+    },
+    {
+     "type": "p",
+     "text": "Flexibilität ist wichtiger als starre Zeitpläne."
+    },
+    {
+     "type": "p",
+     "text": "Routinen spiegeln unsere ethische Verantwortung gegenüber dem Hund wider."
+    },
+    {
+     "type": "p",
+     "text": "Gute Routinen verbinden biologische, emotionale und ethische Aspekte zu einem Ganzen."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

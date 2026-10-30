@@ -684,7 +684,7 @@
     <string name="sound_level_pdf_column_data_points">Data points</string>
     <string name="sound_level_pdf_column_share">Share</string>
     <string name="sound_level_pdf_disclaimer">Note: Estimated value based on a one-time user calibration. Not a calibrated measuring device per DIN EN 61672 – intended only for personal comparability across sessions. This does not evaluate the effect on the dog; what matters is pitch, suddenness, predictability, and observing the dog\'s behavior.</string>
-    <string name="sound_level_pdf_footer">Created with the HundeWildnis app by www.wildnislehrer.de</string>
+    <string name="sound_level_pdf_footer">Created with the HundeWildnis app</string>
 
     <!-- SoundLevelSessionAdapter -->
     <string name="sound_level_session_summary">Ø %1$d dB(A) · %2$s · %3$d:%4$02d min</string>
@@ -2462,7 +2462,7 @@
     <!-- activity_start.xml: layout texts -->
     <string name="start_new_blog_post">💬 New blog post</string>
     <string name="start_view_all">View all ›</string>
-    <string name="start_group_weekly_exercises">Exercise of the Week</string>
+    <string name="start_group_weekly_exercises">Mental Preparation</string>
     <string name="start_group_training_tools">Training Tools</string>
     <string name="start_group_outdoor_tools">Outdoor Tools</string>
     <string name="start_group_dog_safety_emergency">Dog, Safety &amp; Emergency</string>
@@ -2471,11 +2471,11 @@
 
     <!-- dialog_settings.xml -->
     <string name="settings_background_updates">Background updates</string>
-    <string name="settings_background_updates_desc">The app checks for new content twice a day, at 8 am and 8 pm. You can also start an update yourself at any time.</string>
-    <string name="settings_enable_background_updates">Enable background updates</string>
-    <string name="settings_wifi_only">Update only over Wi-Fi</string>
-    <string name="settings_show_notifications">Show notifications</string>
-    <string name="settings_data_usage_note">ℹ️ Data usage for updating content lists twice a day is very low.</string>
+    <string name="settings_background_updates_desc">If you have set up a WebDAV server, the app synchronises your data in the background. Nothing happens without a configured server.</string>
+    <string name="settings_enable_background_updates">Enable automatic WebDAV synchronisation</string>
+    <string name="settings_wifi_only">Synchronise only over Wi-Fi</string>
+    <string name="settings_show_notifications">Show synchronisation notifications</string>
+    <string name="settings_data_usage_note">ℹ️ The synchronisation only transfers changed data.</string>
     <string name="settings_ors_navigation">OpenRouteService (Navigation)</string>
     <string name="settings_ors_desc">Route calculation requires an API key. You can get one for free at openrouteservice.org.</string>
     <string name="settings_delete_reset_key">Delete / reset key</string>
@@ -2533,9 +2533,9 @@
     <string name="instr_backup_title">📦💾 Backup App Data</string>
     <string name="instr_backup_desc">Back up your data regularly.\n• Use all your data on additional Android devices with the HundeWildnis app\n• The backup includes profiles, notes, photos, and statistics.\n• Storage location: Downloads/HundeWildnis_Backups/.</string>
     <string name="instr_support_title">💖🤝 Your Support</string>
-    <string name="instr_support_desc">We\'d be delighted if you support us with a donation. We\'ve set up secure ways for you to support us and the app\'s development with a small contribution of your choice, either once or on a regular basis. This helps us keep offering the app for free in the future.</string>
+    <string name="instr_support_desc">You can support the development of the app voluntarily with an amount of your choice. You receive nothing in return and no additional features. The app stays free.</string>
     <string name="instr_bottom_nav_title">Bottom Navigation Bar</string>
-    <string name="instr_bottom_nav_desc">Access at any time:\n• App home screen\n• HundeWildnis blog\n• Information pages of the HundeWildnisSchule\n• Online training courses (only after individual activation)\n• \'More\' (YouTube channel, HundeWildnis podcast, X channel, direct chats with Manuela and Jörg)</string>
+    <string name="instr_bottom_nav_desc">Access at any time:\n• App home screen\n• Courses (stored in the app, readable without an internet connection)</string>
     <string name="instr_top_menu_title">Top Menu</string>
     <string name="instr_top_menu_desc">Use the main menu (hamburger icon top right) for quick actions such as \n• Refresh\n• Switch between light and dark mode\n• App settings\n• Create backup\n• Import backup\n• App user guide\n• App permissions\n• Privacy policy\n• Imprint\n• About the app\n• Home screen</string>
 
@@ -3029,7 +3029,7 @@
     <string name="notes_default_pdf_title">Daily Note</string>
     <string name="notes_pdf_header">📝 DAILY NOTE - HundeWildnis</string>
     <string name="notes_pdf_created_at">Created on: %1$s</string>
-    <string name="notes_pdf_footer">Created and sent with HundeWildnis - Android app from www.wildnislehrer.de</string>
+    <string name="notes_pdf_footer">Created and sent with HundeWildnis - Android app</string>
     <string name="notes_pdf_label_title">Title: %1$s</string>
     <string name="notes_pdf_label_location">📍 Location (GPS): %1$s, %2$s</string>
     <string name="notes_pdf_label_map">Map (OpenStreetMap): %1$s</string>
@@ -4862,7 +4862,7 @@ high</string>
     <!-- Emergency: PDF content -->
     <string name="emergency_pdf_header_title">🚨 EMERGENCY REPORT - DOG</string>
     <string name="emergency_pdf_created_at_format">Created on: %1$s</string>
-    <string name="emergency_pdf_footer_app_credit">Created and sent with HundeWildnis - Android App from www.wildnislehrer.de</string>
+    <string name="emergency_pdf_footer_app_credit">Created and sent with HundeWildnis - Android App</string>
     <string name="emergency_pdf_medical_emergency_header">MEDICAL EMERGENCY:</string>
     <string name="emergency_pdf_symptom_format">Symptom: %1$s</string>
     <string name="emergency_pdf_additional_info_format">Additional info: %1$s</string>
@@ -5111,7 +5111,15 @@ high</string>
     <!-- ════════════════════════════════════════════════════════════
          PLAY & FUN – CATALOG STRINGS (name + description)
          Add this file's content to values-en/strings.xml (content of
-         <resources>...</resources> without the outer tags), or keep it
+         <resources>...    <string name="error_no_browser">No browser found</string>
+    <string name="courses_heading">Courses</string>
+    <string name="courses_empty">No courses available.</string>
+    <string name="courses_load_error">Courses could not be loaded.</string>
+    <string name="course_lessons_heading">Lessons</string>
+    <string name="nav_emergency">EMERGENCY</string>
+    <string name="course_previous">Previous lesson</string>
+    <string name="course_next">Next lesson</string>
+</resources> without the outer tags), or keep it
          as a separate file values-en/strings_spiel_spass_catalog.xml;
          Android merges all files under values-en/ together.
          Key names intentionally match the German file 1:1.
@@ -5514,4 +5522,260 @@ high</string>
     <string name="net_services_help_no_browser">No browser found. Open openweathermap.org manually.</string>
     <string name="net_services_help_body">Why do I need my own access?\nThe app has no weather server of its own and does not ship weather data. Weather services only allow requests with a personal key (API key). With your own key, the limits and terms of your account with the provider apply, and requests go directly between your device and the provider. The app developer does not see them.\n\nRecommended to start: OpenWeatherMap\n1. Open openweathermap.org and create a free account (button below). Confirm your email address.\n2. Sign in and open the \"API keys\" section of your account. A key (\"Default\") already exists. It has about 32 characters.\n3. Copy the key, choose \"OpenWeatherMap\" here and paste it into the field. Tap \"Done\".\n4. A new key is often active only after a few minutes, sometimes after one or two hours. If the app reports that the key was rejected, wait a while and try again.\n\nNotes\n• The free plan is enough for the app. Do not book a paid plan.\n• Treat the key like a password and do not share it. The app stores it encrypted on your device.\n• With OpenWeatherMap\'s free plan, UV index, sunshine duration, pollen and the thunderstorm forecast are not available. The app hides these displays.\n• The weather view names the provider as the source (\"Weather data © OpenWeather\").\n\nOpen-Meteo\nOpen-Meteo is meant for users who have a customer access with their own server address and key (open-meteo.com) or run their own server. The free Open-Meteo address is only permitted for non-commercial use; whether your case qualifies is for you to check in Open-Meteo\'s terms. Enter the address (and, if you have them, the air quality address and key) exactly as the provider gives them to you. With Open-Meteo all weather displays are available.\n\nOverpass (nearby places, surroundings)
 For searching nearby places and for surroundings data on the map, the app queries the Overpass API. You need no key and no account. By default the app uses public Overpass servers (overpass-api.de and overpass.private.coffee) that all users share. They are free but limited: under heavy load they respond slowly or reject requests. The app then switches to the other server automatically. If you search often or searches fail often, enter the https address of another public server or of your own server under "Overpass server". If something is entered there, the app uses only that server. The operator\'s usage policy applies. If you leave the field empty, everything stays as described.\n\nWithout an entry for the weather services the app shows no weather. All other features work as before.</string>
+    <string name="error_no_browser">No browser found</string>
+    <string name="courses_heading">Courses</string>
+    <string name="courses_empty">No courses available.</string>
+    <string name="courses_load_error">Courses could not be loaded.</string>
+    <string name="course_lessons_heading">Lessons</string>
+    <string name="nav_emergency">EMERGENCY</string>
+    <string name="course_previous">Previous lesson</string>
+    <string name="course_next">Next lesson</string>
+    <string name="imprint_title">Imprint</string>
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="imprint_content">
+        <![CDATA[
+        <h2>Imprint</h2>
+
+        <h3>Information pursuant to § 5 TMG</h3>
+        <p>
+        HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR<br>
+        Hohe Lehne 14<br>
+        01705 Freital, Germany<br>
+        VAT ID:<br>
+        DE458205581<br>
+        </p>
+
+        <h3>Contact</h3>
+        <p>
+        Email: info[at]wildnislehrer.de<br>
+        </p>
+
+        <h3>Responsible for content pursuant to § 55 (2) RStV</h3>
+        <p>
+        Manuela Ulbricht und Peter Jörg Ulbricht<br>
+        01705 Freital, Hohe Lehne 14<br>
+        </p>
+
+        <h3>Disclaimer</h3>
+
+        <h4>Liability for content</h4>
+        <p>
+        The content of our app and pages has been created with the greatest care.
+        However, we cannot guarantee the accuracy, completeness or topicality of the content.
+        </p>
+
+        <h4>Liability for links</h4>
+        <p>
+        Our offer contains links to external third-party websites over whose content
+        we have no influence. Therefore, we cannot accept any liability for this
+        third-party content.
+        </p>
+
+        <h4>Copyright</h4>
+        <p>
+        The content and works created by the site operators on these pages are
+        subject to German copyright law. Reproduction, editing, distribution and any
+        kind of use beyond the limits of copyright law require the written consent
+        of the respective author or creator.
+        INFRINGEMENT WILL RESULT IN CLAIMS FOR DAMAGES
+        </p>
+
+        <h4>Data protection</h4>
+        <p>
+        This app connects only to the services required for the functions used (e.g. weather, routing and map services and, optionally, your own WebDAV server). Content from our website is not loaded.
+        All connections are encrypted (HTTPS).
+        Detailed information can be found in our privacy policy.
+        </p>
+        ]]>
+    </string>
+    <string name="privacy_content">
+        <![CDATA[
+        <h2>Privacy Policy for the HundeWildnis App</h2>
+        <p>As of: October 2026</p>
+
+        <h3>1. Controller</h3>
+        <p>
+        HundeWildnisSchule<br>
+        Manuela Ulbricht und Peter Jörg Ulbricht GbR<br>
+        Hohe Lehne 14<br>
+        01705 Freital, Germany<br>
+        VAT ID: DE458205581<br>
+        Email: tux4us@online.de
+        </p>
+
+        <h3>2. Data processing in the app</h3>
+
+        <h4>2.1 No collection of personal data by the provider</h4>
+        <p>
+        The provider does not operate any servers for the app on which user data is stored, and does not offer a user account. The provider does not collect, store or process any personal data of users.
+        </p>
+        <p>
+        The data you enter in the app (e.g. dog profiles, diary, training and health entries, photos, location notes) is stored exclusively on your device.
+        </p>
+
+        <h4>2.2 No tracking or analytics services</h4>
+        <p>The app does not use:</p>
+        <ul>
+        <li>Google Analytics or other tracking or analytics SDKs</li>
+        <li>advertising SDKs</li>
+        <li>tracking cookies or third-party cookies</li>
+        <li>Google Play Services (except for updates via the Play Store)</li>
+        <li>login or user account</li>
+        </ul>
+
+        <h4>2.3 Local data storage</h4>
+        <p>The app stores the following locally on your device:</p>
+        <ul>
+        <li>your entries and records (see 2.1)</li>
+        <li>app settings</li>
+        <li>access credentials for optional services (WebDAV server, weather and routing keys); WebDAV credentials are stored in encrypted form</li>
+        <li>cached map tiles to save data volume</li>
+        </ul>
+        <p>
+        The courses in the app are part of the app and are read locally. No internet connection is required for this.
+        </p>
+        <p>
+        This data leaves your device only if you trigger a function that requires it (see section 3), or if you export or share data yourself. Uninstalling the app deletes the locally stored data.
+        </p>
+        <p>
+        Note: Depending on your device and system settings, Android may back up app data through the Android backup service of the device manufacturer or Google. You control this in your device&#39;s system settings. The provider has no influence on this backup.
+        </p>
+
+        <h4>2.4 Permissions</h4>
+        <p>The app requests permissions only when a function needs them. You can revoke them at any time in the Android settings.</p>
+        <ul>
+        <li><b>Location:</b> for the map, nearby places, weather at your location, compass, altimeter, walking speed, navigation, location sharing and emergency report</li>
+        <li><b>Camera:</b> for photos (e.g. dog profile, plants) and the tick loupe</li>
+        <li><b>Microphone:</b> for sound level and voice measurement; the app does not send any audio data to the provider or to servers</li>
+        <li><b>Notifications and foreground service:</b> for reminders, timers, and ongoing navigation, walking speed and location functions</li>
+        <li><b>Storage access:</b> for exporting and importing backups, PDF and CSV files</li>
+        </ul>
+
+        <h3>3. External services</h3>
+        <p>
+        The app connects only to the services required for a function you use. All connections are encrypted via HTTPS. With every connection, your IP address is technically transmitted to the respective service.
+        </p>
+
+        <h4>3.1 OpenStreetMap (map display)</h4>
+        <p>The app uses OpenStreetMap to display maps.</p>
+        <p>Data transmitted:</p>
+        <ul>
+        <li>IP address (technically required)</li>
+        <li>Map section (geographic coordinates of the displayed area)</li>
+        <li>Zoom level</li>
+        </ul>
+        <p>Purpose: displaying map tiles for the location functions</p>
+        <p>Storage: Map tiles are cached locally.</p>
+        <p>
+        When you tap the OpenStreetMap licence notice, the page openstreetmap.org/copyright is loaded in an embedded view; your IP address is transmitted in this case as well.
+        </p>
+        <p>Provider: OpenStreetMap Foundation, St John&#39;s Innovation Centre, Cowley Road, Cambridge CB4 0WS, United Kingdom</p>
+        <p>Privacy policy: <a href="https://osmfoundation.org/wiki/Privacy_Policy">https://osmfoundation.org/wiki/Privacy_Policy</a></p>
+        <p>Legal basis: Art. 6(1)(f) GDPR (legitimate interest in providing the map function)</p>
+
+        <h4>3.2 Weather data (OpenWeatherMap or Open-Meteo, only with your own access)</h4>
+        <p>
+        The app retrieves weather data only after you have selected a weather provider in the settings (Services &amp; Servers) and entered your own access: either a key from OpenWeatherMap, or the server address (and, if applicable, the key) of your Open-Meteo access or your own server. Without a selection and access, no weather data is retrieved and no data is sent to weather providers.
+        </p>
+        <p>Data transmitted:</p>
+        <ul>
+        <li>Location coordinates (latitude and longitude)</li>
+        <li>IP address (technically required)</li>
+        <li>Your access key (stored encrypted on your device and sent to the provider with every request)</li>
+        </ul>
+        <p>Purpose: retrieving weather data for your location or a place you selected</p>
+        <p>Voluntary use: The weather function and location sharing are optional. You can revoke the permission at any time in the Android settings and deselect the weather provider in the settings.</p>
+        <p>Provider: The privacy policy and terms of use of the provider you selected apply. You conclude the access agreement directly with the provider.</p>
+        <ul>
+        <li>OpenWeatherMap / OpenWeather Ltd.: <a href="https://openweather.co.uk/privacy-policy">https://openweather.co.uk/privacy-policy</a></li>
+        <li>Open-Meteo: <a href="https://open-meteo.com/en/terms">https://open-meteo.com/en/terms</a></li>
+        </ul>
+        <p>Legal basis: Art. 6(1)(a) GDPR (consent by selecting the provider, entering the access and granting location permission)</p>
+
+        <h4>3.3 Further map services (Nominatim, Overpass, OpenRouteService)</h4>
+        <p>When you trigger an action (place search, nearby places, route calculation), the app retrieves data from the following services:</p>
+        <ul>
+        <li>Nominatim (OpenStreetMap Foundation): place search and place names for coordinates</li>
+        <li>Overpass API (public servers, e.g. overpass-api.de; on request a server you enter): surroundings data and nearby places</li>
+        <li>OpenRouteService (HeiGIT gGmbH): route calculation with your own access key</li>
+        </ul>
+        <p>Data transmitted:</p>
+        <ul>
+        <li>Search term or coordinates (latitude and longitude) or map area</li>
+        <li>IP address (technically required)</li>
+        <li>For OpenRouteService additionally your access key</li>
+        </ul>
+        <p>Purpose: providing the function triggered in each case</p>
+        <p>Your own servers: In the settings (Services &amp; Servers) you can change the address for Overpass. You also define the weather provider and access there (see 3.2). Keys are stored encrypted on your device.</p>
+        <p>Privacy policies:</p>
+        <ul>
+        <li>OpenStreetMap Foundation (Nominatim, Overpass): <a href="https://osmfoundation.org/wiki/Privacy_Policy">https://osmfoundation.org/wiki/Privacy_Policy</a></li>
+        <li>HeiGIT / OpenRouteService: <a href="https://openrouteservice.org/privacy-policy/">https://openrouteservice.org/privacy-policy/</a></li>
+        </ul>
+        <p>Legal basis: Art. 6(1)(a) GDPR (consent by triggering the function and granting location permission)</p>
+
+        <h4>3.4 WebDAV synchronisation (optional, your own server)</h4>
+        <p>
+        The app can synchronise your data with a WebDAV server that you enter yourself. Without a server entry, no synchronisation takes place.
+        </p>
+        <p>Data transmitted:</p>
+        <ul>
+        <li>the app data you have designated for synchronisation (data files and photos)</li>
+        <li>your access credentials for the server (user name and password)</li>
+        <li>IP address (technically required)</li>
+        </ul>
+        <p>Purpose: synchronising your data between your devices</p>
+        <p>
+        You, or the operator of the server you choose, are responsible for the server and the data stored on it. The provider of the app does not receive this data. Access credentials are stored encrypted on your device.
+        </p>
+        <p>Legal basis: Art. 6(1)(a) GDPR (consent by setting up and enabling synchronisation)</p>
+
+        <h4>3.5 Links to other applications</h4>
+        <p>
+        Some functions open content in other applications, for example in the browser, in the PayPal app or in the Play Store. From the moment it opens, the privacy policy of the respective provider applies.
+        </p>
+        <ul>
+        <li><b>Donation via PayPal:</b> The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider&#39;s policy applies: <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
+        <li><b>Map links:</b> Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.</li>
+        <li><b>Rating and sharing the app:</b> The link to the Play Store opens the Play Store or the browser.</li>
+        </ul>
+        <p>Legal basis: Art. 6(1)(a) GDPR (consent by tapping the link)</p>
+
+        <h4>3.6 Sharing and export</h4>
+        <p>
+        You pass on emergency reports, location shares, PDF and CSV files and backups via the Android &quot;Share&quot; function or via file export. You choose the application or recipient yourself. Once passed on, the data is held by the recipient you chose. That recipient&#39;s privacy policy applies to this processing.
+        </p>
+
+        <h4>3.7 Overview of third-party services</h4>
+        <ul>
+        <li>OpenStreetMap: displaying maps; IP address, map area</li>
+        <li>Weather provider of your choice (OpenWeatherMap or Open-Meteo, only with your own access): weather data; IP address, location, access key</li>
+        <li>Nominatim / Overpass: place search, nearby places; IP address, search term, coordinates</li>
+        <li>OpenRouteService: route calculation; IP address, coordinates, own key</li>
+        <li>WebDAV server of your choice: synchronisation; data, credentials, IP address</li>
+        <li>PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app</li>
+        </ul>
+        <p>All connections are encrypted via HTTPS.</p>
+
+        <h3>4. Your rights</h3>
+        <p>
+        Because the provider receives no personal data from you through the app, the provider cannot give you information about stored data and cannot correct or delete any data. You can view, change and delete the data on your device yourself.
+        </p>
+        <p>
+        For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
+        </p>
+        <p>
+        You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR).
+        </p>
+        <p>
+        If you have questions about this privacy policy or the app, you can contact us at any time: tux4us@online.de
+        </p>
+
+        <h3>5. Changes to this privacy policy</h3>
+        <p>
+        This privacy policy may be updated when necessary. You will always find the current version in the app in the menu under &quot;Privacy Policy&quot;.
+        </p>
+        <p>As of this privacy policy: October 2026</p>
+        ]]>
+    </string>
 </resources>

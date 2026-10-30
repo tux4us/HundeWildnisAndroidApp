@@ -21,7 +21,7 @@ class ImprintActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Impressum"
+        supportActionBar?.title = getString(R.string.imprint_title)
 
         // Setze Impressum-Text
         setImprintText()

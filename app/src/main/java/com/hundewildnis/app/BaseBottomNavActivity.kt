@@ -1,20 +1,12 @@
 package com.hundewildnis.app
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
- * BaseBottomNavActivity - Gemeinsame Bottom Navigation für die ganze App
+ * BaseBottomNavActivity - Gemeinsame Bottom Navigation (Home, Kurse)
  */
 abstract class BaseBottomNavActivity : SecureBaseActivity() {
 
@@ -22,8 +14,6 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
     protected abstract fun getCurrentNavigationItemId(): Int
 
     // Callbacks für Navigation
-    protected open fun onBlogSelected() { navigateToMainActivity(MainActivity.VIEW_BLOG) }
-    protected open fun onPagesSelected() { navigateToMainActivity(MainActivity.VIEW_PAGES) }
     protected open fun onCoursesSelected() { navigateToMainActivity(MainActivity.VIEW_COURSES) }
     protected open fun onHomeSelected() { /* Von StartActivity überschrieben */ }
 
@@ -45,16 +35,15 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> { onHomeSelected(); true }
-                R.id.nav_blog -> { onBlogSelected(); true }
-                R.id.nav_pages -> { onPagesSelected(); true }
                 R.id.nav_courses -> { onCoursesSelected(); true }
-                R.id.nav_more -> { showMoreDialog(); true }
+                // Notfall öffnet den Assistenten, die aktuelle Auswahl der Leiste bleibt unverändert
+                R.id.nav_emergency -> { openEmergencyWizard(); false }
                 else -> false
             }
         }
         bottomNav.selectedItemId = getCurrentNavigationItemId()
-        
-        // Hinweis: Insets werden zentral in SecureBaseActivity gehandelt, 
+
+        // Hinweis: Insets werden zentral in SecureBaseActivity gehandelt,
         // um Doppelpufferung und Überlagerung durch die Android-Buttons zu vermeiden.
     }
 
@@ -66,75 +55,50 @@ abstract class BaseBottomNavActivity : SecureBaseActivity() {
         startActivity(intent)
     }
 
-    private fun showMoreDialog() {
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_more_menu, null)
-        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-        dialog.setContentView(view)
+    protected fun openEmergencyWizard() {
+        // Prüfe ob Hunde vorhanden
+        val profiles = DogProfileManager.getAllProfiles(this)
 
-        view.findViewById<android.view.View>(R.id.btnSheetYouTube).setOnClickListener { dialog.dismiss(); openYouTube() }
-        view.findViewById<android.view.View>(R.id.btnSheetPodcast).setOnClickListener { dialog.dismiss(); openPodcast() }
-        view.findViewById<android.view.View>(R.id.btnSheetSpotify).setOnClickListener { dialog.dismiss(); openSpotify() }
-        view.findViewById<android.view.View>(R.id.btnSheetSignalManuela).setOnClickListener { dialog.dismiss(); openSignalManuela() }
-        view.findViewById<android.view.View>(R.id.btnSheetSignalJoerg).setOnClickListener { dialog.dismiss(); openSignalJoerg() }
+        if (profiles.isEmpty()) {
+            // Kein Hund vorhanden - zeige Hinweis
 
-        dialog.show()
-        dialog.setOnDismissListener {
-            getBottomNavigationView().postDelayed({
-                getBottomNavigationView().selectedItemId = getCurrentNavigationItemId()
-            }, 100)
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.start_no_dog_title))
+                .setMessage(getString(R.string.start_no_dog_message))
+                .setPositiveButton(getString(R.string.start_to_master_data)) { _, _ ->
+                    startActivity(Intent(this, DogProfileActivity::class.java))
+                }
+                .setNegativeButton(getString(R.string.cancel), null)
+                .create()
+                .apply {
+                    show()
+                }
+            return
+        }
+
+        // Mehrere Hunde? Auswahl anzeigen
+        if (profiles.size > 1) {
+            val dogNames = profiles.map { it.name }.toTypedArray()
+
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.start_which_dog_title))
+                .setItems(dogNames) { _, which ->
+                    val selectedProfile = profiles[which]
+                    openFirstAidWizard(selectedProfile)
+                }
+                .setNegativeButton(getString(R.string.cancel), null)
+                .create().apply {
+                    show()
+                }
+        } else {
+            // Nur ein Hund - direkt öffnen
+            openFirstAidWizard(profiles[0])
         }
     }
 
-    private fun openYouTube() {
-        val channelUrl = "https://www.youtube.com/@teamnaturedogs"
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(channelUrl))
-            intent.setPackage("com.google.android.youtube")
-            startActivity(intent)
-        } catch (e: Exception) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(channelUrl)))
-        }
-    }
-
-    private fun openPodcast() {
-        val sourceView = when (getCurrentNavigationItemId()) {
-            R.id.nav_blog -> MainActivity.VIEW_BLOG
-            R.id.nav_pages -> MainActivity.VIEW_PAGES
-            R.id.nav_courses -> MainActivity.VIEW_COURSES
-            R.id.nav_home -> MainActivity.VIEW_START
-            else -> MainActivity.VIEW_BLOG
-        }
-        startActivity(Intent(this, ContentActivity::class.java).apply {
-            putExtra("url", "https://wildnislehrer.com/podcasts-audio-video/")
-            putExtra("title", "HundeWildnis Podcast")
-            putExtra(ContentActivity.EXTRA_SOURCE_VIEW, sourceView)
-        })
-    }
-
-    private fun openSpotify() {
-        val url = "https://open.spotify.com/show/0W9JJZhtc0TPzYMyRNxaiD?si=6b3c2d41681b45c3"
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            intent.setPackage("com.twitter.android")
-            startActivity(intent)
-        } catch (e: Exception) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-        }
-    }
-
-    private fun openSignalManuela() { openSignal("Manuela", "https://signal.me/#eu/Ia1RmzOJN5Qo9YkKQfs3vh7f8X70AjwOqb_jpVe5QV1Bw1UVnbpCk5abghaeuz5U") }
-    private fun openSignalJoerg() { openSignal("Jörg", "https://signal.me/#eu/UquXr52-0uUIh1o40pI5jH6HLy6gb3eIWeaSLn8eTIuCTKmOtFRF9Ji2VDvGXqFo") }
-
-    private fun openSignal(name: String, link: String) {
-        
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.signal_contact_title, name))
-            .setMessage(getString(R.string.signal_redirect_message))
-            .setPositiveButton(getString(R.string.btn_continue)) { _, _ ->
-                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link))) }
-                catch (e: Exception) { Toast.makeText(this, getString(R.string.error_signal_not_found), Toast.LENGTH_SHORT).show() }
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+    protected fun openFirstAidWizard(profile: DogProfile) {
+        val intent = Intent(this, FirstAidWizardActivity::class.java)
+        intent.putExtra("profile", profile)
+        startActivity(intent)
     }
 }

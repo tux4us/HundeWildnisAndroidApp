@@ -12,7 +12,7 @@ object AppNetwork {
      * (Nominatim, Overpass) verlangen eine eindeutige Kennung mit Kontaktmöglichkeit.
      */
     val USER_AGENT: String
-        get() = "HundeWildnisApp/${BuildConfig.VERSION_NAME} (Android; +https://wildnislehrer.com)"
+        get() = "HundeWildnisApp/${BuildConfig.VERSION_NAME} (Android; +https://github.com/tux4us/HundeWildnisAndroidApp)"
 
     /** Setzt die einheitliche Kennung auf eine Verbindung. */
     fun applyUserAgent(connection: java.net.URLConnection) {

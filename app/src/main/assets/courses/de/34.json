@@ -1,0 +1,326 @@
+{
+ "id": "34",
+ "title": "Umweltkonflikte",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…eine Frage der Gelassenheit"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "34-01",
+   "title": "Grundgedanke und Weg",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Konfliktsituationen zwischen Hund und Umwelteinflüssen finden ihre Ursache im Mangel an Erfahrung, in der Erinnerung an negative Erlebnisse und in geringer ererbter Wesensstärke gegenüber unterschiedlichen Reizlagen. Umweltkonflikte haben ein hohes Potential, beim Hund panikhaftes Verhalten auszulösen und ihn damit unserem Einfluss teilweise oder schlimmstenfalls vollständig zu entziehen."
+    },
+    {
+     "type": "p",
+     "text": "Grundlage für alles ist das Basisvertrauen: Unser Hund muss in unbekannten Situationen gelernt haben, dass es sich lohnt, uns zu folgen – nicht weil er muss, sondern weil wir verlässlich der ruhigste, sicherste Punkt in jeder Situation sind."
+    },
+    {
+     "type": "p",
+     "text": "Das schrittweise Heranführen an verschiedenste Umweltszenarien ist der langfristige Weg – begleitet von Souveränität und positivem Führen."
+    },
+    {
+     "type": "h",
+     "text": "Was Du wissen solltest 📋"
+    },
+    {
+     "type": "p",
+     "text": "Umweltkonflikte treten zunächst unabhängig vom Verhalten beteiligter Personen auf. Erst im Verlauf der Situation werden die Reaktionsmuster des Hundes sehr stark von unserem Verhalten beeinflusst."
+    },
+    {
+     "type": "p",
+     "text": "Ruhiges Gehen und unser ausgeglichenes Verhalten helfen unserem Hund beim Zurechtfinden in den Umwelteinflüssen. Wir geben Sicherheit durch Souveränität und beseitigen Stress durch geschicktes Führen."
+    },
+    {
+     "type": "p",
+     "text": "Der Fluchtinstinkt übernimmt schnell die Führung – und der Hund wird unbeeinflussbar. Ein Zurückrufen vor Erreichen der sicheren Fluchtdistanz ist dann nicht mehr möglich; es kann zu unberechenbaren bis gefährlichen Situationen kommen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "34-02",
+   "title": "Vorbereitung – Die persönliche Szenarienliste",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Merkmal – Konfliktanzeichen und frühe Stresssignale erkennen 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Zurückweichendes Verhalten, panikhaftes Zerren an der Leine, steifes Hinsetzen oder gar Aufbäumen auf die Hinterpfoten sind Anzeichen, dass unser Hund in Konflikt mit der Situation ist."
+    },
+    {
+     "type": "p",
+     "text": "Frühe Stresssignale – vor der Panik: Leichtes Zögern im Schritt, erhöhte Körperspannung, Ohren nach hinten gelegt, Blick fixiert auf die Reizquelle, flachere oder schnellere Atmung, Maul geschlossen und gepresst. Diese Signale zeigen: Unser Hund beginnt, den Reiz als Bedrohung einzustufen. Jetzt ist der beste Moment zum Handeln – nicht erst, wenn er zieht oder aufbäumt."
+    },
+    {
+     "type": "h",
+     "text": "Die persönliche Szenarienliste – systematisch aufbauen 📝"
+    },
+    {
+     "type": "p",
+     "text": "Wir stellen uns eine Liste aller Orte und Szenarien zusammen, in welche wir geraten könnten. Kategorien sind: städtische Szenarien, ländliche Szenarien, freie Natur, verkehrstechnische Szenarien und infrastrukturelle Szenarien."
+    },
+    {
+     "type": "p",
+     "text": "Beispiele: stark frequentierte Straßen, Treppen, Kanaldeckel, Weidetiere, Baumaschinen, Wildtiere, Brücken und Stege, öffentliche Transportmittel, Tunnel, belebte Plätze und so weiter."
+    },
+    {
+     "type": "p",
+     "text": "Wir führen zu jedem Szenario kurze Notizen: Wie hat unser Hund reagiert? Auf welcher Distanz war er noch entspannt? Was hat geholfen? Diese Beobachtungen machen Fortschritte sichtbar und helfen uns, den nächsten Trainingsschritt gezielt zu wählen."
+    },
+    {
+     "type": "p",
+     "text": "Die Liste ist ein lebendiges Dokument – kein starres Programm. Sie gibt uns Struktur und verhindert, dass wir uns auf Zufallsbegegnungen verlassen müssen."
+    },
+    {
+     "type": "h",
+     "text": "Priorisierungshilfe – welche Szenarien zuerst trainieren? 🎯"
+    },
+    {
+     "type": "p",
+     "text": "Wir priorisieren nach zwei Kriterien: Häufigkeit (wie oft begegnet uns dieses Szenario?) und Stärke der Reaktion (wie stark reagiert unser Hund aktuell darauf?)."
+    },
+    {
+     "type": "p",
+     "text": "Hohe Priorität: Szenarien, die häufig vorkommen und starke Reaktionen auslösen – etwa belebte Straßen, Fahrräder oder Baustellenlärm. Diese trainieren wir als erstes."
+    },
+    {
+     "type": "p",
+     "text": "Mittlere Priorität: Szenarien, die gelegentlich vorkommen oder nur moderate Reaktionen auslösen – etwa Kanaldeckel, Brücken oder Weidetiere."
+    },
+    {
+     "type": "p",
+     "text": "Niedrige Priorität: Seltene Szenarien, auf die unser Hund nur mild reagiert – oder gezielt vorbereitet, wenn ein bestimmtes Ereignis (Urlaub, Umzug) bevorsteht."
+    },
+    {
+     "type": "p",
+     "text": "Generell gilt: Immer mit dem Szenario beginnen, auf dem unser Hund bereits erste Entspannungsmomente zeigt. Erfolge auf leichtem Niveau bauen das Vertrauen auf, das wir für schwierigere Situationen brauchen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "34-03",
+   "title": "Training und Ablauf",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Training – Grundprinzipien 🦮"
+    },
+    {
+     "type": "p",
+     "text": "Wir achten unbedingt darauf, dass alle problematischen Situationen ohne Zeitdruck und in absoluter Gelassenheit absolviert werden. Der Hund wird weder an kurzer Leine noch am Halsband festgehalten."
+    },
+    {
+     "type": "p",
+     "text": "Wichtig ist es, die ersten Anzeichen von Stress wahrzunehmen und flüssig dem Eigensicherungsbedürfnis des Hundes nachzukommen – indem wir auf ausreichende Sicherheitsdistanz gehen. Mindestens soweit, bis unser Hund Beruhigung signalisiert."
+    },
+    {
+     "type": "p",
+     "text": "Aus dieser Beobachtungsdistanz sammeln wir uns mental und lassen unseren Hund die Situation erfassen. Wir nehmen uns Zeit, bis der Hund eine spürbare Beruhigung erfährt – einfach stehen bleiben, noch besser: uns mit dem Hund abseits der Szenerie hinsetzen und ihn lernend beobachten lassen."
+    },
+    {
+     "type": "h",
+     "text": "Anker-Kommandos als Beruhigungsanker in der Distanz ⚓"
+    },
+    {
+     "type": "p",
+     "text": "„Platz\" und „Sitz\" sind in Umweltkonflikten mehr als Gehorsamkeitskommandos – sie sind Beruhigungsanker. Ein Hund, der in der Distanz ins „Platz\" geht, senkt unwillkürlich seine Körperspannung. Die liegende Position ist physiologisch mit Ruhe verknüpft."
+    },
+    {
+     "type": "p",
+     "text": "Voraussetzung: Das Kommando muss vor dem Einsatz in Konfliktsituationen bereits in neutralen, reizarmen Umgebungen so gefestigt sein, dass der Hund es zuverlässig und ohne Zögern ausführt. Erst dann wirkt es auch unter Stress als Anker."
+    },
+    {
+     "type": "p",
+     "text": "Mit zunehmender Trainingstiefe kann das „Platz\" in der Distanz zeitlich immer früher eingesetzt werden – bis es schließlich bereits beim ersten Wahrnehmen des Reizes als beruhigendes Signal funktioniert."
+    },
+    {
+     "type": "h",
+     "text": "Spielzeug und Leckerli – Umlenkung vor der Eskalation 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Spielzeug und Leckerli sind in Umweltkonflikten aktive Umlenkungswerkzeuge. Der entscheidende Unterschied liegt im Zeitpunkt des Einsatzes: nicht nach der Situation, sondern schon beim ersten Anzeichen von Anspannung."
+    },
+    {
+     "type": "p",
+     "text": "In dem Moment, in dem wir frühe Stresssignale wahrnehmen – noch bevor der Hund anfängt zu ziehen oder zu fixieren – präsentieren wir ruhig und ohne Aufhebens das Spielzeug oder halten ein Leckerli hin."
+    },
+    {
+     "type": "p",
+     "text": "Dieser Einsatz hat eine doppelte Wirkung: Er lenkt die Aufmerksamkeit auf uns statt auf die Reizquelle – und verknüpft den Beginn der Stresssituation mit einer positiven Erfahrung: Dieser Reiz = gleich passiert etwas Gutes mit meinem Menschen."
+    },
+    {
+     "type": "p",
+     "text": "Wichtig: Spielzeug und Leckerli wirken nur, solange der Hund noch unterhalb seiner Stressschwelle ist. Ist die Panik erst ausgebrochen, ist kein Leckerli der Welt mehr interessant. Deshalb gilt: früh einsetzen – immer früher einsetzen."
+    },
+    {
+     "type": "h",
+     "text": "Ablauf im Detail 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Wir erkennen eine sich aufbauende Situation – oder unser Hund zeigt plötzlich gestresstes, ängstliches oder panikhaftes Verhalten wegen einer Reizlage in der momentanen Umwelt."
+    },
+    {
+     "type": "p",
+     "text": "Wir bleiben besonnen und verlassen ruhig und fließend die Situation in eine freie Richtung – soweit, bis sich das Verhalten unseres Hundes beruhigt und er spannungsarm mit uns mitkommt."
+    },
+    {
+     "type": "p",
+     "text": "Am sicheren Platz angekommen bleiben wir stehen oder lassen uns nieder. Die Verweildauer bestimmt unser Hund – wir bleiben mindestens bis zur deutlichen Entspannung."
+    },
+    {
+     "type": "p",
+     "text": "Dabei dürfen wir ruhig mit unserem Hund sprechen, ihn beruhigend streicheln und abschließend mit Leckerli bestätigen. Ein abschließendes Spiel oder intensives Motivieren hebt die Gesamtsituation auf eine positiv endende Lernerfahrung."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen nach und nach dazu über, das Spielzeug oder das Leckerli zeitlich innerhalb der Situation immer früher einzusetzen – um den sich anmeldenden Stresszustand so früh wie möglich in positive Beschäftigungsabläufe umzuleiten."
+    },
+    {
+     "type": "p",
+     "text": "Während des gesamten Vorgangs darf keinerlei Zwang auf den Hund ausgeübt werden, welcher in Richtung der Konfliktquelle wirkend interpretiert werden könnte. Jeder Trainingsvorgang bedarf unbedingt eines positiven, sehr motivierenden Abschlusses."
+    },
+    {
+     "type": "h",
+     "text": "Wir merken uns 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Beim Training ist jedweder Zwang in Richtung der Problemquelle als problemverstärkend anzusehen und daher zu unterlassen."
+    },
+    {
+     "type": "p",
+     "text": "Frühe Stresssignale erkennen und sofort handeln – nicht erst auf Zerren oder Aufbäumen warten."
+    },
+    {
+     "type": "p",
+     "text": "Anker-Kommandos wie „Platz\" auf sicherer Distanz einsetzen – sie senken die Körperspannung und geben dem Hund Orientierung."
+    },
+    {
+     "type": "p",
+     "text": "Spielzeug und Leckerli früh einsetzen – als Umlenkung beim ersten Anzeichen von Stress, nicht erst als Belohnung danach."
+    },
+    {
+     "type": "p",
+     "text": "Mit wachsender Sicherheit die Distanz schrittweise verkürzen und die positiven Mittel immer früher in der Situation einsetzen."
+    },
+    {
+     "type": "p",
+     "text": "Den Trainingsfortschritt immer in kleinen Schritten aufbauen. Ausschließlich positive Erfahrungen zählen als Trainingserfolg!"
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "34-04",
+   "title": "Was Du vermeiden solltest",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wichtige Hinweise ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide jedweden Zwang in Richtung der Problemquelle – er verstärkt die Angst nachhaltig."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide lautes Ansprechen, Erzwingen von Nähe und Überzeugungsversuche – sie führen zu noch mehr Verunsicherung."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Kurzhalten der Leine oder Festhalten am Halsband in Stresssituationen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide das Einsetzen von Leckerli oder Spielzeug erst nach der Panik – zu diesem Zeitpunkt wirken sie nicht mehr."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Schritte zu früh – lieber länger auf einer Distanz verweilen, als einen Rückschlag zu riskieren."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide negative Erfahrungen durch zu viel Wollen oder falsche Reaktionsmuster."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide einen Trainingsabschluss ohne positive, motivierende Bestätigung – jede Einheit endet mit einem guten Erlebnis."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "34-05",
+   "title": "Abschnitt 5",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Früher einsetzen – immer früher"
+    },
+    {
+     "type": "p",
+     "text": "Das Ziel ist nicht, Deinen Hund durch die Situation zu bringen – es ist, ihm zu zeigen, dass der Reiz selbst das Signal für etwas Gutes ist. Beginne noch heute: Erkenne den ersten Blick zur Reizquelle und präsentiere in genau diesem Moment ruhig das Leckerli. Diesen Moment immer früher zu treffen ist die Kunst – und der direkteste Weg zur Veränderung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "34-06",
+   "title": "Checkliste für erfolgreiches Training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Führe ich eine persönliche Szenarienliste mit Beobachtungen zu Reaktion und Fortschritt?"
+    },
+    {
+     "type": "p",
+     "text": "→ Trainiere ich nach Priorität – häufige und stark belastende Szenarien zuerst?"
+    },
+    {
+     "type": "p",
+     "text": "→ Erkenne ich frühe Stresssignale meines Hundes, bevor er anfängt zu zerren oder aufzubäumen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Verlasse ich die Situation ruhig und fließend – ohne Zeitdruck, ohne Kommentar?"
+    },
+    {
+     "type": "p",
+     "text": "→ Halte ich die Leine stets ausreichend lang – kein Kurzhalten, kein Festhalten?"
+    },
+    {
+     "type": "p",
+     "text": "→ Setze ich Anker-Kommandos wie „Platz\" auf sicherer Distanz als Beruhigungshilfe ein?"
+    },
+    {
+     "type": "p",
+     "text": "→ Nutze ich Spielzeug und Leckerli aktiv als Umlenkung – früh genug, vor der Eskalation?"
+    },
+    {
+     "type": "p",
+     "text": "→ Verweile ich am sicheren Ort mindestens bis zur deutlichen Entspannung meines Hundes?"
+    },
+    {
+     "type": "p",
+     "text": "→ Baue ich jeden Trainingsschritt klein genug, um ausschließlich positive Abschlüsse zu garantieren?"
+    },
+    {
+     "type": "p",
+     "text": "→ Jeder Trainingsvorgang endet positiv und motivierend – ohne Ausnahme!"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

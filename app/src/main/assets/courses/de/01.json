@@ -1,0 +1,258 @@
+{
+ "id": "01",
+ "title": "Grundlagen",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Für ruhige, klare und harmonische Führung"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "01-01",
+   "title": "Grundlagen der Führung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Bedingungen für ruhiges & klares Führen"
+    },
+    {
+     "type": "p",
+     "text": "Sei ruhig im Umgang mit dem Hund und trotzdem verbindlich konsequent."
+    },
+    {
+     "type": "p",
+     "text": "Gehe in Ruhe und sprich mit ruhiger Stimme."
+    },
+    {
+     "type": "p",
+     "text": "Sei unaufgeregt und lass Dich nicht reizen."
+    },
+    {
+     "type": "p",
+     "text": "Deine Ruhe wird zur Ruhe des Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Halte Pausen ein und bewege Dich übersichtlich für Deinen Hund."
+    },
+    {
+     "type": "p",
+     "text": "Dein Hund ist wie Du bist. Wie Du Dich zeigst, so zeigt sich Dein Hund."
+    },
+    {
+     "type": "p",
+     "text": "Bleibe gelassen und sei harmonisch."
+    },
+    {
+     "type": "p",
+     "text": "Beginne jeden Vorgang mit dem Hund ruhig und mental gesammelt."
+    },
+    {
+     "type": "p",
+     "text": "Geh auf Wegmitte, Dein Hund wird mit der Zeit ruhiger gehen."
+    },
+    {
+     "type": "p",
+     "text": "Gehe nicht dem Hund nach, der Hund sollte lernen mit Dir zu gehen."
+    },
+    {
+     "type": "p",
+     "text": "Gehe immer erst weiter wenn in Dir Ruhe eingekehrt ist."
+    },
+    {
+     "type": "p",
+     "text": "Sei immer mit Herz bewusst im Jetzt und kontrolliere den Denker in Dir."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "01-02",
+   "title": "Die lautlose Sprache",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Kommunikation ohne Worte"
+    },
+    {
+     "type": "p",
+     "text": "Nutze Deine Körpersprache bewusst, denn sie ist die Muttersprache Deines Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Reduziere sprachliche Kommunikation auf das Notwendige. Ein Blick, eine Körperhaltung oder eine Geste sagen oft mehr als Worte."
+    },
+    {
+     "type": "p",
+     "text": "Achte auf Deine Körpersprache. Bleibe locker, entspannt und einladend."
+    },
+    {
+     "type": "p",
+     "text": "Spannung in Deinem Körper überträgt sich unmittelbar auf den Hund."
+    },
+    {
+     "type": "p",
+     "text": "Lerne die Signale Deines Hundes zu lesen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "01-03",
+   "title": "Ruhe aus fachlicher Sicht",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Warum Deine Ruhe messbar auf den Hund wirkt"
+    },
+    {
+     "type": "p",
+     "text": "Hunde nehmen die Stimmung ihres Menschen sehr genau wahr. Sie reagieren auf Körperspannung, Atmung, Tempo und Stimmlage."
+    },
+    {
+     "type": "p",
+     "text": "Eine schwedische Studie (Sundman et al., 2019) hat über mehrere Monate die Cortisolwerte in den Haaren von Hunden und ihren Haltern verglichen. Die Werte von Hund und Mensch verliefen auffallend ähnlich. Der Hund passte sich dabei eher dem Stressniveau seines Menschen an als umgekehrt."
+    },
+    {
+     "type": "p",
+     "text": "Cortisol ist ein Stresshormon. Nach einer Belastung wird es nur langsam abgebaut. Wiederholte Aufregung kann das Grundniveau über längere Zeit erhöhen."
+    },
+    {
+     "type": "p",
+     "text": "Ein Hund mit erhöhtem Stressniveau ist schneller erregbar und lernt schlechter. Ruhe ist deshalb die Voraussetzung für jedes Training, nicht dessen Ergebnis."
+    },
+    {
+     "type": "p",
+     "text": "Deine eigene Gelassenheit ist daher keine Nebensache. Sie ist ein Teil der Trainingsmethode."
+    },
+    {
+     "type": "h",
+     "text": "Stresssignale beim Hund erkennen"
+    },
+    {
+     "type": "p",
+     "text": "Hecheln ohne Hitze oder vorherige Anstrengung."
+    },
+    {
+     "type": "p",
+     "text": "Über die Nase lecken, Gähnen und Abwenden des Kopfes."
+    },
+    {
+     "type": "p",
+     "text": "Hastiges Schnüffeln am Boden in Situationen, in denen es keinen Anlass dafür gibt."
+    },
+    {
+     "type": "p",
+     "text": "Schütteln des Körpers wie nach dem Nasswerden, ohne dass der Hund nass ist."
+    },
+    {
+     "type": "p",
+     "text": "Angespannte Mimik, zurückgezogene Mundwinkel, geweitete Augen mit sichtbarem Weiß."
+    },
+    {
+     "type": "p",
+     "text": "Tief getragene Rute, steife Bewegungen oder wiederholtes Erstarren."
+    },
+    {
+     "type": "p",
+     "text": "Einzelne Signale sind kein Beweis für Stress. Entscheidend sind die Häufung der Signale und die Situation, in der sie auftreten."
+    },
+    {
+     "type": "h",
+     "text": "Beobachtungsübung für die nächsten sieben Tage"
+    },
+    {
+     "type": "p",
+     "text": "Beobachte Deinen Hund auf Spaziergängen ohne einzugreifen und ohne Training."
+    },
+    {
+     "type": "p",
+     "text": "Notiere unter „Meine Reflexion“ am Ende dieser Seite, in welchen Situationen Du Stresssignale siehst und wie Du selbst in diesem Moment atmest und Dich bewegst."
+    },
+    {
+     "type": "p",
+     "text": "Atme in diesen Momenten bewusst langsam aus und beobachte, ob sich das Verhalten Deines Hundes verändert."
+    },
+    {
+     "type": "p",
+     "text": "Vergleiche nach sieben Tagen Deine Notizen. Wiederkehrende Auslöser zeigen Dir, wo Du zuerst ansetzen kannst."
+    },
+    {
+     "type": "p",
+     "text": "Quelle: Sundman A.-S. et al. (2019): Long-term stress levels are synchronized in dogs and their owners. Scientific Reports 9, 7391. Bei anhaltendem Stressverhalten, Aggression oder plötzlichen Verhaltensänderungen klärt zuerst die Tierarztpraxis mögliche Schmerzen oder Erkrankungen ab. Bei Bedarf folgt eine verhaltensmedizinische Beratung."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "01-04",
+   "title": "Wichtige Bedingungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Zu vermeidende Muster"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Unruhe welche Deinen Hund verunsichern könnte."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Stress, dieser schafft Alarmstimmung und macht den Hund reizbar."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide lautes und druckvolles Sprechen. Dein Hund vermutet dadurch Gefahr oder eine andere Herausforderung."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Eile und Hektik, diese schaffen Aufbruchstimmung."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide das permanente Markierenlassen am Wegesrand."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Regellosigkeit, damit der Hund nicht die Initiative übernehmen muss."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "01-05",
+   "title": "Abschnitt 5",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Training von Ruhe und Gelassenheit"
+    },
+    {
+     "type": "p",
+     "text": "Nimm Dir bei jedem Spaziergang 5-10 Minuten, später auch 30 Minuten Zeit in denen Du absolut nicht sprichst und möglichst gedankenfrei bist. Achte nur darauf mit Deinem Hund ruhig und in vollem Bewußtsein an einem ruhigen Ort zu sein."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "01-06",
+   "title": "Merke Dir:",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Führung ist kein Machtanspruch, sondern harmonisch-lenkende Kooperation."
+    },
+    {
+     "type": "p",
+     "text": "Führung ist innere Gelassenheit und Souveränität."
+    },
+    {
+     "type": "p",
+     "text": "Wenn Du nicht führst, führt der Hund."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

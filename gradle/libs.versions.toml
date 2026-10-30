@@ -14,7 +14,6 @@ lifecycleRuntimeKtx = "2.10.0"
 material = "1.14.0"
 osmdroidAndroid = "6.1.20"
 recyclerview = "1.4.0"
-swiperefreshlayout = "1.2.0"
 workManager = "2.11.1"
 securityCrypto = "1.1.0-alpha06"
 
@@ -25,7 +24,6 @@ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
-androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }

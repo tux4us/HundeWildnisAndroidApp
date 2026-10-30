@@ -1,0 +1,424 @@
+{
+ "id": "37",
+ "title": "Hunde mit Vorbesitzern",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…was du weißt, was du glaubst zu wissen – und was der Hund weiß"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "37-01",
+   "title": "Grundgedanke und Weg",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Ein Hund mit Vorbesitzern ist weder ein unbeschriebenes Blatt noch ein hoffnungsloser Fall. Er ist ein Lebewesen mit einer gelebten Geschichte – geprägten Mustern, gelernten Verhaltensweisen und einer eigenen Vorstellung davon, wie die Welt funktioniert."
+    },
+    {
+     "type": "p",
+     "text": "Das größte Risiko bei der Übernahme liegt nicht im Hund, sondern in den Erwartungen und Deutungen, die wir mitbringen. Wir übernehmen einen Hund – nicht die Geschichte, die uns erzählt wurde."
+    },
+    {
+     "type": "p",
+     "text": "Der Hund ist die verlässlichste Informationsquelle. Was er uns zeigt, hat immer Vorrang vor dem, was uns erzählt wurde."
+    },
+    {
+     "type": "h",
+     "text": "Was Du wissen solltest 📋"
+    },
+    {
+     "type": "p",
+     "text": "Das Besondere an Hunden aus privater Abgabe ist die Unschärfe: Manchmal erfährt man viel über den Vorbesitzer – und muss es dennoch kritisch einordnen. Manchmal erfährt man gar nichts."
+    },
+    {
+     "type": "p",
+     "text": "Auch ein Hund, der aus einem Privathaushalt kommt und dort scheinbar problemlos gelebt hat, muss in seinem neuen Zuhause neu lernen, wer wir sind und was er von uns erwarten kann."
+    },
+    {
+     "type": "p",
+     "text": "Wenn unerwartete Verhaltensweisen auftauchen, sind sie kein Versagen – sondern Information. Sie zeigen uns, was der Hund gelernt hat, und geben uns die Möglichkeit, gemeinsam etwas Neues aufzubauen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-02",
+   "title": "Die Vergangenheit – was wir wissen und was nicht",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Das Problem mit den Angaben der Vorbesitzer 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Vorbesitzer sehen ihren Hund durch ihre eigene Brille: Sie haben unbewusst geprägte Verhaltensweisen nicht als problematisch wahrgenommen, weil sie zum Alltag gehörten. Was sie als „er ist manchmal etwas unruhig\" beschreiben, kann für uns als echter Reizüberschuss erlebbar sein."
+    },
+    {
+     "type": "p",
+     "text": "Häufig werden problematische Verhaltensweisen verharmlost, verschwiegen oder schlicht nicht erkannt – nicht aus böser Absicht, sondern weil der frühere Alltag diese Verhaltensweisen ermöglicht oder sogar gefördert hat."
+    },
+    {
+     "type": "p",
+     "text": "Angaben wie „verträgt sich mit Kindern\", „ist stubenrein\" oder „braucht viel Auslauf\" sind immer kontextgebunden. Sie beschreiben, wie der Hund beim Vorbesitzer war – nicht, wie er generell ist oder bei uns sein wird."
+    },
+    {
+     "type": "h",
+     "text": "Was der Hund tatsächlich mitbringt 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Erlernte Regeln und Routinen: Der Hund kennt bestimmte Abläufe – wann er gefüttert wurde, wo er schlief, wie Spaziergänge abliefen. Diese Muster sind tief verankert und werden im neuen Zuhause zunächst weiter gezeigt, auch wenn der Kontext sich verändert hat."
+    },
+    {
+     "type": "p",
+     "text": "Unbeabsichtigt verstärkte Verhaltensweisen: Was im alten Haushalt toleriert oder unbewusst belohnt wurde – Springen zur Begrüßung, Betteln am Tisch, Bellen bei der Türklingel – ist für den Hund erfolgreiche Strategie. Er zeigt es weiterhin, weil es immer funktioniert hat."
+    },
+    {
+     "type": "p",
+     "text": "Lücken in der Sozialisation: Manche Hunde aus Privathaushalten hatten wenig Kontakt zu Kindern, fremden Menschen oder städtischen Reizen. Diese Lücken zeigen sich erst, wenn der neue Alltag diese Situationen mit sich bringt."
+    },
+    {
+     "type": "p",
+     "text": "Bindungsmuster: Ein Hund, der sehr eng an eine Person gebunden war, kann Trennungsangst entwickeln. Ein Hund, der wenig individuelle Zuwendung erfahren hat, kann zunächst distanziert wirken."
+    },
+    {
+     "type": "h",
+     "text": "Häufige Fehlannahmen bei der Übernahme ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "„Er war beim Vorbesitzer problemlos, also wird er es bei mir auch sein.\" – Ein neues Zuhause, neue Menschen, neue Abläufe verändern den Kontext vollständig. Verhalten, das zuvor funktioniert hat, wird neu kalibriert."
+    },
+    {
+     "type": "p",
+     "text": "„Der Vorbesitzer hat gesagt, er braucht eine konsequente Hand.\" – Dieser Hinweis verleitet dazu, von Beginn an mit Druck zu arbeiten, bevor überhaupt eine Vertrauensbasis entstanden ist. Konsequenz ohne Beziehung ist wirkungslos und schädlich."
+    },
+    {
+     "type": "p",
+     "text": "„Er kennt das Kommando, also weiß er es.\" – Ein Hund, der ein Kommando beim Vorbesitzer gelernt hat, hat es nicht automatisch auf den neuen Menschen und die neue Umgebung übertragen."
+    },
+    {
+     "type": "p",
+     "text": "Wir vermeiden es, den Hund in den ersten Wochen an den Informationen des Vorbesitzers zu messen. Der Hund ist die Quelle – nicht die Übergabegespräche."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-03",
+   "title": "Eingewöhnung – Neustart mit Geschichte",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Ankommen trotz Vorerfahrung 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Auch ein Hund, der viele Jahre in einem Privathaushalt gelebt hat, muss in seinem neuen Zuhause ankommen. Er kennt Haushalte – aber nicht diesen. Er kennt Menschen – aber nicht uns."
+    },
+    {
+     "type": "p",
+     "text": "Die ersten Tage sind für den Hund eine Phase der Orientierung. Wir geben ihm diese Orientierung durch ruhige, übersichtliche Abläufe – und lassen ihm den Raum, sich selbst ein Bild zu machen."
+    },
+    {
+     "type": "p",
+     "text": "Wir planen großzügig: Mindestens vier bis acht Wochen geben wir dem Hund, bevor wir ernsthaft mit dem Training beginnen oder feste Urteile über sein Wesen fällen. Manche Hunde brauchen deutlich länger – insbesondere wenn die Bindung an die Vorbesitzer sehr eng war."
+    },
+    {
+     "type": "h",
+     "text": "Trauer, Verwirrung und Suchverhalten 💙"
+    },
+    {
+     "type": "p",
+     "text": "Hunde trauern. Wenn ein Hund seinen vertrauten Menschen verliert – auch wenn dieser Mensch ihn abgegeben hat – kann er eine echte Trauer- und Orientierungsphase durchlaufen. Appetitlosigkeit, Unruhe, Vokalisation, Suchverhalten und sozialer Rückzug sind mögliche Zeichen davon."
+    },
+    {
+     "type": "p",
+     "text": "Wir begegnen dieser Phase mit ruhiger Präsenz, ohne aufzudrängen. Trauer ist keine Ablehnung uns gegenüber – sie ist Ausdruck einer echten Bindung, die Zeit braucht, um sich zu wandeln."
+    },
+    {
+     "type": "p",
+     "text": "Wenn Trauer- und Suchverhalten nach mehreren Wochen nicht nachlässt oder sich in ausgeprägte Trennungsangst umwandelt, empfehlen wir die Unterstützung durch eine erfahrene Fachperson."
+    },
+    {
+     "type": "h",
+     "text": "Stressabbau in der Übergangsphase 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Der Wechsel des Haushalts ist für jeden Hund ein erheblicher Stressor – unabhängig davon, wie gut oder schlecht es ihm beim Vorbesitzer ging. Das Nervensystem braucht Zeit und Ruhe, um sich auf die neue Situation einzustellen."
+    },
+    {
+     "type": "p",
+     "text": "Wir ermöglichen täglich mehrmals ruhige Schnüffel- und Suchbeschäftigung. Wir halten Besuche und Vorstellungsrunden in der ersten Zeit bewusst zurück – der Hund muss zunächst uns kennenlernen, nicht gleichzeitig unsere Familie, Freunde und Nachbarn."
+    },
+    {
+     "type": "p",
+     "text": "Wir widersetzen uns dem Impuls, dem Hund ständig etwas anbieten zu müssen. Langeweile ist für einen Hund in der Eingewöhnungsphase keine Gefahr – Überstimulation hingegen schon."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-04",
+   "title": "Vertrauen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Vertrauen neu aufbauen – trotz Vorerfahrung 🤝"
+    },
+    {
+     "type": "p",
+     "text": "Ein Hund, der bereits ein Leben mit Menschen geführt hat, weiß grundsätzlich, dass Menschen Teil seines Alltags sind. Das ist ein Vorteil – aber es ersetzt kein persönliches Vertrauen. Vertrauen ist immer individuell und muss zu uns als Person erst entstehen."
+    },
+    {
+     "type": "p",
+     "text": "Wenn wir uns anders verhalten als sein bisheriger Mensch – ruhiger, konsequenter, anders strukturiert – muss er lernen, dieses neue Muster einzuordnen. Das braucht Zeit und Wiederholung."
+    },
+    {
+     "type": "h",
+     "text": "Vertrauensfördernd ✅"
+    },
+    {
+     "type": "p",
+     "text": "Ruhige, vorhersehbare Tagesabläufe, die dem Hund Orientierung geben."
+    },
+    {
+     "type": "p",
+     "text": "Abwarten, bis der Hund aktiv Kontakt sucht – und diesen Moment dann warmherzig erwidern."
+    },
+    {
+     "type": "p",
+     "text": "Konsequentes Respektieren des Rückzugsortes als persönlichen Schutzraum."
+    },
+    {
+     "type": "p",
+     "text": "Positive Verknüpfungen aufbauen: Füttern aus der Hand, ruhiges Beisitzen, gemeinsame Suchspiele."
+    },
+    {
+     "type": "p",
+     "text": "Das Loben und Bestärken aller uns zugewandten Verhaltensweisen – auch der kleinen."
+    },
+    {
+     "type": "p",
+     "text": "Gelassenheit im Umgang mit unerwarteten Verhaltensweisen: keine Überreaktion, kein Schimpfen, keine Frustration."
+    },
+    {
+     "type": "h",
+     "text": "Vertrauensschädigend ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Den Hund mit übertriebener Zuneigung zu überwältigen, bevor er sich sicher fühlt."
+    },
+    {
+     "type": "p",
+     "text": "Sofort mit Verboten, Korrekturen und Einschränkungen zu beginnen, bevor eine Beziehung entstanden ist."
+    },
+    {
+     "type": "p",
+     "text": "Verhaltensweisen aus dem alten Haushalt mit Druck zu unterdrücken, anstatt sie durch positive Alternativen zu ersetzen."
+    },
+    {
+     "type": "p",
+     "text": "Körperliche Korrekturmaßnahmen jeglicher Art – sie zerstören das entstehende Vertrauen und können bei vorbelasteten Hunden tiefgreifende Rückschritte verursachen."
+    },
+    {
+     "type": "p",
+     "text": "Wir hüten uns vor dem Gedanken, dem Hund von Anfang an „zeigen zu müssen, wer hier die Regeln setzt\". Vertrauen geht vor Gehorsam – immer. Ein Hund, der uns vertraut, folgt uns. Ein Hund, der uns fürchtet, gehorcht vielleicht – aber nur solange er muss."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-05",
+   "title": "Gelerntes Verhalten einordnen und verändern",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Grundsatz: Verhalten hat immer eine Geschichte 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Jedes Verhalten hat sich in der Vergangenheit auf irgendeine Weise bewährt – es hat Aufmerksamkeit erzeugt, Stress reduziert oder Kontrolle ermöglicht. Dieses Verhalten ist kein Trotz, sondern das Ergebnis von Lernerfahrungen."
+    },
+    {
+     "type": "p",
+     "text": "Verhaltensänderung gelingt nicht durch Unterdrückung allein. Ein Verhalten, das keine Alternative bekommt, sucht sich einen anderen Ausdruck. Wir ersetzen unerwünschte Verhaltensweisen durch erwünschte – und machen diese so attraktiv wie möglich."
+    },
+    {
+     "type": "h",
+     "text": "Typische mitgebrachte Verhaltensweisen und unser Umgang 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Betteln: Wir ignorieren das Verhalten konsequent – ohne Schelten, ohne Wegschicken, ohne Blickkontakt. Das Verhalten erlischt mit der Zeit, wenn es keine Wirkung mehr hat."
+    },
+    {
+     "type": "p",
+     "text": "Springen zur Begrüßung: Wir wenden uns beim Springen konsequent ab, warten auf alle vier Pfoten am Boden und reagieren dann ruhig und freundlich. Niemals mit körperlichem Wegdrängen."
+    },
+    {
+     "type": "p",
+     "text": "Leinenzug: Wir beginnen das Leinentraining von Grund auf neu – in reizarmer Umgebung, mit viel Lob und kurzen Einheiten."
+    },
+    {
+     "type": "p",
+     "text": "Bellen und Alarmverhalten: Wir arbeiten ruhig und systematisch daran, Entspannung gegenüber Auslösern zu konditionieren – nicht durch Schimpfen, sondern durch Aufbau eines alternativen, ruhigen Verhaltens."
+    },
+    {
+     "type": "p",
+     "text": "Ressourcenbewachung: Wir nähern uns seinen Ressourcen zunächst gar nicht, bauen positive Verknüpfungen auf und arbeiten uns behutsam und ohne Konfrontation an das Thema heran."
+    },
+    {
+     "type": "h",
+     "text": "Kommandos – neu aufbauen statt übernehmen 🔧"
+    },
+    {
+     "type": "p",
+     "text": "Auch wenn der Vorbesitzer versichert, der Hund „kenne\" bestimmte Kommandos, empfehlen wir grundsätzlich, alle Signale neu aufzubauen. Das Signal kennt der Hund im Kontext des Vorbesitzers – mit dessen Stimme, Körpersprache und Gewohnheiten."
+    },
+    {
+     "type": "p",
+     "text": "Wir beginnen in reizarmer Umgebung, arbeiten mit hoher Belohnungsrate und steigern die Anforderungen erst dann, wenn das Verhalten zuverlässig gezeigt wird."
+    },
+    {
+     "type": "p",
+     "text": "Wir achten darauf, keine Frustration zu zeigen, wenn der Hund auf ein Signal nicht reagiert. Er weigert sich nicht – er hat es in unserem Kontext noch nicht gelernt."
+    },
+    {
+     "type": "h",
+     "text": "Was im Umgang mit gelerntem Verhalten nicht funktioniert ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Strafen für Verhaltensweisen, die der Hund beim Vorbesitzer nie als falsch erlebt hat. Aus seiner Sicht tut er das Richtige – wir müssen ihm zeigen, was das Richtige bei uns ist."
+    },
+    {
+     "type": "p",
+     "text": "Übermäßige Wiederholungen von Signalen, auf die der Hund nicht reagiert. Mehrfaches Wiederholen entwertet das Signal und lehrt den Hund, erst beim dritten oder fünften Mal zu reagieren."
+    },
+    {
+     "type": "p",
+     "text": "Wir schützen uns und unseren Hund vor dem Vergleich: „Beim Vorbesitzer hat das aber funktioniert.\" Dieser Gedanke erzeugt Druck und blendet aus, dass der Hund gerade eine vollständig neue Welt navigiert. Wir sind der neue Kontext – und wir gestalten ihn."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-06",
+   "title": "Beschäftigung und Alltag",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Spiel und Bindungsaufbau 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Das gemeinsame Spiel ist eines der wirkungsvollsten Mittel, um eine neue Bindung aufzubauen. Wir bieten robustes, griffiges Spielzeug an – Lederlappen, Knotentaue, Gewebsrollen – und laden den Hund ein, ohne zu drängen."
+    },
+    {
+     "type": "p",
+     "text": "Nicht alle Hunde spielen sofort. Manche haben gelernt, dass Aufregung unangenehme Konsequenzen hat. Wir warten geduldig und vertrauen darauf, dass der Hund den Weg zum Spiel findet, wenn er sich sicher genug fühlt."
+    },
+    {
+     "type": "h",
+     "text": "Die Suche als tägliches Grundbedürfnis 👃"
+    },
+    {
+     "type": "p",
+     "text": "Sucharbeit ist für Hunde mit Vorbesitzern besonders wertvoll, weil sie artgemäße Auslastung bietet, ohne ein hohes Maß an Vertrauen oder Training vorauszusetzen. Die Nase funktioniert immer – auch wenn der Rest noch im Aufbau ist."
+    },
+    {
+     "type": "p",
+     "text": "Schnüffelmatten, gestreutes Futter im Gras, gefüllte Kongs und Nasenarbeit sind niederschwellige Alltagsbegleiter, die Stresshormone abbauen, das Nervensystem regulieren und das Selbstbewusstsein des Hundes stärken."
+    },
+    {
+     "type": "h",
+     "text": "Alltagsroutinen bewusst und neu gestalten 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Der Hund bringt Gewohnheiten aus seinem alten Haushalt mit. Wir gestalten unseren Alltag bewusst und übersichtlich, damit der Hund lernen kann, was bei uns gilt."
+    },
+    {
+     "type": "p",
+     "text": "Regelmäßige Fütterungszeiten, verlässliche Spaziergangszeiten und klare Ruhephasen geben dem Hund die Orientierung, die er braucht. Wir halten uns an diese Abläufe – auch wenn der Hund anfangs keine Reaktion darauf zeigt."
+    },
+    {
+     "type": "p",
+     "text": "Wir lassen in erreichbarer Reichweite keine Gegenstände herumliegen, die Konflikte provozieren könnten. Ein Hund, der alte Gewohnheiten in Bezug auf bestimmte Objekte mitbringt, bekommt durch Vermeidung die Chance, neue Gewohnheiten zu entwickeln."
+    },
+    {
+     "type": "p",
+     "text": "Das häusliche Umfeld soll Ruhe und Verlässlichkeit ausstrahlen. Je strukturierter und ruhiger unser Alltag ist, desto schneller findet der Hund seinen inneren Grundzustand bei uns."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-07",
+   "title": "Abschnitt 7",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Der Hund kennt die Wahrheit"
+    },
+    {
+     "type": "p",
+     "text": "Lege für heute die Übergabenotizen beiseite und beobachte Deinen Hund mit frischem Blick. Wie verhält er sich, wenn er allein in einem Raum ist? Wie reagiert er auf Deine Hand? Was lässt ihn aufatmen? Diese Beobachtungen sind verlässlicher als jede erzählte Geschichte – und sie sind Dein eigentlicher Startpunkt."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "37-08",
+   "title": "Checkliste für einen gelungenen Neustart mit Vorgeschichte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Beobachte ich den Hund offen – ohne die Angaben des Vorbesitzers als Schablone zu nehmen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Gebe ich dem Hund ausreichend Zeit zum Ankommen, bevor ich Urteile fälle oder Training beginne?"
+    },
+    {
+     "type": "p",
+     "text": "→ Begleite ich eine mögliche Trauerphase mit ruhiger Präsenz statt mit Ablenkung oder Ungeduld?"
+    },
+    {
+     "type": "p",
+     "text": "→ Baue ich alle Signale und Routinen im neuen Kontext neu auf – statt auf altem Wissen aufzusatteln?"
+    },
+    {
+     "type": "p",
+     "text": "→ Reagiere ich auf unerwünschtes Verhalten mit ruhiger Umleitung statt mit Druck oder Strafe?"
+    },
+    {
+     "type": "p",
+     "text": "→ Schaffe ich täglich Raum für Suchbeschäftigung, ruhiges Spiel und echte Ruhephasen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Vermeide ich in der Eingewöhnungsphase unnötige Reize, Besuche und Überstimulation?"
+    },
+    {
+     "type": "p",
+     "text": "→ Baue ich Vertrauen durch Verlässlichkeit und Geduld auf – nicht durch Kontrolle und Forderungen?"
+    },
+    {
+     "type": "p",
+     "text": "→ Suche ich bei anhaltenden Problemen rechtzeitig professionelle Unterstützung?"
+    },
+    {
+     "type": "p",
+     "text": "→ Nicht die Vergangenheit des Hundes entscheidet über unsere gemeinsame Zukunft – sondern das, was wir heute miteinander aufbauen."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

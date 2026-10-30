@@ -1,0 +1,452 @@
+{
+ "id": "36",
+ "title": "Rescue Dogs",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…a second chance takes time and understanding"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "36-01",
+   "title": "Basic idea and approach",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "A rescue dog is not a dog with a blank slate. He carries a history with him, be it neglect, fear, loss or insufficient socialisation. This history is neither his fault nor his fate. It is his starting point."
+    },
+    {
+     "type": "p",
+     "text": "The rescue dog wants safety. He wants to understand that his new home is a reliable, calm place and that the person at his side offers consistent and empathetic leadership that he can come to trust over time."
+    },
+    {
+     "type": "p",
+     "text": "Patience is not a virtue but a necessity. The time to arrive, understand and trust cannot be shortened."
+    },
+    {
+     "type": "h",
+     "text": "What you should know 📋"
+    },
+    {
+     "type": "p",
+     "text": "Conflicts often arise where the dog's history is not taken seriously, where too much is expected too quickly, or where the person judges the dog's behaviour by human standards."
+    },
+    {
+     "type": "p",
+     "text": "Consistently avoiding overload, pressure and negative influences creates the basis on which a rescue dog is able, in the first place, to open up and learn new things."
+    },
+    {
+     "type": "p",
+     "text": "The willingness to constantly question one's own actions and, where necessary, to seek professional support is not a sign of weakness but of a sense of responsibility."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-02",
+   "title": "History and trauma",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "What the dog may have experienced 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Rescue dogs come from very different situations: from life on the street, from kill shelters, from conditions of neglect, or from housing conditions that allowed no social imprinting at all."
+    },
+    {
+     "type": "p",
+     "text": "A traumatised dog does not openly show his inner life. He freezes, evades, flees or reacts with fear or aggression, apparently “for no reason”, to stimuli that are completely ordinary for us humans. Behind each of these signals lies an experience that we must respect."
+    },
+    {
+     "type": "p",
+     "text": "It is important to understand: Traumatised dogs are not “broken”. They have survived. Their reactions are an expression of intelligence and adaptability. Our task is to show them that the old behaviour is no longer necessary in the new world."
+    },
+    {
+     "type": "h",
+     "text": "Typical behaviours and their meaning 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Freezing: The dog stiffens in certain situations or at certain approaches. This is a classic sign of experienced helplessness – this state must never be misinterpreted as acceptance or calm."
+    },
+    {
+     "type": "p",
+     "text": "Permanent withdrawal: The dog hides and avoids contact. This is not disinterest but protective behaviour. We give him space and wait patiently until he seeks contact himself."
+    },
+    {
+     "type": "p",
+     "text": "Excessive attachment: Some dogs cling extremely and show stress at every separation. The new environment feels good, but the dog does not yet know whether it will stay that way."
+    },
+    {
+     "type": "p",
+     "text": "Resource guarding: Dogs that previously had to fight for food may react tensely when eating or around objects. This is not dominance behaviour but a learned survival pattern."
+    },
+    {
+     "type": "p",
+     "text": "Reactivity on the leash: Many street dogs have hardly learned to walk relaxed on the leash. The restriction of freedom of movement can trigger stress and reactive behaviour."
+    },
+    {
+     "type": "h",
+     "text": "Common mistakes in dealing with the history ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Feeling sorry for the dog and giving in to him at every moment of discomfort reinforces insecure behaviour and prevents him from learning to cope with everyday situations."
+    },
+    {
+     "type": "p",
+     "text": "Expecting the dog to have “thawed out” after a few weeks and to react now like a normally socialised dog leads to pressure that harms the dog."
+    },
+    {
+     "type": "p",
+     "text": "Never bring the rescue dog into overwhelming situations during the settling-in phase. Visits, dog meetings and busy urban areas tempt us to justify our own impatience as “socialisation”. The opposite is the case."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-03",
+   "title": "Settling in and stress reduction",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The first weeks – The 3-3-3 rule 📅"
+    },
+    {
+     "type": "p",
+     "text": "The first 3 days: The dog is overwhelmed. Everything is new: smells, sounds, faces, routines. He may eat little, sleep restlessly or hide. This is normal. We give him space, observe calmly and refrain from any demands."
+    },
+    {
+     "type": "p",
+     "text": "The first 3 weeks: The dog begins to recognise routines and to find first points of orientation. First personality traits become visible – sometimes also first problem behaviours, because the dog feels more secure. We stay calm and give the day structure."
+    },
+    {
+     "type": "p",
+     "text": "The first 3 months: The dog feels at home. He knows the routines, trusts the people in his household and now shows his true nature. Only in this phase is a reliable assessment and a sensible start to training possible."
+    },
+    {
+     "type": "h",
+     "text": "The honeymoon effect – and why it is deceptive 🎭"
+    },
+    {
+     "type": "p",
+     "text": "Many new rescue dog owners report a “perfect” dog in the first days: calm, adapted, unproblematic. This is not luck – it is shock. The dog is in an exceptional and observation mode."
+    },
+    {
+     "type": "p",
+     "text": "After a few weeks, completely new behaviours often appear: barking, resource guarding, separation anxiety, reactivity. This is not a step backwards but a sign that the dog has arrived and can now really be himself."
+    },
+    {
+     "type": "p",
+     "text": "This moment requires that we understand the new behaviours not as a disappointment but as working material – as the beginning of the actual shared development."
+    },
+    {
+     "type": "h",
+     "text": "Actively promoting stress reduction and relaxation 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Calm, structured walks in low-stimulus surroundings are more valuable for rescue dogs during settling in than extended adventures in the city park. A few reliable routines help the nervous system more than varied impressions."
+    },
+    {
+     "type": "p",
+     "text": "Sniffing and searching are natural stress regulators. Deliberately including search tasks reduces cortisol and at the same time strengthens the bond through shared experience."
+    },
+    {
+     "type": "p",
+     "text": "Sufficient sleep is essential for rescue dogs. An adult dog sleeps 16 to 20 hours a day. The undisturbed resting place in the new home is therefore one of the most important contributions we can make."
+    },
+    {
+     "type": "h",
+     "text": "Recognising signs of stress 👁️"
+    },
+    {
+     "type": "p",
+     "text": "We learn to read our dog's stress signals: yawning, shaking off, lip licking, growling, looking away, “turning to stone”, rapid panting without physical exertion, ears pinned back, lowered tail."
+    },
+    {
+     "type": "p",
+     "text": "Tail wagging does not automatically mean joy. A low-wagging tail combined with a tucked body posture signals insecurity."
+    },
+    {
+     "type": "p",
+     "text": "We always respond to stress signals with relief – never by reinforcing the situation that triggers them. The dog should experience: My human sees when I am not well and acts accordingly."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-04",
+   "title": "Trust",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The foundation of the new relationship 🤝"
+    },
+    {
+     "type": "p",
+     "text": "Trust is the foundation on which everything else is built. With rescue dogs this foundation is not a given – it must be built actively and carefully, stone by stone, day by day."
+    },
+    {
+     "type": "p",
+     "text": "Trust does not arise from one big moment but from a thousand small ones: from calmly keeping to routines, from respecting boundaries, from patiently waiting for progress and from the reliability with which we show up every day."
+    },
+    {
+     "type": "h",
+     "text": "Builds trust ✅"
+    },
+    {
+     "type": "p",
+     "text": "Letting the dog decide for himself when he seeks contact, without pushing or luring him into it."
+    },
+    {
+     "type": "p",
+     "text": "Announcing every approach: opening up the body posture, softening the gaze, presenting ourselves calmly and harmoniously."
+    },
+    {
+     "type": "p",
+     "text": "Calm, uniform daily routines through which the dog learns what comes next."
+    },
+    {
+     "type": "p",
+     "text": "Praise and a positive reaction for every bit of attentiveness from the dog, however small."
+    },
+    {
+     "type": "p",
+     "text": "Consistently respecting his retreat as an inviolable safe space."
+    },
+    {
+     "type": "p",
+     "text": "Calm time together without demands – simply being there."
+    },
+    {
+     "type": "p",
+     "text": "Positive associations with the hand: feeding from the hand, calmly laying the hand on the dog's body and head."
+    },
+    {
+     "type": "h",
+     "text": "Damages trust ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Pushing the dog into situations that he clearly rejects through his body language."
+    },
+    {
+     "type": "p",
+     "text": "Stroking before the dog has actively sought contact – especially around the head."
+    },
+    {
+     "type": "p",
+     "text": "Surprising touches, fast movements or loud noises during the settling-in phase."
+    },
+    {
+     "type": "p",
+     "text": "Misinterpreting freezing or toleration as consent."
+    },
+    {
+     "type": "p",
+     "text": "Physical corrections of any kind – with traumatised dogs they destroy the painstakingly built trust within a very short time, and it often cannot be restored permanently."
+    },
+    {
+     "type": "p",
+     "text": "We are especially wary of well-meant but harmful advice: “He has to learn that”, “Show him who's boss” or “He's testing you” are dangerous misinterpretations in the case of a rescue dog."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-05",
+   "title": "Particularities in training",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Principle: Safety first, then learning 🧘"
+    },
+    {
+     "type": "p",
+     "text": "A rescue dog who does not feel safe cannot learn. The brain of a permanently stressed animal is in a survival mode that is not receptive to training progress."
+    },
+    {
+     "type": "p",
+     "text": "Training with rescue dogs does not begin with commands. It begins with observation: What does the dog like? What does he respond to positively? What makes him breathe a sigh of relief?"
+    },
+    {
+     "type": "p",
+     "text": "Short, positive, frequent training sessions are more effective than long sessions. Two to three minutes of genuine, joyful interaction are more valuable than twenty minutes of forced repetition."
+    },
+    {
+     "type": "h",
+     "text": "Understanding and managing triggers 🎯"
+    },
+    {
+     "type": "p",
+     "text": "A trigger is a stimulus that causes a strong emotional reaction in the dog. Identifying our dog's individual triggers is one of the most important tasks in the early period."
+    },
+    {
+     "type": "p",
+     "text": "Trigger management means first of all: creating distance. We keep the dog below his stimulus threshold – at a distance from the trigger at which he still perceives it but does not yet become reactive. At this threshold we begin to link new positive experiences."
+    },
+    {
+     "type": "p",
+     "text": "Desensitisation and counter-conditioning are the scientifically founded methods for working with triggers. They require patience, a systematic approach and – in the case of strong reactions – professional guidance."
+    },
+    {
+     "type": "h",
+     "text": "Reading displacement behaviours and accompanying fear 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Displacement behaviours are behaviours in conflict situations that serve to release inner tension: sudden scratching, yawning, sniffing the ground, shaking off, licking – although there is no obvious cause. In the rescue dog they are a particularly important signal, which we answer by relieving the situation."
+    },
+    {
+     "type": "p",
+     "text": "Fear is not a weakness of character. It cannot be overcome by punishment, pressure or forced confrontation – it is even usually reinforced by them."
+    },
+    {
+     "type": "p",
+     "text": "Fearful dogs benefit especially from predictable routines. Every time a situation ends calmly and without harm, a new memory is created: “That turns out fine.” These memories accumulate over time and reduce fear."
+    },
+    {
+     "type": "p",
+     "text": "In the case of pronounced anxiety disorders, professional guidance is not a luxury but necessary care. We recognise the limits of our own abilities in good time."
+    },
+    {
+     "type": "h",
+     "text": "What does not work in training with rescue dogs ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Flooding or confrontation methods – the forced exposure to the fear stimulus – are particularly harmful with rescue dogs and can lead to lasting traumatisation."
+    },
+    {
+     "type": "p",
+     "text": "Punishment-based training methods of any kind. The rescue dog may have learned that people mean pain or threat. Every punishment confirms this experience."
+    },
+    {
+     "type": "p",
+     "text": "Demanding obedience too early in environments rich in distractions. Reliable responses only develop after long, positive training work."
+    },
+    {
+     "type": "p",
+     "text": "We protect our rescue dog from training approaches based on dominance, submission or strong physical force. What is already questionable with a normally socialised dog can mean the end of any basis of trust with a traumatised animal."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-06",
+   "title": "Activities and everyday life",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Play with the rescue dog 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Many rescue dogs do not know play or have learned that excitement is dangerous. We start calmly: a robust toy is offered, lies there and we observe. We never force play – we only invite."
+    },
+    {
+     "type": "p",
+     "text": "Once the dog begins to trust them, tug games are healthy prey games that strengthen the bond. Playing together is an important indicator of progress: A dog who begins to respond playfully has taken a decisive step toward trust."
+    },
+    {
+     "type": "h",
+     "text": "Searching – species-appropriate work 👃"
+    },
+    {
+     "type": "p",
+     "text": "Searching for hidden toys or a food dummy is a particularly valuable activity for rescue dogs: it is low in stimulation, cooperative, likely to succeed and appeals to deeply rooted species-appropriate instincts."
+    },
+    {
+     "type": "p",
+     "text": "Kongs filled with food and treats in a tin hidden in the terrain are also low-threshold search opportunities that should be offered several times a day. Using the nose reduces stress, promotes concentration and strengthens the dog's self-confidence."
+    },
+    {
+     "type": "h",
+     "text": "Designing everyday routines consciously 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Reliable, calm routines – always at the same time, always in the same way – give the dog orientation in a world that is completely unfamiliar to him at first."
+    },
+    {
+     "type": "p",
+     "text": "Feeding always takes place undisturbed, in the same place. We do not use feeding time for training interludes such as taking away the food bowl – this creates unnecessary stress in rescue dogs with experience of resource scarcity."
+    },
+    {
+     "type": "p",
+     "text": "In the early period the dog goes through doors, stairs and transitions on the leash, following us. We lead him calmly, without haste, and praise every smooth sequence."
+    },
+    {
+     "type": "p",
+     "text": "The home environment is a place of calm. The calmer and more structured the home, the faster the rescue dog finds his inner basic state of safety – and the sooner real development can take place."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-07",
+   "title": "Section 7",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: Less is more"
+    },
+    {
+     "type": "p",
+     "text": "The most common mistake with a rescue dog is not indifference – it is too much of a good thing. Too many people, too many impressions, too much pushing. The most valuable step you can take today: Ask nothing of him. Simply sit quietly beside him. Sometimes the quietest action is the loudest message: You are safe here."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "36-08",
+   "title": "Checklist for a successful fresh start",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Have I seriously considered the possible history of my rescue dog?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I give my dog enough time to arrive – without expectations in the first 3 months?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I recognise his stress signals and respond to them with relief?"
+    },
+    {
+     "type": "p",
+     "text": "→ Is his resting place an inviolable safe space that I consistently respect?"
+    },
+    {
+     "type": "p",
+     "text": "→ During the settling-in phase, do I avoid sensory overload, visits and overwhelming situations?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I build trust through reliable routines, calm communication and voluntary contact?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I train exclusively positively, patiently and below my dog's stimulus threshold?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I seek professional support when I reach my limits – for myself and my dog?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I offer search activities every day as species-appropriate stress relief?"
+    },
+    {
+     "type": "p",
+     "text": "→ Every day that I give my rescue dog safety is a day on which he learns: Here I am in the right place."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

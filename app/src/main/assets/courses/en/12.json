@@ -1,0 +1,645 @@
+{
+ "id": "12",
+ "title": "Young Dog Imprinting",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "...youth only happens once"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "12-01",
+   "title": "Fundamental insights",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Important learning principles 🧠"
+    },
+    {
+     "type": "p",
+     "text": "A dog is always learning, even without any input from us."
+    },
+    {
+     "type": "p",
+     "text": "Our dog has 24 hours a day to observe, try things out and learn."
+    },
+    {
+     "type": "p",
+     "text": "Exceptions to the rule should only occur by exception. The more exceptions we create, the less reliable the training result becomes."
+    },
+    {
+     "type": "p",
+     "text": "However, there is never THE one rule. We have to learn which behaviour suits which situation."
+    },
+    {
+     "type": "p",
+     "text": "Everything we allow, the dog will learn as permitted behaviour. We should therefore allow only desired patterns wherever possible."
+    },
+    {
+     "type": "p",
+     "text": "Once learned, undesired actions and patterns can sometimes only be corrected with a great deal of effort."
+    },
+    {
+     "type": "p",
+     "text": "Learning thrives on success stories. Praise, play, food, joy and good contact with the dog are indispensable foundations for building a strong bond and for learning success."
+    },
+    {
+     "type": "p",
+     "text": "Learning is not just repeating exercises. Learning is setting an example by living out the desired behaviour patterns."
+    },
+    {
+     "type": "h",
+     "text": "Team & training 🤝"
+    },
+    {
+     "type": "p",
+     "text": "The dog is in a team relationship with the human. A team is only as reliable as its worst-performing member."
+    },
+    {
+     "type": "p",
+     "text": "The more everyday and varied the desired actions are trained stress-free in a natural environment, the more reliably they can be called up in future, even under difficult conditions."
+    },
+    {
+     "type": "p",
+     "text": "What a puppy does not learn, the more mature dog learns only with greater effort."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-02",
+   "title": "Development of the young dog",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Care & bonding ❤️"
+    },
+    {
+     "type": "p",
+     "text": "A young dog needs our reliable care, which it previously experienced from its mother. This includes communication, grooming, warmth and teaching."
+    },
+    {
+     "type": "p",
+     "text": "Bonding and basic trust build on our care. Basic trust includes self-confidence and, increasingly, trust in us as companions and above all as self-assured leaders."
+    },
+    {
+     "type": "p",
+     "text": "Basic trust and the emotional stability resulting from it are the driving force for exploratory, fear-free learning. Faulty associations are thereby avoided."
+    },
+    {
+     "type": "h",
+     "text": "Support & social competence 🌟"
+    },
+    {
+     "type": "p",
+     "text": "The greater the variety of supportive environmental variables that are manageable for the dog, the more positive the stimulation of the genetic dispositions and the learning success."
+    },
+    {
+     "type": "p",
+     "text": "The opportunity to act independently in controllable situations strengthens the dog's psyche and promotes healthy problem-solving behaviour and thus social competence."
+    },
+    {
+     "type": "p",
+     "text": "Social competence is an outstanding foundation for further learning and for learning the response patterns and skills we want."
+    },
+    {
+     "type": "p",
+     "text": "Our task is to promote important dispositions such as enjoyment of work, stress resistance, frustration tolerance, willingness to solve problems and perseverance."
+    },
+    {
+     "type": "h",
+     "text": "Our role as a model 🛡️"
+    },
+    {
+     "type": "p",
+     "text": "We are the decisive role model here, and thus crucial for the development of our dog's ability to regulate its emotions depending on the situation."
+    },
+    {
+     "type": "p",
+     "text": "For the development of our dog's skills and social competence we need consistency and reliability in our dealings, clear and reproducible ways of acting, absolute calmness and composure in every situation, and always a high degree of warmth in communication."
+    },
+    {
+     "type": "p",
+     "text": "Over time, the dog becomes a reliable mirror of the dog owner."
+    },
+    {
+     "type": "p",
+     "text": "What the dog owner does not deliver cannot be demanded of the dog either."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-03",
+   "title": "Developmental phases",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Up to the 8th week of life"
+    },
+    {
+     "type": "p",
+     "text": "The puppy is usually still with its mother and therefore with the breeder."
+    },
+    {
+     "type": "h",
+     "text": "First contact 👋"
+    },
+    {
+     "type": "p",
+     "text": "We visit the puppy so that our future friend can get to know us. We do not wear our best clothes, let the dog discover us and behave in an open and pleasant manner."
+    },
+    {
+     "type": "p",
+     "text": "Puppies discover their environment in small steps. We do not want to overwhelm them. For now it is enough to crouch or sit down next to the little one and let it sniff and climb on us."
+    },
+    {
+     "type": "p",
+     "text": "Our hands are an important means of communication here. We play with the dog by stroking it. It is okay if the puppy licks our hand or chews on our fingers. It is simply doing what it also does with its conspecifics."
+    },
+    {
+     "type": "h",
+     "text": "8th to 12th week of life"
+    },
+    {
+     "type": "p",
+     "text": "Or the first 4 weeks for young dogs who have newly moved in with us"
+    },
+    {
+     "type": "p",
+     "text": "During this time our new companion settles in with us. It discovers its new territory and needs time to rest and process. It needs attention and room to explore. We go on different walks in the surroundings frequently and regularly, so that it can get to know them and feel at home in them."
+    },
+    {
+     "type": "p",
+     "text": "A varied environment is beneficial for development. We therefore move around in urban surroundings as well as in woods and fields."
+    },
+    {
+     "type": "h",
+     "text": "Play & activity 🎾"
+    },
+    {
+     "type": "p",
+     "text": "We play a lot and in many different ways with the puppy, both indoors and outdoors. We make sure not to pull too hard on the toy, so as not to damage the milk teeth."
+    },
+    {
+     "type": "p",
+     "text": "It is normal if the little one chews on our hand now and then. However, we should not specifically encourage this or even punish it, but rather redirect the puppy to a toy. Puppies need this kind of direct, physical communication."
+    },
+    {
+     "type": "p",
+     "text": "With appropriate imprinting, this disappears over the course of the next months."
+    },
+    {
+     "type": "h",
+     "text": "Rest & sleep 💤"
+    },
+    {
+     "type": "p",
+     "text": "In this phase of life, puppies need a lot of sleep and freedom from disturbance in order to develop in a stable way. Here we lay important foundations for the later course of development."
+    },
+    {
+     "type": "p",
+     "text": "A calm home environment and balanced handling of the dog are most likely to shape a stable and socially competent temperament."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-04",
+   "title": "Practical everyday topics",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Feeding 🍽️"
+    },
+    {
+     "type": "p",
+     "text": "The puppy should be given a quiet place where it can eat its meals. The dog should not be disturbed while eating. Of course, this applies for a whole dog's life."
+    },
+    {
+     "type": "p",
+     "text": "Ideally, the food and water bowls should always be at the dog's chest height, using suitable stands."
+    },
+    {
+     "type": "p",
+     "text": "Do not argue with the puppy/young dog over food and do not do take-away exercises. Our puppy has no understanding of such 'games', and we thereby provoke resource-guarding behaviour."
+    },
+    {
+     "type": "p",
+     "text": "Children should behave calmly during the dog's meal and must under no circumstances crowd the dog. However, they are also welcome to hand the dog its food."
+    },
+    {
+     "type": "h",
+     "text": "⚠️ Important: taking food away"
+    },
+    {
+     "type": "p",
+     "text": "Of course, if necessary one should also be able to take food away from one's dog. That we will be allowed to do so in future, however, is the result of the respect the dog shows us, which is fairly earned through daily dealings."
+    },
+    {
+     "type": "p",
+     "text": "In the worst case, however, food take-away exercises provoke defensive behaviour with all its disadvantageous consequences for the coexistence between us and our four-legged friend."
+    },
+    {
+     "type": "h",
+     "text": "Activities & feeding breaks ⏱️"
+    },
+    {
+     "type": "p",
+     "text": "If car journeys or activities (training, hikes, etc.) are planned, our dog should not be fed for at least 2 hours beforehand, in order to avoid complications (discomfort, vomiting)."
+    },
+    {
+     "type": "p",
+     "text": "For older dogs of large breeds, this applies all the more, with a feeding break of at least 3 hours, as the risk of highly problematic gastric torsion rises sharply with increasing age. Walks should then in principle no longer take place after feeding."
+    },
+    {
+     "type": "p",
+     "text": "In all cases: better to skip a meal than to take a risk."
+    },
+    {
+     "type": "h",
+     "text": "Feeding intervals & rhythm ⏱️"
+    },
+    {
+     "type": "p",
+     "text": "From decades of experience, we recommend dividing the daily amount of food into several meals. The number of meals depends on the individual circumstances of the regular daily schedule."
+    },
+    {
+     "type": "p",
+     "text": "For puppies: 3 meals | From the 5th–6th month of life: 2 meals – and staying with this for life."
+    },
+    {
+     "type": "p",
+     "text": "We explicitly do not recommend 1 meal per day; especially for large breeds, this increases the risk of complications in later years."
+    },
+    {
+     "type": "p",
+     "text": "Regardless of the number of meals, the following rhythm generally applies: first the activities, then the food and afterwards a rest period. The last meal before the night's rest is the main meal."
+    },
+    {
+     "type": "p",
+     "text": "This way the meals adapt flexibly to the daily routine, and with a healthy dog it is by no means necessary to establish fixed feeding times. A dog accustomed to rigid feeding times can very quickly turn into a pest with no regard for our needs."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-05",
+   "title": "Cleanliness",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Basic rules for house-training 🏠"
+    },
+    {
+     "type": "p",
+     "text": "We frequently go for a short walk with the little one so that it can relieve itself. Once it has done its business outside, praise should not be spared."
+    },
+    {
+     "type": "p",
+     "text": "If an accident happens in the house, we do not scold. It helps to pick up the mess with a little sawdust, put it down outside at an unproblematic and permitted spot, and visit this spot with the dog daily. The dog will then learn to relieve itself there."
+    },
+    {
+     "type": "p",
+     "text": "Use a good disinfectant for cleaning in the house, in order to minimise the source of the smell as far as possible."
+    },
+    {
+     "type": "p",
+     "text": "Calm handling and calm movements help the puppy to stay clean and avoid fright puddles."
+    },
+    {
+     "type": "h",
+     "text": "When does the puppy need to go out? 🚪"
+    },
+    {
+     "type": "p",
+     "text": "After play, feeding, fun and in exciting situations, a puppy usually relieves itself, so watch carefully and rather go outside as a precaution."
+    },
+    {
+     "type": "p",
+     "text": "The more diligent we are and the better we recognise the dog's signals, such as going to the door, being restless, panting noticeably, or walking around the home sniffing, the sooner the little one will become clean."
+    },
+    {
+     "type": "h",
+     "text": "Dog crate as an aid 📦"
+    },
+    {
+     "type": "p",
+     "text": "In the early period it can be helpful to put a puppy that is still very unclean in a cosy, sufficiently large dog crate during rest and sleeping times. It is kept clean, as a dog does not usually use its own sleeping place as a toilet."
+    },
+    {
+     "type": "p",
+     "text": "Rest time: time after feeding (approx. 1 hour)"
+    },
+    {
+     "type": "p",
+     "text": "Sleeping time: night's rest – although at the start the puppy must still be given the opportunity to relieve itself at night. Over time, this is spaced further and further apart, until it finally lasts through the night."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-06",
+   "title": "Safety, leash & socialisation",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "⚠️ Eliminate sources of danger"
+    },
+    {
+     "type": "p",
+     "text": "We arrange the dog's environment so that all hazardous things and circumstances are excluded as far as possible: poisonous plants, electrical cables, chemicals, small parts, staircases and large steps, securing against unnoticed escape, and locally specific sources of danger."
+    },
+    {
+     "type": "h",
+     "text": "Getting used to the leash & free running 🦮"
+    },
+    {
+     "type": "p",
+     "text": "We slowly accustom the little companion to the leash, which should not be too short. A simple leash of 2 to 2.5 m in length is recommended. At first we walk our first short distances with few distractions in a stress-free environment."
+    },
+    {
+     "type": "p",
+     "text": "A motivator carried along in the form of a toy or a treat greatly reinforces the success of getting used to it. With a lot of patience, calm and loving handling, the focus is on building a trusting and strong relationship between us and our dog."
+    },
+    {
+     "type": "p",
+     "text": "In terrain that is safe from obvious dangers, where letting dogs run free is permitted and neither third parties nor our dog can be endangered, we can accustom our companion to following freely without a leash."
+    },
+    {
+     "type": "h",
+     "text": "Commands & socialisation (up to the 12th week) 🐾"
+    },
+    {
+     "type": "p",
+     "text": "No commands are trained at the age stage up to the 12th week of life. However, we can skilfully accompany the dog's corresponding actions with praise and the matching command. For example, when the puppy comes running to us, one can say its name and the corresponding command for coming ('Hier') in a praising manner. If the puppy lies down, we accompany it in a calm tone with 'Platz'. However, we cannot derive any future demand from this approach."
+    },
+    {
+     "type": "p",
+     "text": "We establish positively associated contact with humans and conspecifics, and gladly with other animals too. The more often it happens, the more calmly our dog will react in future. Negative experiences must be avoided. If startling moments occur, we react calmly and walk on. In this way we show our dog that it was not so bad."
+    },
+    {
+     "type": "p",
+     "text": "In doing so, we let it sit or lie down, so that it can learn that distraction does not mean running after things, but that it can simply let things happen. Good resistance to distraction and stress resistance are the reward for our months of patient effort."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-07",
+   "title": "From the 4th month of life",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Or from the 1st month after an older young dog moves in"
+    },
+    {
+     "type": "h",
+     "text": "Advanced training 🎓"
+    },
+    {
+     "type": "p",
+     "text": "We lay the foundation for future complex leadership patterns under various environmental influences, such as 'sit', 'down', 'come', reactions to the name and body signals."
+    },
+    {
+     "type": "p",
+     "text": "We train leash work and off-leash work under individual requirement profiles and learn how the individual exercises depend on one another."
+    },
+    {
+     "type": "p",
+     "text": "In training, we deliberately engage with a wide variety of environmental and social influences, without overwhelming our dog. We seek out both urban areas and the open countryside in order to experience a wide range of distracting influences."
+    },
+    {
+     "type": "h",
+     "text": "⚠️ Note the change of teeth"
+    },
+    {
+     "type": "p",
+     "text": "We bear in mind that throughout this entire period and beyond, our dog is going through its change of teeth. It will therefore often seem unsettled and chew on all sorts of things."
+    },
+    {
+     "type": "p",
+     "text": "We are therefore patient and take care when playing not to tug hard on the toy, so as not to disturb tooth development or even pull teeth out prematurely."
+    },
+    {
+     "type": "p",
+     "text": "Our dog will then certainly also like to chew on its leash, which would be fundamentally wrong. We therefore always carry a chew toy (a chew roll or similar) with us, to offer to our dog as an alternative and let it carry."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-08",
+   "title": "Calm, trust & learning behaviour",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "From the very beginning it is of great importance, on the one hand, to build a trusting bond with the dog and, on the other, to gradually accustom the dog to the various conditions of its environment."
+    },
+    {
+     "type": "h",
+     "text": "Training calmness in the environment 🌿"
+    },
+    {
+     "type": "p",
+     "text": "While out and about, we repeatedly take a few minutes for a break in which we sit down together with the dog, calmly observing the surroundings, seek calm body contact and enjoy composure and let relaxation set in."
+    },
+    {
+     "type": "p",
+     "text": "According to experience, a dog that can observe the environment stress-free from a secure vantage point gets used to the most varied influences much more confidently than a dog that is always on the move."
+    },
+    {
+     "type": "p",
+     "text": "Relaxing stroking of the dog over time greatly promotes trust. The dog should increasingly be allowed to experience being outdoors, with all its circumstances and demands, as relaxing and unproblematic."
+    },
+    {
+     "type": "p",
+     "text": "Young dogs constantly have to respond to countless unfamiliar challenges with problem solutions and alternative actions. For a young dog, learning does not primarily mean learning commands."
+    },
+    {
+     "type": "h",
+     "text": "Building character traits 💪"
+    },
+    {
+     "type": "p",
+     "text": "Learning is first and foremost the human-supported and human-encouraged building of vital character traits such as enjoyment of work, perseverance, self-confidence, tolerance of fear and frustration, stress resistance, willingness to solve problems, joy of learning and determination."
+    },
+    {
+     "type": "p",
+     "text": "These character traits are the foundation for training content and training success."
+    },
+    {
+     "type": "h",
+     "text": "Our main task 🎯"
+    },
+    {
+     "type": "p",
+     "text": "During this time, the dog owner's main task is to experience the most varied environments together with the dog and to establish contact with all the things and living beings around us that are meant to be positively associated and unproblematic for our dog in future."
+    },
+    {
+     "type": "p",
+     "text": "We give the dog time to explore and accompany this more in a supervising and gently guiding way. Impatient or stressful influence on the dog is to be avoided here."
+    },
+    {
+     "type": "p",
+     "text": "Calm, considered communication has the highest priority in conveying to the dog that the environmental conditions are unproblematic."
+    },
+    {
+     "type": "h",
+     "text": "Success & reward 🏆"
+    },
+    {
+     "type": "p",
+     "text": "Every successful completion of a situation is praised warmly, we are happy together and, where appropriate, bring it to a successful close with a toy or food reward afterwards."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-09",
+   "title": "Little tip: carrying puppies correctly",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "How do I carry a puppy? 💡"
+    },
+    {
+     "type": "p",
+     "text": "One hand reaches flat from behind between the hind legs and supports the pelvic area. With very small dogs, the hand should alternatively support both hind feet as the load-bearing surface."
+    },
+    {
+     "type": "p",
+     "text": "The dog virtually 'sits' on the hand. Our other hand supports the chest from below, while our fingers secure both front legs. Depending on the size of the puppy, place the index finger between the front legs."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-10",
+   "title": "⚠️ Important conditions (list of things to avoid)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Avoid overloading the dog."
+    },
+    {
+     "type": "p",
+     "text": "Avoid impatience."
+    },
+    {
+     "type": "p",
+     "text": "Avoid inconsistency, but be kind."
+    },
+    {
+     "type": "p",
+     "text": "Absolutely avoid stressed behaviour. Our dog cannot cope with it."
+    },
+    {
+     "type": "p",
+     "text": "Avoid expecting behaviours that are not yet established. Our dog can only show what we have taught it reliably."
+    },
+    {
+     "type": "p",
+     "text": "Avoid loud communication."
+    },
+    {
+     "type": "p",
+     "text": "Avoid uncontrolled behaviour."
+    },
+    {
+     "type": "p",
+     "text": "Avoid so-called 'submission actions' in the dog. They are simply pointless and at best can damage the basis of trust in the long run."
+    },
+    {
+     "type": "p",
+     "text": "Avoid, in the long term, actions in the dog that cement its territorial behaviour (such as constant marking or extensive sniffing around in every 'dirty corner')."
+    },
+    {
+     "type": "p",
+     "text": "Avoid actions that show the dog that it might hold the leadership."
+    },
+    {
+     "type": "p",
+     "text": "Avoid walking at the back in the group. The young dog does not understand that it has to walk patiently. It is better to walk at the front and thereby avoid stress."
+    },
+    {
+     "type": "p",
+     "text": "Do not provoke the dog excessively in play only to correct it again when it overdoes things. Be loving and moderate."
+    },
+    {
+     "type": "p",
+     "text": "Avoid punishment, it achieves nothing. A dog cannot know that it has done something wrong."
+    },
+    {
+     "type": "p",
+     "text": "Avoid mistakes and undesired behaviour through anticipatory handling."
+    },
+    {
+     "type": "p",
+     "text": "Avoid strictness. Just be reliable and precise."
+    },
+    {
+     "type": "p",
+     "text": "Avoid inattention. Inattention is the cause of misbehaviour."
+    },
+    {
+     "type": "p",
+     "text": "In any case, avoid situations that would overwhelm you and your dog."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "12-11",
+   "title": "Self-reflection for dog owners",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Am I always calm and unflustered?"
+    },
+    {
+     "type": "p",
+     "text": "Do I bear in mind that a dog never does anything with bad intent?"
+    },
+    {
+     "type": "p",
+     "text": "Do I bear in mind that a dog always needs our affection and understanding leadership?"
+    },
+    {
+     "type": "p",
+     "text": "Is my thinking positive?"
+    },
+    {
+     "type": "p",
+     "text": "Do I play with my dog enough at all times?"
+    },
+    {
+     "type": "p",
+     "text": "Do I give the dog sufficient rest?"
+    },
+    {
+     "type": "p",
+     "text": "In all my actions, do I respect the fundamental requirement of basic trust?"
+    },
+    {
+     "type": "p",
+     "text": "Do I give the young dog enough freedom to explore and learn?"
+    },
+    {
+     "type": "p",
+     "text": "Do I offer my dog varied learning experiences through diverse situations?"
+    },
+    {
+     "type": "p",
+     "text": "Do I bear in mind that my hands are positive means of communication?"
+    },
+    {
+     "type": "p",
+     "text": "Am I out and about in the open countryside a lot with my dog?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

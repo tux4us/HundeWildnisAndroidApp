@@ -1,0 +1,271 @@
+{
+ "id": "08",
+ "title": "Sensory Perception",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "How dogs perceive their world"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "08-01",
+   "title": "The world of sensory perception",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The dog's sensory perception (sensorics) is evolutionarily adapted to the demands of a carnivorous predator and a highly social mammal. Unlike humans, whose perception is primarily dominated by vision, the sense of smell is the dog's most important information channel, followed by auditory and tactile-proprioceptive abilities."
+    },
+    {
+     "type": "p",
+     "text": "Sensory processing takes place via specialised receptor systems and is integrated in the central nervous system. The brain plays a central role here – in particular the olfactory bulb , the auditory cortex and multimodal association areas."
+    },
+    {
+     "type": "p",
+     "text": "Dogs are able to combine multisensory information (e.g. smell, sound, body posture) in order to interpret their environment, conspecifics and humans in a differentiated way."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-02",
+   "title": "1. Sense of smell (olfaction)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The sense of smell is the dog's dominant sense and serves orientation, foraging, social communication, territoriality and assessment of danger."
+    },
+    {
+     "type": "h",
+     "text": "Anatomy & performance 👃"
+    },
+    {
+     "type": "p",
+     "text": "Cell power: Depending on the breed, dogs have roughly 125 to 300 million olfactory receptor cells in the nasal mucosa (humans: approx. 5–6 million). The olfactory mucosa can reach an area of up to 150–170 cm² (humans: approx. 5 cm²)."
+    },
+    {
+     "type": "p",
+     "text": "Olfactory bulb: In relation to brain size it is considerably larger than in humans, which reflects the high olfactory processing capacity. It is established that dogs can reliably detect and differentiate very low concentrations of volatile organic compounds (VOCs)."
+    },
+    {
+     "type": "p",
+     "text": "Jacobson's organ: Dogs use the vomeronasal organ (Jacobson's organ) to perceive non-volatile chemical signals, especially in the context of social and reproductive communication (e.g. sexual status, stress or fear signals)."
+    },
+    {
+     "type": "p",
+     "text": "Stereo smelling: Dogs take in scents separately through each nostril, which makes it possible to determine direction (olfactory stereo perception). These abilities are used in practice, for example in detection dog work (explosives, drugs, searching for people) and in the medical detection of disease-specific odour patterns."
+    },
+    {
+     "type": "h",
+     "text": "Limitations ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Olfactory performance can be impaired by drying out of the nasal mucosa, infections of the upper respiratory tract or anatomical particularities."
+    },
+    {
+     "type": "p",
+     "text": "There are also marked breed-specific differences; long-nosed dogs (e.g. Bloodhound) generally have a higher olfactory capacity than short-nosed (brachycephalic) breeds."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-03",
+   "title": "2. Sense of hearing (audition)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The dog's sense of hearing is highly developed and plays a central role in communication, perception of prey and assessment of danger."
+    },
+    {
+     "type": "h",
+     "text": "Performance 👂"
+    },
+    {
+     "type": "p",
+     "text": "Frequency range: Dogs hear sound frequencies from approx. 40 Hz to 60,000–65,000 Hz (humans: approx. 20 Hz to 20,000 Hz). They are therefore considerably more sensitive to high-frequency sounds and ultrasound. At optimal frequencies, the hearing threshold is lower than that of humans (in some cases below 0 dB)."
+    },
+    {
+     "type": "p",
+     "text": "Precision: The movable external ears (pinnae) allow very precise sound localisation, with an angular resolution of a few degrees."
+    },
+    {
+     "type": "p",
+     "text": "Distance: Dogs can perceive sounds from a greater distance than humans and can finely distinguish between different vocalisations (barking, growling, whining) as well as ambient sounds. This is essential for social interactions and alarm reactions."
+    },
+    {
+     "type": "h",
+     "text": "Limitations ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Excessive or unpredictable noise can lead to stress reactions."
+    },
+    {
+     "type": "p",
+     "text": "Ageing processes, inflammation of the ear (e.g. otitis externa/media) or structural damage can significantly reduce hearing."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-04",
+   "title": "3. Sense of sight (vision)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The dog's vision is designed mainly for motion detection and twilight vision, less for detail and colour perception."
+    },
+    {
+     "type": "h",
+     "text": "Movement & twilight 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Field of view: Depending on head and eye position, the binocular field of view is approx. 60–80° (humans: approx. 120°), while the total field of view can be up to 250–270° (humans: approx. 180°). Visual resolution is lower than in humans; it corresponds approximately to a visual acuity of 20/75. Most dogs are slightly short-sighted (myopic)."
+    },
+    {
+     "type": "p",
+     "text": "Colours: Dogs have a dichromatic colour system with cones for short-wavelength (blue) and medium-wavelength (yellowish) light. They can distinguish red and green tones only to a limited extent. The flicker fusion frequency is higher than in humans (approx. 70–80 Hz), which means movements are detected particularly well."
+    },
+    {
+     "type": "p",
+     "text": "Night mode: The tapetum lucidum , a reflective layer behind the retina, improves vision in low light."
+    },
+    {
+     "type": "h",
+     "text": "Limitations ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Visual perception varies greatly between breeds. Brachycephalic breeds often have a restricted peripheral field of view, while dolichocephalic breeds have a particularly wide field of view."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-05",
+   "title": "4. Sense of touch & body awareness",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The sense of touch comprises mechanosensitive receptors in the skin, paws, muzzle and hair follicles."
+    },
+    {
+     "type": "h",
+     "text": "Vibrissae & paws ✋"
+    },
+    {
+     "type": "p",
+     "text": "Vibrissae: Whiskers are highly sensitive sensory organs that register air currents, distances to objects and touch."
+    },
+    {
+     "type": "p",
+     "text": "Proprioception: It is based on receptors in muscles, tendons (Golgi tendon organs) and joints and enables precise perception of the body and of movement. The paw pads contain, among other things, Pacinian corpuscles, which perceive vibrations."
+    },
+    {
+     "type": "p",
+     "text": "Thermoception & balance: Dogs have mechanisms for perceiving temperature and pain that are functionally comparable to those of humans. Their higher cold tolerance is primarily due to coat structure and body build. The vestibular system in the inner ear controls balance and spatial orientation."
+    },
+    {
+     "type": "h",
+     "text": "Limitations ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Skin diseases, neurological disorders or orthopaedic problems can impair tactile and proprioceptive abilities."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-06",
+   "title": "5. Sense of taste (gustation)",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The sense of taste is less pronounced in dogs and is functionally closely linked to the sense of smell."
+    },
+    {
+     "type": "h",
+     "text": "Performance 👅"
+    },
+    {
+     "type": "p",
+     "text": "Dogs have approx. 1,500–2,000 taste buds (humans: approx. 9,000). They have receptors for sweet, sour, bitter, salty and umami. Taste perception is strongly influenced by retronasal olfaction."
+    },
+    {
+     "type": "p",
+     "text": "The sense of taste supports food selection and can help in avoiding strongly bitter (potentially toxic) substances. However, the ability to differentiate is considerably lower than in humans."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-07",
+   "title": "6. Multisensory integration",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Interplay of the senses 🧠"
+    },
+    {
+     "type": "p",
+     "text": "In the dog's brain, sensory information is processed in an integrative way. Combining smell, hearing, sight and body signals enables highly adaptive control of behaviour."
+    },
+    {
+     "type": "p",
+     "text": "Studies show that dogs process social stimuli in particular (e.g. body postures and voices) in specialised neural networks."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-08",
+   "title": "Section 8",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: The \"5-minute nose time\""
+    },
+    {
+     "type": "p",
+     "text": "Regularly let your dog search during the walk for a food dummy or his toy hidden in increasingly difficult places, until he has found it. This search processes enormous amounts of information (VOCs) and is mentally more tiring than simply covering a longer distance on foot."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "08-09",
+   "title": "Summary",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The sense of smell is the dog's dominant sense and serves orientation, communication and assessment of danger."
+    },
+    {
+     "type": "p",
+     "text": "Dogs hear high-frequency sounds up to 65,000 Hz – far beyond human hearing."
+    },
+    {
+     "type": "p",
+     "text": "Vision is specialised for motion detection and twilight vision, not for colour detail."
+    },
+    {
+     "type": "p",
+     "text": "The sense of taste is closely linked to the sense of smell and is less differentiated than in humans."
+    },
+    {
+     "type": "p",
+     "text": "The sense of touch and proprioception enable precise perception of the body and of movement."
+    },
+    {
+     "type": "p",
+     "text": "The integration of all the senses makes the dog a highly adaptive living being – it lives in a multisensory world that often remains invisible to us humans."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

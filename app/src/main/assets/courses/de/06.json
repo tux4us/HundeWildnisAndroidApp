@@ -1,0 +1,215 @@
+{
+ "id": "06",
+ "title": "Körpersprache",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "weil der Hund sieht, was wir denken"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "06-01",
+   "title": "Achte auf Deine Körpersprache",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Hunde als Meister der Beobachtung"
+    },
+    {
+     "type": "p",
+     "text": "Unser Hund erkennt kleinste Gesten und Körperreaktionen und setzt diese Erkenntnisse konsequent um."
+    },
+    {
+     "type": "p",
+     "text": "Hunde interpretieren Gesten, Bewegungen und sogar die Stimmung anhand von Tempo, Muskeltonus und Gesichtsausdruck."
+    },
+    {
+     "type": "p",
+     "text": "Es ist essenziell, sich dem Hund gegenüber harmonisch, ruhig und gelassen zu verhalten."
+    },
+    {
+     "type": "p",
+     "text": "Subtile Signale beeinflussen direkt das Verhalten, das Sicherheitsempfinden und das Vertrauen des Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Unser Hund beobachtet uns sehr aufmerksam. Er erkennt kleinste Gesten und Körperreaktionen. Er setzt diese Erkenntnisse konsequent um. Hunde sind äußerst sensibel in der Auffassungsgabe bezüglich der Körpersprache ihres menschlichen Begleiters. Sie interpretieren Gesten, Bewegungen und sogar die Stimmung anhand von Faktoren wie Tempo, Muskeltonus, Bewegungsgeschwindigkeit, Gangart und Gesichtsausdruck."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "06-02",
+   "title": "Wichtige Körpersignale",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Signale und ihre Wirkung"
+    },
+    {
+     "type": "p",
+     "text": "Gesten: Ruhige, klare und bewusste Gesten signalisieren dem Hund Verlässlichkeit und Sicherheit. Abrupte oder hektische Gesten hingegen können Unsicherheit oder Bedrohung vermitteln."
+    },
+    {
+     "type": "p",
+     "text": "Bewegungen: Sanfte, fließende Bewegungen wirken beruhigend, während ruckartige oder unkoordinierte Bewegungen den Hund nervös machen oder ihn in Alarmbereitschaft versetzen können."
+    },
+    {
+     "type": "p",
+     "text": "Stimmung: Hunde spüren die emotionale Verfassung ihres Menschen. Eine ausgeglichene, positive Stimmung fördert Entspannung beim Hund, während Anspannung oder Wut sich auf ihn überträgt."
+    },
+    {
+     "type": "p",
+     "text": "Tempo: Ein gemäßigtes, gleichmäßiges Tempo in der Interaktion zeigt Kontrolle und Gelassenheit. Zu schnelles oder unregelmäßiges Tempo kann als Stress oder Ungeduld wahrgenommen werden."
+    },
+    {
+     "type": "p",
+     "text": "Muskeltonus: Ein entspannter Muskeltonus strahlt Ruhe aus. Verspannungen oder ein steifer Körper signalisieren Anspannung, was den Hund verunsichern kann."
+    },
+    {
+     "type": "p",
+     "text": "Gangart: Ein sicherer, entspannter Gang vermittelt Souveränität. Ein gehetzter oder unsicherer Gang kann beim Hund Zweifel an der Führungsrolle des Menschen hervorrufen."
+    },
+    {
+     "type": "p",
+     "text": "Gesichtsausdruck: Ein freundlicher, entspannter Gesichtsausdruck wirkt beruhigend. Ein angespannter oder wütender Blick kann den Hund ängstigen oder abwehrend stimmen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "06-03",
+   "title": "Körpersprache aus fachlicher Sicht",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Was Hunde an Menschen erkennen"
+    },
+    {
+     "type": "p",
+     "text": "Hunde verstehen menschliche Zeigegesten. In Versuchen (Hare et al., 2002) fanden Hunde versteckte Ziele, wenn ein Mensch darauf zeigte oder hinsah. Das gelang ihnen besser als Wölfen, die von Menschen aufgezogen wurden."
+    },
+    {
+     "type": "p",
+     "text": "Hunde folgen dem Blick eines Menschen besonders dann, wenn dieser sie zuvor direkt angesprochen oder angesehen hat (Téglás et al., 2012). Blickkontakt und Ansprache kündigen dem Hund an, dass ein Signal folgt."
+    },
+    {
+     "type": "p",
+     "text": "Hunde nehmen Bewegungen sehr gut wahr. Details auf größere Entfernung erkennen sie schlechter als Menschen. Auf Distanz wirken daher große, klare Bewegungen, während kleine Gesten leichter übersehen werden."
+    },
+    {
+     "type": "h",
+     "text": "Erst Aufmerksamkeit herstellen, dann Signal geben"
+    },
+    {
+     "type": "p",
+     "text": "Stelle zuerst Blickkontakt her oder sprich Deinen Hund kurz an. Gib erst danach das Signal."
+    },
+    {
+     "type": "p",
+     "text": "Verwende für jedes Verhalten ein eindeutiges Signal und verwende es immer gleich. Wechselnde Gesten und Worte für dasselbe Verhalten erschweren dem Hund das Lernen."
+    },
+    {
+     "type": "p",
+     "text": "Achte darauf, dass Körperhaltung, Stimme und Geste dasselbe ausdrücken. Widersprüchliche Signale, zum Beispiel eine freundliche Stimme bei angespannter Haltung, verunsichern den Hund."
+    },
+    {
+     "type": "p",
+     "text": "Halte ein Signal nur so lange, wie es für das Verhalten nötig ist. Beende es klar und bewege Dich danach wieder ruhig."
+    },
+    {
+     "type": "h",
+     "text": "Körperhaltung bei Annäherung und Begegnung"
+    },
+    {
+     "type": "p",
+     "text": "Frontales Zugehen, Beugen über den Hund und direktes Anstarren erleben Hunde in unübersichtlichen Situationen als bedrängend oder bedrohlich."
+    },
+    {
+     "type": "p",
+     "text": "Nähere Dich einem Hund eher in einem leichten Bogen, möglichst nicht direkt und mit innerer offener und freundlicher Haltung."
+    },
+    {
+     "type": "p",
+     "text": "Richte den Blick weich in die Umgebung in Richtung des Hundes. Focussiere den Hund nicht."
+    },
+    {
+     "type": "p",
+     "text": "Streichle den Hund ruhig mit fliessenden Bewegungen."
+    },
+    {
+     "type": "p",
+     "text": "Individuelle Erfahrungen und Rasse beeinflussen, wie ein Hund auf Annäherung reagiert. Beobachte deshalb immer seine Reaktion und passe Dein Verhalten an."
+    },
+    {
+     "type": "h",
+     "text": "Übung: Die eigene Körpersprache filmen"
+    },
+    {
+     "type": "p",
+     "text": "Lass Dich zwei bis drei Minuten bei einer Trainingseinheit oder einem Spaziergang mit Deinem Hund filmen."
+    },
+    {
+     "type": "p",
+     "text": "Schau Dir das Video ohne Ton an. Achte auf Schrittgeschwindigkeit, Schulterspannung, Armbewegungen, Blickrichtung und Haltung des Oberkörpers."
+    },
+    {
+     "type": "p",
+     "text": "Beobachte in derselben Szene Deinen Hund: Wann orientiert er sich an Dir, wann wirkt er verunsichert oder abgelenkt?"
+    },
+    {
+     "type": "p",
+     "text": "Notiere Deine Beobachtungen unter „Meine Reflexion“ am Ende dieser Seite und lege einen Punkt fest, den Du in der nächsten Woche gezielt veränderst."
+    },
+    {
+     "type": "p",
+     "text": "Quellen: Hare B., Brown M., Williamson C., Tomasello M. (2002): The domestication of social cognition in dogs. Science 298 (5598), 1634–1636. Téglás E., Gergely A., Kupán K., Miklósi Á., Topál J. (2012): Dogs' gaze following is tuned to human communicative signals. Current Biology 22 (3), 209–212."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "06-04",
+   "title": "Abschnitt 4",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Ruhe durch Entschleunigung"
+    },
+    {
+     "type": "p",
+     "text": "Führe bei Deinen Aktivitäten mit dem Hund Deine Interaktionen bewusst ruhig und langsam aus. Achte dabei auf einen entspannten Muskeltonus und eine ruhige Stimme. Beobachte, wie viel aufmerksamer und gelassener Dein Hund auf diese „leise“ Körpersprache reagiert."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "06-05",
+   "title": "Wichtige Bedingungen:",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Positive Konsequenzen der Beachtung"
+    },
+    {
+     "type": "p",
+     "text": "Wenn der Mensch diese Prinzipien beachtet, entsteht eine vertrauensvolle Bindung zwischen ihm und seinem Hund. Der Hund fühlt sich sicher und orientiert sich an der ruhigen Führung seines Besitzers. Im sozialen Umfeld – etwa bei Begegnungen mit fremden Menschen, anderen Hunden oder Tieren in der Natur – bleibt der Hund gelassen und ausgeglichen. Er reagiert weniger ängstlich oder aggressiv, da er die Situation durch die Körpersprache seines Menschen als unbedrohlich einschätzt. Dies erleichtert Spaziergänge, soziale Interaktionen und das Zusammenleben insgesamt. Der Hund wird zudem als gut erzogen wahrgenommen, was das Ansehen des Besitzers stärkt."
+    },
+    {
+     "type": "p",
+     "text": "Negative Konsequenzen der Nichtbeachtung"
+    },
+    {
+     "type": "p",
+     "text": "Ignoriert der Mensch diese Erkenntnisse und zeigt sich unruhig, hektisch oder angespannt, überträgt sich dies auf den Hund. Ein unsicherer oder gestresster Hund kann bei Begegnungen mit Menschen übermäßig bellen, zurückweichen oder gar schnappen. Gegenüber anderen Hunden kann er aggressiv oder ängstlich reagieren, was zu Konflikten führt. In der Natur könnte er auf Wildtiere impulsiv losstürmen oder in Panik geraten, was sowohl für ihn als auch für die Umwelt gefährlich ist. Langfristig kann dies die Beziehung zum Hund belasten, sein Vertrauen untergraben und Verhaltensprobleme wie Hyperaktivität oder Ängstlichkeit verstärken."
+    },
+    {
+     "type": "p",
+     "text": "Die harmonische, ruhige und gelassene Körpersprache des Menschen ist die Grundlage für ein stabiles Miteinander mit dem Hund. Sie wirkt wie ein Spiegel, in dem sich der Hund orientiert, und prägt sein Verhalten entscheidend – sei es im urbanen Alltag, im sozialen Umfeld oder in der Natur. Wer diese Prinzipien beherzigt, fördert nicht nur das Wohlbefinden und die Führigkeit seines Hundes, sondern auch ein friedliches Zusammenleben mit der sozialen Umwelt. Vernachlässigt man diese Erkenntnisse riskiert man Missverständnisse, Stress, mangelhafte Führigkeit und problematische Situationen."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

@@ -1,0 +1,177 @@
+Privacy Policy for the HundeWildnis App
+
+As of: October 2026
+
+1. Controller
+
+HundeWildnisSchule
+Manuela Ulbricht und Peter Jörg Ulbricht GbR
+Hohe Lehne 14
+01705 Freital, Germany
+VAT ID: DE458205581
+Email: hundewildnisschuleapp@online.de
+Web: https://wildnislehrer.com/impressum/datenschutzerklaerung/
+
+2. Data processing in the app
+
+2.1 No collection of personal data by the provider
+
+The provider does not operate any servers for the app on which user data is stored, and does not offer a user account. The provider does not collect, store or process any personal data of users.
+
+The data you enter in the app (e.g. dog profiles, diary, training and health entries, photos, location notes) is stored exclusively on your device.
+
+2.2 No tracking or analytics services
+
+The app does not use:
+
+- Google Analytics or other tracking or analytics SDKs
+- advertising SDKs
+- tracking cookies or third-party cookies
+- Google Play Services (except for updates via the Play Store)
+- login or user account
+
+2.3 Local data storage
+
+The app stores the following locally on your device:
+
+- your entries and records (see 2.1)
+- app settings
+- access credentials for optional services (WebDAV server, weather and routing keys); WebDAV credentials are stored in encrypted form
+- cached map tiles to save data volume
+
+The courses in the app are part of the app and are read locally. No internet connection is required for this.
+
+This data leaves your device only if you trigger a function that requires it (see section 3), or if you export or share data yourself. Uninstalling the app deletes the locally stored data.
+
+Note: Depending on your device and system settings, Android may back up app data through the Android backup service of the device manufacturer or Google. You control this in your device's system settings. The provider has no influence on this backup.
+
+2.4 Permissions
+
+The app requests permissions only when a function needs them. You can revoke them at any time in the Android settings.
+
+- Location: for the map, nearby places, weather at your location, compass, altimeter, walking speed, navigation, location sharing and emergency report
+- Camera: for photos (e.g. dog profile, plants) and the tick loupe
+- Microphone: for sound level and voice measurement; the app does not send any audio data to the provider or to servers
+- Notifications and foreground service: for reminders, timers, and ongoing navigation, walking speed and location functions
+- Storage access: for exporting and importing backups, PDF and CSV files
+
+3. External services
+
+The app connects only to the services required for a function you use. All connections are encrypted via HTTPS. With every connection, your IP address is technically transmitted to the respective service.
+
+3.1 OpenStreetMap (map display)
+
+The app uses OpenStreetMap to display maps.
+Data transmitted:
+
+- IP address (technically required)
+- Map section (geographic coordinates of the displayed area)
+- Zoom level
+
+Purpose: displaying map tiles for the location functions
+Storage: Map tiles are cached locally.
+
+When you tap the OpenStreetMap licence notice, the page openstreetmap.org/copyright is loaded in an embedded view; your IP address is transmitted in this case as well.
+
+Provider: OpenStreetMap Foundation, St John's Innovation Centre, Cowley Road, Cambridge CB4 0WS, United Kingdom
+Privacy policy: https://osmfoundation.org/wiki/Privacy_Policy
+Legal basis: Art. 6(1)(f) GDPR (legitimate interest in providing the map function)
+
+3.2 Weather data (OpenWeatherMap or Open-Meteo, only with your own access)
+
+The app retrieves weather data only after you have selected a weather provider in the settings (Services & Servers) and entered your own access: either a key from OpenWeatherMap, or the server address (and, if applicable, the key) of your Open-Meteo access or your own server. Without a selection and access, no weather data is retrieved and no data is sent to weather providers.
+
+Data transmitted:
+
+- Location coordinates (latitude and longitude)
+- IP address (technically required)
+- Your access key (stored encrypted on your device and sent to the provider with every request)
+
+Purpose: retrieving weather data for your location or a place you selected
+Voluntary use: The weather function and location sharing are optional. You can revoke the permission at any time in the Android settings and deselect the weather provider in the settings.
+Provider: The privacy policy and terms of use of the provider you selected apply. You conclude the access agreement directly with the provider.
+
+- OpenWeatherMap / OpenWeather Ltd.: https://openweather.co.uk/privacy-policy
+- Open-Meteo: https://open-meteo.com/en/terms
+
+Legal basis: Art. 6(1)(a) GDPR (consent by selecting the provider, entering the access and granting location permission)
+
+3.3 Further map services (Nominatim, Overpass, OpenRouteService)
+
+When you trigger an action (place search, nearby places, route calculation), the app retrieves data from the following services:
+
+- Nominatim (OpenStreetMap Foundation): place search and place names for coordinates
+- Overpass API (public servers, e.g. overpass-api.de; on request a server you enter): surroundings data and nearby places
+- OpenRouteService (HeiGIT gGmbH): route calculation with your own access key
+
+Data transmitted:
+
+- Search term or coordinates (latitude and longitude) or map area
+- IP address (technically required)
+- For OpenRouteService additionally your access key
+
+Purpose: providing the function triggered in each case
+Your own servers: In the settings (Services & Servers) you can change the address for Overpass. You also define the weather provider and access there (see 3.2). Keys are stored encrypted on your device.
+Privacy policies:
+
+- OpenStreetMap Foundation (Nominatim, Overpass): https://osmfoundation.org/wiki/Privacy_Policy
+- HeiGIT / OpenRouteService: https://openrouteservice.org/privacy-policy/
+
+Legal basis: Art. 6(1)(a) GDPR (consent by triggering the function and granting location permission)
+
+3.4 WebDAV synchronisation (optional, your own server)
+
+The app can synchronise your data with a WebDAV server that you enter yourself. Without a server entry, no synchronisation takes place.
+
+Data transmitted:
+
+- the app data you have designated for synchronisation (data files and photos)
+- your access credentials for the server (user name and password)
+- IP address (technically required)
+
+Purpose: synchronising your data between your devices
+
+You, or the operator of the server you choose, are responsible for the server and the data stored on it. The provider of the app does not receive this data. Access credentials are stored encrypted on your device.
+
+Legal basis: Art. 6(1)(a) GDPR (consent by setting up and enabling synchronisation)
+
+3.5 Links to other applications
+
+Some functions open content in other applications, for example in the browser, in the PayPal app or in the Play Store. From the moment it opens, the privacy policy of the respective provider applies.
+
+- Donation via PayPal: The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider's policy applies: https://www.paypal.com/de/legalhub/privacy-full.
+- Map links: Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.
+- Rating and sharing the app: The link to the Play Store opens the Play Store or the browser.
+
+Legal basis: Art. 6(1)(a) GDPR (consent by tapping the link)
+
+3.6 Sharing and export
+
+You pass on emergency reports, location shares, PDF and CSV files and backups via the Android "Share" function or via file export. You choose the application or recipient yourself. Once passed on, the data is held by the recipient you chose. That recipient's privacy policy applies to this processing.
+
+3.7 Overview of third-party services
+
+- OpenStreetMap: displaying maps; IP address, map area
+- Weather provider of your choice (OpenWeatherMap or Open-Meteo, only with your own access): weather data; IP address, location, access key
+- Nominatim / Overpass: place search, nearby places; IP address, search term, coordinates
+- OpenRouteService: route calculation; IP address, coordinates, own key
+- WebDAV server of your choice: synchronisation; data, credentials, IP address
+- PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app
+
+All connections are encrypted via HTTPS.
+
+4. Your rights
+
+Because the provider receives no personal data from you through the app, the provider cannot give you information about stored data and cannot correct or delete any data. You can view, change and delete the data on your device yourself.
+
+For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
+
+You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR).
+
+If you have questions about this privacy policy or the app, you can contact us at any time: hundewildnisschuleapp@online.de
+
+5. Changes to this privacy policy
+
+This privacy policy may be updated when necessary. You will always find the current version in the app in the menu under "Privacy Policy".
+
+As of this privacy policy: October 2026

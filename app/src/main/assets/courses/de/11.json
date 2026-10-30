@@ -1,0 +1,298 @@
+{
+ "id": "11",
+ "title": "Unfallschutz",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Prävention für Sicherheit und Wohlergehen"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "11-01",
+   "title": "Einführung",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Unfallschutz im Zusammenleben und im Umgang mit Hunden bezeichnet die Gesamtheit präventiver Maßnahmen, die darauf abzielen, Verletzungen, Gefährdungen und traumatische Ereignisse für Mensch und Hund zu vermeiden."
+    },
+    {
+     "type": "p",
+     "text": "Er umfasst sowohl physische als auch psychische Sicherheitsaspekte und berücksichtigt die besonderen Anforderungen einer interspezifischen Beziehung, die durch Abhängigkeit, Kommunikation und Verantwortung geprägt ist."
+    },
+    {
+     "type": "p",
+     "text": "Fachlich basiert Unfallschutz auf Erkenntnissen aus der Veterinärmedizin, der Verhaltensbiologie, der Unfallforschung und der Human-Animal-Interaction-Forschung."
+    },
+    {
+     "type": "h",
+     "text": "Wichtige Erkenntnis ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Viele Unfälle im Mensch-Hund-Zusammenleben sind nicht zufällig, sondern das Ergebnis von Fehleinschätzungen, mangelnder Prävention, Stress oder unzureichender Kommunikation."
+    },
+    {
+     "type": "h",
+     "text": "Dimensionen des Unfallschutzes 🌐"
+    },
+    {
+     "type": "p",
+     "text": "Emotionale Ebene: Unfallschutz betont die Verantwortung, Stress- und Überforderungssignale frühzeitig zu erkennen und die Beziehung so zu gestalten, dass Vertrauen und Sicherheit entstehen."
+    },
+    {
+     "type": "p",
+     "text": "Philosophische Ebene: Er verweist auf die ethische Pflicht des Menschen, in einer strukturell asymmetrischen Beziehung Schutz zu gewährleisten, ohne die Autonomie und Würde des Hundes zu verletzen."
+    },
+    {
+     "type": "p",
+     "text": "Unfallschutz ist kein rein technisches Thema, sondern ein integraler Bestandteil verantwortungsvoller Hundehaltung. Er setzt voraus, Hunde als empfindungsfähige, lernende und sozial reagierende Wesen anzuerkennen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-02",
+   "title": "1. Fachliche Aspekte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Verhaltensbiologie und wissenschaftliche Grundlagen"
+    },
+    {
+     "type": "h",
+     "text": "Grundprinzipien der Prävention 🔬"
+    },
+    {
+     "type": "p",
+     "text": "Aus verhaltensbiologischer Sicht entstehen viele Unfälle im Mensch-Hund-Kontext durch eine Diskrepanz zwischen menschlichen Erwartungen und hündischem Verhalten."
+    },
+    {
+     "type": "p",
+     "text": "Hunde reagieren situationsabhängig auf Stress, Schmerz, Bedrohung oder Überforderung. Werden diese Zustände nicht erkannt oder fehlinterpretiert, kann es zu Abwehrreaktionen, Fluchtbewegungen oder unkontrollierten Bewegungen kommen."
+    },
+    {
+     "type": "p",
+     "text": "Unfallschutz zielt daher primär auf die Reduktion von Stressoren, die Förderung sicherer Interaktionen und die Gestaltung einer vorhersehbaren Umwelt ab."
+    },
+    {
+     "type": "p",
+     "text": "Präventive Maßnahmen berücksichtigen dabei immer sowohl den Hund als auch den Menschen als aktive Beteiligte."
+    },
+    {
+     "type": "h",
+     "text": "Typische Unfallrisiken ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Beiß- und Abwehrverletzungen: Meist ausgelöst durch Angst, Schmerz, Ressourcenschutz oder Missverständnisse in der Interaktion."
+    },
+    {
+     "type": "p",
+     "text": "Sturz- und Stolperunfälle: Etwa durch Ziehen an der Leine, plötzliche Bewegungen oder ungesicherte Situationen."
+    },
+    {
+     "type": "p",
+     "text": "Haushaltsbedingte Verletzungen: Darunter das Verschlucken ungeeigneter Gegenstände, Verletzungen durch elektrische Kabel oder giftige Substanzen."
+    },
+    {
+     "type": "p",
+     "text": "Verkehrs- und Transportrisiken: Insbesondere bei ungesicherten Hunden im Straßenverkehr oder im Fahrzeug."
+    },
+    {
+     "type": "p",
+     "text": "Zwischenfälle mit anderen Tieren: Ausgelöst durch mangelnde Kontrolle, fehlende Sozialisation oder territoriale Konflikte."
+    },
+    {
+     "type": "h",
+     "text": "Präventive Maßnahmen 🛡️"
+    },
+    {
+     "type": "p",
+     "text": "Frühe und kontinuierliche Sozialisation, angepasst an Alter und individuelle Belastbarkeit."
+    },
+    {
+     "type": "p",
+     "text": "Training auf Basis positiver Verstärkung und minimal aversiver Methoden (z. B. LIMA-Prinzip ), um Stress und Angst zu vermeiden."
+    },
+    {
+     "type": "p",
+     "text": "Lesen und Respektieren hündischer Körpersprache, etwa bei Anzeichen von Unsicherheit, Rückzug oder Erstarrung."
+    },
+    {
+     "type": "p",
+     "text": "Sichere Gestaltung des häuslichen Umfelds, inklusive Aufbewahrung potenziell gefährlicher Stoffe und Gegenstände."
+    },
+    {
+     "type": "p",
+     "text": "Angemessene Sicherung im Straßenverkehr und beim Transport, um Ablenkung und Verletzungen zu vermeiden."
+    },
+    {
+     "type": "p",
+     "text": "Regelmäßige tierärztliche Betreuung, da Schmerzen oder Erkrankungen das Unfallrisiko erhöhen können."
+    },
+    {
+     "type": "h",
+     "text": "Kinder und Hunde 👶"
+    },
+    {
+     "type": "p",
+     "text": "Ein besonderer Fokus liegt auf der Prävention im Kontakt mit Kindern, da diese hündische Signale häufig nicht korrekt interpretieren können und daher Anleitung und Aufsicht benötigen."
+    },
+    {
+     "type": "h",
+     "text": "Grenzen und Differenzierung ⚖️"
+    },
+    {
+     "type": "p",
+     "text": "Unfallprävention muss stets individuell angepasst werden. Alter, Gesundheitszustand, Lernerfahrungen und Umweltbedingungen beeinflussen das Risiko erheblich."
+    },
+    {
+     "type": "p",
+     "text": "Pauschale Zuschreibungen, etwa anhand von Rassezugehörigkeit, gelten wissenschaftlich als nicht ausreichend, da Verhalten immer aus dem Zusammenspiel von Genetik, Umwelt und Erfahrung entsteht."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-03",
+   "title": "2. Empathische Aspekte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Emotionale Bindung und Gegenseitigkeit"
+    },
+    {
+     "type": "h",
+     "text": "Emotionale Sicherheit als Schutzfaktor 💚"
+    },
+    {
+     "type": "p",
+     "text": "Eine stabile, vertrauensvolle Beziehung zwischen Mensch und Hund wirkt als zentraler Schutzfaktor gegen Unfälle."
+    },
+    {
+     "type": "p",
+     "text": "Hunde, die sich sicher fühlen, zeigen weniger stressbedingte Abwehrreaktionen und können menschliche Signale besser verarbeiten."
+    },
+    {
+     "type": "p",
+     "text": "Emotionale Sicherheit entsteht durch verlässliche Interaktionen, ruhige Kommunikation und konsistente Rahmenbedingungen."
+    },
+    {
+     "type": "h",
+     "text": "Emotionale Signale & Prävention 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Empathischer Unfallschutz erfordert die Fähigkeit, frühe Anzeichen von Stress oder Überforderung zu erkennen. Dazu zählen unter anderem Vermeidungsverhalten, erhöhte Körperspannung, Erstarren oder übermäßige Erregung."
+    },
+    {
+     "type": "p",
+     "text": "Diese Signale sind keine „Ungezogenheit\", sondern adaptive Reaktionen, die ernst genommen werden müssen."
+    },
+    {
+     "type": "p",
+     "text": "Aus moderner welfare-orientierter Perspektive gilt die Förderung von Handlungsspielräumen als unfallpräventiv. Hunde, die Wahlmöglichkeiten innerhalb sicherer Grenzen haben, zeigen weniger Frustration und reagieren seltener impulsiv. Autonomie bedeutet dabei nicht Kontrollverlust, sondern bewusst gestaltete Optionen."
+    },
+    {
+     "type": "h",
+     "text": "Emotionale Nachsorge 🩹"
+    },
+    {
+     "type": "p",
+     "text": "Nach belastenden Ereignissen ist emotionale Stabilisierung wichtig. Sowohl Hunde als auch Menschen können nach Unfällen Stressreaktionen entwickeln."
+    },
+    {
+     "type": "p",
+     "text": "Ruhige, unterstützende Interaktionen und gegebenenfalls fachliche Begleitung tragen zur Verarbeitung bei und reduzieren das Risiko erneuter Zwischenfälle."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-04",
+   "title": "3. Philosophische Aspekte",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Ethik, Gerechtigkeit und Machtdynamiken"
+    },
+    {
+     "type": "h",
+     "text": "Verantwortung in asymmetrischen Beziehungen ⚖️"
+    },
+    {
+     "type": "p",
+     "text": "Philosophisch betrachtet ist der Mensch in der Mensch-Hund-Beziehung die strukturell überlegene Partei. Diese Machtasymmetrie begründet eine besondere moralische Verantwortung, Gefahren zu minimieren und Schaden zu verhindern."
+    },
+    {
+     "type": "p",
+     "text": "Sicherheit ist dabei nicht bloß funktional, sondern Ausdruck von Fürsorge und Respekt."
+    },
+    {
+     "type": "p",
+     "text": "Moderne Tierethik erkennt Hunde als moralisch relevante, empfindungsfähige Wesen an. Unfälle sind aus dieser Perspektive nicht nur praktische Probleme, sondern potenzielle Verletzungen moralischer Pflichten, die aus Domestikation und Abhängigkeit resultieren."
+    },
+    {
+     "type": "h",
+     "text": "Sicherheit vs. Freiheit 🔐"
+    },
+    {
+     "type": "p",
+     "text": "Ein zentrales ethisches Spannungsfeld liegt im Verhältnis von Sicherheit und Autonomie. Faire Unfallprävention sucht nicht maximale Kontrolle, sondern eine verantwortungsvolle Balance, die Schutz bietet, ohne den Hund zum Objekt reiner Risikovermeidung zu machen."
+    },
+    {
+     "type": "p",
+     "text": "Eine vollständige Gleichstellung von Mensch und Hund ist philosophisch nicht möglich. Ethik im Unfallschutz bedeutet daher nicht Gleichheit, sondern reflektierte Verantwortung, die regelmäßig überprüft und an neue Erkenntnisse angepasst wird."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-05",
+   "title": "4. Integration und Gesamtperspektive",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Unfallschutz im Zusammenleben mit Hunden ist ein multidisziplinäres Querschnittsthema, das biologische Erkenntnisse, emotionale Kompetenz und ethische Reflexion verbindet."
+    },
+    {
+     "type": "p",
+     "text": "Er ist kein Zusatz zur Hundehaltung, sondern ein grundlegender Bestandteil eines respektvollen, sicheren und verantwortungsvollen Zusammenlebens."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "11-06",
+   "title": "Kernaussagen",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Unfälle sind oft vermeidbar durch Prävention und aufmerksame Kommunikation."
+    },
+    {
+     "type": "p",
+     "text": "Emotionale Sicherheit ist ein zentraler Schutzfaktor."
+    },
+    {
+     "type": "p",
+     "text": "Frühes Erkennen von Stresssignalen verhindert gefährliche Situationen."
+    },
+    {
+     "type": "p",
+     "text": "Individuelle Anpassung ist wichtiger als pauschale Regeln."
+    },
+    {
+     "type": "p",
+     "text": "Unfallschutz ist Ausdruck ethischer Verantwortung in asymmetrischen Beziehungen."
+    },
+    {
+     "type": "p",
+     "text": "Sicherheit entsteht durch die Balance von Schutz, Vertrauen und Autonomie."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

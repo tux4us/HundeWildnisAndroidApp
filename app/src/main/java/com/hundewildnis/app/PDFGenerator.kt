@@ -172,7 +172,7 @@ object PDFGenerator {
             textAlign = Paint.Align.CENTER
         }
         val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date())
-        canvas.drawText("Erstellt am $dateStr mit HundeWildnis App - www.wildnislehrer.de", 297f, 820f, footerPaint)
+        canvas.drawText("Erstellt am $dateStr mit HundeWildnis App", 297f, 820f, footerPaint)
 
         pdfDocument.finishPage(currentPage)
 

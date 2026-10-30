@@ -1,0 +1,474 @@
+{
+ "id": "13",
+ "title": "Leinenarbeit",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "...bedeutet loslassen können"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "13-01",
+   "title": "Grundprinzip",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Leinentraining ist kein isoliertes Übungsprogramm, sondern ein alltagsbegleitendes Training . Es findet immer statt – auf jedem Spaziergang, in jeder Begegnung."
+    },
+    {
+     "type": "p",
+     "text": "Halsband und Geschirr sind in erster Linie Informationsübermittler und nicht zum Halten des Hundes gedacht. Die Leine kommuniziert – sie zwingt nicht."
+    },
+    {
+     "type": "p",
+     "text": "Leinenführigkeit ist das Produkt aus Entspannung und Sicherheit."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-02",
+   "title": "1. Grundausstattung & Vorbereitung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Die richtige Leine 🦮"
+    },
+    {
+     "type": "p",
+     "text": "Eine Führleine sollte idealerweise 2 Meter lang , jedoch keinesfalls kürzer als 1,20 Meter sein."
+    },
+    {
+     "type": "p",
+     "text": "Eine einfache Leine ohne Schnallen und Beschläge garantiert stressfreies Arbeiten."
+    },
+    {
+     "type": "p",
+     "text": "Achte auf einen stabilen Karabinerhaken ."
+    },
+    {
+     "type": "h",
+     "text": "Ungeeignete Ausrüstung ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Eine flexible, ausrollbare Automatikleine ist nach aller Erfahrung sehr ungeeignet für das generelle Training."
+    },
+    {
+     "type": "p",
+     "text": "Kotbeutelspender und anderer „Kram\" haben nichts an der Leine verloren."
+    },
+    {
+     "type": "h",
+     "text": "Halsband oder Geschirr? 🔖"
+    },
+    {
+     "type": "p",
+     "text": "Ob Halsband oder Geschirr verwendet wird, entscheidet jeder für sich – und letztlich der Hund."
+    },
+    {
+     "type": "p",
+     "text": "Halsband und Geschirr sind in erster Linie Informationsübermittler und letztlich nicht zum Halten des Hundes gedacht."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-03",
+   "title": "2. Grundprinzipien der Leinenführung",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Die Führseite 🧭"
+    },
+    {
+     "type": "p",
+     "text": "Der Hund wird immer an der gleichen Seite geführt. Ausnahmen davon sollten selten sein."
+    },
+    {
+     "type": "p",
+     "text": "Keine Sorge bei linksseitiger Führung – Hunde lernen trotzdem einwandfrei am Fahrrad rechts zu laufen."
+    },
+    {
+     "type": "p",
+     "text": "Die Gewöhnung des Gehens an einer Seite sollte kontinuierlich und ruhig erfolgen."
+    },
+    {
+     "type": "h",
+     "text": "Leinenhaltung & Tempo ⏱️"
+    },
+    {
+     "type": "p",
+     "text": "Die Leine wird vorwiegend am Endbereich gehalten oder wenigstens so lang, dass sie durchhängend locker ist."
+    },
+    {
+     "type": "p",
+     "text": "Ausnahmsweise darf die Leine kürzer gefasst werden, wenn ansonsten Unbeteiligte belästigt oder gefährdet werden könnten bzw. es die einzelne Übung erfordert."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen in ruhigem Tempo , immer etwas langsamer, als der Hund gehen möchte."
+    },
+    {
+     "type": "p",
+     "text": "Ein gutes Leinentempo ist jenes, welches den Hund zu einem Gehen im normalen Gang bringt. Traben oder gar Galopptempo behindern den Lernerfolg."
+    },
+    {
+     "type": "h",
+     "text": "Wegführung & Kommunikation 🗣️"
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen bevorzugt auf Wegmitte , um den Hund aus den ablenkenden Wegrändern herauszulösen."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen so, dass wir allseits Gelassenheit ausstrahlen ."
+    },
+    {
+     "type": "p",
+     "text": "Wir sprechen in Ruhe und normalerweise nicht im Kommandoton ."
+    },
+    {
+     "type": "p",
+     "text": "Wir loben den Hund mit ruhiger Stimme und streicheln beruhigend."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-04",
+   "title": "3. Das Zwei-Kreise-System",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Das Herzstück des Leinentrainings ist ein einfaches, aber wirkungsvolles System mit zwei imaginären Halbkreisen an deiner Führseite:"
+    },
+    {
+     "type": "p",
+     "text": "Äußerer Kreis: Im Radius der Leinenlänge von circa 2 Metern"
+    },
+    {
+     "type": "p",
+     "text": "Innerer Kreis: Bei ungefähr 1 Meter Radius, begrenzt durch die Führseite"
+    },
+    {
+     "type": "h",
+     "text": "Verhalten im inneren Kreis ✅"
+    },
+    {
+     "type": "p",
+     "text": "Bewegt sich der Hund beim Gehen im inneren Kreis, so sprechen wir ihn von Zeit zu Zeit mit ruhiger und lobender Stimme an."
+    },
+    {
+     "type": "p",
+     "text": "Ab und an lassen wir ihn sitzen und loben ihn in Ruhe."
+    },
+    {
+     "type": "p",
+     "text": "Wer möchte, gibt dem Hund ein Leckerlie zur Belohnung. Dazu sollte er uns aber unbedingt anschauen – eher gibt es nichts."
+    },
+    {
+     "type": "p",
+     "text": "Alternativ kann bei Hunden mit Spieltrieb statt Leckerlie ab und an überraschend ein Spielzeug zur kurzen Belohnung hervorgeholt werden."
+    },
+    {
+     "type": "h",
+     "text": "Korrektur bei Verlassen der Führseite ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Falls der Hund während des Gehens die Führseite verlässt, so wird er einfach nur im Gehen oder auch während 3 bis 4 Rückwärtsschritten an die richtige Seite zurückgeführt."
+    },
+    {
+     "type": "p",
+     "text": "Im Laufe der Zeit wird er sich an das Gehen an der gewünschten Seite gewöhnen."
+    },
+    {
+     "type": "p",
+     "text": "Wichtig ist das stetige Korrigieren zur gewählten Seite."
+    },
+    {
+     "type": "h",
+     "text": "Korrektur im äußeren Kreis ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Bewegt sich der Hund während des Gehens in den äußeren Kreis (Richtung 2 Meter Leinenlänge), so sollten wir den Korrekturvorgang einleiten. Wir gehen mit lang gehaltener Leine zügig einige Schritte rückwärts und beginnen lobend zu sprechen, sobald der Hund sich uns nähernd nachfolgt."
+    },
+    {
+     "type": "p",
+     "text": "Wir lassen ihn dann vor uns, uns zugewandt und uns anschauend sitzen oder später auch Platz machen ."
+    },
+    {
+     "type": "p",
+     "text": "Nun warten wir bis Beruhigung eintritt und er uns wiederum anschaut. Dies darf auch durch ruhiges Ansprechen mit seinem Namen unterstützt werden."
+    },
+    {
+     "type": "p",
+     "text": "Wir loben den Hund, nachdem wir ihn gegebenenfalls aus dem Platz ins Sitz gebracht haben, durch ruhiges Streicheln, ruhiges Reden und gegebenenfalls mit einem Leckerlie bzw. mit dem Spiel mittels Spielzeug."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-05",
+   "title": "4. Trainingsablauf Schritt für Schritt",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Merke: Leinenarbeit findet immer statt. Sie ist alltagsbegleitend, also essentiell. Leinenarbeit ist also vorwiegend ein begleitendes Training."
+    },
+    {
+     "type": "h",
+     "text": "Phase 1 – Start & Grundhaltung 🟢"
+    },
+    {
+     "type": "p",
+     "text": "Wir halten die Leine recht locker und gehen in Ruhe."
+    },
+    {
+     "type": "p",
+     "text": "Jede Art des zu schnellen Gehens bringt den Hund in einen Vorwärtsdrang, welcher wiederum ein Ziehen an der Leine befördert."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen erst wieder los, wenn sich der Hund in entspannter Sitzhaltung befindet."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen jeweils ohne Ansprechen des Hundes los. Ein regelmässiges Ansprechen zum Losgehen könnte die Wirkung eines Startsignals und damit unter Umständen eine unerwünschte Wirkung entfalten. Wer zum Losgehen den Hund trotzdem ansprechen möchte, sollte dies mit ruhiger und entspannter Stimmlage tun."
+    },
+    {
+     "type": "h",
+     "text": "Phase 2 – Pausen einbauen ⏸️"
+    },
+    {
+     "type": "p",
+     "text": "Wir starten jeweils nach einer kurzen Pause ruhig aus dem Sitz heraus neu und setzen unseren Spaziergang fort."
+    },
+    {
+     "type": "p",
+     "text": "Wir gehen mit locker und lang gehaltener Leine in Ruhe los."
+    },
+    {
+     "type": "h",
+     "text": "Phase 3 – Die zwei Möglichkeiten 🔀"
+    },
+    {
+     "type": "p",
+     "text": "Nun hat unser Hund zwei Möglichkeiten :"
+    },
+    {
+     "type": "p",
+     "text": "Er bleibt im inneren 'lockeren' Kreis – alles bleibt gut. Wir strahlen Ruhe aus und gehen nicht zu schnell."
+    },
+    {
+     "type": "p",
+     "text": "Oder er strebt in den äusseren Kreis von uns fort und muss wieder wie vorhin beschrieben ins 'Sitz' oder auch ins 'Platz' gehen."
+    },
+    {
+     "type": "h",
+     "text": "Phase 4 – Progressive Verbesserung 📈"
+    },
+    {
+     "type": "p",
+     "text": "Dieser Vorgang wiederholt sich je nach Bedarf mehr oder weniger oft."
+    },
+    {
+     "type": "p",
+     "text": "Da unser Hund ungeübterweise noch recht häufig ausbrechen wird, empfiehlt es sich zu Anfang nur die stark ausufernden Verhaltensweisen zu korrigieren."
+    },
+    {
+     "type": "p",
+     "text": "Mit fortschreitender Verbesserung können dann zunehmend auch kleinere Ungenauigkeiten trainiert werden."
+    },
+    {
+     "type": "p",
+     "text": "Korrigiert werden sollte zunächst ein starkes Ziehen an der Leine – später dann auch ein noch leichtes Ziehen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-06",
+   "title": "5. Spezielle Herausforderungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wegrandschnüffeln kontrollieren ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Ein häufiges und intensives Wegrandschnüffeln sollte konsequent gemindert werden."
+    },
+    {
+     "type": "p",
+     "text": "Nicht extra noch stehenbleiben oder dem Hund gar nachgeben, sondern mit dem Hund einfach weitergehen ."
+    },
+    {
+     "type": "p",
+     "text": "Von vornherein nicht erst in Wegrandnähe gehen ."
+    },
+    {
+     "type": "h",
+     "text": "Folgen von starkem Wegrandschnüffeln ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Merke: Starkes Wegrandschnüffeln führt mit zunehmendem Lebensalter beim heranwachsenden Hund gern zu einem starken Revieranspruch und damit gegebenenfalls zu einer Konfliktfreudigkeit bei Hundebegegnungen, verbunden mit eingeschränkter Führigkeitsbereitschaft."
+    },
+    {
+     "type": "h",
+     "text": "Situative Anpassung 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Dabei ist zu beachten, dass unser Hund keine Maschine ist und ebenso wie wir Umwelteinflüssen unterliegt."
+    },
+    {
+     "type": "p",
+     "text": "Daher immer mit Gefühl und Verstand abwägen, ob eine Verhaltensweise korrigiert werden sollte."
+    },
+    {
+     "type": "p",
+     "text": "Grundsätzlich gilt dabei, dass wir nur die Korrekturen durchführen dürfen, welche wir im Bezug auf die Situation auch zu einem positiven Ende und damit zum Lernerfolg führen können."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-07",
+   "title": "6. Die richtige Trainingsatmosphäre",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Leinentraining sollte stets mit entspannter Ausstrahlung, großer Gelassenheit, Ruhe und Herzlichkeit erfolgen. Unser Hund soll sich in unserer Nähe wohlfühlen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-08",
+   "title": "7. Wichtige Bedingungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Zu vermeidende Verhaltensweisen ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Vermeide unbedingt eine dauerhaft gestraffte Leine ."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide eine dauerhaft kurz gehaltene Leine oder eine kurz gehaltene Leine in Stress-Situationen ."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide Seitenwechsel des Hundes."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide ein dauerhaftes Wegrandschnüffeln ."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide in der Lernphase selbstausziehende Leinen , denn diese lernen dem Hund, dass er tun und lassen kann, was er möchte."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, dem Hund hinterherzulaufen oder sich von ihm beliebig ziehen zu lassen."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide unkontrollierte ziehende Einwirkungen ."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide es, auf den Hund zu warten, wenn er sich irgendwo festgeschnüffelt hat."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide, dass der Hund in die Leine beißt ."
+    },
+    {
+     "type": "p",
+     "text": "Vermeide alles, was die Leine dauerhaft straff auf den Hund einwirken lässt."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-09",
+   "title": "Abschnitt 9",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Die „Zwei-Minuten-Pause\""
+    },
+    {
+     "type": "p",
+     "text": "Halte auf dem nächsten Spaziergang bewusst dreimal inne: Lasse deinen Hund sitzen, warte auf Blickkontakt und setze den Weg erst dann fort, wenn Ruhe eingetreten ist. Diese kurzen Unterbrechungen schulen Impulskontrolle und Orientierung an dir – mental wertvoller als das bloße Weiterlaufen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-10",
+   "title": "Checkliste für erfolgreiches Training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Hund immer an der gleichen Seite geführt?"
+    },
+    {
+     "type": "p",
+     "text": "Leine immer lang und locker gehalten?"
+    },
+    {
+     "type": "p",
+     "text": "Immer ein ruhiges Tempo gegangen?"
+    },
+    {
+     "type": "p",
+     "text": "Überwiegend auf der Mitte des Weges gegangen?"
+    },
+    {
+     "type": "p",
+     "text": "Ruhige Kommunikation mit dem Hund beachtet?"
+    },
+    {
+     "type": "p",
+     "text": "War ich harmonisch und aufmerksam?"
+    },
+    {
+     "type": "p",
+     "text": "Habe ich auf Pausen geachtet?"
+    },
+    {
+     "type": "p",
+     "text": "War das Lob ruhig und herzlich?"
+    },
+    {
+     "type": "p",
+     "text": "Habe ich auf uns zugewandtes Ausführen der Übung geachtet?"
+    },
+    {
+     "type": "p",
+     "text": "Habe ich dem Hund den inneren und äußeren Kreis gut vermittelt?"
+    },
+    {
+     "type": "p",
+     "text": "Habe ich es vermieden, mich dem Tempo des Hundes anzupassen?"
+    },
+    {
+     "type": "p",
+     "text": "Habe ich auf eine angenehme Trainingsatmosphäre geachtet?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

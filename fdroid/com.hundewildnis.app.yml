@@ -12,7 +12,7 @@ IssueTracker: https://github.com/tux4us/HundeWildnisAndroidApp/issues
 # Zu klären mit den F-Droid-Betreuern (nicht selbst entscheiden):
 #  - NonFreeNet: Wetter kommt von Diensten, die nicht frei sind (OpenWeatherMap / Open-Meteo, jeweils mit
 #    Nutzerschlüssel bzw. Nutzer-Server, kein Standarddienst). Anti-Feature NonFreeNet vermutlich zu setzen.
-#  - Spendenlinks (Wero/PayPal o. ä.) in SupportActivity müssen im Metadatensatz stimmen.
+#  - Spendenlink (nur PayPal, freiwillig, ohne Gegenleistung) in SupportActivity muss im Metadatensatz stimmen.
 AntiFeatures: []
 
 RepoType: git

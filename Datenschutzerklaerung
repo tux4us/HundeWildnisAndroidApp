@@ -1,305 +1,177 @@
 Datenschutzerklärung zur HundeWildnis App
 
-Stand: Januar 2026 (zuletzt aktualisiert: Januar 2026)
+Stand: Oktober 2026
 
 1. Verantwortlicher
 
 HundeWildnisSchule
 Manuela Ulbricht und Peter Jörg Ulbricht GbR
-Steuer-Nr.: Finanzamt Pirna 210/155/00902
+Hohe Lehne 14
+01705 Freital
 Ust-IdNr.: DE458205581
-E-Mail: tux4us@online.de
+E-Mail: hundewildnisschuleapp@online.de
+Web: https://wildnislehrer.com/impressum/datenschutzerklaerung/
 
 2. Datenverarbeitung in der App
 
-2.1 Keine Erhebung personenbezogener Daten
+2.1 Keine Erhebung personenbezogener Daten durch den Anbieter
 
-Die HundeWildnis App erhebt, speichert oder verarbeitet keine personenbezogenen Daten der Nutzer.
+Der Anbieter betreibt für die App keine Server, auf denen Daten der Nutzer gespeichert werden, und bietet kein Nutzerkonto an. Der Anbieter erhebt, speichert oder verarbeitet keine personenbezogenen Daten der Nutzer.
+
+Die Daten, die du in der App eingibst (z. B. Hundeprofile, Tagebuch-, Trainings- und Gesundheitseinträge, Fotos, Standortnotizen), liegen ausschließlich auf deinem Gerät.
 
 2.2 Keine Tracking- oder Analyse-Dienste
 
-Die App verwendet keine der folgenden Technologien:
+Die App verwendet nicht:
 
-Was die App NICHT macht:
+- Google Analytics oder andere Tracking- bzw. Analyse-SDKs
+- Werbe-SDKs
+- Tracking-Cookies oder Cookies von Drittanbietern
+- Google Play Services (außer für Updates über den Play Store)
+- Anmeldung oder Nutzerkonto
 
-❌ Keine WebView mit Cookie-Speicherung für Login/Session
-❌ Keine Cookie-basierte Authentifizierung
-❌ Keine Tracking-Cookies
-❌ Keine Third-Party Cookies
-❌ Google Analytics
-❌ Tracking-Tools / Analyse-SDKs
-❌ Werbe-SDKs
-❌ Google Play Services (außer für Play Store Updates)
-❌ Cookies speichern
+2.3 Lokale Datenspeicherung
 
-Was die App macht:
+Die App speichert lokal auf deinem Gerät:
 
-✅ WebView nur für Anzeige (ContentActivity zeigt WordPress-Inhalte)
-✅ Lokaler Cache (SharedPreferences für Theme, ContentCache für Beiträge)
-✅ Keine Session-Verwaltung mit Cookies
+- deine Eingaben und Aufzeichnungen (siehe 2.1)
+- Einstellungen der App
+- Zugangsdaten für optionale Dienste (WebDAV-Server, Wetter- und Routing-Schlüssel); die WebDAV-Zugangsdaten werden verschlüsselt gespeichert
+- zwischengespeicherte Kartenkacheln, um Datenvolumen zu sparen
 
-2.3 Internetverbindung
+Die Kurse in der App sind Teil der App und werden lokal gelesen. Dafür ist keine Internetverbindung nötig.
 
-Die App benötigt eine Internetverbindung, um Inhalte von wildnislehrer.com abzurufen. Dabei werden technisch notwendig folgende Daten an den Server von wildnislehrer.com übertragen:
+Diese Daten verlassen dein Gerät nur, wenn du eine Funktion auslöst, die dies erfordert (siehe Abschnitt 3), oder wenn du Daten selbst exportierst oder teilst. Durch Deinstallation der App werden die lokal gespeicherten Daten gelöscht.
 
-- IP-Adresse (für die Verbindung erforderlich)
-- Angefragte URL
-- Datum und Uhrzeit der Anfrage
-- Verwendetes Betriebssystem (Android-Version)
+Hinweis: Android kann App-Daten je nach Geräte- und Systemeinstellungen im Rahmen der Android-Datensicherung des Geräteherstellers bzw. von Google sichern. Das steuerst du in den Systemeinstellungen deines Geräts. Auf diese Sicherung hat der Anbieter keinen Einfluss.
 
-Diese Daten werden ausschließlich zur Bereitstellung der Inhalte verwendet und nicht von der App selbst gespeichert oder weiterverarbeitet.
+2.4 Berechtigungen
 
-2.4 Lokale Datenspeicherung
+Die App fragt Berechtigungen erst an, wenn eine Funktion sie braucht. Du kannst sie jederzeit in den Android-Einstellungen widerrufen.
 
-Die App speichert ausschließlich lokal auf deinem Gerät:
+- Standort: für Karte, Orte in der Nähe, Wetter am Standort, Kompass, Höhenmesser, Gehgeschwindigkeit, Navigation, Standortfreigabe und Notfallmeldung
+- Kamera: für Fotos (z. B. Hundeprofil, Pflanzen) und die Zeckenlupe
+- Mikrofon: für Lautstärke- und Stimmmessung; die App sendet keine Audiodaten an den Anbieter oder an Server
+- Benachrichtigungen und Vordergrunddienst: für Erinnerungen, Timer sowie laufende Navigation, Gehgeschwindigkeits- und Standortfunktionen
+- Speicherzugriff: für Export und Import von Sicherungen, PDF- und CSV-Dateien
 
-- Theme-Einstellung (Hell-/Dunkel-Modus)
-- Zwischengespeicherte Inhalte (Cache zur Verbesserung der Ladezeiten)
-- Einwilligungen (YouTube-Hinweis, Twitter-Hinweis, Signal-Hinweis gesehen)
+3. Externe Dienste
 
-Diese Daten verlassen niemals dein Gerät und können jederzeit durch Deinstallation der App vollständig gelöscht werden.
+Die App verbindet sich nur mit den Diensten, die für eine von dir genutzte Funktion nötig sind. Alle Verbindungen erfolgen verschlüsselt über HTTPS. Bei jeder Verbindung wird technisch bedingt die IP-Adresse an den jeweiligen Dienst übertragen.
 
-3. Externe Inhalte und Dienste
+3.1 OpenStreetMap (Kartendarstellung)
 
-3.1 WordPress-API (Blogbeiträge, Seiten, Kurse)
-
-Die App lädt Inhalte über die WordPress REST API von wildnislehrer.com.
-
+Die App verwendet OpenStreetMap zur Anzeige von Karten.
 Übertragene Daten:
-- IP-Adresse (technisch erforderlich)
-- Angefragte Inhalte (Blog-Posts, Seiten, Kurse)
-- Datum und Uhrzeit der Anfrage
-- App-Version und Android-Version (User-Agent)
 
-Zweck: Anzeige von Blogbeiträgen, Seiten und Kursinhalten in der App
-
-Verschlüsselung: Alle Anfragen erfolgen über HTTPS (verschlüsselt)
-
-Speicherung: Die geladenen Inhalte werden lokal auf Ihrem Gerät zwischengespeichert (Cache), um Ladezeiten zu verkürzen. Dieser Cache wird automatisch nach 6 Stunden aktualisiert.
-
-Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der App-Funktionalität)
-
-Datenschutzerklärung des Anbieters:
-👉 https://wildnislehrer.com/datenschutzerklaerung/
-
-3.2 YouTube Data API v3 (Video-Liste)
-
-Die App lädt eine Liste von YouTube-Videos unseres Kanals über die YouTube Data API v3.
-
-Übertragene Daten bei Laden der Video-Liste:
-- IP-Adresse (technisch erforderlich)
-- YouTube Data API Anfrage (Kanal-ID, Anzahl Videos)
-- API-Schlüssel (authentifiziert die App, enthält keine Nutzerdaten)
-
-Zweck: Anzeige einer Liste aktueller YouTube-Videos in der App
-
-Verschlüsselung: HTTPS (verschlüsselt)
-
-Speicherung: Die Video-Liste wird lokal zwischengespeichert (Cache), keine personenbezogenen Daten werden gespeichert.
-
-Wichtig: Beim Laden der Video-Liste werden KEINE Daten an YouTube/Google übertragen, die Sie als Person identifizieren. Die API-Anfrage ist anonym.
-
-Übertragene Daten beim Klick auf ein Video:
-Wenn Sie auf ein Video klicken, werden Sie zu YouTube weitergeleitet (YouTube-App oder Browser). Dabei werden Daten an Google LLC (USA) übertragen:
-- IP-Adresse
-- Geräteinformationen
-- YouTube-Account-Daten (falls Sie bei YouTube eingeloggt sind)
-
-Einwilligung: Beim ersten Klick auf ein Video erscheint ein Hinweistext. Sie können der Weiterleitung zustimmen oder sie ablehnen. Ihre Entscheidung wird lokal gespeichert.
-
-Anbieter: Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
-
-Datenschutzerklärungen:
-- YouTube: https://policies.google.com/privacy
-- Google: https://www.google.com/policies/privacy/
-
-Rechtsgrundlage:
-- Laden der Video-Liste: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)
-- Weiterleitung zu YouTube: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
-
-3.3 Twitter/X (Link zu Profil)
-
-Die App enthält einen Link zu unserem Twitter/X-Profil.
-
-Übertragene Daten beim Klick:
-Wenn Sie auf den Twitter-Button klicken, werden Sie zu Twitter/X weitergeleitet. Dabei werden Daten an X Corp. (USA) übertragen:
-- IP-Adresse
-- Geräteinformationen
-- Twitter/X-Account-Daten (falls Sie bei Twitter/X eingeloggt sind)
-
-Einwilligung: Beim ersten Klick erscheint ein Hinweistext. Sie können der Weiterleitung zustimmen oder sie ablehnen. Ihre Entscheidung wird lokal gespeichert.
-
-Anbieter: X Corp., 1355 Market Street, Suite 900, San Francisco, CA 94103, USA
-
-Datenschutzerklärung: https://twitter.com/privacy
-
-Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
-
-3.4 OpenStreetMap (Kartendarstellung)
-
-Die App verwendet OpenStreetMap zur Anzeige von Karten in der Standort-Ansicht.
-
-Übertragene Daten:
 - IP-Adresse (technisch erforderlich)
 - Kartenausschnitt (geografische Koordinaten des angezeigten Bereichs)
 - Zoom-Level
 
-Zweck: Anzeige von Kartenkacheln für die Standort-Funktion
+Zweck: Anzeige von Kartenkacheln für die Standort-Funktionen
+Speicherung: Kartenkacheln werden lokal zwischengespeichert.
 
-Verschlüsselung: HTTPS (verschlüsselt)
-
-Speicherung: Kartenkacheln werden lokal zwischengespeichert, um Datenvolumen zu sparen
+Beim Antippen des OpenStreetMap-Lizenzhinweises wird die Seite openstreetmap.org/copyright in einer eingebetteten Ansicht geladen; dabei wird ebenfalls die IP-Adresse übertragen.
 
 Anbieter: OpenStreetMap Foundation, St John's Innovation Centre, Cowley Road, Cambridge CB4 0WS, United Kingdom
-
 Datenschutzerklärung: https://osmfoundation.org/wiki/Privacy_Policy
-
 Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung der Kartenfunktion)
 
-3.5 Wetterdaten (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang)
+3.2 Wetterdaten (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang)
 
-Die App ruft Wetterdaten erst ab, wenn Sie in den Einstellungen (Dienste & Server) einen Wetteranbieter gewählt und Ihren eigenen Zugang eingetragen haben: entweder einen Schlüssel von OpenWeatherMap oder die Serveradresse (und ggf. den Schlüssel) Ihres Open-Meteo-Zugangs bzw. eigenen Servers. Ohne Auswahl und Zugang werden keine Wetterdaten abgerufen und es werden keine Daten an Wetteranbieter gesendet.
+Die App ruft Wetterdaten erst ab, wenn du in den Einstellungen (Dienste & Server) einen Wetteranbieter gewählt und deinen eigenen Zugang eingetragen hast: entweder einen Schlüssel von OpenWeatherMap oder die Serveradresse (und ggf. den Schlüssel) deines Open-Meteo-Zugangs bzw. eigenen Servers. Ohne Auswahl und Zugang werden keine Wetterdaten abgerufen und es werden keine Daten an Wetteranbieter gesendet.
 
 Übertragene Daten:
+
 - Standortkoordinaten (Breiten- und Längengrad)
 - IP-Adresse (technisch erforderlich)
-- Ihr Zugangsschlüssel (wird verschlüsselt auf Ihrem Gerät gespeichert und dem Anbieter bei jeder Anfrage übermittelt)
+- dein Zugangsschlüssel (wird verschlüsselt auf deinem Gerät gespeichert und dem Anbieter bei jeder Anfrage übermittelt)
 
-Zweck: Abruf von Wetterdaten für Ihren Standort bzw. einen von Ihnen gewählten Ort
+Zweck: Abruf von Wetterdaten für deinen Standort bzw. einen von dir gewählten Ort
+Freiwilligkeit: Die Wetterfunktion und die Standortfreigabe sind optional. Du kannst die Berechtigung jederzeit in den Android-Einstellungen widerrufen und den Wetteranbieter in den Einstellungen abwählen.
+Anbieter: Es gelten die Datenschutzbestimmungen und Nutzungsbedingungen des von dir gewählten Anbieters. Du schließt den Vertrag über den Zugang selbst mit dem Anbieter.
 
-Verschlüsselung: HTTPS (verschlüsselt)
-
-Freiwilligkeit: Die Wetterfunktion und die Standortfreigabe sind optional. Sie können die Berechtigung jederzeit in den Android-Einstellungen widerrufen und den Wetteranbieter in den Einstellungen abwählen.
-
-Anbieter: Es gelten die Datenschutzbestimmungen und Nutzungsbedingungen des von Ihnen gewählten Anbieters. Sie schließen den Vertrag über den Zugang selbst mit dem Anbieter.
 - OpenWeatherMap / OpenWeather Ltd.: https://openweather.co.uk/privacy-policy
 - Open-Meteo: https://open-meteo.com/en/terms
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auswahl des Anbieters, Eintrag des Zugangs und Standortfreigabe)
 
-3.6 Weitere Kartendienste (Nominatim, Overpass, OpenRouteService)
+3.3 Weitere Kartendienste (Nominatim, Overpass, OpenRouteService)
 
-Auf Ihre Aktion hin (Ortssuche, Orte in der Nähe, Routenberechnung) ruft die App Daten bei folgenden Diensten ab:
+Auf deine Aktion hin (Ortssuche, Orte in der Nähe, Routenberechnung) ruft die App Daten bei folgenden Diensten ab:
 
 - Nominatim (OpenStreetMap Foundation): Ortssuche und Ortsnamen zu Koordinaten
-- Overpass API (öffentliche Server, z. B. overpass-api.de; auf Wunsch ein von Ihnen eingetragener Server): Umgebungsdaten und Orte in der Nähe
-- OpenRouteService (HeiGIT gGmbH): Routenberechnung mit Ihrem eigenen Zugangsschlüssel
+- Overpass API (öffentliche Server, z. B. overpass-api.de; auf Wunsch ein von dir eingetragener Server): Umgebungsdaten und Orte in der Nähe
+- OpenRouteService (HeiGIT gGmbH): Routenberechnung mit deinem eigenen Zugangsschlüssel
 
 Übertragene Daten:
+
 - Suchbegriff bzw. Koordinaten (Breiten- und Längengrad) oder Kartenbereich
 - IP-Adresse (technisch erforderlich)
-- bei OpenRouteService zusätzlich Ihr Zugangsschlüssel
+- bei OpenRouteService zusätzlich dein Zugangsschlüssel
 
 Zweck: Bereitstellung der jeweils ausgelösten Funktion
-
-Verschlüsselung: HTTPS (verschlüsselt)
-
-Eigene Server: In den Einstellungen (Dienste & Server) können Sie die Adresse für Overpass ändern. Wetteranbieter und Zugang legen Sie dort ebenfalls selbst fest (siehe 3.5). Schlüssel werden verschlüsselt auf Ihrem Gerät gespeichert.
-
+Eigene Server: In den Einstellungen (Dienste & Server) kannst du die Adresse für Overpass ändern. Wetteranbieter und Zugang legst du dort ebenfalls selbst fest (siehe 3.2). Schlüssel werden verschlüsselt auf deinem Gerät gespeichert.
 Datenschutzerklärungen:
+
 - OpenStreetMap Foundation (Nominatim, Overpass): https://osmfoundation.org/wiki/Privacy_Policy
 - HeiGIT / OpenRouteService: https://openrouteservice.org/privacy-policy/
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Auslösen der Funktion und Standortfreigabe)
 
-3.7 Signal Messenger (Support-Gruppe)
+3.4 WebDAV-Synchronisation (optional, eigener Server)
 
-Die App bietet optional eine Support-Gruppe über Signal Messenger an.
+Die App kann deine Daten mit einem WebDAV-Server synchronisieren, den du selbst einträgst. Ohne Eintrag eines Servers findet keine Synchronisation statt.
 
-Angebot und Freiwilligkeit:
-Die Teilnahme an der Support-Gruppe ist vollständig freiwillig und nicht erforderlich, um die App zu nutzen.
+Übertragene Daten:
 
-Datenverarbeitung durch Signal:
-Wenn Sie der Support-Gruppe beitreten, werden Ihre Daten durch Signal Messenger LLC (Signal Technology Foundation, USA) verarbeitet.
+- die von dir zur Synchronisation vorgesehenen App-Daten (Datendateien und Fotos)
+- deine Zugangsdaten zum Server (Benutzername und Passwort)
+- IP-Adresse (technisch erforderlich)
 
-Signal verarbeitet folgende Daten:
-- Ihre Telefonnummer (für die Registrierung bei Signal)
-- Nachrichten innerhalb der Gruppe (Ende-zu-Ende-verschlüsselt)
-- Metadaten (minimiert durch Signal's Protokoll)
+Zweck: Abgleich deiner Daten zwischen deinen Geräten
 
-Datenschutz in der Signal-Gruppe:
-- Alle Nachrichten sind Ende-zu-Ende-verschlüsselt
-- Ihre Telefonnummer bleibt für andere Gruppenmitglieder grundsätzlich verborgen
-- Andere Gruppenmitglieder sehen nur Ihren Signal-Profilnamen (falls von Ihnen eingerichtet)
-- Nur Kontakte, die Sie bereits in Ihrem Adressbuch gespeichert haben, können Ihre Telefonnummer sehen
-- Signal speichert minimal Metadaten
+Verantwortlich für den Server und die dort gespeicherten Daten bist du bzw. der Betreiber des Servers, den du wählst. Der Anbieter der App erhält diese Daten nicht. Zugangsdaten werden verschlüsselt auf deinem Gerät gespeichert.
 
-Einwilligung: Beim ersten Klick auf den Signal-Button erscheint ein ausführlicher Hinweistext über die Datenverarbeitung. Sie können der Weiterleitung zustimmen oder sie ablehnen. Ihre Entscheidung wird lokal gespeichert.
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Einrichten und Aktivieren der Synchronisation)
 
-Widerruf: Sie können die Gruppe jederzeit ohne Angabe von Gründen verlassen. Ein Widerruf Ihrer Einwilligung lässt die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung unberührt.
+3.5 Links in andere Anwendungen
 
-Anbieter: Signal Messenger LLC, Signal Technology Foundation, USA
+Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im Play Store. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
 
-Datenschutzerklärung: https://signal.org/legal/
+- Spende über PayPal: Die App enthält einen Link zu PayPal für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt https://www.paypal.com/de/legalhub/privacy-full.
+- Karten-Links: Standort-Links zu openstreetmap.org werden nur in Nachrichten eingefügt, die du selbst teilst, oder auf deine Aktion hin im Browser geöffnet.
+- Bewerten und Teilen der App: Der Link zum Play Store öffnet den Play Store bzw. den Browser.
 
-Drittlandtransfer: USA (auf Grundlage der EU-Standardvertragsklauseln)
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Antippen des Links)
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)
+3.6 Teilen und Export
 
-3.8 Zusammenfassung verwendeter Drittanbieter-Dienste
+Notfallmeldungen, Standortfreigaben, PDF- und CSV-Dateien sowie Sicherungen gibst du über die Android-Funktion „Teilen“ oder über den Datei-Export weiter. Du wählst selbst, welche Anwendung oder welchen Empfänger du verwendest. Mit der Weitergabe liegen die Daten bei dem von dir gewählten Empfänger. Für diese Verarbeitung gelten dessen Datenschutzbestimmungen.
 
-| Dienst | Zweck | Datenübertragung | Verschlüsselt |
-|--------|-------|------------------|---------------|
-| WordPress-API | Inhalte laden | IP, Anfragen | ✅ HTTPS |
-| YouTube Data API | Video-Liste | IP, API-Request | ✅ HTTPS |
-| Twitter/X | Link zu Profil | IP, Geräteinfo | ✅ HTTPS |
-| OpenStreetMap | Karten anzeigen | IP, Kartenbereich | ✅ HTTPS |
-| Wetteranbieter nach Ihrer Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang) | Wetterdaten | IP, Standort, Zugangsschlüssel | ✅ HTTPS |
-| Nominatim / Overpass | Ortssuche, Orte in der Nähe | IP, Suchbegriff, Koordinaten | ✅ HTTPS |
-| OpenRouteService | Routenberechnung | IP, Koordinaten, eigener Schlüssel | ✅ HTTPS |
-| Signal Messenger | Support-Gruppe | Telefonnummer, Nachrichten | ✅ E2E-verschlüsselt |
+3.7 Übersicht der Drittanbieter-Dienste
 
-4. Datenschutzhinweise zur Nutzung der Webseite mittels auf Wunsch eingerichteten Nutzerkontos über die App HundeWildnis
+- OpenStreetMap: Karten anzeigen; IP-Adresse, Kartenbereich
+- Wetteranbieter nach deiner Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang): Wetterdaten; IP-Adresse, Standort, Zugangsschlüssel
+- Nominatim / Overpass: Ortssuche, Orte in der Nähe; IP-Adresse, Suchbegriff, Koordinaten
+- OpenRouteService: Routenberechnung; IP-Adresse, Koordinaten, eigener Schlüssel
+- WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse
+- PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App
 
-Diese Hinweise beziehen sich auf die Nutzung der Webseite https://www.wildnislehrer.com über die App HundeWildnis, entwickelt von HundeWildnisSchule Ulbricht, Entwickler Herr Peter Jörg Ulbricht.
+Alle Verbindungen sind durch HTTPS verschlüsselt.
 
-Wir legen großen Wert auf den Schutz Ihrer personenbezogenen Daten. Im Folgenden erklären wir Ihnen, wie Sie die Löschung Ihrer Nutzerdaten anfordern können, welche Daten betroffen sind und welche Konsequenzen damit verbunden sind.
+4. Deine Rechte
 
-Falls Sie ein Nutzerkonto auf unserer Webseite erstellt bzw. dessen Einrichtung veranlasst haben, was außerhalb der App erfolgt, können Sie über die E-Mail-Adresse tux4us@online.de die Löschung Ihrer E-Mail-Adresse und damit Ihres Nutzerzugangs verlangen. Bitte beachten Sie, dass mit der Löschung Ihres Nutzerzugangs die Möglichkeit entfällt, auf geschützte Inhalte zuzugreifen, die ein aktives Nutzerkonto voraussetzen.
+Da der Anbieter über die App keine personenbezogenen Daten von dir erhält, kann er dir keine Auskunft über gespeicherte Daten geben und keine Daten berichtigen oder löschen. Die Daten auf deinem Gerät kannst du selbst einsehen, ändern und löschen.
 
-Schritte zur Anforderung der Löschung von Nutzerdaten:
+Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
 
-1. Erstellen Sie eine E-Mail: Schreiben Sie eine E-Mail mit der klaren Bitte um Löschung Ihrer Nutzerdaten (z. B. "Ich bitte um Löschung meiner E-Mail-Adresse und meines Nutzerzugangs").
+Du hast außerdem das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO).
 
-2. Absenderadresse: Die E-Mail muss von der identischen E-Mail-Adresse gesendet werden, unter der Ihr Nutzerkonto eingerichtet wurde. Dies dient der Verifizierung Ihrer Identität.
+Bei Fragen zur Datenschutzerklärung oder zur App kannst du dich jederzeit melden: hundewildnisschuleapp@online.de
 
-3. Empfänger: Senden Sie die E-Mail an tux4us@online.de.
+5. Änderungen dieser Datenschutzerklärung
 
-4. Bestätigung: Nach Erhalt Ihrer Anfrage werden wir diese prüfen und die Löschung innerhalb einer angemessenen Frist (in der Regel innerhalb von 30 Tagen) durchführen. Sie erhalten eine Bestätigung per E-Mail.
+Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du in der App im Menü unter „Datenschutzerklärung“.
 
-Art der zu löschenden oder aufzubewahrenden Daten:
-
-Zu löschende Daten: Bei einer Löschanfrage werden Ihre E-Mail-Adresse als Nutzer-ID und das zugehörige Zugangspasswort vollständig gelöscht. Dies umfasst alle damit verbundenen personenbezogenen Daten, die für den Zugang zur Webseite erforderlich sind.
-
-Aufzubewahrende Daten: Während der aktiven Nutzung Ihres Kontos werden die E-Mail-Adresse und das Passwort ausschließlich für die Dauer der Nutzung des Nutzerkontos aufbewahrt (z. B. für Authentifizierungszwecke). Es gibt keine zusätzliche Aufbewahrungsdauer über die Löschung hinaus, es sei denn, gesetzliche Vorgaben (z. B. steuerrechtliche Aufbewahrungspflichten) erfordern eine vorübergehende Speicherung der Daten. In solchen Fällen beträgt die Aufbewahrungsdauer maximal die gesetzlich vorgeschriebene Zeit (z. B. 10 Jahre für Buchhaltungsdaten, falls zutreffend), und die Daten werden nicht mehr mit Ihrem Konto verknüpft.
-
-Falls Sie weitere Fragen haben, kontaktieren Sie uns gerne über die angegebene E-Mail-Adresse. Weitere Details zu unserem Datenschutz finden Sie in unserer Datenschutzerklärung.
-
-5. Deine Rechte
-
-Da die App selbst keine personenbezogenen Daten erhebt oder speichert, entfallen die üblichen Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung usw. im Sinne der DSGVO.
-
-Für die Verarbeitung personenbezogener Daten durch Drittanbieter (YouTube, Twitter/X, Signal, etc.) gelten deren jeweilige Datenschutzerklärungen. Auskunfts- und Löschungsrechte können Sie direkt bei den jeweiligen Anbietern geltend machen.
-
-Bezüglich der Erhebung personenbezogener Daten über die Webseite www.wildnislehrer.com außerhalb der App geben wir in obiger Datenschutzerklärung zur Webseite ausführlich Auskunft.
-
-Bei Fragen zur Datenschutzerklärung oder zur App darfst du dich jederzeit gerne melden:
-
-📧 tux4us@online.de
-
-6. Änderungen dieser Datenschutzerklärung
-
-Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du stets hier in der App unter "Datenschutzerklärung" im Menü.
-
-Stand dieser Datenschutzerklärung: Januar 2026
-
-Zusammenfassung
-
-✅ Die HundeWildnis App ist datenschutzfreundlich
-✅ Keine Erhebung personenbezogener Daten durch die App selbst
-✅ Alle Verbindungen sind verschlüsselt (HTTPS/E2E)
-✅ Lokaler Cache (nur auf Ihrem Gerät)
-✅ Freiwillige Funktionen mit vorheriger Einwilligung
-✅ Transparente Information über Drittanbieter-Dienste
-
-🐕✨
+Stand dieser Datenschutzerklärung: Oktober 2026

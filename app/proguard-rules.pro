@@ -57,7 +57,9 @@
 -keep class com.hundewildnis.app.NoteSession { *; }
 -keep class com.hundewildnis.app.SpeedSession { *; }
 -keep class com.hundewildnis.app.VoiceSession { *; }
--keep class com.hundewildnis.app.ContentItem { *; }
+-keep class com.hundewildnis.app.CourseBlock { *; }
+-keep class com.hundewildnis.app.CourseLesson { *; }
+-keep class com.hundewildnis.app.CourseIndexEntry { *; }
 -keep class com.hundewildnis.app.DogCharacter { *; }
 -keep class com.hundewildnis.app.SpielSession { *; }
 -keep class com.hundewildnis.app.SpielStatistik { *; }

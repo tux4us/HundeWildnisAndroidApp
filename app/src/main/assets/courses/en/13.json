@@ -1,0 +1,474 @@
+{
+ "id": "13",
+ "title": "Leash Work",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "...means being able to let go"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "13-01",
+   "title": "Basic principle",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Leash training is not an isolated exercise programme but a training that accompanies everyday life. It takes place all the time – on every walk, in every encounter."
+    },
+    {
+     "type": "p",
+     "text": "Collar and harness are primarily means of transmitting information and are not intended for holding the dog. The leash communicates – it does not force."
+    },
+    {
+     "type": "p",
+     "text": "Loose-leash walking is the product of relaxation and security."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-02",
+   "title": "1. Basic equipment & preparation",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The right leash 🦮"
+    },
+    {
+     "type": "p",
+     "text": "A lead should ideally be 2 metres long, but by no means shorter than 1.20 metres."
+    },
+    {
+     "type": "p",
+     "text": "A simple leash without buckles and fittings guarantees stress-free work."
+    },
+    {
+     "type": "p",
+     "text": "Make sure it has a sturdy carabiner clip."
+    },
+    {
+     "type": "h",
+     "text": "Unsuitable equipment ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "A flexible, retractable leash is, by all experience, very unsuitable for general training."
+    },
+    {
+     "type": "p",
+     "text": "Poop bag dispensers and other “clutter” have no place on the leash."
+    },
+    {
+     "type": "h",
+     "text": "Collar or harness? 🔖"
+    },
+    {
+     "type": "p",
+     "text": "Whether a collar or a harness is used is up to each person to decide – and ultimately up to the dog."
+    },
+    {
+     "type": "p",
+     "text": "Collar and harness are primarily means of transmitting information and are ultimately not intended for holding the dog."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-03",
+   "title": "2. Basic principles of leash leadership",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The leading side 🧭"
+    },
+    {
+     "type": "p",
+     "text": "The dog is always led on the same side. Exceptions should be rare."
+    },
+    {
+     "type": "p",
+     "text": "Do not worry about leading on the left – dogs still learn without any problem to run on the right beside a bicycle."
+    },
+    {
+     "type": "p",
+     "text": "Getting used to walking on one side should happen continuously and calmly."
+    },
+    {
+     "type": "h",
+     "text": "Leash handling & pace ⏱️"
+    },
+    {
+     "type": "p",
+     "text": "The leash is held mainly near its end, or at least long enough that it hangs slack and loose."
+    },
+    {
+     "type": "p",
+     "text": "As an exception, the leash may be shortened if uninvolved people could otherwise be disturbed or endangered, or if the individual exercise requires it."
+    },
+    {
+     "type": "p",
+     "text": "We walk at a calm pace, always slightly slower than the dog would like to go."
+    },
+    {
+     "type": "p",
+     "text": "A good leash pace is one that brings the dog to walk at a normal gait. Trotting or even galloping pace hinders learning success."
+    },
+    {
+     "type": "h",
+     "text": "Route choice & communication 🗣️"
+    },
+    {
+     "type": "p",
+     "text": "We preferably walk in the middle of the path to draw the dog away from the distracting edges of the path."
+    },
+    {
+     "type": "p",
+     "text": "We walk in such a way that we radiate calmness in every respect."
+    },
+    {
+     "type": "p",
+     "text": "We speak calmly and normally not in a commanding tone."
+    },
+    {
+     "type": "p",
+     "text": "We praise the dog in a calm voice and stroke it soothingly."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-04",
+   "title": "3. The two-circle system",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "The core of leash training is a simple but effective system with two imaginary semicircles on your leading side:"
+    },
+    {
+     "type": "p",
+     "text": "Outer circle: Within a radius of the leash length of about 2 metres"
+    },
+    {
+     "type": "p",
+     "text": "Inner circle: At a radius of approximately 1 metre, bounded by the leading side"
+    },
+    {
+     "type": "h",
+     "text": "Behaviour in the inner circle ✅"
+    },
+    {
+     "type": "p",
+     "text": "If the dog moves in the inner circle while walking, we address it from time to time in a calm, praising voice."
+    },
+    {
+     "type": "p",
+     "text": "Every now and then we let it sit and praise it calmly."
+    },
+    {
+     "type": "p",
+     "text": "Those who wish may give the dog a treat as a reward. However, the dog must absolutely look at us for this – otherwise it gets nothing."
+    },
+    {
+     "type": "p",
+     "text": "Alternatively, for dogs with play drive, a toy can occasionally be produced by surprise as a short reward instead of a treat."
+    },
+    {
+     "type": "h",
+     "text": "Correction when leaving the leading side ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "If the dog leaves the leading side while walking, it is simply guided back to the correct side while walking, or during 3 to 4 steps backwards."
+    },
+    {
+     "type": "p",
+     "text": "Over time it will get used to walking on the desired side."
+    },
+    {
+     "type": "p",
+     "text": "What matters is the steady correction towards the chosen side."
+    },
+    {
+     "type": "h",
+     "text": "Correction in the outer circle ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "If the dog moves into the outer circle while walking (towards 2 metres of leash length), we should initiate the correction procedure. With the leash held long, we briskly walk a few steps backwards and begin to speak in a praising tone as soon as the dog follows, approaching us."
+    },
+    {
+     "type": "p",
+     "text": "We then let it sit in front of us, facing us and looking at us, or later also go down."
+    },
+    {
+     "type": "p",
+     "text": "Now we wait until it settles and looks at us again. This may also be supported by calmly addressing it by name."
+    },
+    {
+     "type": "p",
+     "text": "After bringing it from the down into the sit if necessary, we praise the dog with calm stroking, calm talking and, if appropriate, with a treat or with play using a toy."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-05",
+   "title": "4. Training sequence step by step",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Remember: Leash work always takes place. It accompanies everyday life and is therefore essential. Leash work is thus predominantly an accompanying training."
+    },
+    {
+     "type": "h",
+     "text": "Phase 1 – Start & basic posture 🟢"
+    },
+    {
+     "type": "p",
+     "text": "We hold the leash fairly loose and walk calmly."
+    },
+    {
+     "type": "p",
+     "text": "Any kind of walking too fast puts the dog into a forward drive, which in turn promotes pulling on the leash."
+    },
+    {
+     "type": "p",
+     "text": "We only set off again when the dog is in a relaxed sitting position."
+    },
+    {
+     "type": "p",
+     "text": "We set off each time without addressing the dog. Regularly addressing the dog to start walking could take on the effect of a start signal and thus, under some circumstances, an undesired effect. Anyone who still wants to address the dog when setting off should do so in a calm and relaxed tone of voice."
+    },
+    {
+     "type": "h",
+     "text": "Phase 2 – Building in pauses ⏸️"
+    },
+    {
+     "type": "p",
+     "text": "After a short pause, we each time calmly start anew from the sit and continue our walk."
+    },
+    {
+     "type": "p",
+     "text": "We set off calmly with the leash held loose and long."
+    },
+    {
+     "type": "h",
+     "text": "Phase 3 – The two options 🔀"
+    },
+    {
+     "type": "p",
+     "text": "Now our dog has two options:"
+    },
+    {
+     "type": "p",
+     "text": "It stays in the inner ‘loose’ circle – everything remains fine. We radiate calm and do not walk too fast."
+    },
+    {
+     "type": "p",
+     "text": "Or it strives away from us into the outer circle and must again go into the ‘sit’ or also the ‘down’ as described before."
+    },
+    {
+     "type": "h",
+     "text": "Phase 4 – Progressive improvement 📈"
+    },
+    {
+     "type": "p",
+     "text": "This process repeats itself more or less often, depending on need."
+    },
+    {
+     "type": "p",
+     "text": "Since our untrained dog will still break away quite frequently, it is advisable at the beginning to correct only the strongly excessive behaviours."
+    },
+    {
+     "type": "p",
+     "text": "As improvement progresses, smaller inaccuracies can then increasingly be trained as well."
+    },
+    {
+     "type": "p",
+     "text": "Strong pulling on the leash should be corrected first – later also still slight pulling."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-06",
+   "title": "5. Special challenges",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Controlling sniffing at the path edge ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Frequent and intense sniffing at the path edge should be consistently reduced."
+    },
+    {
+     "type": "p",
+     "text": "Do not additionally stop or even give in to the dog, but simply keep walking on with the dog."
+    },
+    {
+     "type": "p",
+     "text": "Do not walk near the path edge in the first place."
+    },
+    {
+     "type": "h",
+     "text": "Consequences of strong sniffing at the path edge ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Remember: As the growing dog gets older, strong sniffing at the path edge tends to lead to a strong territorial claim and thus, possibly, to a readiness for conflict in dog encounters, combined with reduced willingness to be led."
+    },
+    {
+     "type": "h",
+     "text": "Situational adjustment 🧠"
+    },
+    {
+     "type": "p",
+     "text": "It should be noted that our dog is not a machine and, like us, is subject to environmental influences."
+    },
+    {
+     "type": "p",
+     "text": "Therefore always weigh up with feeling and reason whether a behaviour should be corrected."
+    },
+    {
+     "type": "p",
+     "text": "As a general rule, we may only carry out those corrections which, given the situation, we can also bring to a positive end and thus to learning success."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-07",
+   "title": "6. The right training atmosphere",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Leash training should always be carried out with a relaxed presence, great composure, calm and warmth. Our dog should feel comfortable in our presence."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-08",
+   "title": "7. Important conditions",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Behaviours to avoid ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Absolutely avoid a permanently taut leash."
+    },
+    {
+     "type": "p",
+     "text": "Avoid a permanently short leash or a short leash in stressful situations."
+    },
+    {
+     "type": "p",
+     "text": "Avoid the dog changing sides."
+    },
+    {
+     "type": "p",
+     "text": "Avoid permanent sniffing at the path edge."
+    },
+    {
+     "type": "p",
+     "text": "Avoid self-extending leashes during the learning phase, because they teach the dog that it can do as it pleases."
+    },
+    {
+     "type": "p",
+     "text": "Avoid running after the dog or letting it pull you around at will."
+    },
+    {
+     "type": "p",
+     "text": "Avoid uncontrolled pulling influences."
+    },
+    {
+     "type": "p",
+     "text": "Avoid waiting for the dog when it has become fixated on sniffing somewhere."
+    },
+    {
+     "type": "p",
+     "text": "Avoid the dog biting the leash."
+    },
+    {
+     "type": "p",
+     "text": "Avoid everything that lets the leash act permanently taut on the dog."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-09",
+   "title": "Section 9",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: The “two-minute pause”"
+    },
+    {
+     "type": "p",
+     "text": "On your next walk, consciously stop three times: have your dog sit, wait for eye contact and only continue on your way once calm has set in. These short interruptions train impulse control and orientation towards you – mentally more valuable than simply walking on."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "13-10",
+   "title": "Checklist for successful training",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Was the dog always led on the same side?"
+    },
+    {
+     "type": "p",
+     "text": "Was the leash always held long and loose?"
+    },
+    {
+     "type": "p",
+     "text": "Did I always walk at a calm pace?"
+    },
+    {
+     "type": "p",
+     "text": "Did I walk mostly in the middle of the path?"
+    },
+    {
+     "type": "p",
+     "text": "Did I observe calm communication with the dog?"
+    },
+    {
+     "type": "p",
+     "text": "Was I harmonious and attentive?"
+    },
+    {
+     "type": "p",
+     "text": "Did I pay attention to pauses?"
+    },
+    {
+     "type": "p",
+     "text": "Was the praise calm and warm?"
+    },
+    {
+     "type": "p",
+     "text": "Did I make sure the exercise was carried out facing us?"
+    },
+    {
+     "type": "p",
+     "text": "Did I convey the inner and outer circle well to the dog?"
+    },
+    {
+     "type": "p",
+     "text": "Did I avoid adapting to the dog's pace?"
+    },
+    {
+     "type": "p",
+     "text": "Did I make sure of a pleasant training atmosphere?"
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

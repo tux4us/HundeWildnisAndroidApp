@@ -1,0 +1,682 @@
+{
+ "id": "40",
+ "title": "First Aid Kit",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…stay calm, act correctly, save lives"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "40-01",
+   "title": "Principles of first aid for dogs",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "First aid for dogs means: stabilising the animal's condition, preventing further harm and bridging the time until veterinary care. It never replaces the vet – it prepares the way to them."
+    },
+    {
+     "type": "p",
+     "text": "The most important tool in any emergency is our own calm. An agitated person increases the injured dog's stress, makes the examination more difficult and leads to ill-considered actions."
+    },
+    {
+     "type": "p",
+     "text": "Basic sequence: ensure your own safety → secure the dog → assess the condition → contact the vet → give first aid → prepare transport."
+    },
+    {
+     "type": "h",
+     "text": "What first aid is – and what it is not 📋"
+    },
+    {
+     "type": "p",
+     "text": "First aid does not mean: making your own diagnoses, dosing medication without instructions, or treating conditions that require immediate professional care. When in doubt, the rule is always: call before we act."
+    },
+    {
+     "type": "p",
+     "text": "First aid does not mean: making your own diagnoses, dosing medication without instructions, performing surgical procedures, or treating conditions that require immediate professional care."
+    },
+    {
+     "type": "h",
+     "text": "Protecting yourself and securing the dog 🛡️"
+    },
+    {
+     "type": "p",
+     "text": "Self-protection: An injured dog bites – even your own, even the gentlest. Pain overrides learned inhibitions. We always approach slowly, from the side, with a calm voice."
+    },
+    {
+     "type": "p",
+     "text": "Improvised muzzle: If the dog is conscious and has difficulty breathing, do not apply a muzzle. Otherwise: place a scarf, stocking or leash as a loop around the muzzle and tie it behind the ears."
+    },
+    {
+     "type": "p",
+     "text": "Securing the dog: Move the injured dog away from the road, out of the water or out of the danger zone – as gently as possible. To recover large dogs, use a blanket or a tarp as a stretcher."
+    },
+    {
+     "type": "p",
+     "text": "Securing the surroundings: In road accidents, set up a warning triangle, put on a high-visibility vest and secure the vehicles."
+    },
+    {
+     "type": "h",
+     "text": "Measuring and interpreting vital signs 📊"
+    },
+    {
+     "type": "p",
+     "text": "Consciousness: Does the dog respond to being spoken to, to touch, to light? Unconscious dog = immediate emergency."
+    },
+    {
+     "type": "p",
+     "text": "Breathing: Normal: 15–30 breaths per minute at rest. Shallow, very rapid or absent breathing = emergency."
+    },
+    {
+     "type": "p",
+     "text": "Heartbeat / pulse: Feel the heartbeat on the left side of the chest behind the elbow, or the pulse on the inside of the thigh. Normal rate: 60–120 beats per minute depending on size."
+    },
+    {
+     "type": "p",
+     "text": "Mucous membrane colour: Briefly lift the gum. Normal: pink and moist. Pale/white = shock. Blue/grey = lack of oxygen. Brick red = heatstroke. Any deviation from pink = emergency."
+    },
+    {
+     "type": "p",
+     "text": "Capillary refill time (CRT): Briefly press a thumb on the gum, then release. Normal: the white spot turns pink again within 1–2 seconds. Longer than 2 seconds = circulatory problem."
+    },
+    {
+     "type": "p",
+     "text": "Body temperature: Measure rectally. Normal: 38.0–39.0 °C. Below 37.5 °C = hypothermia. Above 39.5 °C = fever. Above 40.5 °C = life-threatening emergency."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-02",
+   "title": "Emergency quick reference",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "⚡ What do I do first in the case of… – quick overview"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Unconsciousness"
+    },
+    {
+     "type": "p",
+     "text": "Clear airway → check breathing → check pulse → if no pulse: resuscitation → recovery position if breathing → vet IMMEDIATELY"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Severe bleeding"
+    },
+    {
+     "type": "p",
+     "text": "Apply pressure bandage → do not remove it → keep the dog calm → vet IMMEDIATELY"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Heatstroke"
+    },
+    {
+     "type": "p",
+     "text": "Move into the shade immediately → cool with lukewarm water (not cold) → moisten the gums → vet IMMEDIATELY"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Drowning / respiratory arrest"
+    },
+    {
+     "type": "p",
+     "text": "Let the water drain (hold the dog upside down) → clear airway → rescue breaths → resuscitation if necessary → vet IMMEDIATELY"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Poisoning"
+    },
+    {
+     "type": "p",
+     "text": "Call the vet / animal poison control centre IMMEDIATELY → do NOT induce vomiting without instructions → secure the poison (photo/sample) → keep the dog calm"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Foreign body in the throat"
+    },
+    {
+     "type": "p",
+     "text": "Do not reach blindly into the throat → Heimlich-like manoeuvre in case of choking → vet IMMEDIATELY"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Eye injury"
+    },
+    {
+     "type": "p",
+     "text": "Do not let the dog rub it → rinse with sterile saline (except in case of injury) → cover the eye → see the vet promptly"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Bone fracture / lameness"
+    },
+    {
+     "type": "p",
+     "text": "Keep the dog calm → do not splint → transport with as little movement as possible → see the vet promptly"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Chemical burn (skin / eye)"
+    },
+    {
+     "type": "p",
+     "text": "Rinse immediately with plenty of water (15+ minutes) → wear gloves → identify the substance involved → see the vet promptly"
+    },
+    {
+     "type": "p",
+     "text": "🟢 Minor wound / cut"
+    },
+    {
+     "type": "p",
+     "text": "Rinse with saline → disinfect → cover → for a deep wound: see the vet"
+    },
+    {
+     "type": "p",
+     "text": "🟢 Tick"
+    },
+    {
+     "type": "p",
+     "text": "Grasp close to the skin with tick tweezers → twist → do not squeeze → disinfect the bite site → monitor"
+    },
+    {
+     "type": "p",
+     "text": "🟢 Insect sting"
+    },
+    {
+     "type": "p",
+     "text": "Remove the stinger → cool → monitor. For a sting in the mouth/throat or an allergic reaction: vet IMMEDIATELY"
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-03",
+   "title": "Resuscitation – chest compressions and rescue breathing",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "When resuscitation is necessary 🚨"
+    },
+    {
+     "type": "p",
+     "text": "Resuscitation is indicated when the dog is unconscious, shows no independent breathing and no heartbeat can be felt. The simultaneous absence of all three signs is the trigger – not just one of them."
+    },
+    {
+     "type": "p",
+     "text": "Resuscitation is demanding and only works if we have practised it beforehand. A first aid course for dogs is strongly recommended."
+    },
+    {
+     "type": "h",
+     "text": "Step 1 – Clear the airway"
+    },
+    {
+     "type": "p",
+     "text": "Lay the dog on its right side and extend the head slightly backwards so that the windpipe is straight. Open the mouth, pull the tongue forward and place it to the side."
+    },
+    {
+     "type": "p",
+     "text": "Check the mouth and throat for foreign bodies. Carefully remove visible foreign bodies – never reach blindly deep into the throat."
+    },
+    {
+     "type": "h",
+     "text": "Step 2 – Rescue breaths"
+    },
+    {
+     "type": "p",
+     "text": "Close the dog's mouth and hold the muzzle with both hands. Breathe over the dog's nostrils – not into the mouth, but into the nose."
+    },
+    {
+     "type": "p",
+     "text": "The breath should be large enough for the dog's chest to visibly rise. For small dogs, use less air volume. Rate: 1 breath every 3–4 seconds, i.e. 15–20 breaths per minute."
+    },
+    {
+     "type": "p",
+     "text": "If no heartbeat can be detected after 5 breaths: begin chest compressions immediately."
+    },
+    {
+     "type": "h",
+     "text": "Step 3 – Chest compressions"
+    },
+    {
+     "type": "p",
+     "text": "Position depending on body build: For normally built dogs: pressure point directly behind the left elbow. For deep-chested dogs: pressure point at the centre of the chest. For small dogs: one hand encircles the chest, thumb and fingers press from both sides."
+    },
+    {
+     "type": "p",
+     "text": "Compression depth: Compress the chest by one third to one half of its width. The pressure must be noticeable."
+    },
+    {
+     "type": "p",
+     "text": "Rate: 100–120 compressions per minute – this corresponds to the tempo of \"Stayin' Alive\" (Bee Gees)."
+    },
+    {
+     "type": "p",
+     "text": "Ratio: 30 compressions, then 2 rescue breaths. Repeat this cycle until the dog breathes on its own or the vet takes over."
+    },
+    {
+     "type": "h",
+     "text": "Important notes on resuscitation ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Resuscitation on a dog that still has a heartbeat can cause serious injuries. Always check the heartbeat first."
+    },
+    {
+     "type": "p",
+     "text": "If a spinal injury is suspected: minimal movement, resuscitation only if absolutely vital."
+    },
+    {
+     "type": "p",
+     "text": "Always have someone call the vet while resuscitation is under way. Resuscitation without professional follow-up care is only a stopgap measure."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-04",
+   "title": "Circulatory and respiratory emergencies",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Heatstroke 🌡️"
+    },
+    {
+     "type": "p",
+     "text": "Recognising it: Heavy, loud panting, brick-red or dark gums, drooling, staggering, coordination problems, clouded consciousness. Body temperature above 40.5 °C."
+    },
+    {
+     "type": "p",
+     "text": "Immediate action: Move the dog into the shade immediately. Cool with lukewarm – not ice-cold – water: head, neck, armpits, groin area, paws. Avoid ice water – it causes vasoconstriction."
+    },
+    {
+     "type": "p",
+     "text": "What not to do: No ice water. Do not force the dog to drink large amounts of water. Continue cooling during transport, but do not overcool – the target is 39 °C, not 36 °C."
+    },
+    {
+     "type": "h",
+     "text": "Shock"
+    },
+    {
+     "type": "p",
+     "text": "Recognising it: Pale or white gums, CRT above 2 seconds, rapid and weak pulse, apathy, cold limbs, shallow breathing."
+    },
+    {
+     "type": "p",
+     "text": "Immediate action: Lay the dog flat, raise the hind legs slightly (except in case of head, chest or abdominal wounds). Wrap in an emergency blanket. Keep calm."
+    },
+    {
+     "type": "p",
+     "text": "What not to do: Do not give water. No muzzle if breathing is impaired. Do not leave the dog alone. Vet immediately."
+    },
+    {
+     "type": "h",
+     "text": "Drowning and water emergencies 💧"
+    },
+    {
+     "type": "p",
+     "text": "Immediate action: Let the water drain: Hold a small dog upside down and shake gently. Lay a large dog head down over the shoulder of a kneeling person. Hold for 20–30 seconds."
+    },
+    {
+     "type": "p",
+     "text": "Next: Check the airway. If there is no spontaneous breathing: rescue breaths. If there is no heartbeat: chest compressions. Go to the vet immediately – even dogs that seem to have recovered can develop \"secondary drowning\"."
+    },
+    {
+     "type": "h",
+     "text": "Unconsciousness and the recovery position"
+    },
+    {
+     "type": "p",
+     "text": "Recovery position: Lay the dog on its right side. Extend the head slightly backwards – open the airway. Place the tongue to the side. Pull the upper front and hind legs slightly forward."
+    },
+    {
+     "type": "p",
+     "text": "Next: Call the vet immediately. Keep the dog warm. No water, no food. During transport, keep the head lower than the rest of the body."
+    },
+    {
+     "type": "h",
+     "text": "Epileptic seizure"
+    },
+    {
+     "type": "p",
+     "text": "Recognising it: Sudden loss of consciousness with uncontrolled muscle twitching, paddling movements, jaw spasm, drooling. Duration usually 1–3 minutes."
+    },
+    {
+     "type": "p",
+     "text": "Immediate action: Do not hold the dog down. Secure the surroundings. Note the time – the duration of the seizure is important for the vet. If the seizure lasts longer than 5 minutes: vet immediately (status epilepticus)."
+    },
+    {
+     "type": "p",
+     "text": "What not to do: Never reach into the mouth. Do not hold the dog down. No bright lights or loud noises."
+    },
+    {
+     "type": "h",
+     "text": "Hypothermia 🥶"
+    },
+    {
+     "type": "p",
+     "text": "Recognising it: Shivering, stiff muscles, slowed reactions, apathetic behaviour, cold skin. Body temperature below 37.5 °C."
+    },
+    {
+     "type": "p",
+     "text": "Immediate action: Bring the dog out of the cold. Dry wet fur immediately. Wrap in blankets. Place hot-water bottles with warm (not hot) water into the body hollows – always with a cloth in between."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-05",
+   "title": "Injuries",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wounds – types and initial care 🩹"
+    },
+    {
+     "type": "p",
+     "text": "Cut: Rinse the wound with saline, disinfect, apply a pressure bandage. For a gaping wound: wound closure strips, see the vet."
+    },
+    {
+     "type": "p",
+     "text": "Bite wound: Always have it seen by the vet – the external opening is often small, the internal injury considerable. Rinse the wound, cover it, do not close it."
+    },
+    {
+     "type": "p",
+     "text": "Puncture wound: Always see the vet – internal injuries cannot be assessed. If an object is still embedded, do not remove it yourself."
+    },
+    {
+     "type": "p",
+     "text": "Applying a pressure bandage: Place a sterile compress on the wound and secure it with an elastic bandage. Slide two fingers under the finished bandage – if this is not possible, the bandage is too tight."
+    },
+    {
+     "type": "h",
+     "text": "Stopping severe bleeding 🩸"
+    },
+    {
+     "type": "p",
+     "text": "Direct pressure: Press a sterile compress firmly onto the bleeding site – for at least 5 minutes without interruption. Do not check in between."
+    },
+    {
+     "type": "p",
+     "text": "Compress soaks through: Add a new layer on top – do not remove the original one."
+    },
+    {
+     "type": "p",
+     "text": "Tourniquet: Only for life-threatening bleeding on limbs, when a pressure bandage is not sufficient. Note the time – release briefly every 30 minutes if possible."
+    },
+    {
+     "type": "p",
+     "text": "Recognising internal bleeding: Signs of shock without a visible injury, bloated abdomen, pale gums. Vet immediately."
+    },
+    {
+     "type": "h",
+     "text": "Paw injuries 🐾"
+    },
+    {
+     "type": "p",
+     "text": "Torn pad: Rinse the wound, disinfect, apply a pressure bandage made of compress and self-adhesive bandage. See the vet – deep pad injuries often need to be sutured."
+    },
+    {
+     "type": "p",
+     "text": "Foreign body in the paw: Only remove it if it is fully visible and can be grasped with tweezers. For a deeply embedded foreign body: vet."
+    },
+    {
+     "type": "p",
+     "text": "Broken claw: Very painful. Do not remove loose parts yourself. Apply a pressure bandage, see the vet."
+    },
+    {
+     "type": "h",
+     "text": "Bone fractures and spinal injuries"
+    },
+    {
+     "type": "p",
+     "text": "Immediate action: Move the dog as little as possible. Do not apply splints – they often cause pressure sores and make the situation worse."
+    },
+    {
+     "type": "p",
+     "text": "Transport: Transport on a firm surface (board, tarp, blanket), as flat and with as little movement as possible. Arrange for several people to help with the transport."
+    },
+    {
+     "type": "p",
+     "text": "Spine: Minimal movement. Position the dog as it is lying. Avoid any rotation or bending of the spine."
+    },
+    {
+     "type": "h",
+     "text": "Eye injuries 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Foreign body in the eye: Rinse with sterile saline solution from the inside outwards. Never rinse from the outside inwards. If the foreign body is still visible after rinsing: vet."
+    },
+    {
+     "type": "p",
+     "text": "Corneal injury: Do not rinse. Loosely cover the eye with a moist compress. Vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "Eye protrusion (prolapse): Do not touch the eye or push it back. Loosely apply a moist compress. Emergency veterinary clinic immediately."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-06",
+   "title": "Foreign bodies",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Foreign body in the throat and choking 🚨"
+    },
+    {
+     "type": "p",
+     "text": "Recognising it: Sudden retching, coughing, pawing at the mouth, drooling, bluish discolouration of the mucous membranes, panic."
+    },
+    {
+     "type": "p",
+     "text": "Heimlich-like manoeuvre: Small dog: hold upside down and strike between the shoulder blades with a flat hand (3–5 blows). Large dog: arms around the abdomen, hands just behind the rib cage, press sharply inwards and upwards (3–5 times)."
+    },
+    {
+     "type": "p",
+     "text": "Never reach blindly deep into the throat – we may push the foreign body further in."
+    },
+    {
+     "type": "h",
+     "text": "Swallowed foreign body – in the gastrointestinal tract"
+    },
+    {
+     "type": "p",
+     "text": "When it is dangerous: Pointed or sharp objects, linear foreign bodies (threads, strings), large objects and toxic materials."
+    },
+    {
+     "type": "p",
+     "text": "What we do: Call the vet and describe what was swallowed. Do not induce vomiting without instructions. Signs of an intestinal obstruction: vomiting, bloated abdomen, no passing of faeces, lethargy."
+    },
+    {
+     "type": "h",
+     "text": "Foreign body in the paw and skin"
+    },
+    {
+     "type": "p",
+     "text": "Thorn, wood splinter, glass: Only remove it if it is fully visible. If the foreign body breaks: vet."
+    },
+    {
+     "type": "p",
+     "text": "Fish hook: Do not remove it yourself – barbs tear when pulled backwards. See the vet."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-07",
+   "title": "Poisoning and chemical burns",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Principles when poisoning is suspected ☎️"
+    },
+    {
+     "type": "p",
+     "text": "First and most important action: Call the vet or animal poison control centre – immediately, before we do anything else. The appropriate emergency number depends on the country and region. In advance, find out which veterinary practice, animal clinic or animal poison control centre can be reached in an emergency near you, and save the number in your phone where you can reach it quickly."
+    },
+    {
+     "type": "p",
+     "text": "Inducing vomiting: Never without veterinary instructions. For some poisons (acids, alkalis, petrol) vomiting is contraindicated."
+    },
+    {
+     "type": "p",
+     "text": "Keep the dog calm: Agitation accelerates the absorption of the poison. No water or food without instructions."
+    },
+    {
+     "type": "h",
+     "text": "Common sources of poison in everyday life ☠️"
+    },
+    {
+     "type": "p",
+     "text": "Chocolate and cocoa: Contain theobromine – dark chocolate is especially dangerous. Symptoms: vomiting, racing heart, tremors, seizures."
+    },
+    {
+     "type": "p",
+     "text": "Grapes and raisins: Can cause acute kidney failure – even in the smallest amounts. Vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "Xylitol (birch sugar): In sugar-free chewing gum, sweets, baked goods. Triggers a life-threatening drop in blood sugar. Emergency vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "Rat poison (rodenticides): Inhibits blood clotting – symptoms often appear only 3–5 days after ingestion. Vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "Ibuprofen, paracetamol, aspirin: Never administer. In case of accidental ingestion: vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "Poisonous plants (selection): Autumn crocus, yew, laburnum, oleander, lily of the valley, deadly nightshade. After contact with plants: photograph the plant, call the vet."
+    },
+    {
+     "type": "h",
+     "text": "Chemical burns – skin and mucous membranes 🧪"
+    },
+    {
+     "type": "p",
+     "text": "Skin burn: Put on gloves. Rinse the affected area immediately and thoroughly with lukewarm water – for at least 15 minutes. No rubbing, no oil."
+    },
+    {
+     "type": "p",
+     "text": "Ingestion of corrosive substances: Do not induce vomiting. Vet immediately, stating the substance. Always bring the packaging."
+    },
+    {
+     "type": "h",
+     "text": "Insect stings and snake bites 🐍"
+    },
+    {
+     "type": "p",
+     "text": "Stings in the mouth or throat area: Vet immediately – swelling can block the airways."
+    },
+    {
+     "type": "p",
+     "text": "Anaphylactic reaction: Severe swelling, difficulty breathing, shock, collapse. Immediate transport to an emergency vet."
+    },
+    {
+     "type": "p",
+     "text": "Snake bite: Keep the dog calm – movement accelerates the spread of the venom. Do not cut, do not suck out, do not apply a tourniquet. Vet immediately."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-08",
+   "title": "Transport to the vet",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Principles and carrying techniques 🚗"
+    },
+    {
+     "type": "p",
+     "text": "An injured dog is transported with as little movement as possible. Always call the vet and announce your arrival before transport – a prepared clinic can act immediately."
+    },
+    {
+     "type": "p",
+     "text": "Small dog: One hand under the chest, one under the abdomen. Hold the dog against your body."
+    },
+    {
+     "type": "p",
+     "text": "Large dog: Blanket or tarp as a hammock – two people each lift at two corners. The dog lies flat, with no sagging in the middle."
+    },
+    {
+     "type": "p",
+     "text": "Spinal injury: Roll the dog onto a firm surface – without rotating the spine. Several people lift at the same time on command."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-09",
+   "title": "Section 9",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: Practise today – be ready tomorrow"
+    },
+    {
+     "type": "p",
+     "text": "Learn one single technique by heart today: the recovery position. Practise it calmly on your dog until it is second nature. Then learn the pressure bandage next week. Step by step – every technique you practise today is one that will simply be there in an emergency. Calm, safe, correct."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "40-10",
+   "title": "The key points at a glance",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Protect yourself first – then secure the dog – then assess the condition – then act."
+    },
+    {
+     "type": "p",
+     "text": "→ In case of poisoning: call the animal poison control centre IMMEDIATELY. Do not induce vomiting without instructions."
+    },
+    {
+     "type": "p",
+     "text": "→ In case of severe bleeding: apply a pressure bandage, do not remove it, go to the vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "→ In case of heatstroke: lukewarm water – no ice water. Into the shade immediately, to the vet immediately."
+    },
+    {
+     "type": "p",
+     "text": "→ In case of unconsciousness: clear airway, check breathing and pulse, resuscitation if necessary."
+    },
+    {
+     "type": "p",
+     "text": "→ Bone fracture: Never splint. As little movement as possible. Transport on a firm surface."
+    },
+    {
+     "type": "p",
+     "text": "→ Foreign body in the throat: Do not reach blindly into the throat. Heimlich-like manoeuvre only in case of choking."
+    },
+    {
+     "type": "p",
+     "text": "→ Always: call the vet beforehand and announce your arrival. A prepared clinic saves lives."
+    },
+    {
+     "type": "p",
+     "text": "→ Attend a first aid course for dogs – techniques must be practised before an emergency."
+    },
+    {
+     "type": "p",
+     "text": "→ Staying calm is the most important first aid measure – for the dog and for ourselves."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

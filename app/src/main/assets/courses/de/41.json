@@ -1,0 +1,678 @@
+{
+ "id": "41",
+ "title": "Erste Hilfe am Hund",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…ruhig bleiben, richtig handeln, Leben retten"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "41-01",
+   "title": "Grundsätze der Ersten Hilfe am Hund",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Erste Hilfe am Hund bedeutet: den Zustand des Tieres stabilisieren, Schlimmeres verhindern und Zeit bis zur tierärztlichen Versorgung überbrücken. Sie ersetzt niemals den Tierarzt – sie bereitet den Weg zu ihm vor."
+    },
+    {
+     "type": "p",
+     "text": "Das wichtigste Werkzeug in jedem Notfall ist unsere eigene Ruhe. Ein aufgeregter Mensch erhöht den Stress des hilfebedürftigen Hundes, erschwert die Untersuchung und neigt zu unüberlegten Handlungen."
+    },
+    {
+     "type": "p",
+     "text": "Grundreihenfolge: Eigenschutz sichern → Hund sichern → Zustand einschätzen → Tierarzt kontaktieren sowie → Erste Hilfe leisten → Transport vorbereiten."
+    },
+    {
+     "type": "h",
+     "text": "Was Erste Hilfe ist – und was nicht 📋"
+    },
+    {
+     "type": "p",
+     "text": "Erste Hilfe bedeutet nicht: eigenständige Diagnosen stellen, Medikamente dosieren ohne Anweisung oder Zustände behandeln, die sofortige professionelle Versorgung erfordern. Im Zweifel gilt immer: anrufen, bevor wir handeln."
+    },
+    {
+     "type": "h",
+     "text": "Eigenschutz und Hund sichern 🛡️"
+    },
+    {
+     "type": "p",
+     "text": "Eigenschutz: Ein verletzter, notleidender und Schmerzen ausgesetzter Hund kann stark zubeißen – auch der eigene, sonst sanftmütigste Hund. Schmerz und Panik schalten erlernte Hemmungen aus. Wir nähern uns immer langsam, von der Seite, mit ruhiger Stimme."
+    },
+    {
+     "type": "p",
+     "text": "Provisorischer Maulkorb: Bei Bewusstseinsstörungen und Atemnot keinen Maulkorb anlegen. Sonst gilt, wenn kein Maulkorb vorhanden: Schal, Strumpf oder Leine als Schlaufe um die Schnauze legen und hinter den Ohren verknoten."
+    },
+    {
+     "type": "p",
+     "text": "Hund sichern: Verletzten Hund von der Straße, aus dem Wasser oder aus der Gefahrenzone bringen – so schonend wie möglich. Für die Bergung großer Hunde eine Decke oder ein Tarp als Trage verwenden."
+    },
+    {
+     "type": "p",
+     "text": "Umgebung sichern: Bei Notfällen im Verkehrsbereich den Hund sichern, gegebenenfalls Warndreieck aufstellen, Warnweste anziehen, Fahrzeuge absichern."
+    },
+    {
+     "type": "h",
+     "text": "Vitalzeichen messen und einordnen 📊"
+    },
+    {
+     "type": "p",
+     "text": "Bewusstsein: Reagiert der Hund auf Ansprache, auf Berührung, auf Licht? Bewusstloser Hund = sofortiger Notfall."
+    },
+    {
+     "type": "p",
+     "text": "Atmung: Normal: 15–30 Atemzüge pro Minute im Ruhezustand. Flache, sehr schnelle oder ganz ausbleibende Atmung = Notfall."
+    },
+    {
+     "type": "p",
+     "text": "Herzschlag / Puls: Herzschlag an der linken Brustseite hinter dem Ellenbogen tasten oder Puls an der Innenseite des Oberschenkels. Normalfrequenz: 60–120 Schläge pro Minute je nach Größe."
+    },
+    {
+     "type": "p",
+     "text": "Schleimhautfarbe: Zahnfleisch kurz anheben. Normal: rosa und feucht. Blass/weiß = Schock. Blau/grau = Sauerstoffmangel. Ziegelrot = Hitzschlag. Jede Abweichung von rosa = Notfall."
+    },
+    {
+     "type": "p",
+     "text": "Kapillarrückfüllzeit (KFZ): Daumen kurz auf das Zahnfleisch drücken, loslassen. Normal: weiße Stelle färbt sich innerhalb von 1–2 Sekunden wieder rosa. Länger als 2 Sekunden = Kreislaufproblem."
+    },
+    {
+     "type": "p",
+     "text": "Körpertemperatur: Rektal messen. Normal: 38,0–39,0 °C. Unter 37,5 °C = Unterkühlung. Über 39,5 °C = Fieber. Über 40,5 °C = lebensbedrohlicher Notfall."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-02",
+   "title": "Notfall-Schnellreferenz",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "⚡ Was tue ich zuerst bei… – Kurzübersicht"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Bewusstlosigkeit"
+    },
+    {
+     "type": "p",
+     "text": "Atemwege frei → Atmung prüfen → Puls prüfen → bei fehlendem Puls: Reanimation → stabile Seitenlage wenn atmend → SOFORT Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Starke Blutung"
+    },
+    {
+     "type": "p",
+     "text": "Druckverband anlegen → nicht ablösen → Hund ruhig halten → SOFORT Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Hitzschlag"
+    },
+    {
+     "type": "p",
+     "text": "Sofort in den Schatten → mit lauwarmem Wasser kühlen (nicht kalt) → Zahnfleisch befeuchten → SOFORT Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Ertrinken / Atemstillstand"
+    },
+    {
+     "type": "p",
+     "text": "Wasser ablaufen lassen (Hund kopfüber halten) → Atemwege frei → Atemspende → Reanimation wenn nötig → SOFORT Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🔴 Vergiftung"
+    },
+    {
+     "type": "p",
+     "text": "Tierarzt / Tiergiftzentrale SOFORT anrufen → KEIN Erbrechen auslösen ohne Anweisung → Gift sicherstellen (Foto/Probe) → ruhig halten"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Fremdkörper im Schlund"
+    },
+    {
+     "type": "p",
+     "text": "Nicht blind in den Rachen greifen → Heimlich-ähnlicher Griff bei Erstickung → SOFORT Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Augenverletzung"
+    },
+    {
+     "type": "p",
+     "text": "Nicht reiben lassen → mit steriler NaCl spülen (außer bei Verletzung) → Auge abdecken → zügig zum Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Knochenbruch / Lahmheit"
+    },
+    {
+     "type": "p",
+     "text": "Hund ruhig halten → nicht schienen → bewegungsarmer Transport → zügig zum Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🟡 Verätzung (Haut / Auge)"
+    },
+    {
+     "type": "p",
+     "text": "Sofort mit viel Wasser spülen (15+ Minuten) → Handschuhe tragen → betroffene Substanz identifizieren → zügig zum Tierarzt"
+    },
+    {
+     "type": "p",
+     "text": "🟢 Kleine Wunde / Schnitt"
+    },
+    {
+     "type": "p",
+     "text": "Mit NaCl spülen → desinfizieren → abdecken → bei tiefer Wunde: Tierarzt aufsuchen"
+    },
+    {
+     "type": "p",
+     "text": "🟢 Zecke"
+    },
+    {
+     "type": "p",
+     "text": "Mit Zeckenzange nah an der Haut fassen → drehen → nicht quetschen → Einstichstelle desinfizieren → beobachten"
+    },
+    {
+     "type": "p",
+     "text": "🟢 Insektenstich"
+    },
+    {
+     "type": "p",
+     "text": "Stachel entfernen → kühlen → beobachten. Bei Stich im Maul/Hals oder allergischer Reaktion: SOFORT Tierarzt"
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-03",
+   "title": "Reanimation – Herzdruckmassage und Atemspende",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wann Reanimation notwendig ist 🚨"
+    },
+    {
+     "type": "p",
+     "text": "Reanimation ist indiziert, wenn der Hund bewusstlos ist, keine eigenständige Atmung zeigt und kein Herzschlag tastbar ist. Das gleichzeitige Fehlen aller drei Zeichen ist der Auslöser – nicht nur eines davon."
+    },
+    {
+     "type": "p",
+     "text": "Reanimation ist anspruchsvoll und funktioniert nur, wenn wir sie zuvor geübt haben. Ein Erste-Hilfe-Kurs für Hunde ist dringend empfohlen."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 1 – Atemwege freimachen"
+    },
+    {
+     "type": "p",
+     "text": "Hund auf die rechte Seite legen, Kopf leicht nach hinten strecken, damit die Luftröhre gerade ist. Maul öffnen, Zunge nach vorne ziehen und zur Seite legen."
+    },
+    {
+     "type": "p",
+     "text": "Maul- und Rachenraum auf Fremdkörper prüfen. Sichtbare Fremdkörper vorsichtig entfernen – niemals blind tief in den Rachen greifen."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 2 – Atemspende"
+    },
+    {
+     "type": "p",
+     "text": "Maul des Hundes schließen und beide Hände umfassen die Schnauze. Mit dem Mund über die Nasenlöcher des Hundes atmen – nicht in das Maul, sondern in die Nase."
+    },
+    {
+     "type": "p",
+     "text": "Atemzug so groß, dass sich die Brust des Hundes sichtbar hebt. Bei kleinen Hunden weniger Luftvolumen. Frequenz: 1 Atemzug alle 3–4 Sekunden, also 15–20 Atemzüge pro Minute."
+    },
+    {
+     "type": "p",
+     "text": "Wenn nach 5 Atemzügen kein Herzschlag feststellbar: sofort mit der Herzdruckmassage beginnen."
+    },
+    {
+     "type": "h",
+     "text": "Schritt 3 – Herzdruckmassage"
+    },
+    {
+     "type": "p",
+     "text": "Position je nach Körperbau: Bei normal gebauten Hunden: Druckpunkt direkt hinter dem linken Ellenbogen. Bei tiefen Brustkorben: Druckpunkt mittig am Brustkorb. Bei kleinen Hunden: eine Hand umgreift den Brustkorb, Daumen und Finger drücken von beiden Seiten."
+    },
+    {
+     "type": "p",
+     "text": "Drucktiefe: Brustkorb um ein Drittel bis zur Hälfte seiner Breite eindrücken. Der Druck muss spürbar sein."
+    },
+    {
+     "type": "p",
+     "text": "Frequenz: 100–120 Druckmassagen pro Minute – das entspricht dem Takt von „Stayin' Alive\" (Bee Gees)."
+    },
+    {
+     "type": "p",
+     "text": "Verhältnis: 30 Kompressionen, dann 2 Atemspenden. Diesen Zyklus wiederholen, bis der Hund eigenständig atmet oder der Tierarzt übernimmt."
+    },
+    {
+     "type": "h",
+     "text": "Wichtige Hinweise zur Reanimation ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Reanimation bei einem Hund, der noch einen Herzschlag hat, kann zu ernsthaften Verletzungen führen. Immer zuerst Herzschlag prüfen."
+    },
+    {
+     "type": "p",
+     "text": "Bei Verdacht auf Wirbelsäulenverletzung: minimale Bewegung, Reanimation nur wenn absolut lebensnotwendig."
+    },
+    {
+     "type": "p",
+     "text": "Parallel zur Reanimation immer jemanden den Tierarzt anrufen lassen. Reanimation ohne professionelle Nachversorgung ist nur eine Überbrückungsmaßnahme."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-04",
+   "title": "Kreislauf- und Atemnotfälle",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Hitzschlag 🌡️"
+    },
+    {
+     "type": "p",
+     "text": "Erkennen: Starkes, lautes Hecheln, ziegelrotes oder dunkles Zahnfleisch, Speichelfluss, Taumeln, Koordinationsprobleme, Bewusstseinstrübung. Körpertemperatur über 40,5 °C."
+    },
+    {
+     "type": "p",
+     "text": "Sofortmaßnahme: Hund sofort in Schatten bringen. Mit lauwarmem – nicht eiskaltem – Wasser kühlen: Kopf, Hals, Achseln, Leistengegend, Pfoten. Eiswasser vermeiden – es verursacht Gefäßverengung."
+    },
+    {
+     "type": "p",
+     "text": "Nicht tun: Kein Eiswasser. Nicht zwingen, große Wassermengen zu trinken. Kühlung während des Transports fortsetzen, aber nicht überkühlen – Ziel ist 39 °C, nicht 36 °C."
+    },
+    {
+     "type": "h",
+     "text": "Schock"
+    },
+    {
+     "type": "p",
+     "text": "Erkennen: Blasses oder weißes Zahnfleisch, KFZ über 2 Sekunden, schneller und schwacher Puls, Apathie, kalte Gliedmaßen, flache Atmung."
+    },
+    {
+     "type": "p",
+     "text": "Sofortmaßnahme: Hund flach lagern, Hinterläufe leicht erhöhen (außer bei Kopf-, Brust- oder Bauchwunden). In Rettungsdecke einwickeln. Ruhig halten."
+    },
+    {
+     "type": "p",
+     "text": "Nicht tun: Kein Wasser geben. Keinen Maulkorb bei Atemstörungen. Hund nicht allein lassen. Sofort Tierarzt."
+    },
+    {
+     "type": "h",
+     "text": "Ertrinken und Wassernotfall 💧"
+    },
+    {
+     "type": "p",
+     "text": "Sofortmaßnahme: Wasser ablaufen lassen: Kleinen Hund kopfüber halten, leicht schütteln. Großen Hund mit dem Kopf nach unten über die Schulter eines knienden Menschen legen. 20–30 Sekunden halten."
+    },
+    {
+     "type": "p",
+     "text": "Weiter: Atemwege prüfen. Wenn keine Spontanatmung: Atemspende. Wenn kein Herzschlag: Herzdruckmassage. Sofort zum Tierarzt – auch scheinbar erholte Hunde können „Sekundärtrinken\" entwickeln."
+    },
+    {
+     "type": "h",
+     "text": "Bewusstlosigkeit und stabile Seitenlage"
+    },
+    {
+     "type": "p",
+     "text": "Stabile Seitenlage: Hund auf die rechte Seite legen. Kopf leicht nach hinten strecken – Atemwege öffnen. Zunge zur Seite legen. Obere Vorder- und Hinterläufe leicht nach vorne ziehen."
+    },
+    {
+     "type": "p",
+     "text": "Weiter: Sofort Tierarzt rufen. Hund warm halten. Kein Wasser, kein Futter. Beim Transport Kopf tiefer als den Rest des Körpers."
+    },
+    {
+     "type": "h",
+     "text": "Epileptischer Anfall"
+    },
+    {
+     "type": "p",
+     "text": "Erkennen: Plötzlicher Bewusstseinsverlust mit unkontrollierten Muskelzuckungen, Paddelbewegungen, Kieferkrampf, Speichelfluss. Dauer meist 1–3 Minuten."
+    },
+    {
+     "type": "p",
+     "text": "Sofortmaßnahme: Hund nicht festhalten. Umgebung sichern. Uhrzeit notieren – Anfallsdauer ist für den Tierarzt wichtig. Wenn Anfall länger als 5 Minuten: sofort Tierarzt (Status epilepticus)."
+    },
+    {
+     "type": "p",
+     "text": "Nicht tun: Niemals in das Maul greifen. Kein Festhalten. Keine hellen Lichter oder laute Geräusche."
+    },
+    {
+     "type": "h",
+     "text": "Unterkühlung 🥶"
+    },
+    {
+     "type": "p",
+     "text": "Erkennen: Zittern, steife Muskeln, verlangsamte Reaktionen, apathisches Verhalten, kalte Haut. Körpertemperatur unter 37,5 °C."
+    },
+    {
+     "type": "p",
+     "text": "Sofortmaßnahme: Hund aus der Kälte bringen. Nasses Fell sofort trocknen. In Decken einwickeln. Wärmflaschen mit warmem (nicht heißem) Wasser in die Körpermulden – immer mit Tuch dazwischen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-05",
+   "title": "Verletzungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Wunden – Arten und Erstversorgung 🩹"
+    },
+    {
+     "type": "p",
+     "text": "Schnittwunde: Wunde mit NaCl spülen, desinfizieren, Druckverband anlegen. Bei klaffender Wunde: Steristrips, Tierarzt aufsuchen."
+    },
+    {
+     "type": "p",
+     "text": "Bisswunde: Immer beim Tierarzt vorstellen – die äußere Öffnung ist oft klein, die innere Verletzung erheblich. Wunde spülen, abdecken, nicht verschließen."
+    },
+    {
+     "type": "p",
+     "text": "Stichwunde: Immer Tierarzt – innere Verletzungen nicht beurteilbar. Gegenstand, falls noch steckend, nicht selbst entfernen."
+    },
+    {
+     "type": "p",
+     "text": "Druckverband anlegen: Sterile Kompresse auf die Wunde, mit elastischer Binde fixieren. Zwei Finger unter den fertigen Verband schieben – wenn das nicht möglich ist, ist der Verband zu fest."
+    },
+    {
+     "type": "h",
+     "text": "Starke Blutungen stillen 🩸"
+    },
+    {
+     "type": "p",
+     "text": "Direkter Druck: Sterile Kompresse fest auf die blutende Stelle drücken – mindestens 5 Minuten ohne Unterbrechung. Nicht zwischendurch nachschauen."
+    },
+    {
+     "type": "p",
+     "text": "Kompresse wird durchgetränkt: Neue Lage darüber – nicht die ursprüngliche entfernen."
+    },
+    {
+     "type": "p",
+     "text": "Tourniquet: Nur bei lebensbedrohlichen Blutungen an Gliedmaßen, wenn Druckverband nicht ausreicht. Zeitpunkt notieren – alle 30 Minuten kurz lösen wenn möglich."
+    },
+    {
+     "type": "p",
+     "text": "Innere Blutung erkennen: Schockzeichen ohne sichtbare Verletzung, aufgeblähter Bauch, blasses Zahnfleisch. Sofort Tierarzt."
+    },
+    {
+     "type": "h",
+     "text": "Pfotenverletzungen 🐾"
+    },
+    {
+     "type": "p",
+     "text": "Eingerissener Ballen: Wunde spülen, desinfizieren, Druckverband aus Kompresse und selbsthaftender Bandage anlegen. Tierarzt – tiefe Ballenverletzungen müssen oft genäht werden."
+    },
+    {
+     "type": "p",
+     "text": "Fremdkörper in der Pfote: Nur entfernen wenn vollständig sichtbar und mit Pinzette greifbar. Bei tiefem Fremdkörper: Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Gebrochene Kralle: Sehr schmerzhaft. Lose Teile nicht selbst entfernen. Druckverband anlegen, Tierarzt aufsuchen."
+    },
+    {
+     "type": "h",
+     "text": "Knochenbrüche und Wirbelsäulenverletzungen"
+    },
+    {
+     "type": "p",
+     "text": "Sofortmaßnahme: Hund so wenig wie möglich bewegen. Keine Schienen anlegen – sie verursachen häufig Druckstellen und verschlimmern die Situation."
+    },
+    {
+     "type": "p",
+     "text": "Transport: Auf einer festen Unterlage (Brett, Tarp, Decke) möglichst flach und bewegungsarm transportieren. Mehrere Personen für den Transport einteilen."
+    },
+    {
+     "type": "p",
+     "text": "Wirbelsäule: Minimale Bewegung. Den Hund so lagern, wie er liegt. Jede Rotation oder Beugung der Wirbelsäule vermeiden."
+    },
+    {
+     "type": "h",
+     "text": "Augenverletzungen 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Fremdkörper im Auge: Mit steriler NaCl-Lösung von innen nach außen spülen. Niemals von außen nach innen spülen. Wenn Fremdkörper nach Spülung noch sichtbar: Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Hornhautverletzung: Kein Spülen. Auge locker mit feuchter Kompresse abdecken. Sofort Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Augenaustritt (Prolaps): Das Auge nicht berühren oder zurückdrücken. Feuchte Kompresse locker auflegen. Sofort Notfalltierarztklinik."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-06",
+   "title": "Fremdkörper",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Fremdkörper im Schlund und Erstickung 🚨"
+    },
+    {
+     "type": "p",
+     "text": "Erkennen: Plötzliches Würgen, Husten, Pfoten an den Mund, Speichelfluss, Blaufärbung der Schleimhäute, Panik."
+    },
+    {
+     "type": "p",
+     "text": "Heimlich-ähnlicher Griff: Kleiner Hund: kopfüber halten, mit der flachen Hand zwischen die Schulterblätter schlagen (3–5 Schläge). Großer Hund: Arme um den Bauch, Hände kurz hinter dem Rippenbogen, ruckartig nach innen und oben drücken (3–5 Mal)."
+    },
+    {
+     "type": "p",
+     "text": "Niemals blind tief in den Rachen greifen – wir können den Fremdkörper tiefer schieben."
+    },
+    {
+     "type": "h",
+     "text": "Fremdkörper verschluckt – im Magen-Darm-Trakt"
+    },
+    {
+     "type": "p",
+     "text": "Wann gefährlich: Spitze oder scharfe Objekte, lineare Fremdkörper (Fäden, Schnüre), große Objekte sowie gifthaltige Materialien."
+    },
+    {
+     "type": "p",
+     "text": "Was wir tun: Tierarzt anrufen und beschreiben, was verschluckt wurde. Kein Erbrechen auslösen ohne Anweisung. Zeichen eines Darmverschlusses: Erbrechen, aufgeblähter Bauch, kein Kotabsatz, Lethargie."
+    },
+    {
+     "type": "h",
+     "text": "Fremdkörper in Pfote und Haut"
+    },
+    {
+     "type": "p",
+     "text": "Dorn, Holzsplitter, Glas: Nur entfernen wenn vollständig sichtbar. Wenn der Fremdkörper bricht: Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Angelhaken: Nicht selbst entfernen – Widerhaken reißen beim Rückwärtsziehen. Tierarzt aufsuchen."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-07",
+   "title": "Vergiftungen und Verätzungen",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Grundsätze bei Vergiftungsverdacht ☎️"
+    },
+    {
+     "type": "p",
+     "text": "Erste und wichtigste Maßnahme: Tierarzt oder Tiergiftzentrale anrufen – sofort, bevor wir irgend etwas anderes tun. Die passende Notrufnummer hängt vom Land und von der Region ab. Informiere Dich vorab, welche Tierarztpraxis, Tierklinik oder Tiergiftzentrale in Deiner Nähe im Notfall erreichbar ist, und speichere die Nummer griffbereit in Deinem Telefon."
+    },
+    {
+     "type": "p",
+     "text": "Erbrechen auslösen: Niemals ohne tierärztliche Anweisung. Bei manchen Giften (Säuren, Laugen, Benzin) ist Erbrechen kontraindiziert."
+    },
+    {
+     "type": "p",
+     "text": "Hund ruhig halten: Aufregung beschleunigt die Giftresorption. Kein Wasser oder Futter ohne Anweisung."
+    },
+    {
+     "type": "h",
+     "text": "Häufige Giftquellen im Alltag ☠️"
+    },
+    {
+     "type": "p",
+     "text": "Schokolade und Kakao: Enthalten Theobromin – besonders Zartbitter gefährlich. Symptome: Erbrechen, Herzrasen, Zittern, Krämpfe."
+    },
+    {
+     "type": "p",
+     "text": "Weintrauben und Rosinen: Können akutes Nierenversagen verursachen – auch kleinste Mengen. Sofort Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Xylitol (Birkenzucker): In zuckerfreiem Kaugummi, Bonbons, Backwaren. Löst lebensbedrohlichen Blutzuckerabfall aus. Sofort Notfalltierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Rattengift (Rodentizide): Hemmt die Blutgerinnung – Symptome erscheinen oft erst 3–5 Tage nach Aufnahme. Sofort Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Ibuprofen, Paracetamol, ASS: Niemals verabreichen. Bei versehentlicher Aufnahme: sofort Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "Giftige Pflanzen (Auswahl): Herbstzeitlose, Eibe, Goldregen, Oleander, Maiglöckchen, Tollkirsche. Bei Pflanzenkontakt: Pflanze fotografieren, Tierarzt anrufen."
+    },
+    {
+     "type": "h",
+     "text": "Verätzungen – Haut und Schleimhäute 🧪"
+    },
+    {
+     "type": "p",
+     "text": "Haut-Verätzung: Handschuhe anlegen. Betroffene Stelle sofort und reichlich mit lauwarmem Wasser spülen – mindestens 15 Minuten. Kein Einreiben, kein Öl."
+    },
+    {
+     "type": "p",
+     "text": "Aufnahme ätzender Substanzen: Kein Erbrechen auslösen. Sofort Tierarzt mit Angabe der Substanz. Verpackung immer mitbringen."
+    },
+    {
+     "type": "h",
+     "text": "Insektenstiche und Schlangenbiss 🐍"
+    },
+    {
+     "type": "p",
+     "text": "Stiche im Maul oder Halsbereich: Sofort Tierarzt – Schwellung kann die Atemwege verlegen."
+    },
+    {
+     "type": "p",
+     "text": "Anaphylaktische Reaktion: Starke Schwellung, Atemnot, Schock, Kollaps. Sofortiger Notfalltierarzttransport."
+    },
+    {
+     "type": "p",
+     "text": "Schlangenbiss: Hund ruhig halten – Bewegung beschleunigt die Giftverteilung. Nicht einschneiden, nicht aussaugen, keine Staubinde anlegen. Sofort Tierarzt."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-08",
+   "title": "Transport zum Tierarzt",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Grundsätze und Tragetechniken 🚗"
+    },
+    {
+     "type": "p",
+     "text": "Verletzter Hund wird so bewegungsarm wie möglich transportiert. Vor dem Transport immer den Tierarzt anrufen und ankündigen – eine vorbereitete Klinik kann sofort handeln."
+    },
+    {
+     "type": "p",
+     "text": "Kleiner Hund: Eine Hand unter den Brustkorb, eine unter den Bauch. Den Hund an den Körper drücken."
+    },
+    {
+     "type": "p",
+     "text": "Großer Hund: Decke oder Tarp als Hängematte – zwei Personen heben jeweils an zwei Ecken. Hund liegt flach, kein Durchhängen in der Mitte."
+    },
+    {
+     "type": "p",
+     "text": "Wirbelsäulenverletzung: Hund auf eine feste Unterlage rollen – ohne Rotation der Wirbelsäule. Mehrere Personen heben gleichzeitig auf Kommando."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-09",
+   "title": "Abschnitt 9",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Praxis-Impuls: Heute üben – morgen bereit sein"
+    },
+    {
+     "type": "p",
+     "text": "Lerne heute einen einzigen Handgriff auswendig: die stabile Seitenlage. Übe ihn an Deinem Hund in Ruhe, bis er sitzt. Dann lerne nächste Woche den Druckverband. Schritt für Schritt – jeder Handgriff, den Du heute übst, ist einer, der im Ernstfall einfach da ist. Ruhig, sicher, richtig."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "41-10",
+   "title": "Das Wichtigste im Überblick",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Eigenschutz zuerst – dann Hund sichern – dann Zustand einschätzen – dann handeln."
+    },
+    {
+     "type": "p",
+     "text": "→ Bei Vergiftung: Tiergiftzentrale SOFORT anrufen. Kein Erbrechen auslösen ohne Anweisung."
+    },
+    {
+     "type": "p",
+     "text": "→ Bei starker Blutung: Druckverband anlegen, nicht ablösen, sofort zum Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "→ Bei Hitzschlag: Lauwarmes Wasser – kein Eiswasser. Sofort in den Schatten, sofort zum Tierarzt."
+    },
+    {
+     "type": "p",
+     "text": "→ Bei Bewusstlosigkeit: Atemwege frei, Atmung und Puls prüfen, Reanimation wenn nötig."
+    },
+    {
+     "type": "p",
+     "text": "→ Knochenbruch: Niemals schienen. So wenig Bewegung wie möglich. Transport auf fester Unterlage."
+    },
+    {
+     "type": "p",
+     "text": "→ Fremdkörper im Schlund: Nicht blind in den Rachen greifen. Heimlich-ähnlicher Griff nur bei Erstickung."
+    },
+    {
+     "type": "p",
+     "text": "→ Immer: Tierarzt vorher anrufen und ankündigen. Eine vorbereitete Klinik rettet Leben."
+    },
+    {
+     "type": "p",
+     "text": "→ Erste-Hilfe-Kurs für Hunde besuchen – Handgriffe müssen vor dem Ernstfall geübt sein."
+    },
+    {
+     "type": "p",
+     "text": "→ Ruhig bleiben ist die wichtigste Erste-Hilfe-Maßnahme – für den Hund und für uns selbst."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

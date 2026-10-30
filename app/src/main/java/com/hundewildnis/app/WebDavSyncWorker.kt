@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * WorkManager-Worker für die WebDAV-Synchronisation.
- * Stil analog zu ContentUpdateWorker.kt / UpdateHelper.kt.
+ * Stil analog zu UpdateHelper.kt.
  */
 class WebDavSyncWorker(
     context: Context,

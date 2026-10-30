@@ -1,0 +1,451 @@
+{
+ "id": "38",
+ "title": "Sick Dogs",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…being there when it matters"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "38-01",
+   "title": "Basic idea and approach",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Illness changes everything – for the dog and for us. It changes what he can do, what he needs, how he behaves and how we have to treat him. A sick dog is not a different dog. He is the same dog – with the same needs for safety, bonding and orientation – but with altered physical and emotional capacities."
+    },
+    {
+     "type": "p",
+     "text": "Illness is not a training problem and not a training failure. A dog that reacts differently because of pain, exhaustion or impairment is sending us signals – not challenges."
+    },
+    {
+     "type": "p",
+     "text": "Quality over quantity: shorter sessions, fewer stimuli, more calm, deeper attention. Being together counts for more than any exercise."
+    },
+    {
+     "type": "h",
+     "text": "What you should know 📋"
+    },
+    {
+     "type": "p",
+     "text": "We adapt our expectations to the dog's reality – not the other way round. What the dog can do today is the benchmark. What he could do yesterday is in the past."
+    },
+    {
+     "type": "p",
+     "text": "Close cooperation with the treating veterinarian is not optional. All decisions about activity, training and daily routine are made in light of the medical assessment."
+    },
+    {
+     "type": "p",
+     "text": "We seek support in good time – from the veterinarian, the dog trainer, and specialists in animal physiotherapy or behavioural medicine. Being willing to accept help is not a weakness, but responsibility."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-02",
+   "title": "Temporary illnesses – supporting recovery",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "What recovery means for the dog 🏥"
+    },
+    {
+     "type": "p",
+     "text": "After operations, injuries or acute illnesses, the dog is in a phase of physical healing that is at the same time a considerable psychological strain."
+    },
+    {
+     "type": "p",
+     "text": "The middle phase of recovery is particularly demanding: the dog feels better subjectively, but is not yet better objectively. He wants to play, run, jump – and we have to protect him without taking away his trust."
+    },
+    {
+     "type": "p",
+     "text": "We follow the veterinary instructions on movement restriction and exertion strictly – even when the dog looks at us with puppy-dog eyes. Exertion too early can undo weeks of healing."
+    },
+    {
+     "type": "h",
+     "text": "Using recovery time sensibly 🌿"
+    },
+    {
+     "type": "p",
+     "text": "During recovery, mental activity replaces physical exercise – carefully and without overtaxing the dog. Short nose work, light search games in the home or calm interactive play from his resting place are often permitted and valuable."
+    },
+    {
+     "type": "p",
+     "text": "Physical contact and calm attention have a demonstrably positive effect on healing processes. Slow stroking, calm companionship, speaking gently to the dog – all of this gives him security in a confusing time."
+    },
+    {
+     "type": "p",
+     "text": "Short, calm moments of activity – a filled Kong, a snuffle mat, a chew item – help the dog bridge the restriction without building up frustration."
+    },
+    {
+     "type": "p",
+     "text": "We avoid visits, loud household noises near the dog and excited interactions during recovery. Every stressor avoided contributes to healing."
+    },
+    {
+     "type": "h",
+     "text": "Common mistakes during recovery ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Freeing the dog from all restrictions out of pity as soon as he seems subjectively better. Clinical healing takes its time – regardless of the dog's mood."
+    },
+    {
+     "type": "p",
+     "text": "Excessive activity to compensate for the movement restriction. Mental exercise also costs energy that the body needs for healing."
+    },
+    {
+     "type": "p",
+     "text": "Ignoring signs of pain because the dog “doesn't show weakness”. Subtle changes – loss of appetite, a changed expression, withdrawal – are the more honest signals."
+    },
+    {
+     "type": "p",
+     "text": "During recovery we place no demands on the dog beyond what makes medical sense. His only task is to get well."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-03",
+   "title": "Chronic physical illnesses",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Living with a permanent diagnosis 🔄"
+    },
+    {
+     "type": "p",
+     "text": "Chronic illnesses such as arthrosis, heart disease, renal insufficiency, diabetes or cancer permanently change the dog's life. There is no return to the “before” – only a new way of living together that we shape jointly."
+    },
+    {
+     "type": "p",
+     "text": "The most important principle: quality of life before performance. What gives the dog joy, what neither physically overtaxes nor bores him – that is the benchmark for every day."
+    },
+    {
+     "type": "p",
+     "text": "Good days and bad days are part of the reality of chronic illness. A good day must not tempt us to demand too much. A bad day is not a setback – it is part of the course of the illness."
+    },
+    {
+     "type": "h",
+     "text": "Adapted training and activity 🎾"
+    },
+    {
+     "type": "p",
+     "text": "Training remains valuable – it just has to be rethought. The focus shifts from performance and conditioning towards mental stimulation, nurturing the bond and preserving joy."
+    },
+    {
+     "type": "p",
+     "text": "Short training sessions of two to five minutes are often ideal for chronically ill dogs. We stop before the dog shows signs of fatigue."
+    },
+    {
+     "type": "p",
+     "text": "Nose work and search games are, for many chronically ill dogs, the most valuable form of activity: gentle on the body, mentally demanding, deeply satisfying."
+    },
+    {
+     "type": "p",
+     "text": "Walks become shorter, calmer and adapted to the dog's condition on the day. We learn to let the dog lead the walk: Where does he want to sniff? When does he want to stop? The route is no longer a compulsory programme – it is quality of life."
+    },
+    {
+     "type": "h",
+     "text": "Pain management in daily life 💊"
+    },
+    {
+     "type": "p",
+     "text": "Pain changes behaviour. A dog in pain can seem irritable, withdrawn or apathetic – behaviours that are easily misinterpreted without knowledge of the illness."
+    },
+    {
+     "type": "p",
+     "text": "We watch for subtle signs of pain: stiffness after getting up, hesitation before stairs or jumping, an altered gait, licking of particular parts of the body, withdrawal when touched."
+    },
+    {
+     "type": "p",
+     "text": "We actively adapt resting places and access routes: ramps instead of stairs, mats on smooth floors, raised food and water bowls for arthrosis, warmth on strained joints. Small adjustments can improve comfort considerably."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-04",
+   "title": "Neurological and cognitive impairments",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "When the brain changes – CDS and neurological diseases 🧠"
+    },
+    {
+     "type": "p",
+     "text": "Canine cognitive dysfunction syndrome (CDS) and neurological diseases change not only the dog's behaviour, but his entire perception of the world. Typical signs: disorientation in familiar surroundings, an altered sleep-wake rhythm, forgetting learned cues, reduced interest in interaction."
+    },
+    {
+     "type": "p",
+     "text": "A dog with cognitive impairments is not worth less and not less dignified. He needs us more – and differently. He needs patience where he used to show independence. He needs orientation where he used to find security."
+    },
+    {
+     "type": "h",
+     "text": "Maintaining orientation and security 🏠"
+    },
+    {
+     "type": "p",
+     "text": "Reliable routines are a basic need for dogs with cognitive impairments. The more stable and predictable the daily routine, the less the impaired brain has to do. We change as little as possible about routines, resting places and daily structure."
+    },
+    {
+     "type": "p",
+     "text": "We secure potential sources of danger: open stairs, access to pools or terraces, narrow passages where the dog can get stuck."
+    },
+    {
+     "type": "p",
+     "text": "Gentle touch, calm speech and physical closeness give the dog security in moments of disorientation. We always respond to states of confusion with calm – never with impatience."
+    },
+    {
+     "type": "h",
+     "text": "Activity with cognitive impairments 🌿"
+    },
+    {
+     "type": "p",
+     "text": "The simplest search tasks – visibly placed food that the dog finds with his nose – often remain possible for a long time and bring joy, even when more complex tasks can no longer be managed."
+    },
+    {
+     "type": "p",
+     "text": "Physical contact and resting together are of particular value for dogs with cognitive impairments. Calm companionship, the familiar breathing of the person nearby – for many of these dogs this is the most valuable form of attention."
+    },
+    {
+     "type": "p",
+     "text": "We refrain from demanding previously learned cues when the dog is evidently no longer able to retrieve them reliably. Forgetting is not refusal – it is the clinical picture."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-05",
+   "title": "Pain-related behaviour changes",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "When pain takes over behaviour 👁️"
+    },
+    {
+     "type": "p",
+     "text": "Pain is the most frequently overlooked factor behind behaviour changes in dogs. Aggressive behaviour that appears suddenly, withdrawal, house-soiling, reduced appetite, jumpiness or irritability – all of these can be an expression of pain, long before a diagnosis has been made."
+    },
+    {
+     "type": "p",
+     "text": "Every sudden or gradual behaviour change in a previously stable dog is first of all a visit to the veterinarian – not a training question. Only when physical causes have been ruled out or treated is behaviour work sensible and fair."
+    },
+    {
+     "type": "h",
+     "text": "Recognising subtle signs of pain 🔍"
+    },
+    {
+     "type": "p",
+     "text": "Physical signs: stiffness after getting up or after rest, altered gait or posture, hesitation before climbing stairs or jumping, licking or chewing at particular parts of the body, flinching when touched."
+    },
+    {
+     "type": "p",
+     "text": "Behavioural signs: withdrawal from social interactions that were previously sought; irritability or snapping when touched; declining interest in play; altered sleep; changes in appetite."
+    },
+    {
+     "type": "p",
+     "text": "In training: declining motivation, refusing exercises that involve physical strain, slowed responses, apparent “forgetting” of well-learned cues. This too is often pain – not defiance."
+    },
+    {
+     "type": "p",
+     "text": "If we suspect pain, we keep a short pain diary: When does the dog show which signs? After which activities? At what time of day? These observations are valuable information for the veterinarian."
+    },
+    {
+     "type": "h",
+     "text": "What we never do with pain-related behaviour changes ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Addressing behavioural problems that arose from pain with training, consistency or pressure – without prior veterinary assessment. A dog that snaps out of pain needs pain treatment – not behaviour correction."
+    },
+    {
+     "type": "p",
+     "text": "Physical corrections or pressure on a dog that may be in pain. Any physical intervention can intensify pain and permanently damage trust."
+    },
+    {
+     "type": "p",
+     "text": "Pushing the dog into activities or exercises in which he hesitates or avoids. Hesitation is often a pain signal. We always respect it."
+    },
+    {
+     "type": "p",
+     "text": "We protect our sick dog from well-meant advice that interprets his changed behaviour as disobedience, dominance or laziness. A dog that is ill behaves differently – because he is ill. This is not a question of character."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-06",
+   "title": "Trust during illness",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "What trust means for the sick dog 🤝"
+    },
+    {
+     "type": "p",
+     "text": "For a sick dog, trust in his person is of particular importance: he cannot classify, explain or predict his condition. What he can feel is the reliability of the person at his side."
+    },
+    {
+     "type": "p",
+     "text": "During illness, trust arises through consistent care: by keeping to routines even on bad days, by calmly accompanying pain and confusion, and by being willing to be there for him – without expectations."
+    },
+    {
+     "type": "h",
+     "text": "Trust-building during illness ✅"
+    },
+    {
+     "type": "p",
+     "text": "Calm, uniform routines, even when daily life is interrupted by veterinary visits and care measures."
+    },
+    {
+     "type": "p",
+     "text": "Gentle announcement of all touching, examinations and care measures – never surprise, never take unawares."
+    },
+    {
+     "type": "p",
+     "text": "Consistently respecting his wish to withdraw – even when out of concern we would like to be with him."
+    },
+    {
+     "type": "p",
+     "text": "No expectations and no pressure to perform in phases in which the dog is evidently suffering or feels unwell."
+    },
+    {
+     "type": "p",
+     "text": "Our own calm in difficult moments. The dog senses our tension and worry. We owe him – as far as we are able – a calm, steady presence."
+    },
+    {
+     "type": "h",
+     "text": "Trust-damaging during illness ⚠️"
+    },
+    {
+     "type": "p",
+     "text": "Enforcing care measures by force when the dog shows pain or fear during them – without looking for alternatives or obtaining veterinary support."
+    },
+    {
+     "type": "p",
+     "text": "Flooding the dog with pity to such an extent that normality is no longer possible. Exaggerated emotional reactions can increase the dog's tension."
+    },
+    {
+     "type": "p",
+     "text": "We guard against suppressing or playing down our dog's illness. A dog whose suffering is not seen carries it alone. Looking, naming and acting is the most honest form of care."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-07",
+   "title": "The emotional experience of owners",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "What illness does to us 💙"
+    },
+    {
+     "type": "p",
+     "text": "Our dog's illness affects us. It brings worry, exhaustion, helplessness, sometimes grief – and sometimes the quiet pain of knowing that this path is finite. All of this is real, justified and does not need to be suppressed."
+    },
+    {
+     "type": "p",
+     "text": "Feelings of guilt are a frequent companion: Should I have gone to the veterinarian sooner? Did I overlook something? These questions rarely lead to constructive answers. What helps is looking ahead: What can I do today to make this day good for my dog?"
+    },
+    {
+     "type": "h",
+     "text": "Taking care of ourselves 🌿"
+    },
+    {
+     "type": "p",
+     "text": "Anyone who cares for a sick dog over a long period needs resources of their own. Conversations with understanding people, breaks from intensive observing and caring, moments of lightness – none of this is selfishness, but a precondition for being able to be there for our dog in the long term."
+    },
+    {
+     "type": "p",
+     "text": "We also allow ourselves to enjoy good moments – without a guilty conscience. A lovely moment together, a day on which he is visibly doing well – that is allowed to bring joy. Illness is not the only thing that counts."
+    },
+    {
+     "type": "p",
+     "text": "If the emotional strain remains high over time, it is fine to seek human support as well. Grieving for a dog who is still alive – so-called anticipatory grief – is real and deserves recognition."
+    },
+    {
+     "type": "h",
+     "text": "The question of quality of life 🕊️"
+    },
+    {
+     "type": "p",
+     "text": "Quality of life is the most honest benchmark. It does not ask: What is still medically possible? It asks: How is this dog doing – today, now, in this moment?"
+    },
+    {
+     "type": "p",
+     "text": "Signs of good quality of life: the dog accepts food, shows interest in his surroundings, seeks contact, can sleep sufficiently, has more moments without pain than with."
+    },
+    {
+     "type": "p",
+     "text": "The decision to end a dog's life by euthanasia is among the hardest an owner can make. It is not a failure – it is a last act of care when the suffering is greater than the quality of life. Bearing this decision is a form of love."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-08",
+   "title": "Section 8",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: Today counts"
+    },
+    {
+     "type": "p",
+     "text": "Ask yourself a single question today: What gives my dog joy in his current condition – and can I give him that today? Not yesterday, not tomorrow. Today. This one question, asked daily and answered honestly, is the most important compass in life with a sick dog."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "38-09",
+   "title": "Checklist for life with a sick dog",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Do I consistently adapt activity, training and daily routine to my dog's condition today – not yesterday's?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I observe subtle behavioural and body signals and report changes to the veterinarian early?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I keep to all veterinary instructions on exertion, medication and rest – even on good days?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I offer my dog gentle activity every day that brings joy without overtaxing him?"
+    },
+    {
+     "type": "p",
+     "text": "→ Are his resting place and surroundings arranged to accommodate his physical limitations?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I recognise pain-related behaviour changes as such – and not as defiance or disobedience?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I stay calm and reliable in difficult moments – as an anchor for my dog?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I also take care of myself – and accept support when the strain becomes too great?"
+    },
+    {
+     "type": "p",
+     "text": "→ Do I keep the question of my dog's quality of life honestly in view – anew every day?"
+    },
+    {
+     "type": "p",
+     "text": "→ Being there when it matters – that is the deepest form of connection between human and dog."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}

@@ -1,0 +1,248 @@
+[
+ {
+  "id": "01",
+  "title": "01 Fundamentals",
+  "summary": "For calm, clear and harmonious leadership",
+  "file": "01.json"
+ },
+ {
+  "id": "02",
+  "title": "02 Motivation",
+  "summary": "to learn with joy",
+  "file": "02.json"
+ },
+ {
+  "id": "03",
+  "title": "03 Correction",
+  "summary": "with foresight and good sense",
+  "file": "03.json"
+ },
+ {
+  "id": "04",
+  "title": "04 Harmony",
+  "summary": "is the key to understanding",
+  "file": "04.json"
+ },
+ {
+  "id": "05",
+  "title": "05 Mental Training",
+  "summary": "be a role model for your dog",
+  "file": "05.json"
+ },
+ {
+  "id": "06",
+  "title": "06 Body Language",
+  "summary": "because the dog sees what we think",
+  "file": "06.json"
+ },
+ {
+  "id": "07",
+  "title": "07 Verbal Communication",
+  "summary": "a dog also hears what we do not say",
+  "file": "07.json"
+ },
+ {
+  "id": "08",
+  "title": "08 Sensory Perception",
+  "summary": "How dogs perceive their world",
+  "file": "08.json"
+ },
+ {
+  "id": "09",
+  "title": "09 Teamwork",
+  "summary": "One of the oldest interspecific forms of cooperation",
+  "file": "09.json"
+ },
+ {
+  "id": "10",
+  "title": "10 Routines",
+  "summary": "Structure for a fair and low-stress life together",
+  "file": "10.json"
+ },
+ {
+  "id": "11",
+  "title": "11 Accident Prevention",
+  "summary": "Prevention for safety and wellbeing",
+  "file": "11.json"
+ },
+ {
+  "id": "12",
+  "title": "12 Young Dog Imprinting",
+  "summary": "...youth only happens once",
+  "file": "12.json"
+ },
+ {
+  "id": "13",
+  "title": "13 Leash Work",
+  "summary": "...means being able to let go",
+  "file": "13.json"
+ },
+ {
+  "id": "14",
+  "title": "14 Interruptions",
+  "summary": "Interrupting situations with down, sit & stand",
+  "file": "14.json"
+ },
+ {
+  "id": "15",
+  "title": "15 Heel",
+  "summary": "...walking together",
+  "file": "15.json"
+ },
+ {
+  "id": "16",
+  "title": "16 Sit",
+  "summary": "…if it is to stay relaxed",
+  "file": "16.json"
+ },
+ {
+  "id": "17",
+  "title": "17 Down",
+  "summary": "…if it has to be reliable",
+  "file": "17.json"
+ },
+ {
+  "id": "18",
+  "title": "18 Stand",
+  "summary": "...in everyday routine",
+  "file": "18.json"
+ },
+ {
+  "id": "19",
+  "title": "19 Socialization Techniques",
+  "summary": "...and meeting each other without stress",
+  "file": "19.json"
+ },
+ {
+  "id": "20",
+  "title": "20 Long-Line Training",
+  "summary": "…the path to composure",
+  "file": "20.json"
+ },
+ {
+  "id": "21",
+  "title": "21 Distance Interruptions",
+  "summary": "…always in a stable connection",
+  "file": "21.json"
+ },
+ {
+  "id": "22",
+  "title": "22 Off-Leash",
+  "summary": "…complete relaxation",
+  "file": "22.json"
+ },
+ {
+  "id": "23",
+  "title": "23 Off-Leash Heel",
+  "summary": "…complete relaxation",
+  "file": "23.json"
+ },
+ {
+  "id": "24",
+  "title": "24 Team Walk",
+  "summary": "…in harmony with dog and nature",
+  "file": "24.json"
+ },
+ {
+  "id": "25",
+  "title": "25 Scouting Techniques",
+  "summary": "…expanding the comfort zone",
+  "file": "25.json"
+ },
+ {
+  "id": "26",
+  "title": "26 Predation Avoidance",
+  "summary": "…being out and about with respect",
+  "file": "26.json"
+ },
+ {
+  "id": "27",
+  "title": "27 Nose Work",
+  "summary": "…the finest thing in the dog world",
+  "file": "27.json"
+ },
+ {
+  "id": "28",
+  "title": "28 Leash Manners",
+  "summary": "…out and about safely",
+  "file": "28.json"
+ },
+ {
+  "id": "29",
+  "title": "29 Encounter Situations",
+  "summary": "…and acceptance of the other party",
+  "file": "29.json"
+ },
+ {
+  "id": "30",
+  "title": "30 Stress Tolerance Training",
+  "summary": "…being out and about in calm",
+  "file": "30.json"
+ },
+ {
+  "id": "31",
+  "title": "31 Street Routines",
+  "summary": "…being able to react calmly",
+  "file": "31.json"
+ },
+ {
+  "id": "32",
+  "title": "32 Dog Conflicts",
+  "summary": "…panic is not helpful",
+  "file": "32.json"
+ },
+ {
+  "id": "33",
+  "title": "33 Human Conflicts",
+  "summary": "…Staying calm and conveying calm",
+  "file": "33.json"
+ },
+ {
+  "id": "34",
+  "title": "34 Environmental Conflicts",
+  "summary": "…a question of composure",
+  "file": "34.json"
+ },
+ {
+  "id": "35",
+  "title": "35 Owner Conflicts",
+  "summary": "…trust is everything",
+  "file": "35.json"
+ },
+ {
+  "id": "36",
+  "title": "36 Rescue Dogs",
+  "summary": "…a second chance takes time and understanding",
+  "file": "36.json"
+ },
+ {
+  "id": "37",
+  "title": "37 Dogs with Previous Owners",
+  "summary": "…what you know, what you think you know – and what the dog knows",
+  "file": "37.json"
+ },
+ {
+  "id": "38",
+  "title": "38 Sick Dogs",
+  "summary": "…being there when it matters",
+  "file": "38.json"
+ },
+ {
+  "id": "39",
+  "title": "39 Traumatized Dogs",
+  "summary": "…healing begins where safety arises",
+  "file": "39.json"
+ },
+ {
+  "id": "40",
+  "title": "40 First Aid Kit",
+  "summary": "…stay calm, act correctly, save lives",
+  "file": "40.json"
+ },
+ {
+  "id": "41",
+  "title": "41 First Aid for Dogs",
+  "summary": "…stay calm, act correctly, save lives",
+  "file": "41.json"
+ }
+]

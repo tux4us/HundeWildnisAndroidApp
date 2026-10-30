@@ -1,0 +1,245 @@
+{
+ "id": "29",
+ "title": "Encounter Situations",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "…and acceptance of the other party"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "29-01",
+   "title": "Basics",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Encounters in the city are a particular challenge for many dogs, and for us dog owners they are initially sometimes not without a certain amount of nervousness. Because everything usually happens in a confined space and the options for moving aside are limited, we want to train alternative patterns of behaviour."
+    },
+    {
+     "type": "p",
+     "text": "Building on the exercises from the previous chapter, LOOSE-LEASH WALKING, we want to apply them specifically in encounter situations."
+    },
+    {
+     "type": "p",
+     "text": "All notes from the BASIC TRAINING section, in particular the chapter SOCIALISATION TECHNIQUES, apply fundamentally; training and mastery of these are largely taken as given."
+    },
+    {
+     "type": "p",
+     "text": "We enter every encounter as calmly as possible and try to maintain this calm, regardless of how the situation develops. This is of the utmost importance for future training success."
+    },
+    {
+     "type": "h",
+     "text": "Remember: Your calm decides 🧠"
+    },
+    {
+     "type": "p",
+     "text": "If we are agitated or under heavy stress in encounter situations, our dog is without leadership because we lack composure, and has to decide immediately for itself what to do. This fatal association has to be undone through long-term training."
+    },
+    {
+     "type": "p",
+     "text": "We walk in a way that radiates calm in every respect, and we are quiet and reliable in everything we do."
+    },
+    {
+     "type": "p",
+     "text": "We speak calmly and thereby convey an atmosphere of safety to the dog."
+    },
+    {
+     "type": "p",
+     "text": "We praise the dog in a calm voice and only stroke it soothingly once the situation is over."
+    },
+    {
+     "type": "p",
+     "text": "In all encounter situations the rule is: “Talking is silver, talking less is gold.”"
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "29-02",
+   "title": "The route",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "We always walk attentively on our routes and avoid confined spaces. This keeps the risk low of being surprised by situations and being unable to react because of unnecessary confinement."
+    },
+    {
+     "type": "h",
+     "text": "The worst-case plan 🗺️"
+    },
+    {
+     "type": "p",
+     "text": "We train ourselves to keep a “worst-case plan” adapted to the location in mind at all times and to adjust it to the situation. This sounds technical, but after some time it becomes a pleasant and relaxed routine that contributes to moving with the dog in a relaxed way."
+    },
+    {
+     "type": "p",
+     "text": "To do this, we observe our surroundings attentively and casually note suitable places along our route that lend themselves to evasion scenarios."
+    },
+    {
+     "type": "p",
+     "text": "These can be, for example: a driveway, a grass verge, a flight of stairs, a fork in the path, an open area – and similar places and features suitable for moving aside."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "29-03",
+   "title": "Case 1 – Relaxed encounter",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Starting situation 😌"
+    },
+    {
+     "type": "p",
+     "text": "As we approach the other party, we observe no significant changes in behaviour, and our dog shows only observing behaviour but remains essentially free of tension."
+    },
+    {
+     "type": "h",
+     "text": "Our action ✅"
+    },
+    {
+     "type": "p",
+     "text": "We do not interrupt our current movement and pass the other party in a relaxed way at a safety distance of “leash length + safety margin” (roughly 1 to 2 metres beyond the leash length, to rule out direct contact)."
+    },
+    {
+     "type": "h",
+     "text": "Tip: Use the windward side 🌬️"
+    },
+    {
+     "type": "p",
+     "text": "Where possible, arrange encounter situations so that we pass with our dog on the windward side and the other party stays downwind of us. This way our dog receives no unnecessary scent information from the other party and therefore has less pretext for unwanted reactions."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "29-04",
+   "title": "Case 2 – Tense encounter",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Starting situation 😤"
+    },
+    {
+     "type": "p",
+     "text": "As we approach the other party, we observe tension and a slowing of our dog’s pace. The head is held in a focused way and the ears are firmly oriented. There is no offensive moving forward."
+    },
+    {
+     "type": "h",
+     "text": "Our action 🔄"
+    },
+    {
+     "type": "p",
+     "text": "We fall back on the local evasion manoeuvre we have already prepared mentally and walk away from the other party without changing our general behaviour (side area, side path, driveway, etc.). This is done, if possible, without conspicuously addressing the dog."
+    },
+    {
+     "type": "p",
+     "text": "We simply turn off and leave the scene with the leash held at its normal length."
+    },
+    {
+     "type": "p",
+     "text": "Everything depends on our relaxed behaviour and on how calmly we leave the situation, regardless of our dog’s behaviour, and reach sufficient distance from the other party."
+    },
+    {
+     "type": "p",
+     "text": "Sufficient distance has been reached when our dog loses its tension and is responsive to us. Then we bring the dog into “sit” or “down” and let the situation settle completely. Praise calmly and continue the original route."
+    },
+    {
+     "type": "h",
+     "text": "Tip: Choose the neutral direction 🧭"
+    },
+    {
+     "type": "p",
+     "text": "Where possible, arrange tense encounter situations so that we can always leave the situation with our dog in a neutral direction, in order to quickly reach a spot where we can bring our dog into “sit” or “down” – so that from there we can still use the fading situation from an observation position to train calmness."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "29-05",
+   "title": "Case 3 – Dynamic encounter",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Starting situation ⚡"
+    },
+    {
+     "type": "p",
+     "text": "As we approach the other party, our dog reacts immediately and intensely. There is offensive moving forward, ranging from restrained forward drive to strong breaking out."
+    },
+    {
+     "type": "h",
+     "text": "Our action 🏃"
+    },
+    {
+     "type": "p",
+     "text": "Depending on the local conditions, we move briskly and continuously in a clear direction away from the source of the situation. We leave the leash at its originally held length wherever possible. We must never yank on the leash or pull the dog towards us."
+    },
+    {
+     "type": "p",
+     "text": "We move at a normal pace and far enough away that our dog can come down from its level of arousal to calm behaviour. It should therefore no longer show offensive behaviour towards the object of the encounter. Then we bring it into “sit” or “down” and remain at the spot until the situation has resolved."
+    },
+    {
+     "type": "p",
+     "text": "In contrast to Case 2, provided there is sufficient distance, the dog does not initially have to sit or lie facing us here. On the contrary: it may observe the scene from a safe distance and learn from it. If it shows another forward reaction, however, we proceed once more as just described."
+    },
+    {
+     "type": "p",
+     "text": "Only in the exceptional case of limited space with no free direction to move aside may we bring the dog towards us and quickly into “sit” or “down”, depending on which it is better able to perform. In doing so, we behave calmly and with composure and bring the dog into a position in which we ourselves stand between our dog and the object of the encounter."
+    },
+    {
+     "type": "p",
+     "text": "In every case, we wait for a clear end of the situation before praising or playing extensively, in order to avoid a false association between praise and the object of the encounter that triggered the activity."
+    },
+    {
+     "type": "p",
+     "text": "With growing routine, our dog will in future show the behaviour patterns of Case 2 – and with further training it will eventually move on to the patterns of Case 1. That is how it should be."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "29-06",
+   "title": "Section 6",
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Practical impulse: Have the plan in place beforehand"
+    },
+    {
+     "type": "p",
+     "text": "On your next walk, consciously set off with a “worst-case plan”: before every encounter, note where you could move aside. This mental preparation does not cost energy – it saves it. Anyone who already knows what to do at the moment of the encounter stays calm. And calm is transferred."
+    }
+   ],
+   "lessons": []
+  },
+  {
+   "id": "29-07",
+   "title": "Important conditions",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "→ Avoid talking at the dog strongly or excessively."
+    },
+    {
+     "type": "p",
+     "text": "→ Avoid keeping the leash short or holding the dog by the collar or harness – the shorter it is held, the higher the stress level!"
+    },
+    {
+     "type": "p",
+     "text": "→ Avoid hasty and agitated reactions – this loses leadership and the dog takes it over in the situation."
+    },
+    {
+     "type": "p",
+     "text": "→ Avoid at all costs losing yourself in the other party – stay focused on your dog and on calmly working through the respective training sequences."
+    },
+    {
+     "type": "p",
+     "text": "→ Stay relaxed and composed – you can leave the situation with your dog at any time."
+    }
+   ],
+   "lessons": []
+  }
+ ]
+}
