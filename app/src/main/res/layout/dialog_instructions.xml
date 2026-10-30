@@ -31,11 +31,32 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/instr_overview_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_overview_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/instr_data_security_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,18 +72,17 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Übung der Woche -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instr_weekly_exercise_title"
+            android:text="@string/instr_services_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instr_weekly_exercise_desc"
+            android:text="@string/instr_services_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -74,18 +94,17 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Meditationsübung -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instr_meditation_title"
+            android:text="@string/instr_relaxation_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instr_meditation_desc"
+            android:text="@string/instr_relaxation_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -97,7 +116,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Geh-Geschwindigkeit -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -120,7 +138,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Sprach-Trainer -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,18 +160,17 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Hundetraining -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instr_dog_training_title"
+            android:text="@string/instr_volume_trainer_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="4dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instr_dog_training_desc"
+            android:text="@string/instr_volume_trainer_desc"
             android:textSize="@dimen/text_body_medium"
             android:layout_marginBottom="16dp" />
 
@@ -166,7 +182,116 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Tagesnotizen -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_interval_timer_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_interval_timer_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_training_diary_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_training_diary_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_activity_calendar_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_activity_calendar_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_nasenarbeit_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_nasenarbeit_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_spiel_spass_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_spiel_spass_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -189,7 +314,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Hundewetter -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -212,7 +336,28 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- POI / Standort -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_thunderstorm_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_thunderstorm_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -235,7 +380,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Kompass -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -258,7 +402,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Höhenmesser -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -281,7 +424,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Stammdaten -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -304,7 +446,94 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Notfall -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_pulse_check_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_pulse_check_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_tick_loupe_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_tick_loupe_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_plant_scout_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_plant_scout_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_location_share_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_location_share_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -327,7 +556,28 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Backup -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_courses_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_courses_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -350,7 +600,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Support -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -373,7 +622,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Bottom Navigation -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -396,7 +644,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Obere Navigation -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
