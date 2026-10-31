@@ -5825,6 +5825,9 @@ For searching nearby places and for surroundings data on the map, the app querie
         ]]>
     </string>
 
+    <!-- Version und Support Popup -->
+    <string name="version_support">The HundeWildnis app is the result of many hours of work and a great deal of passion – for you and your dogs.\nThanks to your feedback, we’re constantly developing the app further.\nTo ensure we can continue to offer the app for free in the future, we need your support.\n🤝 Every contribution – especially regular ones – is a huge encouragement for our work.\ n\nThank you very much for your support 💚\nManuela and Jörg\n\nOf course, you can still use the app even if you don’t support us. 😇</string>
+
     <!-- Feed und Podcasts -->
     <string name="feed_title">Feed</string>
     <string name="feed_welcome_title">Welcome to Feed</string>

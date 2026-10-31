@@ -77,6 +77,10 @@
             </p>
             ]]>
     </string>
+
+    <!-- Version und Support Popup -->
+    <string name="version_support">Die App HundeWildnis entsteht in vielen Stunden Arbeit und mit großer Leidenschaft – für Euch und Eure Hunde.\nDank Eurem Feedback entwickeln wir die App immer weiter.\nDamit wir die App auch künftig kostenlos anbieten können brauchen wir Deine Unterstützung.\n🤝 Jeder, gern auch regelmäßiger Beitrag ist eine große Wertschätzung für unsere Arbeit.\n\nVielen Dank für Deine Unterstützung 💚\nManuela und Jörg\n\nNatürlich kannst Du die App, auch ohne uns zu unterstützen, nutzen. 😇</string>
+
     <!-- Social Media -->
     <string name="spotify_username">HundeWildnis Podcast</string>
 
