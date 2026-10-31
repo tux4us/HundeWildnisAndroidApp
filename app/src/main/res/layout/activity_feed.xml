@@ -97,6 +97,7 @@
                 android:layout_weight="1"
                 android:minHeight="48dp"
                 android:text="@string/feed_unread_only"
+                android:textColor="@color/rd_text_primary"
                 android:textSize="13sp" />
 
             <com.hundewildnis.app.GlassButton

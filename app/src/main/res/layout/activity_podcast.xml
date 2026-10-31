@@ -88,6 +88,10 @@
             android:layout_marginTop="4dp"
             android:background="@android:color/transparent"
             app:tabGravity="fill"
+            app:tabIndicatorColor="@color/rd_overlay_accent"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="@color/rd_text_primary"
+            app:tabTextColor="@color/rd_text_secondary"
             app:tabMode="fixed" />
 
         <ProgressBar
