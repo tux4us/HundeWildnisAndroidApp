@@ -1285,7 +1285,7 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             out body; >; out skel qt;
         """.trimIndent()
 
-        val json     = OverpassHelper.queryWithRetry(applicationContext, overpassQuery) ?: throw Exception(getString(R.string.overpass_api_unreachable))
+        val json     = OverpassHelper.queryWithRetry(applicationContext, overpassQuery) ?: throw Exception(getString(R.string.overpass_api_unreachable) + OverpassHelper.lastErrorSuffix())
         val elements = json.getJSONArray("elements")
         val pois     = mutableListOf<POI>()
 

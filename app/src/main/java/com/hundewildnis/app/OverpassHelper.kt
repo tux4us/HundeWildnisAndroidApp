@@ -26,8 +26,17 @@ object OverpassHelper {
     /** Öffentliche Standardserver in Reihenfolge der Verwendung. */
     val DEFAULT_SERVERS = listOf(
         "https://overpass-api.de/api/interpreter",
-        "https://overpass.private.coffee/api/interpreter"
+        "https://overpass.private.coffee/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter"
     )
+
+    /** Letzte Fehlerursache der zuletzt fehlgeschlagenen Abfrage (für die Fehlermeldung). */
+    @Volatile
+    var lastError: String? = null
+        private set
+
+    /** Kurzer Zusatz für Fehlermeldungen, z. B. „ (HTTP 429)“; leer, wenn keine Ursache bekannt ist. */
+    fun lastErrorSuffix(): String = lastError?.let { " ($it)" } ?: ""
 
     private class RetryableServerBusy(message: String) : Exception(message)
 
@@ -48,6 +57,7 @@ object OverpassHelper {
         query: String,
         maxRetries: Int = 3
     ): JSONObject? {
+        lastError = null
         val serverList = servers(context).map { withInterpreterPath(it) }
         for (serverIndex in serverList.indices) {
             val server = serverList[serverIndex]
@@ -59,16 +69,20 @@ object OverpassHelper {
                     val connection = URL(server).openConnection() as HttpURLConnection
                     connection.requestMethod = "POST"
                     connection.connectTimeout = 15000
-                    connection.readTimeout = 25000
+                    // Etwas länger als das serverseitige [timeout:25], damit die Antwort des Servers ankommt
+                    connection.readTimeout = 40000
                     AppNetwork.applyUserAgent(connection)
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                    connection.setRequestProperty("Accept", "application/json")
                     connection.doOutput = true
 
+                    // Dokumentiertes Format: data=<URL-kodierte Abfrage>
                     connection.outputStream.use {
-                        it.write(query.toByteArray())
+                        it.write("data=${java.net.URLEncoder.encode(query, "UTF-8")}".toByteArray(Charsets.UTF_8))
                     }
 
                     val code = connection.responseCode
-                    if (code == 429 || code == 504) {
+                    if (code == 429 || code in 500..599) {
                         connection.disconnect()
                         throw RetryableServerBusy("HTTP $code")
                     }
@@ -84,9 +98,11 @@ object OverpassHelper {
                     return JSONObject(response)
 
                 } catch (e: RetryableServerBusy) {
+                    lastError = "${hostOf(server)}: ${e.message}"
                     Log.w(TAG, "Server ${serverIndex + 1} ausgelastet (${e.message}), wechsle den Server")
                     break // nächster Server, keine sofortige Wiederholung
                 } catch (e: Exception) {
+                    lastError = "${hostOf(server)}: ${e.javaClass.simpleName} ${e.message ?: ""}".trim()
                     Log.e(TAG, "Versuch $attempt fehlgeschlagen: ${e.message}")
 
                     if (attempt < maxRetries) {
@@ -99,6 +115,8 @@ object OverpassHelper {
         Log.e(TAG, "Alle Server und Versuche fehlgeschlagen")
         return null
     }
+
+    private fun hostOf(url: String): String = url.substringAfter("://").substringBefore('/')
 
     /** Ergänzt „/api/interpreter“, wenn der Nutzer nur den Servernamen eingetragen hat. */
     fun withInterpreterPath(url: String): String {
