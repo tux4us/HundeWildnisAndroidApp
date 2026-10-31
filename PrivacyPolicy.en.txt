@@ -38,6 +38,7 @@ The app stores the following locally on your device:
 - app settings
 - access credentials for optional services (WebDAV server, weather and routing keys); WebDAV credentials are stored in encrypted form
 - cached map tiles to save data volume
+- subscribed feeds and podcasts with cached article and episode lists as well as playback positions
 
 The courses in the app are part of the app and are read locally. No internet connection is required for this.
 
@@ -52,7 +53,7 @@ The app requests permissions only when a function needs them. You can revoke the
 - Location: for the map, nearby places, weather at your location, compass, altimeter, walking speed, navigation, location sharing and emergency report
 - Camera: for photos (e.g. dog profile, plants) and the tick loupe
 - Microphone: for sound level and voice measurement; the app does not send any audio data to the provider or to servers
-- Notifications and foreground service: for reminders, timers, and ongoing navigation, walking speed and location functions
+- Notifications and foreground service: for reminders, timers, ongoing navigation, walking speed and location functions, and podcast playback
 - Storage access: for exporting and importing backups, PDF and CSV files
 
 3. External services
@@ -135,7 +136,23 @@ You, or the operator of the server you choose, are responsible for the server an
 
 Legal basis: Art. 6(1)(a) GDPR (consent by setting up and enabling synchronisation)
 
-3.5 Links to other applications
+3.5 Feeds and podcasts (your choice)
+
+In the “Feed” and “Podcasts” sections you subscribe to feeds and podcasts yourself. The app only retrieves addresses that you add or import. There are no preset sources.
+
+Data transmitted:
+- IP address (technically required)
+- the feed, article or audio address you chose
+- app identifier (user agent with app name and version)
+Purpose: read articles and listen to podcasts you have subscribed to
+
+The app sends no cookies and no credentials. Images in articles are loaded from the source’s servers; you can turn this off in the reader. When you open a link in the browser, the provider’s privacy policy applies. During playback a foreground service with a notification runs. Playback positions stay on your device.
+
+The operators of the servers you choose are responsible for those servers and the data processed there. The app provider does not receive this data. Connections use HTTPS only.
+
+Legal basis: Art. 6(1)(a) GDPR (consent by adding a feed or podcast and retrieving its content)
+
+3.6 Links to other applications
 
 Some functions open content in other applications, for example in the browser, in the PayPal app or in the Play Store. From the moment it opens, the privacy policy of the respective provider applies.
 
@@ -145,17 +162,18 @@ Some functions open content in other applications, for example in the browser, i
 
 Legal basis: Art. 6(1)(a) GDPR (consent by tapping the link)
 
-3.6 Sharing and export
+3.7 Sharing and export
 
 You pass on emergency reports, location shares, PDF and CSV files and backups via the Android "Share" function or via file export. You choose the application or recipient yourself. Once passed on, the data is held by the recipient you chose. That recipient's privacy policy applies to this processing.
 
-3.7 Overview of third-party services
+3.8 Overview of third-party services
 
 - OpenStreetMap: displaying maps; IP address, map area
 - Weather provider of your choice (OpenWeatherMap or Open-Meteo, only with your own access): weather data; IP address, location, access key
 - Nominatim / Overpass: place search, nearby places; IP address, search term, coordinates
 - OpenRouteService: route calculation; IP address, coordinates, own key
 - WebDAV server of your choice: synchronisation; data, credentials, IP address
+- Feed and podcast servers of your choice: retrieve articles and audio; IP address, requested address, app identifier
 - PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app
 
 All connections are encrypted via HTTPS.
@@ -164,7 +182,7 @@ All connections are encrypted via HTTPS.
 
 Because the provider receives no personal data from you through the app, the provider cannot give you information about stored data and cannot correct or delete any data. You can view, change and delete the data on your device yourself.
 
-For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
+For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, feed and podcast servers, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
 
 You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR).
 

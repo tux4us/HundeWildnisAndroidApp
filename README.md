@@ -206,7 +206,10 @@ Das fertige PDF lässt sich mit einem Tap über die Android-Teilen-Funktion an T
 #### Gruppe 5 – Informationen und Lernen
 | Kachel | Beschreibung |
 |---|---|
-| 🎓 Kurse | 41 Kurse mit Lektionen, in der App gespeichert (Deutsch, Englisch), ohne Internetverbindung lesbar |
+| 📰 Feed | RSS-, Atom- und JSON-Feeds nach eigener Wahl abonnieren, OPML-/Textlisten importieren und exportieren, Artikel im Leser lesen (ohne JavaScript, Bilder abschaltbar) |
+| 🎧 Podcasts | Podcasts nach eigener Wahl abonnieren, OPML importieren/exportieren, Wiedergabe im Hintergrund mit Mediensteuerung und gemerkter Position, Liste aller Folgen der letzten 4 Wochen (neueste zuerst) |
+
+Die Kachel **Kurse** (41 Kurse mit Lektionen, in der App gespeichert, ohne Internetverbindung lesbar) befindet sich in der Gruppe Mentale Vorbereitung.
 
 #### Gruppe 6 – App-Service
 | Kachel | Kernfunktionen | Unterfunktionen |

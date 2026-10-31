@@ -13,6 +13,8 @@
     <!-- Foreground Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- Podcast-Wiedergabe im Hintergrund (Vordergrunddienst vom Typ mediaPlayback) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -190,6 +192,32 @@
             android:label="@string/privacy_title"
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:exported="false" />
+
+        <!-- Feed (RSS/Atom/JSON Feed) und Podcasts: Abos wählt der Nutzer selbst -->
+        <activity
+            android:name="com.hundewildnis.app.FeedActivity"
+            android:label="@string/feed_title"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.hundewildnis.app.FeedReaderActivity"
+            android:label="@string/feed_reader_title"
+            android:parentActivityName="com.hundewildnis.app.FeedActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.hundewildnis.app.PodcastActivity"
+            android:label="@string/pod_title"
+            android:launchMode="singleTop"
+            android:parentActivityName="com.hundewildnis.app.StartActivity"
+            android:exported="false" />
+
+        <service
+            android:name="com.hundewildnis.app.PlaybackService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <service
             android:name="com.hundewildnis.app.WalkingSpeedService"

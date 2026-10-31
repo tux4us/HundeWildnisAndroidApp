@@ -581,6 +581,50 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/instr_feed_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_feed_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_podcasts_title"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instr_podcasts_desc"
+            android:textSize="@dimen/text_body_medium"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"
+            android:alpha="0.2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/instr_backup_title"
             android:textStyle="bold"
             android:textSize="@dimen/text_body_medium"

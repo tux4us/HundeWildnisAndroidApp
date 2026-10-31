@@ -1078,14 +1078,19 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
             }
     }
 
+    /** Laufende Kategoriesuche; es wird immer nur eine Overpass-Abfrage gleichzeitig ausgeführt. */
+    private var poiLoadJob: kotlinx.coroutines.Job? = null
+
     private fun loadPOIsForCategory(category: POICategories.Category, radiusMeters: Int = 3000) {
+        // Mehrfaches Antippen während die Suche läuft: ignorieren (Ladeanzeige ist sichtbar)
+        if (poiLoadJob?.isActive == true) return
         currentLocation?.let { location ->
             binding.poiProgressBar.visibility = View.VISIBLE
             binding.categoryView.visibility = View.GONE
             binding.poiListView.visibility = View.VISIBLE
             binding.categoryTitleText.text = "${category.icon} ${category.displayName(this)}"
 
-            lifecycleScope.launch {
+            poiLoadJob = lifecycleScope.launch {
                 try {
                     val pois = withContext(Dispatchers.IO) {
                         fetchPOIsForCategory(location.latitude, location.longitude, category, radiusMeters)
@@ -1135,6 +1140,9 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
                     binding.emptyPoiText.visibility = if (pois.isEmpty()) View.VISIBLE else View.GONE
                     if (pois.isEmpty()) binding.emptyPoiText.text = getString(R.string.poi_none_found_in_radius, category.displayName(this@LocationActivity), radiusKm)
                     showPOIsOnMap(sorted, category)
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    binding.poiProgressBar.visibility = View.GONE
+                    throw e
                 } catch (e: Exception) {
                     binding.poiProgressBar.visibility = View.GONE
                     Toast.makeText(this@LocationActivity, getString(R.string.error_generic, e.message), Toast.LENGTH_LONG).show()
@@ -1144,6 +1152,8 @@ class LocationActivity : SecureBaseActivity(), LocationListener {
     }
 
     private fun showCategoryView() {
+        poiLoadJob?.cancel()
+        binding.poiProgressBar.visibility = View.GONE
         selectedCategory       = null
         isShowingSearchResults = false
         isShowingFavorites     = false

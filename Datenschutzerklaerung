@@ -38,6 +38,7 @@ Die App speichert lokal auf deinem Gerät:
 - Einstellungen der App
 - Zugangsdaten für optionale Dienste (WebDAV-Server, Wetter- und Routing-Schlüssel); die WebDAV-Zugangsdaten werden verschlüsselt gespeichert
 - zwischengespeicherte Kartenkacheln, um Datenvolumen zu sparen
+- abonnierte Feeds und Podcasts mit zwischengespeicherten Artikel- und Folgenlisten sowie Wiedergabepositionen
 
 Die Kurse in der App sind Teil der App und werden lokal gelesen. Dafür ist keine Internetverbindung nötig.
 
@@ -52,7 +53,7 @@ Die App fragt Berechtigungen erst an, wenn eine Funktion sie braucht. Du kannst 
 - Standort: für Karte, Orte in der Nähe, Wetter am Standort, Kompass, Höhenmesser, Gehgeschwindigkeit, Navigation, Standortfreigabe und Notfallmeldung
 - Kamera: für Fotos (z. B. Hundeprofil, Pflanzen) und die Zeckenlupe
 - Mikrofon: für Lautstärke- und Stimmmessung; die App sendet keine Audiodaten an den Anbieter oder an Server
-- Benachrichtigungen und Vordergrunddienst: für Erinnerungen, Timer sowie laufende Navigation, Gehgeschwindigkeits- und Standortfunktionen
+- Benachrichtigungen und Vordergrunddienst: für Erinnerungen, Timer, laufende Navigation, Gehgeschwindigkeits- und Standortfunktionen sowie die Podcast-Wiedergabe
 - Speicherzugriff: für Export und Import von Sicherungen, PDF- und CSV-Dateien
 
 3. Externe Dienste
@@ -135,7 +136,23 @@ Verantwortlich für den Server und die dort gespeicherten Daten bist du bzw. der
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Einrichten und Aktivieren der Synchronisation)
 
-3.5 Links in andere Anwendungen
+3.5 Feeds und Podcasts (nach deiner Auswahl)
+
+Im Bereich „Feed“ und „Podcasts“ abonnierst du selbst Feeds und Podcasts. Die App ruft nur Adressen ab, die du hinzufügst oder importierst. Es gibt keine voreingestellten Quellen.
+
+Übertragene Daten:
+- IP-Adresse (technisch erforderlich)
+- die von dir gewählte Feed-, Artikel- oder Audio-Adresse
+- Kennung der App (User-Agent mit App-Name und Version)
+Zweck: Artikel lesen und Podcasts anhören, die du abonniert hast
+
+Die App sendet keine Cookies und keine Zugangsdaten. Bilder in Artikeln werden von den Servern der Quelle geladen; im Leser kannst du das ausschalten. Beim Öffnen eines Links im Browser gilt die Datenschutzerklärung des jeweiligen Anbieters. Während der Wiedergabe läuft ein Vordergrunddienst mit Benachrichtigung. Die Wiedergabepositionen bleiben auf deinem Gerät.
+
+Verantwortlich für die Server und die dort verarbeiteten Daten sind deren Betreiber, die du wählst. Der Anbieter der App erhält diese Daten nicht. Die Verbindung erfolgt ausschließlich über HTTPS.
+
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Hinzufügen eines Feeds bzw. Podcasts und Abrufen der Inhalte)
+
+3.6 Links in andere Anwendungen
 
 Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im Play Store. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
 
@@ -145,17 +162,18 @@ Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in de
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Antippen des Links)
 
-3.6 Teilen und Export
+3.7 Teilen und Export
 
 Notfallmeldungen, Standortfreigaben, PDF- und CSV-Dateien sowie Sicherungen gibst du über die Android-Funktion „Teilen“ oder über den Datei-Export weiter. Du wählst selbst, welche Anwendung oder welchen Empfänger du verwendest. Mit der Weitergabe liegen die Daten bei dem von dir gewählten Empfänger. Für diese Verarbeitung gelten dessen Datenschutzbestimmungen.
 
-3.7 Übersicht der Drittanbieter-Dienste
+3.8 Übersicht der Drittanbieter-Dienste
 
 - OpenStreetMap: Karten anzeigen; IP-Adresse, Kartenbereich
 - Wetteranbieter nach deiner Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang): Wetterdaten; IP-Adresse, Standort, Zugangsschlüssel
 - Nominatim / Overpass: Ortssuche, Orte in der Nähe; IP-Adresse, Suchbegriff, Koordinaten
 - OpenRouteService: Routenberechnung; IP-Adresse, Koordinaten, eigener Schlüssel
 - WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse
+- Feed- und Podcast-Server nach deiner Wahl: Artikel und Audio abrufen; IP-Adresse, abgerufene Adresse, App-Kennung
 - PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App
 
 Alle Verbindungen sind durch HTTPS verschlüsselt.
@@ -164,7 +182,7 @@ Alle Verbindungen sind durch HTTPS verschlüsselt.
 
 Da der Anbieter über die App keine personenbezogenen Daten von dir erhält, kann er dir keine Auskunft über gespeicherte Daten geben und keine Daten berichtigen oder löschen. Die Daten auf deinem Gerät kannst du selbst einsehen, ändern und löschen.
 
-Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
+Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Feed- und Podcast-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
 
 Du hast außerdem das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO).
 

@@ -2,7 +2,9 @@ package com.hundewildnis.app
 
 import android.content.Context
 import android.util.Log
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -63,14 +65,15 @@ object OverpassHelper {
             val server = serverList[serverIndex]
 
             for (attempt in 1..maxRetries) {
+                currentCoroutineContext().ensureActive() // abgebrochene Suche beendet die Abfrage
                 try {
                     Log.d(TAG, "Versuch $attempt/$maxRetries auf Server ${serverIndex + 1}")
 
                     val connection = URL(server).openConnection() as HttpURLConnection
                     connection.requestMethod = "POST"
-                    connection.connectTimeout = 15000
+                    connection.connectTimeout = 10000
                     // Etwas länger als das serverseitige [timeout:25], damit die Antwort des Servers ankommt
-                    connection.readTimeout = 40000
+                    connection.readTimeout = 30000
                     AppNetwork.applyUserAgent(connection)
                     connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
                     connection.setRequestProperty("Accept", "application/json")
@@ -101,6 +104,13 @@ object OverpassHelper {
                     lastError = "${hostOf(server)}: ${e.message}"
                     Log.w(TAG, "Server ${serverIndex + 1} ausgelastet (${e.message}), wechsle den Server")
                     break // nächster Server, keine sofortige Wiederholung
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    throw e
+                } catch (e: java.net.SocketTimeoutException) {
+                    // Server antwortet nicht: Wiederholung auf demselben Server bringt nichts -> nächster Server
+                    lastError = "${hostOf(server)}: Zeitüberschreitung"
+                    Log.w(TAG, "Server ${serverIndex + 1} antwortet nicht (Timeout), wechsle den Server")
+                    break
                 } catch (e: Exception) {
                     lastError = "${hostOf(server)}: ${e.javaClass.simpleName} ${e.message ?: ""}".trim()
                     Log.e(TAG, "Versuch $attempt fehlgeschlagen: ${e.message}")

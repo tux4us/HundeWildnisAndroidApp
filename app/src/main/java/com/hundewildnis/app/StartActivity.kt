@@ -472,7 +472,8 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 0,
             tiles = listOf(
-                StartTile("entspannung", R.drawable.ic_breathing, getString(R.string.tile_relaxation))
+                StartTile("entspannung", R.drawable.ic_breathing, getString(R.string.tile_relaxation)),
+                StartTile("nav_courses", R.drawable.ic_courses, getString(R.string.tile_online_courses))
             )
         )
 
@@ -529,7 +530,8 @@ class StartActivity : BaseBottomNavActivity() {
             spanCount = spanCount,
             groupIndex = 4,
             tiles = listOf(
-                StartTile("nav_courses", R.drawable.ic_courses, getString(R.string.tile_online_courses))
+                StartTile("feed", R.drawable.ic_rss, getString(R.string.tile_feed)),
+                StartTile("podcasts", R.drawable.ic_podcast, getString(R.string.tile_podcasts))
             )
         )
 
@@ -594,6 +596,8 @@ class StartActivity : BaseBottomNavActivity() {
             "location_share" -> startActivity(Intent(this, LocationShareActivity::class.java))
             "emergency" -> openEmergencyWizard()
             "nav_courses" -> openMainActivity(MainActivity.VIEW_COURSES)
+            "feed" -> startActivity(Intent(this, FeedActivity::class.java))
+            "podcasts" -> startActivity(Intent(this, PodcastActivity::class.java))
             "backup" -> startActivity(Intent(this, BackupActivity::class.java))
             "support" -> startActivity(Intent(this, SupportActivity::class.java))
         }

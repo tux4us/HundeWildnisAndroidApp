@@ -2581,6 +2581,8 @@
     <string name="tile_blog">Blog</string>
     <string name="tile_pages">Seiten</string>
     <string name="tile_online_courses">Kurse</string>
+    <string name="tile_feed">Feed</string>
+    <string name="tile_podcasts">Podcasts</string>
     <string name="tile_backup">Backup</string>
     <string name="tile_support">Unterstützung</string>
 
@@ -2699,6 +2701,10 @@
     <string name="instr_emergency_desc">Schnelle Hilfe, wenn jede Sekunde zählt. Der Notfall-Assistent ist über die Kachel und über „Notfall“ in der unteren Leiste erreichbar.\n• Hund auswählen (bei mehreren Hunden per Auswahl).\n• „Unfall“ oder „Erkrankung“ wählen und die Notfallart bestimmen (insgesamt 17 Notfalltypen).\n• Kurze Ja/Nein-Fragen schätzen die Dringlichkeit ein.\n• Die Erste-Hilfe-Anleitung zeigt Symptome, Sofortmaßnahmen, Was tun / Was nicht tun und Hinweise zum Transport. Je nach Notfall erscheint ein HLW-Timer oder ein Countdown-Timer.\n• Aus der Anleitung erstellst Du eine Notfallmeldung als PDF mit Standort, Stammdaten und Fotos und teilst sie direkt mit Tierarzt, Tierklinik oder Tierrettung.\nDie Anleitung ersetzt keine tierärztliche Versorgung. Rufe im Notfall umgehend eine Tierarztpraxis oder Tierklinik an.</string>
     <string name="instr_courses_title">🎓 Kurse</string>
     <string name="instr_courses_desc">41 Kurse mit Lektionen zu Training, Verhalten und Alltag mit dem Hund, auf Deutsch und Englisch.\n• Die Kurse sind in der App gespeichert und ohne Internetverbindung lesbar.\n• Wähle einen Kurs, dann eine Lektion. Mit „Vorherige Lektion“ und „Nächste Lektion“ blätterst Du weiter.\n• Die Sprache folgt der App-Sprache (Menü → Sprache).</string>
+    <string name="instr_feed_title">📰 Feed</string>
+    <string name="instr_feed_desc">Hier liest Du Artikel von Webseiten, die Du selbst abonnierst, zum Beispiel Blogs zu Hunden und Wildnis.\n• „Hinzufügen“: Adresse einer Webseite oder eines Feeds eingeben. Die App sucht den Feed selbst.\n• Über „Verwalten“ importierst und exportierst Du Listen (OPML oder Textdatei mit einer Adresse pro Zeile) und entfernst Abonnements.\n• „Aktualisieren“ lädt neue Artikel. Tippe einen Artikel an, um ihn im Leser zu öffnen.\n• „Nur ungelesene“ blendet gelesene Artikel aus. Im Menü markierst Du alle als gelesen.\n• Es gibt keine voreingestellten Quellen. Abgerufen wird nur, was Du hinzufügst, ausschließlich per HTTPS.</string>
+    <string name="instr_podcasts_title">🎧 Podcasts</string>
+    <string name="instr_podcasts_desc">Hier hörst Du Podcasts, die Du selbst abonnierst.\n• „Hinzufügen“: Adresse eines Podcast-Feeds eingeben. Listen kannst Du als OPML importieren und exportieren.\n• Tab „Abos“: Podcast antippen zeigt die Folgen. Eine Folge antippen startet die Wiedergabe.\n• Tab „Letzte 4 Wochen“: alle Folgen Deiner Abonnements der letzten 28 Tage, die neueste zuerst.\n• Die Wiedergabe läuft im Hintergrund weiter und lässt sich über die Benachrichtigung steuern. Die Position jeder Folge wird gemerkt.\n• Langes Drücken auf eine Folge markiert sie als gehört bzw. ungehört.</string>
     <string name="instr_backup_title">📦 Backup</string>
     <string name="instr_backup_desc">Sichere Deine Daten regelmäßig.\n• Menü → „Backup erstellen“ legt eine Sicherungsdatei in Downloads/HundeWildnis_Backups an und bietet das Teilen an. Sie umfasst Profile, Notizen, Fotos, Statistiken und weitere App-Daten.\n• Menü → „Backup importieren“: Datei wählen. Vor der Wiederherstellung wählst Du die Art: Hinzufügen, Ersetzen oder Zusammenführen. So überträgst Du Deine Daten auch auf weitere Geräte.\n• Die Kachel „Backup“ bietet zusätzlich die Synchronisation mit Deinem eigenen WebDAV-Server und das Bereinigen von Speicher.</string>
     <string name="instr_support_title">💛 Unterstützung</string>
@@ -5597,6 +5603,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         <li>Einstellungen der App</li>
         <li>Zugangsdaten für optionale Dienste (WebDAV-Server, Wetter- und Routing-Schlüssel); die WebDAV-Zugangsdaten werden verschlüsselt gespeichert</li>
         <li>zwischengespeicherte Kartenkacheln, um Datenvolumen zu sparen</li>
+        <li>abonnierte Feeds und Podcasts mit zwischengespeicherten Artikel- und Folgenlisten sowie Wiedergabepositionen</li>
         </ul>
         <p>
         Die Kurse in der App sind Teil der App und werden lokal gelesen. Dafür ist keine Internetverbindung nötig.
@@ -5614,7 +5621,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         <li><b>Standort:</b> für Karte, Orte in der Nähe, Wetter am Standort, Kompass, Höhenmesser, Gehgeschwindigkeit, Navigation, Standortfreigabe und Notfallmeldung</li>
         <li><b>Kamera:</b> für Fotos (z. B. Hundeprofil, Pflanzen) und die Zeckenlupe</li>
         <li><b>Mikrofon:</b> für Lautstärke- und Stimmmessung; die App sendet keine Audiodaten an den Anbieter oder an Server</li>
-        <li><b>Benachrichtigungen und Vordergrunddienst:</b> für Erinnerungen, Timer sowie laufende Navigation, Gehgeschwindigkeits- und Standortfunktionen</li>
+        <li><b>Benachrichtigungen und Vordergrunddienst:</b> für Erinnerungen, Timer, laufende Navigation, Gehgeschwindigkeits- und Standortfunktionen sowie die Podcast-Wiedergabe</li>
         <li><b>Speicherzugriff:</b> für Export und Import von Sicherungen, PDF- und CSV-Dateien</li>
         </ul>
 
@@ -5697,7 +5704,20 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         </p>
         <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Einrichten und Aktivieren der Synchronisation)</p>
 
-        <h4>3.5 Links in andere Anwendungen</h4>
+        <h4>3.5 Feeds und Podcasts (nach deiner Auswahl)</h4>
+        <p>Im Bereich „Feed“ und „Podcasts“ abonnierst du selbst Feeds und Podcasts. Die App ruft nur Adressen ab, die du hinzufügst oder importierst. Es gibt keine voreingestellten Quellen.</p>
+        <p>Übertragene Daten:</p>
+        <ul>
+        <li>IP-Adresse (technisch erforderlich)</li>
+        <li>die von dir gewählte Feed-, Artikel- oder Audio-Adresse</li>
+        <li>Kennung der App (User-Agent mit App-Name und Version)</li>
+        </ul>
+        <p>Zweck: Artikel lesen und Podcasts anhören, die du abonniert hast</p>
+        <p>Die App sendet keine Cookies und keine Zugangsdaten. Bilder in Artikeln werden von den Servern der Quelle geladen; im Leser kannst du das ausschalten. Beim Öffnen eines Links im Browser gilt die Datenschutzerklärung des jeweiligen Anbieters. Während der Wiedergabe läuft ein Vordergrunddienst mit Benachrichtigung. Die Wiedergabepositionen bleiben auf deinem Gerät.</p>
+        <p>Verantwortlich für die Server und die dort verarbeiteten Daten sind deren Betreiber, die du wählst. Der Anbieter der App erhält diese Daten nicht. Die Verbindung erfolgt ausschließlich über HTTPS.</p>
+        <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Hinzufügen eines Feeds bzw. Podcasts und Abrufen der Inhalte)</p>
+
+        <h4>3.6 Links in andere Anwendungen</h4>
         <p>
         Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im Play Store. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
         </p>
@@ -5708,18 +5728,19 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         </ul>
         <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Antippen des Links)</p>
 
-        <h4>3.6 Teilen und Export</h4>
+        <h4>3.7 Teilen und Export</h4>
         <p>
         Notfallmeldungen, Standortfreigaben, PDF- und CSV-Dateien sowie Sicherungen gibst du über die Android-Funktion „Teilen“ oder über den Datei-Export weiter. Du wählst selbst, welche Anwendung oder welchen Empfänger du verwendest. Mit der Weitergabe liegen die Daten bei dem von dir gewählten Empfänger. Für diese Verarbeitung gelten dessen Datenschutzbestimmungen.
         </p>
 
-        <h4>3.7 Übersicht der Drittanbieter-Dienste</h4>
+        <h4>3.8 Übersicht der Drittanbieter-Dienste</h4>
         <ul>
         <li>OpenStreetMap: Karten anzeigen; IP-Adresse, Kartenbereich</li>
         <li>Wetteranbieter nach deiner Wahl (OpenWeatherMap oder Open-Meteo, nur mit eigenem Zugang): Wetterdaten; IP-Adresse, Standort, Zugangsschlüssel</li>
         <li>Nominatim / Overpass: Ortssuche, Orte in der Nähe; IP-Adresse, Suchbegriff, Koordinaten</li>
         <li>OpenRouteService: Routenberechnung; IP-Adresse, Koordinaten, eigener Schlüssel</li>
         <li>WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse</li>
+        <li>Feed- und Podcast-Server nach deiner Wahl: Artikel und Audio abrufen; IP-Adresse, abgerufene Adresse, App-Kennung</li>
         <li>PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App</li>
         </ul>
         <p>Alle Verbindungen sind durch HTTPS verschlüsselt.</p>
@@ -5729,7 +5750,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         Da der Anbieter über die App keine personenbezogenen Daten von dir erhält, kann er dir keine Auskunft über gespeicherte Daten geben und keine Daten berichtigen oder löschen. Die Daten auf deinem Gerät kannst du selbst einsehen, ändern und löschen.
         </p>
         <p>
-        Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
+        Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Feed- und Podcast-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
         </p>
         <p>
         Du hast außerdem das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO).
@@ -5745,4 +5766,106 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         <p>Stand dieser Datenschutzerklärung: Oktober 2026</p>
         ]]>
     </string>
+
+    <!-- Feed und Podcasts -->
+    <string name="feed_title">Feed</string>
+    <string name="feed_welcome_title">Willkommen im Feed</string>
+    <string name="feed_guide">Hier liest du Neuigkeiten von Webseiten deiner Wahl direkt in der App, zum Beispiel Blogs, Magazine und Nachrichtenseiten rund um Hunde, Hundetraining und Wildnis. Du entscheidest selbst, welche Quellen du abonnierst. Die App enthält keine vorgegebenen Quellen und sendet keine Daten an uns.\n\nSo geht es:\n1. Tippe auf „Hinzufügen“ und gib die Adresse einer Webseite oder eines Feeds ein, zum Beispiel wildnislehrer.com. Die App sucht den Feed automatisch.\n2. Mit „Verwalten“ → „Importieren“ liest du eine OPML-Datei oder eine Textliste mit einer Adresse pro Zeile ein, zum Beispiel aus einem anderen Feed-Reader. Mit „Exportieren“ sicherst du deine Liste als OPML-Datei.\n3. „Aktualisieren“ lädt neue Artikel. Die neuesten stehen oben, ungelesene sind fett.\n4. Tippe auf einen Artikel, um ihn zu lesen. Über „Im Browser öffnen“ siehst du die Originalseite.\n5. Über „Quelle“ zeigst du nur einen Feed an, mit „Nur ungelesene“ blendest du Gelesenes aus.\n\nDu kannst jetzt jederzeit Artikel aus Quellen deiner Wahl lesen. Unterstützt werden RSS, Atom und JSON Feed über HTTPS. Beim Abruf sieht der jeweilige Server deine IP-Adresse.</string>
+    <string name="feed_btn_add">Hinzufügen</string>
+    <string name="feed_btn_refresh">Aktualisieren</string>
+    <string name="feed_btn_manage">Verwalten</string>
+    <string name="feed_btn_help">Anleitung</string>
+    <string name="feed_source_all">Alle Feeds</string>
+    <string name="feed_source_button">Quelle: %1$s</string>
+    <string name="feed_source_dialog_title">Quelle wählen</string>
+    <string name="feed_source_item">%1$s (%2$d ungelesen)</string>
+    <string name="feed_unread_only">Nur ungelesene</string>
+    <string name="feed_empty_list">Keine Artikel vorhanden. Tippe auf „Aktualisieren“.</string>
+    <string name="feed_empty_unread">Keine ungelesenen Artikel.</string>
+    <string name="feed_add_title">Feed hinzufügen</string>
+    <string name="feed_add_message">Gib die Adresse einer Webseite oder eines Feeds ein. Die App sucht den Feed automatisch. Es werden nur HTTPS-Adressen unterstützt.</string>
+    <string name="feed_add_hint">Adresse der Webseite oder des Feeds</string>
+    <string name="feed_err_not_https">Es werden nur HTTPS-Adressen unterstützt (https://…).</string>
+    <string name="feed_err_invalid">Die Adresse ist ungültig.</string>
+    <string name="feed_err_not_feed">Unter dieser Adresse wurde kein Feed gefunden.</string>
+    <string name="feed_err_network">Der Server ist nicht erreichbar oder hat nicht geantwortet.</string>
+    <string name="feed_added">„%1$s“ wurde hinzugefügt.</string>
+    <string name="feed_already">Dieser Feed ist bereits abonniert.</string>
+    <string name="feed_limit">Es sind höchstens %1$d Abos möglich.</string>
+    <string name="feed_refresh_partial">%1$d von %2$d Feeds konnten nicht geladen werden.</string>
+    <string name="feed_manage_title">Abos verwalten</string>
+    <string name="feed_manage_empty">Noch keine Abos.</string>
+    <string name="feed_remove_confirm">„%1$s“ und die gespeicherten Artikel entfernen?</string>
+    <string name="feed_mark_all_read">Alle als gelesen markieren</string>
+    <string name="feed_import_result">Importiert: %1$d neu, %2$d schon vorhanden, %3$d übersprungen (kein HTTPS oder ungültig), %4$d über dem Limit.</string>
+    <string name="feed_import_failed">Die Datei konnte nicht gelesen werden. Unterstützt werden OPML-Dateien und Textlisten mit einer Adresse pro Zeile.</string>
+    <string name="feed_export_done">Liste exportiert.</string>
+    <string name="feed_export_failed">Export fehlgeschlagen.</string>
+    <string name="feed_export_title">HundeWildnis Feeds</string>
+    <string name="feed_reader_title">Artikel</string>
+    <string name="feed_reader_open_browser">Im Browser öffnen</string>
+    <string name="feed_reader_unread">Als ungelesen markieren</string>
+    <string name="feed_reader_images_on">Bilder: an</string>
+    <string name="feed_reader_images_off">Bilder: aus</string>
+    <string name="feed_reader_missing">Der Artikel wurde nicht gefunden.</string>
+    <string name="feed_open_failed">Es wurde keine App zum Öffnen gefunden.</string>
+    <string name="pod_title">Podcasts</string>
+    <string name="pod_welcome_title">Willkommen bei Podcasts</string>
+    <string name="pod_guide">Hier hörst du Podcasts deiner Wahl direkt in der App, zum Beispiel zu Hunden, Hundetraining und Wildnis. Du entscheidest selbst, welche Podcasts du abonnierst. Die App enthält keine vorgegebenen Podcasts und sendet keine Daten an uns.\n\nSo geht es:\n1. Tippe auf „Hinzufügen“ und gib die Feed-Adresse (RSS) eines Podcasts ein. Du findest sie auf der Webseite des Podcasts oder in einem Podcast-Verzeichnis.\n2. Mit „Verwalten“ → „Importieren“ liest du eine OPML-Datei oder eine Textliste mit einer Adresse pro Zeile ein, zum Beispiel aus einer anderen Podcast-App. Mit „Exportieren“ sicherst du deine Abos als OPML-Datei.\n3. Unter „Abos“ tippst du einen Podcast an und siehst seine Folgen, die neueste zuerst. „Aktualisieren“ lädt neue Folgen.\n4. Unter „Letzte 4 Wochen“ siehst du alle Folgen deiner Abos aus den vergangenen vier Wochen in einer Liste, die neueste zuerst.\n5. Tippe auf eine Folge, um sie abzuspielen. Die Wiedergabe läuft im Hintergrund weiter, auch bei ausgeschaltetem Bildschirm. Die App merkt sich, wo du aufgehört hast. Mit dem Tempo-Knopf änderst du die Geschwindigkeit. „Infos“ zeigt die Beschreibung der Folge.\n\nDu kannst jetzt jederzeit Podcasts deiner Wahl hören. Die Folgen werden gestreamt (HTTPS) und nicht gespeichert, dafür ist eine Internetverbindung nötig. Beim Abruf und beim Streamen sieht der jeweilige Server deine IP-Adresse.</string>
+    <string name="pod_tab_subs">Abos</string>
+    <string name="pod_tab_recent">Letzte 4 Wochen</string>
+    <string name="pod_btn_add">Hinzufügen</string>
+    <string name="pod_btn_refresh">Aktualisieren</string>
+    <string name="pod_btn_manage">Verwalten</string>
+    <string name="pod_btn_help">Anleitung</string>
+    <string name="pod_back_to_list">‹ Alle Podcasts</string>
+    <string name="pod_add_title">Podcast hinzufügen</string>
+    <string name="pod_add_message">Gib die Feed-Adresse (RSS) des Podcasts ein. Du findest sie auf der Webseite des Podcasts oder in einem Podcast-Verzeichnis. Es werden nur HTTPS-Adressen unterstützt.</string>
+    <string name="pod_add_hint">Feed-Adresse des Podcasts</string>
+    <string name="pod_err_not_https">Es werden nur HTTPS-Adressen unterstützt (https://…).</string>
+    <string name="pod_err_invalid">Die Adresse ist ungültig.</string>
+    <string name="pod_err_not_podcast">Unter dieser Adresse wurde kein Podcast-Feed gefunden.</string>
+    <string name="pod_err_network">Der Server ist nicht erreichbar oder hat nicht geantwortet.</string>
+    <string name="pod_added">„%1$s“ wurde abonniert.</string>
+    <string name="pod_already">Dieser Podcast ist bereits abonniert.</string>
+    <string name="pod_limit">Es sind höchstens %1$d Abos möglich.</string>
+    <string name="pod_refresh_partial">%1$d von %2$d Podcasts konnten nicht geladen werden.</string>
+    <string name="pod_episodes_empty">Keine Folgen geladen. Tippe auf „Aktualisieren“.</string>
+    <string name="pod_recent_empty">In den letzten 4 Wochen sind keine Folgen erschienen. Tippe auf „Aktualisieren“, um neue Folgen zu laden.</string>
+    <string name="pod_podcast_meta">%1$d Folgen</string>
+    <string name="pod_episode_meta">%1$s · %2$s</string>
+    <string name="pod_episode_duration">%1$s</string>
+    <string name="pod_played">gehört</string>
+    <string name="pod_resume_at">ab %1$s</string>
+    <string name="pod_info">Infos</string>
+    <string name="pod_shownotes_title">Beschreibung</string>
+    <string name="pod_shownotes_empty">Zu dieser Folge gibt es keine Beschreibung.</string>
+    <string name="pod_mark_played">Als gehört markieren</string>
+    <string name="pod_mark_unplayed">Als ungehört markieren</string>
+    <string name="pod_manage_title">Abos verwalten</string>
+    <string name="pod_manage_empty">Noch keine Abos.</string>
+    <string name="pod_remove_confirm">„%1$s“ abbestellen und die gespeicherten Folgen entfernen?</string>
+    <string name="pod_import_result">Importiert: %1$d neu, %2$d schon vorhanden, %3$d übersprungen (kein HTTPS oder ungültig), %4$d nicht als Podcast lesbar, %5$d über dem Limit.</string>
+    <string name="pod_import_failed">Die Datei konnte nicht gelesen werden. Unterstützt werden OPML-Dateien und Textlisten mit einer Adresse pro Zeile.</string>
+    <string name="pod_export_done">Liste exportiert.</string>
+    <string name="pod_export_failed">Export fehlgeschlagen.</string>
+    <string name="pod_export_title">HundeWildnis Podcasts</string>
+    <string name="pod_player_idle">Keine Folge ausgewählt</string>
+    <string name="pod_player_loading">Lädt …</string>
+    <string name="pod_play">Wiedergabe</string>
+    <string name="pod_pause">Pause</string>
+    <string name="pod_back10">10 Sekunden zurück</string>
+    <string name="pod_fwd30">30 Sekunden vor</string>
+    <string name="pod_speed">Tempo %1$s×</string>
+    <string name="pod_playback_failed">Die Folge konnte nicht abgespielt werden. Prüfe die Internetverbindung.</string>
+    <string name="pod_notif_channel">Podcast-Wiedergabe</string>
+    <string name="pod_notif_stop">Beenden</string>
+    <string name="common_import">Importieren</string>
+    <string name="common_export">Exportieren</string>
+    <string name="common_remove">Entfernen</string>
+    <string name="common_close">Schließen</string>
+    <string name="common_add">Hinzufügen</string>
+    <string name="common_loading">Lädt …</string>
+    <string name="pod_back10_label">−10 s</string>
+    <string name="pod_fwd30_label">+30 s</string>
 </resources>

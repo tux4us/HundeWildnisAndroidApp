@@ -105,3 +105,11 @@
 
 # SLF4J
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+
+# Feed- und Podcast-Datenmodelle werden mit Gson gespeichert: Klassen und Feldnamen behalten
+-keep class com.hundewildnis.app.feed.FeedData { *; }
+-keep class com.hundewildnis.app.feed.FeedSub { *; }
+-keep class com.hundewildnis.app.feed.FeedArticle { *; }
+-keep class com.hundewildnis.app.podcast.PodcastData { *; }
+-keep class com.hundewildnis.app.podcast.Podcast { *; }
+-keep class com.hundewildnis.app.podcast.Episode { *; }

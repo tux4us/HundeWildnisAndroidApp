@@ -2436,6 +2436,8 @@
     <string name="tile_blog">Blog</string>
     <string name="tile_pages">Pages</string>
     <string name="tile_online_courses">Courses</string>
+    <string name="tile_feed">Feed</string>
+    <string name="tile_podcasts">Podcasts</string>
     <string name="tile_backup">Backup</string>
     <string name="tile_support">Support</string>
 
@@ -2554,6 +2556,10 @@
     <string name="instr_emergency_desc">Quick help when every second counts. The emergency assistant can be opened via the tile and via “Emergency” in the bottom bar.\n• Select the dog (with several dogs, via a selection).\n• Choose “Accident” or “Illness” and determine the type of emergency (17 emergency types in total).\n• Short yes/no questions assess the urgency.\n• The first-aid guide shows symptoms, immediate measures, what to do / what not to do and notes on transport. Depending on the emergency, a CPR timer or a countdown timer appears.\n• From the guide you create an emergency report as a PDF with location, dog profile and photos and share it directly with the vet, animal clinic or animal rescue.\nThe guide does not replace veterinary care. In an emergency, call a vet practice or animal clinic immediately.</string>
     <string name="instr_courses_title">🎓 Courses</string>
     <string name="instr_courses_desc">41 courses with lessons on training, behaviour and everyday life with the dog, in German and English.\n• The courses are stored in the app and can be read without an internet connection.\n• Choose a course, then a lesson. Use “Previous lesson” and “Next lesson” to move on.\n• The language follows the app language (menu → Language).</string>
+    <string name="instr_feed_title">📰 Feed</string>
+    <string name="instr_feed_desc">Read articles from websites you subscribe to yourself, for example blogs about dogs and the outdoors.\n• “Add”: enter the address of a website or a feed. The app finds the feed itself.\n• Under “Manage” you import and export lists (OPML or a text file with one address per line) and remove subscriptions.\n• “Refresh” loads new articles. Tap an article to open it in the reader.\n• “Unread only” hides articles you have read. In the menu you can mark everything as read.\n• There are no preset sources. Only what you add is retrieved, over HTTPS only.</string>
+    <string name="instr_podcasts_title">🎧 Podcasts</string>
+    <string name="instr_podcasts_desc">Listen to podcasts you subscribe to yourself.\n• “Add”: enter the address of a podcast feed. You can import and export lists as OPML.\n• “Subscriptions” tab: tap a podcast to see its episodes. Tap an episode to start playback.\n• “Last 4 weeks” tab: all episodes from your subscriptions of the last 28 days, newest first.\n• Playback continues in the background and can be controlled from the notification. The position of each episode is remembered.\n• Long-press an episode to mark it as played or unplayed.</string>
     <string name="instr_backup_title">📦 Backup</string>
     <string name="instr_backup_desc">Back up your data regularly.\n• Menu → “Create Backup” creates a backup file in Downloads/HundeWildnis_Backups and offers to share it. It includes profiles, notes, photos, statistics and further app data.\n• Menu → “Import Backup”: choose a file. Before restoring you choose the mode: Add, Replace or Merge. This is also how you transfer your data to other devices.\n• The “Backup” tile additionally offers synchronisation with your own WebDAV server and cleaning up storage.</string>
     <string name="instr_support_title">💛 Support</string>
@@ -5655,6 +5661,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         <li>app settings</li>
         <li>access credentials for optional services (WebDAV server, weather and routing keys); WebDAV credentials are stored in encrypted form</li>
         <li>cached map tiles to save data volume</li>
+        <li>subscribed feeds and podcasts with cached article and episode lists as well as playback positions</li>
         </ul>
         <p>
         The courses in the app are part of the app and are read locally. No internet connection is required for this.
@@ -5672,7 +5679,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         <li><b>Location:</b> for the map, nearby places, weather at your location, compass, altimeter, walking speed, navigation, location sharing and emergency report</li>
         <li><b>Camera:</b> for photos (e.g. dog profile, plants) and the tick loupe</li>
         <li><b>Microphone:</b> for sound level and voice measurement; the app does not send any audio data to the provider or to servers</li>
-        <li><b>Notifications and foreground service:</b> for reminders, timers, and ongoing navigation, walking speed and location functions</li>
+        <li><b>Notifications and foreground service:</b> for reminders, timers, ongoing navigation, walking speed and location functions, and podcast playback</li>
         <li><b>Storage access:</b> for exporting and importing backups, PDF and CSV files</li>
         </ul>
 
@@ -5755,7 +5762,20 @@ For searching nearby places and for surroundings data on the map, the app querie
         </p>
         <p>Legal basis: Art. 6(1)(a) GDPR (consent by setting up and enabling synchronisation)</p>
 
-        <h4>3.5 Links to other applications</h4>
+        <h4>3.5 Feeds and podcasts (your choice)</h4>
+        <p>In the “Feed” and “Podcasts” sections you subscribe to feeds and podcasts yourself. The app only retrieves addresses that you add or import. There are no preset sources.</p>
+        <p>Data transmitted:</p>
+        <ul>
+        <li>IP address (technically required)</li>
+        <li>the feed, article or audio address you chose</li>
+        <li>app identifier (user agent with app name and version)</li>
+        </ul>
+        <p>Purpose: read articles and listen to podcasts you have subscribed to</p>
+        <p>The app sends no cookies and no credentials. Images in articles are loaded from the source’s servers; you can turn this off in the reader. When you open a link in the browser, the provider’s privacy policy applies. During playback a foreground service with a notification runs. Playback positions stay on your device.</p>
+        <p>The operators of the servers you choose are responsible for those servers and the data processed there. The app provider does not receive this data. Connections use HTTPS only.</p>
+        <p>Legal basis: Art. 6(1)(a) GDPR (consent by adding a feed or podcast and retrieving its content)</p>
+
+        <h4>3.6 Links to other applications</h4>
         <p>
         Some functions open content in other applications, for example in the browser, in the PayPal app or in the Play Store. From the moment it opens, the privacy policy of the respective provider applies.
         </p>
@@ -5766,18 +5786,19 @@ For searching nearby places and for surroundings data on the map, the app querie
         </ul>
         <p>Legal basis: Art. 6(1)(a) GDPR (consent by tapping the link)</p>
 
-        <h4>3.6 Sharing and export</h4>
+        <h4>3.7 Sharing and export</h4>
         <p>
         You pass on emergency reports, location shares, PDF and CSV files and backups via the Android &quot;Share&quot; function or via file export. You choose the application or recipient yourself. Once passed on, the data is held by the recipient you chose. That recipient&#39;s privacy policy applies to this processing.
         </p>
 
-        <h4>3.7 Overview of third-party services</h4>
+        <h4>3.8 Overview of third-party services</h4>
         <ul>
         <li>OpenStreetMap: displaying maps; IP address, map area</li>
         <li>Weather provider of your choice (OpenWeatherMap or Open-Meteo, only with your own access): weather data; IP address, location, access key</li>
         <li>Nominatim / Overpass: place search, nearby places; IP address, search term, coordinates</li>
         <li>OpenRouteService: route calculation; IP address, coordinates, own key</li>
         <li>WebDAV server of your choice: synchronisation; data, credentials, IP address</li>
+        <li>Feed and podcast servers of your choice: retrieve articles and audio; IP address, requested address, app identifier</li>
         <li>PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app</li>
         </ul>
         <p>All connections are encrypted via HTTPS.</p>
@@ -5787,7 +5808,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         Because the provider receives no personal data from you through the app, the provider cannot give you information about stored data and cannot correct or delete any data. You can view, change and delete the data on your device yourself.
         </p>
         <p>
-        For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
+        For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, feed and podcast servers, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
         </p>
         <p>
         You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR).
@@ -5803,4 +5824,106 @@ For searching nearby places and for surroundings data on the map, the app querie
         <p>As of this privacy policy: October 2026</p>
         ]]>
     </string>
+
+    <!-- Feed und Podcasts -->
+    <string name="feed_title">Feed</string>
+    <string name="feed_welcome_title">Welcome to Feed</string>
+    <string name="feed_guide">Here you read news from websites of your choice directly in the app, for example blogs, magazines and news sites about dogs, dog training and the wilderness. You decide which sources to subscribe to. The app contains no preset sources and sends no data to us.\n\nHow it works:\n1. Tap “Add” and enter the address of a website or a feed, for example wildnislehrer.com. The app finds the feed automatically.\n2. With “Manage” → “Import” you load an OPML file or a text list with one address per line, for example from another feed reader. With “Export” you save your list as an OPML file.\n3. “Refresh” loads new articles. The newest are at the top, unread ones are bold.\n4. Tap an article to read it. “Open in browser” shows the original page.\n5. Use “Source” to show only one feed, and “Unread only” to hide what you have already read.\n\nYou can now read articles from sources of your choice at any time. RSS, Atom and JSON Feed over HTTPS are supported. When a feed is retrieved, the respective server sees your IP address.</string>
+    <string name="feed_btn_add">Add</string>
+    <string name="feed_btn_refresh">Refresh</string>
+    <string name="feed_btn_manage">Manage</string>
+    <string name="feed_btn_help">Guide</string>
+    <string name="feed_source_all">All feeds</string>
+    <string name="feed_source_button">Source: %1$s</string>
+    <string name="feed_source_dialog_title">Choose source</string>
+    <string name="feed_source_item">%1$s (%2$d unread)</string>
+    <string name="feed_unread_only">Unread only</string>
+    <string name="feed_empty_list">No articles yet. Tap “Refresh”.</string>
+    <string name="feed_empty_unread">No unread articles.</string>
+    <string name="feed_add_title">Add feed</string>
+    <string name="feed_add_message">Enter the address of a website or a feed. The app finds the feed automatically. Only HTTPS addresses are supported.</string>
+    <string name="feed_add_hint">Address of the website or feed</string>
+    <string name="feed_err_not_https">Only HTTPS addresses are supported (https://…).</string>
+    <string name="feed_err_invalid">The address is not valid.</string>
+    <string name="feed_err_not_feed">No feed was found at this address.</string>
+    <string name="feed_err_network">The server could not be reached or did not respond.</string>
+    <string name="feed_added">“%1$s” was added.</string>
+    <string name="feed_already">You are already subscribed to this feed.</string>
+    <string name="feed_limit">A maximum of %1$d subscriptions is possible.</string>
+    <string name="feed_refresh_partial">%1$d of %2$d feeds could not be loaded.</string>
+    <string name="feed_manage_title">Manage subscriptions</string>
+    <string name="feed_manage_empty">No subscriptions yet.</string>
+    <string name="feed_remove_confirm">Remove “%1$s” and its saved articles?</string>
+    <string name="feed_mark_all_read">Mark all as read</string>
+    <string name="feed_import_result">Imported: %1$d new, %2$d already present, %3$d skipped (not HTTPS or invalid), %4$d over the limit.</string>
+    <string name="feed_import_failed">The file could not be read. OPML files and text lists with one address per line are supported.</string>
+    <string name="feed_export_done">List exported.</string>
+    <string name="feed_export_failed">Export failed.</string>
+    <string name="feed_export_title">HundeWildnis feeds</string>
+    <string name="feed_reader_title">Article</string>
+    <string name="feed_reader_open_browser">Open in browser</string>
+    <string name="feed_reader_unread">Mark as unread</string>
+    <string name="feed_reader_images_on">Images: on</string>
+    <string name="feed_reader_images_off">Images: off</string>
+    <string name="feed_reader_missing">The article was not found.</string>
+    <string name="feed_open_failed">No app was found to open this.</string>
+    <string name="pod_title">Podcasts</string>
+    <string name="pod_welcome_title">Welcome to Podcasts</string>
+    <string name="pod_guide">Here you listen to podcasts of your choice directly in the app, for example about dogs, dog training and the wilderness. You decide which podcasts to subscribe to. The app contains no preset podcasts and sends no data to us.\n\nHow it works:\n1. Tap “Add” and enter the feed address (RSS) of a podcast. You can find it on the podcast’s website or in a podcast directory.\n2. With “Manage” → “Import” you load an OPML file or a text list with one address per line, for example from another podcast app. With “Export” you save your subscriptions as an OPML file.\n3. Under “Subscriptions” tap a podcast to see its episodes, newest first. “Refresh” loads new episodes.\n4. Under “Last 4 weeks” you see all episodes of your subscriptions from the past four weeks in one list, newest first.\n5. Tap an episode to play it. Playback continues in the background, also with the screen off. The app remembers where you stopped. The speed button changes the playback speed. “Info” shows the episode description.\n\nYou can now listen to podcasts of your choice at any time. Episodes are streamed (HTTPS) and not saved, so an internet connection is required. When a feed is retrieved and when streaming, the respective server sees your IP address.</string>
+    <string name="pod_tab_subs">Subscriptions</string>
+    <string name="pod_tab_recent">Last 4 weeks</string>
+    <string name="pod_btn_add">Add</string>
+    <string name="pod_btn_refresh">Refresh</string>
+    <string name="pod_btn_manage">Manage</string>
+    <string name="pod_btn_help">Guide</string>
+    <string name="pod_back_to_list">‹ All podcasts</string>
+    <string name="pod_add_title">Add podcast</string>
+    <string name="pod_add_message">Enter the feed address (RSS) of the podcast. You can find it on the podcast’s website or in a podcast directory. Only HTTPS addresses are supported.</string>
+    <string name="pod_add_hint">Feed address of the podcast</string>
+    <string name="pod_err_not_https">Only HTTPS addresses are supported (https://…).</string>
+    <string name="pod_err_invalid">The address is not valid.</string>
+    <string name="pod_err_not_podcast">No podcast feed was found at this address.</string>
+    <string name="pod_err_network">The server could not be reached or did not respond.</string>
+    <string name="pod_added">Subscribed to “%1$s”.</string>
+    <string name="pod_already">You are already subscribed to this podcast.</string>
+    <string name="pod_limit">A maximum of %1$d subscriptions is possible.</string>
+    <string name="pod_refresh_partial">%1$d of %2$d podcasts could not be loaded.</string>
+    <string name="pod_episodes_empty">No episodes loaded. Tap “Refresh”.</string>
+    <string name="pod_recent_empty">No episodes were published in the last 4 weeks. Tap “Refresh” to load new episodes.</string>
+    <string name="pod_podcast_meta">%1$d episodes</string>
+    <string name="pod_episode_meta">%1$s · %2$s</string>
+    <string name="pod_episode_duration">%1$s</string>
+    <string name="pod_played">played</string>
+    <string name="pod_resume_at">from %1$s</string>
+    <string name="pod_info">Info</string>
+    <string name="pod_shownotes_title">Description</string>
+    <string name="pod_shownotes_empty">This episode has no description.</string>
+    <string name="pod_mark_played">Mark as played</string>
+    <string name="pod_mark_unplayed">Mark as unplayed</string>
+    <string name="pod_manage_title">Manage subscriptions</string>
+    <string name="pod_manage_empty">No subscriptions yet.</string>
+    <string name="pod_remove_confirm">Unsubscribe from “%1$s” and remove the saved episode list?</string>
+    <string name="pod_import_result">Imported: %1$d new, %2$d already present, %3$d skipped (not HTTPS or invalid), %4$d not readable as a podcast, %5$d over the limit.</string>
+    <string name="pod_import_failed">The file could not be read. OPML files and text lists with one address per line are supported.</string>
+    <string name="pod_export_done">List exported.</string>
+    <string name="pod_export_failed">Export failed.</string>
+    <string name="pod_export_title">HundeWildnis podcasts</string>
+    <string name="pod_player_idle">No episode selected</string>
+    <string name="pod_player_loading">Loading …</string>
+    <string name="pod_play">Play</string>
+    <string name="pod_pause">Pause</string>
+    <string name="pod_back10">Back 10 seconds</string>
+    <string name="pod_fwd30">Forward 30 seconds</string>
+    <string name="pod_speed">Speed %1$s×</string>
+    <string name="pod_playback_failed">The episode could not be played. Check your internet connection.</string>
+    <string name="pod_notif_channel">Podcast playback</string>
+    <string name="pod_notif_stop">Stop</string>
+    <string name="common_import">Import</string>
+    <string name="common_export">Export</string>
+    <string name="common_remove">Remove</string>
+    <string name="common_close">Close</string>
+    <string name="common_add">Add</string>
+    <string name="common_loading">Loading …</string>
+    <string name="pod_back10_label">−10 s</string>
+    <string name="pod_fwd30_label">+30 s</string>
 </resources>
