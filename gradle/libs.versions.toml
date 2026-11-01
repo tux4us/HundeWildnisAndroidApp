@@ -1,5 +1,5 @@
 [versions]
-agp = "9.4.1"
+agp = "9.5.0"
 activityKtx = "1.12.3"
 appcompat = "1.7.1"
 coil = "2.7.0"

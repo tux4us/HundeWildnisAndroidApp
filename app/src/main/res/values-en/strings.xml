@@ -3251,6 +3251,7 @@
 
     <!-- General -->
     <string name="weather_toolbar_title">Weather Information</string>
+    <string name="weather_bg_animate">Animate background</string>
 
     <!-- Days (short) -->
     <string name="day_sun">Sun</string>

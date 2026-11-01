@@ -26,4 +26,10 @@
         android:icon="@drawable/ic_my_location"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_toggle_background_animation"
+        android:title="@string/weather_bg_animate"
+        android:checkable="true"
+        app:showAsAction="never" />
+
 </menu>

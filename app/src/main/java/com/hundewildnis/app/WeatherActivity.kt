@@ -66,12 +66,15 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             setDisplayHomeAsUpEnabled(true)
         }
         binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+        binding.weatherBackground.setAnimationEnabled(AppSettings(this).isWeatherBackgroundAnimated())
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         checkLocationPermission()
     }
 
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         menuInflater.inflate(R.menu.menu_weather, menu)
+        menu.findItem(R.id.action_toggle_background_animation)?.isChecked =
+            AppSettings(this).isWeatherBackgroundAnimated()
         updateFavoriteIcon(menu)
         return true
     }
@@ -93,6 +96,13 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             R.id.action_favorite_toggle -> { toggleFavorite(); true }
             R.id.action_favorites -> { showFavoritesDialog(); true }
             R.id.action_current_location -> { getLocation(); true }
+            R.id.action_toggle_background_animation -> {
+                val enabled = !item.isChecked
+                item.isChecked = enabled
+                AppSettings(this).setWeatherBackgroundAnimated(enabled)
+                binding.weatherBackground.setAnimationEnabled(enabled)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -182,8 +192,14 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.weatherBackground.onHostResume()
+    }
+
     override fun onPause() {
         super.onPause()
+        binding.weatherBackground.onHostPause()
         stopLocationUpdates()
     }
 
@@ -400,7 +416,7 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         return WeatherProvider.fetchForecast(applicationContext, latitude, longitude,
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature," +
                 "precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m," +
-                "wind_gusts_10m,uv_index,is_day" +
+                "wind_gusts_10m,uv_index,is_day,cloud_cover" +
                 "&hourly=temperature_2m,precipitation,precipitation_probability,weather_code," +
                 "apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m," +
                 "cloud_cover,visibility,uv_index,cape,surface_pressure" +
@@ -446,6 +462,14 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
         val (description, icon) = getWeatherDescription(weatherCode)
         binding.descriptionText.text = description
         binding.weatherIcon.text = icon
+
+        binding.weatherBackground.setCondition(
+            weatherCode = weatherCode,
+            isDay = current.optInt("is_day", 1) == 1,
+            cloudCoverPercent = if (current.has("cloud_cover")) current.optInt("cloud_cover", -1) else null,
+            windKmh = windSpeed,
+            windDirDeg = windDirection
+        )
 
         val windDirectionText = getWindDirection(windDirection)
         val beaufort = getBeaufortScale(windSpeed)

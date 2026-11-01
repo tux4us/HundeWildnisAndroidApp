@@ -21,6 +21,7 @@ class AppSettings(private val context: Context) {
         private const val KEY_WEATHER_API_KEY = "weather_api_key"          // Open-Meteo-Schlüssel
         private const val KEY_OWM_API_KEY = "owm_api_key"                  // OpenWeatherMap-Schlüssel
         private const val KEY_WEATHER_PROVIDER = "weather_provider"
+        private const val KEY_WEATHER_BG_ANIMATED = "weather_bg_animated"
 
         /**
          * Prüft eine eingegebene Serveradresse. Erlaubt sind nur https-Adressen ohne Leerzeichen,
@@ -49,6 +50,13 @@ class AppSettings(private val context: Context) {
 
     fun setWeatherProvider(type: WeatherProviderType) {
         plainPrefs().edit().putString(KEY_WEATHER_PROVIDER, type.id).apply()
+    }
+
+    /** Animierter Wetter-Hintergrund in der Wetteransicht (Standard: an). Aus = ruhiges Standbild. */
+    fun isWeatherBackgroundAnimated(): Boolean = plainPrefs().getBoolean(KEY_WEATHER_BG_ANIMATED, true)
+
+    fun setWeatherBackgroundAnimated(enabled: Boolean) {
+        plainPrefs().edit().putBoolean(KEY_WEATHER_BG_ANIMATED, enabled).apply()
     }
 
     /** Open-Meteo: Serveradresse (kommerzielle Kundenadresse oder eigener Server) oder null. */
