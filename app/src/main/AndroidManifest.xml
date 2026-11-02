@@ -151,13 +151,6 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity" />
 
         <activity
-            android:name="com.hundewildnis.app.WeatherRadarActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:screenOrientation="fullSensor"
-            android:exported="false"
-            android:parentActivityName="com.hundewildnis.app.WeatherActivity" />
-
-        <activity
             android:name="com.hundewildnis.app.LocationActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:screenOrientation="fullSensor"

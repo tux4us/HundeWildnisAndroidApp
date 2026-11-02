@@ -27,11 +27,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_radar"
-        android:title="@string/weather_radar_menu"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_toggle_background_animation"
         android:title="@string/weather_bg_animate"
         android:checkable="true"

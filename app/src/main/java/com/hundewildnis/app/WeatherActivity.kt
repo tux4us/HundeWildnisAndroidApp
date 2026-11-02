@@ -96,13 +96,6 @@ class WeatherActivity : SecureBaseActivity(), LocationListener {
             R.id.action_favorite_toggle -> { toggleFavorite(); true }
             R.id.action_favorites -> { showFavoritesDialog(); true }
             R.id.action_current_location -> { getLocation(); true }
-            R.id.action_radar -> {
-                startActivity(Intent(this, WeatherRadarActivity::class.java).apply {
-                    putExtra(WeatherRadarActivity.EXTRA_LAT, currentLat)
-                    putExtra(WeatherRadarActivity.EXTRA_LON, currentLon)
-                })
-                true
-            }
             R.id.action_toggle_background_animation -> {
                 val enabled = !item.isChecked
                 item.isChecked = enabled

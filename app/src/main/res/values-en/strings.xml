@@ -3252,12 +3252,6 @@
     <!-- General -->
     <string name="weather_toolbar_title">Weather Information</string>
     <string name="weather_bg_animate">Animate background</string>
-    <string name="weather_radar_menu">Weather map (precipitation/clouds)</string>
-    <string name="weather_radar_title">Weather map</string>
-    <string name="weather_radar_layer_precipitation">Precipitation</string>
-    <string name="weather_radar_layer_clouds">Clouds</string>
-    <string name="weather_radar_key_missing">The weather map requires an OpenWeatherMap key. Please enter it under Settings → “Services &amp; servers”.</string>
-    <string name="weather_radar_status">Layer: %1$s. Current model state, not measured radar, no time progression. The layer stays empty if there is no precipitation in view; zoom out to check. %2$s</string>
 
     <!-- Days (short) -->
     <string name="day_sun">Sun</string>
