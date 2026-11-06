@@ -51,3 +51,11 @@ Dateien auf Syntaxfehler. Ein echter Gradle-Build steht aus.
    Kalibrierung des Barometers prüfen)
 4. Rechtliche Prüfung der Lizenzumstellung (Mitwirkende Dritte? Dann deren Zustimmung nötig)
 5. Tag mit freier Lizenz setzen, `fdroid build` lokal laufen lassen, dann Merge-Request bei fdroiddata
+
+
+## Nachtrag 27.1 / 138: insecure-gradlew
+
+- `gradle/wrapper/gradle-wrapper.properties` enthält jetzt `distributionSha256Sum` (Wert von der Gradle-Release-Seite übernommen, **bitte gegen `https://services.gradle.org/distributions/gradle-9.6.0-bin.zip.sha256` prüfen**).
+- `gradle-wrapper.jar` weicht von der offiziellen Prüfsumme des 9.6.0-Wrappers ab. Neu erzeugen: `./gradlew wrapper --gradle-version 9.6.0 --gradle-distribution-sha256-sum <Hash>` (zweimal ausführen) und `sha256sum gradle/wrapper/gradle-wrapper.jar` mit der offiziellen `…-wrapper.jar.sha256` vergleichen.
+- Sicherungsregeln (`backup_rules.xml`, `data_extraction_rules.xml`) sind im Manifest eingebunden und schließen die verschlüsselten Einstellungen aus.
+- Signal-/X-Logos entfernt, Play-Store-Link durch Projektseite ersetzt.

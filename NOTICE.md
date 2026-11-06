@@ -8,7 +8,7 @@ Copyright (c) 2026 tux4us (www.wildnislehrer.de)
 ## Eigene Inhalte
 
 Die Texte, Grafiken und Audiodateien dieses Projekts (u. a. `res/raw/entspannung_music.mp3`,
-`res/drawable/entspannung_bg.jpg`, `assets/wero_qr_code.jpg`) stammen vom Rechteinhaber und werden
+`res/drawable/entspannung_bg.jpg`) stammen vom Rechteinhaber und werden
 ebenfalls unter `GPL-3.0-or-later` bereitgestellt.
 
 ## Schrift

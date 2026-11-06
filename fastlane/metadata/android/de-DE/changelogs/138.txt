@@ -1,0 +1,6 @@
+• Gradle-Wrapper mit Prüfsumme abgesichert (F-Droid)
+• Sicherungsregeln: Schlüssel und Zugangsdaten werden nicht mehr gesichert
+• Robusteres Laden der verschlüsselten Einstellungen
+• Keine Play-Store- und Marken-Verweise mehr in der App
+• Standort-Link im Teilen-Text über OpenStreetMap
+• Texte zum Wetteranbieter angepasst

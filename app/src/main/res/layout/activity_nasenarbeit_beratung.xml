@@ -442,7 +442,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/nasenarbeit_beratung_tab_warnings"
-                                        android:icon="@drawable/ic_signal"/>
+                                        android:icon="@drawable/ic_info"/>
                                     <com.google.android.material.tabs.TabItem
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"

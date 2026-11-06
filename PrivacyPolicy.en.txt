@@ -1,6 +1,6 @@
 Privacy Policy for the HundeWildnis App
 
-As of: October 2026
+As of: November 2026
 
 1. Controller
 
@@ -154,11 +154,11 @@ Legal basis: Art. 6(1)(a) GDPR (consent by adding a feed or podcast and retrievi
 
 3.6 Links to other applications
 
-Some functions open content in other applications, for example in the browser, in the PayPal app or in the Play Store. From the moment it opens, the privacy policy of the respective provider applies.
+Some functions open content in other applications, for example in the browser, in the PayPal app or in your device's app store. From the moment it opens, the privacy policy of the respective provider applies.
 
 - Donation via PayPal: The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider's policy applies: https://www.paypal.com/de/legalhub/privacy-full.
 - Map links: Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.
-- Rating and sharing the app: The link to the Play Store opens the Play Store or the browser.
+- Rating and sharing the app: Rating opens the app store installed on your device or the project page in the browser. The share text contains a link to the project page.
 
 Legal basis: Art. 6(1)(a) GDPR (consent by tapping the link)
 
@@ -192,4 +192,4 @@ If you have questions about this privacy policy or the app, you can contact us a
 
 This privacy policy may be updated when necessary. You will always find the current version in the app in the menu under "Privacy Policy".
 
-As of this privacy policy: October 2026
+As of this privacy policy: November 2026

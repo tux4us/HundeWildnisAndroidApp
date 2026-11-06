@@ -8,25 +8,28 @@ AuthorName: HundeWildnisSchule Ulbricht
 WebSite: https://wildnislehrer.com/hundewildnisapp/
 SourceCode: https://github.com/tux4us/HundeWildnisAndroidApp
 IssueTracker: https://github.com/tux4us/HundeWildnisAndroidApp/issues
+Donate: https://www.paypal.com/paypalme/wildnishunde
 
 # Zu klären mit den F-Droid-Betreuern (nicht selbst entscheiden):
 #  - NonFreeNet: Wetter kommt von Diensten, die nicht frei sind (OpenWeatherMap / Open-Meteo, jeweils mit
 #    Nutzerschlüssel bzw. Nutzer-Server, kein Standarddienst). Anti-Feature NonFreeNet vermutlich zu setzen.
-#  - Spendenlink (nur PayPal, freiwillig, ohne Gegenleistung) in SupportActivity muss im Metadatensatz stimmen.
+#  - Donate-Link oben: bitte gegen SupportActivity prüfen (nur PayPal, freiwillig, ohne Gegenleistung).
+#  - Abhängigkeit über JitPack (MPAndroidChart): F-Droid-Buildserver erlaubt das ggf. nur mit Hinweis.
+#  - Gradle-Wrapper: distributionSha256Sum gesetzt; gradle-wrapper.jar vor dem Merge-Request neu erzeugen.
 AntiFeatures: []
 
 RepoType: git
 Repo: https://github.com/tux4us/HundeWildnisAndroidApp.git
 
 Builds:
-  - versionName: '24.1'
-    versionCode: 131
-    commit: v24.1        # Tag mit freier Lizenz setzen
+  - versionName: '27.1'
+    versionCode: 138
+    commit: v27.1        # Tag mit freier Lizenz setzen
     subdir: app
     gradle:
       - yes
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: '24.1'
-CurrentVersionCode: 131
+CurrentVersion: '27.1'
+CurrentVersionCode: 138

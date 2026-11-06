@@ -112,19 +112,30 @@ class AppSettings(private val context: Context) {
         if (value == null) remove(key) else putString(key, value)
     }
 
+    private fun createSecurePrefs() = EncryptedSharedPreferences.create(
+        context,
+        ENCRYPTED_PREFS_FILE,
+        MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+
+    /**
+     * Verschlüsselte Einstellungen (API-Schlüssel). Ist die Datei nicht mehr lesbar (z. B. nach
+     * einer Wiederherstellung auf einem anderen Gerät, weil der Keystore-Schlüssel fehlt), wird sie
+     * zurückgesetzt; die Schlüssel müssen dann neu eingetragen werden. Nur wenn auch das scheitert,
+     * wird eine getrennte, unverschlüsselte Datei verwendet, damit die verschlüsselte nicht
+     * mit Klartext vermischt wird.
+     */
     private fun securePrefs() = try {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-        EncryptedSharedPreferences.create(
-            context,
-            ENCRYPTED_PREFS_FILE,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        createSecurePrefs()
     } catch (e: Exception) {
-        context.getSharedPreferences(ENCRYPTED_PREFS_FILE, Context.MODE_PRIVATE)
+        try {
+            context.deleteSharedPreferences(ENCRYPTED_PREFS_FILE)
+            createSecurePrefs()
+        } catch (e2: Exception) {
+            context.getSharedPreferences(ENCRYPTED_PREFS_FILE + "_unavailable", Context.MODE_PRIVATE)
+        }
     }
 
     /**

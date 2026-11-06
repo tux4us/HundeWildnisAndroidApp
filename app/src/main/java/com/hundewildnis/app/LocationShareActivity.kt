@@ -841,7 +841,7 @@ class LocationShareActivity : SecureBaseActivity() {
                                 getString(
                                     R.string.location_share_share_text_format,
                                     p.label,
-                                    "https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}"
+                                    "https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=16/${p.lat}/${p.lon}"
                                 )
                             )
                         }, getString(R.string.location_share_share_chooser_title)

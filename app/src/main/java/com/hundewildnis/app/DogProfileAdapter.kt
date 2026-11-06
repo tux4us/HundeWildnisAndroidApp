@@ -54,7 +54,7 @@ class DogProfileAdapter(
             val actionTiles = listOf(
                 StartTile("dog_view", R.drawable.ic_info, context.getString(R.string.dog_tile_view)),
                 StartTile("dog_edit", R.drawable.ic_notes, context.getString(R.string.dog_tile_edit)),
-                StartTile("dog_qr", R.drawable.ic_signal, context.getString(R.string.dog_tile_qr)),
+                StartTile("dog_qr", R.drawable.ic_qr_code, context.getString(R.string.dog_tile_qr)),
                 StartTile("dog_pdf", R.drawable.ic_notes, context.getString(R.string.dog_tile_pdf)),
                 StartTile("dog_share", R.drawable.ic_map_pin_share, context.getString(R.string.dog_tile_share)),
                 StartTile("dog_delete", R.drawable.ic_remove, context.getString(R.string.dog_tile_delete))

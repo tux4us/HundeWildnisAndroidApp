@@ -1,0 +1,6 @@
+• Gradle wrapper secured with checksum (F-Droid)
+• Backup rules: keys and credentials are no longer backed up
+• More robust loading of encrypted settings
+• No more Play Store or brand references in the app
+• Location share link now uses OpenStreetMap
+• Weather provider texts updated

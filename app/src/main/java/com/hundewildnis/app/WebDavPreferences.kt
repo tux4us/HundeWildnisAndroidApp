@@ -43,20 +43,28 @@ class WebDavPreferences(private val context: Context) {
 
     // ── Verschlüsselte Zugangsdaten ────────────────────────────────────────
 
+    private fun createEncryptedPrefs() = EncryptedSharedPreferences.create(
+        context,
+        ENCRYPTED_PREFS_FILE,
+        MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+
+    /**
+     * Ist die Datei nicht lesbar (z. B. nach einer Wiederherstellung ohne Keystore-Schlüssel), wird sie
+     * zurückgesetzt; der Zugang muss dann neu eingetragen werden. Der Klartext-Ersatz nutzt eine
+     * getrennte Datei, damit nichts mit verschlüsselten Daten vermischt wird.
+     */
     private fun encryptedPrefs() = try {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-        EncryptedSharedPreferences.create(
-            context,
-            ENCRYPTED_PREFS_FILE,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        createEncryptedPrefs()
     } catch (e: Exception) {
-        // Fallback (sollte auf API 24+ praktisch nie eintreten)
-        context.getSharedPreferences(ENCRYPTED_PREFS_FILE, Context.MODE_PRIVATE)
+        try {
+            context.deleteSharedPreferences(ENCRYPTED_PREFS_FILE)
+            createEncryptedPrefs()
+        } catch (e2: Exception) {
+            context.getSharedPreferences(ENCRYPTED_PREFS_FILE + "_unavailable", Context.MODE_PRIVATE)
+        }
     }
 
     fun saveCredentials(serverUrl: String, username: String, password: String) {

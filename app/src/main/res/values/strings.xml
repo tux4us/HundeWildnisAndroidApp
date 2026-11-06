@@ -22,60 +22,80 @@
     <string name="imprint_content">
         <![CDATA[
         <h2>Impressum</h2>
+        <p>Angebot von wildnislehrer.de, hundeberater.de und wildnislehrer.com sowie der HundeWildnis App.</p>
 
-            <h3>Angaben gemäß § 5 TMG</h3>
-            <p>
-            HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR<br>
-            Hohe Lehne 14<br>
-            01705 Freital<br>
-            Umsatzsteuer-IdNr.:<br>
-            DE458205581<br>
-            </p>
+        <h3>Anbieter</h3>
+        <p>
+        <b>HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR</b><br>
+        Büro: Hohe Lehne 14, 01705 Freital<br>
+        <i>Achtung: kein Treffpunkt zur Hunde-/Wildnisschule bzw. Welpenschule!</i><br>
+        Tel.: 0351 4602225<br>
+        E-Mail: info@wildnislehrer.de<br>
+        E-Mail (App): hundewildnisschuleapp@online.de<br>
+        www.wildnislehrer.de · www.hundeberater.de · www.wildnislehrer.com
+        </p>
 
-            <h3>Kontakt</h3>
-            <p>
-            E-Mail: hundewildnisschuleapp@online.de<br>
-            </p>
+        <h3>Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</h3>
+        <p>
+        Anbieter der Website, des Weblogs und der App: Manuela Ulbricht und Peter Jörg Ulbricht,
+        Hohe Lehne 14, 01705 Freital, Tel. 0351 4602225.
+        </p>
+        <p>
+        Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: DE458205581<br>
+        Steuernummer: 210/155/00902 (Finanzamt Pirna)<br>
+        Gerichtsstand: Freital
+        </p>
+        <p>
+        Inhaltlich Verantwortliche: Manuela und Peter Jörg Ulbricht, Hohe Lehne 14, 01705 Freital,
+        Tel. 0351 4602225, info@wildnislehrer.de
+        </p>
 
-            <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
-            <p>
-            Manuela Ulbricht und Peter Jörg Ulbricht<br>
-            01705 Freital, Hohe Lehne 14<br>
-            </p>
+        <h3>Rechtshinweise</h3>
+        <p>
+        <a href="https://wildnislehrer.com/impressum/datenschutzerklaerung">Datenschutzerklärung</a> ·
+        <a href="https://wildnislehrer.com/impressum/agb">Allgemeine Geschäftsbedingungen</a>
+        </p>
 
-            <h3>Haftungsausschluss</h3>
+        <h3>Urheberrecht</h3>
+        <p>
+        Aufbau und Inhalt dieser App und der zugehörigen Websites sowie Grafiken, Bilder, Logos und Texte sind
+        urheberrechtlich geschützt. Der Quelltext der App steht unter der GNU General Public License
+        (GPL-3.0-or-later); die Lizenzbedingungen sind dort geregelt. Darüber hinaus dürfen die Inhalte ohne unsere
+        ausdrückliche Zustimmung nicht vervielfältigt oder für gewerbliche Zwecke genutzt werden. Sollten
+        unbeabsichtigt fremde Inhalte verwendet worden sein, korrigieren wir dies umgehend nach Mitteilung.
+        Alle genannten Marken- und Warenzeichen unterliegen den Bestimmungen des jeweils gültigen
+        Kennzeichenrechts; die bloße Nennung bedeutet nicht, dass diese frei von Rechten Dritter sind.
+        </p>
 
-            <h4>Haftung für Inhalte</h4>
-            <p>
-            Die Inhalte unserer App und Seiten wurden mit größter Sorgfalt erstellt.
-            Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
-            können wir jedoch keine Gewähr übernehmen.
-            </p>
+        <h3>Externe Links</h3>
+        <p>
+        Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte extern verlinkter
+        Websites; für deren Inhalte sind ausschließlich die jeweiligen Betreiber verantwortlich. Zum Zeitpunkt der
+        Verlinkung waren keine Rechtsverstöße erkennbar. Bei Bekanntwerden einer Rechtsverletzung entfernen wir den
+        betroffenen Link umgehend.
+        </p>
 
-            <h4>Haftung für Links</h4>
-            <p>
-            Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren
-            Inhalte wir keinen Einfluss haben. Deshalb können wir für diese
-            fremden Inhalte auch keine Gewähr übernehmen.
-            </p>
+        <h3>Haftungsausschluss</h3>
+        <p>
+        Für Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Informationen übernehmen wir keine
+        Gewähr. Haftungsansprüche gegen uns, die sich auf Schäden materieller oder ideeller Art durch die Nutzung
+        oder Nichtnutzung dargebotener Informationen bzw. durch fehlerhafte oder unvollständige Informationen
+        beziehen, sind ausgeschlossen, sofern uns kein nachweislich vorsätzliches oder grob fahrlässiges Verschulden
+        trifft. Alle Angebote sind freibleibend und unverbindlich.
+        </p>
+        <p>
+        Die Nutzung der im Impressum veröffentlichten Kontaktdaten zur Übersendung nicht ausdrücklich angeforderter
+        Werbung ist nicht gestattet; rechtliche Schritte gegen Zuwiderhandlungen behalten wir uns vor.
+        </p>
 
-            <h4>Urheberrecht</h4>
-            <p>
-            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen
-            Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung,
-            Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
-            Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des
-            jeweiligen Autors bzw. Erstellers.
-            ZUWIDERHANDLUNG HAT SCHADENERSATZFORDERUNGEN ZUR FOLGE
-            </p>
-
-            <h4>Datenschutz</h4>
-            <p>
-            Diese App verbindet sich nur mit den Diensten, die für die genutzten Funktionen nötig sind (z. B. Wetter-, Routing- und Kartendienste sowie, optional, Dein eigener WebDAV-Server). Inhalte von unserer Webseite werden nicht nachgeladen.
-            Alle Verbindungen sind verschlüsselt (HTTPS).
-            Ausführliche Informationen in unserer Datenschutzerklärung.
-            </p>
-            ]]>
+        <h3>Datenschutz</h3>
+        <p>
+        Diese App verbindet sich nur mit den Diensten, die für die genutzten Funktionen nötig sind (z. B. Wetter-,
+        Routing- und Kartendienste sowie, optional, Dein eigener WebDAV-Server). Inhalte unserer Website werden nicht geladen.
+        Alle Verbindungen sind verschlüsselt (HTTPS).
+        Ausführliche Informationen in unserer Datenschutzerklärung.
+        </p>
+        ]]>
     </string>
 
     <!-- Version und Support Popup -->
@@ -86,7 +106,6 @@
 
     <!-- NEU: Signal -->
     <string name="signal_support">SIGNAL HundeWildnisGruppe</string>
-    <string name="signal_group_link">https://signal.group/#CjQKIHJcoNHMe3tNArSNAp9uYDw6psjUVbVFP1HFDYi-cAQwEhA37ia7Wb2iYAXEEnk-6mT2</string>
 
     <!-- Weather Activity -->
     <string name="weather_icon_placeholder">☀️</string>
@@ -109,7 +128,6 @@
     <string name="uv_index_placeholder">--</string>
     <string name="forecast_24h_title">24-Stunden Vorhersage</string>
     <string name="location_determining">📍 Standort wird ermittelt...</string>
-    <string name="open_meteo_source">Daten: Open-Meteo.com</string>
 
     <!-- Emergency Strings -->
     <string name="emergency_title">Erste Hilfe</string>
@@ -3048,7 +3066,7 @@
     <string name="nasenarbeit_beratung_tab_training">Training</string>
     <string name="nasenarbeit_beratung_tab_empfehlung">Empfehlung</string>
     <string name="nasenarbeit_beratung_loading_title">GPS &amp; Wetterdaten werden abgerufen</string>
-    <string name="nasenarbeit_beratung_loading_desc">Open-Meteo API · Automatisch</string>
+    <string name="nasenarbeit_beratung_loading_desc">Wetterdaten · Automatisch (gewählter Wetteranbieter)</string>
     <string name="nasenarbeit_beratung_wetter_header">Schicht 1 · Wetterbedingungen</string>
     <string name="nasenarbeit_beratung_wetter_current">Aktuelle Wetterdaten</string>
     <string name="nasenarbeit_beratung_wetter_temp">Temperatur</string>
@@ -3223,7 +3241,7 @@
     <!-- Nasenarbeit Beratung Code Strings -->
     <string name="nasenarbeit_beratung_title_suffix"> – Nasenarbeit Beratung</string>
     <string name="nasenarbeit_beratung_consent_title">Nasenarbeit – Trainingsberatung</string>
-    <string name="nasenarbeit_beratung_consent_message">Für eine optimale Trainingsempfehlung benötigt die App:\n\n📍 GPS-Standort – temporär für Wetterdaten, wird nicht gespeichert\n🌡️ Wetterdaten – automatisch via Open-Meteo API\n\nAlle Daten bleiben auf deinem Gerät.</string>
+    <string name="nasenarbeit_beratung_consent_message">Für eine optimale Trainingsempfehlung benötigt die App:\n\n📍 GPS-Standort – temporär für Wetterdaten, wird nicht gespeichert\n🌡️ Wetterdaten – automatisch über den von dir gewählten Wetteranbieter (Einstellungen → Dienste &amp; Server)\n\nAlle Daten bleiben auf deinem Gerät.</string>
     <string name="nasenarbeit_beratung_consent_btn_continue">Verstanden &amp; Weiter</string>
     <string name="nasenarbeit_beratung_weather_not_available">Wetter nicht verfügbar – manuelle Eingabe</string>
     <string name="nasenarbeit_beratung_exclusion_too_hot_reason">Temperatur über 30°C</string>
@@ -3793,7 +3811,7 @@
     <string name="weather_aqi_current_label">Aktuell:</string>
     <string name="weather_aqi_current_placeholder">-- Gut</string>
     <string name="weather_scroll_hours_hint">Verschiebe 👉🏼 für weitere Stunden</string>
-    <string name="weather_source_air_quality_ugm3">Quelle: Open-Meteo Air Quality API (CAMS/Copernicus). Werte in µg/m³.</string>
+    <string name="weather_source_air_quality_ugm3">Quelle: Luftqualitätsdienst des gewählten Wetteranbieters. Werte in µg/m³.</string>
     <string name="weather_temp_chart_card_title">📊 24h-Temperaturverlauf</string>
     <string name="weather_precip_chart_card_title">🌧️ 24h-Niederschlagsmenge</string>
     <string name="weather_sun_card_title">☀️ Sonne</string>
@@ -3851,7 +3869,7 @@
     <string name="thunderstorm_approach_formula_with_eta">📐 Geschwindigkeit ≈ %1$.0f km/h  •  Restweg (%2$.1f km − 1,0 km) ÷ %3$.0f km/h ≈ %4$.0f min</string>
     <string name="thunderstorm_approach_formula_no_eta">📐 Geschwindigkeit = Distanzänderung ÷ vergangene Zeit ≈ %1$.0f km/h</string>
     <string name="thunderstorm_location_dialog_title">📍 Standort für Gewittervorhersage</string>
-    <string name="thunderstorm_location_dialog_message">Um die Gewittergefahr für die nächsten Stunden an Deinem aktuellen Standort abzurufen, wird Dein Standort anonymisiert an Open-Meteo (freier Wetterdienst) übermittelt. Es erfolgt keine Übermittlung an HundeWildnis oder Dritte.</string>
+    <string name="thunderstorm_location_dialog_message">Um die Gewittergefahr für die nächsten Stunden an Deinem aktuellen Standort abzurufen, werden Deine Standortkoordinaten an Deinen Open-Meteo-Zugang (Adresse laut Einstellungen) übermittelt. Der Anbieter erhält dabei auch Deine IP-Adresse. Es erfolgt keine Übermittlung an HundeWildnis.</string>
     <string name="thunderstorm_activate">AKTIVIEREN</string>
     <string name="thunderstorm_cancel_uppercase">ABBRECHEN</string>
     <string name="thunderstorm_location_permission_denied">Standortberechtigung wurde verweigert</string>
@@ -5554,7 +5572,7 @@ hoch</string>
     <string name="net_services_help_open_owm">OpenWeatherMap öffnen</string>
     <string name="net_services_help_no_browser">Kein Browser gefunden. Öffne openweathermap.org manuell.</string>
     <string name="net_services_help_body">Warum brauche ich einen eigenen Zugang?\nDie App hat keinen eigenen Wetterserver und liefert keine Wetterdaten mit. Wetterdienste erlauben den Abruf nur mit einem persönlichen Schlüssel (API-Schlüssel). Mit deinem eigenen Schlüssel gelten die Grenzen und Bedingungen deines Kontos beim Anbieter, und die Abrufe laufen direkt zwischen deinem Gerät und dem Anbieter. Der Entwickler der App sieht sie nicht.\n\nEmpfehlung für den Einstieg: OpenWeatherMap\n1. Öffne openweathermap.org und lege ein kostenloses Konto an (Button unten). Bestätige die E-Mail-Adresse.\n2. Melde dich an und öffne in deinem Konto den Bereich „API keys“. Dort gibt es bereits einen Schlüssel („Default“). Er besteht aus etwa 32 Zeichen.\n3. Kopiere den Schlüssel, wähle hier „OpenWeatherMap“ und füge ihn in das Feld ein. Tippe auf „Fertig“.\n4. Ein neuer Schlüssel ist oft erst nach einigen Minuten, manchmal erst nach ein bis zwei Stunden aktiv. Meldet die App, dass der Schlüssel abgelehnt wurde, warte etwas und versuche es erneut.\n\nHinweise\n• Der kostenlose Tarif reicht für die App aus. Buche keinen kostenpflichtigen Tarif.\n• Behandle den Schlüssel wie ein Passwort und gib ihn nicht weiter. Die App speichert ihn verschlüsselt auf deinem Gerät.\n• Mit dem kostenlosen Tarif von OpenWeatherMap fehlen UV-Index, Sonnenscheindauer, Pollen und die Gewitter-Vorhersage. Diese Anzeigen blendet die App aus.\n• Die Wetteransicht nennt den Anbieter als Quelle („Weather data © OpenWeather“).\n\nOpen-Meteo\nOpen-Meteo ist für Nutzer gedacht, die einen Kundenzugang mit eigener Serveradresse und Schlüssel (open-meteo.com) oder einen eigenen Server betreiben. Die kostenlose Open-Meteo-Adresse ist nur für nicht-kommerzielle Nutzung erlaubt; ob dein Fall darunterfällt, prüfst du in den Bedingungen von Open-Meteo. Trage Adresse (und, falls vorhanden, Luftqualitäts-Adresse und Schlüssel) so ein, wie sie dir der Anbieter nennt. Mit Open-Meteo sind alle Wetteranzeigen verfügbar.\n\nOverpass (Orte in der Nähe, Umgebungsdaten)
-Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fragt die App die Overpass-API ab. Dafür brauchst du keinen Schlüssel und kein Konto. Die App nutzt standardmäßig öffentliche Overpass-Server (overpass-api.de und overpass.private.coffee), die sich alle Nutzer teilen. Sie sind kostenlos, aber begrenzt: Bei hoher Auslastung antworten sie langsam oder lehnen Anfragen ab. Die App wechselt dann automatisch auf den anderen Server. Wenn du häufig suchst oder die Suche oft fehlschlägt, trage unter „Overpass-Server“ die https-Adresse eines anderen öffentlichen Servers oder eines eigenen Servers ein. Ist dort etwas eingetragen, nutzt die App nur diesen Server. Die Nutzungsrichtlinien des jeweiligen Betreibers gelten. Lässt du das Feld leer, bleibt alles wie beschrieben.\n\nOhne Eintrag bei den Wetter-Diensten zeigt die App kein Wetter. Alle anderen Funktionen laufen unverändert.</string>
+Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fragt die App die Overpass-API ab. Dafür brauchst du keinen Schlüssel und kein Konto. Die App nutzt standardmäßig öffentliche Overpass-Server (overpass-api.de, overpass.private.coffee und overpass.kumi.systems), die sich alle Nutzer teilen. Sie sind kostenlos, aber begrenzt: Bei hoher Auslastung antworten sie langsam oder lehnen Anfragen ab. Die App wechselt dann automatisch auf den anderen Server. Wenn du häufig suchst oder die Suche oft fehlschlägt, trage unter „Overpass-Server“ die https-Adresse eines anderen öffentlichen Servers oder eines eigenen Servers ein. Ist dort etwas eingetragen, nutzt die App nur diesen Server. Die Nutzungsrichtlinien des jeweiligen Betreibers gelten. Lässt du das Feld leer, bleibt alles wie beschrieben.\n\nOhne Eintrag bei den Wetter-Diensten zeigt die App kein Wetter. Alle anderen Funktionen laufen unverändert.</string>
     <string name="error_no_browser">Kein Browser gefunden</string>
     <string name="courses_heading">Kurse</string>
     <string name="courses_empty">Keine Kurse verfügbar.</string>
@@ -5568,7 +5586,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
     <string name="privacy_content">
         <![CDATA[
         <h2>Datenschutzerklärung zur HundeWildnis App</h2>
-        <p>Stand: Oktober 2026</p>
+        <p>Stand: November 2026</p>
 
         <h3>1. Verantwortlicher</h3>
         <p>
@@ -5724,12 +5742,12 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
 
         <h4>3.6 Links in andere Anwendungen</h4>
         <p>
-        Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im Play Store. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
+        Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im App-Store deines Geräts. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
         </p>
         <ul>
         <li><b>Spende über PayPal:</b> Die App enthält einen Link zu PayPal für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
         <li><b>Karten-Links:</b> Standort-Links zu openstreetmap.org werden nur in Nachrichten eingefügt, die du selbst teilst, oder auf deine Aktion hin im Browser geöffnet.</li>
-        <li><b>Bewerten und Teilen der App:</b> Der Link zum Play Store öffnet den Play Store bzw. den Browser.</li>
+        <li><b>Bewerten und Teilen der App:</b> Die Bewertung öffnet den auf deinem Gerät installierten App-Store bzw. die Projektseite im Browser. Der Teilen-Text enthält einen Link zur Projektseite.</li>
         </ul>
         <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Antippen des Links)</p>
 
@@ -5768,7 +5786,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         <p>
         Diese Datenschutzerklärung kann bei Bedarf aktualisiert werden. Die jeweils aktuelle Version findest du in der App im Menü unter „Datenschutzerklärung“.
         </p>
-        <p>Stand dieser Datenschutzerklärung: Oktober 2026</p>
+        <p>Stand dieser Datenschutzerklärung: November 2026</p>
         ]]>
     </string>
 

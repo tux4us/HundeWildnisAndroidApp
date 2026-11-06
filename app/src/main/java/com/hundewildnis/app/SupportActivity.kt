@@ -21,6 +21,8 @@ import com.google.android.material.button.MaterialButton
  * SupportActivity - Finanzielle Unterstützung
  * Zeigt verschiedene Optionen zur Unterstützung der App und des Entwicklers
  */
+private const val PROJECT_URL = "https://wildnislehrer.com/hundewildnisapp/"
+
 class SupportActivity : SecureBaseActivity() {
 
     private lateinit var binding: ActivitySupportBinding
@@ -47,7 +49,7 @@ class SupportActivity : SecureBaseActivity() {
     private fun setupGrids() {
         // Geld
         val moneyTiles = listOf(
-            StartTile("support_paypal", R.drawable.ic_signal, "PayPal")
+            StartTile("support_paypal", R.drawable.ic_heart_support, "PayPal")
         )
 
         val colorsMoney = StartGroupColors.forGroup(this, 2) // Grün
@@ -100,10 +102,13 @@ class SupportActivity : SecureBaseActivity() {
             startActivity(intent)
         } catch (e: Exception) {
             // Fallback (kein Store installiert): Projektseite im Browser öffnen
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=com.hundewildnis.app")
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(PROJECT_URL)
+                })
+            } catch (e2: Exception) {
+                Toast.makeText(this, "Konnte nicht geöffnet werden", Toast.LENGTH_SHORT).show()
             }
-            startActivity(intent)
         }
     }
 
@@ -114,7 +119,7 @@ class SupportActivity : SecureBaseActivity() {
             Die perfekte Begleiter-App für entspannte Spaziergänge mit deinem Hund!
             
             Mehr Infos und Download:
-            https://play.google.com/store/apps/details?id=com.hundewildnis.app
+            $PROJECT_URL
         """.trimIndent()
 
         val intent = Intent(Intent.ACTION_SEND).apply {

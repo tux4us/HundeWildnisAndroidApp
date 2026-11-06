@@ -2919,7 +2919,7 @@
     <string name="nasenarbeit_beratung_tab_training">Training</string>
     <string name="nasenarbeit_beratung_tab_empfehlung">Recommendation</string>
     <string name="nasenarbeit_beratung_loading_title">Fetching GPS &amp; Weather Data</string>
-    <string name="nasenarbeit_beratung_loading_desc">Open-Meteo API · Automatic</string>
+    <string name="nasenarbeit_beratung_loading_desc">Weather data · Automatic (chosen weather provider)</string>
     <string name="nasenarbeit_beratung_wetter_header">Layer 1 · Weather Conditions</string>
     <string name="nasenarbeit_beratung_wetter_current">Current Weather Data</string>
     <string name="nasenarbeit_beratung_wetter_temp">Temperature</string>
@@ -3094,7 +3094,7 @@
     <!-- Nasenarbeit Beratung Code Strings -->
     <string name="nasenarbeit_beratung_title_suffix"> – Nosework Consulting</string>
     <string name="nasenarbeit_beratung_consent_title">Nosework – Training Consulting</string>
-    <string name="nasenarbeit_beratung_consent_message">For optimal training recommendations, the app needs:\n\n📍 GPS location – temporarily for weather data, not stored\n🌡️ Weather data – automatic via Open-Meteo API\n\nAll data remains on your device.</string>
+    <string name="nasenarbeit_beratung_consent_message">For optimal training recommendations, the app needs:\n\n📍 GPS location – temporarily for weather data, not stored\n🌡️ Weather data – automatically via the weather provider you chose (Settings → Services &amp; servers)\n\nAll data remains on your device.</string>
     <string name="nasenarbeit_beratung_consent_btn_continue">Understood &amp; Continue</string>
     <string name="nasenarbeit_beratung_weather_not_available">Weather not available – manual input</string>
     <string name="nasenarbeit_beratung_exclusion_too_hot_reason">Temperature above 30°C</string>
@@ -3741,7 +3741,7 @@ Illumination: ~%1$d%%</string>
     <string name="weather_aqi_current_label">Current:</string>
     <string name="weather_aqi_current_placeholder">-- Good</string>
     <string name="weather_scroll_hours_hint">Scroll 👉🏼 for more hours</string>
-    <string name="weather_source_air_quality_ugm3">Source: Open-Meteo Air Quality API (CAMS/Copernicus). Values in µg/m³.</string>
+    <string name="weather_source_air_quality_ugm3">Source: air quality service of the chosen weather provider. Values in µg/m³.</string>
     <string name="weather_temp_chart_card_title">📊 24h Temperature Trend</string>
     <string name="weather_precip_chart_card_title">🌧️ 24h Precipitation Amount</string>
     <string name="weather_sun_card_title">☀️ Sun</string>
@@ -3813,7 +3813,7 @@ Illumination: ~%1$d%%</string>
     <string name="thunderstorm_approach_formula_with_eta">📐 Speed ≈ %1$.0f km/h  •  Remaining distance (%2$.1f km − 1.0 km) ÷ %3$.0f km/h ≈ %4$.0f min</string>
     <string name="thunderstorm_approach_formula_no_eta">📐 Speed = change in distance ÷ elapsed time ≈ %1$.0f km/h</string>
     <string name="thunderstorm_location_dialog_title">📍 Location for Storm Forecast</string>
-    <string name="thunderstorm_location_dialog_message">To retrieve the storm risk for the next few hours at your current location, your location is sent anonymously to Open-Meteo (a free weather service). No data is sent to HundeWildnis or third parties.</string>
+    <string name="thunderstorm_location_dialog_message">To retrieve the storm risk for the next few hours at your current location, your location coordinates are sent to your Open-Meteo access (address as set in the settings). The provider also receives your IP address. No data is sent to HundeWildnis.</string>
     <string name="thunderstorm_activate">ENABLE</string>
     <string name="thunderstorm_cancel_uppercase">CANCEL</string>
     <string name="thunderstorm_location_permission_denied">Location permission was denied</string>
@@ -5552,7 +5552,7 @@ high</string>
     <string name="net_services_help_open_owm">Open OpenWeatherMap</string>
     <string name="net_services_help_no_browser">No browser found. Open openweathermap.org manually.</string>
     <string name="net_services_help_body">Why do I need my own access?\nThe app has no weather server of its own and does not ship weather data. Weather services only allow requests with a personal key (API key). With your own key, the limits and terms of your account with the provider apply, and requests go directly between your device and the provider. The app developer does not see them.\n\nRecommended to start: OpenWeatherMap\n1. Open openweathermap.org and create a free account (button below). Confirm your email address.\n2. Sign in and open the \"API keys\" section of your account. A key (\"Default\") already exists. It has about 32 characters.\n3. Copy the key, choose \"OpenWeatherMap\" here and paste it into the field. Tap \"Done\".\n4. A new key is often active only after a few minutes, sometimes after one or two hours. If the app reports that the key was rejected, wait a while and try again.\n\nNotes\n• The free plan is enough for the app. Do not book a paid plan.\n• Treat the key like a password and do not share it. The app stores it encrypted on your device.\n• With OpenWeatherMap\'s free plan, UV index, sunshine duration, pollen and the thunderstorm forecast are not available. The app hides these displays.\n• The weather view names the provider as the source (\"Weather data © OpenWeather\").\n\nOpen-Meteo\nOpen-Meteo is meant for users who have a customer access with their own server address and key (open-meteo.com) or run their own server. The free Open-Meteo address is only permitted for non-commercial use; whether your case qualifies is for you to check in Open-Meteo\'s terms. Enter the address (and, if you have them, the air quality address and key) exactly as the provider gives them to you. With Open-Meteo all weather displays are available.\n\nOverpass (nearby places, surroundings)
-For searching nearby places and for surroundings data on the map, the app queries the Overpass API. You need no key and no account. By default the app uses public Overpass servers (overpass-api.de and overpass.private.coffee) that all users share. They are free but limited: under heavy load they respond slowly or reject requests. The app then switches to the other server automatically. If you search often or searches fail often, enter the https address of another public server or of your own server under "Overpass server". If something is entered there, the app uses only that server. The operator\'s usage policy applies. If you leave the field empty, everything stays as described.\n\nWithout an entry for the weather services the app shows no weather. All other features work as before.</string>
+For searching nearby places and for surroundings data on the map, the app queries the Overpass API. You need no key and no account. By default the app uses public Overpass servers (overpass-api.de, overpass.private.coffee and overpass.kumi.systems) that all users share. They are free but limited: under heavy load they respond slowly or reject requests. The app then switches to the other server automatically. If you search often or searches fail often, enter the https address of another public server or of your own server under "Overpass server". If something is entered there, the app uses only that server. The operator\'s usage policy applies. If you leave the field empty, everything stays as described.\n\nWithout an entry for the weather services the app shows no weather. All other features work as before.</string>
     <string name="error_no_browser">No browser found</string>
     <string name="courses_heading">Courses</string>
     <string name="courses_empty">No courses available.</string>
@@ -5566,52 +5566,70 @@ For searching nearby places and for surroundings data on the map, the app querie
     <string name="imprint_content">
         <![CDATA[
         <h2>Imprint</h2>
+        <p>Offered via wildnislehrer.de, hundeberater.de and wildnislehrer.com and the HundeWildnis app.</p>
 
-        <h3>Information pursuant to § 5 TMG</h3>
+        <h3>Provider</h3>
         <p>
-        HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR<br>
-        Hohe Lehne 14<br>
-        01705 Freital, Germany<br>
-        VAT ID:<br>
-        DE458205581<br>
+        <b>HundeWildnisSchule Manuela Ulbricht und Peter Jörg Ulbricht GbR</b><br>
+        Office: Hohe Lehne 14, 01705 Freital, Germany<br>
+        <i>Note: this is not a meeting point for the dog or wilderness school or puppy classes.</i><br>
+        Phone: +49 351 4602225<br>
+        Email: info@wildnislehrer.de<br>
+        Email (app): hundewildnisschuleapp@online.de<br>
+        www.wildnislehrer.de · www.hundeberater.de · www.wildnislehrer.com
         </p>
 
-        <h3>Contact</h3>
+        <h3>Information pursuant to § 5 Digitale-Dienste-Gesetz (DDG)</h3>
         <p>
-        Email: hundewildnisschuleapp@online.de<br>
+        Provider of the website, the weblog and the app: Manuela Ulbricht and Peter Jörg Ulbricht,
+        Hohe Lehne 14, 01705 Freital, Germany, phone +49 351 4602225.
+        </p>
+        <p>
+        VAT identification number pursuant to § 27a Umsatzsteuergesetz: DE458205581<br>
+        Tax number: 210/155/00902 (Finanzamt Pirna)<br>
+        Place of jurisdiction: Freital
+        </p>
+        <p>
+        Responsible for content: Manuela and Peter Jörg Ulbricht, Hohe Lehne 14, 01705 Freital, Germany,
+        phone +49 351 4602225, info@wildnislehrer.de
         </p>
 
-        <h3>Responsible for content pursuant to § 55 (2) RStV</h3>
+        <h3>Legal notices</h3>
         <p>
-        Manuela Ulbricht und Peter Jörg Ulbricht<br>
-        01705 Freital, Hohe Lehne 14<br>
+        <a href="https://wildnislehrer.com/impressum/datenschutzerklaerung">Privacy policy (German)</a> ·
+        <a href="https://wildnislehrer.com/impressum/agb">General terms and conditions (German)</a>
+        </p>
+
+        <h3>Copyright</h3>
+        <p>
+        The structure and content of this app and the associated websites, as well as graphics, images, logos and
+        texts, are protected by copyright. The source code of the app is licensed under the GNU General Public License
+        (GPL-3.0-or-later); the license terms apply there. Beyond that, the content may not be reproduced or used for
+        commercial purposes without our express consent. If third-party content has been used unintentionally,
+        we will correct this promptly upon notification. All trademarks and brand names mentioned are subject to the
+        provisions of the applicable trademark law; mere mention does not imply that they are free of third-party rights.
+        </p>
+
+        <h3>External links</h3>
+        <p>
+        Despite careful review, we accept no liability for the content of externally linked websites; their
+        operators are solely responsible for their content. No legal violations were apparent at the time of linking.
+        If we become aware of an infringement, we will remove the link promptly.
         </p>
 
         <h3>Disclaimer</h3>
-
-        <h4>Liability for content</h4>
         <p>
-        The content of our app and pages has been created with the greatest care.
-        However, we cannot guarantee the accuracy, completeness or topicality of the content.
+        We accept no guarantee for the accuracy, completeness or topicality of the information provided.
+        Liability claims against us for material or immaterial damage caused by the use or non-use of the information
+        offered, or by incorrect or incomplete information, are excluded unless we are demonstrably at fault through
+        intent or gross negligence. All offers are subject to change and non-binding.
+        </p>
+        <p>
+        Use of the contact details published in this imprint to send unsolicited advertising is not permitted;
+        we reserve the right to take legal action against violations.
         </p>
 
-        <h4>Liability for links</h4>
-        <p>
-        Our offer contains links to external third-party websites over whose content
-        we have no influence. Therefore, we cannot accept any liability for this
-        third-party content.
-        </p>
-
-        <h4>Copyright</h4>
-        <p>
-        The content and works created by the site operators on these pages are
-        subject to German copyright law. Reproduction, editing, distribution and any
-        kind of use beyond the limits of copyright law require the written consent
-        of the respective author or creator.
-        INFRINGEMENT WILL RESULT IN CLAIMS FOR DAMAGES
-        </p>
-
-        <h4>Data protection</h4>
+        <h3>Data protection</h3>
         <p>
         This app connects only to the services required for the functions used (e.g. weather, routing and map services and, optionally, your own WebDAV server). Content from our website is not loaded.
         All connections are encrypted (HTTPS).
@@ -5622,7 +5640,7 @@ For searching nearby places and for surroundings data on the map, the app querie
     <string name="privacy_content">
         <![CDATA[
         <h2>Privacy Policy for the HundeWildnis App</h2>
-        <p>As of: October 2026</p>
+        <p>As of: November 2026</p>
 
         <h3>1. Controller</h3>
         <p>
@@ -5778,12 +5796,12 @@ For searching nearby places and for surroundings data on the map, the app querie
 
         <h4>3.6 Links to other applications</h4>
         <p>
-        Some functions open content in other applications, for example in the browser, in the PayPal app or in the Play Store. From the moment it opens, the privacy policy of the respective provider applies.
+        Some functions open content in other applications, for example in the browser, in the PayPal app or in your device's app store. From the moment it opens, the privacy policy of the respective provider applies.
         </p>
         <ul>
         <li><b>Donation via PayPal:</b> The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider&#39;s policy applies: <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
         <li><b>Map links:</b> Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.</li>
-        <li><b>Rating and sharing the app:</b> The link to the Play Store opens the Play Store or the browser.</li>
+        <li><b>Rating and sharing the app:</b> Rating opens the app store installed on your device or the project page in the browser. The share text contains a link to the project page.</li>
         </ul>
         <p>Legal basis: Art. 6(1)(a) GDPR (consent by tapping the link)</p>
 
@@ -5822,7 +5840,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         <p>
         This privacy policy may be updated when necessary. You will always find the current version in the app in the menu under &quot;Privacy Policy&quot;.
         </p>
-        <p>As of this privacy policy: October 2026</p>
+        <p>As of this privacy policy: November 2026</p>
         ]]>
     </string>
 
