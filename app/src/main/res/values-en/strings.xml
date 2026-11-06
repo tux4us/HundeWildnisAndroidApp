@@ -5796,7 +5796,7 @@ For searching nearby places and for surroundings data on the map, the app querie
 
         <h4>3.6 Links to other applications</h4>
         <p>
-        Some functions open content in other applications, for example in the browser, in the PayPal app or in your device's app store. From the moment it opens, the privacy policy of the respective provider applies.
+        Some functions open content in other applications, for example in the browser, in the PayPal app or in your device\'s app store. From the moment it opens, the privacy policy of the respective provider applies.
         </p>
         <ul>
         <li><b>Donation via PayPal:</b> The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider&#39;s policy applies: <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
@@ -5845,7 +5845,7 @@ For searching nearby places and for surroundings data on the map, the app querie
     </string>
 
     <!-- Version und Support Popup -->
-    <string name="version_support">The HundeWildnis app is the result of many hours of work and a great deal of passion – for you and your dogs.\nThanks to your feedback, we’re constantly developing the app further.\nTo ensure we can continue to offer the app for free in the future, we need your support.\n🤝 Every contribution – especially regular ones – is a huge encouragement for our work.\ n\nThank you very much for your support 💚\nManuela and Jörg\n\nOf course, you can still use the app even if you don’t support us. 😇</string>
+    <string name="version_support">The HundeWildnis app is the result of many hours of work and a great deal of passion – for you and your dogs.\nThanks to your feedback, we’re constantly developing the app further.\nTo ensure we can continue to offer the app for free in the future, we need your support.\n🤝 Every contribution – especially regular ones – is a huge encouragement for our work.\n\nThank you very much for your support 💚\nManuela and Jörg\n\nOf course, you can still use the app even if you don’t support us. 😇</string>
 
     <!-- Feed und Podcasts -->
     <string name="feed_title">Feed</string>
