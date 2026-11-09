@@ -6,7 +6,7 @@
 
 [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-100%25-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Version](https://img.shields.io/badge/Version-27.4%20Build%20141-C9A84C?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/Version-27.5%20Build%20142-C9A84C?style=flat-square)](#)
 [![License](https://img.shields.io/badge/Lizenz-GPL--3.0--or--later-5C8A3C?style=flat-square)](LICENSE)
 [![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#-datenschutz--sicherheit)
 [![F-Droid](https://img.shields.io/badge/F--Droid-ready-lightgrey?style=flat-square)](https://f-droid.org/)
