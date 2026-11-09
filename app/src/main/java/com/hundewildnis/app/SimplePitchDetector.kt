@@ -22,7 +22,7 @@ import kotlin.math.*
  * - isAvailable() nutzt dieselbe Fallback-Logik
  */
 class SimplePitchDetector(
-    private val sampleRate: Int = 22050,
+    val sampleRate: Int = 22050,
     private val bufferSize: Int = 4096
 ) {
 
@@ -65,11 +65,16 @@ class SimplePitchDetector(
      *                        bis 0 dBFS, Untergrenze -120 dBFS). Wird pro Puffer unmittelbar
      *                        vor onPitchDetected im Recording-Thread aufgerufen.
      *                        Unabhängig von der 30x-Verstärkung/Kappung der Amplitude.
+     * @param onAudio         Optionaler Roh-Audio-Callback (PCM 16 Bit mono, Abtastrate wie dieser
+     *                        Detektor, siehe sampleRate). Wird im Recording-Thread vor der
+     *                        Pitch-Berechnung aufgerufen; der Puffer wird danach überschrieben und
+     *                        darf nicht behalten werden. Muss schnell zurückkehren.
      */
     fun startRecording(
         onPitchDetected: (frequency: Float, amplitude: Float) -> Unit,
         onError: ((Exception) -> Unit)? = null,
-        onLevel: ((rmsDbfs: Float) -> Unit)? = null
+        onLevel: ((rmsDbfs: Float) -> Unit)? = null,
+        onAudio: ((buffer: ShortArray, size: Int) -> Unit)? = null
     ) {
         if (isRecording) return
 
@@ -89,6 +94,7 @@ class SimplePitchDetector(
                     val readSize = record.read(audioBuffer, 0, bufferSize)
                     when {
                         readSize > 0 -> {
+                            onAudio?.invoke(audioBuffer, readSize)
                             val pitch     = detectPitch(audioBuffer, readSize)
                             val amplitude = calculateAmplitude(audioBuffer, readSize)
                             onLevel?.invoke(calculateRmsDbfs(audioBuffer, readSize))

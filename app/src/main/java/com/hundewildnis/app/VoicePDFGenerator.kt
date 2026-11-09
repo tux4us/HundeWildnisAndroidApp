@@ -110,6 +110,11 @@ object VoicePDFGenerator {
 
             document.add(table)
 
+            // KOMMANDOS (nur wenn während der Messung Kommandos erkannt wurden)
+            if (session.commandEvents.isNotEmpty()) {
+                addCommandSection(document, session.commandEvents, greenColor)
+            }
+
             // Chart (wenn vorhanden)
             if (chartBitmap != null) {
                 addSectionTitle(document, "FREQUENZ-VERLAUF", greenColor)
@@ -175,6 +180,59 @@ object VoicePDFGenerator {
         }
 
         document.add(table)
+    }
+
+    private fun addCommandSection(document: PdfDoc, events: List<CommandEvent>, color: Int) {
+        val stats = CommandStats.from(events)
+        val germanSeconds = { ms: Long -> String.format(Locale.GERMAN, "%.1f s", ms / 1000.0) }
+
+        addSectionTitle(document, "KOMMANDOS", color)
+
+        val summary = mutableListOf(
+            "Gezählte Kommandos" to "${stats.totalCounted}",
+            "Wiederholungen (nicht gezählt)" to "${stats.totalIgnored}"
+        )
+        if (stats.intervalCount > 0) {
+            summary.add("Abstand (Mittel)" to germanSeconds(stats.meanIntervalMs))
+            summary.add("Abstand (min / max)" to "${germanSeconds(stats.minIntervalMs)} / ${germanSeconds(stats.maxIntervalMs)}")
+        }
+        addDataTable(document, summary)
+
+        // Anzahl je Kommando
+        val countTable = PdfTable.percent(floatArrayOf(50f, 25f, 25f))
+            .useAllAvailableWidth()
+            .setMarginBottom(10f)
+        listOf("Kommando", "Gezählt", "Wiederholt").forEach { header ->
+            countTable.addCell(PdfCell().add(PdfParagraph(header).setBold()).setPadding(5f))
+        }
+        stats.perCommand.forEach { c ->
+            countTable.addCell(PdfParagraph(c.name).setPadding(5f))
+            countTable.addCell(PdfParagraph("${c.counted}×").setPadding(5f))
+            countTable.addCell(PdfParagraph("${c.ignored}×").setPadding(5f))
+        }
+        document.add(countTable)
+
+        // Ereignisliste: Abstand = Zeit seit dem vorherigen gezählten Kommando
+        val eventTable = PdfTable.percent(floatArrayOf(18f, 30f, 22f, 30f))
+            .useAllAvailableWidth()
+            .setMarginBottom(10f)
+        listOf("Zeit", "Kommando", "Abstand", "Hinweis").forEach { header ->
+            eventTable.addCell(PdfCell().add(PdfParagraph(header).setBold()).setPadding(5f))
+        }
+        var previousCounted: Long? = null
+        events.sortedBy { it.timestamp }.forEach { e ->
+            val totalSeconds = e.timestamp / 1000
+            val time = String.format(Locale.GERMAN, "%d:%02d", totalSeconds / 60, totalSeconds % 60)
+            val interval = if (e.counted && previousCounted != null) germanSeconds(e.timestamp - previousCounted!!) else "–"
+            val note = if (e.counted) "" else "Wiederholung, nicht gezählt"
+            if (e.counted) previousCounted = e.timestamp
+
+            eventTable.addCell(PdfParagraph(time).setPadding(5f))
+            eventTable.addCell(PdfParagraph(e.name).setPadding(5f))
+            eventTable.addCell(PdfParagraph(interval).setPadding(5f))
+            eventTable.addCell(PdfParagraph(note).setPadding(5f))
+        }
+        document.add(eventTable)
     }
 
     private fun formatDuration(seconds: Long): String {

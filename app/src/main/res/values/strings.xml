@@ -5909,6 +5909,20 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
     <string name="comm_feedback_no_vibrator">⚠️ Dieses Gerät meldet keinen Vibrationsmotor</string>
     <string name="comm_feedback_media_volume_zero">⚠️ Medienlautstärke ist 0 – der Ton ist nicht hörbar</string>
     <string name="comm_feedback_tone_failed">⚠️ Tonausgabe nicht verfügbar</string>
+    <string name="comm_cmd_switch">Kommandoerkennung während der Messung</string>
+    <string name="comm_cmd_match_initial">Erkennungsschwelle: 0,80</string>
+    <string name="comm_cmd_match_format">Erkennungsschwelle: %1$.2f</string>
+    <string name="comm_cmd_strict">streng</string>
+    <string name="comm_cmd_tolerant">tolerant</string>
+    <string name="comm_cmd_none_active">Keine vollständig eingesprochenen Kommandos – Erkennung inaktiv</string>
+    <string name="comm_cmd_last_counted">Erkannt: %1$s (Distanz %2$.2f)</string>
+    <string name="comm_cmd_last_repeat">Erkannt: %1$s (Distanz %2$.2f) – Wiederholung, nicht gezählt</string>
+    <string name="comm_cmd_last_rejected">Verworfen: %1$s %2$.2f (Schwelle %3$.2f)</string>
+    <string name="comm_cmd_last_ambiguous">Unsicher: %1$s %2$.2f / %3$s %4$.2f</string>
+    <string name="comm_cmd_summary_totals">🗣️ Kommandos: %1$d gezählt, %2$d Wiederholungen nicht gezählt</string>
+    <string name="comm_cmd_summary_item">• %1$s: %2$d×</string>
+    <string name="comm_cmd_summary_item_repeats">• %1$s: %2$d× (+%3$d Wiederholungen)</string>
+    <string name="comm_cmd_summary_interval">Abstand: Ø %1$.1f s (min %2$.1f s, max %3$.1f s)</string>
 
     <!-- Kommandos (Sprach-Trainer) -->
     <string name="cmd_toolbar_title">Kommandos</string>
@@ -5916,7 +5930,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
     <string name="cmd_btn_open">🎙️ Kommandos verwalten</string>
     <string name="cmd_summary_none">Noch keine Kommandos angelegt</string>
     <string name="cmd_summary_format">Kommandos: %1$d angelegt, %2$d vollständig</string>
-    <string name="cmd_intro">Lege Deine Kommandos an und spreche jedes mindestens 3-mal selbst ein. Die Aufnahmen bleiben lokal auf diesem Gerät und dienen später dazu, Kommandos während der Messung zu erkennen. Aufnahme in ruhiger Umgebung, das Handy so halten wie im Training, in normaler Lautstärke sprechen.</string>
+    <string name="cmd_intro">Lege Deine Kommandos an und spreche jedes mindestens 3-mal selbst ein, in unterschiedlicher Tonlage (ruhig, normal, lebhaft), so wie Du das Kommando im Training einsetzt. Die Aufnahmen bleiben lokal auf diesem Gerät und dienen dazu, Kommandos während der Messung zu erkennen. Aufnahme in ruhiger Umgebung, das Handy so halten wie im Training.</string>
     <string name="cmd_empty">Noch keine Kommandos angelegt.</string>
     <string name="cmd_btn_add">➕ Kommando hinzufügen</string>
     <string name="cmd_btn_defaults">📋 Standardliste laden</string>

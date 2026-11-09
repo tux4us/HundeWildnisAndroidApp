@@ -82,6 +82,23 @@ object VoiceCommandStore {
     fun completeCount(commands: List<VoiceCommand>): Int =
         commands.count { it.samples.size >= REQUIRED_SAMPLES }
 
+    /**
+     * Erzeugt die Erkennungsvorlagen (MFCC) aus den Aufnahmen aller vollständigen Kommandos.
+     * Dauert für eine typische Liste (6 Kommandos × 3 Aufnahmen) deutlich unter einer Sekunde.
+     */
+    fun buildTemplates(context: Context, commands: List<VoiceCommand>): List<CommandTemplate> {
+        val mfcc = MfccExtractor(SAMPLE_RATE)
+        val templates = mutableListOf<CommandTemplate>()
+        for (command in commands) {
+            if (command.samples.size < REQUIRED_SAMPLES) continue
+            for (fileName in command.samples) {
+                val pcm = readWav(sampleFile(context, fileName)) ?: continue
+                CommandTemplate.fromPcm(command.id, command.name, pcm, mfcc)?.let { templates.add(it) }
+            }
+        }
+        return templates
+    }
+
     // ─────────────────────────────────────────────────────────────
     // WAV (PCM 16 Bit, mono, SAMPLE_RATE)
     // ─────────────────────────────────────────────────────────────

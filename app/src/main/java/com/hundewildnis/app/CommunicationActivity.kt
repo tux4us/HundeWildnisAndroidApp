@@ -97,6 +97,13 @@ class CommunicationActivity : SecureBaseActivity() {
     private var currentLevelDb = -120f               // letzter gemessener RMS-Pegel in dBFS
     private var isMonitoring = false                 // Pegeltest ohne Messung aktiv
 
+    // Kommandoerkennung
+    @Volatile private var commandDetector: CommandDetector? = null
+    private val commandCounter = CommandCounter()
+    private val commandEvents = mutableListOf<CommandEvent>()
+    private var commandDetectionEnabled = true
+    private var matchThreshold = CommandDetector.DEFAULT_ACCEPT_THRESHOLD
+
     // Shimmer-Animator (Glow-Effekt)
     private var shimmerAnimator: ValueAnimator? = null
 
@@ -146,6 +153,11 @@ class CommunicationActivity : SecureBaseActivity() {
         private const val PREF_THRESHOLD_DB = "threshold_db"
         private const val PREF_VIBRATION = "vibration"
         private const val PREF_SOUND = "sound"
+        private const val PREF_CMD_DETECT = "cmd_detect"
+        private const val PREF_CMD_MATCH = "cmd_match"          // Erkennungsschwelle in Hundertsteln
+        private const val DEFAULT_CMD_MATCH = 80
+        private const val MIN_CMD_MATCH = 30
+        private const val MAX_CMD_MATCH = 120
 
         // Glow-Farben
         private const val COLOR_CARD_NORMAL = "#6FBF73"
@@ -290,6 +302,14 @@ class CommunicationActivity : SecureBaseActivity() {
         updateThresholdLabel()
         resetLevelMeter()
 
+        commandDetectionEnabled = prefs.getBoolean(PREF_CMD_DETECT, true)
+        val matchHundredths = ((prefs.getInt(PREF_CMD_MATCH, DEFAULT_CMD_MATCH) / 5f).roundToInt() * 5)
+            .coerceIn(MIN_CMD_MATCH, MAX_CMD_MATCH)
+        matchThreshold = matchHundredths / 100f
+        binding.switchCommandDetection.isChecked = commandDetectionEnabled
+        binding.sliderMatchThreshold.value = matchHundredths.toFloat()
+        updateMatchThresholdLabel()
+
         binding.radioGroupMode.setOnCheckedChangeListener { _, checkedId ->
             trainingMode = if (checkedId == R.id.radioModeFree) TrainingMode.FREE else TrainingMode.FOCUS
             binding.layoutFocusFrequency.visibility =
@@ -325,9 +345,21 @@ class CommunicationActivity : SecureBaseActivity() {
             startActivity(Intent(this, CommandListActivity::class.java))
         }
 
+        binding.switchCommandDetection.setOnCheckedChangeListener { _, isChecked ->
+            commandDetectionEnabled = isChecked
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_CMD_DETECT, isChecked).apply()
+        }
+        binding.sliderMatchThreshold.addOnChangeListener { _, value, _ ->
+            matchThreshold = value / 100f
+            commandDetector?.acceptThreshold = matchThreshold
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putInt(PREF_CMD_MATCH, value.toInt()).apply()
+            updateMatchThresholdLabel()
+        }
+
         // Mikrofon-Kalibrierung: Regler bleibt auch während der Messung bedienbar
         binding.sliderThreshold.addOnChangeListener { _, value, _ ->
             thresholdDb = value
+            commandDetector?.gateDb = value
             getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putFloat(PREF_THRESHOLD_DB, value).apply()
             updateThresholdLabel()
             updateLevelMeter(currentLevelDb)
@@ -420,6 +452,12 @@ class CommunicationActivity : SecureBaseActivity() {
         feedbackBlankUntil = 0L
         currentLevelDb = -120f
 
+        commandEvents.clear()
+        commandCounter.reset()
+        commandDetector = null
+        binding.tvLastRecognition.text = ""
+        binding.tvCommandCounts.text = ""
+
         if (soundEnabled) {
             toneGenerator = createToneGenerator()
             if (toneGenerator == null) {
@@ -430,8 +468,10 @@ class CommunicationActivity : SecureBaseActivity() {
         }
 
         try {
-            pitchDetector = SimplePitchDetector()
-            pitchDetector?.startRecording(
+            val detector = SimplePitchDetector()
+            pitchDetector = detector
+            if (commandDetectionEnabled) commandDetector = createCommandDetector(detector.sampleRate)
+            detector.startRecording(
                 onPitchDetected = { frequency, amplitude ->
                     runOnUiThread { processPitchDetection(frequency, amplitude) }
                 },
@@ -450,7 +490,8 @@ class CommunicationActivity : SecureBaseActivity() {
                         currentLevelDb = db
                         updateLevelMeter(db)
                     }
-                }
+                },
+                onAudio = { buffer, size -> commandDetector?.feed(buffer, size) }
             )
         } catch (e: Exception) {
             Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -462,6 +503,8 @@ class CommunicationActivity : SecureBaseActivity() {
         isRecording = false
         pitchDetector?.stopRecording()
         pitchDetector = null
+        commandDetector?.release()
+        commandDetector = null
         toneGenerator?.release()
         toneGenerator = null
 
@@ -499,7 +542,8 @@ class CommunicationActivity : SecureBaseActivity() {
         binding.switchSound.isEnabled = enabled
         binding.btnFeedbackTest.isEnabled = enabled
         binding.btnLevelTest.isEnabled = enabled
-        // sliderThreshold bleibt bewusst aktiv: Live-Anpassung während der Messung
+        binding.switchCommandDetection.isEnabled = enabled
+        // sliderThreshold und sliderMatchThreshold bleiben bewusst aktiv: Live-Anpassung während der Messung
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -934,7 +978,8 @@ class CommunicationActivity : SecureBaseActivity() {
             avgFrequency = avgFreq,
             minFrequency = minFreq,
             maxFrequency = maxFreq,
-            dataPoints = frequencyDataPoints.toList()
+            dataPoints = frequencyDataPoints.toList(),
+            commandEvents = commandEvents.toList()
         )
 
         historyList.add(0, session)
@@ -1003,6 +1048,9 @@ class CommunicationActivity : SecureBaseActivity() {
 
             val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN).format(Date(session.startTime))
             binding.tvChartTitle.text = getString(R.string.comm_session_title_format, dateStr)
+
+            binding.tvLastRecognition.text = ""
+            binding.tvCommandCounts.text = commandSummaryText(session.commandEvents)
 
             if (session.dataPoints.isNotEmpty()) {
                 val lastPoint = session.dataPoints.last()
@@ -1087,7 +1135,8 @@ class CommunicationActivity : SecureBaseActivity() {
                     avgFrequency = avgFreq,
                     minFrequency = minFreq,
                     maxFrequency = maxFreq,
-                    dataPoints = frequencyDataPoints.toList()
+                    dataPoints = frequencyDataPoints.toList(),
+                    commandEvents = commandEvents.toList()
                 )
 
                 exportSessionToPdf(currentSession, share)
@@ -1165,6 +1214,91 @@ class CommunicationActivity : SecureBaseActivity() {
             e.printStackTrace()
             Toast.makeText(this, "Fehler beim Teilen: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Kommandoerkennung
+    // ─────────────────────────────────────────────────────────────
+
+    private fun updateMatchThresholdLabel() {
+        binding.tvMatchThreshold.text = getString(R.string.comm_cmd_match_format, matchThreshold)
+    }
+
+    /**
+     * Baut die Vorlagen aus den eingesprochenen Kommandos und startet den Detektor.
+     * Null (Erkennung aus), wenn kein Kommando vollständig eingesprochen ist.
+     */
+    private fun createCommandDetector(inputRate: Int): CommandDetector? {
+        return try {
+            val templates = VoiceCommandStore.buildTemplates(this, VoiceCommandStore.load(this))
+            if (templates.isEmpty()) {
+                Toast.makeText(this, R.string.comm_cmd_none_active, Toast.LENGTH_LONG).show()
+                null
+            } else {
+                CommandDetector(templates, inputRate) { recognition ->
+                    runOnUiThread { handleRecognition(recognition) }
+                }.also {
+                    it.gateDb = thresholdDb
+                    it.acceptThreshold = matchThreshold
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Kommandoerkennung nicht verfügbar: ${e.message}")
+            null
+        }
+    }
+
+    private fun handleRecognition(recognition: CommandDetector.Recognition) {
+        if (!isRecording) return
+        val result = recognition.result
+        val id = result.bestId
+        val name = result.bestName ?: return
+
+        if (result.accepted && id != null) {
+            val counted = commandCounter.register(id, recognition.onsetMs)
+            commandEvents.add(
+                CommandEvent(id, name, recognition.onsetMs, counted, result.bestDistance)
+            )
+            binding.tvLastRecognition.text = getString(
+                if (counted) R.string.comm_cmd_last_counted else R.string.comm_cmd_last_repeat,
+                name, result.bestDistance
+            )
+            binding.tvCommandCounts.text = commandSummaryText(commandEvents)
+        } else if (result.bestDistance <= matchThreshold && result.secondName != null) {
+            // Distanz reicht, aber ein zweites Kommando liegt zu nah → keine sichere Zuordnung
+            binding.tvLastRecognition.text = getString(
+                R.string.comm_cmd_last_ambiguous,
+                name, result.bestDistance, result.secondName, result.secondDistance
+            )
+        } else {
+            binding.tvLastRecognition.text = getString(
+                R.string.comm_cmd_last_rejected, name, result.bestDistance, matchThreshold
+            )
+        }
+    }
+
+    /** Mehrzeilige Zusammenfassung (Anzahl je Kommando, Wiederholungen, Abstände); leer ohne Ereignisse. */
+    private fun commandSummaryText(events: List<CommandEvent>): String {
+        if (events.isEmpty()) return ""
+        val stats = CommandStats.from(events)
+        val lines = mutableListOf(
+            getString(R.string.comm_cmd_summary_totals, stats.totalCounted, stats.totalIgnored)
+        )
+        for (c in stats.perCommand) {
+            lines.add(
+                if (c.ignored > 0) getString(R.string.comm_cmd_summary_item_repeats, c.name, c.counted, c.ignored)
+                else getString(R.string.comm_cmd_summary_item, c.name, c.counted)
+            )
+        }
+        if (stats.intervalCount > 0) {
+            lines.add(
+                getString(
+                    R.string.comm_cmd_summary_interval,
+                    stats.meanIntervalMs / 1000f, stats.minIntervalMs / 1000f, stats.maxIntervalMs / 1000f
+                )
+            )
+        }
+        return lines.joinToString("\n")
     }
 
     // ─────────────────────────────────────────────────────────────

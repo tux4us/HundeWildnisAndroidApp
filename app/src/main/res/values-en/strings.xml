@@ -5966,6 +5966,20 @@ For searching nearby places and for surroundings data on the map, the app querie
     <string name="comm_feedback_no_vibrator">⚠️ This device reports no vibration motor</string>
     <string name="comm_feedback_media_volume_zero">⚠️ Media volume is 0 – the sound will not be audible</string>
     <string name="comm_feedback_tone_failed">⚠️ Sound output unavailable</string>
+    <string name="comm_cmd_switch">Command detection during measurement</string>
+    <string name="comm_cmd_match_initial">Detection threshold: 0.80</string>
+    <string name="comm_cmd_match_format">Detection threshold: %1$.2f</string>
+    <string name="comm_cmd_strict">strict</string>
+    <string name="comm_cmd_tolerant">tolerant</string>
+    <string name="comm_cmd_none_active">No fully recorded commands – detection inactive</string>
+    <string name="comm_cmd_last_counted">Detected: %1$s (distance %2$.2f)</string>
+    <string name="comm_cmd_last_repeat">Detected: %1$s (distance %2$.2f) – repeat, not counted</string>
+    <string name="comm_cmd_last_rejected">Rejected: %1$s %2$.2f (threshold %3$.2f)</string>
+    <string name="comm_cmd_last_ambiguous">Uncertain: %1$s %2$.2f / %3$s %4$.2f</string>
+    <string name="comm_cmd_summary_totals">🗣️ Commands: %1$d counted, %2$d repeats not counted</string>
+    <string name="comm_cmd_summary_item">• %1$s: %2$d×</string>
+    <string name="comm_cmd_summary_item_repeats">• %1$s: %2$d× (+%3$d repeats)</string>
+    <string name="comm_cmd_summary_interval">Interval: avg %1$.1f s (min %2$.1f s, max %3$.1f s)</string>
 
     <!-- Commands (Voice trainer) -->
     <string name="cmd_toolbar_title">Commands</string>
@@ -5973,7 +5987,7 @@ For searching nearby places and for surroundings data on the map, the app querie
     <string name="cmd_btn_open">🎙️ Manage commands</string>
     <string name="cmd_summary_none">No commands created yet</string>
     <string name="cmd_summary_format">Commands: %1$d created, %2$d complete</string>
-    <string name="cmd_intro">Create your commands and record each one yourself at least 3 times. The recordings stay on this device and are later used to detect commands during a measurement. Record in a quiet place, hold the phone as you would during training and speak at normal volume.</string>
+    <string name="cmd_intro">Create your commands and record each one yourself at least 3 times, in different pitches (calm, normal, lively), as you use the command in training. The recordings stay on this device and are used to detect commands during a measurement. Record in a quiet place and hold the phone as you would during training.</string>
     <string name="cmd_empty">No commands created yet.</string>
     <string name="cmd_btn_add">➕ Add command</string>
     <string name="cmd_btn_defaults">📋 Load default list</string>

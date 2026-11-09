@@ -62,7 +62,10 @@ data class VoiceSession(
     val maxFrequency: Float = 0f,                // Höchste Frequenz
 
     // Detaillierte Kurvendaten (für PDF-Export & Detail-Ansicht)
-    val dataPoints: List<FrequencyPoint> = emptyList()
+    val dataPoints: List<FrequencyPoint> = emptyList(),
+
+    // Während der Messung erkannte Kommandos (leer bei älteren Sessions oder ausgeschalteter Erkennung)
+    val commandEvents: List<CommandEvent> = emptyList()
 ) {
     /**
      * Effizienz: Prozent der Sprechzeit in harmonischen Bereichen
