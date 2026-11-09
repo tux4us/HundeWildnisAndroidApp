@@ -277,6 +277,50 @@
             </LinearLayout>
 
             <!-- ═══════════════════════════════════════════════════ -->
+            <!-- KOMMANDOS -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <com.hundewildnis.app.GlassCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cmd_header_commands"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvCommandsSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cmd_summary_none"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <Button
+                        android:id="@+id/btnCommands"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cmd_btn_open"
+                        android:textSize="@dimen/text_body_medium"
+                        style="@style/Widget.App.Button.Primary" />
+
+                </LinearLayout>
+            </com.hundewildnis.app.GlassCardView>
+
+            <!-- ═══════════════════════════════════════════════════ -->
             <!-- MIKROFON-KALIBRIERUNG -->
             <!-- ═══════════════════════════════════════════════════ -->
             <com.hundewildnis.app.GlassCardView

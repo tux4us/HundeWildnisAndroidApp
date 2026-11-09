@@ -5909,4 +5909,50 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
     <string name="comm_feedback_no_vibrator">⚠️ Dieses Gerät meldet keinen Vibrationsmotor</string>
     <string name="comm_feedback_media_volume_zero">⚠️ Medienlautstärke ist 0 – der Ton ist nicht hörbar</string>
     <string name="comm_feedback_tone_failed">⚠️ Tonausgabe nicht verfügbar</string>
+
+    <!-- Kommandos (Sprach-Trainer) -->
+    <string name="cmd_toolbar_title">Kommandos</string>
+    <string name="cmd_header_commands">🗣️ Kommandos</string>
+    <string name="cmd_btn_open">🎙️ Kommandos verwalten</string>
+    <string name="cmd_summary_none">Noch keine Kommandos angelegt</string>
+    <string name="cmd_summary_format">Kommandos: %1$d angelegt, %2$d vollständig</string>
+    <string name="cmd_intro">Lege Deine Kommandos an und spreche jedes mindestens 3-mal selbst ein. Die Aufnahmen bleiben lokal auf diesem Gerät und dienen später dazu, Kommandos während der Messung zu erkennen. Aufnahme in ruhiger Umgebung, das Handy so halten wie im Training, in normaler Lautstärke sprechen.</string>
+    <string name="cmd_empty">Noch keine Kommandos angelegt.</string>
+    <string name="cmd_btn_add">➕ Kommando hinzufügen</string>
+    <string name="cmd_btn_defaults">📋 Standardliste laden</string>
+    <string name="cmd_samples_format">Aufnahmen: %1$d / %2$d</string>
+    <string name="cmd_btn_record">🎙️ Einsprechen</string>
+    <string name="cmd_btn_record_more">🎙️ Weitere Aufnahme</string>
+    <string name="cmd_btn_play">▶ Anhören</string>
+    <string name="cmd_btn_more">⋯</string>
+    <string name="cmd_menu_rename">Umbenennen</string>
+    <string name="cmd_menu_delete_samples">Aufnahmen löschen</string>
+    <string name="cmd_menu_delete">Kommando löschen</string>
+    <string name="cmd_dialog_add_title">Neues Kommando</string>
+    <string name="cmd_dialog_rename_title">Kommando umbenennen</string>
+    <string name="cmd_hint_name">Name, z. B. Sitz</string>
+    <string name="cmd_name_empty">Bitte einen Namen eingeben.</string>
+    <string name="cmd_name_exists">Dieses Kommando existiert bereits.</string>
+    <string name="cmd_confirm_delete_title">Kommando löschen?</string>
+    <string name="cmd_confirm_delete_message">„%1$s“ und alle zugehörigen Aufnahmen werden gelöscht.</string>
+    <string name="cmd_defaults_added">%1$d Kommando(s) hinzugefügt</string>
+    <string name="cmd_max_samples">Maximal %1$d Aufnahmen je Kommando.</string>
+    <string name="cmd_no_samples">Keine Aufnahme vorhanden.</string>
+    <string name="cmd_record_title">%1$s – Aufnahme %2$d von %3$d</string>
+    <string name="cmd_state_preparing">Bitte kurz still sein …</string>
+    <string name="cmd_state_listening">Jetzt sprechen: „%1$s“</string>
+    <string name="cmd_state_speaking">Aufnahme läuft …</string>
+    <string name="cmd_saved">✓ Aufnahme gespeichert</string>
+    <string name="cmd_err_no_speech">Keine Sprache erkannt. Bitte erneut versuchen.</string>
+    <string name="cmd_err_too_short">Aufnahme zu kurz. Bitte erneut versuchen.</string>
+    <string name="cmd_err_clipped">Aufnahme übersteuert. Bitte leiser oder mit mehr Abstand zum Mikrofon sprechen.</string>
+    <string name="cmd_err_mic">Mikrofon-Fehler: %1$s</string>
+    <string name="cmd_mic_required">⚠️ Mikrofon erforderlich</string>
+    <string name="cmd_default_1">Sitz</string>
+    <string name="cmd_default_2">Platz</string>
+    <string name="cmd_default_3">Steh</string>
+    <string name="cmd_default_4">Fuß</string>
+    <string name="cmd_default_5">Hier</string>
+    <string name="cmd_default_6">Geh</string>
+
 </resources>

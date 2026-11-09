@@ -57,6 +57,7 @@
 -keep class com.hundewildnis.app.NoteSession { *; }
 -keep class com.hundewildnis.app.SpeedSession { *; }
 -keep class com.hundewildnis.app.VoiceSession { *; }
+-keep class com.hundewildnis.app.VoiceCommand { *; }
 -keep class com.hundewildnis.app.CourseBlock { *; }
 -keep class com.hundewildnis.app.CourseLesson { *; }
 -keep class com.hundewildnis.app.CourseIndexEntry { *; }

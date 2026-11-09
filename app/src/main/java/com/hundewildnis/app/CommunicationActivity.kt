@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.media.AudioAttributes
@@ -320,6 +321,9 @@ class CommunicationActivity : SecureBaseActivity() {
             getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_SOUND, isChecked).apply()
         }
         binding.btnFeedbackTest.setOnClickListener { testFeedback() }
+        binding.btnCommands.setOnClickListener {
+            startActivity(Intent(this, CommandListActivity::class.java))
+        }
 
         // Mikrofon-Kalibrierung: Regler bleibt auch während der Messung bedienbar
         binding.sliderThreshold.addOnChangeListener { _, value, _ ->
@@ -1171,6 +1175,24 @@ class CommunicationActivity : SecureBaseActivity() {
         return when (item.itemId) {
             android.R.id.home -> { finish(); true }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateCommandsSummary()
+    }
+
+    /** Zusammenfassung der hinterlegten Kommandos (Anzahl, davon vollständig eingesprochen). */
+    private fun updateCommandsSummary() {
+        val commands = VoiceCommandStore.load(this)
+        binding.tvCommandsSummary.text = if (commands.isEmpty()) {
+            getString(R.string.cmd_summary_none)
+        } else {
+            getString(
+                R.string.cmd_summary_format,
+                commands.size, VoiceCommandStore.completeCount(commands)
+            )
         }
     }
 

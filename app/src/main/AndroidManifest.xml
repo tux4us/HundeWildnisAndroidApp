@@ -228,6 +228,14 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
+        <!-- In AndroidManifest.xml direkt NACH dem <activity>-Block von CommunicationActivity einfügen: -->
+        <activity
+            android:name="com.hundewildnis.app.CommandListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.hundewildnis.app.CommunicationActivity"
+            android:theme="@style/Theme.HundeWildnis" />
+
         <activity
             android:name="com.hundewildnis.app.SoundLevelActivity"
             android:exported="false"
