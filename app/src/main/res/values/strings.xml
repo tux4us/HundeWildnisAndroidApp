@@ -5891,4 +5891,22 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
     <string name="common_loading">Lädt …</string>
     <string name="pod_back10_label">−10 s</string>
     <string name="pod_fwd30_label">+30 s</string>
+
+    <string name="comm_header_mic_calib">🎚️ Mikrofon-Kalibrierung</string>
+    <string name="comm_mic_calib_hint">Stelle den Regler knapp über den Pegel der Hintergrundgeräusche. Der Balken wird grün, sobald der Pegel die Schwelle überschreitet; nur dann wird gemessen. Mit „Pegel testen“ kannst Du die Einstellung ohne Messung prüfen.</string>
+    <string name="comm_level_idle">Pegel: ---</string>
+    <string name="comm_level_format">Pegel: %1$d dBFS  (Schwelle: %2$d dBFS)</string>
+    <string name="comm_threshold_initial">Schwelle: -50 dBFS</string>
+    <string name="comm_threshold_format">Schwelle: %1$d dBFS</string>
+    <string name="comm_threshold_sensitive">empfindlich</string>
+    <string name="comm_threshold_robust">robust gegen Lärm</string>
+    <string name="comm_btn_level_test_start">🎚️ Pegel testen</string>
+    <string name="comm_btn_level_test_stop">⏹ Pegeltest beenden</string>
+    <string name="comm_btn_feedback_test">🔔 Feedback testen</string>
+    <string name="comm_feedback_test_done">Feedback ausgelöst (Vibration: %1$s, Ton: %2$s)</string>
+    <string name="comm_feedback_on">an</string>
+    <string name="comm_feedback_off">aus</string>
+    <string name="comm_feedback_no_vibrator">⚠️ Dieses Gerät meldet keinen Vibrationsmotor</string>
+    <string name="comm_feedback_media_volume_zero">⚠️ Medienlautstärke ist 0 – der Ton ist nicht hörbar</string>
+    <string name="comm_feedback_tone_failed">⚠️ Tonausgabe nicht verfügbar</string>
 </resources>

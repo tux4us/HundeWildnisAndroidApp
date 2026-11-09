@@ -5948,4 +5948,22 @@ For searching nearby places and for surroundings data on the map, the app querie
     <string name="common_loading">Loading …</string>
     <string name="pod_back10_label">−10 s</string>
     <string name="pod_fwd30_label">+30 s</string>
+
+    <string name="comm_header_mic_calib">🎚️ Microphone Calibration</string>
+    <string name="comm_mic_calib_hint">Set the slider just above the background noise level. The bar turns green when the level exceeds the threshold; only then is the voice measured. Use “Test level” to check the setting without starting a measurement.</string>
+    <string name="comm_level_idle">Level: ---</string>
+    <string name="comm_level_format">Level: %1$d dBFS  (threshold: %2$d dBFS)</string>
+    <string name="comm_threshold_initial">Threshold: -50 dBFS</string>
+    <string name="comm_threshold_format">Threshold: %1$d dBFS</string>
+    <string name="comm_threshold_sensitive">sensitive</string>
+    <string name="comm_threshold_robust">robust against noise</string>
+    <string name="comm_btn_level_test_start">🎚️ Test level</string>
+    <string name="comm_btn_level_test_stop">⏹ Stop level test</string>
+    <string name="comm_btn_feedback_test">🔔 Test feedback</string>
+    <string name="comm_feedback_test_done">Feedback triggered (vibration: %1$s, sound: %2$s)</string>
+    <string name="comm_feedback_on">on</string>
+    <string name="comm_feedback_off">off</string>
+    <string name="comm_feedback_no_vibrator">⚠️ This device reports no vibration motor</string>
+    <string name="comm_feedback_media_volume_zero">⚠️ Media volume is 0 – the sound will not be audible</string>
+    <string name="comm_feedback_tone_failed">⚠️ Sound output unavailable</string>
 </resources>

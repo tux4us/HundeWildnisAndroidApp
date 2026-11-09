@@ -6,7 +6,9 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
@@ -14,6 +16,7 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.util.Log
 import android.view.MenuItem
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
@@ -39,6 +42,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class CommunicationActivity : SecureBaseActivity() {
 
@@ -82,6 +86,16 @@ class CommunicationActivity : SecureBaseActivity() {
     private lateinit var vibrator: Vibrator
     private var toneGenerator: ToneGenerator? = null
 
+    // Während Vibration/Ton erfasst das Mikrofon Motor- bzw. Signalgeräusche (ca. 150–250 Hz bzw.
+    // Piepton). Solange dieser Zeitpunkt in der Zukunft liegt, werden Pitch-Frames verworfen,
+    // damit das Feedback keine Folge-Treffer auslöst.
+    private var feedbackBlankUntil = 0L
+
+    // Mikrofon-Kalibrierung
+    private var thresholdDb = DEFAULT_THRESHOLD_DB   // Rauschschwelle in dBFS (Regler)
+    private var currentLevelDb = -120f               // letzter gemessener RMS-Pegel in dBFS
+    private var isMonitoring = false                 // Pegeltest ohne Messung aktiv
+
     // Shimmer-Animator (Glow-Effekt)
     private var shimmerAnimator: ValueAnimator? = null
 
@@ -95,10 +109,42 @@ class CommunicationActivity : SecureBaseActivity() {
     // Aktuell geladene Session (für Export von Historie)
     private var currentDisplayedSession: VoiceSession? = null
 
+    // Steuert, welche Aktion nach erteilter Mikrofonberechtigung ausgeführt wird
+    private enum class PendingMicAction { START_RECORDING, LEVEL_TEST }
+    private var pendingMicAction = PendingMicAction.START_RECORDING
+
     companion object {
-        private const val VOICE_THRESHOLD = 0.001f
+        private const val TAG = "CommunicationActivity"
+
         private const val TOLERANCE_HZ = 5f
         private const val HIT_COOLDOWN_MS = 1000L
+
+        // Maximale Lücke zwischen zwei Treffern auf derselben Zielfrequenz, damit die Zeit dazwischen
+        // noch als Verweildauer zählt (Pitch-Frames kommen etwa alle 190 ms).
+        private const val MAX_HIT_GAP_MS = 800L
+
+        // Rauschschwelle (RMS in dBFS). Unterhalb ca. -48 dBFS verwirft SimplePitchDetector
+        // (Mindestkorrelation 0.03) ohnehin jedes Signal, daher beginnt der Regler bei -50.
+        private const val MIN_THRESHOLD_DB = -50f
+        private const val MAX_THRESHOLD_DB = -20f
+        private const val DEFAULT_THRESHOLD_DB = -50f
+
+        // Anzeigebereich der Pegelanzeige
+        private const val LEVEL_METER_MIN_DB = -70f
+        private const val LEVEL_METER_MAX_DB = -10f
+        private const val COLOR_LEVEL_BELOW = "#808080"
+
+        // Feedback
+        private const val VIBRATION_MS = 150L
+        private const val TONE_DURATION_MS = 150
+        private const val TONE_VOLUME = 85
+        private const val FEEDBACK_BLANKING_MS = 400L
+
+        // Einstellungen
+        private const val PREFS_NAME = "voice_settings"
+        private const val PREF_THRESHOLD_DB = "threshold_db"
+        private const val PREF_VIBRATION = "vibration"
+        private const val PREF_SOUND = "sound"
 
         // Glow-Farben
         private const val COLOR_CARD_NORMAL = "#6FBF73"
@@ -110,8 +156,14 @@ class CommunicationActivity : SecureBaseActivity() {
     private val micPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) startRecording()
-        else Toast.makeText(this, "⚠️ Mikrofon erforderlich", Toast.LENGTH_LONG).show()
+        if (granted) {
+            when (pendingMicAction) {
+                PendingMicAction.START_RECORDING -> startRecording()
+                PendingMicAction.LEVEL_TEST -> startLevelTest()
+            }
+        } else {
+            Toast.makeText(this, "⚠️ Mikrofon erforderlich", Toast.LENGTH_LONG).show()
+        }
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -225,6 +277,18 @@ class CommunicationActivity : SecureBaseActivity() {
     // ─────────────────────────────────────────────────────────────
 
     private fun setupUI() {
+        // Gespeicherte Einstellungen laden, bevor die Listener gesetzt werden
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        thresholdDb = prefs.getFloat(PREF_THRESHOLD_DB, DEFAULT_THRESHOLD_DB)
+            .roundToInt().toFloat().coerceIn(MIN_THRESHOLD_DB, MAX_THRESHOLD_DB)
+        vibrationEnabled = prefs.getBoolean(PREF_VIBRATION, true)
+        soundEnabled = prefs.getBoolean(PREF_SOUND, false)
+        binding.switchVibration.isChecked = vibrationEnabled
+        binding.switchSound.isChecked = soundEnabled
+        binding.sliderThreshold.value = thresholdDb
+        updateThresholdLabel()
+        resetLevelMeter()
+
         binding.radioGroupMode.setOnCheckedChangeListener { _, checkedId ->
             trainingMode = if (checkedId == R.id.radioModeFree) TrainingMode.FREE else TrainingMode.FOCUS
             binding.layoutFocusFrequency.visibility =
@@ -247,11 +311,29 @@ class CommunicationActivity : SecureBaseActivity() {
             updateChartLimitLines()
         }
 
-        binding.switchVibration.setOnCheckedChangeListener { _, isChecked -> vibrationEnabled = isChecked }
-        binding.switchSound.setOnCheckedChangeListener { _, isChecked -> soundEnabled = isChecked }
+        binding.switchVibration.setOnCheckedChangeListener { _, isChecked ->
+            vibrationEnabled = isChecked
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_VIBRATION, isChecked).apply()
+        }
+        binding.switchSound.setOnCheckedChangeListener { _, isChecked ->
+            soundEnabled = isChecked
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_SOUND, isChecked).apply()
+        }
+        binding.btnFeedbackTest.setOnClickListener { testFeedback() }
+
+        // Mikrofon-Kalibrierung: Regler bleibt auch während der Messung bedienbar
+        binding.sliderThreshold.addOnChangeListener { _, value, _ ->
+            thresholdDb = value
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putFloat(PREF_THRESHOLD_DB, value).apply()
+            updateThresholdLabel()
+            updateLevelMeter(currentLevelDb)
+        }
+        binding.btnLevelTest.setOnClickListener {
+            if (isMonitoring) stopLevelTest() else requestMicPermissionAnd(PendingMicAction.LEVEL_TEST)
+        }
 
         binding.btnStartStop.setOnClickListener {
-            if (isRecording) stopRecording() else requestMicPermissionAndStart()
+            if (isRecording) stopRecording() else requestMicPermissionAnd(PendingMicAction.START_RECORDING)
         }
 
         binding.btnExport.setOnClickListener { exportToPdf(false) }
@@ -273,7 +355,8 @@ class CommunicationActivity : SecureBaseActivity() {
     // Aufnahme-Steuerung
     // ─────────────────────────────────────────────────────────────
 
-    private fun requestMicPermissionAndStart() {
+    private fun requestMicPermissionAnd(action: PendingMicAction) {
+        pendingMicAction = action
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
             != android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -299,11 +382,14 @@ class CommunicationActivity : SecureBaseActivity() {
                 }
             return
         }
-        startRecording()
+        when (action) {
+            PendingMicAction.START_RECORDING -> startRecording()
+            PendingMicAction.LEVEL_TEST -> startLevelTest()
+        }
     }
 
     private fun startRecording() {
-        if (isRecording) return
+        if (isRecording || isMonitoring) return
 
         frequencyDataPoints.clear()
         sessionStartTime = System.currentTimeMillis()
@@ -327,8 +413,16 @@ class CommunicationActivity : SecureBaseActivity() {
         // Chart-Linien beim Start auf aktuelle Auswahl setzen
         updateChartLimitLines()
 
+        feedbackBlankUntil = 0L
+        currentLevelDb = -120f
+
         if (soundEnabled) {
-            toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 50)
+            toneGenerator = createToneGenerator()
+            if (toneGenerator == null) {
+                Toast.makeText(this, R.string.comm_feedback_tone_failed, Toast.LENGTH_LONG).show()
+            } else {
+                warnIfMediaVolumeZero()
+            }
         }
 
         try {
@@ -345,6 +439,12 @@ class CommunicationActivity : SecureBaseActivity() {
                             Toast.LENGTH_LONG
                         ).show()
                         stopRecording()
+                    }
+                },
+                onLevel = { db ->
+                    runOnUiThread {
+                        currentLevelDb = db
+                        updateLevelMeter(db)
                     }
                 }
             )
@@ -363,6 +463,7 @@ class CommunicationActivity : SecureBaseActivity() {
 
         // Laufenden Shimmer stoppen und Karte zurücksetzen
         cancelShimmer()
+        resetLevelMeter()
 
         binding.btnStartStop.text = getString(R.string.comm_btn_start)
         binding.btnStartStop.setBackgroundColor(ContextCompat.getColor(this@CommunicationActivity, R.color.gl_success_fill))
@@ -392,6 +493,9 @@ class CommunicationActivity : SecureBaseActivity() {
         }
         binding.switchVibration.isEnabled = enabled
         binding.switchSound.isEnabled = enabled
+        binding.btnFeedbackTest.isEnabled = enabled
+        binding.btnLevelTest.isEnabled = enabled
+        // sliderThreshold bleibt bewusst aktiv: Live-Anpassung während der Messung
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -399,11 +503,19 @@ class CommunicationActivity : SecureBaseActivity() {
     // ─────────────────────────────────────────────────────────────
 
     private fun processPitchDetection(frequency: Float, amplitude: Float) {
-        val isVoice = amplitude > VOICE_THRESHOLD && frequency > 80f && frequency < 800f
+        // Bereits in der UI-Queue liegende Frames nach Stopp verwerfen
+        if (!isRecording) return
+
+        val now = System.currentTimeMillis()
+
+        // Austastung nach Vibration/Ton (Eigengeräusch des Feedbacks nicht auswerten)
+        if (now < feedbackBlankUntil) return
+
+        // Stimme = Pegel über der per Regler eingestellten Rauschschwelle UND gültige Grundfrequenz
+        val isVoice = currentLevelDb >= thresholdDb && frequency > 80f && frequency < 800f
 
         if (isVoice) {
             currentFrequency = frequency
-            val now = System.currentTimeMillis()
             val elapsed = now - sessionStartTime
 
             if (!isCurrentlyVoice) {
@@ -458,7 +570,9 @@ class CommunicationActivity : SecureBaseActivity() {
             648f -> hits648Hz++
         }
 
-        if (lastHitFrequency == target) {
+        // Verweildauer nur bei lückenlos aufeinanderfolgenden Treffern auf derselben Zielfrequenz
+        // (vorher wurde auch die gesamte Pause zwischen zwei Treffern aufaddiert)
+        if (lastHitFrequency == target && now - lastHitTimestamp <= MAX_HIT_GAP_MS) {
             val duration = now - lastHitTimestamp
             when (target.hz) {
                 108f -> time108Hz += duration
@@ -561,16 +675,184 @@ class CommunicationActivity : SecureBaseActivity() {
     }
 
     private fun provideFeedback() {
-        if (vibrationEnabled) {
+        if (!vibrationEnabled && !soundEnabled) return
+
+        feedbackBlankUntil = System.currentTimeMillis() + FEEDBACK_BLANKING_MS
+
+        if (vibrationEnabled) vibrateHit()
+        if (soundEnabled) {
+            try {
+                toneGenerator?.startTone(ToneGenerator.TONE_PROP_BEEP, TONE_DURATION_MS)
+            } catch (e: Exception) {
+                Log.w(TAG, "startTone fehlgeschlagen: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * Vibration mit expliziten Audio-Attributen (USAGE_ALARM).
+     * Ohne Attribute wird die Vibration als USAGE_UNKNOWN eingestuft und kann je nach
+     * Systemeinstellung (Touch-Feedback/Medien-Vibration, Nicht stören) unterdrückt werden.
+     */
+    @Suppress("DEPRECATION")
+    private fun vibrateHit() {
+        if (!vibrator.hasVibrator()) return
+        try {
+            val attrs = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(VIBRATION_MS, VibrationEffect.DEFAULT_AMPLITUDE),
+                    attrs
+                )
             } else {
-                @Suppress("DEPRECATION") vibrator.vibrate(100)
+                vibrator.vibrate(VIBRATION_MS, attrs)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "vibrate fehlgeschlagen: ${e.message}")
+        }
+    }
+
+    /**
+     * ToneGenerator auf dem Medien-Stream. STREAM_NOTIFICATION war bei stummem/vibrierendem
+     * Klingelmodus oder aktivem „Nicht stören“ lautlos.
+     */
+    private fun createToneGenerator(): ToneGenerator? {
+        return try {
+            ToneGenerator(AudioManager.STREAM_MUSIC, TONE_VOLUME)
+        } catch (e: Exception) {
+            Log.w(TAG, "ToneGenerator nicht verfügbar: ${e.message}")
+            null
+        }
+    }
+
+    private fun warnIfMediaVolumeZero() {
+        val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (am.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+            Toast.makeText(this, R.string.comm_feedback_media_volume_zero, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * Löst das eingestellte Feedback einmalig außerhalb der Messung aus.
+     * Dient zur Diagnose: funktioniert der Test, aber nicht während der Messung,
+     * liegt die Ursache bei der Mikrofonnutzung bzw. der Treffererkennung.
+     */
+    private fun testFeedback() {
+        if (isRecording) return
+
+        if (vibrationEnabled) {
+            if (!vibrator.hasVibrator()) {
+                Toast.makeText(this, R.string.comm_feedback_no_vibrator, Toast.LENGTH_LONG).show()
+            } else {
+                vibrateHit()
             }
         }
         if (soundEnabled) {
-            toneGenerator?.startTone(ToneGenerator.TONE_PROP_BEEP, 100)
+            warnIfMediaVolumeZero()
+            val tone = createToneGenerator()
+            if (tone == null) {
+                Toast.makeText(this, R.string.comm_feedback_tone_failed, Toast.LENGTH_LONG).show()
+            } else {
+                try {
+                    tone.startTone(ToneGenerator.TONE_PROP_BEEP, TONE_DURATION_MS)
+                } catch (e: Exception) {
+                    Log.w(TAG, "startTone fehlgeschlagen: ${e.message}")
+                }
+                binding.btnFeedbackTest.postDelayed({ tone.release() }, 500)
+            }
         }
+
+        val on = getString(R.string.comm_feedback_on)
+        val off = getString(R.string.comm_feedback_off)
+        Toast.makeText(
+            this,
+            getString(
+                R.string.comm_feedback_test_done,
+                if (vibrationEnabled) on else off,
+                if (soundEnabled) on else off
+            ),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Mikrofon-Kalibrierung
+    // ─────────────────────────────────────────────────────────────
+
+    private fun updateThresholdLabel() {
+        binding.tvThresholdValue.text = getString(R.string.comm_threshold_format, thresholdDb.toInt())
+    }
+
+    private fun updateLevelMeter(levelDb: Float) {
+        if (!isRecording && !isMonitoring) return
+
+        val range = LEVEL_METER_MAX_DB - LEVEL_METER_MIN_DB
+        val progress = ((levelDb - LEVEL_METER_MIN_DB) / range * 100f).toInt().coerceIn(0, 100)
+        val aboveThreshold = levelDb >= thresholdDb
+
+        binding.progressInputLevel.progress = progress
+        binding.progressInputLevel.progressTintList = ColorStateList.valueOf(
+            Color.parseColor(if (aboveThreshold) COLOR_CARD_NORMAL else COLOR_LEVEL_BELOW)
+        )
+        binding.tvInputLevel.text = getString(
+            R.string.comm_level_format, levelDb.roundToInt(), thresholdDb.toInt()
+        )
+    }
+
+    private fun resetLevelMeter() {
+        binding.progressInputLevel.progress = 0
+        binding.progressInputLevel.progressTintList =
+            ColorStateList.valueOf(Color.parseColor(COLOR_LEVEL_BELOW))
+        binding.tvInputLevel.text = getString(R.string.comm_level_idle)
+    }
+
+    /**
+     * Pegeltest: Mikrofon läuft nur für die Pegelanzeige, es werden keine Daten aufgezeichnet.
+     */
+    private fun startLevelTest() {
+        if (isRecording || isMonitoring) return
+
+        isMonitoring = true
+        currentLevelDb = -120f
+        binding.btnLevelTest.text = getString(R.string.comm_btn_level_test_stop)
+        binding.btnStartStop.isEnabled = false
+
+        try {
+            pitchDetector = SimplePitchDetector()
+            pitchDetector?.startRecording(
+                onPitchDetected = { _, _ -> },
+                onError = { e ->
+                    runOnUiThread {
+                        Toast.makeText(this, "⚠️ Mikrofon-Fehler: ${e.message}", Toast.LENGTH_LONG).show()
+                        stopLevelTest()
+                    }
+                },
+                onLevel = { db ->
+                    runOnUiThread {
+                        currentLevelDb = db
+                        updateLevelMeter(db)
+                    }
+                }
+            )
+        } catch (e: Exception) {
+            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            stopLevelTest()
+        }
+    }
+
+    private fun stopLevelTest() {
+        if (!isMonitoring) return
+        isMonitoring = false
+
+        pitchDetector?.stopRecording()
+        pitchDetector = null
+
+        binding.btnLevelTest.text = getString(R.string.comm_btn_level_test_start)
+        binding.btnStartStop.isEnabled = true
+        resetLevelMeter()
     }
 
     private fun updateChart() {
@@ -892,8 +1174,15 @@ class CommunicationActivity : SecureBaseActivity() {
         }
     }
 
+    override fun onStop() {
+        // Der reine Pegeltest darf das Mikrofon nicht im Hintergrund offen halten
+        if (isMonitoring) stopLevelTest()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        if (isMonitoring) stopLevelTest()
         if (isRecording) stopRecording()
     }
 

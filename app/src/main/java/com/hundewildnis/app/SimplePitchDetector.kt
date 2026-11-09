@@ -13,9 +13,9 @@ import kotlin.math.*
  * Optimiert für Sprachfrequenzen: 80–800 Hz
  *
  * Änderungen gegenüber der Vorversion:
- * - AudioSource-Fallback-Kette: VOICE_RECOGNITION → MIC → DEFAULT
- *   (VOICE_COMMUNICATION ist auf vielen Geräten ohne aktiven Anruf gesperrt
- *    oder unterdrückt per Hardware-AGC genau die gemessenen Frequenzen)
+ * - AudioSource-Fallback-Kette: MIC → VOICE_RECOGNITION → VOICE_COMMUNICATION → DEFAULT
+ *   (siehe AUDIO_SOURCE_FALLBACKS; Reihenfolge nicht ändern)
+ * - Optionaler onLevel-Callback mit ungekapptem RMS-Pegel in dBFS (für Mikrofon-Kalibrierung)
  * - Buffergröße wird korrekt via getMinBufferSize() berechnet
  * - Fehler im Recording-Thread werden per onError-Callback nach oben gemeldet
  * - Thread.sleep() entfernt; kontinuierliches Lesen ohne künstliche Pause
@@ -61,10 +61,15 @@ class SimplePitchDetector(
      *                        ggf. auf den UI-Thread wechseln.
      * @param onError         Optionaler Fehler-Callback; wird aufgerufen wenn
      *                        die Aufnahme im laufenden Betrieb abbricht.
+     * @param onLevel         Optionaler Pegel-Callback (RMS in dBFS, unbegrenzt nach oben
+     *                        bis 0 dBFS, Untergrenze -120 dBFS). Wird pro Puffer unmittelbar
+     *                        vor onPitchDetected im Recording-Thread aufgerufen.
+     *                        Unabhängig von der 30x-Verstärkung/Kappung der Amplitude.
      */
     fun startRecording(
         onPitchDetected: (frequency: Float, amplitude: Float) -> Unit,
-        onError: ((Exception) -> Unit)? = null
+        onError: ((Exception) -> Unit)? = null,
+        onLevel: ((rmsDbfs: Float) -> Unit)? = null
     ) {
         if (isRecording) return
 
@@ -86,6 +91,7 @@ class SimplePitchDetector(
                         readSize > 0 -> {
                             val pitch     = detectPitch(audioBuffer, readSize)
                             val amplitude = calculateAmplitude(audioBuffer, readSize)
+                            onLevel?.invoke(calculateRmsDbfs(audioBuffer, readSize))
                             onPitchDetected(pitch, amplitude)
                         }
                         readSize == AudioRecord.ERROR_INVALID_OPERATION -> {
@@ -251,5 +257,20 @@ class SimplePitchDetector(
             sum += sample * sample
         }
         return (sqrt(sum / size) * 30.0).toFloat().coerceAtMost(1.0f)
+    }
+
+    /**
+     * RMS-Pegel in dBFS (0 dBFS = Vollaussteuerung, typische Raumgeräusche -70…-55 dBFS,
+     * Sprache auf 1–2 m ca. -40…-25 dBFS). Ohne Verstärkung und ohne Kappung,
+     * damit die Anzeige auch bei lauter Sprache nicht sättigt.
+     */
+    private fun calculateRmsDbfs(buffer: ShortArray, size: Int): Float {
+        var sum = 0.0
+        for (i in 0 until size) {
+            val sample = buffer[i] / 32768.0
+            sum += sample * sample
+        }
+        val rms = sqrt(sum / size)
+        return (20.0 * log10(rms.coerceAtLeast(1e-6))).toFloat()
     }
 }

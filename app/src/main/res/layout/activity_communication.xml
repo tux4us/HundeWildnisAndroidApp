@@ -277,6 +277,114 @@
             </LinearLayout>
 
             <!-- ═══════════════════════════════════════════════════ -->
+            <!-- MIKROFON-KALIBRIERUNG -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <com.hundewildnis.app.GlassCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comm_header_mic_calib"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comm_mic_calib_hint"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Live-Eingangspegel -->
+                    <TextView
+                        android:id="@+id/tvInputLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comm_level_idle"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="4dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressInputLevel"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="0"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Schwellwert-Regler -->
+                    <TextView
+                        android:id="@+id/tvThresholdValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comm_threshold_initial"
+                        android:textSize="@dimen/text_body_medium"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary" />
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/sliderThreshold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="-50"
+                        android:valueTo="-20"
+                        android:value="-50"
+                        android:stepSize="1"
+                        app:labelBehavior="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/comm_threshold_sensitive"
+                            android:textSize="@dimen/text_body_medium"
+                            android:alpha="0.7"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@string/comm_threshold_robust"
+                            android:textSize="@dimen/text_body_medium"
+                            android:alpha="0.7"
+                            android:textColor="?android:attr/textColorSecondary" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnLevelTest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comm_btn_level_test_start"
+                        android:textSize="@dimen/text_body_medium"
+                        style="@style/Widget.App.Button.Primary" />
+
+                </LinearLayout>
+            </com.hundewildnis.app.GlassCardView>
+
+            <!-- ═══════════════════════════════════════════════════ -->
             <!-- EINSTELLUNGEN -->
             <!-- ═══════════════════════════════════════════════════ -->
             <com.hundewildnis.app.GlassCardView
@@ -313,6 +421,15 @@
                         android:layout_height="wrap_content"
                         android:text="@string/comm_switch_sound"
                         android:checked="false" />
+
+                    <Button
+                        android:id="@+id/btnFeedbackTest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/comm_btn_feedback_test"
+                        android:textSize="@dimen/text_body_medium"
+                        style="@style/Widget.App.Button.Primary" />
 
                 </LinearLayout>
             </com.hundewildnis.app.GlassCardView>
