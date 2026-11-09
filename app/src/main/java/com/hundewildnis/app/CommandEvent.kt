@@ -7,6 +7,8 @@ package com.hundewildnis.app
  * Session-Start bis auf die Anlaufzeit des Mikrofons, ca. 0,1–0,2 s).
  * [counted]: false, wenn dasselbe Kommando innerhalb der Wiederholungsfrist erneut gesprochen wurde.
  * [distance]: DTW-Distanz zur besten Vorlage (kleiner = sicherer erkannt).
+ * [pathMeters]: seit Messbeginn zurückgelegte Strecke in Metern zum Zeitpunkt des Kommandos
+ * (GPS); -1, wenn die Wegstrecke nicht erfasst wurde oder noch kein GPS-Fix vorlag.
  *
  * Wird mit Gson serialisiert → Keep-Regel in proguard-rules.pro erforderlich.
  */
@@ -15,7 +17,8 @@ data class CommandEvent(
     val name: String = "",
     val timestamp: Long = 0L,
     val counted: Boolean = true,
-    val distance: Float = 0f
+    val distance: Float = 0f,
+    val pathMeters: Float = -1f
 )
 
 /**
@@ -55,9 +58,35 @@ data class CommandStats(
     val intervalCount: Int,
     val meanIntervalMs: Long,
     val minIntervalMs: Long,
-    val maxIntervalMs: Long
+    val maxIntervalMs: Long,
+    /** Anzahl Abschnitte zwischen aufeinanderfolgenden gezählten Kommandos mit bekannter Strecke. */
+    val legCount: Int = 0,
+    val meanLegMeters: Float = 0f,
+    val minLegMeters: Float = 0f,
+    val maxLegMeters: Float = 0f
 ) {
     companion object {
+
+        /**
+         * Strecke in Metern seit dem vorherigen gezählten Kommando, je Ereignis in der Reihenfolge
+         * nach Zeitstempel. Null für nicht gezählte Wiederholungen, für das erste gezählte Kommando
+         * und wenn eine der beiden Positionen unbekannt ist.
+         */
+        fun legMeters(events: List<CommandEvent>): List<Float?> {
+            var previous: CommandEvent? = null
+            return events.sortedBy { it.timestamp }.map { e ->
+                if (!e.counted) {
+                    null
+                } else {
+                    val p = previous
+                    previous = e
+                    if (p != null && p.pathMeters >= 0f && e.pathMeters >= 0f) {
+                        (e.pathMeters - p.pathMeters).coerceAtLeast(0f)
+                    } else null
+                }
+            }
+        }
+
         fun from(events: List<CommandEvent>): CommandStats {
             val order = LinkedHashMap<String, String>()   // commandId → Name, in Reihenfolge des Auftretens
             val counted = HashMap<String, Int>()
@@ -73,6 +102,7 @@ data class CommandStats(
 
             val times = events.filter { it.counted }.map { it.timestamp }.sorted()
             val intervals = times.zipWithNext { a, b -> b - a }
+            val legs = legMeters(events).filterNotNull()
 
             return CommandStats(
                 perCommand = perCommand,
@@ -81,7 +111,11 @@ data class CommandStats(
                 intervalCount = intervals.size,
                 meanIntervalMs = if (intervals.isEmpty()) 0L else intervals.sum() / intervals.size,
                 minIntervalMs = intervals.minOrNull() ?: 0L,
-                maxIntervalMs = intervals.maxOrNull() ?: 0L
+                maxIntervalMs = intervals.maxOrNull() ?: 0L,
+                legCount = legs.size,
+                meanLegMeters = if (legs.isEmpty()) 0f else legs.sum() / legs.size,
+                minLegMeters = legs.minOrNull() ?: 0f,
+                maxLegMeters = legs.maxOrNull() ?: 0f
             )
         }
     }

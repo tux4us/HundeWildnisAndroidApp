@@ -6,7 +6,7 @@
 
 [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-100%25-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Version](https://img.shields.io/badge/Version-27.2%20Build%20139-C9A84C?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/Version-27.4%20Build%20141-C9A84C?style=flat-square)](#)
 [![License](https://img.shields.io/badge/Lizenz-GPL--3.0--or--later-5C8A3C?style=flat-square)](LICENSE)
 [![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#-datenschutz--sicherheit)
 [![F-Droid](https://img.shields.io/badge/F--Droid-ready-lightgrey?style=flat-square)](https://f-droid.org/)
@@ -104,12 +104,30 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 | Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
 | ⏱️ Tempo-Trainer | GPS-Geschwindigkeitsüberwachung als Hintergrunddienst | Limits 2,5/3,0/4,0 km/h laufend wechselbar · Vibration/Ton bei Überschreitung separat schaltbar · Live-Diagramm · Messintervall 30/60 s · eigenes Untermenü (Anleitung/Berechtigungen/Über) · Historie mit Löschfunktion · Export PDF/GPX/Teilen |
-| 🗣️ Sprach-Trainer | Stimmfrequenzanalyse, 5 Zielfrequenzen (108/216/324/432/648 Hz, ±5 Hz) | Ganzheitliches oder Fokus-Training · Vibration/Ton unabhängig schaltbar · Statistik je Sitzung · PDF-Export, Historie |
+| 🗣️ Sprach-Trainer | Stimmfrequenzanalyse, 5 Zielfrequenzen (108/216/324/432/648 Hz, ±5 Hz) · Erkennung und Zählung eigener Kommandos – **siehe Detailabschnitt unten** | Ganzheitliches oder Fokus-Training · Vibration/Ton unabhängig schaltbar, mit Testtaste · manuelle Mikrofon-Kalibrierung mit Live-Pegel · Kommandos einsprechen und verwalten · Kommandoerkennung mit 5-Sekunden-Regel · optionale GPS-Wegstrecke zwischen Kommandos · Hintergrundbetrieb bei ausgeschaltetem Bildschirm · Statistik je Sitzung · PDF-Export, Historie |
 | ⏲️ Intervall-Timer | Konfigurierbarer Intervall-Timer | Aktiv/Pause 10–120 s, 1–20 Runden, Abkühlphase 0–300 s · 6 Schnellprofile (Standard/Welpe/Senior/Energiegeladen/Arbeitshund/Tierschutzhund) · automatischer Vorschlag nach Wesensmerkmalen · Ton/Vibration je Phase · Historie · Übergabe ans Trainingstagebuch |
 | 📔 Trainingstagebuch | 18 Trainingskategorien je Hund, Wochenstatistik auf Hundekarte | Session-Erfassung (Dauer/Wiederholungen, Erfolg, Ablenkung, Schwierigkeit, Ort, Wetter, GPS, Notiz) · Fortschritt 0–100 % mit 5 Trainingsständen · Trend/Streak/Konsistenz · automatische Meilensteine · PDF-/CSV-Export gesamt, vollständiges Löschen je Hund |
 | 📅 Aktivitätskalender | Monatskalender mit Trainingstagen | Tagesdetail per Tap · Vorausplanung mit automatischem Dauervorschlag und Erinnerung · 7-Tage-Vorschau mit Wettereignungs-Ampel |
 | 🐾 Nasenarbeit | Regelbasiertes Expertensystem, 3 Disziplinen – **siehe Detailabschnitt unten** | Sechsstufiger Beratungs-Wizard (Wetter → Gelände → Boden → Trainingsstand → Empfehlung) · Vier-Schichten-Analyse · Kartenwerkzeug · Sitzungsdokumentation · Statistik, PDF-/CSV-Export je Hund |
 | 🎾 Spiel und Spaß | Empfehlungssystem für spielerische Aktivitäten | Beratungs-Wizard (Ort → Gelände → Ausrüstung → Spielinhalt → Empfehlung) · Analyse · Vorschlag · Sitzungsdokumentation · Statistik, PDF-/CSV-Export je Hund |
+
+##### Sprach-Trainer im Detail
+
+**Mikrofon-Kalibrierung:** Ein Regler (−50 bis −20 dBFS) legt fest, ab welchem Pegel eine Eingabe überhaupt ausgewertet wird. Eine Live-Pegelanzeige und der Modus „Pegel testen“ zeigen den aktuellen Eingangspegel, ohne eine Sitzung zu starten. So lässt sich die Schwelle über dem Hintergrundgeräusch der Umgebung (Wind, Straße, Wald) einstellen. Werte unterhalb von etwa −48 dBFS haben wegen der internen Mindestkorrelation der Tonhöhenerkennung keine zusätzliche Wirkung. Der Wert wird gespeichert.
+
+**Feedback bei Treffern:** Vibration und Ton sind unabhängig schaltbar. Eine Testtaste löst beide Signale sofort aus; ist die Medienlautstärke auf 0, weist die App darauf hin. Während des Feedbacks wird die Tonhöhenerkennung kurz ausgesetzt, damit der eigene Signalton nicht als Eingabe gewertet wird.
+
+**Kommandos einsprechen:** Der Hundeführer spricht seine Kommandos selbst ein; sie bilden eine lokale Referenzdatenbank. Die Liste ist frei bearbeitbar (hinzufügen, umbenennen, löschen) und wird mit einer Standardliste vorbelegt (Deutsch: Sitz, Platz, Steh, Fuß, Hier, Geh · Englisch: Sit, Down, Stand, Heel, Come, Go). Je Kommando sind mindestens 3, höchstens 5 Aufnahmen erforderlich; Aufnahmen lassen sich abspielen und einzeln ersetzen. Empfehlung: in unterschiedlicher Tonlage und Lautstärke einsprechen, wie im Training üblich.
+
+**Kommandoerkennung während der Messung:** Parallel zur Frequenzanalyse werden Äußerungen aus dem Mikrofonstrom abgetrennt und mit den eingesprochenen Kommandos verglichen (MFCC-Merkmale und Dynamic Time Warping, eigene Implementierung ohne Bibliothek). Ein Treffer wird nur gezählt, wenn er eindeutig ist; die Empfindlichkeit ist per Regler einstellbar. **5-Sekunden-Regel:** Wiederholt der Hundeführer dasselbe Kommando innerhalb von 5 Sekunden, wird die Wiederholung nicht mitgezählt (z. B. zur Motivation des Hundes), sondern separat als „ignoriert“ ausgewiesen. Erfasst werden Anzahl je Kommando und Zeitabstand zwischen den gezählten Kommandos.
+
+**Wegstrecke zwischen Kommandos (optional, GPS):** Ist der Schalter aktiv und die Standortberechtigung erteilt, wird während der Messung der zurückgelegte Weg erfasst und jedem gezählten Kommando zugeordnet. Ausgewiesen werden die Strecke seit dem vorherigen gezählten Kommando (Mittel, Minimum, Maximum) und die Gesamtstrecke. Gespeichert wird je Kommando nur die bis dahin zurückgelegte Strecke in Metern; Koordinaten oder Wegpunkte werden nicht abgelegt. Fixes mit mehr als 25 m Ungenauigkeit und Ausreißer werden verworfen; bei Stillstand (gemeldete Geschwindigkeit unter 0,4 m/s) wird keine Strecke aufsummiert. Die Strecke fällt systembedingt um bis zu einige Meter zu kurz aus. Kommandos, die vor dem ersten GPS-Fix gesprochen werden, erhalten keine Streckenangabe.
+
+**Hintergrundbetrieb (Handy in der Tasche):** Bei aktivem Schalter läuft während einer Messung ein Vordergrunddienst (Typ Mikrofon, bei aktiver Wegstrecke zusätzlich Standort) mit dauerhafter Benachrichtigung, und der Prozessor bleibt bei ausgeschaltetem Bildschirm aktiv (Teil-Wakelock, höchstens 4 Stunden). Mikrofonaufnahme, Erkennung und GPS-Auswertung laufen weiterhin in der Anwendung; der Dienst speichert und überträgt nichts. Beendet wird mit „Stopp“ in der App; ein Antippen der Benachrichtigung öffnet die Messung. Der Hintergrundbetrieb erhöht den Akkuverbrauch. In der Tasche ist das Signal gedämpft: Die Mikrofonöffnung sollte nicht verdeckt sein (z. B. obere Jackentasche, Mikrofon nach oben); Schwelle und Erkennung sind in dieser Haltung zu testen. Ab Android 13 muss die Benachrichtigungsberechtigung erteilt sein, damit die Benachrichtigung sichtbar ist; der Dienst arbeitet auch ohne sie.
+
+**Protokoll:** Die Kommandoauswertung erscheint in der Sitzungsanzeige und im PDF-Export (Zusammenfassung, Zählung je Kommando, Ereignisliste mit Zeit, Kommando, Abstand, bei erfasster Wegstrecke auch Strecke, und Hinweis).
+
+**Hinweise:** Die Erkennung arbeitet vollständig auf dem Gerät; Aufnahmen und Kommandoliste verlassen es nicht. Sie ist nicht mit einer allgemeinen Spracherkennung vergleichbar, sondern erkennt nur die selbst eingesprochenen Kommandos und ist stimm- und umgebungsabhängig. Das Mikrofon arbeitet nur, solange eine Messung oder der Pegeltest aktiv ist. Die Erkennung ist am zuverlässigsten, wenn das Handy frei in der Hand oder so platziert wird, dass das Mikrofon nicht verdeckt ist.
 
 ##### Nasenarbeit im Detail
 
@@ -236,7 +254,7 @@ Durchgehend sichtbare Navigationsleiste am unteren Bildschirmrand mit drei Eintr
 ```
 Sprache          Kotlin 100 %
 Android          7.0 – 15  (API 24 – 36)
-Version          26.0 (Build 134)
+Version          27.4 (Build 141)
 Architektur      MVVM + Kotlin Coroutines
 UI               Android Views · ViewBinding · Material Design
 ```
@@ -268,11 +286,12 @@ UI               Android Views · ViewBinding · Material Design
 | Berechtigung | Verwendung |
 |---|---|
 | `INTERNET` | Wetter, Karte, WebDAV-Sync |
-| `ACCESS_FINE_LOCATION` | Navigation, Wetter, Nasenarbeit-Karte, Tempo-Trainer, Kompass (Himmelsberechnung), Standortfreigabe |
+| `ACCESS_FINE_LOCATION` | Navigation, Wetter, Nasenarbeit-Karte, Tempo-Trainer, Kompass (Himmelsberechnung), Standortfreigabe, Sprach-Trainer (optionale Wegstrecke zwischen Kommandos) |
 | `ACCESS_COARSE_LOCATION` | Standort-Fallback |
-| `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | GPS-Tracking (Tempo-Trainer, Standortfreigabe, Navigation) |
+| `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | GPS-Tracking (Tempo-Trainer, Standortfreigabe, Navigation, Sprach-Trainer) |
+| `FOREGROUND_SERVICE_MICROPHONE` | Sprach-Trainer: Messung bei ausgeschaltetem Bildschirm |
 | `CAMERA` | Zeckenlupe, Fotos für Notizen, Notfall-PDF, Gefahrenpflanzen |
-| `RECORD_AUDIO` | Sprach-Trainer (Frequenzanalyse) |
+| `RECORD_AUDIO` | Sprach-Trainer (Frequenzanalyse, Mikrofon-Kalibrierung, Aufnahme und Erkennung eigener Kommandos – ausschließlich lokal) |
 | `POST_NOTIFICATIONS` | Tempo-Trainer-Warnungen, Läufigkeits-Erinnerungen, WebDAV-Synchronisation |
 | `VIBRATE` | Feedback in Sprach-Trainer, Entspannung, Intervall-Timer |
 | `READ_EXTERNAL_STORAGE` | Backup-Import, Foto-Auswahl |

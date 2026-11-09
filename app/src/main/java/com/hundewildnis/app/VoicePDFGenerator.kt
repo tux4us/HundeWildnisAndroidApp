@@ -110,9 +110,9 @@ object VoicePDFGenerator {
 
             document.add(table)
 
-            // KOMMANDOS (nur wenn während der Messung Kommandos erkannt wurden)
-            if (session.commandEvents.isNotEmpty()) {
-                addCommandSection(document, session.commandEvents, greenColor)
+            // KOMMANDOS / WEGSTRECKE (nur wenn Kommandos erkannt oder die Wegstrecke erfasst wurde)
+            if (session.commandEvents.isNotEmpty() || session.totalDistanceMeters >= 0f) {
+                addCommandSection(document, session.commandEvents, session.totalDistanceMeters, greenColor)
             }
 
             // Chart (wenn vorhanden)
@@ -182,21 +182,35 @@ object VoicePDFGenerator {
         document.add(table)
     }
 
-    private fun addCommandSection(document: PdfDoc, events: List<CommandEvent>, color: Int) {
+    /** Meter unter 1000 als ganze Meter, darüber als Kilometer mit zwei Nachkommastellen. */
+    private fun formatMeters(meters: Float): String =
+        if (meters < 1000f) String.format(Locale.GERMAN, "%d m", Math.round(meters))
+        else String.format(Locale.GERMAN, "%.2f km", meters / 1000f)
+
+    private fun addCommandSection(
+        document: PdfDoc, events: List<CommandEvent>, totalMeters: Float, color: Int
+    ) {
         val stats = CommandStats.from(events)
         val germanSeconds = { ms: Long -> String.format(Locale.GERMAN, "%.1f s", ms / 1000.0) }
 
-        addSectionTitle(document, "KOMMANDOS", color)
+        addSectionTitle(document, if (events.isEmpty()) "WEGSTRECKE" else "KOMMANDOS", color)
 
-        val summary = mutableListOf(
-            "Gezählte Kommandos" to "${stats.totalCounted}",
-            "Wiederholungen (nicht gezählt)" to "${stats.totalIgnored}"
-        )
-        if (stats.intervalCount > 0) {
-            summary.add("Abstand (Mittel)" to germanSeconds(stats.meanIntervalMs))
-            summary.add("Abstand (min / max)" to "${germanSeconds(stats.minIntervalMs)} / ${germanSeconds(stats.maxIntervalMs)}")
+        val summary = mutableListOf<Pair<String, String>>()
+        if (events.isNotEmpty()) {
+            summary.add("Gezählte Kommandos" to "${stats.totalCounted}")
+            summary.add("Wiederholungen (nicht gezählt)" to "${stats.totalIgnored}")
+            if (stats.intervalCount > 0) {
+                summary.add("Abstand (Mittel)" to germanSeconds(stats.meanIntervalMs))
+                summary.add("Abstand (min / max)" to "${germanSeconds(stats.minIntervalMs)} / ${germanSeconds(stats.maxIntervalMs)}")
+            }
+        }
+        if (totalMeters >= 0f) summary.add("Wegstrecke gesamt (GPS)" to formatMeters(totalMeters))
+        if (stats.legCount > 0) {
+            summary.add("Strecke zwischen Kommandos (Mittel)" to formatMeters(stats.meanLegMeters))
+            summary.add("Strecke zwischen Kommandos (min / max)" to "${formatMeters(stats.minLegMeters)} / ${formatMeters(stats.maxLegMeters)}")
         }
         addDataTable(document, summary)
+        if (events.isEmpty()) return
 
         // Anzahl je Kommando
         val countTable = PdfTable.percent(floatArrayOf(50f, 25f, 25f))
@@ -212,15 +226,21 @@ object VoicePDFGenerator {
         }
         document.add(countTable)
 
-        // Ereignisliste: Abstand = Zeit seit dem vorherigen gezählten Kommando
-        val eventTable = PdfTable.percent(floatArrayOf(18f, 30f, 22f, 30f))
+        // Ereignisliste: Abstand/Strecke = Zeit bzw. Weg seit dem vorherigen gezählten Kommando
+        val withDistance = events.any { it.pathMeters >= 0f }
+        val eventTable = PdfTable.percent(
+            if (withDistance) floatArrayOf(13f, 25f, 18f, 18f, 26f) else floatArrayOf(18f, 30f, 22f, 30f)
+        )
             .useAllAvailableWidth()
             .setMarginBottom(10f)
-        listOf("Zeit", "Kommando", "Abstand", "Hinweis").forEach { header ->
+        val headers = if (withDistance) listOf("Zeit", "Kommando", "Abstand", "Strecke", "Hinweis")
+        else listOf("Zeit", "Kommando", "Abstand", "Hinweis")
+        headers.forEach { header ->
             eventTable.addCell(PdfCell().add(PdfParagraph(header).setBold()).setPadding(5f))
         }
         var previousCounted: Long? = null
-        events.sortedBy { it.timestamp }.forEach { e ->
+        val legs = CommandStats.legMeters(events)
+        events.sortedBy { it.timestamp }.forEachIndexed { index, e ->
             val totalSeconds = e.timestamp / 1000
             val time = String.format(Locale.GERMAN, "%d:%02d", totalSeconds / 60, totalSeconds % 60)
             val interval = if (e.counted && previousCounted != null) germanSeconds(e.timestamp - previousCounted!!) else "–"
@@ -230,6 +250,9 @@ object VoicePDFGenerator {
             eventTable.addCell(PdfParagraph(time).setPadding(5f))
             eventTable.addCell(PdfParagraph(e.name).setPadding(5f))
             eventTable.addCell(PdfParagraph(interval).setPadding(5f))
+            if (withDistance) {
+                eventTable.addCell(PdfParagraph(legs[index]?.let { formatMeters(it) } ?: "–").setPadding(5f))
+            }
             eventTable.addCell(PdfParagraph(note).setPadding(5f))
         }
         document.add(eventTable)

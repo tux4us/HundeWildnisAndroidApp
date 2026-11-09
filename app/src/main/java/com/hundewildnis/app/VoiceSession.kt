@@ -65,7 +65,10 @@ data class VoiceSession(
     val dataPoints: List<FrequencyPoint> = emptyList(),
 
     // Während der Messung erkannte Kommandos (leer bei älteren Sessions oder ausgeschalteter Erkennung)
-    val commandEvents: List<CommandEvent> = emptyList()
+    val commandEvents: List<CommandEvent> = emptyList(),
+
+    // Während der Messung per GPS zurückgelegte Strecke in Metern; -1 = nicht erfasst oder kein Fix
+    val totalDistanceMeters: Float = -1f
 ) {
     /**
      * Effizienz: Prozent der Sprechzeit in harmonischen Bereichen

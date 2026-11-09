@@ -5,15 +5,21 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
+import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -104,6 +110,16 @@ class CommunicationActivity : SecureBaseActivity() {
     private var commandDetectionEnabled = true
     private var matchThreshold = CommandDetector.DEFAULT_ACCEPT_THRESHOLD
 
+    // Wegstrecke (GPS)
+    private val distanceTracker = DistanceTracker()
+    private var gpsEnabled = false                   // Schalter "Wegstrecke erfassen"
+    private var gpsActive = false                    // GPS-Updates laufen in der aktuellen Messung
+    private var gpsUsedInSession = false             // GPS war in der aktuellen Messung aktiv
+    private var sessionStartElapsed = 0L             // SystemClock.elapsedRealtime() bei Messbeginn
+
+    // Hintergrundbetrieb (Vordergrunddienst), Standard: an
+    private var runInBackground = true
+
     // Shimmer-Animator (Glow-Effekt)
     private var shimmerAnimator: ValueAnimator? = null
 
@@ -158,6 +174,11 @@ class CommunicationActivity : SecureBaseActivity() {
         private const val DEFAULT_CMD_MATCH = 80
         private const val MIN_CMD_MATCH = 30
         private const val MAX_CMD_MATCH = 120
+        private const val PREF_CMD_GPS = "cmd_gps"
+        private const val PREF_BACKGROUND = "run_background"
+
+        // GPS: Update je Sekunde (Gehtempo); Fixes mit mehr als 25 m Ungenauigkeit filtert DistanceTracker
+        private const val GPS_INTERVAL_MS = 1000L
 
         // Glow-Farben
         private const val COLOR_CARD_NORMAL = "#6FBF73"
@@ -177,6 +198,27 @@ class CommunicationActivity : SecureBaseActivity() {
         } else {
             Toast.makeText(this, "⚠️ Mikrofon erforderlich", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            gpsEnabled = true
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_CMD_GPS, true).apply()
+        } else {
+            Toast.makeText(this, R.string.comm_gps_permission_denied, Toast.LENGTH_LONG).show()
+            binding.switchCommandGps.isChecked = false   // löst den Listener aus, der den Wert speichert
+        }
+    }
+
+    // Alle Methoden überschrieben: Auf API < 30 sind sie nicht als Default-Methoden vorhanden
+    private val gpsListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) { handleLocation(location) }
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
+        @Deprecated("Deprecated in Java")
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -310,6 +352,11 @@ class CommunicationActivity : SecureBaseActivity() {
         binding.sliderMatchThreshold.value = matchHundredths.toFloat()
         updateMatchThresholdLabel()
 
+        gpsEnabled = prefs.getBoolean(PREF_CMD_GPS, false) && hasLocationPermission()
+        runInBackground = prefs.getBoolean(PREF_BACKGROUND, true)
+        binding.switchCommandGps.isChecked = gpsEnabled
+        binding.switchBackground.isChecked = runInBackground
+
         binding.radioGroupMode.setOnCheckedChangeListener { _, checkedId ->
             trainingMode = if (checkedId == R.id.radioModeFree) TrainingMode.FREE else TrainingMode.FOCUS
             binding.layoutFocusFrequency.visibility =
@@ -348,6 +395,19 @@ class CommunicationActivity : SecureBaseActivity() {
         binding.switchCommandDetection.setOnCheckedChangeListener { _, isChecked ->
             commandDetectionEnabled = isChecked
             getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_CMD_DETECT, isChecked).apply()
+        }
+        binding.switchCommandGps.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked && !hasLocationPermission()) {
+                // Wert wird erst nach erteilter Berechtigung gespeichert (locationPermissionLauncher)
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            } else {
+                gpsEnabled = isChecked
+                getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_CMD_GPS, isChecked).apply()
+            }
+        }
+        binding.switchBackground.setOnCheckedChangeListener { _, isChecked ->
+            runInBackground = isChecked
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(PREF_BACKGROUND, isChecked).apply()
         }
         binding.sliderMatchThreshold.addOnChangeListener { _, value, _ ->
             matchThreshold = value / 100f
@@ -457,6 +517,14 @@ class CommunicationActivity : SecureBaseActivity() {
         commandDetector = null
         binding.tvLastRecognition.text = ""
         binding.tvCommandCounts.text = ""
+        binding.tvGpsStatus.text = ""
+
+        // Hintergrundbetrieb und GPS vor dem Mikrofon starten; Zeitbasis für Wegstrecke = Messbeginn
+        sessionStartElapsed = SystemClock.elapsedRealtime()
+        if (runInBackground && !VoiceSessionService.start(this, gpsEnabled && hasLocationPermission())) {
+            Toast.makeText(this, R.string.comm_bg_failed, Toast.LENGTH_LONG).show()
+        }
+        startGps()
 
         if (soundEnabled) {
             toneGenerator = createToneGenerator()
@@ -501,6 +569,8 @@ class CommunicationActivity : SecureBaseActivity() {
 
     private fun stopRecording() {
         isRecording = false
+        stopGps()
+        VoiceSessionService.stop(this)
         pitchDetector?.stopRecording()
         pitchDetector = null
         commandDetector?.release()
@@ -543,6 +613,8 @@ class CommunicationActivity : SecureBaseActivity() {
         binding.btnFeedbackTest.isEnabled = enabled
         binding.btnLevelTest.isEnabled = enabled
         binding.switchCommandDetection.isEnabled = enabled
+        binding.switchCommandGps.isEnabled = enabled
+        binding.switchBackground.isEnabled = enabled
         // sliderThreshold und sliderMatchThreshold bleiben bewusst aktiv: Live-Anpassung während der Messung
     }
 
@@ -979,7 +1051,8 @@ class CommunicationActivity : SecureBaseActivity() {
             minFrequency = minFreq,
             maxFrequency = maxFreq,
             dataPoints = frequencyDataPoints.toList(),
-            commandEvents = commandEvents.toList()
+            commandEvents = commandEvents.toList(),
+            totalDistanceMeters = if (gpsUsedInSession && distanceTracker.hasFix) distanceTracker.totalMeters else -1f
         )
 
         historyList.add(0, session)
@@ -1050,7 +1123,8 @@ class CommunicationActivity : SecureBaseActivity() {
             binding.tvChartTitle.text = getString(R.string.comm_session_title_format, dateStr)
 
             binding.tvLastRecognition.text = ""
-            binding.tvCommandCounts.text = commandSummaryText(session.commandEvents)
+            binding.tvGpsStatus.text = ""
+            binding.tvCommandCounts.text = commandSummaryText(session.commandEvents, session.totalDistanceMeters)
 
             if (session.dataPoints.isNotEmpty()) {
                 val lastPoint = session.dataPoints.last()
@@ -1256,14 +1330,15 @@ class CommunicationActivity : SecureBaseActivity() {
 
         if (result.accepted && id != null) {
             val counted = commandCounter.register(id, recognition.onsetMs)
+            val pathMeters = if (gpsUsedInSession) distanceTracker.metersAt(recognition.onsetMs) ?: -1f else -1f
             commandEvents.add(
-                CommandEvent(id, name, recognition.onsetMs, counted, result.bestDistance)
+                CommandEvent(id, name, recognition.onsetMs, counted, result.bestDistance, pathMeters)
             )
             binding.tvLastRecognition.text = getString(
                 if (counted) R.string.comm_cmd_last_counted else R.string.comm_cmd_last_repeat,
                 name, result.bestDistance
             )
-            binding.tvCommandCounts.text = commandSummaryText(commandEvents)
+            binding.tvCommandCounts.text = commandSummaryText(commandEvents, liveDistanceMeters())
         } else if (result.bestDistance <= matchThreshold && result.secondName != null) {
             // Distanz reicht, aber ein zweites Kommando liegt zu nah → keine sichere Zuordnung
             binding.tvLastRecognition.text = getString(
@@ -1277,28 +1352,116 @@ class CommunicationActivity : SecureBaseActivity() {
         }
     }
 
-    /** Mehrzeilige Zusammenfassung (Anzahl je Kommando, Wiederholungen, Abstände); leer ohne Ereignisse. */
-    private fun commandSummaryText(events: List<CommandEvent>): String {
-        if (events.isEmpty()) return ""
-        val stats = CommandStats.from(events)
-        val lines = mutableListOf(
-            getString(R.string.comm_cmd_summary_totals, stats.totalCounted, stats.totalIgnored)
-        )
-        for (c in stats.perCommand) {
-            lines.add(
-                if (c.ignored > 0) getString(R.string.comm_cmd_summary_item_repeats, c.name, c.counted, c.ignored)
-                else getString(R.string.comm_cmd_summary_item, c.name, c.counted)
-            )
-        }
-        if (stats.intervalCount > 0) {
-            lines.add(
-                getString(
-                    R.string.comm_cmd_summary_interval,
-                    stats.meanIntervalMs / 1000f, stats.minIntervalMs / 1000f, stats.maxIntervalMs / 1000f
+    /**
+     * Mehrzeilige Zusammenfassung (Anzahl je Kommando, Wiederholungen, Abstände, Wegstrecke);
+     * leer ohne Ereignisse und ohne Wegstrecke. [totalMeters] < 0: keine Wegstrecke erfasst.
+     */
+    private fun commandSummaryText(events: List<CommandEvent>, totalMeters: Float = -1f): String {
+        if (events.isEmpty() && totalMeters < 0f) return ""
+        val lines = mutableListOf<String>()
+        if (events.isNotEmpty()) {
+            val stats = CommandStats.from(events)
+            lines.add(getString(R.string.comm_cmd_summary_totals, stats.totalCounted, stats.totalIgnored))
+            for (c in stats.perCommand) {
+                lines.add(
+                    if (c.ignored > 0) getString(R.string.comm_cmd_summary_item_repeats, c.name, c.counted, c.ignored)
+                    else getString(R.string.comm_cmd_summary_item, c.name, c.counted)
                 )
-            )
+            }
+            if (stats.intervalCount > 0) {
+                lines.add(
+                    getString(
+                        R.string.comm_cmd_summary_interval,
+                        stats.meanIntervalMs / 1000f, stats.minIntervalMs / 1000f, stats.maxIntervalMs / 1000f
+                    )
+                )
+            }
+            if (stats.legCount > 0) {
+                lines.add(
+                    getString(
+                        R.string.comm_gps_summary_legs,
+                        formatMeters(stats.meanLegMeters), formatMeters(stats.minLegMeters), formatMeters(stats.maxLegMeters)
+                    )
+                )
+            }
+        }
+        if (totalMeters >= 0f) {
+            lines.add(getString(R.string.comm_gps_summary_total, formatMeters(totalMeters)))
         }
         return lines.joinToString("\n")
+    }
+
+    /** Meter unter 1000 als ganze Meter, darüber als Kilometer mit zwei Nachkommastellen. */
+    private fun formatMeters(meters: Float): String =
+        if (meters < 1000f) getString(R.string.comm_gps_meters, meters.roundToInt())
+        else getString(R.string.comm_gps_kilometers, meters / 1000f)
+
+    // ─────────────────────────────────────────────────────────────
+    // Wegstrecke (GPS)
+    // ─────────────────────────────────────────────────────────────
+
+    private fun hasLocationPermission(): Boolean =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+
+    /** Gesamtstrecke der laufenden Messung oder -1, wenn GPS nicht läuft bzw. noch kein Fix vorliegt. */
+    private fun liveDistanceMeters(): Float =
+        if (gpsUsedInSession && distanceTracker.hasFix) distanceTracker.totalMeters else -1f
+
+    @SuppressLint("MissingPermission")
+    private fun startGps() {
+        distanceTracker.reset()
+        gpsActive = false
+        gpsUsedInSession = false
+        if (!gpsEnabled) return
+
+        if (!hasLocationPermission()) {
+            Toast.makeText(this, R.string.comm_gps_permission_denied, Toast.LENGTH_LONG).show()
+            return
+        }
+        try {
+            val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Toast.makeText(this, R.string.comm_gps_disabled, Toast.LENGTH_LONG).show()
+                return
+            }
+            manager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, GPS_INTERVAL_MS, 0f, gpsListener, Looper.getMainLooper()
+            )
+            gpsActive = true
+            gpsUsedInSession = true
+            binding.tvGpsStatus.text = getString(R.string.comm_gps_waiting)
+        } catch (e: Exception) {
+            Log.w(TAG, "GPS nicht verfügbar: ${e.message}")
+            Toast.makeText(this, R.string.comm_gps_failed, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun stopGps() {
+        if (!gpsActive) return
+        gpsActive = false
+        try {
+            (getSystemService(Context.LOCATION_SERVICE) as LocationManager).removeUpdates(gpsListener)
+        } catch (e: Exception) {
+            Log.w(TAG, "GPS-Stopp: ${e.message}")
+        }
+    }
+
+    private fun handleLocation(location: Location) {
+        if (!isRecording || !gpsActive) return
+        // Zeit relativ zum Messbeginn; Fixes aus der Zeit davor (zwischengespeichert) verwerfen
+        val timeMs = location.elapsedRealtimeNanos / 1_000_000L - sessionStartElapsed
+        if (timeMs < 0L) return
+        val used = distanceTracker.addFix(
+            timeMs,
+            location.latitude,
+            location.longitude,
+            if (location.hasAccuracy()) location.accuracy else 0f,
+            if (location.hasSpeed()) location.speed else -1f
+        )
+        if (used) {
+            binding.tvGpsStatus.text = getString(R.string.comm_gps_live, formatMeters(distanceTracker.totalMeters))
+        }
     }
 
     // ─────────────────────────────────────────────────────────────

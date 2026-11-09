@@ -13,6 +13,8 @@
     <!-- Foreground Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- Sprach-Trainer: Messung bei ausgeschaltetem Bildschirm / Handy in der Tasche (Typ microphone) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <!-- Podcast-Wiedergabe im Hintergrund (Vordergrunddienst vom Typ mediaPlayback) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -228,13 +230,19 @@
             android:parentActivityName="com.hundewildnis.app.StartActivity"
             android:theme="@style/Theme.HundeWildnis" />
 
-        <!-- In AndroidManifest.xml direkt NACH dem <activity>-Block von CommunicationActivity einfügen: -->
         <activity
             android:name="com.hundewildnis.app.CommandListActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:parentActivityName="com.hundewildnis.app.CommunicationActivity"
             android:theme="@style/Theme.HundeWildnis" />
+
+        <!-- Service: Sprach-Trainer im Hintergrund (Mikrofon, optional Standort) -->
+        <service
+            android:name="com.hundewildnis.app.VoiceSessionService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="microphone|location" />
 
         <activity
             android:name="com.hundewildnis.app.SoundLevelActivity"
