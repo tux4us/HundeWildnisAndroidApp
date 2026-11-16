@@ -129,6 +129,22 @@ object BackupManager {
                 }
             }
 
+            // Fotos der Gesundheitsbeobachtungen kopieren
+            dogs.forEach { dog ->
+                dog.healthObservations.forEach { obs ->
+                    obs.photoUris.forEachIndexed { photoIndex, uriString ->
+                        try {
+                            val photoFile = File(photosInZipDir, "health_${obs.id}_${photoIndex}.jpg")
+                            if (copyUriToFile(context, Uri.parse(uriString), photoFile)) {
+                                photoMapping[uriString] = "${PHOTOS_DIR}/${photoFile.name}"
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Fehler beim Kopieren von Gesundheitsfoto: ${e.message}")
+                        }
+                    }
+                }
+            }
+
             // Timeline-Fotos (eigene Einträge) kopieren
             dogs.forEach { dog ->
                 dog.timelineEntries.forEach { entry ->
@@ -318,6 +334,7 @@ object BackupManager {
         }
         dogs.forEach { if (it.photoUri.isNotEmpty()) addPhotoFingerprint(it.photoUri) }
         dogs.forEach { dog -> dog.timelineEntries.forEach { if (it.photoUri.isNotEmpty()) addPhotoFingerprint(it.photoUri) } }
+        dogs.forEach { dog -> dog.healthObservations.forEach { obs -> obs.photoUris.forEach { addPhotoFingerprint(it) } } }
         notes?.forEach { note -> note.photoUris.forEach { addPhotoFingerprint(it) } }
         emergencyReports?.forEach { report -> report.photoUris.forEach { addPhotoFingerprint(it) } }
         plantPhotoMap.forEach { (_, paths) -> paths.forEach { addPhotoFingerprint(it) } }
@@ -422,7 +439,7 @@ object BackupManager {
                         if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri))
                             dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
                         else dog
-                    }.map { it.remapTimelinePhotos(restoredPhotoMapping) },
+                    }.map { it.remapTimelinePhotos(restoredPhotoMapping).remapHealthPhotos(restoredPhotoMapping) },
                     existing = existing
                 )
                 existing.forEach { DogProfileManager.deleteProfile(context, it.id) }
@@ -435,7 +452,10 @@ object BackupManager {
                     val restoredDog = if (dog.photoUri.isNotEmpty() && restoredPhotoMapping.containsKey(dog.photoUri)) {
                         dog.copy(photoUri = restoredPhotoMapping[dog.photoUri]!!)
                     } else dog
-                    DogProfileManager.saveProfile(context, restoredDog.remapTimelinePhotos(restoredPhotoMapping))
+                    DogProfileManager.saveProfile(
+                        context,
+                        restoredDog.remapTimelinePhotos(restoredPhotoMapping).remapHealthPhotos(restoredPhotoMapping)
+                    )
                 }
             }
 
@@ -657,6 +677,7 @@ object BackupManager {
             DogProfileManager.getAllProfiles(context).forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
             DogProfileManager.getAllProfiles(context).forEach { dog ->
                 dog.timelineEntries.forEach { if (it.photoUri.isNotEmpty()) activeUris.add(it.photoUri) }
+                dog.healthObservations.forEach { obs -> activeUris.addAll(obs.photoUris) }
             }
             collectNotes(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
             collectEmergencyReports(context)?.forEach { it.photoUris.forEach { uri -> activeUris.add(uri) } }
@@ -909,6 +930,15 @@ object BackupManager {
                         val photoFile = File(photosInZipDir, "dog_${index}_${timestamp}.jpg")
                         if (copyUriToFile(context, Uri.parse(dog.photoUri), photoFile)) {
                             photoMapping[dog.photoUri] = "${PHOTOS_DIR}/${photoFile.name}"
+                        }
+                    }
+                    // Fotos der Gesundheitsbeobachtungen
+                    dog.healthObservations.forEach { obs ->
+                        obs.photoUris.forEachIndexed { photoIndex, uriString ->
+                            val obsPhoto = File(photosInZipDir, "health_${obs.id}_${photoIndex}.jpg")
+                            if (copyUriToFile(context, Uri.parse(uriString), obsPhoto)) {
+                                photoMapping[uriString] = "${PHOTOS_DIR}/${obsPhoto.name}"
+                            }
                         }
                     }
                     // Timeline-Fotos (eigene Einträge)
@@ -1240,7 +1270,7 @@ object BackupManager {
             if (profile.photoUri.isNotEmpty() && photoMapping.containsKey(profile.photoUri)) {
                 profile.copy(photoUri = photoMapping[profile.photoUri]!!)
             } else profile
-        }.map { it.remapTimelinePhotos(photoMapping) }
+        }.map { it.remapTimelinePhotos(photoMapping).remapHealthPhotos(photoMapping) }
 
         when (mode) {
             MergeMode.ADD_NEW -> {

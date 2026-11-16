@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/gl_bar"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Zeitraum -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_period"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_form_start"
+                        android:textColor="@color/rd_text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvHealthStart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="@string/tap_to_select"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                        app:drawableTint="?android:attr/textColorPrimary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_form_end"
+                        android:textColor="@color/rd_text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvHealthEnd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="@string/tap_to_select_optional"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                        app:drawableTint="?android:attr/textColorPrimary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Status -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_status"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <RadioGroup
+                android:id="@+id/rgHealthStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Kategorie -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_category"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <Spinner
+                android:id="@+id/spHealthCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Symptome (dynamisch je Kategorie) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_symptoms"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:id="@+id/llHealthSymptoms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Schweregrad -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_severity"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <RadioGroup
+                android:id="@+id/rgHealthSeverity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Notizen -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_notes"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/etHealthNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/health_form_notes_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Fotos -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_photos"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="6dp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/llHealthPhotos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/tvHealthPhotosHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_photos_hint"
+                android:textSize="12sp"
+                android:alpha="0.6"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/btnAddHealthPhoto"
+                style="@style/Widget.App.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_photo_add"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Tierarzt -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/rd_surface_alt"
+                android:layout_marginBottom="12dp" />
+
+            <Switch
+                android:id="@+id/switchHealthVet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_vet_switch"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/llHealthVet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/etHealthVetNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/health_form_vet_hint"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColorHint="?android:attr/textColorSecondary"
+                    android:inputType="textMultiLine"
+                    android:minLines="2"
+                    android:gravity="top"
+                    android:layout_marginBottom="16dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSaveHealth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_save"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.App.Button" />
+
+            <Button
+                android:id="@+id/btnDeleteHealth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/health_form_delete"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp"
+                style="@style/Widget.App.Button.Danger" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

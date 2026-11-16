@@ -98,6 +98,13 @@ data class DogProfile(
     /** Nachträglich gesetzte Standorte für Timeline-Ereignisse (siehe TimelineLocation.kt). */
     var timelineLocations: List<TimelineLocation> = emptyList(),
 
+    // ═══════════════════════════════════════════════════════════
+    // GESUNDHEITSKALENDER
+    // Beobachtungen (siehe HealthObservationEntry). Notfallmeldungen
+    // bleiben separat in "emergency_history" und werden nur eingeblendet.
+    // ═══════════════════════════════════════════════════════════
+    var healthObservations: List<HealthObservationEntry> = emptyList(),
+
     // lastModified bleibt das letzte Feld (bereits vorhanden):
     var lastModified: Long = 0L
 

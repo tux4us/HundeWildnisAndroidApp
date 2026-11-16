@@ -582,6 +582,74 @@
 
             </LinearLayout>
 
+            <!-- ════════ GESUNDHEITSKALENDER ════════ -->
+            <LinearLayout
+                android:id="@+id/llHealthSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/health_section_header"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
+
+                <com.hundewildnis.app.GlassCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="8dp"
+                    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/tvHealthSummary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.hundewildnis.app.GlassCardView>
+
+                <LinearLayout
+                    android:id="@+id/llHealthList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btnAddHealth"
+                    style="@style/Widget.App.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/health_btn_add"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btnOpenHealthCalendar"
+                    style="@style/Widget.App.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/health_btn_open_all"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+
 
 
         </LinearLayout>

@@ -7,7 +7,7 @@ import android.content.Context
 //
 // Die Timeline speichert nichts. Sie ist eine reine Sicht auf die
 // vorhandenen Daten (Training, Nasenarbeit, Spiel & Spaß, Intervall-
-// Timer, Vitalwerte, Läufigkeit, Beginn der gemeinsamen Zeit).
+// Timer, Vitalwerte, Läufigkeit, Gesundheitsbeobachtungen, Beginn der gemeinsamen Zeit).
 // Die Klassen werden nicht mit Gson serialisiert und brauchen daher
 // keine ProGuard-Regeln.
 // ════════════════════════════════════════════════════════════════
@@ -25,6 +25,7 @@ enum class TimelineCategory(
     INTERVALL("⏱️", 3, true),
     VITAL("❤️", 4, true),
     HEAT("🌸", 5, true),
+    HEALTH("🩺", 4, true),
     EIGENE("📌", 2, true),
     START("🏁", 0, false);
 
@@ -36,6 +37,7 @@ enum class TimelineCategory(
             INTERVALL -> R.string.timeline_cat_intervall
             VITAL -> R.string.timeline_cat_vital
             HEAT -> R.string.timeline_cat_heat
+            HEALTH -> R.string.timeline_cat_health
             EIGENE -> R.string.timeline_cat_eigene
             START -> R.string.timeline_cat_start
         }
@@ -46,7 +48,7 @@ enum class TimelineCategory(
  * Ein Eintrag der Timeline.
  *
  * @param payload quellenabhängige Referenz für das Öffnen der Detailansicht:
- *  TRAINING = Kategorie-ID, NASENARBEIT/VITAL/HEAT/INTERVALL = Datensatz-ID,
+ *  TRAINING = Kategorie-ID, NASENARBEIT/VITAL/HEAT/HEALTH/INTERVALL = Datensatz-ID,
  *  SPIEL = "aktivitaetId|ORT", EIGENE = ID des eigenen Eintrags, START = leer.
  * @param hasTime false bei reinen Datumsangaben (Läufigkeit, eigene Einträge, Beginn der gemeinsamen Zeit).
  * @param icon überschreibt das Symbol der Kategorie (eigene Einträge: Symbol der Eintragsart).

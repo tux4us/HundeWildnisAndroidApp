@@ -16,6 +16,11 @@ class DogViewActivity : SecureBaseActivity() {
 
     private lateinit var binding: ActivityDogViewBinding
 
+    private companion object {
+        /** Anzahl der Einträge des Gesundheitskalenders in der Stammdatenansicht. */
+        const val HEALTH_PREVIEW_COUNT = 5
+    }
+
     // Profil-ID für Reload nach Rückkehr aus HeatCycleActivity
     private var profileId: String = ""
 
@@ -28,6 +33,15 @@ class DogViewActivity : SecureBaseActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             reloadAndRefresh()
+        }
+    }
+
+    // Launcher für HealthObservationActivity / HealthCalendarActivity
+    private val healthLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            DogProfileManager.getProfile(this, profileId)?.let { displayHealthSection(it) }
         }
     }
 
@@ -63,6 +77,7 @@ class DogViewActivity : SecureBaseActivity() {
                 displayTogetherSection(fresh)
                 displayVitalSection(fresh)
                 displayHeatCycleSection(fresh)
+                displayHealthSection(fresh)
             }
         }
     }
@@ -141,6 +156,9 @@ class DogViewActivity : SecureBaseActivity() {
 
         // Läufigkeit
         displayHeatCycleSection(p)
+
+        // Gesundheitskalender
+        displayHealthSection(p)
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -353,6 +371,51 @@ class DogViewActivity : SecureBaseActivity() {
         // Button-Farbe ans Theme anpassen
         val accentColor = Color.WHITE
         binding.btnAddHeatCycle.setTextColor(accentColor)
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // GESUNDHEITSKALENDER — ABSCHNITT
+    // Beobachtungen + eingeblendete Notfallmeldungen (nur Anzeige).
+    // ════════════════════════════════════════════════════════════════
+
+    private fun displayHealthSection(p: DogProfile) {
+        binding.tvHealthSummary.text = HealthObservationManager.summaryLabel(this, p)
+
+        binding.llHealthList.removeAllViews()
+        val items = HealthObservationManager.calendarItems(this, p)
+        if (items.isEmpty()) {
+            binding.llHealthList.addView(
+                HealthCalendarUi.infoText(this, getString(R.string.health_empty_hint))
+            )
+        } else {
+            items.take(HEALTH_PREVIEW_COUNT).forEach { item ->
+                binding.llHealthList.addView(
+                    HealthCalendarUi.buildRow(
+                        context = this,
+                        item = item,
+                        onObservationClick = {
+                            HealthObservationActivity.startForEdit(this, p.id, it, healthLauncher)
+                        },
+                        onEmergencyClick = { HealthCalendarUi.openEmergencyPdf(this, it) }
+                    )
+                )
+            }
+        }
+
+        binding.btnAddHealth.setOnClickListener {
+            HealthObservationActivity.startForNew(this, p.id, healthLauncher)
+        }
+
+        // "Alle anzeigen" nur, wenn mehr Einträge vorhanden sind als die Vorschau zeigt
+        binding.btnOpenHealthCalendar.visibility =
+            if (items.size > HEALTH_PREVIEW_COUNT) View.VISIBLE else View.GONE
+        binding.btnOpenHealthCalendar.setOnClickListener {
+            healthLauncher.launch(
+                Intent(this, HealthCalendarActivity::class.java)
+                    .putExtra(HealthCalendarActivity.EXTRA_DOG_ID, p.id)
+                    .putExtra(HealthCalendarActivity.EXTRA_DOG_NAME, p.name)
+            )
+        }
     }
 
     // ════════════════════════════════════════════════════════════════

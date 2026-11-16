@@ -262,8 +262,16 @@ class EmergencyActivity : SecureBaseActivity() {
 
     private fun saveHistory() {
         val prefs = getSharedPreferences("emergency_history", Context.MODE_PRIVATE)
-        val json = Gson().toJson(historyList)
-        prefs.edit().putString("reports", json).apply()
+        // historyList enthält nur die Meldungen des aktuellen Hundes (siehe loadHistory).
+        // Die Meldungen aller anderen Hunde müssen erhalten bleiben und werden daher
+        // aus dem gespeicherten Bestand übernommen.
+        val type = object : TypeToken<List<EmergencyReport>>() {}.type
+        val stored: List<EmergencyReport> = prefs.getString("reports", null)
+            ?.let { runCatching { Gson().fromJson<List<EmergencyReport>>(it, type) }.getOrNull() }
+            .orEmpty()
+        val currentDogId = profile?.id
+        val otherDogs = stored.filter { it.dogId != currentDogId }
+        prefs.edit().putString("reports", Gson().toJson(otherDogs + historyList)).apply()
     }
 
     private fun loadHistory() {

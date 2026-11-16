@@ -444,6 +444,11 @@ class TimelineActivity : SecureBaseActivity() {
                 val entry = fresh.heatCycles.find { it.id == event.payload } ?: return
                 HeatCycleActivity.startForEdit(this, profile.id, entry, heatLauncher)
             }
+            TimelineCategory.HEALTH -> {
+                val fresh = DogProfileManager.getProfile(this, profile.id) ?: return
+                val entry = fresh.healthObservations.find { it.id == event.payload } ?: return
+                HealthObservationActivity.startForEdit(this, profile.id, entry, heatLauncher)
+            }
             TimelineCategory.EIGENE -> startActivity(
                 Intent(this, TimelineEntryActivity::class.java).apply {
                     putExtra("profile", profile)

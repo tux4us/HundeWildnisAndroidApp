@@ -28,6 +28,7 @@ object TimelineRepository {
         events += safe { vitalEvents(context, dogId) }
         if (profile != null) {
             events += safe { heatEvents(context, profile) }
+            events += safe { healthEvents(context, profile) }
             events += safe { userEvents(context, profile) }
             events += safe { startEvents(context, profile) }
         }
@@ -179,6 +180,55 @@ object TimelineRepository {
                     title = context.getString(R.string.timeline_heat_end),
                     subtitle = subtitle,
                     payload = entry.id
+                )
+            }
+        }
+        return result
+    }
+
+    /**
+     * Gesundheitsbeobachtungen: ein Eintrag für den Beginn, ein weiterer für das Ende
+     * (nur wenn gesetzt, d. h. Status "abgeklungen"). Das erste Foto wird als Vorschau übernommen.
+     */
+    private fun healthEvents(context: Context, profile: DogProfile): List<TimelineEvent> {
+        val result = mutableListOf<TimelineEvent>()
+        for (entry in profile.healthObservations) {
+            val category = HealthCategory.fromCode(entry.category)
+            val severity = HealthSeverity.fromCode(entry.severity)
+            val symptoms = entry.symptoms
+                .mapNotNull { HealthSymptom.fromCode(it) }
+                .joinToString(", ") { context.getString(it.labelRes) }
+            val head = context.getString(
+                R.string.timeline_health_subtitle_format,
+                context.getString(category.labelRes),
+                context.getString(severity.labelRes)
+            )
+            val subtitle = if (symptoms.isNotEmpty()) "$head: $symptoms" else head
+            val plain = if (entry.notes.isNotEmpty()) "$subtitle – ${entry.notes}" else subtitle
+
+            parseDate(entry.startDate)?.let { ts ->
+                result += TimelineEvent(
+                    id = "health_start_${entry.id}",
+                    timestamp = ts,
+                    hasTime = false,
+                    category = TimelineCategory.HEALTH,
+                    title = context.getString(R.string.timeline_health_start),
+                    subtitle = subtitle,
+                    payload = entry.id,
+                    photoUri = entry.photoUris.firstOrNull().orEmpty(),
+                    plain = plain
+                )
+            }
+            parseDate(entry.endDate)?.let { ts ->
+                result += TimelineEvent(
+                    id = "health_end_${entry.id}",
+                    timestamp = ts,
+                    hasTime = false,
+                    category = TimelineCategory.HEALTH,
+                    title = context.getString(R.string.timeline_health_end),
+                    subtitle = subtitle,
+                    payload = entry.id,
+                    plain = plain
                 )
             }
         }

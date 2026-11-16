@@ -34,6 +34,11 @@
         name="timeline_photos"
         path="timeline_photos/" />
 
+    <!-- Gesundheitskalender: Fotos der Beobachtungen -->
+    <files-path
+        name="health_photos"
+        path="health_photos/" />
+
     <!-- Verkleinerte Fotos: Hundeprofil, Tagesnotizen, Notfallmeldungen -->
     <files-path
         name="user_photos"

@@ -404,6 +404,15 @@
             android:label="Läufigkeit"
             android:parentActivityName=".DogViewActivity" />
 
+        <activity
+            android:name=".HealthObservationActivity"
+            android:label="@string/health_form_title_new"
+            android:parentActivityName=".DogViewActivity" />
+
+        <activity
+            android:name=".HealthCalendarActivity"
+            android:parentActivityName=".DogViewActivity" />
+
 
         <!-- ════════════════════════════════════════════════ -->
         <!-- ✅ NASENARBEIT                                  -->
