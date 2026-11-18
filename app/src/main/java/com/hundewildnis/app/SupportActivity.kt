@@ -49,7 +49,8 @@ class SupportActivity : SecureBaseActivity() {
     private fun setupGrids() {
         // Geld
         val moneyTiles = listOf(
-            StartTile("support_paypal", R.drawable.ic_heart_support, "PayPal")
+            StartTile("support_paypal", R.drawable.ic_heart_support, "PayPal"),
+            StartTile("support_buymeacoffee", R.drawable.ic_coffee_support, "Buy Me a Coffee")
         )
 
         val colorsMoney = StartGroupColors.forGroup(this, 2) // Grün
@@ -80,6 +81,7 @@ class SupportActivity : SecureBaseActivity() {
     private fun handleTileClick(tileId: String) {
         when (tileId) {
             "support_paypal" -> openUrl("https://www.paypal.com/paypalme/wildnishunde")
+            "support_buymeacoffee" -> openUrl("https://buymeacoffee.com/tux4us")
             "support_rate" -> rateApp()
             "support_share" -> shareApp()
         }

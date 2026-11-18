@@ -2563,7 +2563,7 @@
     <string name="instr_backup_title">📦 Backup</string>
     <string name="instr_backup_desc">Back up your data regularly.\n• Menu → “Create Backup” creates a backup file in Downloads/HundeWildnis_Backups and offers to share it. It includes profiles, notes, photos, statistics and further app data.\n• Menu → “Import Backup”: choose a file. Before restoring you choose the mode: Add, Replace or Merge. This is also how you transfer your data to other devices.\n• The “Backup” tile additionally offers synchronisation with your own WebDAV server and cleaning up storage.</string>
     <string name="instr_support_title">💛 Support</string>
-    <string name="instr_support_desc">You can voluntarily support the development of the app with an amount of your choice via PayPal. You receive no consideration and no additional functions for this. The app remains free. You can also rate the app and recommend it to others.</string>
+    <string name="instr_support_desc">You can voluntarily support the development of the app with an amount of your choice via PayPal or Buy Me a Coffee. You receive no consideration and no additional functions for this. The app remains free. You can also rate the app and recommend it to others.</string>
     <string name="instr_bottom_nav_title">Bottom navigation bar</string>
     <string name="instr_bottom_nav_desc">Open at any time:\n• Start: tile start page\n• Courses: course overview\n• Emergency: opens the first-aid assistant directly</string>
     <string name="instr_top_menu_title">Top menu</string>
@@ -5899,6 +5899,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         </p>
         <ul>
         <li><b>Donation via PayPal:</b> The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider&#39;s policy applies: <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
+        <li><b>Donation via Buy Me a Coffee:</b> The app contains a link to buymeacoffee.com for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to the provider; the provider&#39;s privacy policy applies.</li>
         <li><b>Map links:</b> Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.</li>
         <li><b>Rating and sharing the app:</b> Rating opens the app store installed on your device or the project page in the browser. The share text contains a link to the project page.</li>
         </ul>
@@ -5918,6 +5919,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         <li>WebDAV server of your choice: synchronisation; data, credentials, IP address</li>
         <li>Feed and podcast servers of your choice: retrieve articles and audio; IP address, requested address, app identifier</li>
         <li>PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app</li>
+        <li>Buy Me a Coffee: voluntary donation via a link; IP address, depending on what you do in the browser</li>
         </ul>
         <p>All connections are encrypted via HTTPS.</p>
 
@@ -5926,7 +5928,7 @@ For searching nearby places and for surroundings data on the map, the app querie
         Because the provider receives no personal data from you through the app, the provider cannot give you information about stored data and cannot correct or delete any data. You can view, change and delete the data on your device yourself.
         </p>
         <p>
-        For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, feed and podcast servers, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
+        For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, Buy Me a Coffee, your WebDAV server, feed and podcast servers, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
         </p>
         <p>
         You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR).
@@ -5944,7 +5946,9 @@ For searching nearby places and for surroundings data on the map, the app querie
     </string>
 
     <!-- Version und Support Popup -->
-    <string name="version_support">The HundeWildnis app is the result of many hours of work and a great deal of passion – for you and your dogs.\nThanks to your feedback, we’re constantly developing the app further.\nTo ensure we can continue to offer the app for free in the future, we need your support.\n🤝 Every contribution – especially regular ones – is a huge encouragement for our work.\n\nThank you very much for your support 💚\nManuela and Jörg\n\nOf course, you can still use the app even if you don’t support us. 😇</string>
+    <string name="version_support_headline">HundeWildnis stays free.</string>
+    <string name="version_support">A voluntary donation – one-time or recurring – secures further development and keeps the app ad-free.\n\nThank you 💚\nManuela and Jörg</string>
+    <string name="version_support_note">Of course, you can use the app without donating.</string>
 
     <!-- Feed und Podcasts -->
     <string name="feed_title">Feed</string>

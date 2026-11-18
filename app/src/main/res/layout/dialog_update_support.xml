@@ -10,9 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="🎉"
-        android:textSize="@dimen/text_body_medium"
-        android:layout_marginBottom="16dp" />
+        android:text="💚"
+        android:textSize="40sp"
+        android:layout_marginBottom="8dp" />
 
     <!-- Titel -->
     <TextView
@@ -20,10 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Neue Version verfügbar!"
-        android:textSize="@dimen/text_body_medium"
+        android:textSize="@dimen/text_body_large"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="4dp" />
 
     <!-- Versionsnummer -->
     <TextView
@@ -35,7 +35,19 @@
         android:gravity="center"
         android:layout_marginBottom="20dp" />
 
-    <!-- ✅ NEU: ScrollView für langen Text -->
+    <!-- Kernaussage -->
+    <TextView
+        android:id="@+id/tvUpdateHeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/version_support_headline"
+        android:textSize="@dimen/text_headline_large"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginBottom="12dp" />
+
+    <!-- ScrollView als Absicherung für große Schriftgrößen -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,9 +63,21 @@
             android:layout_height="wrap_content"
             android:text="@string/version_support"
             android:textSize="@dimen/text_body_large"
+            android:gravity="center"
             android:lineSpacingMultiplier="1.2" />
 
     </ScrollView>
+
+    <!-- Hinweis -->
+    <TextView
+        android:id="@+id/tvUpdateNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/version_support_note"
+        android:textSize="@dimen/text_body_medium"
+        android:alpha="0.8"
+        android:gravity="center"
+        android:layout_marginTop="12dp" />
 
     <!-- Spacer -->
     <View
@@ -73,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💝 Ich möchte unterstützen"
-            android:textSize="@dimen/text_body_medium"
+            android:textSize="@dimen/text_body_large"
             android:textStyle="bold"
             style="@style/Widget.App.Button"
             android:layout_marginBottom="12dp" />

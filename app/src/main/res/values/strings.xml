@@ -99,7 +99,9 @@
     </string>
 
     <!-- Version und Support Popup -->
-    <string name="version_support">Die App HundeWildnis entsteht in vielen Stunden Arbeit und mit großer Leidenschaft – für Euch und Eure Hunde.\nDank Eurem Feedback entwickeln wir die App immer weiter.\nDamit wir die App auch künftig kostenlos anbieten können brauchen wir Deine Unterstützung.\n🤝 Jeder, gern auch regelmäßiger Beitrag ist eine große Wertschätzung für unsere Arbeit.\n\nVielen Dank für Deine Unterstützung 💚\nManuela und Jörg\n\nNatürlich kannst Du die App, auch ohne uns zu unterstützen, nutzen. 😇</string>
+    <string name="version_support_headline">HundeWildnis bleibt kostenlos.</string>
+    <string name="version_support">Mit einer freiwilligen Spende – einmalig oder regelmäßig – sicherst Du Weiterentwicklung und Werbefreiheit.\n\nDanke 💚\nManuela und Jörg</string>
+    <string name="version_support_note">Die App nutzt Du selbstverständlich auch ohne Spende.</string>
 
     <!-- Social Media -->
     <string name="spotify_username">HundeWildnis Podcast</string>
@@ -2730,7 +2732,7 @@
     <string name="instr_backup_title">📦 Backup</string>
     <string name="instr_backup_desc">Sichere Deine Daten regelmäßig.\n• Menü → „Backup erstellen“ legt eine Sicherungsdatei in Downloads/HundeWildnis_Backups an und bietet das Teilen an. Sie umfasst Profile, Notizen, Fotos, Statistiken und weitere App-Daten.\n• Menü → „Backup importieren“: Datei wählen. Vor der Wiederherstellung wählst Du die Art: Hinzufügen, Ersetzen oder Zusammenführen. So überträgst Du Deine Daten auch auf weitere Geräte.\n• Die Kachel „Backup“ bietet zusätzlich die Synchronisation mit Deinem eigenen WebDAV-Server und das Bereinigen von Speicher.</string>
     <string name="instr_support_title">💛 Unterstützung</string>
-    <string name="instr_support_desc">Du kannst die Entwicklung der App freiwillig mit einem Betrag Deiner Wahl über PayPal unterstützen. Du erhältst dafür keine Gegenleistung und keine zusätzlichen Funktionen. Die App bleibt kostenlos. Außerdem kannst Du die App bewerten und weiterempfehlen.</string>
+    <string name="instr_support_desc">Du kannst die Entwicklung der App freiwillig mit einem Betrag Deiner Wahl über PayPal oder Buy Me a Coffee unterstützen. Du erhältst dafür keine Gegenleistung und keine zusätzlichen Funktionen. Die App bleibt kostenlos. Außerdem kannst Du die App bewerten und weiterempfehlen.</string>
     <string name="instr_bottom_nav_title">Navigationsleiste unten</string>
     <string name="instr_bottom_nav_desc">Rufe jederzeit auf:\n• Start: Kachel-Startseite\n• Kurse: Kursübersicht\n• Notfall: öffnet direkt den Erste-Hilfe-Assistenten</string>
     <string name="instr_top_menu_title">Menü oben</string>
@@ -5845,6 +5847,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         </p>
         <ul>
         <li><b>Spende über PayPal:</b> Die App enthält einen Link zu PayPal für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
+        <li><b>Spende über Buy Me a Coffee:</b> Die App enthält einen Link zu buymeacoffee.com für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an den Anbieter übertragen (u. a. IP-Adresse); anbieterseitig gilt dessen Datenschutzerklärung.</li>
         <li><b>Karten-Links:</b> Standort-Links zu openstreetmap.org werden nur in Nachrichten eingefügt, die du selbst teilst, oder auf deine Aktion hin im Browser geöffnet.</li>
         <li><b>Bewerten und Teilen der App:</b> Die Bewertung öffnet den auf deinem Gerät installierten App-Store bzw. die Projektseite im Browser. Der Teilen-Text enthält einen Link zur Projektseite.</li>
         </ul>
@@ -5864,6 +5867,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         <li>WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse</li>
         <li>Feed- und Podcast-Server nach deiner Wahl: Artikel und Audio abrufen; IP-Adresse, abgerufene Adresse, App-Kennung</li>
         <li>PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App</li>
+        <li>Buy Me a Coffee: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser</li>
         </ul>
         <p>Alle Verbindungen sind durch HTTPS verschlüsselt.</p>
 
@@ -5872,7 +5876,7 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         Da der Anbieter über die App keine personenbezogenen Daten von dir erhält, kann er dir keine Auskunft über gespeicherte Daten geben und keine Daten berichtigen oder löschen. Die Daten auf deinem Gerät kannst du selbst einsehen, ändern und löschen.
         </p>
         <p>
-        Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Feed- und Podcast-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
+        Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, Buy Me a Coffee, dein WebDAV-Server, Feed- und Podcast-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
         </p>
         <p>
         Du hast außerdem das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO).

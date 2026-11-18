@@ -728,6 +728,7 @@ class StartActivity : BaseBottomNavActivity() {
             setTextColor(textColor)
         }
         dialogView.findViewById<TextView>(R.id.tvUpdateMessage).setTextColor(textColor)
+        dialogView.findViewById<TextView>(R.id.tvUpdateNote).setTextColor(textColor)
 
         // Dialog erstellen
         val dialog = AlertDialog.Builder(this)
