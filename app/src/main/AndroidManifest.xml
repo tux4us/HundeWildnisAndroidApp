@@ -39,6 +39,16 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <!-- Bildschirmausrichtung nicht als zwingende Hardwareanforderung werten
+         (verhindert, dass Google Play aus screenOrientation="portrait" die Feature-Anforderung
+         android.hardware.screen.portrait ableitet) -->
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="false" />
+
     <!-- ✅ MIKROFON Permission -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
