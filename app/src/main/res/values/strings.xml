@@ -107,10 +107,10 @@
     <string name="support_section_free">Kostenlose Unterstützung</string>
     <string name="support_footer">Vielen Dank für Deine Unterstützung! 🐕💚</string>
 
-    <!-- Version und Support Popup -->
-    <string name="version_support_headline">HundeWildnis remains free of charge.</string>
-    <string name="version_support">By making a voluntary donation – whether a one-off or a regular contribution – you’re helping to support the app’s ongoing development and keep it ad-free.\n\nThank you 💚\nManuela and Jörg</string>
-    <string name="version_support_note">The app can, of course, still be used without making a donation.</string>
+    <!-- Popup zu Version und Support -->
+    <string name="version_support_headline">HundeWildnis bleibt weiterhin kostenlos.</string>
+    <string name="version_support">Mit einer freiwilligen Unterstützung – sei es als einmaliger oder regelmäßiger Beitrag – hilfst du dabei, die weitere Entwicklung der App zu unterstützen und sie werbefrei zu halten.\n\nVielen Dank 💚\nManuela und Jörg</string>
+    <string name="version_support_note">Die App kann natürlich auch ohne Spende genutzt werden.</string>
 
     <!-- Social Media -->
     <string name="spotify_username">HundeWildnis Podcast</string>

@@ -5955,9 +5955,9 @@ For searching nearby places and for surroundings data on the map, the app querie
     <string name="support_footer">Thank you for your support! 🐕💚</string>
 
     <!-- Version und Support Popup -->
-    <string name="version_support_headline">HundeWildnis stays free.</string>
-    <string name="version_support">Voluntary support – one-time or recurring – secures further development and keeps the app ad-free.\n\nThank you 💚\nManuela and Jörg</string>
-    <string name="version_support_note">Of course, you can use the app without supporting us.</string>
+    <string name="version_support_headline">HundeWildnis remains free of charge.</string>
+    <string name="version_support">By making a voluntary donation – whether a one-off or a regular contribution – you’re helping to support the app’s ongoing development and keep it ad-free.\n\nThank you 💚\nManuela and Jörg</string>
+    <string name="version_support_note">The app can, of course, still be used without making a donation.</string>
 
     <!-- Feed und Podcasts -->
     <string name="feed_title">Feed</string>
