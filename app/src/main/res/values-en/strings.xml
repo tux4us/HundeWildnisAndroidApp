@@ -2549,7 +2549,7 @@
     <string name="instr_tick_loupe_title">🔍 Tick Loupe</string>
     <string name="instr_tick_loupe_desc">Digital magnifier using the camera.\n• Three filters: thermal view, inversion, high contrast.\n• Tapping focuses, “freeze” holds the image.\n• Images can be saved to the gallery.</string>
     <string name="instr_plant_scout_title">🌿 Hazardous Plants</string>
-    <string name="instr_plant_scout_desc">Offline database of 56 poisonous plants.\n• Seasonal warning, text search, filters by toxicity and season.\n• Your own photos per plant.\n• Linked to the emergency assistant.\n• If poisoning is suspected: open the emergency assistant and contact a vet immediately.</string>
+    <string name="instr_plant_scout_desc">Offline database of 55 poisonous plants.\n• Seasonal warning, text search, filters by toxicity and season.\n• Your own photos per plant.\n• Linked to the emergency assistant.\n• If poisoning is suspected: open the emergency assistant and contact a vet immediately.</string>
     <string name="instr_location_share_title">📍 Location Sharing</string>
     <string name="instr_location_share_desc">Share your location in real time with trusted people, e.g. when hiking together. The transmission runs via a WebDAV server that you set up yourself. Without WebDAV credentials the function is locked and links to the WebDAV settings.\n• After activation a background service runs. It transmits your location when you move and otherwise at longer intervals, and shows the locations of the other devices on a map.\n• For each device the battery level and a freely selectable label are shown. Locations not updated for more than 10 minutes appear grey.\n• With one tap a route to the shared location can be calculated.\n• Exclude the app from battery optimisation so that sharing continues with the screen locked.</string>
     <string name="instr_emergency_title">🚨 EMERGENCY</string>
@@ -2562,8 +2562,8 @@
     <string name="instr_podcasts_desc">Listen to podcasts you subscribe to yourself.\n• “Add”: enter the address of a podcast feed. You can import and export lists as OPML.\n• “Subscriptions” tab: tap a podcast to see its episodes. Tap an episode to start playback.\n• “Last 4 weeks” tab: all episodes from your subscriptions of the last 28 days, newest first.\n• Playback continues in the background and can be controlled from the notification. The position of each episode is remembered.\n• Long-press an episode to mark it as played or unplayed.</string>
     <string name="instr_backup_title">📦 Backup</string>
     <string name="instr_backup_desc">Back up your data regularly.\n• Menu → “Create Backup” creates a backup file in Downloads/HundeWildnis_Backups and offers to share it. It includes profiles, notes, photos, statistics and further app data.\n• Menu → “Import Backup”: choose a file. Before restoring you choose the mode: Add, Replace or Merge. This is also how you transfer your data to other devices.\n• The “Backup” tile additionally offers synchronisation with your own WebDAV server and cleaning up storage.</string>
-    <string name="instr_support_title">💛 Support</string>
-    <string name="instr_support_desc">You can voluntarily support the development of the app with an amount of your choice via PayPal or Buy Me a Coffee. You receive no consideration and no additional functions for this. The app remains free. You can also rate the app and recommend it to others.</string>
+    <string name="instr_support_title">💛 Voluntary support</string>
+    <string name="instr_support_desc">You can voluntarily support the development of the app with an amount of your choice via PayPal or Buy Me a Coffee. You receive no consideration and no additional functions for this. The app remains free. Payment is made outside the app with the respective provider, whose terms and privacy policy apply. You can also rate the app and recommend it to others.</string>
     <string name="instr_bottom_nav_title">Bottom navigation bar</string>
     <string name="instr_bottom_nav_desc">Open at any time:\n• Start: tile start page\n• Courses: course overview\n• Emergency: opens the first-aid assistant directly</string>
     <string name="instr_top_menu_title">Top menu</string>
@@ -5898,8 +5898,8 @@ For searching nearby places and for surroundings data on the map, the app querie
         Some functions open content in other applications, for example in the browser, in the PayPal app or in your device\'s app store. From the moment it opens, the privacy policy of the respective provider applies.
         </p>
         <ul>
-        <li><b>Donation via PayPal:</b> The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider&#39;s policy applies: <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
-        <li><b>Donation via Buy Me a Coffee:</b> The app contains a link to buymeacoffee.com for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to the provider; the provider&#39;s privacy policy applies.</li>
+        <li><b>Voluntary support via PayPal:</b> The app contains a link to PayPal for voluntary support of the development. The app does not process any payment data. The terms and privacy policies of the provider and its payment service providers apply to the payment. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider&#39;s policy applies: <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
+        <li><b>Voluntary support via Buy Me a Coffee:</b> The app contains a link to buymeacoffee.com for voluntary support of the development. The app does not process any payment data. The terms and privacy policies of the provider and its payment service providers apply to the payment. When the link is opened, data (including your IP address) is transmitted to the provider; the provider&#39;s privacy policy applies: <a href="https://buymeacoffee.com/privacy-policy">https://buymeacoffee.com/privacy-policy</a>. Payment service providers such as Stripe may be involved in the payment; for Stripe, see <a href="https://stripe.com/de/privacy">https://stripe.com/de/privacy</a>.</li>
         <li><b>Map links:</b> Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.</li>
         <li><b>Rating and sharing the app:</b> Rating opens the app store installed on your device or the project page in the browser. The share text contains a link to the project page.</li>
         </ul>
@@ -5918,8 +5918,8 @@ For searching nearby places and for surroundings data on the map, the app querie
         <li>OpenRouteService: route calculation; IP address, coordinates, own key</li>
         <li>WebDAV server of your choice: synchronisation; data, credentials, IP address</li>
         <li>Feed and podcast servers of your choice: retrieve articles and audio; IP address, requested address, app identifier</li>
-        <li>PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app</li>
-        <li>Buy Me a Coffee: voluntary donation via a link; IP address, depending on what you do in the browser</li>
+        <li>PayPal: voluntary support via a link; IP address, depending on what you do in the browser or the PayPal app</li>
+        <li>Buy Me a Coffee: voluntary support via a link; IP address, depending on what you do in the browser</li>
         </ul>
         <p>All connections are encrypted via HTTPS.</p>
 
@@ -5945,10 +5945,19 @@ For searching nearby places and for surroundings data on the map, the app querie
         ]]>
     </string>
 
+    <!-- Support (SupportActivity) -->
+    <string name="support_title">Voluntary support</string>
+    <string name="support_thanks_header">💚 🤝 Thank you!</string>
+    <string name="support_intro">The app stays free and ad-free. We fund its further development through voluntary support, with nothing offered in return. 🐾</string>
+    <string name="support_section_money">Financial support</string>
+    <string name="support_money_hint">Note: Tapping a button takes you out of the app. Payment is handled by the respective provider and its payment service providers (e.g. PayPal, Stripe, Wero). Their terms and privacy policies apply.</string>
+    <string name="support_section_free">Free ways to support</string>
+    <string name="support_footer">Thank you for your support! 🐕💚</string>
+
     <!-- Version und Support Popup -->
     <string name="version_support_headline">HundeWildnis stays free.</string>
-    <string name="version_support">A voluntary donation – one-time or recurring – secures further development and keeps the app ad-free.\n\nThank you 💚\nManuela and Jörg</string>
-    <string name="version_support_note">Of course, you can use the app without donating.</string>
+    <string name="version_support">Voluntary support – one-time or recurring – secures further development and keeps the app ad-free.\n\nThank you 💚\nManuela and Jörg</string>
+    <string name="version_support_note">Of course, you can use the app without supporting us.</string>
 
     <!-- Feed und Podcasts -->
     <string name="feed_title">Feed</string>

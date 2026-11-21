@@ -156,7 +156,8 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Hinzufügen eine
 
 Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im App-Store deines Geräts. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
 
-- Spende über PayPal: Die App enthält einen Link zu PayPal für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt https://www.paypal.com/de/legalhub/privacy-full.
+- Freiwillige Unterstützung über PayPal: Die App enthält einen Link zu PayPal für die freiwillige Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Für die Zahlung gelten die Bedingungen und Datenschutzbestimmungen des Anbieters und seiner Zahlungsdienstleister. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt https://www.paypal.com/de/legalhub/privacy-full.
+- Freiwillige Unterstützung über Buy Me a Coffee: Die App enthält einen Link zu buymeacoffee.com für die freiwillige Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Für die Zahlung gelten die Bedingungen und Datenschutzbestimmungen des Anbieters und seiner Zahlungsdienstleister. Beim Öffnen des Links werden Daten an den Anbieter übertragen (u. a. IP-Adresse); anbieterseitig gilt https://buymeacoffee.com/privacy-policy. Bei der Zahlung können Zahlungsdienstleister wie Stripe beteiligt sein; für Stripe gilt https://stripe.com/de/privacy.
 - Karten-Links: Standort-Links zu openstreetmap.org werden nur in Nachrichten eingefügt, die du selbst teilst, oder auf deine Aktion hin im Browser geöffnet.
 - Bewerten und Teilen der App: Die Bewertung öffnet den auf deinem Gerät installierten App-Store bzw. die Projektseite im Browser. Der Teilen-Text enthält einen Link zur Projektseite.
 
@@ -174,7 +175,8 @@ Notfallmeldungen, Standortfreigaben, PDF- und CSV-Dateien sowie Sicherungen gibs
 - OpenRouteService: Routenberechnung; IP-Adresse, Koordinaten, eigener Schlüssel
 - WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse
 - Feed- und Podcast-Server nach deiner Wahl: Artikel und Audio abrufen; IP-Adresse, abgerufene Adresse, App-Kennung
-- PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App
+- PayPal: freiwillige Unterstützung über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App
+- Buy Me a Coffee: freiwillige Unterstützung über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser
 
 Alle Verbindungen sind durch HTTPS verschlüsselt.
 
@@ -182,7 +184,7 @@ Alle Verbindungen sind durch HTTPS verschlüsselt.
 
 Da der Anbieter über die App keine personenbezogenen Daten von dir erhält, kann er dir keine Auskunft über gespeicherte Daten geben und keine Daten berichtigen oder löschen. Die Daten auf deinem Gerät kannst du selbst einsehen, ändern und löschen.
 
-Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, dein WebDAV-Server, Feed- und Podcast-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
+Für die Verarbeitung personenbezogener Daten durch Drittanbieter (z. B. Kartendienste, Wetteranbieter, PayPal, Buy Me a Coffee, dein WebDAV-Server, Feed- und Podcast-Server, Empfänger geteilter Daten) gelten deren Datenschutzerklärungen. Auskunfts-, Berichtigungs- und Löschungsrechte kannst du direkt bei den jeweiligen Anbietern geltend machen.
 
 Du hast außerdem das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO).
 

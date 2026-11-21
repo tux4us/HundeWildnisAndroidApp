@@ -6,7 +6,7 @@
 
 [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-100%25-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Version](https://img.shields.io/badge/Version-27.6%20Build%20143-C9A84C?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/Version-27.8%20Build%20145-C9A84C?style=flat-square)](#)
 [![License](https://img.shields.io/badge/Lizenz-GPL--3.0--or--later-5C8A3C?style=flat-square)](LICENSE)
 [![No Google Services](https://img.shields.io/badge/Google%20Services-keine-brightgreen?style=flat-square)](#-datenschutz--sicherheit)
 [![F-Droid](https://img.shields.io/badge/F--Droid-ready-lightgrey?style=flat-square)](https://f-droid.org/)
@@ -70,7 +70,7 @@ Die HundeWildnis App ist ein mobiler Begleiter für den Alltag mit dem Hund – 
 
 ## 🧭 Funktionsübersicht
 
-Die App gliedert sich in drei Bedienebenen: das **Hamburger-Menü** (App-weite Systemfunktionen), die **Startseite** mit sechs Kachelgruppen (die eigentlichen Funktionsmodule) und die **untere Navigationsleiste** als Footer (Wechsel zwischen den vier Hauptbereichen sowie externe Kanäle).
+Die App gliedert sich in drei Bedienebenen: das **Hamburger-Menü** (App-weite Systemfunktionen), die **Startseite** mit sechs Kachelgruppen (die eigentlichen Funktionsmodule) und die **untere Navigationsleiste** als Footer (Wechsel zwischen Start, Kursen und Notfall).
 
 ---
 
@@ -80,7 +80,8 @@ Erreichbar über das Drei-Punkte-Symbol rechts oben in der Toolbar – auf der S
 
 | Eintrag | Funktion |
 |---|---|
-| ⚙️ Einstellungen | Öffnet Dialog mit: WebDAV-Synchronisation im Hintergrund ein/aus · Beschränkung auf WLAN · Benachrichtigungen zur Synchronisation ein/aus · eigener OpenRouteService-API-Key (eingeben/testen/löschen) |
+| 🌐 Sprache / Language | Umschalten zwischen Deutsch und Englisch |
+| ⚙️ Einstellungen | Öffnet Dialog mit: WebDAV-Synchronisation im Hintergrund ein/aus · Beschränkung auf WLAN · Benachrichtigungen zur Synchronisation ein/aus · eigener OpenRouteService-API-Key (eingeben/testen/löschen) · „Dienste & Server“ (Wetteranbieter mit eigenem Zugang, Overpass-Server) |
 | 📦 Backup erstellen | Vollständige Sicherungsdatei in `Downloads/HundeWildnis_Backups`, anschließend Teilen-Angebot |
 | 📥 Backup importieren | Dateiauswahl, Prüfung, Abfrage der Merge-Art (Hinzufügen/Ersetzen/Zusammenführen) vor der Wiederherstellung |
 | 📖 Anleitung zur Nutzung | Kurzanleitung zu den wichtigsten Funktionen |
@@ -180,7 +181,7 @@ Der Beratungs-Wizard führt durch fünf Bildschirme mit Fortschrittsanzeige:
 | 🐕 Stammdaten | Beliebig viele Hundeprofile | Basis-/Identifikations-/Gesundheits-/Kontaktdaten · Timelinetracker (gemeinsame Lebenszeit mit dem Hund inclusive aller mit der App aufgenommenenen Aktivitäten und Situationen) · Läufigkeitstracker · 6 Wesensmerkmal-Skalen, 11 Schnellprofile · Export (Text/QR/PDF/GPX) · eigenständige Notfallmeldung ab Profilkarte |
 | ❤️ Pulscheck | Geführte Puls-/Atemfrequenzmessung | 15-s-Countdowns mit automatischer Hochrechnung · Bewertung nach Schulterhöhe · Kapillarfüllzeit, Schleimhautfarbe, Bewusstsein, Belastungsszenario · Übernahme in Notfallmeldung · Verlauf, CSV-Export |
 | 🔍 Zeckenlupe | Digitale Lupe (Camera2 API) | 3 Filter (Wärmebild/Invertierung/Hoher Kontrast) · Antipp-Fokus · Freeze-Frame · Speichern in Galerie |
-| 🌿 Gefahrenpflanzen | Offline-Datenbank, 56 Giftpflanzen | Saisonale Warnung · Textsuche, Toxizitäts-Filter, Saisonal-Umschalter · eigene Fotos je Pflanze · Verknüpfung mit Notfall-Assistent |
+| 🌿 Gefahrenpflanzen | Offline-Datenbank, 55 Giftpflanzen | Saisonale Warnung · Textsuche, Toxizitäts-Filter, Saisonal-Umschalter · eigene Fotos je Pflanze · Verknüpfung mit Notfall-Assistent |
 | 📍 Standortfreigabe | WebDAV-basierte Geräteortung – **siehe Detailabschnitt unten** | Bewegungsbasierte Uploads mit Heartbeat-Fallback · Akkustand-Anzeige · frei wählbares Geräte-Label · Karte mit Stale-Markierung · Routing zum Standort |
 | 🚨 NOTFALL | Vierstufiger Erste-Hilfe-Assistent – **siehe Detailabschnitt unten** | Hund wählen → Unfall/Erkrankung → 17 Notfalltypen → Symptom-Check → Anleitung mit HLW-Timer und Countdown-Timer je nach Bedarf · Notfallmeldung mit PDF-Export |
 
@@ -233,7 +234,7 @@ Die Kachel **Kurse** (41 Kurse mit Lektionen, in der App gespeichert, ohne Inter
 | Kachel | Kernfunktionen | Unterfunktionen |
 |---|---|---|
 | 📦 Backup | Sicherung, Wiederherstellung, Synchronisation | Backup erstellen · Wiederherstellen (3 Merge-Modi) · WebDAV-Sync (Hub-and-Spoke, 14 selektive Datenbereiche) · Standortfreigabe-Zugriff · Speicher bereinigen |
-| 💛 Unterstützung | Freiwillige Finanzierung | PayPal (freiwillig, ohne Gegenleistung) · kostenlos: bewerten, teilen |
+| 💛 Freiwillige Unterstützung | Freiwillige Finanzierung (ohne Gegenleistung) | PayPal · Buy Me a Coffee (Zahlung beim jeweiligen Anbieter, dessen Bedingungen gelten) · kostenlos: bewerten, teilen |
 
 ---
 
@@ -254,7 +255,7 @@ Durchgehend sichtbare Navigationsleiste am unteren Bildschirmrand mit drei Eintr
 ```
 Sprache          Kotlin 100 %
 Android          7.0 – 15  (API 24 – 36)
-Version          27.4 (Build 141)
+Version          27.8 (Build 145)
 Architektur      MVVM + Kotlin Coroutines
 UI               Android Views · ViewBinding · Material Design
 ```
@@ -288,8 +289,13 @@ UI               Android Views · ViewBinding · Material Design
 | `INTERNET` | Wetter, Karte, WebDAV-Sync |
 | `ACCESS_FINE_LOCATION` | Navigation, Wetter, Nasenarbeit-Karte, Tempo-Trainer, Kompass (Himmelsberechnung), Standortfreigabe, Sprach-Trainer (optionale Wegstrecke zwischen Kommandos) |
 | `ACCESS_COARSE_LOCATION` | Standort-Fallback |
+| `ACCESS_NETWORK_STATE` | Netzwerk-Bedingung der WebDAV-Synchronisation (WorkManager: Verbindung bzw. nur WLAN) |
 | `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_LOCATION` | GPS-Tracking (Tempo-Trainer, Standortfreigabe, Navigation, Sprach-Trainer) |
 | `FOREGROUND_SERVICE_MICROPHONE` | Sprach-Trainer: Messung bei ausgeschaltetem Bildschirm |
+| `FOREGROUND_SERVICE_MEDIA_PLAYBACK` | Podcast-Wiedergabe im Hintergrund |
+| `WAKE_LOCK` | Prozessor aktiv halten bei Sprach-Trainer-Messung, Standortfreigabe und Podcast-Wiedergabe |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Hinweis zur Ausnahme von der Akkuoptimierung (Standortfreigabe) |
+| `RECEIVE_BOOT_COMPLETED` | Standortfreigabe nach Geräteneustart wieder starten, falls sie zuvor aktiv war |
 | `CAMERA` | Zeckenlupe, Fotos für Notizen, Notfall-PDF, Gefahrenpflanzen |
 | `RECORD_AUDIO` | Sprach-Trainer (Frequenzanalyse, Mikrofon-Kalibrierung, Aufnahme und Erkennung eigener Kommandos – ausschließlich lokal) |
 | `POST_NOTIFICATIONS` | Tempo-Trainer-Warnungen, Läufigkeits-Erinnerungen, WebDAV-Synchronisation |

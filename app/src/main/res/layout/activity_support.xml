@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="💚 🤝 Vielen Dank! "
+                android:text="@string/support_thanks_header"
                 android:textSize="@dimen/text_headline_large"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -48,7 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Unterstütze uns gern mit einem kleinen Beitrag – so bleibt die App werbefrei und wird stetig verbessert.🐾"
+                android:text="@string/support_intro"
                 android:textSize="@dimen/text_body_medium"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary"
@@ -72,7 +72,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sichere Zahlungswege"
+                    android:text="@string/support_section_money"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorSecondary" />
@@ -82,10 +82,21 @@
                 android:id="@+id/gridSupportMoney"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="8dp"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="2" />
+
+            <!-- Hinweis auf die Bedingungen der Zahlungsanbieter -->
+            <TextView
+                android:id="@+id/tvSupportMoneyHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/support_money_hint"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="24dp"
+                android:paddingHorizontal="4dp" />
 
             <!-- KOSTENLOSE UNTERSTÜTZUNG -->
             <LinearLayout
@@ -104,7 +115,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kostenlose Unterstützung"
+                    android:text="@string/support_section_free"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorSecondary" />
@@ -123,7 +134,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Vielen Dank für Deine Unterstützung! 🐕💚"
+                android:text="@string/support_footer"
                 android:textSize="@dimen/text_body_medium"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorSecondary"

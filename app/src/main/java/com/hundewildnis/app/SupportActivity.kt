@@ -18,8 +18,8 @@ import com.hundewildnis.app.databinding.ActivitySupportBinding
 import com.google.android.material.button.MaterialButton
 
 /**
- * SupportActivity - Finanzielle Unterstützung
- * Zeigt verschiedene Optionen zur Unterstützung der App und des Entwicklers
+ * SupportActivity - Freiwillige Unterstützung
+ * Zeigt die Wege zur freiwilligen Unterstützung der App (PayPal, Buy Me a Coffee) und kostenlose Optionen
  */
 private const val PROJECT_URL = "https://wildnislehrer.com/hundewildnisapp/"
 
@@ -35,7 +35,7 @@ class SupportActivity : SecureBaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Unterstützung"
+            title = getString(R.string.support_title)
             setDisplayHomeAsUpEnabled(true)
         }
 

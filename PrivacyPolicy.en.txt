@@ -156,7 +156,8 @@ Legal basis: Art. 6(1)(a) GDPR (consent by adding a feed or podcast and retrievi
 
 Some functions open content in other applications, for example in the browser, in the PayPal app or in your device's app store. From the moment it opens, the privacy policy of the respective provider applies.
 
-- Donation via PayPal: The app contains a link to PayPal for voluntary donations to support development. The app does not process any payment data. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider's policy applies: https://www.paypal.com/de/legalhub/privacy-full.
+- Voluntary support via PayPal: The app contains a link to PayPal for voluntary support of the development. The app does not process any payment data. The terms and privacy policies of the provider and its payment service providers apply to the payment. When the link is opened, data (including your IP address) is transmitted to PayPal; the provider's policy applies: https://www.paypal.com/de/legalhub/privacy-full.
+- Voluntary support via Buy Me a Coffee: The app contains a link to buymeacoffee.com for voluntary support of the development. The app does not process any payment data. The terms and privacy policies of the provider and its payment service providers apply to the payment. When the link is opened, data (including your IP address) is transmitted to the provider; the provider's privacy policy applies: https://buymeacoffee.com/privacy-policy. Payment service providers such as Stripe may be involved in the payment; for Stripe, see https://stripe.com/de/privacy.
 - Map links: Location links to openstreetmap.org are only inserted into messages that you share yourself, or opened in the browser at your request.
 - Rating and sharing the app: Rating opens the app store installed on your device or the project page in the browser. The share text contains a link to the project page.
 
@@ -174,7 +175,8 @@ You pass on emergency reports, location shares, PDF and CSV files and backups vi
 - OpenRouteService: route calculation; IP address, coordinates, own key
 - WebDAV server of your choice: synchronisation; data, credentials, IP address
 - Feed and podcast servers of your choice: retrieve articles and audio; IP address, requested address, app identifier
-- PayPal: voluntary donation via a link; IP address, depending on what you do in the browser or the PayPal app
+- PayPal: voluntary support via a link; IP address, depending on what you do in the browser or the PayPal app
+- Buy Me a Coffee: voluntary support via a link; IP address, depending on what you do in the browser
 
 All connections are encrypted via HTTPS.
 
@@ -182,7 +184,7 @@ All connections are encrypted via HTTPS.
 
 Because the provider receives no personal data from you through the app, the provider cannot give you information about stored data and cannot correct or delete any data. You can view, change and delete the data on your device yourself.
 
-For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, your WebDAV server, feed and podcast servers, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
+For the processing of personal data by third parties (e.g. map services, weather providers, PayPal, Buy Me a Coffee, your WebDAV server, feed and podcast servers, recipients of shared data), their respective privacy policies apply. You can assert rights of access, rectification and erasure directly with the respective providers.
 
 You also have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR).
 

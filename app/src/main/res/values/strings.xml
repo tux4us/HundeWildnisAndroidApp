@@ -98,10 +98,19 @@
         ]]>
     </string>
 
+    <!-- Unterstützung (SupportActivity) -->
+    <string name="support_title">Freiwillige Unterstützung</string>
+    <string name="support_thanks_header">💚 🤝 Vielen Dank!</string>
+    <string name="support_intro">Die App bleibt kostenlos und werbefrei. Ihre Weiterentwicklung finanzieren wir durch freiwillige Unterstützung, ohne Gegenleistung. 🐾</string>
+    <string name="support_section_money">Finanzielle Unterstützung</string>
+    <string name="support_money_hint">Hinweis: Mit dem Antippen verlässt Du die App. Die Zahlung läuft über den jeweiligen Anbieter und dessen Zahlungsdienstleister (z. B. PayPal, Stripe, Wero). Es gelten deren Bedingungen und Datenschutzbestimmungen.</string>
+    <string name="support_section_free">Kostenlose Unterstützung</string>
+    <string name="support_footer">Vielen Dank für Deine Unterstützung! 🐕💚</string>
+
     <!-- Version und Support Popup -->
-    <string name="version_support_headline">HundeWildnis bleibt kostenlos.</string>
-    <string name="version_support">Mit einer freiwilligen Spende – einmalig oder regelmäßig – sicherst Du Weiterentwicklung und Werbefreiheit.\n\nDanke 💚\nManuela und Jörg</string>
-    <string name="version_support_note">Die App nutzt Du selbstverständlich auch ohne Spende.</string>
+    <string name="version_support_headline">HundeWildnis remains free of charge.</string>
+    <string name="version_support">By making a voluntary donation – whether a one-off or a regular contribution – you’re helping to support the app’s ongoing development and keep it ad-free.\n\nThank you 💚\nManuela and Jörg</string>
+    <string name="version_support_note">The app can, of course, still be used without making a donation.</string>
 
     <!-- Social Media -->
     <string name="spotify_username">HundeWildnis Podcast</string>
@@ -2718,7 +2727,7 @@
     <string name="instr_tick_loupe_title">🔍 Zeckenlupe</string>
     <string name="instr_tick_loupe_desc">Digitale Lupe mit der Kamera.\n• Drei Filter: Wärmebild, Invertierung, Hoher Kontrast.\n• Antippen stellt scharf, „Freeze“ hält das Bild an.\n• Bilder lassen sich in der Galerie speichern.</string>
     <string name="instr_plant_scout_title">🌿 Gefahrenpflanzen</string>
-    <string name="instr_plant_scout_desc">Offline-Datenbank mit 56 Giftpflanzen.\n• Saisonale Warnung, Textsuche, Filter nach Giftigkeit und Saison.\n• Eigene Fotos je Pflanze.\n• Verknüpfung mit dem Notfall-Assistenten.\n• Bei Verdacht auf eine Vergiftung: Notfall-Assistent öffnen und umgehend einen Tierarzt kontaktieren.</string>
+    <string name="instr_plant_scout_desc">Offline-Datenbank mit 55 Giftpflanzen.\n• Saisonale Warnung, Textsuche, Filter nach Giftigkeit und Saison.\n• Eigene Fotos je Pflanze.\n• Verknüpfung mit dem Notfall-Assistenten.\n• Bei Verdacht auf eine Vergiftung: Notfall-Assistent öffnen und umgehend einen Tierarzt kontaktieren.</string>
     <string name="instr_location_share_title">📍 Standortfreigabe</string>
     <string name="instr_location_share_desc">Teile Deinen Standort in Echtzeit mit vertrauten Personen, z. B. beim gemeinsamen Wandern. Die Übertragung läuft über einen WebDAV-Server, den Du selbst einrichtest. Ohne WebDAV-Zugangsdaten ist die Funktion gesperrt und verweist auf die WebDAV-Einstellungen.\n• Nach der Aktivierung läuft ein Hintergrunddienst. Er überträgt Deinen Standort bei Bewegung und sonst in größeren Abständen und zeigt die Standorte der anderen Geräte auf einer Karte.\n• Je Gerät werden Akkustand und frei wählbares Label angezeigt. Standorte, die länger als 10 Minuten nicht aktualisiert wurden, erscheinen grau.\n• Mit einem Tipp lässt sich eine Route zum freigegebenen Standort berechnen.\n• Nimm die App von der Akkuoptimierung aus, damit die Freigabe bei gesperrtem Bildschirm weiterläuft.</string>
     <string name="instr_emergency_title">🚨 NOTFALL</string>
@@ -2731,8 +2740,8 @@
     <string name="instr_podcasts_desc">Hier hörst Du Podcasts, die Du selbst abonnierst.\n• „Hinzufügen“: Adresse eines Podcast-Feeds eingeben. Listen kannst Du als OPML importieren und exportieren.\n• Tab „Abos“: Podcast antippen zeigt die Folgen. Eine Folge antippen startet die Wiedergabe.\n• Tab „Letzte 4 Wochen“: alle Folgen Deiner Abonnements der letzten 28 Tage, die neueste zuerst.\n• Die Wiedergabe läuft im Hintergrund weiter und lässt sich über die Benachrichtigung steuern. Die Position jeder Folge wird gemerkt.\n• Langes Drücken auf eine Folge markiert sie als gehört bzw. ungehört.</string>
     <string name="instr_backup_title">📦 Backup</string>
     <string name="instr_backup_desc">Sichere Deine Daten regelmäßig.\n• Menü → „Backup erstellen“ legt eine Sicherungsdatei in Downloads/HundeWildnis_Backups an und bietet das Teilen an. Sie umfasst Profile, Notizen, Fotos, Statistiken und weitere App-Daten.\n• Menü → „Backup importieren“: Datei wählen. Vor der Wiederherstellung wählst Du die Art: Hinzufügen, Ersetzen oder Zusammenführen. So überträgst Du Deine Daten auch auf weitere Geräte.\n• Die Kachel „Backup“ bietet zusätzlich die Synchronisation mit Deinem eigenen WebDAV-Server und das Bereinigen von Speicher.</string>
-    <string name="instr_support_title">💛 Unterstützung</string>
-    <string name="instr_support_desc">Du kannst die Entwicklung der App freiwillig mit einem Betrag Deiner Wahl über PayPal oder Buy Me a Coffee unterstützen. Du erhältst dafür keine Gegenleistung und keine zusätzlichen Funktionen. Die App bleibt kostenlos. Außerdem kannst Du die App bewerten und weiterempfehlen.</string>
+    <string name="instr_support_title">💛 Freiwillige Unterstützung</string>
+    <string name="instr_support_desc">Du kannst die Entwicklung der App freiwillig mit einem Betrag Deiner Wahl über PayPal oder Buy Me a Coffee unterstützen. Du erhältst dafür keine Gegenleistung und keine zusätzlichen Funktionen. Die App bleibt kostenlos. Die Zahlung erfolgt außerhalb der App beim jeweiligen Anbieter; es gelten dessen Bedingungen und Datenschutzbestimmungen. Außerdem kannst Du die App bewerten und weiterempfehlen.</string>
     <string name="instr_bottom_nav_title">Navigationsleiste unten</string>
     <string name="instr_bottom_nav_desc">Rufe jederzeit auf:\n• Start: Kachel-Startseite\n• Kurse: Kursübersicht\n• Notfall: öffnet direkt den Erste-Hilfe-Assistenten</string>
     <string name="instr_top_menu_title">Menü oben</string>
@@ -5846,8 +5855,8 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         Einige Funktionen öffnen Inhalte in anderen Anwendungen, etwa im Browser, in der PayPal-App oder im App-Store deines Geräts. Ab dem Öffnen gilt die Datenschutzerklärung des jeweiligen Anbieters.
         </p>
         <ul>
-        <li><b>Spende über PayPal:</b> Die App enthält einen Link zu PayPal für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
-        <li><b>Spende über Buy Me a Coffee:</b> Die App enthält einen Link zu buymeacoffee.com für freiwillige Spenden zur Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Beim Öffnen des Links werden Daten an den Anbieter übertragen (u. a. IP-Adresse); anbieterseitig gilt dessen Datenschutzerklärung.</li>
+        <li><b>Freiwillige Unterstützung über PayPal:</b> Die App enthält einen Link zu PayPal für die freiwillige Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Für die Zahlung gelten die Bedingungen und Datenschutzbestimmungen des Anbieters und seiner Zahlungsdienstleister. Beim Öffnen des Links werden Daten an PayPal übertragen (u. a. IP-Adresse); anbieterseitig gilt <a href="https://www.paypal.com/de/legalhub/privacy-full">https://www.paypal.com/de/legalhub/privacy-full</a>.</li>
+        <li><b>Freiwillige Unterstützung über Buy Me a Coffee:</b> Die App enthält einen Link zu buymeacoffee.com für die freiwillige Unterstützung der Entwicklung. Die App verarbeitet keine Zahlungsdaten. Für die Zahlung gelten die Bedingungen und Datenschutzbestimmungen des Anbieters und seiner Zahlungsdienstleister. Beim Öffnen des Links werden Daten an den Anbieter übertragen (u. a. IP-Adresse); anbieterseitig gilt <a href="https://buymeacoffee.com/privacy-policy">https://buymeacoffee.com/privacy-policy</a>. Bei der Zahlung können Zahlungsdienstleister wie Stripe beteiligt sein; für Stripe gilt <a href="https://stripe.com/de/privacy">https://stripe.com/de/privacy</a>.</li>
         <li><b>Karten-Links:</b> Standort-Links zu openstreetmap.org werden nur in Nachrichten eingefügt, die du selbst teilst, oder auf deine Aktion hin im Browser geöffnet.</li>
         <li><b>Bewerten und Teilen der App:</b> Die Bewertung öffnet den auf deinem Gerät installierten App-Store bzw. die Projektseite im Browser. Der Teilen-Text enthält einen Link zur Projektseite.</li>
         </ul>
@@ -5866,8 +5875,8 @@ Für die Suche nach Orten in der Nähe und für Umgebungsdaten auf der Karte fra
         <li>OpenRouteService: Routenberechnung; IP-Adresse, Koordinaten, eigener Schlüssel</li>
         <li>WebDAV-Server deiner Wahl: Synchronisation; Daten, Zugangsdaten, IP-Adresse</li>
         <li>Feed- und Podcast-Server nach deiner Wahl: Artikel und Audio abrufen; IP-Adresse, abgerufene Adresse, App-Kennung</li>
-        <li>PayPal: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App</li>
-        <li>Buy Me a Coffee: freiwillige Spende über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser</li>
+        <li>PayPal: freiwillige Unterstützung über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser bzw. in der PayPal-App</li>
+        <li>Buy Me a Coffee: freiwillige Unterstützung über einen Link; IP-Adresse, abhängig von deinem Vorgehen im Browser</li>
         </ul>
         <p>Alle Verbindungen sind durch HTTPS verschlüsselt.</p>
 
